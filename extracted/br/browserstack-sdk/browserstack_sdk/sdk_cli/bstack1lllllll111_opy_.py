@@ -1,145 +1,246 @@
 # coding: UTF-8
 import sys
-bstack111l1_opy_ = sys.version_info [0] == 2
-bstack11l11ll_opy_ = 2048
-bstack1l1l1_opy_ = 7
-def bstack11111l_opy_ (bstack11l11_opy_):
-    global bstack11l1111_opy_
-    bstack1l1lll_opy_ = ord (bstack11l11_opy_ [-1])
-    bstack1l111_opy_ = bstack11l11_opy_ [:-1]
-    bstack1l1llll_opy_ = bstack1l1lll_opy_ % len (bstack1l111_opy_)
-    bstack1ll11l_opy_ = bstack1l111_opy_ [:bstack1l1llll_opy_] + bstack1l111_opy_ [bstack1l1llll_opy_:]
-    if bstack111l1_opy_:
-        bstack1l1ll1_opy_ = unicode () .join ([unichr (ord (char) - bstack11l11ll_opy_ - (bstack11ll111_opy_ + bstack1l1lll_opy_) % bstack1l1l1_opy_) for bstack11ll111_opy_, char in enumerate (bstack1ll11l_opy_)])
+bstack1l1l11_opy_ = sys.version_info [0] == 2
+bstack1l1ll11_opy_ = 2048
+bstack11ll11_opy_ = 7
+def bstack1llll1l_opy_ (bstack111llll_opy_):
+    global bstack1lll111_opy_
+    bstack1llll_opy_ = ord (bstack111llll_opy_ [-1])
+    bstack11l1lll_opy_ = bstack111llll_opy_ [:-1]
+    bstack111lll_opy_ = bstack1llll_opy_ % len (bstack11l1lll_opy_)
+    bstack1l1ll_opy_ = bstack11l1lll_opy_ [:bstack111lll_opy_] + bstack11l1lll_opy_ [bstack111lll_opy_:]
+    if bstack1l1l11_opy_:
+        bstack11l111l_opy_ = unicode () .join ([unichr (ord (char) - bstack1l1ll11_opy_ - (bstack11111ll_opy_ + bstack1llll_opy_) % bstack11ll11_opy_) for bstack11111ll_opy_, char in enumerate (bstack1l1ll_opy_)])
     else:
-        bstack1l1ll1_opy_ = str () .join ([chr (ord (char) - bstack11l11ll_opy_ - (bstack11ll111_opy_ + bstack1l1lll_opy_) % bstack1l1l1_opy_) for bstack11ll111_opy_, char in enumerate (bstack1ll11l_opy_)])
-    return eval (bstack1l1ll1_opy_)
-import os
-import traceback
+        bstack11l111l_opy_ = str () .join ([chr (ord (char) - bstack1l1ll11_opy_ - (bstack11111ll_opy_ + bstack1llll_opy_) % bstack11ll11_opy_) for bstack11111ll_opy_, char in enumerate (bstack1l1ll_opy_)])
+    return eval (bstack11l111l_opy_)
+import logging
+from enum import Enum
 from typing import Dict, Tuple, Callable, Type, List, Any
-from urllib.parse import urlparse
-from browserstack_sdk.sdk_cli.bstack11111l1111_opy_ import (
-    bstack11111llll1_opy_,
-    bstack111111ll1l_opy_,
-    bstack1111111l1l_opy_,
-    bstack1111l11l11_opy_,
-)
-import copy
+import abc
 from datetime import datetime, timezone, timedelta
-class bstack1llllll1lll_opy_(bstack11111llll1_opy_):
-    bstack1l11lllllll_opy_ = bstack11111l_opy_ (u"ࠣࡄࡕࡓ࡜࡙ࡅࡓࡕࡗࡅࡈࡑ࡟ࡑࡎࡄࡘࡋࡕࡒࡎࡡࡌࡒࡉࡋࡘࠣፖ")
-    bstack1l1ll111111_opy_ = bstack11111l_opy_ (u"ࠤࡩࡶࡦࡳࡥࡸࡱࡵ࡯ࡤࡹࡥࡴࡵ࡬ࡳࡳࡥࡩࡥࠤፗ")
-    bstack1l1ll111ll1_opy_ = bstack11111l_opy_ (u"ࠥ࡬ࡺࡨ࡟ࡶࡴ࡯ࠦፘ")
-    bstack1l1ll11ll1l_opy_ = bstack11111l_opy_ (u"ࠦࡨࡧࡰࡢࡤ࡬ࡰ࡮ࡺࡩࡦࡵࠥፙ")
-    bstack1l11llll1ll_opy_ = bstack11111l_opy_ (u"ࠧࡽ࠳ࡤࡧࡻࡩࡨࡻࡴࡦࡵࡦࡶ࡮ࡶࡴࠣፚ")
-    bstack1l11llll11l_opy_ = bstack11111l_opy_ (u"ࠨࡷ࠴ࡥࡨࡼࡪࡩࡵࡵࡧࡶࡧࡷ࡯ࡰࡵࡣࡶࡽࡳࡩࠢ፛")
-    NAME = bstack11111l_opy_ (u"ࠢࡱ࡮ࡤࡽࡼࡸࡩࡨࡪࡷࠦ፜")
-    bstack1l1l11111l1_opy_: Dict[str, List[Callable]] = dict()
-    platform_index: int
-    options: Any
-    desired_capabilities: Any
-    bstack1llll1111l1_opy_: Any
-    bstack1l11lllll1l_opy_: Dict
+from browserstack_sdk.sdk_cli.bstack1lllllll11l_opy_ import bstack1llllll1lll_opy_, bstack11111lll1l_opy_
+import os
+import threading
+class bstack1llllll1l1l_opy_(Enum):
+    PRE = 0
+    POST = 1
+    def __repr__(self) -> str:
+        return bstack1llll1l_opy_ (u"ࠣࡊࡲࡳࡰ࡙ࡴࡢࡶࡨ࠲ࢀࢃࠢေ").format(self.name)
+class bstack11111l1l1l_opy_(Enum):
+    NONE = 0
+    bstack11111ll111_opy_ = 1
+    bstack111111l1l1_opy_ = 3
+    bstack111111llll_opy_ = 4
+    bstack1111111l11_opy_ = 5
+    QUIT = 6
+    def __eq__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value == other.value
+        return NotImplemented
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
+    def __repr__(self) -> str:
+        return bstack1llll1l_opy_ (u"ࠤࡄࡹࡹࡵ࡭ࡢࡶ࡬ࡳࡳࡌࡲࡢ࡯ࡨࡻࡴࡸ࡫ࡔࡶࡤࡸࡪ࠴ࡻࡾࠤဲ").format(self.name)
+class bstack1111111ll1_opy_(bstack1llllll1lll_opy_):
+    framework_name: str
+    framework_version: str
+    state: bstack11111l1l1l_opy_
+    previous_state: bstack11111l1l1l_opy_
+    bstack1llllll1ll1_opy_: datetime
+    bstack1lllllll1l1_opy_: datetime
     def __init__(
         self,
-        platform_index: int,
+        context: bstack11111lll1l_opy_,
+        framework_name: str,
+        framework_version: str,
+        state=bstack11111l1l1l_opy_.NONE,
+    ):
+        super().__init__(context)
+        self.framework_name = framework_name
+        self.framework_version = framework_version
+        self.state = state
+        self.previous_state = bstack11111l1l1l_opy_.NONE
+        self.bstack1llllll1ll1_opy_ = datetime.now(tz=timezone.utc)
+        self.bstack1lllllll1l1_opy_ = datetime.now(tz=timezone.utc)
+    def bstack111111111l_opy_(self, bstack1lllllll1ll_opy_: bstack11111l1l1l_opy_):
+        bstack11111111l1_opy_ = bstack11111l1l1l_opy_(bstack1lllllll1ll_opy_).name
+        if not bstack11111111l1_opy_:
+            return False
+        if bstack1lllllll1ll_opy_ == self.state:
+            return False
+        if self.state == bstack11111l1l1l_opy_.bstack111111l1l1_opy_: # bstack11111111ll_opy_ bstack1llllllll11_opy_ for bstack11111l11l1_opy_ in bstack11111ll1ll_opy_, it bstack111111ll11_opy_ bstack11111l1ll1_opy_ bstack1llllll1l11_opy_ times bstack1lllll1llll_opy_ a new state
+            return True
+        if (
+            bstack1lllllll1ll_opy_ == bstack11111l1l1l_opy_.NONE
+            or (self.state != bstack11111l1l1l_opy_.NONE and bstack1lllllll1ll_opy_ == bstack11111l1l1l_opy_.bstack11111ll111_opy_)
+            or (self.state < bstack11111l1l1l_opy_.bstack11111ll111_opy_ and bstack1lllllll1ll_opy_ == bstack11111l1l1l_opy_.bstack111111llll_opy_)
+            or (self.state < bstack11111l1l1l_opy_.bstack11111ll111_opy_ and bstack1lllllll1ll_opy_ == bstack11111l1l1l_opy_.QUIT)
+        ):
+            raise ValueError(bstack1llll1l_opy_ (u"ࠥ࡭ࡳࡼࡡ࡭࡫ࡧࠤࡸࡺࡡࡵࡧࠣࡸࡷࡧ࡮ࡴ࡫ࡷ࡭ࡴࡴ࠺ࠡࠤဳ") + str(self.state) + bstack1llll1l_opy_ (u"ࠦࠥࡃ࠾ࠡࠤဴ") + str(bstack1lllllll1ll_opy_))
+        self.previous_state = self.state
+        self.state = bstack1lllllll1ll_opy_
+        self.bstack1lllllll1l1_opy_ = datetime.now(tz=timezone.utc)
+        return True
+class bstack11111lll11_opy_(abc.ABC):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    bstack1llllllll1l_opy_: Dict[str, bstack1111111ll1_opy_] = dict()
+    framework_name: str
+    framework_version: str
+    classes: List[Type]
+    def __init__(
+        self,
         framework_name: str,
         framework_version: str,
         classes: List[Type],
-        methods=[bstack11111l_opy_ (u"ࠣ࡮ࡤࡹࡳࡩࡨࠣ፝"), bstack11111l_opy_ (u"ࠤࡦࡳࡳࡴࡥࡤࡶࠥ፞"), bstack11111l_opy_ (u"ࠥࡲࡪࡽ࡟ࡱࡣࡪࡩࠧ፟"), bstack11111l_opy_ (u"ࠦࡨࡲ࡯ࡴࡧࠥ፠"), bstack11111l_opy_ (u"ࠧࡪࡩࡴࡲࡤࡸࡨ࡮ࠢ፡")],
     ):
-        super().__init__(
-            framework_name,
-            framework_version,
-            classes,
-        )
-        self.platform_index = platform_index
-        self.bstack111111l111_opy_(methods)
-    def bstack1111111ll1_opy_(self, instance: bstack111111ll1l_opy_, method_name: str, bstack11111111l1_opy_: timedelta, *args, **kwargs):
-        pass
-    def bstack11111ll1l1_opy_(
+        self.framework_name = framework_name
+        self.framework_version = framework_version
+        self.classes = classes
+    @abc.abstractmethod
+    def bstack11111l1l11_opy_(self, instance: bstack1111111ll1_opy_, method_name: str, bstack111111l1ll_opy_: timedelta, *args, **kwargs):
+        return
+    @abc.abstractmethod
+    def bstack111111l111_opy_(
+        self, method_name, previous_state: bstack11111l1l1l_opy_, *args, **kwargs
+    ) -> bstack11111l1l1l_opy_:
+        return
+    @abc.abstractmethod
+    def bstack1111111l1l_opy_(
         self,
         target: object,
-        exec: Tuple[bstack111111ll1l_opy_, str],
-        bstack1111111111_opy_: Tuple[bstack1111111l1l_opy_, bstack1111l11l11_opy_],
+        exec: Tuple[bstack1111111ll1_opy_, str],
+        bstack11111l1lll_opy_: Tuple[bstack11111l1l1l_opy_, bstack1llllll1l1l_opy_],
         result: Any,
         *args,
         **kwargs,
-    ) -> Callable[..., Any]:
-        instance, method_name = exec
-        bstack111111l1ll_opy_, bstack1l11lllll11_opy_ = bstack1111111111_opy_
-        bstack1l11llll1l1_opy_ = bstack1llllll1lll_opy_.bstack1l11llllll1_opy_(bstack1111111111_opy_)
-        if bstack1l11llll1l1_opy_ in bstack1llllll1lll_opy_.bstack1l1l11111l1_opy_:
-            bstack1l1l111111l_opy_ = None
-            for callback in bstack1llllll1lll_opy_.bstack1l1l11111l1_opy_[bstack1l11llll1l1_opy_]:
-                try:
-                    bstack1l1l1111111_opy_ = callback(self, target, exec, bstack1111111111_opy_, result, *args, **kwargs)
-                    if bstack1l1l111111l_opy_ == None:
-                        bstack1l1l111111l_opy_ = bstack1l1l1111111_opy_
-                except Exception as e:
-                    self.logger.error(bstack11111l_opy_ (u"ࠨࡥࡳࡴࡲࡶࠥ࡯࡮ࡷࡱ࡮࡭ࡳ࡭ࠠࡤࡣ࡯ࡰࡧࡧࡣ࡬࠼ࠣࠦ።") + str(e) + bstack11111l_opy_ (u"ࠢࠣ፣"))
-                    traceback.print_exc()
-            if bstack1l11lllll11_opy_ == bstack1111l11l11_opy_.PRE and callable(bstack1l1l111111l_opy_):
-                return bstack1l1l111111l_opy_
-            elif bstack1l11lllll11_opy_ == bstack1111l11l11_opy_.POST and bstack1l1l111111l_opy_:
-                return bstack1l1l111111l_opy_
-    def bstack11111l1lll_opy_(
-        self, method_name, previous_state: bstack1111111l1l_opy_, *args, **kwargs
-    ) -> bstack1111111l1l_opy_:
-        if method_name == bstack11111l_opy_ (u"ࠨ࡮ࡤࡹࡳࡩࡨࠨ፤") or method_name == bstack11111l_opy_ (u"ࠩࡦࡳࡳࡴࡥࡤࡶࠪ፥") or method_name == bstack11111l_opy_ (u"ࠪࡲࡪࡽ࡟ࡱࡣࡪࡩࠬ፦"):
-            return bstack1111111l1l_opy_.bstack1111l11ll1_opy_
-        if method_name == bstack11111l_opy_ (u"ࠫࡩ࡯ࡳࡱࡣࡷࡧ࡭࠭፧"):
-            return bstack1111111l1l_opy_.bstack11111l1l1l_opy_
-        if method_name == bstack11111l_opy_ (u"ࠬࡩ࡬ࡰࡵࡨࠫ፨"):
-            return bstack1111111l1l_opy_.QUIT
-        return bstack1111111l1l_opy_.NONE
+    ) -> Callable:
+        return
+    def bstack11111l111l_opy_(self, bstack1llllll1111_opy_: List[str]):
+        for clazz in self.classes:
+            for method_name in bstack1llllll1111_opy_:
+                bstack11111ll1l1_opy_ = getattr(clazz, method_name, None)
+                if not callable(bstack11111ll1l1_opy_):
+                    self.logger.warning(bstack1llll1l_opy_ (u"ࠧࡻ࡮ࡱࡣࡷࡧ࡭࡫ࡤࠡ࡯ࡨࡸ࡭ࡵࡤ࠻ࠢࠥဵ") + str(method_name) + bstack1llll1l_opy_ (u"ࠨࠢံ"))
+                    continue
+                bstack11111l11ll_opy_ = self.bstack111111l111_opy_(
+                    method_name, previous_state=bstack11111l1l1l_opy_.NONE
+                )
+                bstack1111111lll_opy_ = self.bstack1111111111_opy_(
+                    method_name,
+                    (bstack11111l11ll_opy_ if bstack11111l11ll_opy_ else bstack11111l1l1l_opy_.NONE),
+                    bstack11111ll1l1_opy_,
+                )
+                if not callable(bstack1111111lll_opy_):
+                    self.logger.warning(bstack1llll1l_opy_ (u"ࠢ࡮ࡧࡷ࡬ࡴࡪࠠ࡯ࡱࡷࠤࡵࡧࡴࡤࡪࡨࡨ࠿ࠦࡻ࡮ࡧࡷ࡬ࡴࡪ࡟࡯ࡣࡰࡩࢂࠦࠨࡼࡵࡨࡰ࡫࠴ࡦࡳࡣࡰࡩࡼࡵࡲ࡬ࡡࡱࡥࡲ࡫ࡽ࠻့ࠢࠥ") + str(self.framework_version) + bstack1llll1l_opy_ (u"ࠣࠫࠥး"))
+                    continue
+                setattr(clazz, method_name, bstack1111111lll_opy_)
+    def bstack1111111111_opy_(
+        self,
+        method_name: str,
+        bstack11111l11ll_opy_: bstack11111l1l1l_opy_,
+        bstack11111ll1l1_opy_: Callable,
+    ):
+        def wrapped(target, *args, **kwargs):
+            bstack1l11l1lll_opy_ = datetime.now()
+            (bstack11111l11ll_opy_,) = wrapped.__vars__
+            bstack11111l11ll_opy_ = (
+                bstack11111l11ll_opy_
+                if bstack11111l11ll_opy_ and bstack11111l11ll_opy_ != bstack11111l1l1l_opy_.NONE
+                else self.bstack111111l111_opy_(method_name, previous_state=bstack11111l11ll_opy_, *args, **kwargs)
+            )
+            if bstack11111l11ll_opy_ == bstack11111l1l1l_opy_.bstack11111ll111_opy_:
+                ctx = bstack1llllll1lll_opy_.create_context(self.bstack11111ll11l_opy_(target))
+                if not self.bstack111111lll1_opy_() or ctx.id not in bstack11111lll11_opy_.bstack1llllllll1l_opy_:
+                    bstack11111lll11_opy_.bstack1llllllll1l_opy_[ctx.id] = bstack1111111ll1_opy_(
+                        ctx, self.framework_name, self.framework_version, bstack11111l11ll_opy_
+                    )
+                self.logger.debug(bstack1llll1l_opy_ (u"ࠤࡺࡶࡦࡶࡰࡦࡦࠣࡱࡪࡺࡨࡰࡦࠣࡧࡷ࡫ࡡࡵࡧࡧ࠾ࠥࢁࡴࡢࡴࡪࡩࡹ࠴࡟ࡠࡥ࡯ࡥࡸࡹ࡟ࡠࡿࠣࡱࡪࡺࡨࡰࡦࡢࡲࡦࡳࡥ࠾ࡽࡰࡩࡹ࡮࡯ࡥࡡࡱࡥࡲ࡫ࡽࠡࡨࡵࡥࡲ࡫ࡷࡰࡴ࡮ࡣࡸࡺࡡࡵࡧࡀࡿ࡫ࡸࡡ࡮ࡧࡺࡳࡷࡱ࡟ࡴࡶࡤࡸࡪࢃࠠࡤࡶࡻࡁࢀࡩࡴࡹ࠰࡬ࡨࢂࠦࡩ࡯ࡵࡷࡥࡳࡩࡥࡴ࠿္ࠥ") + str(bstack11111lll11_opy_.bstack1llllllll1l_opy_.keys()) + bstack1llll1l_opy_ (u"်ࠥࠦ"))
+            else:
+                self.logger.debug(bstack1llll1l_opy_ (u"ࠦࡼࡸࡡࡱࡲࡨࡨࠥࡳࡥࡵࡪࡲࡨࠥ࡯࡮ࡷࡱ࡮ࡩࡩࡀࠠࡼࡶࡤࡶ࡬࡫ࡴ࠯ࡡࡢࡧࡱࡧࡳࡴࡡࡢࢁࠥࡳࡥࡵࡪࡲࡨࡤࡴࡡ࡮ࡧࡀࡿࡲ࡫ࡴࡩࡱࡧࡣࡳࡧ࡭ࡦࡿࠣࡪࡷࡧ࡭ࡦࡹࡲࡶࡰࡥࡳࡵࡣࡷࡩࡂࢁࡦࡳࡣࡰࡩࡼࡵࡲ࡬ࡡࡶࡸࡦࡺࡥࡾࠢ࡬ࡲࡸࡺࡡ࡯ࡥࡨࡷࡂࠨျ") + str(bstack11111lll11_opy_.bstack1llllllll1l_opy_.keys()) + bstack1llll1l_opy_ (u"ࠧࠨြ"))
+            instance = bstack11111lll11_opy_.bstack111111l11l_opy_(self.bstack11111ll11l_opy_(target))
+            if bstack11111l11ll_opy_ == bstack11111l1l1l_opy_.NONE or not instance:
+                ctx = bstack1llllll1lll_opy_.create_context(self.bstack11111ll11l_opy_(target))
+                self.logger.warning(bstack1llll1l_opy_ (u"ࠨࡷࡳࡣࡳࡴࡪࡪࠠ࡮ࡧࡷ࡬ࡴࡪࠠࡶࡰࡷࡶࡦࡩ࡫ࡦࡦ࠽ࠤࢀࡳࡥࡵࡪࡲࡨࡤࡴࡡ࡮ࡧࢀࠤ࡫ࡸࡡ࡮ࡧࡺࡳࡷࡱ࡟ࡴࡶࡤࡸࡪࡃࡻࡧࡴࡤࡱࡪࡽ࡯ࡳ࡭ࡢࡷࡹࡧࡴࡦࡿࠣࡧࡹࡾ࠽ࡼࡥࡷࡼࢂࠦࡩ࡯ࡵࡷࡥࡳࡩࡥࡴ࠿ࠥွ") + str(bstack11111lll11_opy_.bstack1llllllll1l_opy_.keys()) + bstack1llll1l_opy_ (u"ࠢࠣှ"))
+                return bstack11111ll1l1_opy_(target, *args, **kwargs)
+            bstack1llllll11ll_opy_ = self.bstack1111111l1l_opy_(
+                target,
+                (instance, method_name),
+                (bstack11111l11ll_opy_, bstack1llllll1l1l_opy_.PRE),
+                None,
+                *args,
+                **kwargs,
+            )
+            if instance.bstack111111111l_opy_(bstack11111l11ll_opy_):
+                self.logger.debug(bstack1llll1l_opy_ (u"ࠣࡣࡳࡴࡱ࡯ࡥࡥࠢࡶࡸࡦࡺࡥ࠮ࡶࡵࡥࡳࡹࡩࡵ࡫ࡲࡲ࠿ࠦࡻࡪࡰࡶࡸࡦࡴࡣࡦ࠰ࡳࡶࡪࡼࡩࡰࡷࡶࡣࡸࡺࡡࡵࡧࢀࠤࡂࡄࠠࡼ࡫ࡱࡷࡹࡧ࡮ࡤࡧ࠱ࡷࡹࡧࡴࡦࡿࠣࠬࢀࡺࡹࡱࡧࠫࡸࡦࡸࡧࡦࡶࠬࢁ࠳ࢁ࡭ࡦࡶ࡫ࡳࡩࡥ࡮ࡢ࡯ࡨࢁࠥࢁࡡࡳࡩࡶࢁ࠮࡛ࠦࠣဿ") + str(instance.ref()) + bstack1llll1l_opy_ (u"ࠤࡠࠦ၀"))
+            result = (
+                bstack1llllll11ll_opy_(target, bstack11111ll1l1_opy_, *args, **kwargs)
+                if callable(bstack1llllll11ll_opy_)
+                else bstack11111ll1l1_opy_(target, *args, **kwargs)
+            )
+            bstack11111l1111_opy_ = self.bstack1111111l1l_opy_(
+                target,
+                (instance, method_name),
+                (bstack11111l11ll_opy_, bstack1llllll1l1l_opy_.POST),
+                result,
+                *args,
+                **kwargs,
+            )
+            self.bstack11111l1l11_opy_(instance, method_name, datetime.now() - bstack1l11l1lll_opy_, *args, **kwargs)
+            return bstack11111l1111_opy_ if bstack11111l1111_opy_ else result
+        wrapped.__name__ = method_name
+        wrapped.__vars__ = (bstack11111l11ll_opy_,)
+        return wrapped
     @staticmethod
-    def bstack1l11llllll1_opy_(bstack1111111111_opy_: Tuple[bstack1111111l1l_opy_, bstack1111l11l11_opy_]):
-        return bstack11111l_opy_ (u"ࠨ࠺ࠣ፩").join((bstack1111111l1l_opy_(bstack1111111111_opy_[0]).name, bstack1111l11l11_opy_(bstack1111111111_opy_[1]).name))
+    def bstack111111l11l_opy_(target: object, strict=True):
+        ctx = bstack1llllll1lll_opy_.create_context(target)
+        instance = bstack11111lll11_opy_.bstack1llllllll1l_opy_.get(ctx.id, None)
+        if instance and instance.bstack1llllllllll_opy_(target):
+            return instance
+        return instance if instance and not strict else None
     @staticmethod
-    def bstack1ll1l111111_opy_(bstack1111111111_opy_: Tuple[bstack1111111l1l_opy_, bstack1111l11l11_opy_], callback: Callable):
-        bstack1l11llll1l1_opy_ = bstack1llllll1lll_opy_.bstack1l11llllll1_opy_(bstack1111111111_opy_)
-        if not bstack1l11llll1l1_opy_ in bstack1llllll1lll_opy_.bstack1l1l11111l1_opy_:
-            bstack1llllll1lll_opy_.bstack1l1l11111l1_opy_[bstack1l11llll1l1_opy_] = []
-        bstack1llllll1lll_opy_.bstack1l1l11111l1_opy_[bstack1l11llll1l1_opy_].append(callback)
-    @staticmethod
-    def bstack1ll1l11llll_opy_(method_name: str):
-        return True
-    @staticmethod
-    def bstack1ll1l111ll1_opy_(method_name: str, *args) -> bool:
-        return True
-    @staticmethod
-    def bstack1ll1ll11ll1_opy_(instance: bstack111111ll1l_opy_, default_value=None):
-        return bstack11111llll1_opy_.bstack1111111l11_opy_(instance, bstack1llllll1lll_opy_.bstack1l1ll11ll1l_opy_, default_value)
-    @staticmethod
-    def bstack1ll1l1111ll_opy_(instance: bstack111111ll1l_opy_) -> bool:
-        return True
-    @staticmethod
-    def bstack1ll1l1lllll_opy_(instance: bstack111111ll1l_opy_, default_value=None):
-        return bstack11111llll1_opy_.bstack1111111l11_opy_(instance, bstack1llllll1lll_opy_.bstack1l1ll111ll1_opy_, default_value)
-    @staticmethod
-    def bstack1ll1l1l1111_opy_(*args):
-        return args[0] if args and type(args) in [list, tuple] and isinstance(args[0], str) else None
-    @staticmethod
-    def bstack1ll1l1ll11l_opy_(method_name: str, *args):
-        if not bstack1llllll1lll_opy_.bstack1ll1l11llll_opy_(method_name):
-            return False
-        if not bstack1llllll1lll_opy_.bstack1l11llll1ll_opy_ in bstack1llllll1lll_opy_.bstack1l1l1l1111l_opy_(*args):
-            return False
-        bstack1ll11l1lll1_opy_ = bstack1llllll1lll_opy_.bstack1ll11ll11ll_opy_(*args)
-        return bstack1ll11l1lll1_opy_ and bstack11111l_opy_ (u"ࠢࡴࡥࡵ࡭ࡵࡺࠢ፪") in bstack1ll11l1lll1_opy_ and bstack11111l_opy_ (u"ࠣࡤࡵࡳࡼࡹࡥࡳࡵࡷࡥࡨࡱ࡟ࡦࡺࡨࡧࡺࡺ࡯ࡳࠤ፫") in bstack1ll11l1lll1_opy_[bstack11111l_opy_ (u"ࠤࡶࡧࡷ࡯ࡰࡵࠤ፬")]
-    @staticmethod
-    def bstack1ll1l11lll1_opy_(method_name: str, *args):
-        if not bstack1llllll1lll_opy_.bstack1ll1l11llll_opy_(method_name):
-            return False
-        if not bstack1llllll1lll_opy_.bstack1l11llll1ll_opy_ in bstack1llllll1lll_opy_.bstack1l1l1l1111l_opy_(*args):
-            return False
-        bstack1ll11l1lll1_opy_ = bstack1llllll1lll_opy_.bstack1ll11ll11ll_opy_(*args)
-        return (
-            bstack1ll11l1lll1_opy_
-            and bstack11111l_opy_ (u"ࠥࡷࡨࡸࡩࡱࡶࠥ፭") in bstack1ll11l1lll1_opy_
-            and bstack11111l_opy_ (u"ࠦࡧࡸ࡯ࡸࡵࡨࡶࡸࡺࡡࡤ࡭ࡢࡥࡨࡩࡥࡴࡵ࡬ࡦ࡮ࡲࡩࡵࡻࡢࡥࡺࡺ࡯࡮ࡣࡷ࡭ࡴࡴ࡟ࡴࡥࡵ࡭ࡵࡺࠢ፮") in bstack1ll11l1lll1_opy_[bstack11111l_opy_ (u"ࠧࡹࡣࡳ࡫ࡳࡸࠧ፯")]
+    def bstack1llllll11l1_opy_(
+        ctx: bstack11111lll1l_opy_, state: bstack11111l1l1l_opy_, reverse=True
+    ) -> List[bstack1111111ll1_opy_]:
+        return sorted(
+            filter(
+                lambda t: t.state == state
+                and t.context.thread_id == ctx.thread_id
+                and t.context.process_id == ctx.process_id,
+                bstack11111lll11_opy_.bstack1llllllll1l_opy_.values(),
+            ),
+            key=lambda t: t.bstack1llllll1ll1_opy_,
+            reverse=reverse,
         )
     @staticmethod
-    def bstack1l1l1l1111l_opy_(*args):
-        return str(bstack1llllll1lll_opy_.bstack1ll1l1l1111_opy_(*args)).lower()
+    def bstack111111ll1l_opy_(instance: bstack1111111ll1_opy_, key: str):
+        return instance and key in instance.data
+    @staticmethod
+    def bstack1lllllllll1_opy_(instance: bstack1111111ll1_opy_, key: str, default_value=None):
+        return instance.data.get(key, default_value) if instance else default_value
+    @staticmethod
+    def bstack111111111l_opy_(instance: bstack1111111ll1_opy_, key: str, value: Any) -> bool:
+        instance.data[key] = value
+        bstack11111lll11_opy_.logger.debug(bstack1llll1l_opy_ (u"ࠥࡷࡪࡺ࡟ࡴࡶࡤࡸࡪࡀࠠࡪࡰࡶࡸࡦࡴࡣࡦ࠿ࡾ࡭ࡳࡹࡴࡢࡰࡦࡩ࠳ࡸࡥࡧࠪࠬࢁࠥࡱࡥࡺ࠿ࡾ࡯ࡪࡿࡽࠡࡸࡤࡰࡺ࡫࠽ࠣ၁") + str(value) + bstack1llll1l_opy_ (u"ࠦࠧ၂"))
+        return True
+    @staticmethod
+    def get_data(key: str, target: object, strict=True, default_value=None):
+        instance = bstack11111lll11_opy_.bstack111111l11l_opy_(target, strict)
+        return bstack11111lll11_opy_.bstack1lllllllll1_opy_(instance, key, default_value)
+    @staticmethod
+    def set_data(key: str, value: Any, target: object, strict=True):
+        instance = bstack11111lll11_opy_.bstack111111l11l_opy_(target, strict)
+        if not instance:
+            return False
+        instance.data[key] = value
+        return True
+    def bstack111111lll1_opy_(self):
+        return self.framework_name == bstack1llll1l_opy_ (u"ࠬࡶ࡬ࡢࡻࡺࡶ࡮࡭ࡨࡵࠩ၃")
+    def bstack11111ll11l_opy_(self, target):
+        return target if not self.bstack111111lll1_opy_() else self.bstack1llllll111l_opy_()
+    @staticmethod
+    def bstack1llllll111l_opy_():
+        return str(os.getpid()) + str(threading.get_ident())

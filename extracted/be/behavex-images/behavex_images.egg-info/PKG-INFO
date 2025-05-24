@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: behavex-images
-Version: 3.1.1
+Version: 3.2.0
 Summary: BehaveX extension library to attach images to the test execution report.
 Home-page: https://github.com/abmercado19/behavex-images
 Author: Hernan Rey, Ana Mercado

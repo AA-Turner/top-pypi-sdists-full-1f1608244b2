@@ -1,7 +1,7 @@
 r'''
 # `tfe_workspace_run`
 
-Refer to the Terraform Registry for docs: [`tfe_workspace_run`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run).
+Refer to the Terraform Registry for docs: [`tfe_workspace_run`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class WorkspaceRun(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.workspaceRun.WorkspaceRun",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run tfe_workspace_run}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run tfe_workspace_run}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class WorkspaceRun(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run tfe_workspace_run} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run tfe_workspace_run} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#workspace_id WorkspaceRun#workspace_id}.
-        :param apply: apply block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#apply WorkspaceRun#apply}
-        :param destroy: destroy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#destroy WorkspaceRun#destroy}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#id WorkspaceRun#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#workspace_id WorkspaceRun#workspace_id}.
+        :param apply: apply block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#apply WorkspaceRun#apply}
+        :param destroy: destroy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#destroy WorkspaceRun#destroy}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#id WorkspaceRun#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class WorkspaceRun(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the WorkspaceRun to import.
-        :param import_from_id: The id of the existing WorkspaceRun that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing WorkspaceRun that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the WorkspaceRun to import is found.
         '''
         if __debug__:
@@ -135,12 +135,12 @@ class WorkspaceRun(
         wait_for_run: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
-        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry WorkspaceRun#retry}.
-        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
-        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
-        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
-        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
+        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
+        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry WorkspaceRun#retry}.
+        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
+        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
+        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
+        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
         '''
         value = WorkspaceRunApply(
             manual_confirm=manual_confirm,
@@ -165,12 +165,12 @@ class WorkspaceRun(
         wait_for_run: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
-        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry WorkspaceRun#retry}.
-        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
-        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
-        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
-        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
+        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
+        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry WorkspaceRun#retry}.
+        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
+        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
+        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
+        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
         '''
         value = WorkspaceRunDestroy(
             manual_confirm=manual_confirm,
@@ -287,12 +287,12 @@ class WorkspaceRunApply:
         wait_for_run: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
-        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry WorkspaceRun#retry}.
-        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
-        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
-        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
-        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
+        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
+        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry WorkspaceRun#retry}.
+        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
+        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
+        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
+        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8433703e98ec657a31e080b2baeaa66a5e7eb8c68b75a1c6c3df385c478c8782)
@@ -320,7 +320,7 @@ class WorkspaceRunApply:
     def manual_confirm(
         self,
     ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.'''
         result = self._values.get("manual_confirm")
         assert result is not None, "Required property 'manual_confirm' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
@@ -329,25 +329,25 @@ class WorkspaceRunApply:
     def retry(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry WorkspaceRun#retry}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry WorkspaceRun#retry}.'''
         result = self._values.get("retry")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def retry_attempts(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.'''
         result = self._values.get("retry_attempts")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def retry_backoff_max(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.'''
         result = self._values.get("retry_backoff_max")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def retry_backoff_min(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.'''
         result = self._values.get("retry_backoff_min")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -355,7 +355,7 @@ class WorkspaceRunApply:
     def wait_for_run(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.'''
         result = self._values.get("wait_for_run")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -584,10 +584,10 @@ class WorkspaceRunConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#workspace_id WorkspaceRun#workspace_id}.
-        :param apply: apply block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#apply WorkspaceRun#apply}
-        :param destroy: destroy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#destroy WorkspaceRun#destroy}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#id WorkspaceRun#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#workspace_id WorkspaceRun#workspace_id}.
+        :param apply: apply block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#apply WorkspaceRun#apply}
+        :param destroy: destroy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#destroy WorkspaceRun#destroy}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#id WorkspaceRun#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -698,7 +698,7 @@ class WorkspaceRunConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def workspace_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#workspace_id WorkspaceRun#workspace_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#workspace_id WorkspaceRun#workspace_id}.'''
         result = self._values.get("workspace_id")
         assert result is not None, "Required property 'workspace_id' is missing"
         return typing.cast(builtins.str, result)
@@ -707,7 +707,7 @@ class WorkspaceRunConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def apply(self) -> typing.Optional[WorkspaceRunApply]:
         '''apply block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#apply WorkspaceRun#apply}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#apply WorkspaceRun#apply}
         '''
         result = self._values.get("apply")
         return typing.cast(typing.Optional[WorkspaceRunApply], result)
@@ -716,14 +716,14 @@ class WorkspaceRunConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def destroy(self) -> typing.Optional["WorkspaceRunDestroy"]:
         '''destroy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#destroy WorkspaceRun#destroy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#destroy WorkspaceRun#destroy}
         '''
         result = self._values.get("destroy")
         return typing.cast(typing.Optional["WorkspaceRunDestroy"], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#id WorkspaceRun#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#id WorkspaceRun#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -767,12 +767,12 @@ class WorkspaceRunDestroy:
         wait_for_run: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
-        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry WorkspaceRun#retry}.
-        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
-        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
-        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
-        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
+        :param manual_confirm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.
+        :param retry: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry WorkspaceRun#retry}.
+        :param retry_attempts: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.
+        :param retry_backoff_max: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.
+        :param retry_backoff_min: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.
+        :param wait_for_run: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__95cc0af3725dc167b805847eee490883953cbf554cea9913046bb7ad3c14ea80)
@@ -800,7 +800,7 @@ class WorkspaceRunDestroy:
     def manual_confirm(
         self,
     ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#manual_confirm WorkspaceRun#manual_confirm}.'''
         result = self._values.get("manual_confirm")
         assert result is not None, "Required property 'manual_confirm' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
@@ -809,25 +809,25 @@ class WorkspaceRunDestroy:
     def retry(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry WorkspaceRun#retry}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry WorkspaceRun#retry}.'''
         result = self._values.get("retry")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def retry_attempts(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_attempts WorkspaceRun#retry_attempts}.'''
         result = self._values.get("retry_attempts")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def retry_backoff_max(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_max WorkspaceRun#retry_backoff_max}.'''
         result = self._values.get("retry_backoff_max")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def retry_backoff_min(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#retry_backoff_min WorkspaceRun#retry_backoff_min}.'''
         result = self._values.get("retry_backoff_min")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -835,7 +835,7 @@ class WorkspaceRunDestroy:
     def wait_for_run(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run#wait_for_run WorkspaceRun#wait_for_run}.'''
         result = self._values.get("wait_for_run")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 

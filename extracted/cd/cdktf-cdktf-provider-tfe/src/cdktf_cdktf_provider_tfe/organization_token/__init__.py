@@ -1,7 +1,7 @@
 r'''
 # `tfe_organization_token`
 
-Refer to the Terraform Registry for docs: [`tfe_organization_token`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token).
+Refer to the Terraform Registry for docs: [`tfe_organization_token`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OrganizationToken(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.organizationToken.OrganizationToken",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token tfe_organization_token}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token tfe_organization_token}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class OrganizationToken(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token tfe_organization_token} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token tfe_organization_token} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param expired_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#expired_at OrganizationToken#expired_at}.
-        :param force_regenerate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#force_regenerate OrganizationToken#force_regenerate}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#id OrganizationToken#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#organization OrganizationToken#organization}.
+        :param expired_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#expired_at OrganizationToken#expired_at}.
+        :param force_regenerate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#force_regenerate OrganizationToken#force_regenerate}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#id OrganizationToken#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#organization OrganizationToken#organization}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class OrganizationToken(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OrganizationToken to import.
-        :param import_from_id: The id of the existing OrganizationToken that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OrganizationToken that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OrganizationToken to import is found.
         '''
         if __debug__:
@@ -274,10 +274,10 @@ class OrganizationTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param expired_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#expired_at OrganizationToken#expired_at}.
-        :param force_regenerate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#force_regenerate OrganizationToken#force_regenerate}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#id OrganizationToken#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#organization OrganizationToken#organization}.
+        :param expired_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#expired_at OrganizationToken#expired_at}.
+        :param force_regenerate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#force_regenerate OrganizationToken#force_regenerate}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#id OrganizationToken#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#organization OrganizationToken#organization}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -384,7 +384,7 @@ class OrganizationTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def expired_at(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#expired_at OrganizationToken#expired_at}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#expired_at OrganizationToken#expired_at}.'''
         result = self._values.get("expired_at")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -392,13 +392,13 @@ class OrganizationTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def force_regenerate(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#force_regenerate OrganizationToken#force_regenerate}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#force_regenerate OrganizationToken#force_regenerate}.'''
         result = self._values.get("force_regenerate")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#id OrganizationToken#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#id OrganizationToken#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -408,7 +408,7 @@ class OrganizationTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_token#organization OrganizationToken#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_token#organization OrganizationToken#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 

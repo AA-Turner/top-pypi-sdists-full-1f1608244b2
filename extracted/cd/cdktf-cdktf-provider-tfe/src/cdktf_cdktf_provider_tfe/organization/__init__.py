@@ -1,7 +1,7 @@
 r'''
 # `tfe_organization`
 
-Refer to the Terraform Registry for docs: [`tfe_organization`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization).
+Refer to the Terraform Registry for docs: [`tfe_organization`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Organization(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.organization.Organization",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization tfe_organization}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization tfe_organization}.'''
 
     def __init__(
         self,
@@ -72,23 +72,23 @@ class Organization(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization tfe_organization} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization tfe_organization} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#email Organization#email}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#name Organization#name}.
-        :param aggregated_commit_status_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#aggregated_commit_status_enabled Organization#aggregated_commit_status_enabled}.
-        :param allow_force_delete_workspaces: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#allow_force_delete_workspaces Organization#allow_force_delete_workspaces}.
-        :param assessments_enforced: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#assessments_enforced Organization#assessments_enforced}.
-        :param collaborator_auth_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#collaborator_auth_policy Organization#collaborator_auth_policy}.
-        :param cost_estimation_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#cost_estimation_enabled Organization#cost_estimation_enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#id Organization#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param owners_team_saml_role_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#owners_team_saml_role_id Organization#owners_team_saml_role_id}.
-        :param send_passing_statuses_for_untriggered_speculative_plans: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#send_passing_statuses_for_untriggered_speculative_plans Organization#send_passing_statuses_for_untriggered_speculative_plans}.
-        :param session_remember_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#session_remember_minutes Organization#session_remember_minutes}.
-        :param session_timeout_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#session_timeout_minutes Organization#session_timeout_minutes}.
-        :param speculative_plan_management_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#speculative_plan_management_enabled Organization#speculative_plan_management_enabled}.
+        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#email Organization#email}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#name Organization#name}.
+        :param aggregated_commit_status_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#aggregated_commit_status_enabled Organization#aggregated_commit_status_enabled}.
+        :param allow_force_delete_workspaces: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#allow_force_delete_workspaces Organization#allow_force_delete_workspaces}.
+        :param assessments_enforced: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#assessments_enforced Organization#assessments_enforced}.
+        :param collaborator_auth_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#collaborator_auth_policy Organization#collaborator_auth_policy}.
+        :param cost_estimation_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#cost_estimation_enabled Organization#cost_estimation_enabled}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#id Organization#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param owners_team_saml_role_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#owners_team_saml_role_id Organization#owners_team_saml_role_id}.
+        :param send_passing_statuses_for_untriggered_speculative_plans: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#send_passing_statuses_for_untriggered_speculative_plans Organization#send_passing_statuses_for_untriggered_speculative_plans}.
+        :param session_remember_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#session_remember_minutes Organization#session_remember_minutes}.
+        :param session_timeout_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#session_timeout_minutes Organization#session_timeout_minutes}.
+        :param speculative_plan_management_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#speculative_plan_management_enabled Organization#speculative_plan_management_enabled}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -139,7 +139,7 @@ class Organization(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Organization to import.
-        :param import_from_id: The id of the existing Organization that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Organization that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Organization to import is found.
         '''
         if __debug__:
@@ -535,19 +535,19 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#email Organization#email}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#name Organization#name}.
-        :param aggregated_commit_status_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#aggregated_commit_status_enabled Organization#aggregated_commit_status_enabled}.
-        :param allow_force_delete_workspaces: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#allow_force_delete_workspaces Organization#allow_force_delete_workspaces}.
-        :param assessments_enforced: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#assessments_enforced Organization#assessments_enforced}.
-        :param collaborator_auth_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#collaborator_auth_policy Organization#collaborator_auth_policy}.
-        :param cost_estimation_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#cost_estimation_enabled Organization#cost_estimation_enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#id Organization#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param owners_team_saml_role_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#owners_team_saml_role_id Organization#owners_team_saml_role_id}.
-        :param send_passing_statuses_for_untriggered_speculative_plans: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#send_passing_statuses_for_untriggered_speculative_plans Organization#send_passing_statuses_for_untriggered_speculative_plans}.
-        :param session_remember_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#session_remember_minutes Organization#session_remember_minutes}.
-        :param session_timeout_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#session_timeout_minutes Organization#session_timeout_minutes}.
-        :param speculative_plan_management_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#speculative_plan_management_enabled Organization#speculative_plan_management_enabled}.
+        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#email Organization#email}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#name Organization#name}.
+        :param aggregated_commit_status_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#aggregated_commit_status_enabled Organization#aggregated_commit_status_enabled}.
+        :param allow_force_delete_workspaces: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#allow_force_delete_workspaces Organization#allow_force_delete_workspaces}.
+        :param assessments_enforced: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#assessments_enforced Organization#assessments_enforced}.
+        :param collaborator_auth_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#collaborator_auth_policy Organization#collaborator_auth_policy}.
+        :param cost_estimation_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#cost_estimation_enabled Organization#cost_estimation_enabled}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#id Organization#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param owners_team_saml_role_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#owners_team_saml_role_id Organization#owners_team_saml_role_id}.
+        :param send_passing_statuses_for_untriggered_speculative_plans: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#send_passing_statuses_for_untriggered_speculative_plans Organization#send_passing_statuses_for_untriggered_speculative_plans}.
+        :param session_remember_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#session_remember_minutes Organization#session_remember_minutes}.
+        :param session_timeout_minutes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#session_timeout_minutes Organization#session_timeout_minutes}.
+        :param speculative_plan_management_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#speculative_plan_management_enabled Organization#speculative_plan_management_enabled}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -680,14 +680,14 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def email(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#email Organization#email}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#email Organization#email}.'''
         result = self._values.get("email")
         assert result is not None, "Required property 'email' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#name Organization#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#name Organization#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
@@ -696,7 +696,7 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aggregated_commit_status_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#aggregated_commit_status_enabled Organization#aggregated_commit_status_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#aggregated_commit_status_enabled Organization#aggregated_commit_status_enabled}.'''
         result = self._values.get("aggregated_commit_status_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -704,7 +704,7 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def allow_force_delete_workspaces(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#allow_force_delete_workspaces Organization#allow_force_delete_workspaces}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#allow_force_delete_workspaces Organization#allow_force_delete_workspaces}.'''
         result = self._values.get("allow_force_delete_workspaces")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -712,13 +712,13 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def assessments_enforced(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#assessments_enforced Organization#assessments_enforced}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#assessments_enforced Organization#assessments_enforced}.'''
         result = self._values.get("assessments_enforced")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def collaborator_auth_policy(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#collaborator_auth_policy Organization#collaborator_auth_policy}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#collaborator_auth_policy Organization#collaborator_auth_policy}.'''
         result = self._values.get("collaborator_auth_policy")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -726,13 +726,13 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def cost_estimation_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#cost_estimation_enabled Organization#cost_estimation_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#cost_estimation_enabled Organization#cost_estimation_enabled}.'''
         result = self._values.get("cost_estimation_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#id Organization#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#id Organization#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -742,7 +742,7 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def owners_team_saml_role_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#owners_team_saml_role_id Organization#owners_team_saml_role_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#owners_team_saml_role_id Organization#owners_team_saml_role_id}.'''
         result = self._values.get("owners_team_saml_role_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -750,19 +750,19 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def send_passing_statuses_for_untriggered_speculative_plans(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#send_passing_statuses_for_untriggered_speculative_plans Organization#send_passing_statuses_for_untriggered_speculative_plans}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#send_passing_statuses_for_untriggered_speculative_plans Organization#send_passing_statuses_for_untriggered_speculative_plans}.'''
         result = self._values.get("send_passing_statuses_for_untriggered_speculative_plans")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def session_remember_minutes(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#session_remember_minutes Organization#session_remember_minutes}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#session_remember_minutes Organization#session_remember_minutes}.'''
         result = self._values.get("session_remember_minutes")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def session_timeout_minutes(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#session_timeout_minutes Organization#session_timeout_minutes}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#session_timeout_minutes Organization#session_timeout_minutes}.'''
         result = self._values.get("session_timeout_minutes")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -770,7 +770,7 @@ class OrganizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def speculative_plan_management_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization#speculative_plan_management_enabled Organization#speculative_plan_management_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization#speculative_plan_management_enabled Organization#speculative_plan_management_enabled}.'''
         result = self._values.get("speculative_plan_management_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 

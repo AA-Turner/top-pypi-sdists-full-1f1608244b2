@@ -1,7 +1,7 @@
 r'''
 # `tfe_organization_membership`
 
-Refer to the Terraform Registry for docs: [`tfe_organization_membership`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership).
+Refer to the Terraform Registry for docs: [`tfe_organization_membership`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OrganizationMembership(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.organizationMembership.OrganizationMembership",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership tfe_organization_membership}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership tfe_organization_membership}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class OrganizationMembership(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership tfe_organization_membership} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership tfe_organization_membership} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#email OrganizationMembership#email}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#id OrganizationMembership#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#organization OrganizationMembership#organization}.
+        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#email OrganizationMembership#email}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#id OrganizationMembership#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#organization OrganizationMembership#organization}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class OrganizationMembership(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OrganizationMembership to import.
-        :param import_from_id: The id of the existing OrganizationMembership that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OrganizationMembership that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OrganizationMembership to import is found.
         '''
         if __debug__:
@@ -242,9 +242,9 @@ class OrganizationMembershipConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#email OrganizationMembership#email}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#id OrganizationMembership#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#organization OrganizationMembership#organization}.
+        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#email OrganizationMembership#email}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#id OrganizationMembership#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#organization OrganizationMembership#organization}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -348,14 +348,14 @@ class OrganizationMembershipConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def email(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#email OrganizationMembership#email}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#email OrganizationMembership#email}.'''
         result = self._values.get("email")
         assert result is not None, "Required property 'email' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#id OrganizationMembership#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#id OrganizationMembership#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -365,7 +365,7 @@ class OrganizationMembershipConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_membership#organization OrganizationMembership#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_membership#organization OrganizationMembership#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 

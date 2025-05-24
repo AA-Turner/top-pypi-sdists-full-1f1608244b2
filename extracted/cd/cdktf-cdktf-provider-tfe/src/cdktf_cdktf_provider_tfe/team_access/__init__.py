@@ -1,7 +1,7 @@
 r'''
 # `tfe_team_access`
 
-Refer to the Terraform Registry for docs: [`tfe_team_access`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access).
+Refer to the Terraform Registry for docs: [`tfe_team_access`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TeamAccess(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.teamAccess.TeamAccess",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access tfe_team_access}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access tfe_team_access}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class TeamAccess(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access tfe_team_access} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access tfe_team_access} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#team_id TeamAccess#team_id}.
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#workspace_id TeamAccess#workspace_id}.
-        :param access: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#access TeamAccess#access}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#id TeamAccess#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#permissions TeamAccess#permissions}
+        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#team_id TeamAccess#team_id}.
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#workspace_id TeamAccess#workspace_id}.
+        :param access: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#access TeamAccess#access}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#id TeamAccess#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#permissions TeamAccess#permissions}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class TeamAccess(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TeamAccess to import.
-        :param import_from_id: The id of the existing TeamAccess that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TeamAccess that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TeamAccess to import is found.
         '''
         if __debug__:
@@ -288,11 +288,11 @@ class TeamAccessConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#team_id TeamAccess#team_id}.
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#workspace_id TeamAccess#workspace_id}.
-        :param access: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#access TeamAccess#access}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#id TeamAccess#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#permissions TeamAccess#permissions}
+        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#team_id TeamAccess#team_id}.
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#workspace_id TeamAccess#workspace_id}.
+        :param access: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#access TeamAccess#access}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#id TeamAccess#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#permissions TeamAccess#permissions}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -401,27 +401,27 @@ class TeamAccessConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def team_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#team_id TeamAccess#team_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#team_id TeamAccess#team_id}.'''
         result = self._values.get("team_id")
         assert result is not None, "Required property 'team_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def workspace_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#workspace_id TeamAccess#workspace_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#workspace_id TeamAccess#workspace_id}.'''
         result = self._values.get("workspace_id")
         assert result is not None, "Required property 'workspace_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def access(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#access TeamAccess#access}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#access TeamAccess#access}.'''
         result = self._values.get("access")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#id TeamAccess#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#id TeamAccess#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -435,7 +435,7 @@ class TeamAccessConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["TeamAccessPermissions"]]]:
         '''permissions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#permissions TeamAccess#permissions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#permissions TeamAccess#permissions}
         '''
         result = self._values.get("permissions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["TeamAccessPermissions"]]], result)
@@ -476,12 +476,12 @@ class TeamAccessPermissions:
         workspace_locking: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
     ) -> None:
         '''
-        :param runs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#runs TeamAccess#runs}.
-        :param run_tasks: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#run_tasks TeamAccess#run_tasks}.
-        :param sentinel_mocks: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#sentinel_mocks TeamAccess#sentinel_mocks}.
-        :param state_versions: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#state_versions TeamAccess#state_versions}.
-        :param variables: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#variables TeamAccess#variables}.
-        :param workspace_locking: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#workspace_locking TeamAccess#workspace_locking}.
+        :param runs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#runs TeamAccess#runs}.
+        :param run_tasks: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#run_tasks TeamAccess#run_tasks}.
+        :param sentinel_mocks: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#sentinel_mocks TeamAccess#sentinel_mocks}.
+        :param state_versions: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#state_versions TeamAccess#state_versions}.
+        :param variables: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#variables TeamAccess#variables}.
+        :param workspace_locking: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#workspace_locking TeamAccess#workspace_locking}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0eace29ae0eba15f82ad6328b3dfc04e7ad208eef0a0623b7877ccb0e3afe14a)
@@ -502,35 +502,35 @@ class TeamAccessPermissions:
 
     @builtins.property
     def runs(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#runs TeamAccess#runs}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#runs TeamAccess#runs}.'''
         result = self._values.get("runs")
         assert result is not None, "Required property 'runs' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def run_tasks(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#run_tasks TeamAccess#run_tasks}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#run_tasks TeamAccess#run_tasks}.'''
         result = self._values.get("run_tasks")
         assert result is not None, "Required property 'run_tasks' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
 
     @builtins.property
     def sentinel_mocks(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#sentinel_mocks TeamAccess#sentinel_mocks}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#sentinel_mocks TeamAccess#sentinel_mocks}.'''
         result = self._values.get("sentinel_mocks")
         assert result is not None, "Required property 'sentinel_mocks' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def state_versions(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#state_versions TeamAccess#state_versions}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#state_versions TeamAccess#state_versions}.'''
         result = self._values.get("state_versions")
         assert result is not None, "Required property 'state_versions' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def variables(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#variables TeamAccess#variables}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#variables TeamAccess#variables}.'''
         result = self._values.get("variables")
         assert result is not None, "Required property 'variables' is missing"
         return typing.cast(builtins.str, result)
@@ -539,7 +539,7 @@ class TeamAccessPermissions:
     def workspace_locking(
         self,
     ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_access#workspace_locking TeamAccess#workspace_locking}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_access#workspace_locking TeamAccess#workspace_locking}.'''
         result = self._values.get("workspace_locking")
         assert result is not None, "Required property 'workspace_locking' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)

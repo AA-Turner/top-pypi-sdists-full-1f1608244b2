@@ -1,7 +1,7 @@
 r'''
 # `data_tfe_oauth_client`
 
-Refer to the Terraform Registry for docs: [`data_tfe_oauth_client`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client).
+Refer to the Terraform Registry for docs: [`data_tfe_oauth_client`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataTfeOauthClient(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataTfeOauthClient.DataTfeOauthClient",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client tfe_oauth_client}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client tfe_oauth_client}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class DataTfeOauthClient(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client tfe_oauth_client} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client tfe_oauth_client} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#id DataTfeOauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#name DataTfeOauthClient#name}.
-        :param oauth_client_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#oauth_client_id DataTfeOauthClient#oauth_client_id}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#organization DataTfeOauthClient#organization}.
-        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#service_provider DataTfeOauthClient#service_provider}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#id DataTfeOauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#name DataTfeOauthClient#name}.
+        :param oauth_client_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#oauth_client_id DataTfeOauthClient#oauth_client_id}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#organization DataTfeOauthClient#organization}.
+        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#service_provider DataTfeOauthClient#service_provider}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class DataTfeOauthClient(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataTfeOauthClient to import.
-        :param import_from_id: The id of the existing DataTfeOauthClient that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataTfeOauthClient that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataTfeOauthClient to import is found.
         '''
         if __debug__:
@@ -328,11 +328,11 @@ class DataTfeOauthClientConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#id DataTfeOauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#name DataTfeOauthClient#name}.
-        :param oauth_client_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#oauth_client_id DataTfeOauthClient#oauth_client_id}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#organization DataTfeOauthClient#organization}.
-        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#service_provider DataTfeOauthClient#service_provider}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#id DataTfeOauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#name DataTfeOauthClient#name}.
+        :param oauth_client_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#oauth_client_id DataTfeOauthClient#oauth_client_id}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#organization DataTfeOauthClient#organization}.
+        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#service_provider DataTfeOauthClient#service_provider}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -442,7 +442,7 @@ class DataTfeOauthClientConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#id DataTfeOauthClient#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#id DataTfeOauthClient#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -452,25 +452,25 @@ class DataTfeOauthClientConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#name DataTfeOauthClient#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#name DataTfeOauthClient#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def oauth_client_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#oauth_client_id DataTfeOauthClient#oauth_client_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#oauth_client_id DataTfeOauthClient#oauth_client_id}.'''
         result = self._values.get("oauth_client_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#organization DataTfeOauthClient#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#organization DataTfeOauthClient#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def service_provider(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/oauth_client#service_provider DataTfeOauthClient#service_provider}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/oauth_client#service_provider DataTfeOauthClient#service_provider}.'''
         result = self._values.get("service_provider")
         return typing.cast(typing.Optional[builtins.str], result)
 

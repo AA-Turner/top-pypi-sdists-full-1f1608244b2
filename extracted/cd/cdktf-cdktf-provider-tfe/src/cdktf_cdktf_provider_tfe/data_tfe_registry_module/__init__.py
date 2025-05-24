@@ -1,7 +1,7 @@
 r'''
 # `data_tfe_registry_module`
 
-Refer to the Terraform Registry for docs: [`data_tfe_registry_module`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module).
+Refer to the Terraform Registry for docs: [`data_tfe_registry_module`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataTfeRegistryModule(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataTfeRegistryModule.DataTfeRegistryModule",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module tfe_registry_module}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module tfe_registry_module}.'''
 
     def __init__(
         self,
@@ -68,19 +68,19 @@ class DataTfeRegistryModule(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module tfe_registry_module} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module tfe_registry_module} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param module_provider: Name of the module provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#module_provider DataTfeRegistryModule#module_provider}
-        :param name: Name of the module. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#name DataTfeRegistryModule#name}
-        :param organization: Name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#organization DataTfeRegistryModule#organization}
-        :param namespace: The namespace of the no-code module. Uses organization name if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#namespace DataTfeRegistryModule#namespace}
-        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#permissions DataTfeRegistryModule#permissions}
-        :param registry_name: Name of the registry. Valid options: "public", "private". Defaults to "private". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#registry_name DataTfeRegistryModule#registry_name}
-        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#test_config DataTfeRegistryModule#test_config}
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#vcs_repo DataTfeRegistryModule#vcs_repo}
-        :param version_statuses: version_statuses block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#version_statuses DataTfeRegistryModule#version_statuses}
+        :param module_provider: Name of the module provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#module_provider DataTfeRegistryModule#module_provider}
+        :param name: Name of the module. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#name DataTfeRegistryModule#name}
+        :param organization: Name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#organization DataTfeRegistryModule#organization}
+        :param namespace: The namespace of the no-code module. Uses organization name if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#namespace DataTfeRegistryModule#namespace}
+        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#permissions DataTfeRegistryModule#permissions}
+        :param registry_name: Name of the registry. Valid options: "public", "private". Defaults to "private". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#registry_name DataTfeRegistryModule#registry_name}
+        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#test_config DataTfeRegistryModule#test_config}
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#vcs_repo DataTfeRegistryModule#vcs_repo}
+        :param version_statuses: version_statuses block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#version_statuses DataTfeRegistryModule#version_statuses}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -127,7 +127,7 @@ class DataTfeRegistryModule(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataTfeRegistryModule to import.
-        :param import_from_id: The id of the existing DataTfeRegistryModule that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataTfeRegistryModule that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataTfeRegistryModule to import is found.
         '''
         if __debug__:
@@ -452,15 +452,15 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param module_provider: Name of the module provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#module_provider DataTfeRegistryModule#module_provider}
-        :param name: Name of the module. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#name DataTfeRegistryModule#name}
-        :param organization: Name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#organization DataTfeRegistryModule#organization}
-        :param namespace: The namespace of the no-code module. Uses organization name if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#namespace DataTfeRegistryModule#namespace}
-        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#permissions DataTfeRegistryModule#permissions}
-        :param registry_name: Name of the registry. Valid options: "public", "private". Defaults to "private". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#registry_name DataTfeRegistryModule#registry_name}
-        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#test_config DataTfeRegistryModule#test_config}
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#vcs_repo DataTfeRegistryModule#vcs_repo}
-        :param version_statuses: version_statuses block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#version_statuses DataTfeRegistryModule#version_statuses}
+        :param module_provider: Name of the module provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#module_provider DataTfeRegistryModule#module_provider}
+        :param name: Name of the module. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#name DataTfeRegistryModule#name}
+        :param organization: Name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#organization DataTfeRegistryModule#organization}
+        :param namespace: The namespace of the no-code module. Uses organization name if not provided. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#namespace DataTfeRegistryModule#namespace}
+        :param permissions: permissions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#permissions DataTfeRegistryModule#permissions}
+        :param registry_name: Name of the registry. Valid options: "public", "private". Defaults to "private". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#registry_name DataTfeRegistryModule#registry_name}
+        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#test_config DataTfeRegistryModule#test_config}
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#vcs_repo DataTfeRegistryModule#vcs_repo}
+        :param version_statuses: version_statuses block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#version_statuses DataTfeRegistryModule#version_statuses}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -582,7 +582,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def module_provider(self) -> builtins.str:
         '''Name of the module provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#module_provider DataTfeRegistryModule#module_provider}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#module_provider DataTfeRegistryModule#module_provider}
         '''
         result = self._values.get("module_provider")
         assert result is not None, "Required property 'module_provider' is missing"
@@ -592,7 +592,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the module.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#name DataTfeRegistryModule#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#name DataTfeRegistryModule#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -602,7 +602,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> builtins.str:
         '''Name of the organization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#organization DataTfeRegistryModule#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#organization DataTfeRegistryModule#organization}
         '''
         result = self._values.get("organization")
         assert result is not None, "Required property 'organization' is missing"
@@ -612,7 +612,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def namespace(self) -> typing.Optional[builtins.str]:
         '''The namespace of the no-code module. Uses organization name if not provided.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#namespace DataTfeRegistryModule#namespace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#namespace DataTfeRegistryModule#namespace}
         '''
         result = self._values.get("namespace")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -623,7 +623,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModulePermissions"]]]:
         '''permissions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#permissions DataTfeRegistryModule#permissions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#permissions DataTfeRegistryModule#permissions}
         '''
         result = self._values.get("permissions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModulePermissions"]]], result)
@@ -632,7 +632,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def registry_name(self) -> typing.Optional[builtins.str]:
         '''Name of the registry. Valid options: "public", "private". Defaults to "private".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#registry_name DataTfeRegistryModule#registry_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#registry_name DataTfeRegistryModule#registry_name}
         '''
         result = self._values.get("registry_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -643,7 +643,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModuleTestConfig"]]]:
         '''test_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#test_config DataTfeRegistryModule#test_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#test_config DataTfeRegistryModule#test_config}
         '''
         result = self._values.get("test_config")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModuleTestConfig"]]], result)
@@ -654,7 +654,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModuleVcsRepo"]]]:
         '''vcs_repo block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#vcs_repo DataTfeRegistryModule#vcs_repo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#vcs_repo DataTfeRegistryModule#vcs_repo}
         '''
         result = self._values.get("vcs_repo")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModuleVcsRepo"]]], result)
@@ -665,7 +665,7 @@ class DataTfeRegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModuleVersionStatuses"]]]:
         '''version_statuses block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_module#version_statuses DataTfeRegistryModule#version_statuses}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_module#version_statuses DataTfeRegistryModule#version_statuses}
         '''
         result = self._values.get("version_statuses")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataTfeRegistryModuleVersionStatuses"]]], result)

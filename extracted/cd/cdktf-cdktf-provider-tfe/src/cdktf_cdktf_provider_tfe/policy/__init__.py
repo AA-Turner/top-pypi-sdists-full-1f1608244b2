@@ -1,7 +1,7 @@
 r'''
 # `tfe_policy`
 
-Refer to the Terraform Registry for docs: [`tfe_policy`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy).
+Refer to the Terraform Registry for docs: [`tfe_policy`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Policy(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.policy.Policy",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy tfe_policy}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy tfe_policy}.'''
 
     def __init__(
         self,
@@ -67,18 +67,18 @@ class Policy(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy tfe_policy} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy tfe_policy} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: The name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#name Policy#name}
-        :param policy: Text of a valid Sentinel or OPA policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#policy Policy#policy}
-        :param description: Text describing the policy's purpose. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#description Policy#description}
-        :param enforce_mode: The enforcement configuration of the policy. For Sentinel, valid values are ``hard-mandatory``, ``soft-mandatory`` and ``advisory``. For OPA, Valid values are ``mandatory` and `advisory`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#enforce_mode Policy#enforce_mode}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#id Policy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param kind: The policy-as-code framework for the policy. Valid values are sentinel and opa. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#kind Policy#kind}
-        :param organization: Name of the organization that this policy belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#organization Policy#organization}
-        :param query: The OPA query to run. Required for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#query Policy#query}
+        :param name: The name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#name Policy#name}
+        :param policy: Text of a valid Sentinel or OPA policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#policy Policy#policy}
+        :param description: Text describing the policy's purpose. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#description Policy#description}
+        :param enforce_mode: The enforcement configuration of the policy. For Sentinel, valid values are ``hard-mandatory``, ``soft-mandatory`` and ``advisory``. For OPA, Valid values are ``mandatory` and `advisory`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#enforce_mode Policy#enforce_mode}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#id Policy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param kind: The policy-as-code framework for the policy. Valid values are sentinel and opa. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#kind Policy#kind}
+        :param organization: Name of the organization that this policy belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#organization Policy#organization}
+        :param query: The OPA query to run. Required for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#query Policy#query}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -124,7 +124,7 @@ class Policy(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Policy to import.
-        :param import_from_id: The id of the existing Policy that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Policy that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Policy to import is found.
         '''
         if __debug__:
@@ -358,14 +358,14 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: The name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#name Policy#name}
-        :param policy: Text of a valid Sentinel or OPA policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#policy Policy#policy}
-        :param description: Text describing the policy's purpose. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#description Policy#description}
-        :param enforce_mode: The enforcement configuration of the policy. For Sentinel, valid values are ``hard-mandatory``, ``soft-mandatory`` and ``advisory``. For OPA, Valid values are ``mandatory` and `advisory`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#enforce_mode Policy#enforce_mode}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#id Policy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param kind: The policy-as-code framework for the policy. Valid values are sentinel and opa. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#kind Policy#kind}
-        :param organization: Name of the organization that this policy belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#organization Policy#organization}
-        :param query: The OPA query to run. Required for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#query Policy#query}
+        :param name: The name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#name Policy#name}
+        :param policy: Text of a valid Sentinel or OPA policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#policy Policy#policy}
+        :param description: Text describing the policy's purpose. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#description Policy#description}
+        :param enforce_mode: The enforcement configuration of the policy. For Sentinel, valid values are ``hard-mandatory``, ``soft-mandatory`` and ``advisory``. For OPA, Valid values are ``mandatory` and `advisory`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#enforce_mode Policy#enforce_mode}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#id Policy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param kind: The policy-as-code framework for the policy. Valid values are sentinel and opa. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#kind Policy#kind}
+        :param organization: Name of the organization that this policy belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#organization Policy#organization}
+        :param query: The OPA query to run. Required for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#query Policy#query}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -485,7 +485,7 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The name of the policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#name Policy#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#name Policy#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -495,7 +495,7 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy(self) -> builtins.str:
         '''Text of a valid Sentinel or OPA policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#policy Policy#policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#policy Policy#policy}
         '''
         result = self._values.get("policy")
         assert result is not None, "Required property 'policy' is missing"
@@ -505,7 +505,7 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''Text describing the policy's purpose.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#description Policy#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#description Policy#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -516,14 +516,14 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For Sentinel, valid values are ``hard-mandatory``, ``soft-mandatory`` and ``advisory``. For OPA, Valid values are ``mandatory`` and ``advisory``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#enforce_mode Policy#enforce_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#enforce_mode Policy#enforce_mode}
         '''
         result = self._values.get("enforce_mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#id Policy#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#id Policy#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -535,7 +535,7 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def kind(self) -> typing.Optional[builtins.str]:
         '''The policy-as-code framework for the policy. Valid values are sentinel and opa.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#kind Policy#kind}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#kind Policy#kind}
         '''
         result = self._values.get("kind")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -544,7 +544,7 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''Name of the organization that this policy belongs to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#organization Policy#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#organization Policy#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -553,7 +553,7 @@ class PolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def query(self) -> typing.Optional[builtins.str]:
         '''The OPA query to run. Required for OPA policies.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy#query Policy#query}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy#query Policy#query}
         '''
         result = self._values.get("query")
         return typing.cast(typing.Optional[builtins.str], result)

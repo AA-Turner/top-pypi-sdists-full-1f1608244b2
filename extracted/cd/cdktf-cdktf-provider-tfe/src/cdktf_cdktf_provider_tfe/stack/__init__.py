@@ -1,7 +1,7 @@
 r'''
 # `tfe_stack`
 
-Refer to the Terraform Registry for docs: [`tfe_stack`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack).
+Refer to the Terraform Registry for docs: [`tfe_stack`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Stack(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.stack.Stack",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack tfe_stack}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack tfe_stack}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class Stack(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack tfe_stack} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack tfe_stack} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#name Stack#name}
-        :param project_id: ID of the project that the Stack belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#project_id Stack#project_id}
-        :param description: Description of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#description Stack#description}
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#vcs_repo Stack#vcs_repo}
+        :param name: Name of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#name Stack#name}
+        :param project_id: ID of the project that the Stack belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#project_id Stack#project_id}
+        :param description: Description of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#description Stack#description}
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#vcs_repo Stack#vcs_repo}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class Stack(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Stack to import.
-        :param import_from_id: The id of the existing Stack that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Stack that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Stack to import is found.
         '''
         if __debug__:
@@ -133,10 +133,10 @@ class Stack(
         oauth_token_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param identifier: Identifier of the VCS repository. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#identifier Stack#identifier}
-        :param branch: The repository branch that Terraform should use. This defaults to the respository's default branch (e.g. main). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#branch Stack#branch}
-        :param github_app_installation_id: The installation ID of the GitHub App. This conflicts with ``oauth_token_id`` and can only be used if ``oauth_token_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#github_app_installation_id Stack#github_app_installation_id}
-        :param oauth_token_id: The VCS Connection to use. This ID can be obtained from a ``tfe_oauth_client`` resource. This conflicts with ``github_app_installation_id`` and can only be used if ``github_app_installation_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#oauth_token_id Stack#oauth_token_id}
+        :param identifier: Identifier of the VCS repository. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#identifier Stack#identifier}
+        :param branch: The repository branch that Terraform should use. This defaults to the respository's default branch (e.g. main). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#branch Stack#branch}
+        :param github_app_installation_id: The installation ID of the GitHub App. This conflicts with ``oauth_token_id`` and can only be used if ``oauth_token_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#github_app_installation_id Stack#github_app_installation_id}
+        :param oauth_token_id: The VCS Connection to use. This ID can be obtained from a ``tfe_oauth_client`` resource. This conflicts with ``github_app_installation_id`` and can only be used if ``github_app_installation_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#oauth_token_id Stack#oauth_token_id}
         '''
         value = StackVcsRepo(
             identifier=identifier,
@@ -293,10 +293,10 @@ class StackConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#name Stack#name}
-        :param project_id: ID of the project that the Stack belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#project_id Stack#project_id}
-        :param description: Description of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#description Stack#description}
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#vcs_repo Stack#vcs_repo}
+        :param name: Name of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#name Stack#name}
+        :param project_id: ID of the project that the Stack belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#project_id Stack#project_id}
+        :param description: Description of the Stack. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#description Stack#description}
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#vcs_repo Stack#vcs_repo}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -406,7 +406,7 @@ class StackConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the Stack.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#name Stack#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#name Stack#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -416,7 +416,7 @@ class StackConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def project_id(self) -> builtins.str:
         '''ID of the project that the Stack belongs to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#project_id Stack#project_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#project_id Stack#project_id}
         '''
         result = self._values.get("project_id")
         assert result is not None, "Required property 'project_id' is missing"
@@ -426,7 +426,7 @@ class StackConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''Description of the Stack.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#description Stack#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#description Stack#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -435,7 +435,7 @@ class StackConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def vcs_repo(self) -> typing.Optional["StackVcsRepo"]:
         '''vcs_repo block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#vcs_repo Stack#vcs_repo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#vcs_repo Stack#vcs_repo}
         '''
         result = self._values.get("vcs_repo")
         return typing.cast(typing.Optional["StackVcsRepo"], result)
@@ -472,10 +472,10 @@ class StackVcsRepo:
         oauth_token_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param identifier: Identifier of the VCS repository. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#identifier Stack#identifier}
-        :param branch: The repository branch that Terraform should use. This defaults to the respository's default branch (e.g. main). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#branch Stack#branch}
-        :param github_app_installation_id: The installation ID of the GitHub App. This conflicts with ``oauth_token_id`` and can only be used if ``oauth_token_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#github_app_installation_id Stack#github_app_installation_id}
-        :param oauth_token_id: The VCS Connection to use. This ID can be obtained from a ``tfe_oauth_client`` resource. This conflicts with ``github_app_installation_id`` and can only be used if ``github_app_installation_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#oauth_token_id Stack#oauth_token_id}
+        :param identifier: Identifier of the VCS repository. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#identifier Stack#identifier}
+        :param branch: The repository branch that Terraform should use. This defaults to the respository's default branch (e.g. main). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#branch Stack#branch}
+        :param github_app_installation_id: The installation ID of the GitHub App. This conflicts with ``oauth_token_id`` and can only be used if ``oauth_token_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#github_app_installation_id Stack#github_app_installation_id}
+        :param oauth_token_id: The VCS Connection to use. This ID can be obtained from a ``tfe_oauth_client`` resource. This conflicts with ``github_app_installation_id`` and can only be used if ``github_app_installation_id`` is not used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#oauth_token_id Stack#oauth_token_id}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__70e25c7767178d4bc953b03e4cfd34823aee7859e39e16810080e9300020e9c3)
@@ -497,7 +497,7 @@ class StackVcsRepo:
     def identifier(self) -> builtins.str:
         '''Identifier of the VCS repository.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#identifier Stack#identifier}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#identifier Stack#identifier}
         '''
         result = self._values.get("identifier")
         assert result is not None, "Required property 'identifier' is missing"
@@ -507,7 +507,7 @@ class StackVcsRepo:
     def branch(self) -> typing.Optional[builtins.str]:
         '''The repository branch that Terraform should use. This defaults to the respository's default branch (e.g. main).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#branch Stack#branch}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#branch Stack#branch}
         '''
         result = self._values.get("branch")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -518,7 +518,7 @@ class StackVcsRepo:
 
         This conflicts with ``oauth_token_id`` and can only be used if ``oauth_token_id`` is not used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#github_app_installation_id Stack#github_app_installation_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#github_app_installation_id Stack#github_app_installation_id}
         '''
         result = self._values.get("github_app_installation_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -529,7 +529,7 @@ class StackVcsRepo:
 
         This ID can be obtained from a ``tfe_oauth_client`` resource. This conflicts with ``github_app_installation_id`` and can only be used if ``github_app_installation_id`` is not used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/stack#oauth_token_id Stack#oauth_token_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/stack#oauth_token_id Stack#oauth_token_id}
         '''
         result = self._values.get("oauth_token_id")
         return typing.cast(typing.Optional[builtins.str], result)

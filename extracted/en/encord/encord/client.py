@@ -38,7 +38,6 @@ from encord.common.deprecated import deprecated
 from encord.configs import Config
 from encord.constants.enums import DataType
 from encord.constants.string_constants import (
-    FITTED_BOUNDING_BOX,
     INTERPOLATION,
 )
 from encord.http.querier import Querier
@@ -87,9 +86,7 @@ from encord.orm.label_row import (
     AnnotationTaskStatus,
     LabelRow,
     LabelRowMetadata,
-    LabelStatus,
     LabelValidationState,
-    Review,
     ShadowDataState,
 )
 from encord.orm.labeling_algorithm import (
@@ -105,7 +102,9 @@ from encord.orm.project import (
     ProjectCopy,
     ProjectCopyOptions,
     ProjectDataset,
+    ProjectStatus,
     ProjectUsers,
+    SetProjectStatusPayload,
     TaskPriorityParams,
 )
 from encord.orm.project import Project as OrmProject
@@ -860,13 +859,6 @@ class EncordClientProject(EncordClient):
         }
         return self._querier.get_multiple(LabelRowMetadata, payload=payload, retryable=True)
 
-    def set_label_status(self, label_hash: str, label_status: LabelStatus) -> bool:
-        """This function is documented in :meth:`encord.project.Project.set_label_status`."""
-        payload = {
-            "label_status": label_status.value,
-        }
-        return self._querier.basic_setter(LabelStatus, label_hash, payload)
-
     def add_users(self, user_emails: List[str], user_role: ProjectUserRole) -> List[ProjectUser]:
         """This function is documented in :meth:`encord.project.Project.add_users`."""
         payload = {"user_emails": user_emails, "user_role": user_role}
@@ -1020,10 +1012,6 @@ class EncordClientProject(EncordClient):
             payload={"multi_request": True, "get_signed_url": get_signed_url, "branch_name": branch_name},
         )
 
-    def submit_label_row_for_review(self, uid):
-        """This function is documented in :meth:`encord.project.Project.submit_label_row_for_review`."""
-        return self._querier.basic_put(Review, uid=uid, payload=None)
-
     def add_datasets(self, dataset_hashes: List[str]) -> bool:
         """This function is documented in :meth:`encord.project.Project.add_datasets`."""
         payload = {"dataset_hashes": dataset_hashes}
@@ -1092,33 +1080,6 @@ class EncordClientProject(EncordClient):
             {
                 "algorithm_name": INTERPOLATION,
                 "algorithm_parameters": interpolation_params,
-            }
-        )
-
-        return self._querier.basic_setter(LabelingAlgorithm, str(uuid.uuid4()), payload=algo)
-
-    def fitted_bounding_boxes(
-        self,
-        frames: dict,
-        video: dict,
-    ):
-        """This function is documented in :meth:`encord.project.Project.fitted_bounding_boxes`."""
-        if len(frames) == 0 or len(video) == 0:
-            raise encord.exceptions.EncordException(
-                message="To run fitting, you must pass frames and video to run bounding box fitting on.."
-            )
-
-        fitting_params = BoundingBoxFittingParams(
-            {
-                "labels": frames,
-                "video": video,
-            }
-        )
-
-        algo = LabelingAlgorithm(
-            {
-                "algorithm_name": FITTED_BOUNDING_BOX,
-                "algorithm_parameters": fitting_params,
             }
         )
 
@@ -1248,6 +1209,13 @@ class EncordClientProject(EncordClient):
             result_type=None,
         )
         logger.info("Sync initiated in Active, please check the app to see progress")
+
+    def set_status(self, status: ProjectStatus) -> None:
+        self._api_client.put(
+            f"projects/{self.project_hash}/status",
+            params=None,
+            payload=SetProjectStatusPayload(status=status),
+        )
 
 
 CordClientProject = EncordClientProject

@@ -1,7 +1,7 @@
 r'''
 # `tfe_registry_gpg_key`
 
-Refer to the Terraform Registry for docs: [`tfe_registry_gpg_key`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key).
+Refer to the Terraform Registry for docs: [`tfe_registry_gpg_key`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class RegistryGpgKey(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.registryGpgKey.RegistryGpgKey",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key tfe_registry_gpg_key}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key tfe_registry_gpg_key}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class RegistryGpgKey(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key tfe_registry_gpg_key} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key tfe_registry_gpg_key} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param ascii_armor: ASCII-armored representation of the GPG key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key#ascii_armor RegistryGpgKey#ascii_armor}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key#organization RegistryGpgKey#organization}
+        :param ascii_armor: ASCII-armored representation of the GPG key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key#ascii_armor RegistryGpgKey#ascii_armor}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key#organization RegistryGpgKey#organization}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class RegistryGpgKey(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the RegistryGpgKey to import.
-        :param import_from_id: The id of the existing RegistryGpgKey that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing RegistryGpgKey that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the RegistryGpgKey to import is found.
         '''
         if __debug__:
@@ -221,8 +221,8 @@ class RegistryGpgKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param ascii_armor: ASCII-armored representation of the GPG key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key#ascii_armor RegistryGpgKey#ascii_armor}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key#organization RegistryGpgKey#organization}
+        :param ascii_armor: ASCII-armored representation of the GPG key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key#ascii_armor RegistryGpgKey#ascii_armor}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key#organization RegistryGpgKey#organization}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -325,7 +325,7 @@ class RegistryGpgKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def ascii_armor(self) -> builtins.str:
         '''ASCII-armored representation of the GPG key.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key#ascii_armor RegistryGpgKey#ascii_armor}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key#ascii_armor RegistryGpgKey#ascii_armor}
         '''
         result = self._values.get("ascii_armor")
         assert result is not None, "Required property 'ascii_armor' is missing"
@@ -335,7 +335,7 @@ class RegistryGpgKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''Name of the organization. If omitted, organization must be defined in the provider config.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_gpg_key#organization RegistryGpgKey#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_gpg_key#organization RegistryGpgKey#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)

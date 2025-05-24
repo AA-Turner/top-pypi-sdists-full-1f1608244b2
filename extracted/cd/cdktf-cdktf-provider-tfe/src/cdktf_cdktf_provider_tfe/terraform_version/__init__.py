@@ -1,7 +1,7 @@
 r'''
 # `tfe_terraform_version`
 
-Refer to the Terraform Registry for docs: [`tfe_terraform_version`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version).
+Refer to the Terraform Registry for docs: [`tfe_terraform_version`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TerraformVersion(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.terraformVersion.TerraformVersion",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version tfe_terraform_version}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version tfe_terraform_version}.'''
 
     def __init__(
         self,
@@ -68,19 +68,19 @@ class TerraformVersion(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version tfe_terraform_version} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version tfe_terraform_version} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param sha: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#sha TerraformVersion#sha}.
-        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#url TerraformVersion#url}.
-        :param version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#version TerraformVersion#version}.
-        :param beta: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#beta TerraformVersion#beta}.
-        :param deprecated: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#deprecated TerraformVersion#deprecated}.
-        :param deprecated_reason: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#deprecated_reason TerraformVersion#deprecated_reason}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#enabled TerraformVersion#enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#id TerraformVersion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param official: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#official TerraformVersion#official}.
+        :param sha: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#sha TerraformVersion#sha}.
+        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#url TerraformVersion#url}.
+        :param version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#version TerraformVersion#version}.
+        :param beta: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#beta TerraformVersion#beta}.
+        :param deprecated: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#deprecated TerraformVersion#deprecated}.
+        :param deprecated_reason: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#deprecated_reason TerraformVersion#deprecated_reason}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#enabled TerraformVersion#enabled}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#id TerraformVersion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param official: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#official TerraformVersion#official}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -127,7 +127,7 @@ class TerraformVersion(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TerraformVersion to import.
-        :param import_from_id: The id of the existing TerraformVersion that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TerraformVersion that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TerraformVersion to import is found.
         '''
         if __debug__:
@@ -400,15 +400,15 @@ class TerraformVersionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param sha: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#sha TerraformVersion#sha}.
-        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#url TerraformVersion#url}.
-        :param version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#version TerraformVersion#version}.
-        :param beta: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#beta TerraformVersion#beta}.
-        :param deprecated: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#deprecated TerraformVersion#deprecated}.
-        :param deprecated_reason: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#deprecated_reason TerraformVersion#deprecated_reason}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#enabled TerraformVersion#enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#id TerraformVersion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param official: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#official TerraformVersion#official}.
+        :param sha: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#sha TerraformVersion#sha}.
+        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#url TerraformVersion#url}.
+        :param version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#version TerraformVersion#version}.
+        :param beta: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#beta TerraformVersion#beta}.
+        :param deprecated: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#deprecated TerraformVersion#deprecated}.
+        :param deprecated_reason: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#deprecated_reason TerraformVersion#deprecated_reason}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#enabled TerraformVersion#enabled}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#id TerraformVersion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param official: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#official TerraformVersion#official}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -528,21 +528,21 @@ class TerraformVersionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def sha(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#sha TerraformVersion#sha}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#sha TerraformVersion#sha}.'''
         result = self._values.get("sha")
         assert result is not None, "Required property 'sha' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def url(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#url TerraformVersion#url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#url TerraformVersion#url}.'''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def version(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#version TerraformVersion#version}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#version TerraformVersion#version}.'''
         result = self._values.get("version")
         assert result is not None, "Required property 'version' is missing"
         return typing.cast(builtins.str, result)
@@ -551,7 +551,7 @@ class TerraformVersionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def beta(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#beta TerraformVersion#beta}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#beta TerraformVersion#beta}.'''
         result = self._values.get("beta")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -559,13 +559,13 @@ class TerraformVersionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def deprecated(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#deprecated TerraformVersion#deprecated}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#deprecated TerraformVersion#deprecated}.'''
         result = self._values.get("deprecated")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def deprecated_reason(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#deprecated_reason TerraformVersion#deprecated_reason}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#deprecated_reason TerraformVersion#deprecated_reason}.'''
         result = self._values.get("deprecated_reason")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -573,13 +573,13 @@ class TerraformVersionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#enabled TerraformVersion#enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#enabled TerraformVersion#enabled}.'''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#id TerraformVersion#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#id TerraformVersion#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -591,7 +591,7 @@ class TerraformVersionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def official(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/terraform_version#official TerraformVersion#official}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/terraform_version#official TerraformVersion#official}.'''
         result = self._values.get("official")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 

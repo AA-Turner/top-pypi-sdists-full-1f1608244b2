@@ -14,10 +14,6 @@ class ResultMetadata(BaseModel):
     field_expansion:Optional[Union[str, Dict[str, FieldExpansionMetadata]]] = Field(None, description="Field expansion metadata")
 
 class BaseResultSchemas:
-    class BaseRow(BaseModel):
-        class Config:
-            from_attributes=True
-
     class Base(BaseModel):
         success:bool = Field(..., description="Success status")
         code:BaseTypes.OptionalString = Field(None, description="Optional result code")

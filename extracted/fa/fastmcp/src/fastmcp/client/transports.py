@@ -19,11 +19,13 @@ from mcp.client.sse import sse_client
 from mcp.client.stdio import stdio_client
 from mcp.client.streamable_http import streamablehttp_client
 from mcp.client.websocket import websocket_client
+from mcp.server.fastmcp import FastMCP as FastMCP1Server
 from mcp.shared.memory import create_connected_server_and_client_session
 from pydantic import AnyUrl
 from typing_extensions import Unpack
 
 from fastmcp.server import FastMCP as FastMCPServer
+from fastmcp.server.dependencies import get_http_request
 from fastmcp.server.server import FastMCP
 from fastmcp.utilities.logging import get_logger
 from fastmcp.utilities.mcp_config import MCPConfig, infer_transport_type_from_url
@@ -32,6 +34,11 @@ if TYPE_CHECKING:
     from fastmcp.utilities.mcp_config import MCPConfig
 
 logger = get_logger(__name__)
+
+# these headers, when forwarded to the remote server, can cause issues
+EXCLUDE_HEADERS = {
+    "content-length",
+}
 
 
 class SessionKwargs(TypedDict, total=False):
@@ -131,7 +138,24 @@ class SSETransport(ClientTransport):
     async def connect_session(
         self, **session_kwargs: Unpack[SessionKwargs]
     ) -> AsyncIterator[ClientSession]:
-        client_kwargs = {}
+        client_kwargs: dict[str, Any] = {
+            "headers": self.headers,
+        }
+
+        # load headers from an active HTTP request, if available. This will only be true
+        # if the client is used in a FastMCP Proxy, in which case the MCP client headers
+        # need to be forwarded to the remote server.
+        try:
+            active_request = get_http_request()
+            for name, value in active_request.headers.items():
+                name = name.lower()
+                if name not in self.headers and name not in {
+                    h.lower() for h in EXCLUDE_HEADERS
+                }:
+                    client_kwargs["headers"][name] = str(value)
+        except RuntimeError:
+            client_kwargs["headers"] = self.headers
+
         # sse_read_timeout has a default value set, so we can't pass None without overriding it
         # instead we simply leave the kwarg out if it's not provided
         if self.sse_read_timeout is not None:
@@ -142,9 +166,7 @@ class SSETransport(ClientTransport):
             )
             client_kwargs["timeout"] = read_timeout_seconds.total_seconds()
 
-        async with sse_client(
-            self.url, headers=self.headers, **client_kwargs
-        ) as transport:
+        async with sse_client(self.url, **client_kwargs) as transport:
             read_stream, write_stream = transport
             async with ClientSession(
                 read_stream, write_stream, **session_kwargs
@@ -179,7 +201,26 @@ class StreamableHttpTransport(ClientTransport):
     async def connect_session(
         self, **session_kwargs: Unpack[SessionKwargs]
     ) -> AsyncIterator[ClientSession]:
-        client_kwargs = {}
+        client_kwargs: dict[str, Any] = {
+            "headers": self.headers,
+        }
+
+        # load headers from an active HTTP request, if available. This will only be true
+        # if the client is used in a FastMCP Proxy, in which case the MCP client headers
+        # need to be forwarded to the remote server.
+        try:
+            active_request = get_http_request()
+            for name, value in active_request.headers.items():
+                name = name.lower()
+                if name not in self.headers and name not in {
+                    h.lower() for h in EXCLUDE_HEADERS
+                }:
+                    client_kwargs["headers"][name] = str(value)
+
+        except RuntimeError:
+            client_kwargs["headers"] = self.headers
+        print(client_kwargs)
+
         # sse_read_timeout has a default value set, so we can't pass None without overriding it
         # instead we simply leave the kwarg out if it's not provided
         if self.sse_read_timeout is not None:
@@ -187,9 +228,7 @@ class StreamableHttpTransport(ClientTransport):
         if session_kwargs.get("read_timeout_seconds", None) is not None:
             client_kwargs["timeout"] = session_kwargs.get("read_timeout_seconds")
 
-        async with streamablehttp_client(
-            self.url, headers=self.headers, **client_kwargs
-        ) as transport:
+        async with streamablehttp_client(self.url, **client_kwargs) as transport:
             read_stream, write_stream, _ = transport
             async with ClientSession(
                 read_stream, write_stream, **session_kwargs
@@ -448,15 +487,21 @@ class NpxStdioTransport(StdioTransport):
 
 
 class FastMCPTransport(ClientTransport):
-    """
-    Special transport for in-memory connections to an MCP server.
+    """In-memory transport for FastMCP servers.
 
-    This is particularly useful for testing or when client and server
-    are in the same process.
+    This transport connects directly to a FastMCP server instance in the same
+    Python process. It works with both FastMCP 2.x servers and FastMCP 1.0
+    servers from the low-level MCP SDK. This is particularly useful for unit
+    tests or scenarios where client and server run in the same runtime.
     """
 
-    def __init__(self, mcp: FastMCPServer):
-        self.server = mcp  # Can be FastMCP or MCPServer
+    def __init__(self, mcp: FastMCPServer | FastMCP1Server):
+        """Initialize a FastMCPTransport from a FastMCP server instance."""
+
+        # Accept both FastMCP 2.x and FastMCP 1.0 servers. Both expose a
+        # ``_mcp_server`` attribute pointing to the underlying MCP server
+        # implementation, so we can treat them identically.
+        self.server = mcp
 
     @contextlib.asynccontextmanager
     async def connect_session(
@@ -528,8 +573,12 @@ class MCPConfigTransport(ClientTransport):
             config = MCPConfig.from_dict(config)
         self.config = config
 
+        # if there are no servers, raise an error
+        if len(self.config.mcpServers) == 0:
+            raise ValueError("No MCP servers defined in the config")
+
         # if there's exactly one server, create a client for that server
-        if len(self.config.mcpServers) == 1:
+        elif len(self.config.mcpServers) == 1:
             self.transport = list(self.config.mcpServers.values())[0].to_transport()
 
         # otherwise create a composite client
@@ -558,6 +607,7 @@ class MCPConfigTransport(ClientTransport):
 def infer_transport(
     transport: ClientTransport
     | FastMCPServer
+    | FastMCP1Server
     | AnyUrl
     | Path
     | MCPConfig
@@ -573,7 +623,7 @@ def infer_transport(
 
     The function supports these input types:
     - ClientTransport: Used directly without modification
-    - FastMCPServer: Creates an in-memory FastMCPTransport
+    - FastMCPServer or FastMCP1Server: Creates an in-memory FastMCPTransport
     - Path or str (file path): Creates PythonStdioTransport (.py) or NodeStdioTransport (.js)
     - AnyUrl or str (URL): Creates StreamableHttpTransport (default) or SSETransport (for /sse endpoints)
     - MCPConfig or dict: Creates MCPConfigTransport, potentially connecting to multiple servers
@@ -610,8 +660,8 @@ def infer_transport(
     if isinstance(transport, ClientTransport):
         return transport
 
-    # the transport is a FastMCP server
-    elif isinstance(transport, FastMCPServer):
+    # the transport is a FastMCP server (2.x or 1.0)
+    elif isinstance(transport, FastMCPServer | FastMCP1Server):
         inferred_transport = FastMCPTransport(mcp=transport)
 
     # the transport is a path to a script

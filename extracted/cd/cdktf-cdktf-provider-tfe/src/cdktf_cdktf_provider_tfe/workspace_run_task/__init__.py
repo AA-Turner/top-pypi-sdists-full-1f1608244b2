@@ -1,7 +1,7 @@
 r'''
 # `tfe_workspace_run_task`
 
-Refer to the Terraform Registry for docs: [`tfe_workspace_run_task`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task).
+Refer to the Terraform Registry for docs: [`tfe_workspace_run_task`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class WorkspaceRunTask(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.workspaceRunTask.WorkspaceRunTask",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task tfe_workspace_run_task}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task tfe_workspace_run_task}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class WorkspaceRunTask(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task tfe_workspace_run_task} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task tfe_workspace_run_task} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param enforcement_level: The enforcement level of the task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#enforcement_level WorkspaceRunTask#enforcement_level}
-        :param task_id: The id of the Run task to associate to the Workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#task_id WorkspaceRunTask#task_id}
-        :param workspace_id: The id of the workspace to associate the Run task to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#workspace_id WorkspaceRunTask#workspace_id}
-        :param stage: The stage to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#stage WorkspaceRunTask#stage}
-        :param stages: The stages to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#stages WorkspaceRunTask#stages}
+        :param enforcement_level: The enforcement level of the task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#enforcement_level WorkspaceRunTask#enforcement_level}
+        :param task_id: The id of the Run task to associate to the Workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#task_id WorkspaceRunTask#task_id}
+        :param workspace_id: The id of the workspace to associate the Run task to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#workspace_id WorkspaceRunTask#workspace_id}
+        :param stage: The stage to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#stage WorkspaceRunTask#stage}
+        :param stages: The stages to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#stages WorkspaceRunTask#stages}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class WorkspaceRunTask(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the WorkspaceRunTask to import.
-        :param import_from_id: The id of the existing WorkspaceRunTask that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing WorkspaceRunTask that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the WorkspaceRunTask to import is found.
         '''
         if __debug__:
@@ -281,11 +281,11 @@ class WorkspaceRunTaskConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param enforcement_level: The enforcement level of the task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#enforcement_level WorkspaceRunTask#enforcement_level}
-        :param task_id: The id of the Run task to associate to the Workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#task_id WorkspaceRunTask#task_id}
-        :param workspace_id: The id of the workspace to associate the Run task to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#workspace_id WorkspaceRunTask#workspace_id}
-        :param stage: The stage to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#stage WorkspaceRunTask#stage}
-        :param stages: The stages to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#stages WorkspaceRunTask#stages}
+        :param enforcement_level: The enforcement level of the task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#enforcement_level WorkspaceRunTask#enforcement_level}
+        :param task_id: The id of the Run task to associate to the Workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#task_id WorkspaceRunTask#task_id}
+        :param workspace_id: The id of the workspace to associate the Run task to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#workspace_id WorkspaceRunTask#workspace_id}
+        :param stage: The stage to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#stage WorkspaceRunTask#stage}
+        :param stages: The stages to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#stages WorkspaceRunTask#stages}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -395,7 +395,7 @@ class WorkspaceRunTaskConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enforcement_level(self) -> builtins.str:
         '''The enforcement level of the task. Valid values are ``advisory`` and ``mandatory``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#enforcement_level WorkspaceRunTask#enforcement_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#enforcement_level WorkspaceRunTask#enforcement_level}
         '''
         result = self._values.get("enforcement_level")
         assert result is not None, "Required property 'enforcement_level' is missing"
@@ -405,7 +405,7 @@ class WorkspaceRunTaskConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def task_id(self) -> builtins.str:
         '''The id of the Run task to associate to the Workspace.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#task_id WorkspaceRunTask#task_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#task_id WorkspaceRunTask#task_id}
         '''
         result = self._values.get("task_id")
         assert result is not None, "Required property 'task_id' is missing"
@@ -415,7 +415,7 @@ class WorkspaceRunTaskConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def workspace_id(self) -> builtins.str:
         '''The id of the workspace to associate the Run task to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#workspace_id WorkspaceRunTask#workspace_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#workspace_id WorkspaceRunTask#workspace_id}
         '''
         result = self._values.get("workspace_id")
         assert result is not None, "Required property 'workspace_id' is missing"
@@ -425,7 +425,7 @@ class WorkspaceRunTaskConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def stage(self) -> typing.Optional[builtins.str]:
         '''The stage to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#stage WorkspaceRunTask#stage}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#stage WorkspaceRunTask#stage}
         '''
         result = self._values.get("stage")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -434,7 +434,7 @@ class WorkspaceRunTaskConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def stages(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The stages to run the task in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_run_task#stages WorkspaceRunTask#stages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_run_task#stages WorkspaceRunTask#stages}
         '''
         result = self._values.get("stages")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

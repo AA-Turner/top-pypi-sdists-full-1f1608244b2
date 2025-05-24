@@ -1,26 +1,19 @@
-from functools import reduce
+from functools import reduce, cmp_to_key
 from math import prod
 import re
 
 
-def get_functions(compile):
-    def build_function(fn):
-        def evaluate_fn(*args):
-            compiled_args = list(map(compile, args))
+def get_functions(compile, build_function):
+    sortable_types = {bool: 0, int: 1, float: 1, str: 2}
+    other_types = 3
 
-            return lambda data: fn(
-                *list(map(lambda compiled_arg: compiled_arg(data), compiled_args))
-            )
-
-        return evaluate_fn
-
-    def fn_get(*path: []):
+    def fn_get(*path: str):
         def getter(item):
             value = item
 
             for p in path:
                 value_exists = value is not None and (
-                    p < len(value) if type(value) is list else p in value
+                    int(p) < len(value) if type(value) is list else p in value
                 )
                 value = value[p] if value_exists else None
 
@@ -58,19 +51,27 @@ def get_functions(compile):
         return evaluate_object
 
     def fn_array(*items):
-        getters = map(compile, items)
+        getters = list(map(compile, items))
 
         return lambda data: list(map(lambda getter: getter(data), getters))
 
     def fn_filter(predicate):
         _predicate = compile(predicate)
 
-        return lambda data: list(filter(lambda item: truthy(_predicate(item)), data))
+        return (
+            lambda data: raise_array_expected()
+            if type(data) is not list
+            else list(filter(lambda item: truthy(_predicate(item)), data))
+        )
 
     def fn_map(callback):
         _callback = compile(callback)
 
-        return lambda data: list(map(_callback, data))
+        return (
+            lambda data: raise_array_expected()
+            if type(data) is not list
+            else list(map(_callback, data))
+        )
 
     def fn_map_object(callback):
         _callback = compile(callback)
@@ -97,14 +98,33 @@ def get_functions(compile):
         return lambda data: {key: _callback(value) for key, value in data.items()}
 
     def fn_pipe(*entries):
-        getters = map(compile, entries)
+        getters = list(map(compile, entries))
 
         return lambda data: reduce(lambda value, getter: getter(value), getters, data)
 
     def fn_sort(path=None, direction="asc"):
         getter = compile(path) if path is not None else lambda item: item
+        sign = -1 if direction == "desc" else 1
 
-        return lambda data: sorted(data, key=getter, reverse=direction == "desc")
+        def compare(a, b):
+            value_a = getter(a)
+            value_b = getter(b)
+
+            # Sort mixed types
+            if type(value_a) is not type(value_b):
+                index_a = sortable_types.get(type(value_a), other_types)
+                index_b = sortable_types.get(type(value_b), other_types)
+
+                return sign if index_a > index_b else -sign if index_b > index_a else 0
+
+            # Sort two numbers, two strings, or two booleans
+            if type(value_a) in sortable_types:
+                return sign if value_a > value_b else -sign if value_b > value_a else 0
+
+            # Leave other types like array or object ordered as is
+            return 0
+
+        return lambda data: sorted(data, key=cmp_to_key(compare))
 
     def fn_reverse():
         return lambda data: list(reversed(data))
@@ -145,38 +165,73 @@ def get_functions(compile):
     fn_join = lambda separator="": lambda data: separator.join(data)
     fn_split = build_function(
         lambda text, separator=None: (
-            text.split(separator) if separator is not "" else split_chars(text)
+            text.split(separator) if separator != "" else split_chars(text)
         )
     )
     fn_substring = build_function(
         lambda text, start, end=None: text[max(start, 0) : end]
     )
-    fn_uniq = lambda: lambda data: list(dict.fromkeys(data))
+
+    def uniq(data):
+        res = []
+
+        for item in data:
+            if item not in res:
+                res.append(item)
+
+        return res
+
+    fn_uniq = lambda: uniq
     fn_uniq_by = lambda path: lambda data: list(fn_key_by(path)(data).values())
     fn_limit = lambda count: lambda data: data[0:count] if count >= 0 else []
     fn_size = lambda: lambda data: len(data)
     fn_keys = lambda: lambda data: list(data.keys())
     fn_values = lambda: lambda data: list(data.values())
-    fn_prod = (
-        lambda: lambda data: prod(data)
-        if not empty(data)
-        else raise_runtime_error("Cannot calculate the prod of an empty list")
-    )
-    fn_sum = (
-        lambda: lambda data: sum(data)
-        if not empty(data)
-        else raise_runtime_error("Cannot calculate the sum of an empty list")
-    )
-    fn_average = (
-        lambda: lambda data: sum(data) / len(data)
-        if not empty(data)
-        else raise_runtime_error("Cannot calculate the average of an empty list")
-    )
-    fn_min = lambda: lambda data: min(data)
-    fn_max = lambda: lambda data: max(data)
 
-    fn_and = build_function(lambda a, b: a and b)
-    fn_or = build_function(lambda a, b: a or b)
+    fn_prod = (
+        lambda: lambda data: raise_array_expected()
+        if type(data) is not list
+        else None
+        if empty(data)
+        else prod(data)
+    )
+
+    fn_sum = (
+        lambda: lambda data: raise_array_expected()
+        if type(data) is not list
+        else sum(data)
+    )
+
+    fn_average = (
+        lambda: lambda data: raise_array_expected()
+        if type(data) is not list
+        else None
+        if empty(data)
+        else sum(data) / len(data)
+    )
+
+    fn_max = (
+        lambda: lambda data: raise_array_expected()
+        if type(data) is not list
+        else None
+        if empty(data)
+        else max(data)
+    )
+
+    fn_min = (
+        lambda: lambda data: raise_array_expected()
+        if type(data) is not list
+        else None
+        if empty(data)
+        else min(data)
+    )
+
+    fn_and = build_function(
+        lambda *args: reduce(lambda a, b: a and b, args) if not empty(args) else None
+    )
+    fn_or = build_function(
+        lambda *args: reduce(lambda a, b: a or b, args) if args else None
+    )
     fn_not = build_function(lambda a: not a)
 
     def fn_exists(query_get):
@@ -207,13 +262,13 @@ def get_functions(compile):
 
     def fn_in(path, in_values):
         getter = compile(path)
-        _values = map(compile, in_values)
+        _values = list(map(compile, in_values))
 
         return lambda data: getter(data) in map(lambda _value: _value(data), _values)
 
     def fn_not_in(path, not_in_values):
         getter = compile(path)
-        _values = map(compile, not_in_values)
+        _values = list(map(compile, not_in_values))
 
         return lambda data: getter(data) not in map(
             lambda _value: _value(data), _values
@@ -229,12 +284,21 @@ def get_functions(compile):
 
         return lambda value: regex.match(getter(value)) is not None
 
-    fn_eq = build_function(lambda a, b: a == b)
-    fn_gt = build_function(lambda a, b: a > b)
-    fn_gte = build_function(lambda a, b: a >= b)
-    fn_lt = build_function(lambda a, b: a < b)
-    fn_lte = build_function(lambda a, b: a <= b)
-    fn_ne = build_function(lambda a, b: a != b)
+    def eq(a, b):
+        return a == b
+
+    def gt(a, b):
+        return a > b if (type(a) is type(b)) and (type(a) in sortable_types) else False
+
+    def lt(a, b):
+        return a < b if (type(a) is type(b)) and (type(a) in sortable_types) else False
+
+    fn_eq = build_function(eq)
+    fn_gt = build_function(gt)
+    fn_gte = build_function(lambda a, b: gt(a, b) or eq(a, b))
+    fn_lt = build_function(lt)
+    fn_lte = build_function(lambda a, b: lt(a, b) or eq(a, b))
+    fn_ne = build_function(lambda a, b: not eq(a, b))
 
     fn_add = build_function(
         lambda a, b: to_string(a) + to_string(b)
@@ -360,5 +424,15 @@ def empty(array):
     return len(array) == 0
 
 
+def raise_array_expected():
+    raise RuntimeError("Array expected")
+
+
 def raise_runtime_error(message: str):
     raise RuntimeError(message)
+
+
+def validate_list(data):
+    if type(data) is not list:
+        raise_array_expected()
+    return data

@@ -1,7 +1,7 @@
 r'''
 # `snowflake_pipe`
 
-Refer to the Terraform Registry for docs: [`snowflake_pipe`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe).
+Refer to the Terraform Registry for docs: [`snowflake_pipe`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Pipe(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.pipe.Pipe",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe snowflake_pipe}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe snowflake_pipe}.'''
 
     def __init__(
         self,
@@ -61,6 +61,7 @@ class Pipe(
         error_integration: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
         integration: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["PipeTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -69,20 +70,21 @@ class Pipe(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe snowflake_pipe} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe snowflake_pipe} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param copy_statement: Specifies the copy statement for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#copy_statement Pipe#copy_statement}
-        :param database: The database in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#database Pipe#database}
-        :param name: Specifies the identifier for the pipe; must be unique for the database and schema in which the pipe is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#name Pipe#name}
-        :param schema: The schema in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#schema Pipe#schema}
-        :param auto_ingest: Specifies a auto_ingest param for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#auto_ingest Pipe#auto_ingest}
-        :param aws_sns_topic_arn: Specifies the Amazon Resource Name (ARN) for the SNS topic for your S3 bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#aws_sns_topic_arn Pipe#aws_sns_topic_arn}
-        :param comment: Specifies a comment for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#comment Pipe#comment}
-        :param error_integration: Specifies the name of the notification integration used for error notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#error_integration Pipe#error_integration}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#id Pipe#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param integration: Specifies an integration for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#integration Pipe#integration}
+        :param copy_statement: Specifies the copy statement for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#copy_statement Pipe#copy_statement}
+        :param database: The database in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#database Pipe#database}
+        :param name: Specifies the identifier for the pipe; must be unique for the database and schema in which the pipe is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#name Pipe#name}
+        :param schema: The schema in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#schema Pipe#schema}
+        :param auto_ingest: (Default: ``false``) Specifies a auto_ingest param for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#auto_ingest Pipe#auto_ingest}
+        :param aws_sns_topic_arn: Specifies the Amazon Resource Name (ARN) for the SNS topic for your S3 bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#aws_sns_topic_arn Pipe#aws_sns_topic_arn}
+        :param comment: Specifies a comment for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#comment Pipe#comment}
+        :param error_integration: Specifies the name of the notification integration used for error notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#error_integration Pipe#error_integration}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#id Pipe#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param integration: Specifies an integration for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#integration Pipe#integration}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#timeouts Pipe#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,6 +108,7 @@ class Pipe(
             error_integration=error_integration,
             id=id,
             integration=integration,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -130,7 +133,7 @@ class Pipe(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Pipe to import.
-        :param import_from_id: The id of the existing Pipe that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Pipe that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Pipe to import is found.
         '''
         if __debug__:
@@ -140,6 +143,25 @@ class Pipe(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#create Pipe#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#delete Pipe#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#read Pipe#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#update Pipe#update}.
+        '''
+        value = PipeTimeouts(create=create, delete=delete, read=read, update=update)
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetAutoIngest")
     def reset_auto_ingest(self) -> None:
@@ -164,6 +186,10 @@ class Pipe(
     @jsii.member(jsii_name="resetIntegration")
     def reset_integration(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetIntegration", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -192,6 +218,11 @@ class Pipe(
     @jsii.member(jsii_name="owner")
     def owner(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "owner"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "PipeTimeoutsOutputReference":
+        return typing.cast("PipeTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="autoIngestInput")
@@ -244,6 +275,13 @@ class Pipe(
     @jsii.member(jsii_name="schemaInput")
     def schema_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "schemaInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "PipeTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "PipeTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="autoIngest")
@@ -390,6 +428,7 @@ class Pipe(
         "error_integration": "errorIntegration",
         "id": "id",
         "integration": "integration",
+        "timeouts": "timeouts",
     },
 )
 class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -413,6 +452,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         error_integration: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
         integration: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["PipeTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -422,19 +462,22 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param copy_statement: Specifies the copy statement for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#copy_statement Pipe#copy_statement}
-        :param database: The database in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#database Pipe#database}
-        :param name: Specifies the identifier for the pipe; must be unique for the database and schema in which the pipe is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#name Pipe#name}
-        :param schema: The schema in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#schema Pipe#schema}
-        :param auto_ingest: Specifies a auto_ingest param for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#auto_ingest Pipe#auto_ingest}
-        :param aws_sns_topic_arn: Specifies the Amazon Resource Name (ARN) for the SNS topic for your S3 bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#aws_sns_topic_arn Pipe#aws_sns_topic_arn}
-        :param comment: Specifies a comment for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#comment Pipe#comment}
-        :param error_integration: Specifies the name of the notification integration used for error notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#error_integration Pipe#error_integration}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#id Pipe#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param integration: Specifies an integration for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#integration Pipe#integration}
+        :param copy_statement: Specifies the copy statement for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#copy_statement Pipe#copy_statement}
+        :param database: The database in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#database Pipe#database}
+        :param name: Specifies the identifier for the pipe; must be unique for the database and schema in which the pipe is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#name Pipe#name}
+        :param schema: The schema in which to create the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#schema Pipe#schema}
+        :param auto_ingest: (Default: ``false``) Specifies a auto_ingest param for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#auto_ingest Pipe#auto_ingest}
+        :param aws_sns_topic_arn: Specifies the Amazon Resource Name (ARN) for the SNS topic for your S3 bucket. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#aws_sns_topic_arn Pipe#aws_sns_topic_arn}
+        :param comment: Specifies a comment for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#comment Pipe#comment}
+        :param error_integration: Specifies the name of the notification integration used for error notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#error_integration Pipe#error_integration}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#id Pipe#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param integration: Specifies an integration for the pipe. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#integration Pipe#integration}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#timeouts Pipe#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = PipeTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__da26adec79a0eb292e8ecde6fc9a82788b5d1ade251e80cb78f1d8a2815cb921)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -454,6 +497,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument error_integration", value=error_integration, expected_type=type_hints["error_integration"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument integration", value=integration, expected_type=type_hints["integration"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "copy_statement": copy_statement,
             "database": database,
@@ -486,6 +530,8 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["id"] = id
         if integration is not None:
             self._values["integration"] = integration
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -555,7 +601,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def copy_statement(self) -> builtins.str:
         '''Specifies the copy statement for the pipe.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#copy_statement Pipe#copy_statement}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#copy_statement Pipe#copy_statement}
         '''
         result = self._values.get("copy_statement")
         assert result is not None, "Required property 'copy_statement' is missing"
@@ -565,7 +611,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def database(self) -> builtins.str:
         '''The database in which to create the pipe.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#database Pipe#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#database Pipe#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -577,7 +623,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         must be unique for the database and schema in which the pipe is created.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#name Pipe#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#name Pipe#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -587,7 +633,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def schema(self) -> builtins.str:
         '''The schema in which to create the pipe.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#schema Pipe#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#schema Pipe#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -597,9 +643,9 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auto_ingest(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Specifies a auto_ingest param for the pipe.
+        '''(Default: ``false``) Specifies a auto_ingest param for the pipe.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#auto_ingest Pipe#auto_ingest}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#auto_ingest Pipe#auto_ingest}
         '''
         result = self._values.get("auto_ingest")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -608,7 +654,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aws_sns_topic_arn(self) -> typing.Optional[builtins.str]:
         '''Specifies the Amazon Resource Name (ARN) for the SNS topic for your S3 bucket.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#aws_sns_topic_arn Pipe#aws_sns_topic_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#aws_sns_topic_arn Pipe#aws_sns_topic_arn}
         '''
         result = self._values.get("aws_sns_topic_arn")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -617,7 +663,7 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the pipe.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#comment Pipe#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#comment Pipe#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -626,14 +672,14 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def error_integration(self) -> typing.Optional[builtins.str]:
         '''Specifies the name of the notification integration used for error notifications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#error_integration Pipe#error_integration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#error_integration Pipe#error_integration}
         '''
         result = self._values.get("error_integration")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#id Pipe#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#id Pipe#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -645,10 +691,19 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def integration(self) -> typing.Optional[builtins.str]:
         '''Specifies an integration for the pipe.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/pipe#integration Pipe#integration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#integration Pipe#integration}
         '''
         result = self._values.get("integration")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["PipeTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#timeouts Pipe#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["PipeTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -662,9 +717,210 @@ class PipeConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.pipe.PipeTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class PipeTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#create Pipe#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#delete Pipe#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#read Pipe#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#update Pipe#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d7c753a71c2b70f8bfca9ef57af927afcc579c2a1843e05f609ae8e320daca46)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#create Pipe#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#delete Pipe#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#read Pipe#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/pipe#update Pipe#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "PipeTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class PipeTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.pipe.PipeTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1afbe04107e4d698319b60d470383eb0a1f88126d6c8b889dd26395b96c5876b)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7671b9bc6a69d336fdeaf96bc859fdd6afb6fa8b6038b9a9074fdcddd3938ddd)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__867b2e28788646edf24cdabd97aaba46da250d8ccd95faf248aa5c61d05b4679)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__123a2917fba3ad6776c78d4f1bff995642f85f42cc555117d49fb0be3700813c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f439ee9abcfbee96bdeb1f79e0eac0d67451adae1ee886630e5ca5f7fde7a606)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PipeTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PipeTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PipeTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__115a943999f97817cc9d75ea0905f65a04eb2f0113dd363d225de4c3ab7198c1)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "Pipe",
     "PipeConfig",
+    "PipeTimeouts",
+    "PipeTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -683,6 +939,7 @@ def _typecheckingstub__2c94a4f60f8a8b6e1dde9d0fe64f9603bc826fcb4cc6455836ea5b23b
     error_integration: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
     integration: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[PipeTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -782,6 +1039,54 @@ def _typecheckingstub__da26adec79a0eb292e8ecde6fc9a82788b5d1ade251e80cb78f1d8a28
     error_integration: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
     integration: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[PipeTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d7c753a71c2b70f8bfca9ef57af927afcc579c2a1843e05f609ae8e320daca46(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1afbe04107e4d698319b60d470383eb0a1f88126d6c8b889dd26395b96c5876b(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7671b9bc6a69d336fdeaf96bc859fdd6afb6fa8b6038b9a9074fdcddd3938ddd(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__867b2e28788646edf24cdabd97aaba46da250d8ccd95faf248aa5c61d05b4679(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__123a2917fba3ad6776c78d4f1bff995642f85f42cc555117d49fb0be3700813c(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f439ee9abcfbee96bdeb1f79e0eac0d67451adae1ee886630e5ca5f7fde7a606(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__115a943999f97817cc9d75ea0905f65a04eb2f0113dd363d225de4c3ab7198c1(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, PipeTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

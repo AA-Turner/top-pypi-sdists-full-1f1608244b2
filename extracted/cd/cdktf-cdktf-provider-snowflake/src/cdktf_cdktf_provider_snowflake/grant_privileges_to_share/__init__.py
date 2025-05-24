@@ -1,7 +1,7 @@
 r'''
 # `snowflake_grant_privileges_to_share`
 
-Refer to the Terraform Registry for docs: [`snowflake_grant_privileges_to_share`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share).
+Refer to the Terraform Registry for docs: [`snowflake_grant_privileges_to_share`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class GrantPrivilegesToShare(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.grantPrivilegesToShare.GrantPrivilegesToShare",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share snowflake_grant_privileges_to_share}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share snowflake_grant_privileges_to_share}.'''
 
     def __init__(
         self,
@@ -61,6 +61,7 @@ class GrantPrivilegesToShare(
         on_table: typing.Optional[builtins.str] = None,
         on_tag: typing.Optional[builtins.str] = None,
         on_view: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["GrantPrivilegesToShareTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -69,20 +70,21 @@ class GrantPrivilegesToShare(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share snowflake_grant_privileges_to_share} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share snowflake_grant_privileges_to_share} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param privileges: The privileges to grant on the share. See available list of privileges: https://docs.snowflake.com/en/sql-reference/sql/grant-privilege-share#syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#privileges GrantPrivilegesToShare#privileges}
-        :param to_share: The fully qualified name of the share on which privileges will be granted. For more information about this resource, see `docs <./share>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#to_share GrantPrivilegesToShare#to_share}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#id GrantPrivilegesToShare#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param on_all_tables_in_schema: The fully qualified identifier for the schema for which the specified privilege will be granted for all tables. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_all_tables_in_schema GrantPrivilegesToShare#on_all_tables_in_schema}
-        :param on_database: The fully qualified name of the database on which privileges will be granted. For more information about this resource, see `docs <./database>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_database GrantPrivilegesToShare#on_database}
-        :param on_function: The fully qualified name of the function on which privileges will be granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_function GrantPrivilegesToShare#on_function}
-        :param on_schema: The fully qualified name of the schema on which privileges will be granted. For more information about this resource, see `docs <./schema>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_schema GrantPrivilegesToShare#on_schema}
-        :param on_table: The fully qualified name of the table on which privileges will be granted. For more information about this resource, see `docs <./table>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_table GrantPrivilegesToShare#on_table}
-        :param on_tag: The fully qualified name of the tag on which privileges will be granted. For more information about this resource, see `docs <./tag>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_tag GrantPrivilegesToShare#on_tag}
-        :param on_view: The fully qualified name of the view on which privileges will be granted. For more information about this resource, see `docs <./view>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_view GrantPrivilegesToShare#on_view}
+        :param privileges: The privileges to grant on the share. See available list of privileges: https://docs.snowflake.com/en/sql-reference/sql/grant-privilege-share#syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#privileges GrantPrivilegesToShare#privileges}
+        :param to_share: The fully qualified name of the share on which privileges will be granted. For more information about this resource, see `docs <./share>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#to_share GrantPrivilegesToShare#to_share}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#id GrantPrivilegesToShare#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param on_all_tables_in_schema: The fully qualified identifier for the schema for which the specified privilege will be granted for all tables. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_all_tables_in_schema GrantPrivilegesToShare#on_all_tables_in_schema}
+        :param on_database: The fully qualified name of the database on which privileges will be granted. For more information about this resource, see `docs <./database>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_database GrantPrivilegesToShare#on_database}
+        :param on_function: The fully qualified name of the function on which privileges will be granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_function GrantPrivilegesToShare#on_function}
+        :param on_schema: The fully qualified name of the schema on which privileges will be granted. For more information about this resource, see `docs <./schema>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_schema GrantPrivilegesToShare#on_schema}
+        :param on_table: The fully qualified name of the table on which privileges will be granted. For more information about this resource, see `docs <./table>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_table GrantPrivilegesToShare#on_table}
+        :param on_tag: The fully qualified name of the tag on which privileges will be granted. For more information about this resource, see `docs <./tag>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_tag GrantPrivilegesToShare#on_tag}
+        :param on_view: The fully qualified name of the view on which privileges will be granted. For more information about this resource, see `docs <./view>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_view GrantPrivilegesToShare#on_view}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#timeouts GrantPrivilegesToShare#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,6 +108,7 @@ class GrantPrivilegesToShare(
             on_table=on_table,
             on_tag=on_tag,
             on_view=on_view,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -130,7 +133,7 @@ class GrantPrivilegesToShare(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the GrantPrivilegesToShare to import.
-        :param import_from_id: The id of the existing GrantPrivilegesToShare that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing GrantPrivilegesToShare that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the GrantPrivilegesToShare to import is found.
         '''
         if __debug__:
@@ -140,6 +143,27 @@ class GrantPrivilegesToShare(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#create GrantPrivilegesToShare#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#delete GrantPrivilegesToShare#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#read GrantPrivilegesToShare#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#update GrantPrivilegesToShare#update}.
+        '''
+        value = GrantPrivilegesToShareTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
@@ -173,6 +197,10 @@ class GrantPrivilegesToShare(
     def reset_on_view(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetOnView", []))
 
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
+
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
         return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "synthesizeAttributes", []))
@@ -185,6 +213,11 @@ class GrantPrivilegesToShare(
     @jsii.member(jsii_name="tfResourceType")
     def TF_RESOURCE_TYPE(cls) -> builtins.str:
         return typing.cast(builtins.str, jsii.sget(cls, "tfResourceType"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "GrantPrivilegesToShareTimeoutsOutputReference":
+        return typing.cast("GrantPrivilegesToShareTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="idInput")
@@ -230,6 +263,13 @@ class GrantPrivilegesToShare(
     @jsii.member(jsii_name="privilegesInput")
     def privileges_input(self) -> typing.Optional[typing.List[builtins.str]]:
         return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "privilegesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "GrantPrivilegesToShareTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "GrantPrivilegesToShareTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="toShareInput")
@@ -378,6 +418,7 @@ class GrantPrivilegesToShare(
         "on_table": "onTable",
         "on_tag": "onTag",
         "on_view": "onView",
+        "timeouts": "timeouts",
     },
 )
 class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -401,6 +442,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         on_table: typing.Optional[builtins.str] = None,
         on_tag: typing.Optional[builtins.str] = None,
         on_view: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["GrantPrivilegesToShareTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -410,19 +452,22 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param privileges: The privileges to grant on the share. See available list of privileges: https://docs.snowflake.com/en/sql-reference/sql/grant-privilege-share#syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#privileges GrantPrivilegesToShare#privileges}
-        :param to_share: The fully qualified name of the share on which privileges will be granted. For more information about this resource, see `docs <./share>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#to_share GrantPrivilegesToShare#to_share}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#id GrantPrivilegesToShare#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param on_all_tables_in_schema: The fully qualified identifier for the schema for which the specified privilege will be granted for all tables. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_all_tables_in_schema GrantPrivilegesToShare#on_all_tables_in_schema}
-        :param on_database: The fully qualified name of the database on which privileges will be granted. For more information about this resource, see `docs <./database>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_database GrantPrivilegesToShare#on_database}
-        :param on_function: The fully qualified name of the function on which privileges will be granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_function GrantPrivilegesToShare#on_function}
-        :param on_schema: The fully qualified name of the schema on which privileges will be granted. For more information about this resource, see `docs <./schema>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_schema GrantPrivilegesToShare#on_schema}
-        :param on_table: The fully qualified name of the table on which privileges will be granted. For more information about this resource, see `docs <./table>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_table GrantPrivilegesToShare#on_table}
-        :param on_tag: The fully qualified name of the tag on which privileges will be granted. For more information about this resource, see `docs <./tag>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_tag GrantPrivilegesToShare#on_tag}
-        :param on_view: The fully qualified name of the view on which privileges will be granted. For more information about this resource, see `docs <./view>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_view GrantPrivilegesToShare#on_view}
+        :param privileges: The privileges to grant on the share. See available list of privileges: https://docs.snowflake.com/en/sql-reference/sql/grant-privilege-share#syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#privileges GrantPrivilegesToShare#privileges}
+        :param to_share: The fully qualified name of the share on which privileges will be granted. For more information about this resource, see `docs <./share>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#to_share GrantPrivilegesToShare#to_share}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#id GrantPrivilegesToShare#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param on_all_tables_in_schema: The fully qualified identifier for the schema for which the specified privilege will be granted for all tables. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_all_tables_in_schema GrantPrivilegesToShare#on_all_tables_in_schema}
+        :param on_database: The fully qualified name of the database on which privileges will be granted. For more information about this resource, see `docs <./database>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_database GrantPrivilegesToShare#on_database}
+        :param on_function: The fully qualified name of the function on which privileges will be granted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_function GrantPrivilegesToShare#on_function}
+        :param on_schema: The fully qualified name of the schema on which privileges will be granted. For more information about this resource, see `docs <./schema>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_schema GrantPrivilegesToShare#on_schema}
+        :param on_table: The fully qualified name of the table on which privileges will be granted. For more information about this resource, see `docs <./table>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_table GrantPrivilegesToShare#on_table}
+        :param on_tag: The fully qualified name of the tag on which privileges will be granted. For more information about this resource, see `docs <./tag>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_tag GrantPrivilegesToShare#on_tag}
+        :param on_view: The fully qualified name of the view on which privileges will be granted. For more information about this resource, see `docs <./view>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_view GrantPrivilegesToShare#on_view}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#timeouts GrantPrivilegesToShare#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = GrantPrivilegesToShareTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c5dc87562d29cd935055c6310cbf416df91caa02a79f0f39caa35c880965f49f)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -442,6 +487,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument on_table", value=on_table, expected_type=type_hints["on_table"])
             check_type(argname="argument on_tag", value=on_tag, expected_type=type_hints["on_tag"])
             check_type(argname="argument on_view", value=on_view, expected_type=type_hints["on_view"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "privileges": privileges,
             "to_share": to_share,
@@ -476,6 +522,8 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["on_tag"] = on_tag
         if on_view is not None:
             self._values["on_view"] = on_view
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -545,7 +593,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def privileges(self) -> typing.List[builtins.str]:
         '''The privileges to grant on the share. See available list of privileges: https://docs.snowflake.com/en/sql-reference/sql/grant-privilege-share#syntax.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#privileges GrantPrivilegesToShare#privileges}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#privileges GrantPrivilegesToShare#privileges}
         '''
         result = self._values.get("privileges")
         assert result is not None, "Required property 'privileges' is missing"
@@ -557,7 +605,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./share>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#to_share GrantPrivilegesToShare#to_share}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#to_share GrantPrivilegesToShare#to_share}
         '''
         result = self._values.get("to_share")
         assert result is not None, "Required property 'to_share' is missing"
@@ -565,7 +613,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#id GrantPrivilegesToShare#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#id GrantPrivilegesToShare#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -577,7 +625,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def on_all_tables_in_schema(self) -> typing.Optional[builtins.str]:
         '''The fully qualified identifier for the schema for which the specified privilege will be granted for all tables.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_all_tables_in_schema GrantPrivilegesToShare#on_all_tables_in_schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_all_tables_in_schema GrantPrivilegesToShare#on_all_tables_in_schema}
         '''
         result = self._values.get("on_all_tables_in_schema")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -588,7 +636,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./database>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_database GrantPrivilegesToShare#on_database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_database GrantPrivilegesToShare#on_database}
         '''
         result = self._values.get("on_database")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -597,7 +645,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def on_function(self) -> typing.Optional[builtins.str]:
         '''The fully qualified name of the function on which privileges will be granted.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_function GrantPrivilegesToShare#on_function}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_function GrantPrivilegesToShare#on_function}
         '''
         result = self._values.get("on_function")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -608,7 +656,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./schema>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_schema GrantPrivilegesToShare#on_schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_schema GrantPrivilegesToShare#on_schema}
         '''
         result = self._values.get("on_schema")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -619,7 +667,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./table>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_table GrantPrivilegesToShare#on_table}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_table GrantPrivilegesToShare#on_table}
         '''
         result = self._values.get("on_table")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -630,7 +678,7 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./tag>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_tag GrantPrivilegesToShare#on_tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_tag GrantPrivilegesToShare#on_tag}
         '''
         result = self._values.get("on_tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -641,10 +689,19 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./view>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_privileges_to_share#on_view GrantPrivilegesToShare#on_view}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#on_view GrantPrivilegesToShare#on_view}
         '''
         result = self._values.get("on_view")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["GrantPrivilegesToShareTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#timeouts GrantPrivilegesToShare#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["GrantPrivilegesToShareTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -658,9 +715,210 @@ class GrantPrivilegesToShareConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.grantPrivilegesToShare.GrantPrivilegesToShareTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class GrantPrivilegesToShareTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#create GrantPrivilegesToShare#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#delete GrantPrivilegesToShare#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#read GrantPrivilegesToShare#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#update GrantPrivilegesToShare#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1f0d63e40266bfe497e3f4a0bfb06d4ad83792ee513f729932dc6b29aea908be)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#create GrantPrivilegesToShare#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#delete GrantPrivilegesToShare#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#read GrantPrivilegesToShare#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_privileges_to_share#update GrantPrivilegesToShare#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "GrantPrivilegesToShareTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class GrantPrivilegesToShareTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.grantPrivilegesToShare.GrantPrivilegesToShareTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3f41afdb8e8e1444fc8cda5292bf226cd850443d756a70ceffa55d6700b842f1)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__379a2ab8aa25135c928359aae45836bcf13abe8054aac6d9c013da4937add143)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ab22b3fb153e18ee7ce4978ea9e60f2efcb5d677ad79d145382b9259cbb696d7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__423440895de1f51c79e33cf3de78bca1fb7f98b969d596294d3d963f16a416ea)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__44f983329e880120661c9d1fbccd7a7af900d2ebffc93e9b9c9a34c4aea89068)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantPrivilegesToShareTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantPrivilegesToShareTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantPrivilegesToShareTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__48df736c84c1fc335ef5b08ebbf512a263a20b6fa6c9f7378ce5373271fbe08d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "GrantPrivilegesToShare",
     "GrantPrivilegesToShareConfig",
+    "GrantPrivilegesToShareTimeouts",
+    "GrantPrivilegesToShareTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -679,6 +937,7 @@ def _typecheckingstub__204f570a41eb3c8ab007b93a7be873e976b075f7f4ce4859077282275
     on_table: typing.Optional[builtins.str] = None,
     on_tag: typing.Optional[builtins.str] = None,
     on_view: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[GrantPrivilegesToShareTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -778,6 +1037,54 @@ def _typecheckingstub__c5dc87562d29cd935055c6310cbf416df91caa02a79f0f39caa35c880
     on_table: typing.Optional[builtins.str] = None,
     on_tag: typing.Optional[builtins.str] = None,
     on_view: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[GrantPrivilegesToShareTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1f0d63e40266bfe497e3f4a0bfb06d4ad83792ee513f729932dc6b29aea908be(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3f41afdb8e8e1444fc8cda5292bf226cd850443d756a70ceffa55d6700b842f1(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__379a2ab8aa25135c928359aae45836bcf13abe8054aac6d9c013da4937add143(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ab22b3fb153e18ee7ce4978ea9e60f2efcb5d677ad79d145382b9259cbb696d7(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__423440895de1f51c79e33cf3de78bca1fb7f98b969d596294d3d963f16a416ea(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__44f983329e880120661c9d1fbccd7a7af900d2ebffc93e9b9c9a34c4aea89068(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__48df736c84c1fc335ef5b08ebbf512a263a20b6fa6c9f7378ce5373271fbe08d(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantPrivilegesToShareTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

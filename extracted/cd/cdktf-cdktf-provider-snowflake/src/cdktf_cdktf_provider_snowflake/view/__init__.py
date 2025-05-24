@@ -1,7 +1,7 @@
 r'''
 # `snowflake_view`
 
-Refer to the Terraform Registry for docs: [`snowflake_view`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view).
+Refer to the Terraform Registry for docs: [`snowflake_view`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class View(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.view.View",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view snowflake_view}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view snowflake_view}.'''
 
     def __init__(
         self,
@@ -67,6 +67,7 @@ class View(
         is_secure: typing.Optional[builtins.str] = None,
         is_temporary: typing.Optional[builtins.str] = None,
         row_access_policy: typing.Optional[typing.Union["ViewRowAccessPolicy", typing.Dict[builtins.str, typing.Any]]] = None,
+        timeouts: typing.Optional[typing.Union["ViewTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -75,26 +76,27 @@ class View(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view snowflake_view} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view snowflake_view} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param database: The database in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#database View#database}
-        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#name View#name}
-        :param schema: The schema in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#schema View#schema}
-        :param statement: Specifies the query used to create the view. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#statement View#statement}
-        :param aggregation_policy: aggregation_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#aggregation_policy View#aggregation_policy}
-        :param change_tracking: Specifies to enable or disable change tracking on the table. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#change_tracking View#change_tracking}
-        :param column: column block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#column View#column}
-        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#comment View#comment}
-        :param copy_grants: Retains the access permissions from the original view when a view is recreated using the OR REPLACE clause. This is used when the provider detects changes for fields that can not be changed by ALTER. This value will not have any effect during creating a new object with Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#copy_grants View#copy_grants}
-        :param data_metric_function: data_metric_function block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#data_metric_function View#data_metric_function}
-        :param data_metric_schedule: data_metric_schedule block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#data_metric_schedule View#data_metric_schedule}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#id View#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_recursive: Specifies that the view can refer to itself using recursive syntax without necessarily using a CTE (common table expression). Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_recursive View#is_recursive}
-        :param is_secure: Specifies that the view is secure. By design, the Snowflake's ``SHOW VIEWS`` command does not provide information about secure views (consult `view usage notes <https://docs.snowflake.com/en/sql-reference/sql/create-view#usage-notes>`_) which is essential to manage/import view with Terraform. Use the role owning the view while managing secure views. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_secure View#is_secure}
-        :param is_temporary: Specifies that the view persists only for the duration of the session that you created it in. A temporary view and all its contents are dropped at the end of the session. In context of this provider, it means that it's dropped after a Terraform operation. This results in a permanent plan with object creation. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_temporary View#is_temporary}
-        :param row_access_policy: row_access_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#row_access_policy View#row_access_policy}
+        :param database: The database in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#database View#database}
+        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#name View#name}
+        :param schema: The schema in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#schema View#schema}
+        :param statement: Specifies the query used to create the view. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#statement View#statement}
+        :param aggregation_policy: aggregation_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#aggregation_policy View#aggregation_policy}
+        :param change_tracking: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies to enable or disable change tracking on the table. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#change_tracking View#change_tracking}
+        :param column: column block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#column View#column}
+        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#comment View#comment}
+        :param copy_grants: (Default: ``false``) Retains the access permissions from the original view when a view is recreated using the OR REPLACE clause. This is used when the provider detects changes for fields that can not be changed by ALTER. This value will not have any effect during creating a new object with Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#copy_grants View#copy_grants}
+        :param data_metric_function: data_metric_function block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#data_metric_function View#data_metric_function}
+        :param data_metric_schedule: data_metric_schedule block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#data_metric_schedule View#data_metric_schedule}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#id View#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_recursive: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view can refer to itself using recursive syntax without necessarily using a CTE (common table expression). Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_recursive View#is_recursive}
+        :param is_secure: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view is secure. By design, the Snowflake's ``SHOW VIEWS`` command does not provide information about secure views (consult `view usage notes <https://docs.snowflake.com/en/sql-reference/sql/create-view#usage-notes>`_) which is essential to manage/import view with Terraform. Use the role owning the view while managing secure views. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_secure View#is_secure}
+        :param is_temporary: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view persists only for the duration of the session that you created it in. A temporary view and all its contents are dropped at the end of the session. In context of this provider, it means that it's dropped after a Terraform operation. This results in a permanent plan with object creation. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_temporary View#is_temporary}
+        :param row_access_policy: row_access_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#row_access_policy View#row_access_policy}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#timeouts View#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -124,6 +126,7 @@ class View(
             is_secure=is_secure,
             is_temporary=is_temporary,
             row_access_policy=row_access_policy,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -148,7 +151,7 @@ class View(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the View to import.
-        :param import_from_id: The id of the existing View that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing View that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the View to import is found.
         '''
         if __debug__:
@@ -167,8 +170,8 @@ class View(
         entity_key: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param policy_name: Aggregation policy name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
-        :param entity_key: Defines which columns uniquely identify an entity within the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#entity_key View#entity_key}
+        :param policy_name: Aggregation policy name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
+        :param entity_key: Defines which columns uniquely identify an entity within the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#entity_key View#entity_key}
         '''
         value = ViewAggregationPolicy(policy_name=policy_name, entity_key=entity_key)
 
@@ -208,8 +211,8 @@ class View(
         using_cron: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param minutes: Specifies an interval (in minutes) of wait time inserted between runs of the data metric function. Conflicts with ``using_cron``. Valid values are: ``5`` | ``15`` | ``30`` | ``60`` | ``720`` | ``1440``. Due to Snowflake limitations, changes in this field are not managed by the provider. Please consider using `taint <https://developer.hashicorp.com/terraform/cli/commands/taint>`_ command, ``using_cron`` field, or `replace_triggered_by <https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#replace_triggered_by>`_ metadata argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#minutes View#minutes}
-        :param using_cron: Specifies a cron expression and time zone for periodically running the data metric function. Supports a subset of standard cron utility syntax. Conflicts with ``minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#using_cron View#using_cron}
+        :param minutes: Specifies an interval (in minutes) of wait time inserted between runs of the data metric function. Conflicts with ``using_cron``. Valid values are: ``5`` | ``15`` | ``30`` | ``60`` | ``720`` | ``1440``. Due to Snowflake limitations, changes in this field are not managed by the provider. Please consider using `taint <https://developer.hashicorp.com/terraform/cli/commands/taint>`_ command, ``using_cron`` field, or `replace_triggered_by <https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#replace_triggered_by>`_ metadata argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#minutes View#minutes}
+        :param using_cron: Specifies a cron expression and time zone for periodically running the data metric function. Supports a subset of standard cron utility syntax. Conflicts with ``minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#using_cron View#using_cron}
         '''
         value = ViewDataMetricSchedule(minutes=minutes, using_cron=using_cron)
 
@@ -223,12 +226,31 @@ class View(
         policy_name: builtins.str,
     ) -> None:
         '''
-        :param on: Defines which columns are affected by the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#on View#on}
-        :param policy_name: Row access policy name. For more information about this resource, see `docs <./row_access_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        :param on: Defines which columns are affected by the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#on View#on}
+        :param policy_name: Row access policy name. For more information about this resource, see `docs <./row_access_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         value = ViewRowAccessPolicy(on=on, policy_name=policy_name)
 
         return typing.cast(None, jsii.invoke(self, "putRowAccessPolicy", [value]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#create View#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#delete View#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#read View#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#update View#update}.
+        '''
+        value = ViewTimeouts(create=create, delete=delete, read=read, update=update)
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetAggregationPolicy")
     def reset_aggregation_policy(self) -> None:
@@ -277,6 +299,10 @@ class View(
     @jsii.member(jsii_name="resetRowAccessPolicy")
     def reset_row_access_policy(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetRowAccessPolicy", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -330,6 +356,11 @@ class View(
     @jsii.member(jsii_name="showOutput")
     def show_output(self) -> "ViewShowOutputList":
         return typing.cast("ViewShowOutputList", jsii.get(self, "showOutput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "ViewTimeoutsOutputReference":
+        return typing.cast("ViewTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="aggregationPolicyInput")
@@ -416,6 +447,13 @@ class View(
     @jsii.member(jsii_name="statementInput")
     def statement_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "statementInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ViewTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ViewTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="changeTracking")
@@ -566,8 +604,8 @@ class ViewAggregationPolicy:
         entity_key: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param policy_name: Aggregation policy name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
-        :param entity_key: Defines which columns uniquely identify an entity within the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#entity_key View#entity_key}
+        :param policy_name: Aggregation policy name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
+        :param entity_key: Defines which columns uniquely identify an entity within the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#entity_key View#entity_key}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__76de6e789c9f0ef301ab4206ef0865bd52b112ca49aa4c92dac68fdfeb0e0168)
@@ -583,7 +621,7 @@ class ViewAggregationPolicy:
     def policy_name(self) -> builtins.str:
         '''Aggregation policy name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         result = self._values.get("policy_name")
         assert result is not None, "Required property 'policy_name' is missing"
@@ -593,7 +631,7 @@ class ViewAggregationPolicy:
     def entity_key(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Defines which columns uniquely identify an entity within the view.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#entity_key View#entity_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#entity_key View#entity_key}
         '''
         result = self._values.get("entity_key")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -701,10 +739,10 @@ class ViewColumn:
         projection_policy: typing.Optional[typing.Union["ViewColumnProjectionPolicy", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param column_name: Specifies affected column name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#column_name View#column_name}
-        :param comment: Specifies a comment for the column. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#comment View#comment}
-        :param masking_policy: masking_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#masking_policy View#masking_policy}
-        :param projection_policy: projection_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#projection_policy View#projection_policy}
+        :param column_name: Specifies affected column name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#column_name View#column_name}
+        :param comment: Specifies a comment for the column. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#comment View#comment}
+        :param masking_policy: masking_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#masking_policy View#masking_policy}
+        :param projection_policy: projection_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#projection_policy View#projection_policy}
         '''
         if isinstance(masking_policy, dict):
             masking_policy = ViewColumnMaskingPolicy(**masking_policy)
@@ -730,7 +768,7 @@ class ViewColumn:
     def column_name(self) -> builtins.str:
         '''Specifies affected column name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#column_name View#column_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#column_name View#column_name}
         '''
         result = self._values.get("column_name")
         assert result is not None, "Required property 'column_name' is missing"
@@ -740,7 +778,7 @@ class ViewColumn:
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the column.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#comment View#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#comment View#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -749,7 +787,7 @@ class ViewColumn:
     def masking_policy(self) -> typing.Optional["ViewColumnMaskingPolicy"]:
         '''masking_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#masking_policy View#masking_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#masking_policy View#masking_policy}
         '''
         result = self._values.get("masking_policy")
         return typing.cast(typing.Optional["ViewColumnMaskingPolicy"], result)
@@ -758,7 +796,7 @@ class ViewColumn:
     def projection_policy(self) -> typing.Optional["ViewColumnProjectionPolicy"]:
         '''projection_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#projection_policy View#projection_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#projection_policy View#projection_policy}
         '''
         result = self._values.get("projection_policy")
         return typing.cast(typing.Optional["ViewColumnProjectionPolicy"], result)
@@ -878,8 +916,8 @@ class ViewColumnMaskingPolicy:
         using: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param policy_name: Specifies the masking policy to set on a column. For more information about this resource, see `docs <./masking_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
-        :param using: Specifies the arguments to pass into the conditional masking policy SQL expression. The first column in the list specifies the column for the policy conditions to mask or tokenize the data and must match the column to which the masking policy is set. The additional columns specify the columns to evaluate to determine whether to mask or tokenize the data in each row of the query result when a query is made on the first column. If the USING clause is omitted, Snowflake treats the conditional masking policy as a normal masking policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#using View#using}
+        :param policy_name: Specifies the masking policy to set on a column. For more information about this resource, see `docs <./masking_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
+        :param using: Specifies the arguments to pass into the conditional masking policy SQL expression. The first column in the list specifies the column for the policy conditions to mask or tokenize the data and must match the column to which the masking policy is set. The additional columns specify the columns to evaluate to determine whether to mask or tokenize the data in each row of the query result when a query is made on the first column. If the USING clause is omitted, Snowflake treats the conditional masking policy as a normal masking policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#using View#using}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__91be762c59dcb5373043f22b8e8a84ef6befb88891eb139130b16c2598abb15b)
@@ -895,7 +933,7 @@ class ViewColumnMaskingPolicy:
     def policy_name(self) -> builtins.str:
         '''Specifies the masking policy to set on a column. For more information about this resource, see `docs <./masking_policy>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         result = self._values.get("policy_name")
         assert result is not None, "Required property 'policy_name' is missing"
@@ -907,7 +945,7 @@ class ViewColumnMaskingPolicy:
 
         The first column in the list specifies the column for the policy conditions to mask or tokenize the data and must match the column to which the masking policy is set. The additional columns specify the columns to evaluate to determine whether to mask or tokenize the data in each row of the query result when a query is made on the first column. If the USING clause is omitted, Snowflake treats the conditional masking policy as a normal masking policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#using View#using}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#using View#using}
         '''
         result = self._values.get("using")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1029,8 +1067,8 @@ class ViewColumnOutputReference(
         using: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param policy_name: Specifies the masking policy to set on a column. For more information about this resource, see `docs <./masking_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
-        :param using: Specifies the arguments to pass into the conditional masking policy SQL expression. The first column in the list specifies the column for the policy conditions to mask or tokenize the data and must match the column to which the masking policy is set. The additional columns specify the columns to evaluate to determine whether to mask or tokenize the data in each row of the query result when a query is made on the first column. If the USING clause is omitted, Snowflake treats the conditional masking policy as a normal masking policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#using View#using}
+        :param policy_name: Specifies the masking policy to set on a column. For more information about this resource, see `docs <./masking_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
+        :param using: Specifies the arguments to pass into the conditional masking policy SQL expression. The first column in the list specifies the column for the policy conditions to mask or tokenize the data and must match the column to which the masking policy is set. The additional columns specify the columns to evaluate to determine whether to mask or tokenize the data in each row of the query result when a query is made on the first column. If the USING clause is omitted, Snowflake treats the conditional masking policy as a normal masking policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#using View#using}
         '''
         value = ViewColumnMaskingPolicy(policy_name=policy_name, using=using)
 
@@ -1039,7 +1077,7 @@ class ViewColumnOutputReference(
     @jsii.member(jsii_name="putProjectionPolicy")
     def put_projection_policy(self, *, policy_name: builtins.str) -> None:
         '''
-        :param policy_name: Specifies the projection policy to set on a column. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        :param policy_name: Specifies the projection policy to set on a column. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         value = ViewColumnProjectionPolicy(policy_name=policy_name)
 
@@ -1137,7 +1175,7 @@ class ViewColumnOutputReference(
 class ViewColumnProjectionPolicy:
     def __init__(self, *, policy_name: builtins.str) -> None:
         '''
-        :param policy_name: Specifies the projection policy to set on a column. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        :param policy_name: Specifies the projection policy to set on a column. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__73d3015a8c9907adad06a37cec71ece2a794a8f87b918a820252d5c88c4eeb00)
@@ -1150,7 +1188,7 @@ class ViewColumnProjectionPolicy:
     def policy_name(self) -> builtins.str:
         '''Specifies the projection policy to set on a column.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         result = self._values.get("policy_name")
         assert result is not None, "Required property 'policy_name' is missing"
@@ -1248,6 +1286,7 @@ class ViewColumnProjectionPolicyOutputReference(
         "is_secure": "isSecure",
         "is_temporary": "isTemporary",
         "row_access_policy": "rowAccessPolicy",
+        "timeouts": "timeouts",
     },
 )
 class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -1277,6 +1316,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         is_secure: typing.Optional[builtins.str] = None,
         is_temporary: typing.Optional[builtins.str] = None,
         row_access_policy: typing.Optional[typing.Union["ViewRowAccessPolicy", typing.Dict[builtins.str, typing.Any]]] = None,
+        timeouts: typing.Optional[typing.Union["ViewTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -1286,22 +1326,23 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param database: The database in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#database View#database}
-        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#name View#name}
-        :param schema: The schema in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#schema View#schema}
-        :param statement: Specifies the query used to create the view. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#statement View#statement}
-        :param aggregation_policy: aggregation_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#aggregation_policy View#aggregation_policy}
-        :param change_tracking: Specifies to enable or disable change tracking on the table. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#change_tracking View#change_tracking}
-        :param column: column block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#column View#column}
-        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#comment View#comment}
-        :param copy_grants: Retains the access permissions from the original view when a view is recreated using the OR REPLACE clause. This is used when the provider detects changes for fields that can not be changed by ALTER. This value will not have any effect during creating a new object with Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#copy_grants View#copy_grants}
-        :param data_metric_function: data_metric_function block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#data_metric_function View#data_metric_function}
-        :param data_metric_schedule: data_metric_schedule block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#data_metric_schedule View#data_metric_schedule}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#id View#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_recursive: Specifies that the view can refer to itself using recursive syntax without necessarily using a CTE (common table expression). Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_recursive View#is_recursive}
-        :param is_secure: Specifies that the view is secure. By design, the Snowflake's ``SHOW VIEWS`` command does not provide information about secure views (consult `view usage notes <https://docs.snowflake.com/en/sql-reference/sql/create-view#usage-notes>`_) which is essential to manage/import view with Terraform. Use the role owning the view while managing secure views. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_secure View#is_secure}
-        :param is_temporary: Specifies that the view persists only for the duration of the session that you created it in. A temporary view and all its contents are dropped at the end of the session. In context of this provider, it means that it's dropped after a Terraform operation. This results in a permanent plan with object creation. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_temporary View#is_temporary}
-        :param row_access_policy: row_access_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#row_access_policy View#row_access_policy}
+        :param database: The database in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#database View#database}
+        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#name View#name}
+        :param schema: The schema in which to create the view. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#schema View#schema}
+        :param statement: Specifies the query used to create the view. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#statement View#statement}
+        :param aggregation_policy: aggregation_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#aggregation_policy View#aggregation_policy}
+        :param change_tracking: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies to enable or disable change tracking on the table. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#change_tracking View#change_tracking}
+        :param column: column block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#column View#column}
+        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#comment View#comment}
+        :param copy_grants: (Default: ``false``) Retains the access permissions from the original view when a view is recreated using the OR REPLACE clause. This is used when the provider detects changes for fields that can not be changed by ALTER. This value will not have any effect during creating a new object with Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#copy_grants View#copy_grants}
+        :param data_metric_function: data_metric_function block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#data_metric_function View#data_metric_function}
+        :param data_metric_schedule: data_metric_schedule block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#data_metric_schedule View#data_metric_schedule}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#id View#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_recursive: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view can refer to itself using recursive syntax without necessarily using a CTE (common table expression). Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_recursive View#is_recursive}
+        :param is_secure: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view is secure. By design, the Snowflake's ``SHOW VIEWS`` command does not provide information about secure views (consult `view usage notes <https://docs.snowflake.com/en/sql-reference/sql/create-view#usage-notes>`_) which is essential to manage/import view with Terraform. Use the role owning the view while managing secure views. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_secure View#is_secure}
+        :param is_temporary: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view persists only for the duration of the session that you created it in. A temporary view and all its contents are dropped at the end of the session. In context of this provider, it means that it's dropped after a Terraform operation. This results in a permanent plan with object creation. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_temporary View#is_temporary}
+        :param row_access_policy: row_access_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#row_access_policy View#row_access_policy}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#timeouts View#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1311,6 +1352,8 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             data_metric_schedule = ViewDataMetricSchedule(**data_metric_schedule)
         if isinstance(row_access_policy, dict):
             row_access_policy = ViewRowAccessPolicy(**row_access_policy)
+        if isinstance(timeouts, dict):
+            timeouts = ViewTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__af4c315392eb726cc55e03fa983a07210e0ef3fc36ec42f9f5bb319667fc81f2)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -1336,6 +1379,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument is_secure", value=is_secure, expected_type=type_hints["is_secure"])
             check_type(argname="argument is_temporary", value=is_temporary, expected_type=type_hints["is_temporary"])
             check_type(argname="argument row_access_policy", value=row_access_policy, expected_type=type_hints["row_access_policy"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "database": database,
             "name": name,
@@ -1380,6 +1424,8 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["is_temporary"] = is_temporary
         if row_access_policy is not None:
             self._values["row_access_policy"] = row_access_policy
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -1451,7 +1497,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#database View#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#database View#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -1463,7 +1509,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         must be unique for the schema in which the view is created. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#name View#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#name View#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1475,7 +1521,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#schema View#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#schema View#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -1487,7 +1533,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#statement View#statement}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#statement View#statement}
         '''
         result = self._values.get("statement")
         assert result is not None, "Required property 'statement' is missing"
@@ -1497,18 +1543,18 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aggregation_policy(self) -> typing.Optional[ViewAggregationPolicy]:
         '''aggregation_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#aggregation_policy View#aggregation_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#aggregation_policy View#aggregation_policy}
         '''
         result = self._values.get("aggregation_policy")
         return typing.cast(typing.Optional[ViewAggregationPolicy], result)
 
     @builtins.property
     def change_tracking(self) -> typing.Optional[builtins.str]:
-        '''Specifies to enable or disable change tracking on the table.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies to enable or disable change tracking on the table.
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#change_tracking View#change_tracking}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#change_tracking View#change_tracking}
         '''
         result = self._values.get("change_tracking")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1519,7 +1565,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ViewColumn]]]:
         '''column block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#column View#column}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#column View#column}
         '''
         result = self._values.get("column")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ViewColumn]]], result)
@@ -1528,7 +1574,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the view.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#comment View#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#comment View#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1537,11 +1583,11 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def copy_grants(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Retains the access permissions from the original view when a view is recreated using the OR REPLACE clause.
+        '''(Default: ``false``) Retains the access permissions from the original view when a view is recreated using the OR REPLACE clause.
 
         This is used when the provider detects changes for fields that can not be changed by ALTER. This value will not have any effect during creating a new object with Terraform.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#copy_grants View#copy_grants}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#copy_grants View#copy_grants}
         '''
         result = self._values.get("copy_grants")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1552,7 +1598,7 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ViewDataMetricFunction"]]]:
         '''data_metric_function block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#data_metric_function View#data_metric_function}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#data_metric_function View#data_metric_function}
         '''
         result = self._values.get("data_metric_function")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ViewDataMetricFunction"]]], result)
@@ -1561,14 +1607,14 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def data_metric_schedule(self) -> typing.Optional["ViewDataMetricSchedule"]:
         '''data_metric_schedule block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#data_metric_schedule View#data_metric_schedule}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#data_metric_schedule View#data_metric_schedule}
         '''
         result = self._values.get("data_metric_schedule")
         return typing.cast(typing.Optional["ViewDataMetricSchedule"], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#id View#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#id View#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1578,33 +1624,33 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def is_recursive(self) -> typing.Optional[builtins.str]:
-        '''Specifies that the view can refer to itself using recursive syntax without necessarily using a CTE (common table expression).
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view can refer to itself using recursive syntax without necessarily using a CTE (common table expression).
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_recursive View#is_recursive}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_recursive View#is_recursive}
         '''
         result = self._values.get("is_recursive")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def is_secure(self) -> typing.Optional[builtins.str]:
-        '''Specifies that the view is secure.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view is secure.
 
         By design, the Snowflake's ``SHOW VIEWS`` command does not provide information about secure views (consult `view usage notes <https://docs.snowflake.com/en/sql-reference/sql/create-view#usage-notes>`_) which is essential to manage/import view with Terraform. Use the role owning the view while managing secure views. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_secure View#is_secure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_secure View#is_secure}
         '''
         result = self._values.get("is_secure")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def is_temporary(self) -> typing.Optional[builtins.str]:
-        '''Specifies that the view persists only for the duration of the session that you created it in.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the view persists only for the duration of the session that you created it in.
 
         A temporary view and all its contents are dropped at the end of the session. In context of this provider, it means that it's dropped after a Terraform operation. This results in a permanent plan with object creation. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#is_temporary View#is_temporary}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#is_temporary View#is_temporary}
         '''
         result = self._values.get("is_temporary")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1613,10 +1659,19 @@ class ViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def row_access_policy(self) -> typing.Optional["ViewRowAccessPolicy"]:
         '''row_access_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#row_access_policy View#row_access_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#row_access_policy View#row_access_policy}
         '''
         result = self._values.get("row_access_policy")
         return typing.cast(typing.Optional["ViewRowAccessPolicy"], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["ViewTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#timeouts View#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["ViewTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -1648,9 +1703,9 @@ class ViewDataMetricFunction:
         schedule_status: builtins.str,
     ) -> None:
         '''
-        :param function_name: Identifier of the data metric function to add to the table or view or drop from the table or view. This function identifier must be provided without arguments in parenthesis. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#function_name View#function_name}
-        :param on: The table or view columns on which to associate the data metric function. The data types of the columns must match the data types of the columns specified in the data metric function definition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#on View#on}
-        :param schedule_status: The status of the metrics association. Valid values are: ``STARTED`` | ``SUSPENDED``. When status of a data metric function is changed, it is being reassigned with ``DROP DATA METRIC FUNCTION`` and ``ADD DATA METRIC FUNCTION``, and then its status is changed by ``MODIFY DATA METRIC FUNCTION`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#schedule_status View#schedule_status}
+        :param function_name: Identifier of the data metric function to add to the table or view or drop from the table or view. This function identifier must be provided without arguments in parenthesis. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#function_name View#function_name}
+        :param on: The table or view columns on which to associate the data metric function. The data types of the columns must match the data types of the columns specified in the data metric function definition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#on View#on}
+        :param schedule_status: The status of the metrics association. Valid values are: ``STARTED`` | ``SUSPENDED``. When status of a data metric function is changed, it is being reassigned with ``DROP DATA METRIC FUNCTION`` and ``ADD DATA METRIC FUNCTION``, and then its status is changed by ``MODIFY DATA METRIC FUNCTION`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#schedule_status View#schedule_status}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3cedddf968b86ed9f1cac58a9c1c1dc9ff09023b9d49155470e2094482732c69)
@@ -1669,7 +1724,7 @@ class ViewDataMetricFunction:
 
         This function identifier must be provided without arguments in parenthesis.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#function_name View#function_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#function_name View#function_name}
         '''
         result = self._values.get("function_name")
         assert result is not None, "Required property 'function_name' is missing"
@@ -1681,7 +1736,7 @@ class ViewDataMetricFunction:
 
         The data types of the columns must match the data types of the columns specified in the data metric function definition.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#on View#on}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#on View#on}
         '''
         result = self._values.get("on")
         assert result is not None, "Required property 'on' is missing"
@@ -1693,7 +1748,7 @@ class ViewDataMetricFunction:
 
         Valid values are: ``STARTED`` | ``SUSPENDED``. When status of a data metric function is changed, it is being reassigned with ``DROP DATA METRIC FUNCTION`` and ``ADD DATA METRIC FUNCTION``, and then its status is changed by ``MODIFY DATA METRIC FUNCTION``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#schedule_status View#schedule_status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#schedule_status View#schedule_status}
         '''
         result = self._values.get("schedule_status")
         assert result is not None, "Required property 'schedule_status' is missing"
@@ -1909,8 +1964,8 @@ class ViewDataMetricSchedule:
         using_cron: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param minutes: Specifies an interval (in minutes) of wait time inserted between runs of the data metric function. Conflicts with ``using_cron``. Valid values are: ``5`` | ``15`` | ``30`` | ``60`` | ``720`` | ``1440``. Due to Snowflake limitations, changes in this field are not managed by the provider. Please consider using `taint <https://developer.hashicorp.com/terraform/cli/commands/taint>`_ command, ``using_cron`` field, or `replace_triggered_by <https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#replace_triggered_by>`_ metadata argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#minutes View#minutes}
-        :param using_cron: Specifies a cron expression and time zone for periodically running the data metric function. Supports a subset of standard cron utility syntax. Conflicts with ``minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#using_cron View#using_cron}
+        :param minutes: Specifies an interval (in minutes) of wait time inserted between runs of the data metric function. Conflicts with ``using_cron``. Valid values are: ``5`` | ``15`` | ``30`` | ``60`` | ``720`` | ``1440``. Due to Snowflake limitations, changes in this field are not managed by the provider. Please consider using `taint <https://developer.hashicorp.com/terraform/cli/commands/taint>`_ command, ``using_cron`` field, or `replace_triggered_by <https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#replace_triggered_by>`_ metadata argument. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#minutes View#minutes}
+        :param using_cron: Specifies a cron expression and time zone for periodically running the data metric function. Supports a subset of standard cron utility syntax. Conflicts with ``minutes``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#using_cron View#using_cron}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__cdc271ed9e7e200c14fc1f028ea6ab736631371100f73f44d8b4f97616e5ba2c)
@@ -1928,7 +1983,7 @@ class ViewDataMetricSchedule:
 
         Conflicts with ``using_cron``. Valid values are: ``5`` | ``15`` | ``30`` | ``60`` | ``720`` | ``1440``. Due to Snowflake limitations, changes in this field are not managed by the provider. Please consider using `taint <https://developer.hashicorp.com/terraform/cli/commands/taint>`_ command, ``using_cron`` field, or `replace_triggered_by <https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle#replace_triggered_by>`_ metadata argument.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#minutes View#minutes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#minutes View#minutes}
         '''
         result = self._values.get("minutes")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1939,7 +1994,7 @@ class ViewDataMetricSchedule:
 
         Supports a subset of standard cron utility syntax. Conflicts with ``minutes``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#using_cron View#using_cron}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#using_cron View#using_cron}
         '''
         result = self._values.get("using_cron")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2237,8 +2292,8 @@ class ViewRowAccessPolicy:
         policy_name: builtins.str,
     ) -> None:
         '''
-        :param on: Defines which columns are affected by the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#on View#on}
-        :param policy_name: Row access policy name. For more information about this resource, see `docs <./row_access_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        :param on: Defines which columns are affected by the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#on View#on}
+        :param policy_name: Row access policy name. For more information about this resource, see `docs <./row_access_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__2e2597efd1d1b0be59ea7d33b2d30090a27b8d99c85ae71810fe032781e131e7)
@@ -2253,7 +2308,7 @@ class ViewRowAccessPolicy:
     def on(self) -> typing.List[builtins.str]:
         '''Defines which columns are affected by the policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#on View#on}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#on View#on}
         '''
         result = self._values.get("on")
         assert result is not None, "Required property 'on' is missing"
@@ -2263,7 +2318,7 @@ class ViewRowAccessPolicy:
     def policy_name(self) -> builtins.str:
         '''Row access policy name. For more information about this resource, see `docs <./row_access_policy>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/view#policy_name View#policy_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#policy_name View#policy_name}
         '''
         result = self._values.get("policy_name")
         assert result is not None, "Required property 'policy_name' is missing"
@@ -2546,6 +2601,205 @@ class ViewShowOutputOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.view.ViewTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class ViewTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#create View#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#delete View#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#read View#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#update View#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fabb53759b10b078d9e54536892f77bc1b8e7aca4dbe54293335e5adccf2273c)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#create View#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#delete View#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#read View#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/view#update View#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "ViewTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class ViewTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.view.ViewTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__800e627bdcd14cf3b22072ed490ca7a14969a48571bd4ebcee4f127d192a285d)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d052555daf268e851ccdae07cb73e8acaae8db40b74323b6f227f5286a1926fa)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__09c45f4055bbc01b4204eece18fce1ef24e9f2857187f07cd29ce27e23901f46)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ad2ca0f0d2855e7553e642a34c22c447ab232d163bea351a9bc6cd22aba1fd56)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ae2657b1afce3ab304141d227001962acd9acf4fb4135c78c92fc59c37b42172)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ViewTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ViewTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ViewTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ed511b92071b1046f534099cd637fd6a86e3af7597d743fb85d4af32451fc4e8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "View",
     "ViewAggregationPolicy",
@@ -2571,6 +2825,8 @@ __all__ = [
     "ViewShowOutput",
     "ViewShowOutputList",
     "ViewShowOutputOutputReference",
+    "ViewTimeouts",
+    "ViewTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -2595,6 +2851,7 @@ def _typecheckingstub__0e0462f8da364bb0cc996ac2edd41517d2b2f5feaf2f8e302def5e65d
     is_secure: typing.Optional[builtins.str] = None,
     is_temporary: typing.Optional[builtins.str] = None,
     row_access_policy: typing.Optional[typing.Union[ViewRowAccessPolicy, typing.Dict[builtins.str, typing.Any]]] = None,
+    timeouts: typing.Optional[typing.Union[ViewTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -2885,6 +3142,7 @@ def _typecheckingstub__af4c315392eb726cc55e03fa983a07210e0ef3fc36ec42f9f5bb31966
     is_secure: typing.Optional[builtins.str] = None,
     is_temporary: typing.Optional[builtins.str] = None,
     row_access_policy: typing.Optional[typing.Union[ViewRowAccessPolicy, typing.Dict[builtins.str, typing.Any]]] = None,
+    timeouts: typing.Optional[typing.Union[ViewTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -3125,6 +3383,53 @@ def _typecheckingstub__7ea5e057259442f0b43e95476defe5aa0aaeaa265cc7eba25957139c6
 
 def _typecheckingstub__6d62316160784f6f0024ba3f5011ed6a6431e1fc257a2e8f0d659b3413bd87c4(
     value: typing.Optional[ViewShowOutput],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fabb53759b10b078d9e54536892f77bc1b8e7aca4dbe54293335e5adccf2273c(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__800e627bdcd14cf3b22072ed490ca7a14969a48571bd4ebcee4f127d192a285d(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d052555daf268e851ccdae07cb73e8acaae8db40b74323b6f227f5286a1926fa(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__09c45f4055bbc01b4204eece18fce1ef24e9f2857187f07cd29ce27e23901f46(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ad2ca0f0d2855e7553e642a34c22c447ab232d163bea351a9bc6cd22aba1fd56(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ae2657b1afce3ab304141d227001962acd9acf4fb4135c78c92fc59c37b42172(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ed511b92071b1046f534099cd637fd6a86e3af7597d743fb85d4af32451fc4e8(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ViewTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

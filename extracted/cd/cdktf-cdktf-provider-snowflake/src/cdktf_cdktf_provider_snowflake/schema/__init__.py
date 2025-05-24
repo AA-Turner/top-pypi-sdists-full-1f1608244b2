@@ -1,7 +1,7 @@
 r'''
 # `snowflake_schema`
 
-Refer to the Terraform Registry for docs: [`snowflake_schema`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema).
+Refer to the Terraform Registry for docs: [`snowflake_schema`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Schema(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.schema.Schema",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema snowflake_schema}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema snowflake_schema}.'''
 
     def __init__(
         self,
@@ -69,6 +69,7 @@ class Schema(
         storage_serialization_policy: typing.Optional[builtins.str] = None,
         suspend_task_after_num_failures: typing.Optional[jsii.Number] = None,
         task_auto_retry_attempts: typing.Optional[jsii.Number] = None,
+        timeouts: typing.Optional[typing.Union["SchemaTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         trace_level: typing.Optional[builtins.str] = None,
         user_task_managed_initial_warehouse_size: typing.Optional[builtins.str] = None,
         user_task_minimum_trigger_interval_in_seconds: typing.Optional[jsii.Number] = None,
@@ -82,33 +83,34 @@ class Schema(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema snowflake_schema} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema snowflake_schema} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param database: The database in which to create the schema. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#database Schema#database}
-        :param name: Specifies the identifier for the schema; must be unique for the database in which the schema is created. When the name is ``PUBLIC``, during creation the provider checks if this schema has already been created and, in such case, ``ALTER`` is used to match the desired state. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#name Schema#name}
-        :param catalog: The database parameter that specifies the default catalog to use for Iceberg tables. For more information, see `CATALOG <https://docs.snowflake.com/en/sql-reference/parameters#catalog>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#catalog Schema#catalog}
-        :param comment: Specifies a comment for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#comment Schema#comment}
-        :param data_retention_time_in_days: Specifies the number of days for which Time Travel actions (CLONE and UNDROP) can be performed on the database, as well as specifying the default Time Travel retention time for all schemas created in the database. For more details, see `Understanding & Using Time Travel <https://docs.snowflake.com/en/user-guide/data-time-travel>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#data_retention_time_in_days Schema#data_retention_time_in_days}
-        :param default_ddl_collation: Specifies a default collation specification for all schemas and tables added to the database. It can be overridden on schema or table level. For more information, see `collation specification <https://docs.snowflake.com/en/sql-reference/collation#label-collation-specification>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#default_ddl_collation Schema#default_ddl_collation}
-        :param enable_console_output: If true, enables stdout/stderr fast path logging for anonymous stored procedures. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#enable_console_output Schema#enable_console_output}
-        :param external_volume: The database parameter that specifies the default external volume to use for Iceberg tables. For more information, see `EXTERNAL_VOLUME <https://docs.snowflake.com/en/sql-reference/parameters#external-volume>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#external_volume Schema#external_volume}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#id Schema#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_transient: Specifies the schema as transient. Transient schemas do not have a Fail-safe period so they do not incur additional storage costs once they leave Time Travel; however, this means they are also not protected by Fail-safe in the event of a data loss. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#is_transient Schema#is_transient}
-        :param log_level: Specifies the severity level of messages that should be ingested and made available in the active event table. Valid options are: [TRACE DEBUG INFO WARN ERROR FATAL OFF]. Messages at the specified level (and at more severe levels) are ingested. For more information, see `LOG_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#log_level Schema#log_level}
-        :param max_data_extension_time_in_days: Object parameter that specifies the maximum number of days for which Snowflake can extend the data retention period for tables in the database to prevent streams on the tables from becoming stale. For a detailed description of this parameter, see `MAX_DATA_EXTENSION_TIME_IN_DAYS <https://docs.snowflake.com/en/sql-reference/parameters.html#label-max-data-extension-time-in-days>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#max_data_extension_time_in_days Schema#max_data_extension_time_in_days}
-        :param pipe_execution_paused: Specifies whether to pause a running pipe, primarily in preparation for transferring ownership of the pipe to a different role. For more information, check `PIPE_EXECUTION_PAUSED docs <https://docs.snowflake.com/en/sql-reference/parameters#pipe-execution-paused>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#pipe_execution_paused Schema#pipe_execution_paused}
-        :param quoted_identifiers_ignore_case: If true, the case of quoted identifiers is ignored. For more information, see `QUOTED_IDENTIFIERS_IGNORE_CASE <https://docs.snowflake.com/en/sql-reference/parameters#quoted-identifiers-ignore-case>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#quoted_identifiers_ignore_case Schema#quoted_identifiers_ignore_case}
-        :param replace_invalid_characters: Specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�) in query results for an Iceberg table. You can only set this parameter for tables that use an external Iceberg catalog. For more information, see `REPLACE_INVALID_CHARACTERS <https://docs.snowflake.com/en/sql-reference/parameters#replace-invalid-characters>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#replace_invalid_characters Schema#replace_invalid_characters}
-        :param storage_serialization_policy: The storage serialization policy for Iceberg tables that use Snowflake as the catalog. Valid options are: [COMPATIBLE OPTIMIZED]. COMPATIBLE: Snowflake performs encoding and compression of data files that ensures interoperability with third-party compute engines. OPTIMIZED: Snowflake performs encoding and compression of data files that ensures the best table performance within Snowflake. For more information, see `STORAGE_SERIALIZATION_POLICY <https://docs.snowflake.com/en/sql-reference/parameters#storage-serialization-policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#storage_serialization_policy Schema#storage_serialization_policy}
-        :param suspend_task_after_num_failures: How many times a task must fail in a row before it is automatically suspended. 0 disables auto-suspending. For more information, see `SUSPEND_TASK_AFTER_NUM_FAILURES <https://docs.snowflake.com/en/sql-reference/parameters#suspend-task-after-num-failures>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#suspend_task_after_num_failures Schema#suspend_task_after_num_failures}
-        :param task_auto_retry_attempts: Maximum automatic retries allowed for a user task. For more information, see `TASK_AUTO_RETRY_ATTEMPTS <https://docs.snowflake.com/en/sql-reference/parameters#task-auto-retry-attempts>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#task_auto_retry_attempts Schema#task_auto_retry_attempts}
-        :param trace_level: Controls how trace events are ingested into the event table. Valid options are: [ALWAYS ON_EVENT OFF]. For information about levels, see `TRACE_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#trace_level Schema#trace_level}
-        :param user_task_managed_initial_warehouse_size: The initial size of warehouse to use for managed warehouses in the absence of history. For more information, see `USER_TASK_MANAGED_INITIAL_WAREHOUSE_SIZE <https://docs.snowflake.com/en/sql-reference/parameters#user-task-managed-initial-warehouse-size>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_managed_initial_warehouse_size Schema#user_task_managed_initial_warehouse_size}
-        :param user_task_minimum_trigger_interval_in_seconds: Minimum amount of time between Triggered Task executions in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_minimum_trigger_interval_in_seconds Schema#user_task_minimum_trigger_interval_in_seconds}
-        :param user_task_timeout_ms: User task execution timeout in milliseconds. For more information, see `USER_TASK_TIMEOUT_MS <https://docs.snowflake.com/en/sql-reference/parameters#user-task-timeout-ms>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_timeout_ms Schema#user_task_timeout_ms}
-        :param with_managed_access: Specifies a managed schema. Managed access schemas centralize privilege management with the schema owner. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#with_managed_access Schema#with_managed_access}
+        :param database: The database in which to create the schema. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#database Schema#database}
+        :param name: Specifies the identifier for the schema; must be unique for the database in which the schema is created. When the name is ``PUBLIC``, during creation the provider checks if this schema has already been created and, in such case, ``ALTER`` is used to match the desired state. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#name Schema#name}
+        :param catalog: The database parameter that specifies the default catalog to use for Iceberg tables. For more information, see `CATALOG <https://docs.snowflake.com/en/sql-reference/parameters#catalog>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#catalog Schema#catalog}
+        :param comment: Specifies a comment for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#comment Schema#comment}
+        :param data_retention_time_in_days: Specifies the number of days for which Time Travel actions (CLONE and UNDROP) can be performed on the database, as well as specifying the default Time Travel retention time for all schemas created in the database. For more details, see `Understanding & Using Time Travel <https://docs.snowflake.com/en/user-guide/data-time-travel>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#data_retention_time_in_days Schema#data_retention_time_in_days}
+        :param default_ddl_collation: Specifies a default collation specification for all schemas and tables added to the database. It can be overridden on schema or table level. For more information, see `collation specification <https://docs.snowflake.com/en/sql-reference/collation#label-collation-specification>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#default_ddl_collation Schema#default_ddl_collation}
+        :param enable_console_output: If true, enables stdout/stderr fast path logging for anonymous stored procedures. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#enable_console_output Schema#enable_console_output}
+        :param external_volume: The database parameter that specifies the default external volume to use for Iceberg tables. For more information, see `EXTERNAL_VOLUME <https://docs.snowflake.com/en/sql-reference/parameters#external-volume>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#external_volume Schema#external_volume}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#id Schema#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_transient: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies the schema as transient. Transient schemas do not have a Fail-safe period so they do not incur additional storage costs once they leave Time Travel; however, this means they are also not protected by Fail-safe in the event of a data loss. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#is_transient Schema#is_transient}
+        :param log_level: Specifies the severity level of messages that should be ingested and made available in the active event table. Valid options are: [TRACE DEBUG INFO WARN ERROR FATAL OFF]. Messages at the specified level (and at more severe levels) are ingested. For more information, see `LOG_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#log_level Schema#log_level}
+        :param max_data_extension_time_in_days: Object parameter that specifies the maximum number of days for which Snowflake can extend the data retention period for tables in the database to prevent streams on the tables from becoming stale. For a detailed description of this parameter, see `MAX_DATA_EXTENSION_TIME_IN_DAYS <https://docs.snowflake.com/en/sql-reference/parameters.html#label-max-data-extension-time-in-days>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#max_data_extension_time_in_days Schema#max_data_extension_time_in_days}
+        :param pipe_execution_paused: Specifies whether to pause a running pipe, primarily in preparation for transferring ownership of the pipe to a different role. For more information, check `PIPE_EXECUTION_PAUSED docs <https://docs.snowflake.com/en/sql-reference/parameters#pipe-execution-paused>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#pipe_execution_paused Schema#pipe_execution_paused}
+        :param quoted_identifiers_ignore_case: If true, the case of quoted identifiers is ignored. For more information, see `QUOTED_IDENTIFIERS_IGNORE_CASE <https://docs.snowflake.com/en/sql-reference/parameters#quoted-identifiers-ignore-case>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#quoted_identifiers_ignore_case Schema#quoted_identifiers_ignore_case}
+        :param replace_invalid_characters: Specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�) in query results for an Iceberg table. You can only set this parameter for tables that use an external Iceberg catalog. For more information, see `REPLACE_INVALID_CHARACTERS <https://docs.snowflake.com/en/sql-reference/parameters#replace-invalid-characters>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#replace_invalid_characters Schema#replace_invalid_characters}
+        :param storage_serialization_policy: The storage serialization policy for Iceberg tables that use Snowflake as the catalog. Valid options are: [COMPATIBLE OPTIMIZED]. COMPATIBLE: Snowflake performs encoding and compression of data files that ensures interoperability with third-party compute engines. OPTIMIZED: Snowflake performs encoding and compression of data files that ensures the best table performance within Snowflake. For more information, see `STORAGE_SERIALIZATION_POLICY <https://docs.snowflake.com/en/sql-reference/parameters#storage-serialization-policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#storage_serialization_policy Schema#storage_serialization_policy}
+        :param suspend_task_after_num_failures: How many times a task must fail in a row before it is automatically suspended. 0 disables auto-suspending. For more information, see `SUSPEND_TASK_AFTER_NUM_FAILURES <https://docs.snowflake.com/en/sql-reference/parameters#suspend-task-after-num-failures>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#suspend_task_after_num_failures Schema#suspend_task_after_num_failures}
+        :param task_auto_retry_attempts: Maximum automatic retries allowed for a user task. For more information, see `TASK_AUTO_RETRY_ATTEMPTS <https://docs.snowflake.com/en/sql-reference/parameters#task-auto-retry-attempts>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#task_auto_retry_attempts Schema#task_auto_retry_attempts}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#timeouts Schema#timeouts}
+        :param trace_level: Controls how trace events are ingested into the event table. Valid options are: [ALWAYS ON_EVENT OFF]. For information about levels, see `TRACE_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#trace_level Schema#trace_level}
+        :param user_task_managed_initial_warehouse_size: The initial size of warehouse to use for managed warehouses in the absence of history. For more information, see `USER_TASK_MANAGED_INITIAL_WAREHOUSE_SIZE <https://docs.snowflake.com/en/sql-reference/parameters#user-task-managed-initial-warehouse-size>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_managed_initial_warehouse_size Schema#user_task_managed_initial_warehouse_size}
+        :param user_task_minimum_trigger_interval_in_seconds: Minimum amount of time between Triggered Task executions in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_minimum_trigger_interval_in_seconds Schema#user_task_minimum_trigger_interval_in_seconds}
+        :param user_task_timeout_ms: User task execution timeout in milliseconds. For more information, see `USER_TASK_TIMEOUT_MS <https://docs.snowflake.com/en/sql-reference/parameters#user-task-timeout-ms>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_timeout_ms Schema#user_task_timeout_ms}
+        :param with_managed_access: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies a managed schema. Managed access schemas centralize privilege management with the schema owner. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#with_managed_access Schema#with_managed_access}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -140,6 +142,7 @@ class Schema(
             storage_serialization_policy=storage_serialization_policy,
             suspend_task_after_num_failures=suspend_task_after_num_failures,
             task_auto_retry_attempts=task_auto_retry_attempts,
+            timeouts=timeouts,
             trace_level=trace_level,
             user_task_managed_initial_warehouse_size=user_task_managed_initial_warehouse_size,
             user_task_minimum_trigger_interval_in_seconds=user_task_minimum_trigger_interval_in_seconds,
@@ -169,7 +172,7 @@ class Schema(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Schema to import.
-        :param import_from_id: The id of the existing Schema that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Schema that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Schema to import is found.
         '''
         if __debug__:
@@ -179,6 +182,25 @@ class Schema(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#create Schema#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#delete Schema#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#read Schema#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#update Schema#update}.
+        '''
+        value = SchemaTimeouts(create=create, delete=delete, read=read, update=update)
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetCatalog")
     def reset_catalog(self) -> None:
@@ -244,6 +266,10 @@ class Schema(
     def reset_task_auto_retry_attempts(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTaskAutoRetryAttempts", []))
 
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
+
     @jsii.member(jsii_name="resetTraceLevel")
     def reset_trace_level(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTraceLevel", []))
@@ -296,6 +322,11 @@ class Schema(
     @jsii.member(jsii_name="showOutput")
     def show_output(self) -> "SchemaShowOutputList":
         return typing.cast("SchemaShowOutputList", jsii.get(self, "showOutput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "SchemaTimeoutsOutputReference":
+        return typing.cast("SchemaTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="catalogInput")
@@ -394,6 +425,13 @@ class Schema(
     @jsii.member(jsii_name="taskAutoRetryAttemptsInput")
     def task_auto_retry_attempts_input(self) -> typing.Optional[jsii.Number]:
         return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "taskAutoRetryAttemptsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "SchemaTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "SchemaTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="traceLevelInput")
@@ -750,6 +788,7 @@ class Schema(
         "storage_serialization_policy": "storageSerializationPolicy",
         "suspend_task_after_num_failures": "suspendTaskAfterNumFailures",
         "task_auto_retry_attempts": "taskAutoRetryAttempts",
+        "timeouts": "timeouts",
         "trace_level": "traceLevel",
         "user_task_managed_initial_warehouse_size": "userTaskManagedInitialWarehouseSize",
         "user_task_minimum_trigger_interval_in_seconds": "userTaskMinimumTriggerIntervalInSeconds",
@@ -786,6 +825,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         storage_serialization_policy: typing.Optional[builtins.str] = None,
         suspend_task_after_num_failures: typing.Optional[jsii.Number] = None,
         task_auto_retry_attempts: typing.Optional[jsii.Number] = None,
+        timeouts: typing.Optional[typing.Union["SchemaTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         trace_level: typing.Optional[builtins.str] = None,
         user_task_managed_initial_warehouse_size: typing.Optional[builtins.str] = None,
         user_task_minimum_trigger_interval_in_seconds: typing.Optional[jsii.Number] = None,
@@ -800,32 +840,35 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param database: The database in which to create the schema. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#database Schema#database}
-        :param name: Specifies the identifier for the schema; must be unique for the database in which the schema is created. When the name is ``PUBLIC``, during creation the provider checks if this schema has already been created and, in such case, ``ALTER`` is used to match the desired state. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#name Schema#name}
-        :param catalog: The database parameter that specifies the default catalog to use for Iceberg tables. For more information, see `CATALOG <https://docs.snowflake.com/en/sql-reference/parameters#catalog>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#catalog Schema#catalog}
-        :param comment: Specifies a comment for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#comment Schema#comment}
-        :param data_retention_time_in_days: Specifies the number of days for which Time Travel actions (CLONE and UNDROP) can be performed on the database, as well as specifying the default Time Travel retention time for all schemas created in the database. For more details, see `Understanding & Using Time Travel <https://docs.snowflake.com/en/user-guide/data-time-travel>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#data_retention_time_in_days Schema#data_retention_time_in_days}
-        :param default_ddl_collation: Specifies a default collation specification for all schemas and tables added to the database. It can be overridden on schema or table level. For more information, see `collation specification <https://docs.snowflake.com/en/sql-reference/collation#label-collation-specification>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#default_ddl_collation Schema#default_ddl_collation}
-        :param enable_console_output: If true, enables stdout/stderr fast path logging for anonymous stored procedures. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#enable_console_output Schema#enable_console_output}
-        :param external_volume: The database parameter that specifies the default external volume to use for Iceberg tables. For more information, see `EXTERNAL_VOLUME <https://docs.snowflake.com/en/sql-reference/parameters#external-volume>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#external_volume Schema#external_volume}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#id Schema#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_transient: Specifies the schema as transient. Transient schemas do not have a Fail-safe period so they do not incur additional storage costs once they leave Time Travel; however, this means they are also not protected by Fail-safe in the event of a data loss. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#is_transient Schema#is_transient}
-        :param log_level: Specifies the severity level of messages that should be ingested and made available in the active event table. Valid options are: [TRACE DEBUG INFO WARN ERROR FATAL OFF]. Messages at the specified level (and at more severe levels) are ingested. For more information, see `LOG_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#log_level Schema#log_level}
-        :param max_data_extension_time_in_days: Object parameter that specifies the maximum number of days for which Snowflake can extend the data retention period for tables in the database to prevent streams on the tables from becoming stale. For a detailed description of this parameter, see `MAX_DATA_EXTENSION_TIME_IN_DAYS <https://docs.snowflake.com/en/sql-reference/parameters.html#label-max-data-extension-time-in-days>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#max_data_extension_time_in_days Schema#max_data_extension_time_in_days}
-        :param pipe_execution_paused: Specifies whether to pause a running pipe, primarily in preparation for transferring ownership of the pipe to a different role. For more information, check `PIPE_EXECUTION_PAUSED docs <https://docs.snowflake.com/en/sql-reference/parameters#pipe-execution-paused>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#pipe_execution_paused Schema#pipe_execution_paused}
-        :param quoted_identifiers_ignore_case: If true, the case of quoted identifiers is ignored. For more information, see `QUOTED_IDENTIFIERS_IGNORE_CASE <https://docs.snowflake.com/en/sql-reference/parameters#quoted-identifiers-ignore-case>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#quoted_identifiers_ignore_case Schema#quoted_identifiers_ignore_case}
-        :param replace_invalid_characters: Specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�) in query results for an Iceberg table. You can only set this parameter for tables that use an external Iceberg catalog. For more information, see `REPLACE_INVALID_CHARACTERS <https://docs.snowflake.com/en/sql-reference/parameters#replace-invalid-characters>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#replace_invalid_characters Schema#replace_invalid_characters}
-        :param storage_serialization_policy: The storage serialization policy for Iceberg tables that use Snowflake as the catalog. Valid options are: [COMPATIBLE OPTIMIZED]. COMPATIBLE: Snowflake performs encoding and compression of data files that ensures interoperability with third-party compute engines. OPTIMIZED: Snowflake performs encoding and compression of data files that ensures the best table performance within Snowflake. For more information, see `STORAGE_SERIALIZATION_POLICY <https://docs.snowflake.com/en/sql-reference/parameters#storage-serialization-policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#storage_serialization_policy Schema#storage_serialization_policy}
-        :param suspend_task_after_num_failures: How many times a task must fail in a row before it is automatically suspended. 0 disables auto-suspending. For more information, see `SUSPEND_TASK_AFTER_NUM_FAILURES <https://docs.snowflake.com/en/sql-reference/parameters#suspend-task-after-num-failures>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#suspend_task_after_num_failures Schema#suspend_task_after_num_failures}
-        :param task_auto_retry_attempts: Maximum automatic retries allowed for a user task. For more information, see `TASK_AUTO_RETRY_ATTEMPTS <https://docs.snowflake.com/en/sql-reference/parameters#task-auto-retry-attempts>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#task_auto_retry_attempts Schema#task_auto_retry_attempts}
-        :param trace_level: Controls how trace events are ingested into the event table. Valid options are: [ALWAYS ON_EVENT OFF]. For information about levels, see `TRACE_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#trace_level Schema#trace_level}
-        :param user_task_managed_initial_warehouse_size: The initial size of warehouse to use for managed warehouses in the absence of history. For more information, see `USER_TASK_MANAGED_INITIAL_WAREHOUSE_SIZE <https://docs.snowflake.com/en/sql-reference/parameters#user-task-managed-initial-warehouse-size>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_managed_initial_warehouse_size Schema#user_task_managed_initial_warehouse_size}
-        :param user_task_minimum_trigger_interval_in_seconds: Minimum amount of time between Triggered Task executions in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_minimum_trigger_interval_in_seconds Schema#user_task_minimum_trigger_interval_in_seconds}
-        :param user_task_timeout_ms: User task execution timeout in milliseconds. For more information, see `USER_TASK_TIMEOUT_MS <https://docs.snowflake.com/en/sql-reference/parameters#user-task-timeout-ms>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_timeout_ms Schema#user_task_timeout_ms}
-        :param with_managed_access: Specifies a managed schema. Managed access schemas centralize privilege management with the schema owner. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#with_managed_access Schema#with_managed_access}
+        :param database: The database in which to create the schema. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#database Schema#database}
+        :param name: Specifies the identifier for the schema; must be unique for the database in which the schema is created. When the name is ``PUBLIC``, during creation the provider checks if this schema has already been created and, in such case, ``ALTER`` is used to match the desired state. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#name Schema#name}
+        :param catalog: The database parameter that specifies the default catalog to use for Iceberg tables. For more information, see `CATALOG <https://docs.snowflake.com/en/sql-reference/parameters#catalog>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#catalog Schema#catalog}
+        :param comment: Specifies a comment for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#comment Schema#comment}
+        :param data_retention_time_in_days: Specifies the number of days for which Time Travel actions (CLONE and UNDROP) can be performed on the database, as well as specifying the default Time Travel retention time for all schemas created in the database. For more details, see `Understanding & Using Time Travel <https://docs.snowflake.com/en/user-guide/data-time-travel>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#data_retention_time_in_days Schema#data_retention_time_in_days}
+        :param default_ddl_collation: Specifies a default collation specification for all schemas and tables added to the database. It can be overridden on schema or table level. For more information, see `collation specification <https://docs.snowflake.com/en/sql-reference/collation#label-collation-specification>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#default_ddl_collation Schema#default_ddl_collation}
+        :param enable_console_output: If true, enables stdout/stderr fast path logging for anonymous stored procedures. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#enable_console_output Schema#enable_console_output}
+        :param external_volume: The database parameter that specifies the default external volume to use for Iceberg tables. For more information, see `EXTERNAL_VOLUME <https://docs.snowflake.com/en/sql-reference/parameters#external-volume>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#external_volume Schema#external_volume}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#id Schema#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_transient: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies the schema as transient. Transient schemas do not have a Fail-safe period so they do not incur additional storage costs once they leave Time Travel; however, this means they are also not protected by Fail-safe in the event of a data loss. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#is_transient Schema#is_transient}
+        :param log_level: Specifies the severity level of messages that should be ingested and made available in the active event table. Valid options are: [TRACE DEBUG INFO WARN ERROR FATAL OFF]. Messages at the specified level (and at more severe levels) are ingested. For more information, see `LOG_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#log_level Schema#log_level}
+        :param max_data_extension_time_in_days: Object parameter that specifies the maximum number of days for which Snowflake can extend the data retention period for tables in the database to prevent streams on the tables from becoming stale. For a detailed description of this parameter, see `MAX_DATA_EXTENSION_TIME_IN_DAYS <https://docs.snowflake.com/en/sql-reference/parameters.html#label-max-data-extension-time-in-days>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#max_data_extension_time_in_days Schema#max_data_extension_time_in_days}
+        :param pipe_execution_paused: Specifies whether to pause a running pipe, primarily in preparation for transferring ownership of the pipe to a different role. For more information, check `PIPE_EXECUTION_PAUSED docs <https://docs.snowflake.com/en/sql-reference/parameters#pipe-execution-paused>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#pipe_execution_paused Schema#pipe_execution_paused}
+        :param quoted_identifiers_ignore_case: If true, the case of quoted identifiers is ignored. For more information, see `QUOTED_IDENTIFIERS_IGNORE_CASE <https://docs.snowflake.com/en/sql-reference/parameters#quoted-identifiers-ignore-case>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#quoted_identifiers_ignore_case Schema#quoted_identifiers_ignore_case}
+        :param replace_invalid_characters: Specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�) in query results for an Iceberg table. You can only set this parameter for tables that use an external Iceberg catalog. For more information, see `REPLACE_INVALID_CHARACTERS <https://docs.snowflake.com/en/sql-reference/parameters#replace-invalid-characters>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#replace_invalid_characters Schema#replace_invalid_characters}
+        :param storage_serialization_policy: The storage serialization policy for Iceberg tables that use Snowflake as the catalog. Valid options are: [COMPATIBLE OPTIMIZED]. COMPATIBLE: Snowflake performs encoding and compression of data files that ensures interoperability with third-party compute engines. OPTIMIZED: Snowflake performs encoding and compression of data files that ensures the best table performance within Snowflake. For more information, see `STORAGE_SERIALIZATION_POLICY <https://docs.snowflake.com/en/sql-reference/parameters#storage-serialization-policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#storage_serialization_policy Schema#storage_serialization_policy}
+        :param suspend_task_after_num_failures: How many times a task must fail in a row before it is automatically suspended. 0 disables auto-suspending. For more information, see `SUSPEND_TASK_AFTER_NUM_FAILURES <https://docs.snowflake.com/en/sql-reference/parameters#suspend-task-after-num-failures>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#suspend_task_after_num_failures Schema#suspend_task_after_num_failures}
+        :param task_auto_retry_attempts: Maximum automatic retries allowed for a user task. For more information, see `TASK_AUTO_RETRY_ATTEMPTS <https://docs.snowflake.com/en/sql-reference/parameters#task-auto-retry-attempts>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#task_auto_retry_attempts Schema#task_auto_retry_attempts}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#timeouts Schema#timeouts}
+        :param trace_level: Controls how trace events are ingested into the event table. Valid options are: [ALWAYS ON_EVENT OFF]. For information about levels, see `TRACE_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#trace_level Schema#trace_level}
+        :param user_task_managed_initial_warehouse_size: The initial size of warehouse to use for managed warehouses in the absence of history. For more information, see `USER_TASK_MANAGED_INITIAL_WAREHOUSE_SIZE <https://docs.snowflake.com/en/sql-reference/parameters#user-task-managed-initial-warehouse-size>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_managed_initial_warehouse_size Schema#user_task_managed_initial_warehouse_size}
+        :param user_task_minimum_trigger_interval_in_seconds: Minimum amount of time between Triggered Task executions in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_minimum_trigger_interval_in_seconds Schema#user_task_minimum_trigger_interval_in_seconds}
+        :param user_task_timeout_ms: User task execution timeout in milliseconds. For more information, see `USER_TASK_TIMEOUT_MS <https://docs.snowflake.com/en/sql-reference/parameters#user-task-timeout-ms>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_timeout_ms Schema#user_task_timeout_ms}
+        :param with_managed_access: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies a managed schema. Managed access schemas centralize privilege management with the schema owner. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#with_managed_access Schema#with_managed_access}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = SchemaTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__933b22d4f33ab3703f8c6e84f222b0c2ab1cdb3484c64b57dabf3d44d3591301)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -853,6 +896,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument storage_serialization_policy", value=storage_serialization_policy, expected_type=type_hints["storage_serialization_policy"])
             check_type(argname="argument suspend_task_after_num_failures", value=suspend_task_after_num_failures, expected_type=type_hints["suspend_task_after_num_failures"])
             check_type(argname="argument task_auto_retry_attempts", value=task_auto_retry_attempts, expected_type=type_hints["task_auto_retry_attempts"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
             check_type(argname="argument trace_level", value=trace_level, expected_type=type_hints["trace_level"])
             check_type(argname="argument user_task_managed_initial_warehouse_size", value=user_task_managed_initial_warehouse_size, expected_type=type_hints["user_task_managed_initial_warehouse_size"])
             check_type(argname="argument user_task_minimum_trigger_interval_in_seconds", value=user_task_minimum_trigger_interval_in_seconds, expected_type=type_hints["user_task_minimum_trigger_interval_in_seconds"])
@@ -908,6 +952,8 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["suspend_task_after_num_failures"] = suspend_task_after_num_failures
         if task_auto_retry_attempts is not None:
             self._values["task_auto_retry_attempts"] = task_auto_retry_attempts
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
         if trace_level is not None:
             self._values["trace_level"] = trace_level
         if user_task_managed_initial_warehouse_size is not None:
@@ -989,7 +1035,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#database Schema#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#database Schema#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -1001,7 +1047,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         must be unique for the database in which the schema is created. When the name is ``PUBLIC``, during creation the provider checks if this schema has already been created and, in such case, ``ALTER`` is used to match the desired state. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#name Schema#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#name Schema#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1011,7 +1057,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def catalog(self) -> typing.Optional[builtins.str]:
         '''The database parameter that specifies the default catalog to use for Iceberg tables. For more information, see `CATALOG <https://docs.snowflake.com/en/sql-reference/parameters#catalog>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#catalog Schema#catalog}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#catalog Schema#catalog}
         '''
         result = self._values.get("catalog")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1020,7 +1066,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#comment Schema#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#comment Schema#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1031,7 +1077,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more details, see `Understanding & Using Time Travel <https://docs.snowflake.com/en/user-guide/data-time-travel>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#data_retention_time_in_days Schema#data_retention_time_in_days}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#data_retention_time_in_days Schema#data_retention_time_in_days}
         '''
         result = self._values.get("data_retention_time_in_days")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1042,7 +1088,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         It can be overridden on schema or table level. For more information, see `collation specification <https://docs.snowflake.com/en/sql-reference/collation#label-collation-specification>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#default_ddl_collation Schema#default_ddl_collation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#default_ddl_collation Schema#default_ddl_collation}
         '''
         result = self._values.get("default_ddl_collation")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1053,7 +1099,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''If true, enables stdout/stderr fast path logging for anonymous stored procedures.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#enable_console_output Schema#enable_console_output}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#enable_console_output Schema#enable_console_output}
         '''
         result = self._values.get("enable_console_output")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1062,14 +1108,14 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def external_volume(self) -> typing.Optional[builtins.str]:
         '''The database parameter that specifies the default external volume to use for Iceberg tables. For more information, see `EXTERNAL_VOLUME <https://docs.snowflake.com/en/sql-reference/parameters#external-volume>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#external_volume Schema#external_volume}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#external_volume Schema#external_volume}
         '''
         result = self._values.get("external_volume")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#id Schema#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#id Schema#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1079,11 +1125,11 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def is_transient(self) -> typing.Optional[builtins.str]:
-        '''Specifies the schema as transient.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies the schema as transient.
 
         Transient schemas do not have a Fail-safe period so they do not incur additional storage costs once they leave Time Travel; however, this means they are also not protected by Fail-safe in the event of a data loss. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#is_transient Schema#is_transient}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#is_transient Schema#is_transient}
         '''
         result = self._values.get("is_transient")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1094,7 +1140,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid options are: [TRACE DEBUG INFO WARN ERROR FATAL OFF]. Messages at the specified level (and at more severe levels) are ingested. For more information, see `LOG_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-log-level>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#log_level Schema#log_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#log_level Schema#log_level}
         '''
         result = self._values.get("log_level")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1105,7 +1151,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For a detailed description of this parameter, see `MAX_DATA_EXTENSION_TIME_IN_DAYS <https://docs.snowflake.com/en/sql-reference/parameters.html#label-max-data-extension-time-in-days>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#max_data_extension_time_in_days Schema#max_data_extension_time_in_days}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#max_data_extension_time_in_days Schema#max_data_extension_time_in_days}
         '''
         result = self._values.get("max_data_extension_time_in_days")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1118,7 +1164,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information, check `PIPE_EXECUTION_PAUSED docs <https://docs.snowflake.com/en/sql-reference/parameters#pipe-execution-paused>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#pipe_execution_paused Schema#pipe_execution_paused}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#pipe_execution_paused Schema#pipe_execution_paused}
         '''
         result = self._values.get("pipe_execution_paused")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1129,7 +1175,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''If true, the case of quoted identifiers is ignored. For more information, see `QUOTED_IDENTIFIERS_IGNORE_CASE <https://docs.snowflake.com/en/sql-reference/parameters#quoted-identifiers-ignore-case>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#quoted_identifiers_ignore_case Schema#quoted_identifiers_ignore_case}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#quoted_identifiers_ignore_case Schema#quoted_identifiers_ignore_case}
         '''
         result = self._values.get("quoted_identifiers_ignore_case")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1142,7 +1188,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         You can only set this parameter for tables that use an external Iceberg catalog. For more information, see `REPLACE_INVALID_CHARACTERS <https://docs.snowflake.com/en/sql-reference/parameters#replace-invalid-characters>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#replace_invalid_characters Schema#replace_invalid_characters}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#replace_invalid_characters Schema#replace_invalid_characters}
         '''
         result = self._values.get("replace_invalid_characters")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1153,7 +1199,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid options are: [COMPATIBLE OPTIMIZED]. COMPATIBLE: Snowflake performs encoding and compression of data files that ensures interoperability with third-party compute engines. OPTIMIZED: Snowflake performs encoding and compression of data files that ensures the best table performance within Snowflake. For more information, see `STORAGE_SERIALIZATION_POLICY <https://docs.snowflake.com/en/sql-reference/parameters#storage-serialization-policy>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#storage_serialization_policy Schema#storage_serialization_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#storage_serialization_policy Schema#storage_serialization_policy}
         '''
         result = self._values.get("storage_serialization_policy")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1164,7 +1210,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         0 disables auto-suspending. For more information, see `SUSPEND_TASK_AFTER_NUM_FAILURES <https://docs.snowflake.com/en/sql-reference/parameters#suspend-task-after-num-failures>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#suspend_task_after_num_failures Schema#suspend_task_after_num_failures}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#suspend_task_after_num_failures Schema#suspend_task_after_num_failures}
         '''
         result = self._values.get("suspend_task_after_num_failures")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1173,10 +1219,19 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def task_auto_retry_attempts(self) -> typing.Optional[jsii.Number]:
         '''Maximum automatic retries allowed for a user task. For more information, see `TASK_AUTO_RETRY_ATTEMPTS <https://docs.snowflake.com/en/sql-reference/parameters#task-auto-retry-attempts>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#task_auto_retry_attempts Schema#task_auto_retry_attempts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#task_auto_retry_attempts Schema#task_auto_retry_attempts}
         '''
         result = self._values.get("task_auto_retry_attempts")
         return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["SchemaTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#timeouts Schema#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["SchemaTimeouts"], result)
 
     @builtins.property
     def trace_level(self) -> typing.Optional[builtins.str]:
@@ -1184,7 +1239,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid options are: [ALWAYS ON_EVENT OFF]. For information about levels, see `TRACE_LEVEL <https://docs.snowflake.com/en/sql-reference/parameters.html#label-trace-level>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#trace_level Schema#trace_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#trace_level Schema#trace_level}
         '''
         result = self._values.get("trace_level")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1195,7 +1250,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information, see `USER_TASK_MANAGED_INITIAL_WAREHOUSE_SIZE <https://docs.snowflake.com/en/sql-reference/parameters#user-task-managed-initial-warehouse-size>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_managed_initial_warehouse_size Schema#user_task_managed_initial_warehouse_size}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_managed_initial_warehouse_size Schema#user_task_managed_initial_warehouse_size}
         '''
         result = self._values.get("user_task_managed_initial_warehouse_size")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1206,7 +1261,7 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[jsii.Number]:
         '''Minimum amount of time between Triggered Task executions in seconds.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_minimum_trigger_interval_in_seconds Schema#user_task_minimum_trigger_interval_in_seconds}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_minimum_trigger_interval_in_seconds Schema#user_task_minimum_trigger_interval_in_seconds}
         '''
         result = self._values.get("user_task_minimum_trigger_interval_in_seconds")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1215,18 +1270,18 @@ class SchemaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_task_timeout_ms(self) -> typing.Optional[jsii.Number]:
         '''User task execution timeout in milliseconds. For more information, see `USER_TASK_TIMEOUT_MS <https://docs.snowflake.com/en/sql-reference/parameters#user-task-timeout-ms>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#user_task_timeout_ms Schema#user_task_timeout_ms}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#user_task_timeout_ms Schema#user_task_timeout_ms}
         '''
         result = self._values.get("user_task_timeout_ms")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def with_managed_access(self) -> typing.Optional[builtins.str]:
-        '''Specifies a managed schema.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies a managed schema.
 
         Managed access schemas centralize privilege management with the schema owner. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/schema#with_managed_access Schema#with_managed_access}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#with_managed_access Schema#with_managed_access}
         '''
         result = self._values.get("with_managed_access")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4602,6 +4657,205 @@ class SchemaShowOutputOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.schema.SchemaTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class SchemaTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#create Schema#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#delete Schema#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#read Schema#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#update Schema#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1278b78c36fd31752dc3236361aeafd0978d3406866bf58880119ee1055d60d8)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#create Schema#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#delete Schema#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#read Schema#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/schema#update Schema#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "SchemaTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class SchemaTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.schema.SchemaTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5cda7483431b5ae55f4c045066439af9a40e96d128ebe55879c0f04409687455)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__44869edd33359caa3649459d0295174b801f19a2707679ed5648183c7f83ab3b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f3c178fe3a063e6fb7a4b7d5337e830ca98499e11ca65cb99867d56a88365c70)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__80b5f8bf1061278f46378b947502179078a9b7cdcf01f7cbb54c2b73f5875f86)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b218415fbf00e9e421af7c75f5f0941377ed7787a5302db9c3249ab893078602)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SchemaTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SchemaTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SchemaTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fe7662e3513ab903d45704deacce4e860fb7ec79dc0862ccfe4af143f2cf2e3f)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "Schema",
     "SchemaConfig",
@@ -4665,6 +4919,8 @@ __all__ = [
     "SchemaShowOutput",
     "SchemaShowOutputList",
     "SchemaShowOutputOutputReference",
+    "SchemaTimeouts",
+    "SchemaTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -4691,6 +4947,7 @@ def _typecheckingstub__4a7f31ce197ad346226677001c20e7651f4d3749ff745027f9ad6c25f
     storage_serialization_policy: typing.Optional[builtins.str] = None,
     suspend_task_after_num_failures: typing.Optional[jsii.Number] = None,
     task_auto_retry_attempts: typing.Optional[jsii.Number] = None,
+    timeouts: typing.Optional[typing.Union[SchemaTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     trace_level: typing.Optional[builtins.str] = None,
     user_task_managed_initial_warehouse_size: typing.Optional[builtins.str] = None,
     user_task_minimum_trigger_interval_in_seconds: typing.Optional[jsii.Number] = None,
@@ -4881,6 +5138,7 @@ def _typecheckingstub__933b22d4f33ab3703f8c6e84f222b0c2ab1cdb3484c64b57dabf3d44d
     storage_serialization_policy: typing.Optional[builtins.str] = None,
     suspend_task_after_num_failures: typing.Optional[jsii.Number] = None,
     task_auto_retry_attempts: typing.Optional[jsii.Number] = None,
+    timeouts: typing.Optional[typing.Union[SchemaTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     trace_level: typing.Optional[builtins.str] = None,
     user_task_managed_initial_warehouse_size: typing.Optional[builtins.str] = None,
     user_task_minimum_trigger_interval_in_seconds: typing.Optional[jsii.Number] = None,
@@ -5826,6 +6084,53 @@ def _typecheckingstub__ceaaee91875e6f7b3c880486135b1f80774e2a44cc0464de8889cd132
 
 def _typecheckingstub__7ed87313a32c41c76177a3af8022b338dfa462d5620d2aebc5abce2ba244b17a(
     value: typing.Optional[SchemaShowOutput],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1278b78c36fd31752dc3236361aeafd0978d3406866bf58880119ee1055d60d8(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5cda7483431b5ae55f4c045066439af9a40e96d128ebe55879c0f04409687455(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__44869edd33359caa3649459d0295174b801f19a2707679ed5648183c7f83ab3b(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f3c178fe3a063e6fb7a4b7d5337e830ca98499e11ca65cb99867d56a88365c70(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__80b5f8bf1061278f46378b947502179078a9b7cdcf01f7cbb54c2b73f5875f86(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b218415fbf00e9e421af7c75f5f0941377ed7787a5302db9c3249ab893078602(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fe7662e3513ab903d45704deacce4e860fb7ec79dc0862ccfe4af143f2cf2e3f(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SchemaTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

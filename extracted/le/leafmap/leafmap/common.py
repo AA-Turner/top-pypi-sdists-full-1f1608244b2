@@ -17148,3 +17148,72 @@ def filter_geom_type(
             filtered.to_file(output, **kwargs)
 
     return filtered
+
+
+def create_lines_from_points(
+    src_points: Union[dict, str, "gpd.GeoDataFrame"],
+    dst_points: Union[dict, str, "gpd.GeoDataFrame"],
+    col: str = "id",
+    distance_col: str = "distance",
+    decimal_places: int = 2,
+    return_gdf: bool = False,
+) -> dict:
+    """
+    Create LineString features between matching point features from two GeoJSON FeatureCollections
+    based on a shared column (default is 'id').
+
+    Parameters:
+        src_points (Union[dict, str, gpd.GeoDataFrame]): Source GeoJSON FeatureCollection with point features.
+        dst_points (Union[dict, str, gpd.GeoDataFrame]): Destination GeoJSON FeatureCollection with point features.
+        col (str): The property name to match features between the two collections.
+        distance_col (str): The name of the column to store the distance between the points.
+        decimal_places (int): The number of decimal places to round the distance to.
+        return_gdf (bool): If True, returns a GeoDataFrame instead of a dictionary. Defaults to False.
+
+    Returns:
+        dict: A GeoJSON FeatureCollection containing LineString features.
+    """
+    import geopandas as gpd
+
+    # Convert inputs to GeoJSON FeatureCollections if necessary
+    if isinstance(src_points, str):
+        src_points = read_vector(src_points).__geo_interface__
+    elif isinstance(src_points, gpd.GeoDataFrame):
+        src_points = src_points.__geo_interface__
+
+    if isinstance(dst_points, str):
+        dst_points = read_vector(dst_points).__geo_interface__
+    elif isinstance(dst_points, gpd.GeoDataFrame):
+        dst_points = dst_points.__geo_interface__
+
+    # Build a lookup from col value to coordinates in dst_points
+    dst_lookup = {
+        feature[col] if col in feature else feature["properties"][col]: feature[
+            "geometry"
+        ]["coordinates"]
+        for feature in dst_points["features"]
+    }
+
+    lines = []
+    for feature in src_points["features"]:
+        match_value = feature[col] if col in feature else feature["properties"][col]
+        coords1 = feature["geometry"]["coordinates"]
+        coords2 = dst_lookup.get(match_value)
+
+        if coords2:
+            line = {
+                "type": "Feature",
+                "geometry": {"type": "LineString", "coordinates": [coords1, coords2]},
+                "properties": {col: match_value, **feature.get("properties", {})},
+            }
+            lines.append(line)
+
+    gdf = gpd.GeoDataFrame.from_features(lines, crs="EPSG:4326")
+    if distance_col:
+        gdf_proj = gdf.to_crs("EPSG:3857")
+        gdf[distance_col] = gdf_proj.length.round(decimal_places)
+
+    if return_gdf:
+        return gdf
+    else:
+        return gdf.__geo_interface__

@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: PyExcelerate
-Version: 0.12.0
+Version: 0.13.0
 Summary: Accelerated Excel XLSX Writing Library for Python 2/3
 Home-page: https://github.com/kz26/PyExcelerate
 Author: Kevin Wang, Kevin Zhang
@@ -19,6 +19,16 @@ Classifier: Programming Language :: Python :: 3.8
 License-File: LICENSE
 Requires-Dist: Jinja2
 Requires-Dist: six>=1.4.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: requires-dist
+Dynamic: summary
 
 PyExcelerate
 ============

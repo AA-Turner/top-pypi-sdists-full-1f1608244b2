@@ -2,13 +2,12 @@ import os
 import shlex
 import subprocess
 import stat
-import time
 import uuid
 import json
 import shutil
 from siliconcompiler import utils, SiliconCompilerError
-from siliconcompiler.utils.flowgraph import nodes_to_execute
 from siliconcompiler.package import get_cache_path
+from siliconcompiler.flowgraph import RuntimeFlowgraph
 
 # Full list of Slurm states, split into 'active' and 'inactive' categories.
 # Many of these do not apply to a minimal configuration, but we'll track them all.
@@ -60,7 +59,14 @@ def init(chip):
     collect = False
     flow = chip.get('option', 'flow')
     entry_nodes = chip.schema.get("flowgraph", flow, field="schema").get_entry_nodes()
-    for (step, index) in nodes_to_execute(chip, flow):
+
+    runtime = RuntimeFlowgraph(
+        chip.schema.get("flowgraph", flow, field='schema'),
+        from_steps=chip.get('option', 'from'),
+        to_steps=chip.get('option', 'to'),
+        prune_nodes=chip.get('option', 'prune'))
+
+    for (step, index) in runtime.get_nodes():
         if (step, index) in entry_nodes:
             collect = True
 
@@ -125,7 +131,7 @@ def _defernode(chip, step, index, replay):
     os.chmod(script_file,
              os.stat(script_file).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-    schedule_cmd = ['sbatch',
+    schedule_cmd = ['srun',
                     '--exclusive',
                     '--partition', partition,
                     '--chdir', chip.cwd,
@@ -149,45 +155,6 @@ def _defernode(chip, step, index, replay):
     # as it has closed its output stream. But if we don't call '.wait()',
     # the '.returncode' value will not be set correctly.
     step_result.wait()
-    result_msg = step_result.stdout.read().decode()
-    sbatch_id = result_msg.split(' ')[-1].strip()
-    retcode = 0
-
-    while True:
-        # Return early with an error if the batch ID is not an integer.
-        if not sbatch_id.isdigit():
-            retcode = 1
-            break
-
-        # Rate-limit the status checks to once every few seconds.
-        time.sleep(3.0)
-
-        # Check whether the job is still running.
-        jobcheck = subprocess.run(['scontrol', 'show', 'job', sbatch_id],
-                                  stdout=subprocess.PIPE,
-                                  stderr=subprocess.STDOUT)
-        jobout = jobcheck.stdout.decode()
-
-        # Jobs have a number of potential states that they can be in if they
-        # are still active in the Slurm scheduler.
-        if [state for state in SLURM_ACTIVE_STATES if state in jobout]:
-            pass
-        # 'COMPLETED' is a special case indicating successful job termination.
-        elif 'COMPLETED' in jobout:
-            break
-        elif 'Invalid job id specified' in jobout:
-            # May have already completed and been purged from active list.
-            break
-        # Jobs have a number of potential states that they can be in if they
-        # did not terminate successfully.
-        elif [state for state in SLURM_INACTIVE_STATES if state in jobout]:
-            # FAILED, TIMEOUT, etc.
-            retcode = 1
-            break
-
-    if retcode > 0:
-        chip.logger.error(f'srun command for {step} failed.')
-        chip.logger.error(f'srun output for {step}: {jobout}')
 
 
 def _get_slurm_partition():

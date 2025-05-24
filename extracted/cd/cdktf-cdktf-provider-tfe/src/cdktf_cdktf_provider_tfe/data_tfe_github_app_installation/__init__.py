@@ -1,7 +1,7 @@
 r'''
 # `data_tfe_github_app_installation`
 
-Refer to the Terraform Registry for docs: [`data_tfe_github_app_installation`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation).
+Refer to the Terraform Registry for docs: [`data_tfe_github_app_installation`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataTfeGithubAppInstallation(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataTfeGithubAppInstallation.DataTfeGithubAppInstallation",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation tfe_github_app_installation}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation tfe_github_app_installation}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class DataTfeGithubAppInstallation(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation tfe_github_app_installation} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation tfe_github_app_installation} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation#installation_id DataTfeGithubAppInstallation#installation_id}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation#name DataTfeGithubAppInstallation#name}.
+        :param installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation#installation_id DataTfeGithubAppInstallation#installation_id}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation#name DataTfeGithubAppInstallation#name}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class DataTfeGithubAppInstallation(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataTfeGithubAppInstallation to import.
-        :param import_from_id: The id of the existing DataTfeGithubAppInstallation that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataTfeGithubAppInstallation that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataTfeGithubAppInstallation to import is found.
         '''
         if __debug__:
@@ -215,8 +215,8 @@ class DataTfeGithubAppInstallationConfig(_cdktf_9a9027ec.TerraformMetaArguments)
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation#installation_id DataTfeGithubAppInstallation#installation_id}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation#name DataTfeGithubAppInstallation#name}.
+        :param installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation#installation_id DataTfeGithubAppInstallation#installation_id}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation#name DataTfeGithubAppInstallation#name}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -317,13 +317,13 @@ class DataTfeGithubAppInstallationConfig(_cdktf_9a9027ec.TerraformMetaArguments)
 
     @builtins.property
     def installation_id(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation#installation_id DataTfeGithubAppInstallation#installation_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation#installation_id DataTfeGithubAppInstallation#installation_id}.'''
         result = self._values.get("installation_id")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/github_app_installation#name DataTfeGithubAppInstallation#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/github_app_installation#name DataTfeGithubAppInstallation#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 

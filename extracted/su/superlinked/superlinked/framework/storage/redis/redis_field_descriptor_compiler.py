@@ -28,7 +28,9 @@ RedisFieldTypeByFieldDataType: dict[FieldDataType, type[RedisField]] = {
     FieldDataType.DOUBLE: NumericField,
     FieldDataType.INT: NumericField,
     FieldDataType.STRING: TextField,
+    FieldDataType.SCHEMA_ID_STRING: TagField,
     FieldDataType.STRING_LIST: TagField,
+    FieldDataType.BOOLEAN: TagField,
 }
 
 DistanceMetricMap = {
@@ -70,5 +72,8 @@ class RedisFieldDescriptorCompiler:
                     },
                 )
         elif redis_field_cls := RedisFieldTypeByFieldDataType.get(field_descriptor.field_data_type):
-            return redis_field_cls(field_descriptor.field_name, sortable=True)
+            field = redis_field_cls(field_descriptor.field_name, sortable=True)
+            if isinstance(field, TagField):
+                field.args_suffix.append("UNF")
+            return field
         return None

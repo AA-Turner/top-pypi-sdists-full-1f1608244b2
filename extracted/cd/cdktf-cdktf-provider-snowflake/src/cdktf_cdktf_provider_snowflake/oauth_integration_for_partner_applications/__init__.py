@@ -1,7 +1,7 @@
 r'''
 # `snowflake_oauth_integration_for_partner_applications`
 
-Refer to the Terraform Registry for docs: [`snowflake_oauth_integration_for_partner_applications`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications).
+Refer to the Terraform Registry for docs: [`snowflake_oauth_integration_for_partner_applications`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OauthIntegrationForPartnerApplications(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.oauthIntegrationForPartnerApplications.OauthIntegrationForPartnerApplications",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications snowflake_oauth_integration_for_partner_applications}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications snowflake_oauth_integration_for_partner_applications}.'''
 
     def __init__(
         self,
@@ -61,6 +61,7 @@ class OauthIntegrationForPartnerApplications(
         oauth_redirect_uri: typing.Optional[builtins.str] = None,
         oauth_refresh_token_validity: typing.Optional[jsii.Number] = None,
         oauth_use_secondary_roles: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["OauthIntegrationForPartnerApplicationsTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -69,20 +70,21 @@ class OauthIntegrationForPartnerApplications(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications snowflake_oauth_integration_for_partner_applications} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications snowflake_oauth_integration_for_partner_applications} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#name OauthIntegrationForPartnerApplications#name}
-        :param oauth_client: Creates an OAuth interface between Snowflake and a partner application. Valid options are: ``LOOKER`` | ``TABLEAU_DESKTOP`` | ``TABLEAU_SERVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_client OauthIntegrationForPartnerApplications#oauth_client}
-        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#blocked_roles_list OauthIntegrationForPartnerApplications#blocked_roles_list}
-        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#comment OauthIntegrationForPartnerApplications#comment}
-        :param enabled: Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#enabled OauthIntegrationForPartnerApplications#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#id OauthIntegrationForPartnerApplications#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param oauth_issue_refresh_tokens: Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_issue_refresh_tokens OauthIntegrationForPartnerApplications#oauth_issue_refresh_tokens}
-        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. The field should be only set when OAUTH_CLIENT = LOOKER. In any other case the field should be left out empty. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_redirect_uri OauthIntegrationForPartnerApplications#oauth_redirect_uri}
-        :param oauth_refresh_token_validity: Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_refresh_token_validity OauthIntegrationForPartnerApplications#oauth_refresh_token_validity}
-        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_use_secondary_roles OauthIntegrationForPartnerApplications#oauth_use_secondary_roles}
+        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#name OauthIntegrationForPartnerApplications#name}
+        :param oauth_client: Creates an OAuth interface between Snowflake and a partner application. Valid options are: ``LOOKER`` | ``TABLEAU_DESKTOP`` | ``TABLEAU_SERVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_client OauthIntegrationForPartnerApplications#oauth_client}
+        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#blocked_roles_list OauthIntegrationForPartnerApplications#blocked_roles_list}
+        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#comment OauthIntegrationForPartnerApplications#comment}
+        :param enabled: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#enabled OauthIntegrationForPartnerApplications#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#id OauthIntegrationForPartnerApplications#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param oauth_issue_refresh_tokens: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_issue_refresh_tokens OauthIntegrationForPartnerApplications#oauth_issue_refresh_tokens}
+        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. The field should be only set when OAUTH_CLIENT = LOOKER. In any other case the field should be left out empty. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_redirect_uri OauthIntegrationForPartnerApplications#oauth_redirect_uri}
+        :param oauth_refresh_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_refresh_token_validity OauthIntegrationForPartnerApplications#oauth_refresh_token_validity}
+        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_use_secondary_roles OauthIntegrationForPartnerApplications#oauth_use_secondary_roles}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#timeouts OauthIntegrationForPartnerApplications#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,6 +108,7 @@ class OauthIntegrationForPartnerApplications(
             oauth_redirect_uri=oauth_redirect_uri,
             oauth_refresh_token_validity=oauth_refresh_token_validity,
             oauth_use_secondary_roles=oauth_use_secondary_roles,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -130,7 +133,7 @@ class OauthIntegrationForPartnerApplications(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OauthIntegrationForPartnerApplications to import.
-        :param import_from_id: The id of the existing OauthIntegrationForPartnerApplications that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OauthIntegrationForPartnerApplications that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OauthIntegrationForPartnerApplications to import is found.
         '''
         if __debug__:
@@ -140,6 +143,27 @@ class OauthIntegrationForPartnerApplications(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#create OauthIntegrationForPartnerApplications#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#delete OauthIntegrationForPartnerApplications#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#read OauthIntegrationForPartnerApplications#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#update OauthIntegrationForPartnerApplications#update}.
+        '''
+        value = OauthIntegrationForPartnerApplicationsTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetBlockedRolesList")
     def reset_blocked_roles_list(self) -> None:
@@ -172,6 +196,10 @@ class OauthIntegrationForPartnerApplications(
     @jsii.member(jsii_name="resetOauthUseSecondaryRoles")
     def reset_oauth_use_secondary_roles(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetOauthUseSecondaryRoles", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -209,6 +237,13 @@ class OauthIntegrationForPartnerApplications(
     @jsii.member(jsii_name="showOutput")
     def show_output(self) -> "OauthIntegrationForPartnerApplicationsShowOutputList":
         return typing.cast("OauthIntegrationForPartnerApplicationsShowOutputList", jsii.get(self, "showOutput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(
+        self,
+    ) -> "OauthIntegrationForPartnerApplicationsTimeoutsOutputReference":
+        return typing.cast("OauthIntegrationForPartnerApplicationsTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="blockedRolesListInput")
@@ -259,6 +294,13 @@ class OauthIntegrationForPartnerApplications(
     @jsii.member(jsii_name="oauthUseSecondaryRolesInput")
     def oauth_use_secondary_roles_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "oauthUseSecondaryRolesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "OauthIntegrationForPartnerApplicationsTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "OauthIntegrationForPartnerApplicationsTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="blockedRolesList")
@@ -402,6 +444,7 @@ class OauthIntegrationForPartnerApplications(
         "oauth_redirect_uri": "oauthRedirectUri",
         "oauth_refresh_token_validity": "oauthRefreshTokenValidity",
         "oauth_use_secondary_roles": "oauthUseSecondaryRoles",
+        "timeouts": "timeouts",
     },
 )
 class OauthIntegrationForPartnerApplicationsConfig(
@@ -427,6 +470,7 @@ class OauthIntegrationForPartnerApplicationsConfig(
         oauth_redirect_uri: typing.Optional[builtins.str] = None,
         oauth_refresh_token_validity: typing.Optional[jsii.Number] = None,
         oauth_use_secondary_roles: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["OauthIntegrationForPartnerApplicationsTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -436,19 +480,22 @@ class OauthIntegrationForPartnerApplicationsConfig(
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#name OauthIntegrationForPartnerApplications#name}
-        :param oauth_client: Creates an OAuth interface between Snowflake and a partner application. Valid options are: ``LOOKER`` | ``TABLEAU_DESKTOP`` | ``TABLEAU_SERVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_client OauthIntegrationForPartnerApplications#oauth_client}
-        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#blocked_roles_list OauthIntegrationForPartnerApplications#blocked_roles_list}
-        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#comment OauthIntegrationForPartnerApplications#comment}
-        :param enabled: Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#enabled OauthIntegrationForPartnerApplications#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#id OauthIntegrationForPartnerApplications#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param oauth_issue_refresh_tokens: Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_issue_refresh_tokens OauthIntegrationForPartnerApplications#oauth_issue_refresh_tokens}
-        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. The field should be only set when OAUTH_CLIENT = LOOKER. In any other case the field should be left out empty. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_redirect_uri OauthIntegrationForPartnerApplications#oauth_redirect_uri}
-        :param oauth_refresh_token_validity: Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_refresh_token_validity OauthIntegrationForPartnerApplications#oauth_refresh_token_validity}
-        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_use_secondary_roles OauthIntegrationForPartnerApplications#oauth_use_secondary_roles}
+        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#name OauthIntegrationForPartnerApplications#name}
+        :param oauth_client: Creates an OAuth interface between Snowflake and a partner application. Valid options are: ``LOOKER`` | ``TABLEAU_DESKTOP`` | ``TABLEAU_SERVER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_client OauthIntegrationForPartnerApplications#oauth_client}
+        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#blocked_roles_list OauthIntegrationForPartnerApplications#blocked_roles_list}
+        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#comment OauthIntegrationForPartnerApplications#comment}
+        :param enabled: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#enabled OauthIntegrationForPartnerApplications#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#id OauthIntegrationForPartnerApplications#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param oauth_issue_refresh_tokens: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_issue_refresh_tokens OauthIntegrationForPartnerApplications#oauth_issue_refresh_tokens}
+        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. The field should be only set when OAUTH_CLIENT = LOOKER. In any other case the field should be left out empty. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_redirect_uri OauthIntegrationForPartnerApplications#oauth_redirect_uri}
+        :param oauth_refresh_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_refresh_token_validity OauthIntegrationForPartnerApplications#oauth_refresh_token_validity}
+        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_use_secondary_roles OauthIntegrationForPartnerApplications#oauth_use_secondary_roles}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#timeouts OauthIntegrationForPartnerApplications#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = OauthIntegrationForPartnerApplicationsTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0af96a8af16bdee37916ca1cc8a5b1aa4655ebee55f4ca4ac854bd690e858da8)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -468,6 +515,7 @@ class OauthIntegrationForPartnerApplicationsConfig(
             check_type(argname="argument oauth_redirect_uri", value=oauth_redirect_uri, expected_type=type_hints["oauth_redirect_uri"])
             check_type(argname="argument oauth_refresh_token_validity", value=oauth_refresh_token_validity, expected_type=type_hints["oauth_refresh_token_validity"])
             check_type(argname="argument oauth_use_secondary_roles", value=oauth_use_secondary_roles, expected_type=type_hints["oauth_use_secondary_roles"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "name": name,
             "oauth_client": oauth_client,
@@ -502,6 +550,8 @@ class OauthIntegrationForPartnerApplicationsConfig(
             self._values["oauth_refresh_token_validity"] = oauth_refresh_token_validity
         if oauth_use_secondary_roles is not None:
             self._values["oauth_use_secondary_roles"] = oauth_use_secondary_roles
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -573,7 +623,7 @@ class OauthIntegrationForPartnerApplicationsConfig(
 
         This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#name OauthIntegrationForPartnerApplications#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#name OauthIntegrationForPartnerApplications#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -583,7 +633,7 @@ class OauthIntegrationForPartnerApplicationsConfig(
     def oauth_client(self) -> builtins.str:
         '''Creates an OAuth interface between Snowflake and a partner application. Valid options are: ``LOOKER`` | ``TABLEAU_DESKTOP`` | ``TABLEAU_SERVER``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_client OauthIntegrationForPartnerApplications#oauth_client}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_client OauthIntegrationForPartnerApplications#oauth_client}
         '''
         result = self._values.get("oauth_client")
         assert result is not None, "Required property 'oauth_client' is missing"
@@ -595,7 +645,7 @@ class OauthIntegrationForPartnerApplicationsConfig(
 
         By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#blocked_roles_list OauthIntegrationForPartnerApplications#blocked_roles_list}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#blocked_roles_list OauthIntegrationForPartnerApplications#blocked_roles_list}
         '''
         result = self._values.get("blocked_roles_list")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -604,25 +654,25 @@ class OauthIntegrationForPartnerApplicationsConfig(
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the OAuth integration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#comment OauthIntegrationForPartnerApplications#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#comment OauthIntegrationForPartnerApplications#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def enabled(self) -> typing.Optional[builtins.str]:
-        '''Specifies whether this OAuth integration is enabled or disabled.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether this OAuth integration is enabled or disabled.
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#enabled OauthIntegrationForPartnerApplications#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#enabled OauthIntegrationForPartnerApplications#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#id OauthIntegrationForPartnerApplications#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#id OauthIntegrationForPartnerApplications#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -632,11 +682,11 @@ class OauthIntegrationForPartnerApplicationsConfig(
 
     @builtins.property
     def oauth_issue_refresh_tokens(self) -> typing.Optional[builtins.str]:
-        '''Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired.
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_issue_refresh_tokens OauthIntegrationForPartnerApplications#oauth_issue_refresh_tokens}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_issue_refresh_tokens OauthIntegrationForPartnerApplications#oauth_issue_refresh_tokens}
         '''
         result = self._values.get("oauth_issue_refresh_tokens")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -647,16 +697,18 @@ class OauthIntegrationForPartnerApplicationsConfig(
 
         After a user is authenticated, the web browser is redirected to this URI. The field should be only set when OAUTH_CLIENT = LOOKER. In any other case the field should be left out empty.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_redirect_uri OauthIntegrationForPartnerApplications#oauth_redirect_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_redirect_uri OauthIntegrationForPartnerApplications#oauth_redirect_uri}
         '''
         result = self._values.get("oauth_redirect_uri")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def oauth_refresh_token_validity(self) -> typing.Optional[jsii.Number]:
-        '''Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies how long refresh tokens should be valid (in seconds).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_refresh_token_validity OauthIntegrationForPartnerApplications#oauth_refresh_token_validity}
+        OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_refresh_token_validity OauthIntegrationForPartnerApplications#oauth_refresh_token_validity}
         '''
         result = self._values.get("oauth_refresh_token_validity")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -667,10 +719,21 @@ class OauthIntegrationForPartnerApplicationsConfig(
 
         Valid options are: ``IMPLICIT`` | ``NONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/oauth_integration_for_partner_applications#oauth_use_secondary_roles OauthIntegrationForPartnerApplications#oauth_use_secondary_roles}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#oauth_use_secondary_roles OauthIntegrationForPartnerApplications#oauth_use_secondary_roles}
         '''
         result = self._values.get("oauth_use_secondary_roles")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(
+        self,
+    ) -> typing.Optional["OauthIntegrationForPartnerApplicationsTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#timeouts OauthIntegrationForPartnerApplications#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["OauthIntegrationForPartnerApplicationsTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -4502,6 +4565,205 @@ class OauthIntegrationForPartnerApplicationsShowOutputOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForPartnerApplications.OauthIntegrationForPartnerApplicationsTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class OauthIntegrationForPartnerApplicationsTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#create OauthIntegrationForPartnerApplications#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#delete OauthIntegrationForPartnerApplications#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#read OauthIntegrationForPartnerApplications#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#update OauthIntegrationForPartnerApplications#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__63d599b1bcc384508b6e7513379ab0f0b523230884529e6d9c1e57ae0ca9f3d8)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#create OauthIntegrationForPartnerApplications#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#delete OauthIntegrationForPartnerApplications#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#read OauthIntegrationForPartnerApplications#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_partner_applications#update OauthIntegrationForPartnerApplications#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "OauthIntegrationForPartnerApplicationsTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class OauthIntegrationForPartnerApplicationsTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForPartnerApplications.OauthIntegrationForPartnerApplicationsTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__49395aa0b61f8702700926349f11aba43a1072ffaf732b33ef14bfc8c3f648da)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__46b8128ef8fa1abc7d9b81db9db6165ecaac94f7d2c35d2f78551e3ec4d794b2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ad3e3334ef6599f538746256de98c0b01e61936db0858c9335ef4c748f2b42f5)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__18998e858ee3f8e07bdbd853ca7e9a9e2a0cad0ac36506e4da3ea9dc08ad75e0)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6960798bf7c7de5d05f8851bd6283c86d0794af011533906634e5295fc87cff2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, OauthIntegrationForPartnerApplicationsTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, OauthIntegrationForPartnerApplicationsTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, OauthIntegrationForPartnerApplicationsTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__27f99e03484c88c69361734354a727742b3e81e207871f481b5768b08127d0dc)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "OauthIntegrationForPartnerApplications",
     "OauthIntegrationForPartnerApplicationsConfig",
@@ -4574,6 +4836,8 @@ __all__ = [
     "OauthIntegrationForPartnerApplicationsShowOutput",
     "OauthIntegrationForPartnerApplicationsShowOutputList",
     "OauthIntegrationForPartnerApplicationsShowOutputOutputReference",
+    "OauthIntegrationForPartnerApplicationsTimeouts",
+    "OauthIntegrationForPartnerApplicationsTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -4592,6 +4856,7 @@ def _typecheckingstub__90df3a7593055b3842f7b95a64f325944cea311964db1611991b757d0
     oauth_redirect_uri: typing.Optional[builtins.str] = None,
     oauth_refresh_token_validity: typing.Optional[jsii.Number] = None,
     oauth_use_secondary_roles: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[OauthIntegrationForPartnerApplicationsTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -4691,6 +4956,7 @@ def _typecheckingstub__0af96a8af16bdee37916ca1cc8a5b1aa4655ebee55f4ca4ac854bd690
     oauth_redirect_uri: typing.Optional[builtins.str] = None,
     oauth_refresh_token_validity: typing.Optional[jsii.Number] = None,
     oauth_use_secondary_roles: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[OauthIntegrationForPartnerApplicationsTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -5772,6 +6038,53 @@ def _typecheckingstub__100c8005f8f27137746da6f933ce91fb39492c18b9a5b8e23900821c4
 
 def _typecheckingstub__8ad67b4880ab227be3649e46e90ee95ff0b0d1408ae9bb8666be8f7569a3f9b0(
     value: typing.Optional[OauthIntegrationForPartnerApplicationsShowOutput],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__63d599b1bcc384508b6e7513379ab0f0b523230884529e6d9c1e57ae0ca9f3d8(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__49395aa0b61f8702700926349f11aba43a1072ffaf732b33ef14bfc8c3f648da(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__46b8128ef8fa1abc7d9b81db9db6165ecaac94f7d2c35d2f78551e3ec4d794b2(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ad3e3334ef6599f538746256de98c0b01e61936db0858c9335ef4c748f2b42f5(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__18998e858ee3f8e07bdbd853ca7e9a9e2a0cad0ac36506e4da3ea9dc08ad75e0(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6960798bf7c7de5d05f8851bd6283c86d0794af011533906634e5295fc87cff2(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__27f99e03484c88c69361734354a727742b3e81e207871f481b5768b08127d0dc(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, OauthIntegrationForPartnerApplicationsTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

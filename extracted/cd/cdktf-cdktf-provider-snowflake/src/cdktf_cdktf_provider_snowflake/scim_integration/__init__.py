@@ -1,7 +1,7 @@
 r'''
 # `snowflake_scim_integration`
 
-Refer to the Terraform Registry for docs: [`snowflake_scim_integration`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration).
+Refer to the Terraform Registry for docs: [`snowflake_scim_integration`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ScimIntegration(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.scimIntegration.ScimIntegration",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration snowflake_scim_integration}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration snowflake_scim_integration}.'''
 
     def __init__(
         self,
@@ -59,6 +59,7 @@ class ScimIntegration(
         id: typing.Optional[builtins.str] = None,
         network_policy: typing.Optional[builtins.str] = None,
         sync_password: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["ScimIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -67,18 +68,19 @@ class ScimIntegration(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration snowflake_scim_integration} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration snowflake_scim_integration} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param enabled: Specify whether the security integration is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#enabled ScimIntegration#enabled}
-        :param name: String that specifies the identifier (i.e. name) for the integration; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#name ScimIntegration#name}
-        :param run_as_role: Specify the SCIM role in Snowflake that owns any users and roles that are imported from the identity provider into Snowflake using SCIM. Provider assumes that the specified role is already provided. Valid options are: ``OKTA_PROVISIONER`` | ``AAD_PROVISIONER`` | ``GENERIC_SCIM_PROVISIONER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#run_as_role ScimIntegration#run_as_role}
-        :param scim_client: Specifies the client type for the scim integration. Valid options are: ``OKTA`` | ``AZURE`` | ``GENERIC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#scim_client ScimIntegration#scim_client}
-        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#comment ScimIntegration#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#id ScimIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_policy: Specifies an existing network policy that controls SCIM network traffic. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#network_policy ScimIntegration#network_policy}
-        :param sync_password: Specifies whether to enable or disable the synchronization of a user password from an Okta SCIM client as part of the API request to Snowflake. This property is not supported for Azure SCIM. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#sync_password ScimIntegration#sync_password}
+        :param enabled: Specify whether the security integration is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#enabled ScimIntegration#enabled}
+        :param name: String that specifies the identifier (i.e. name) for the integration; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#name ScimIntegration#name}
+        :param run_as_role: Specify the SCIM role in Snowflake that owns any users and roles that are imported from the identity provider into Snowflake using SCIM. Provider assumes that the specified role is already provided. Valid options are: ``OKTA_PROVISIONER`` | ``AAD_PROVISIONER`` | ``GENERIC_SCIM_PROVISIONER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#run_as_role ScimIntegration#run_as_role}
+        :param scim_client: Specifies the client type for the scim integration. Valid options are: ``OKTA`` | ``AZURE`` | ``GENERIC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#scim_client ScimIntegration#scim_client}
+        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#comment ScimIntegration#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#id ScimIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_policy: Specifies an existing network policy that controls SCIM network traffic. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#network_policy ScimIntegration#network_policy}
+        :param sync_password: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to enable or disable the synchronization of a user password from an Okta SCIM client as part of the API request to Snowflake. This property is not supported for Azure SCIM. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#sync_password ScimIntegration#sync_password}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#timeouts ScimIntegration#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -100,6 +102,7 @@ class ScimIntegration(
             id=id,
             network_policy=network_policy,
             sync_password=sync_password,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -124,7 +127,7 @@ class ScimIntegration(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ScimIntegration to import.
-        :param import_from_id: The id of the existing ScimIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ScimIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ScimIntegration to import is found.
         '''
         if __debug__:
@@ -134,6 +137,27 @@ class ScimIntegration(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#create ScimIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#delete ScimIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#read ScimIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#update ScimIntegration#update}.
+        '''
+        value = ScimIntegrationTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetComment")
     def reset_comment(self) -> None:
@@ -150,6 +174,10 @@ class ScimIntegration(
     @jsii.member(jsii_name="resetSyncPassword")
     def reset_sync_password(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetSyncPassword", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -178,6 +206,11 @@ class ScimIntegration(
     @jsii.member(jsii_name="showOutput")
     def show_output(self) -> "ScimIntegrationShowOutputList":
         return typing.cast("ScimIntegrationShowOutputList", jsii.get(self, "showOutput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "ScimIntegrationTimeoutsOutputReference":
+        return typing.cast("ScimIntegrationTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="commentInput")
@@ -220,6 +253,13 @@ class ScimIntegration(
     @jsii.member(jsii_name="syncPasswordInput")
     def sync_password_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "syncPasswordInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ScimIntegrationTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ScimIntegrationTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="comment")
@@ -340,6 +380,7 @@ class ScimIntegration(
         "id": "id",
         "network_policy": "networkPolicy",
         "sync_password": "syncPassword",
+        "timeouts": "timeouts",
     },
 )
 class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -361,6 +402,7 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         id: typing.Optional[builtins.str] = None,
         network_policy: typing.Optional[builtins.str] = None,
         sync_password: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["ScimIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -370,17 +412,20 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param enabled: Specify whether the security integration is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#enabled ScimIntegration#enabled}
-        :param name: String that specifies the identifier (i.e. name) for the integration; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#name ScimIntegration#name}
-        :param run_as_role: Specify the SCIM role in Snowflake that owns any users and roles that are imported from the identity provider into Snowflake using SCIM. Provider assumes that the specified role is already provided. Valid options are: ``OKTA_PROVISIONER`` | ``AAD_PROVISIONER`` | ``GENERIC_SCIM_PROVISIONER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#run_as_role ScimIntegration#run_as_role}
-        :param scim_client: Specifies the client type for the scim integration. Valid options are: ``OKTA`` | ``AZURE`` | ``GENERIC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#scim_client ScimIntegration#scim_client}
-        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#comment ScimIntegration#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#id ScimIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_policy: Specifies an existing network policy that controls SCIM network traffic. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#network_policy ScimIntegration#network_policy}
-        :param sync_password: Specifies whether to enable or disable the synchronization of a user password from an Okta SCIM client as part of the API request to Snowflake. This property is not supported for Azure SCIM. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#sync_password ScimIntegration#sync_password}
+        :param enabled: Specify whether the security integration is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#enabled ScimIntegration#enabled}
+        :param name: String that specifies the identifier (i.e. name) for the integration; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#name ScimIntegration#name}
+        :param run_as_role: Specify the SCIM role in Snowflake that owns any users and roles that are imported from the identity provider into Snowflake using SCIM. Provider assumes that the specified role is already provided. Valid options are: ``OKTA_PROVISIONER`` | ``AAD_PROVISIONER`` | ``GENERIC_SCIM_PROVISIONER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#run_as_role ScimIntegration#run_as_role}
+        :param scim_client: Specifies the client type for the scim integration. Valid options are: ``OKTA`` | ``AZURE`` | ``GENERIC``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#scim_client ScimIntegration#scim_client}
+        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#comment ScimIntegration#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#id ScimIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_policy: Specifies an existing network policy that controls SCIM network traffic. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#network_policy ScimIntegration#network_policy}
+        :param sync_password: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to enable or disable the synchronization of a user password from an Okta SCIM client as part of the API request to Snowflake. This property is not supported for Azure SCIM. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#sync_password ScimIntegration#sync_password}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#timeouts ScimIntegration#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = ScimIntegrationTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__794b914e9df9e49679cfece29b1bd5acb7daf8887e633c834881f6a12193d51e)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -398,6 +443,7 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument network_policy", value=network_policy, expected_type=type_hints["network_policy"])
             check_type(argname="argument sync_password", value=sync_password, expected_type=type_hints["sync_password"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "enabled": enabled,
             "name": name,
@@ -426,6 +472,8 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["network_policy"] = network_policy
         if sync_password is not None:
             self._values["sync_password"] = sync_password
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -495,7 +543,7 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
         '''Specify whether the security integration is enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#enabled ScimIntegration#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#enabled ScimIntegration#enabled}
         '''
         result = self._values.get("enabled")
         assert result is not None, "Required property 'enabled' is missing"
@@ -505,7 +553,7 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''String that specifies the identifier (i.e. name) for the integration; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#name ScimIntegration#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#name ScimIntegration#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -517,7 +565,7 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Provider assumes that the specified role is already provided. Valid options are: ``OKTA_PROVISIONER`` | ``AAD_PROVISIONER`` | ``GENERIC_SCIM_PROVISIONER``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#run_as_role ScimIntegration#run_as_role}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#run_as_role ScimIntegration#run_as_role}
         '''
         result = self._values.get("run_as_role")
         assert result is not None, "Required property 'run_as_role' is missing"
@@ -527,7 +575,7 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def scim_client(self) -> builtins.str:
         '''Specifies the client type for the scim integration. Valid options are: ``OKTA`` | ``AZURE`` | ``GENERIC``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#scim_client ScimIntegration#scim_client}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#scim_client ScimIntegration#scim_client}
         '''
         result = self._values.get("scim_client")
         assert result is not None, "Required property 'scim_client' is missing"
@@ -537,14 +585,14 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the integration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#comment ScimIntegration#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#comment ScimIntegration#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#id ScimIntegration#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#id ScimIntegration#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -556,21 +604,30 @@ class ScimIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def network_policy(self) -> typing.Optional[builtins.str]:
         '''Specifies an existing network policy that controls SCIM network traffic. For more information about this resource, see `docs <./network_policy>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#network_policy ScimIntegration#network_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#network_policy ScimIntegration#network_policy}
         '''
         result = self._values.get("network_policy")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def sync_password(self) -> typing.Optional[builtins.str]:
-        '''Specifies whether to enable or disable the synchronization of a user password from an Okta SCIM client as part of the API request to Snowflake.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to enable or disable the synchronization of a user password from an Okta SCIM client as part of the API request to Snowflake.
 
         This property is not supported for Azure SCIM. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/scim_integration#sync_password ScimIntegration#sync_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#sync_password ScimIntegration#sync_password}
         '''
         result = self._values.get("sync_password")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["ScimIntegrationTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#timeouts ScimIntegration#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["ScimIntegrationTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -1707,6 +1764,205 @@ class ScimIntegrationShowOutputOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.scimIntegration.ScimIntegrationTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class ScimIntegrationTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#create ScimIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#delete ScimIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#read ScimIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#update ScimIntegration#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7246f4e2e64814e81986dfaf9c762eeeec2484071759e4b73bb27bbb3b3827f6)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#create ScimIntegration#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#delete ScimIntegration#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#read ScimIntegration#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/scim_integration#update ScimIntegration#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "ScimIntegrationTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class ScimIntegrationTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.scimIntegration.ScimIntegrationTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2190991c9534507a6d1d5e62768a0350ae0124971914ee027864d6dea9e979e6)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__49c706b4680452c7a22e6e44e0e87db07ab44427717259ec4bb8d1c869b6a256)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4c28023bfa54f54c5b514b3a3b3a54a080465df9843dba0b9568a9342a5a6889)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4f98250c957a2e8df23e8e59e21c703c8e7663dc5fe6b99fdaf8b13bcd7e0ece)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5ce1b69438fb148e925e45e2e28178659b7170ba72c1e87bd4dbb56640e0fca8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ScimIntegrationTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ScimIntegrationTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ScimIntegrationTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1015e3d7f4fdc98401562bc4e4d5628dceff8b8619caacbcc2eceadf4476b618)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "ScimIntegration",
     "ScimIntegrationConfig",
@@ -1731,6 +1987,8 @@ __all__ = [
     "ScimIntegrationShowOutput",
     "ScimIntegrationShowOutputList",
     "ScimIntegrationShowOutputOutputReference",
+    "ScimIntegrationTimeouts",
+    "ScimIntegrationTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -1747,6 +2005,7 @@ def _typecheckingstub__4d83aeefca348d674a94d10f0b4a24b3ef93ed3eee8ad630d87726f0e
     id: typing.Optional[builtins.str] = None,
     network_policy: typing.Optional[builtins.str] = None,
     sync_password: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[ScimIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -1832,6 +2091,7 @@ def _typecheckingstub__794b914e9df9e49679cfece29b1bd5acb7daf8887e633c834881f6a12
     id: typing.Optional[builtins.str] = None,
     network_policy: typing.Optional[builtins.str] = None,
     sync_password: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[ScimIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -2161,6 +2421,53 @@ def _typecheckingstub__9a3c953ffec54c3ed1503f3b74c7d47c53c4163401fa4d4b86e1066f8
 
 def _typecheckingstub__1098ed6c808e9e17efaf934619c07ebd429862e22cd955112459a75442e06fbc(
     value: typing.Optional[ScimIntegrationShowOutput],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7246f4e2e64814e81986dfaf9c762eeeec2484071759e4b73bb27bbb3b3827f6(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2190991c9534507a6d1d5e62768a0350ae0124971914ee027864d6dea9e979e6(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__49c706b4680452c7a22e6e44e0e87db07ab44427717259ec4bb8d1c869b6a256(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4c28023bfa54f54c5b514b3a3b3a54a080465df9843dba0b9568a9342a5a6889(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4f98250c957a2e8df23e8e59e21c703c8e7663dc5fe6b99fdaf8b13bcd7e0ece(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5ce1b69438fb148e925e45e2e28178659b7170ba72c1e87bd4dbb56640e0fca8(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1015e3d7f4fdc98401562bc4e4d5628dceff8b8619caacbcc2eceadf4476b618(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ScimIntegrationTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

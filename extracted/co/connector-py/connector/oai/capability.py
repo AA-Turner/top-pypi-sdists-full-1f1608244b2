@@ -28,6 +28,8 @@ from connector.generated import (
     DeactivateAccountResponse,
     DeleteAccountRequest,
     DeleteAccountResponse,
+    DowngradeLicenseRequest,
+    DowngradeLicenseResponse,
     ErrorCode,
     FindEntitlementAssociationsRequest,
     FindEntitlementAssociationsResponse,
@@ -56,9 +58,13 @@ from connector.generated import (
     Page,
     RefreshAccessTokenRequest,
     RefreshAccessTokenResponse,
+    ReleaseResourcesRequest,
+    ReleaseResourcesResponse,
     ServiceAccountCredential,
     StandardCapabilityName,
     TokenCredential,
+    TransferDataRequest,
+    TransferDataResponse,
     UnassignEntitlementRequest,
     UnassignEntitlementResponse,
     UpdateAccountRequest,
@@ -679,5 +685,17 @@ _STANDARD_CAPABILITY_SIGNATURES: dict[StandardCapabilityName, CapabilitySignatur
         output_payload=_payload_type_data(
             envelope_type=ValidateCredentialsResponse, is_request=False
         ),
+    ),
+    StandardCapabilityName.TRANSFER_DATA: CapabilitySignature(
+        input_payload=_payload_type_data(envelope_type=TransferDataRequest, is_request=True),
+        output_payload=_payload_type_data(envelope_type=TransferDataResponse, is_request=False),
+    ),
+    StandardCapabilityName.RELEASE_RESOURCES: CapabilitySignature(
+        input_payload=_payload_type_data(envelope_type=ReleaseResourcesRequest, is_request=True),
+        output_payload=_payload_type_data(envelope_type=ReleaseResourcesResponse, is_request=False),
+    ),
+    StandardCapabilityName.DOWNGRADE_LICENSE: CapabilitySignature(
+        input_payload=_payload_type_data(envelope_type=DowngradeLicenseRequest, is_request=True),
+        output_payload=_payload_type_data(envelope_type=DowngradeLicenseResponse, is_request=False),
     ),
 }

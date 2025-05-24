@@ -69,17 +69,15 @@ pub(crate) extern "C" fn solver_new_jlrs(
     let cones = ccall_arrays_to_cones(jlcones);
     let settings = settings_from_json(json_settings);
 
-    // manually validate settings from Julia side
-    match settings.validate() {
-        Ok(_) => (),
+    let solver = DefaultSolver::new(&P, &q, &A, &b, &cones, settings);
+
+    match solver {
+        Ok(solver) => to_ptr(Box::new(solver)),
         Err(e) => {
-            println!("Invalid settings: {}", e);
+            println!("Error creating solver: {}", e);
             return std::ptr::null_mut();
         }
-    };
-
-    let solver = DefaultSolver::new(&P, &q, &A, &b, &cones, settings);
-    to_ptr(Box::new(solver))
+    }
 }
 
 #[no_mangle]
@@ -97,16 +95,16 @@ pub(crate) extern "C" fn solver_solve_jlrs(ptr: *mut c_void) -> SolutionJLRS {
 }
 
 #[no_mangle]
-pub(crate) extern "C" fn solver_get_info_jlrs(ptr: *mut c_void) -> DefaultInfo<f64> {
+pub(crate) extern "C" fn solver_get_info_jlrs(ptr: *mut c_void) -> InfoJLRS {
     let solver = from_ptr(ptr);
 
-    let info = solver.info.clone();
+    let out = InfoJLRS::from(&solver.info);
 
     // don't drop, since the memory is owned by
     // Julia and we might want to solve again
     std::mem::forget(solver);
 
-    info
+    out
 }
 
 #[no_mangle]
@@ -126,7 +124,7 @@ pub(crate) extern "C" fn solver_print_timers_jlrs(ptr: *mut c_void) {
 // dump problem data to a file
 // returns -1 on failure, 0 on success
 #[no_mangle]
-pub(crate) extern "C" fn solver_write_to_file_jlrs(
+pub(crate) extern "C" fn solver_save_to_file_jlrs(
     ptr: *mut c_void,
     filename: *const std::os::raw::c_char,
 ) -> c_int {
@@ -147,7 +145,7 @@ pub(crate) extern "C" fn solver_write_to_file_jlrs(
     };
 
     let solver = from_ptr(ptr);
-    let status = solver.write_to_file(&mut file).is_ok();
+    let status = solver.save_to_file(&mut file).is_ok();
     let status = if status { 0 } else { -1 } as c_int;
 
     // don't drop, since the memory is owned by Julia
@@ -159,7 +157,7 @@ pub(crate) extern "C" fn solver_write_to_file_jlrs(
 // read problem data from a file with serialized JSON settings
 // returns NULL on failure, pointer to solver on success
 #[no_mangle]
-pub(crate) extern "C" fn solver_read_from_file_jlrs(
+pub(crate) extern "C" fn solver_load_from_file_jlrs(
     filename: *const std::os::raw::c_char,
     json_settings: *const std::os::raw::c_char,
 ) -> *const c_void {
@@ -179,18 +177,16 @@ pub(crate) extern "C" fn solver_read_from_file_jlrs(
         }
     };
 
-    // None on the julia size is serialized as "",
+    // None on the julia side is serialized as "",
     let settings = unsafe {
-        if json_settings.is_null() {
-            None
-        } else if CStr::from_ptr(json_settings).to_bytes().is_empty() {
+        if json_settings.is_null() || CStr::from_ptr(json_settings).to_bytes().is_empty() {
             None
         } else {
             Some(settings_from_json(json_settings))
         }
     };
 
-    let solver = DefaultSolver::read_from_file(&mut file, settings);
+    let solver = DefaultSolver::load_from_file(&mut file, settings);
 
     match solver {
         Ok(solver) => to_ptr(Box::new(solver)),

@@ -2,7 +2,28 @@ from __future__ import annotations
 
 import datetime as pydt
 
+from hypothesis import given
+from hypothesis import strategies as st
+from hypothesis.strategies import SearchStrategy
+
 import ry
+
+from ..strategies import st_i32, st_i64
+
+
+def st_signed_duration_args() -> SearchStrategy[tuple[int, int]]:
+    """Strategy for `ry.Duration` constructor arguments"""
+    return st.tuples(st_i64, st_i32)
+
+
+@given(st_signed_duration_args())
+def test_signed_duration_new(duration_args: tuple[int, int]) -> None:
+    secs, nanos = duration_args
+    try:
+        dur = ry.SignedDuration(secs, nanos)
+        assert isinstance(dur, ry.SignedDuration)
+    except OverflowError:
+        ...
 
 
 def test_duration_from_pydelta() -> None:

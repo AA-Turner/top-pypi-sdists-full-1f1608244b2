@@ -1,7 +1,7 @@
 r'''
 # `data_tfe_organization_run_task_global_settings`
 
-Refer to the Terraform Registry for docs: [`data_tfe_organization_run_task_global_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings).
+Refer to the Terraform Registry for docs: [`data_tfe_organization_run_task_global_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataTfeOrganizationRunTaskGlobalSettings(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataTfeOrganizationRunTaskGlobalSettings.DataTfeOrganizationRunTaskGlobalSettings",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings tfe_organization_run_task_global_settings}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings tfe_organization_run_task_global_settings}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class DataTfeOrganizationRunTaskGlobalSettings(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings tfe_organization_run_task_global_settings} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings tfe_organization_run_task_global_settings} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#task_id DataTfeOrganizationRunTaskGlobalSettings#task_id}
-        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#enabled DataTfeOrganizationRunTaskGlobalSettings#enabled}
-        :param enforcement_level: The enforcement level of the global task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#enforcement_level DataTfeOrganizationRunTaskGlobalSettings#enforcement_level}
-        :param stages: Which stages the task will run in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#stages DataTfeOrganizationRunTaskGlobalSettings#stages}
+        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#task_id DataTfeOrganizationRunTaskGlobalSettings#task_id}
+        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#enabled DataTfeOrganizationRunTaskGlobalSettings#enabled}
+        :param enforcement_level: The enforcement level of the global task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#enforcement_level DataTfeOrganizationRunTaskGlobalSettings#enforcement_level}
+        :param stages: Which stages the task will run in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#stages DataTfeOrganizationRunTaskGlobalSettings#stages}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class DataTfeOrganizationRunTaskGlobalSettings(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataTfeOrganizationRunTaskGlobalSettings to import.
-        :param import_from_id: The id of the existing DataTfeOrganizationRunTaskGlobalSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataTfeOrganizationRunTaskGlobalSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataTfeOrganizationRunTaskGlobalSettings to import is found.
         '''
         if __debug__:
@@ -270,10 +270,10 @@ class DataTfeOrganizationRunTaskGlobalSettingsConfig(
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#task_id DataTfeOrganizationRunTaskGlobalSettings#task_id}
-        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#enabled DataTfeOrganizationRunTaskGlobalSettings#enabled}
-        :param enforcement_level: The enforcement level of the global task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#enforcement_level DataTfeOrganizationRunTaskGlobalSettings#enforcement_level}
-        :param stages: Which stages the task will run in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#stages DataTfeOrganizationRunTaskGlobalSettings#stages}
+        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#task_id DataTfeOrganizationRunTaskGlobalSettings#task_id}
+        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#enabled DataTfeOrganizationRunTaskGlobalSettings#enabled}
+        :param enforcement_level: The enforcement level of the global task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#enforcement_level DataTfeOrganizationRunTaskGlobalSettings#enforcement_level}
+        :param stages: Which stages the task will run in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#stages DataTfeOrganizationRunTaskGlobalSettings#stages}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -382,7 +382,7 @@ class DataTfeOrganizationRunTaskGlobalSettingsConfig(
     def task_id(self) -> builtins.str:
         '''The id of the run task.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#task_id DataTfeOrganizationRunTaskGlobalSettings#task_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#task_id DataTfeOrganizationRunTaskGlobalSettings#task_id}
         '''
         result = self._values.get("task_id")
         assert result is not None, "Required property 'task_id' is missing"
@@ -394,7 +394,7 @@ class DataTfeOrganizationRunTaskGlobalSettingsConfig(
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the run task will be applied globally.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#enabled DataTfeOrganizationRunTaskGlobalSettings#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#enabled DataTfeOrganizationRunTaskGlobalSettings#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -403,7 +403,7 @@ class DataTfeOrganizationRunTaskGlobalSettingsConfig(
     def enforcement_level(self) -> typing.Optional[builtins.str]:
         '''The enforcement level of the global task.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#enforcement_level DataTfeOrganizationRunTaskGlobalSettings#enforcement_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#enforcement_level DataTfeOrganizationRunTaskGlobalSettings#enforcement_level}
         '''
         result = self._values.get("enforcement_level")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -412,7 +412,7 @@ class DataTfeOrganizationRunTaskGlobalSettingsConfig(
     def stages(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Which stages the task will run in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/organization_run_task_global_settings#stages DataTfeOrganizationRunTaskGlobalSettings#stages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/organization_run_task_global_settings#stages DataTfeOrganizationRunTaskGlobalSettings#stages}
         '''
         result = self._values.get("stages")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

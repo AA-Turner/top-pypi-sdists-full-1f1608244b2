@@ -1,7 +1,7 @@
 r'''
 # `tfe_policy_set`
 
-Refer to the Terraform Registry for docs: [`tfe_policy_set`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set).
+Refer to the Terraform Registry for docs: [`tfe_policy_set`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicySet(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.policySet.PolicySet",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set tfe_policy_set}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set tfe_policy_set}.'''
 
     def __init__(
         self,
@@ -73,24 +73,24 @@ class PolicySet(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set tfe_policy_set} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set tfe_policy_set} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#name PolicySet#name}.
-        :param agent_enabled: Whether the policy set is executed in the HCP Terraform agent. True by default for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#agent_enabled PolicySet#agent_enabled}
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#description PolicySet#description}.
-        :param global_: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#global PolicySet#global}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#id PolicySet#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param kind: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#kind PolicySet#kind}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#organization PolicySet#organization}.
-        :param overridable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#overridable PolicySet#overridable}.
-        :param policies_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policies_path PolicySet#policies_path}.
-        :param policy_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policy_ids PolicySet#policy_ids}.
-        :param policy_tool_version: The policy tool version to run the policy evaluation against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policy_tool_version PolicySet#policy_tool_version}
-        :param slug: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#slug PolicySet#slug}.
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#vcs_repo PolicySet#vcs_repo}
-        :param workspace_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#workspace_ids PolicySet#workspace_ids}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#name PolicySet#name}.
+        :param agent_enabled: Whether the policy set is executed in the HCP Terraform agent. True by default for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#agent_enabled PolicySet#agent_enabled}
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#description PolicySet#description}.
+        :param global_: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#global PolicySet#global}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#id PolicySet#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param kind: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#kind PolicySet#kind}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#organization PolicySet#organization}.
+        :param overridable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#overridable PolicySet#overridable}.
+        :param policies_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policies_path PolicySet#policies_path}.
+        :param policy_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policy_ids PolicySet#policy_ids}.
+        :param policy_tool_version: The policy tool version to run the policy evaluation against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policy_tool_version PolicySet#policy_tool_version}
+        :param slug: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#slug PolicySet#slug}.
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#vcs_repo PolicySet#vcs_repo}
+        :param workspace_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#workspace_ids PolicySet#workspace_ids}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -142,7 +142,7 @@ class PolicySet(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicySet to import.
-        :param import_from_id: The id of the existing PolicySet that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicySet that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicySet to import is found.
         '''
         if __debug__:
@@ -164,11 +164,11 @@ class PolicySet(
         oauth_token_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#identifier PolicySet#identifier}.
-        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#branch PolicySet#branch}.
-        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#github_app_installation_id PolicySet#github_app_installation_id}.
-        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#ingress_submodules PolicySet#ingress_submodules}.
-        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#oauth_token_id PolicySet#oauth_token_id}.
+        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#identifier PolicySet#identifier}.
+        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#branch PolicySet#branch}.
+        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#github_app_installation_id PolicySet#github_app_installation_id}.
+        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#ingress_submodules PolicySet#ingress_submodules}.
+        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#oauth_token_id PolicySet#oauth_token_id}.
         '''
         value = PolicySetVcsRepo(
             identifier=identifier,
@@ -553,20 +553,20 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#name PolicySet#name}.
-        :param agent_enabled: Whether the policy set is executed in the HCP Terraform agent. True by default for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#agent_enabled PolicySet#agent_enabled}
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#description PolicySet#description}.
-        :param global_: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#global PolicySet#global}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#id PolicySet#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param kind: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#kind PolicySet#kind}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#organization PolicySet#organization}.
-        :param overridable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#overridable PolicySet#overridable}.
-        :param policies_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policies_path PolicySet#policies_path}.
-        :param policy_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policy_ids PolicySet#policy_ids}.
-        :param policy_tool_version: The policy tool version to run the policy evaluation against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policy_tool_version PolicySet#policy_tool_version}
-        :param slug: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#slug PolicySet#slug}.
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#vcs_repo PolicySet#vcs_repo}
-        :param workspace_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#workspace_ids PolicySet#workspace_ids}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#name PolicySet#name}.
+        :param agent_enabled: Whether the policy set is executed in the HCP Terraform agent. True by default for OPA policies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#agent_enabled PolicySet#agent_enabled}
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#description PolicySet#description}.
+        :param global_: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#global PolicySet#global}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#id PolicySet#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param kind: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#kind PolicySet#kind}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#organization PolicySet#organization}.
+        :param overridable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#overridable PolicySet#overridable}.
+        :param policies_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policies_path PolicySet#policies_path}.
+        :param policy_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policy_ids PolicySet#policy_ids}.
+        :param policy_tool_version: The policy tool version to run the policy evaluation against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policy_tool_version PolicySet#policy_tool_version}
+        :param slug: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#slug PolicySet#slug}.
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#vcs_repo PolicySet#vcs_repo}
+        :param workspace_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#workspace_ids PolicySet#workspace_ids}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -705,7 +705,7 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#name PolicySet#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#name PolicySet#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
@@ -716,14 +716,14 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the policy set is executed in the HCP Terraform agent. True by default for OPA policies.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#agent_enabled PolicySet#agent_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#agent_enabled PolicySet#agent_enabled}
         '''
         result = self._values.get("agent_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#description PolicySet#description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#description PolicySet#description}.'''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -731,13 +731,13 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def global_(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#global PolicySet#global}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#global PolicySet#global}.'''
         result = self._values.get("global_")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#id PolicySet#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#id PolicySet#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -747,13 +747,13 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def kind(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#kind PolicySet#kind}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#kind PolicySet#kind}.'''
         result = self._values.get("kind")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#organization PolicySet#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#organization PolicySet#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -761,19 +761,19 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def overridable(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#overridable PolicySet#overridable}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#overridable PolicySet#overridable}.'''
         result = self._values.get("overridable")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def policies_path(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policies_path PolicySet#policies_path}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policies_path PolicySet#policies_path}.'''
         result = self._values.get("policies_path")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def policy_ids(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policy_ids PolicySet#policy_ids}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policy_ids PolicySet#policy_ids}.'''
         result = self._values.get("policy_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -781,14 +781,14 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_tool_version(self) -> typing.Optional[builtins.str]:
         '''The policy tool version to run the policy evaluation against.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#policy_tool_version PolicySet#policy_tool_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#policy_tool_version PolicySet#policy_tool_version}
         '''
         result = self._values.get("policy_tool_version")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def slug(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#slug PolicySet#slug}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#slug PolicySet#slug}.'''
         result = self._values.get("slug")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -796,14 +796,14 @@ class PolicySetConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def vcs_repo(self) -> typing.Optional["PolicySetVcsRepo"]:
         '''vcs_repo block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#vcs_repo PolicySet#vcs_repo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#vcs_repo PolicySet#vcs_repo}
         '''
         result = self._values.get("vcs_repo")
         return typing.cast(typing.Optional["PolicySetVcsRepo"], result)
 
     @builtins.property
     def workspace_ids(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#workspace_ids PolicySet#workspace_ids}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#workspace_ids PolicySet#workspace_ids}.'''
         result = self._values.get("workspace_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -841,11 +841,11 @@ class PolicySetVcsRepo:
         oauth_token_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#identifier PolicySet#identifier}.
-        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#branch PolicySet#branch}.
-        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#github_app_installation_id PolicySet#github_app_installation_id}.
-        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#ingress_submodules PolicySet#ingress_submodules}.
-        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#oauth_token_id PolicySet#oauth_token_id}.
+        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#identifier PolicySet#identifier}.
+        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#branch PolicySet#branch}.
+        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#github_app_installation_id PolicySet#github_app_installation_id}.
+        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#ingress_submodules PolicySet#ingress_submodules}.
+        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#oauth_token_id PolicySet#oauth_token_id}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c142443d7f869111fd8d8055bce18abd2a6c6fd69d0edd53c6a917bf64236e3a)
@@ -868,20 +868,20 @@ class PolicySetVcsRepo:
 
     @builtins.property
     def identifier(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#identifier PolicySet#identifier}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#identifier PolicySet#identifier}.'''
         result = self._values.get("identifier")
         assert result is not None, "Required property 'identifier' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def branch(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#branch PolicySet#branch}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#branch PolicySet#branch}.'''
         result = self._values.get("branch")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def github_app_installation_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#github_app_installation_id PolicySet#github_app_installation_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#github_app_installation_id PolicySet#github_app_installation_id}.'''
         result = self._values.get("github_app_installation_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -889,13 +889,13 @@ class PolicySetVcsRepo:
     def ingress_submodules(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#ingress_submodules PolicySet#ingress_submodules}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#ingress_submodules PolicySet#ingress_submodules}.'''
         result = self._values.get("ingress_submodules")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def oauth_token_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set#oauth_token_id PolicySet#oauth_token_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set#oauth_token_id PolicySet#oauth_token_id}.'''
         result = self._values.get("oauth_token_id")
         return typing.cast(typing.Optional[builtins.str], result)
 

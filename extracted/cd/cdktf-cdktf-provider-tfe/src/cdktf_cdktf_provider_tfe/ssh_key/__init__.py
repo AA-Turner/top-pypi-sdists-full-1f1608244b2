@@ -1,7 +1,7 @@
 r'''
 # `tfe_ssh_key`
 
-Refer to the Terraform Registry for docs: [`tfe_ssh_key`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key).
+Refer to the Terraform Registry for docs: [`tfe_ssh_key`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class SshKey(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.sshKey.SshKey",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key tfe_ssh_key}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key tfe_ssh_key}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class SshKey(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key tfe_ssh_key} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key tfe_ssh_key} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: The name of the SSH key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#name SshKey#name}
-        :param key: The text of the SSH private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#key SshKey#key}
-        :param key_wo: The text of the SSH private key, guaranteed not to be written to state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#key_wo SshKey#key_wo}
-        :param organization: The name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#organization SshKey#organization}
+        :param name: The name of the SSH key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#name SshKey#name}
+        :param key: The text of the SSH private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#key SshKey#key}
+        :param key_wo: The text of the SSH private key, guaranteed not to be written to state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#key_wo SshKey#key_wo}
+        :param organization: The name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#organization SshKey#organization}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class SshKey(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the SshKey to import.
-        :param import_from_id: The id of the existing SshKey that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing SshKey that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the SshKey to import is found.
         '''
         if __debug__:
@@ -263,10 +263,10 @@ class SshKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: The name of the SSH key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#name SshKey#name}
-        :param key: The text of the SSH private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#key SshKey#key}
-        :param key_wo: The text of the SSH private key, guaranteed not to be written to state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#key_wo SshKey#key_wo}
-        :param organization: The name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#organization SshKey#organization}
+        :param name: The name of the SSH key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#name SshKey#name}
+        :param key: The text of the SSH private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#key SshKey#key}
+        :param key_wo: The text of the SSH private key, guaranteed not to be written to state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#key_wo SshKey#key_wo}
+        :param organization: The name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#organization SshKey#organization}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -375,7 +375,7 @@ class SshKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The name of the SSH key.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#name SshKey#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#name SshKey#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -385,7 +385,7 @@ class SshKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key(self) -> typing.Optional[builtins.str]:
         '''The text of the SSH private key.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#key SshKey#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#key SshKey#key}
         '''
         result = self._values.get("key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -394,7 +394,7 @@ class SshKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key_wo(self) -> typing.Optional[builtins.str]:
         '''The text of the SSH private key, guaranteed not to be written to state.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#key_wo SshKey#key_wo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#key_wo SshKey#key_wo}
         '''
         result = self._values.get("key_wo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -403,7 +403,7 @@ class SshKeyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''The name of the organization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/ssh_key#organization SshKey#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/ssh_key#organization SshKey#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)

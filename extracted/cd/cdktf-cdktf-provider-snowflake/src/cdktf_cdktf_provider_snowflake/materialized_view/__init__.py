@@ -1,7 +1,7 @@
 r'''
 # `snowflake_materialized_view`
 
-Refer to the Terraform Registry for docs: [`snowflake_materialized_view`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view).
+Refer to the Terraform Registry for docs: [`snowflake_materialized_view`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class MaterializedView(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.materializedView.MaterializedView",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view snowflake_materialized_view}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view snowflake_materialized_view}.'''
 
     def __init__(
         self,
@@ -61,6 +61,7 @@ class MaterializedView(
         is_secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         or_replace: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         tag: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["MaterializedViewTag", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        timeouts: typing.Optional[typing.Union["MaterializedViewTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -69,20 +70,21 @@ class MaterializedView(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view snowflake_materialized_view} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view snowflake_materialized_view} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param database: The database in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#database MaterializedView#database}
-        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#name MaterializedView#name}
-        :param schema: The schema in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#schema MaterializedView#schema}
-        :param statement: Specifies the query used to create the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#statement MaterializedView#statement}
-        :param warehouse: The warehouse name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#warehouse MaterializedView#warehouse}
-        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#comment MaterializedView#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#id MaterializedView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_secure: Specifies that the view is secure. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#is_secure MaterializedView#is_secure}
-        :param or_replace: Overwrites the View if it exists. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#or_replace MaterializedView#or_replace}
-        :param tag: tag block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#tag MaterializedView#tag}
+        :param database: The database in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#database MaterializedView#database}
+        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#name MaterializedView#name}
+        :param schema: The schema in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#schema MaterializedView#schema}
+        :param statement: Specifies the query used to create the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#statement MaterializedView#statement}
+        :param warehouse: The warehouse name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#warehouse MaterializedView#warehouse}
+        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#comment MaterializedView#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#id MaterializedView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_secure: (Default: ``false``) Specifies that the view is secure. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#is_secure MaterializedView#is_secure}
+        :param or_replace: (Default: ``false``) Overwrites the View if it exists. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#or_replace MaterializedView#or_replace}
+        :param tag: tag block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#tag MaterializedView#tag}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#timeouts MaterializedView#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,6 +108,7 @@ class MaterializedView(
             is_secure=is_secure,
             or_replace=or_replace,
             tag=tag,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -130,7 +133,7 @@ class MaterializedView(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the MaterializedView to import.
-        :param import_from_id: The id of the existing MaterializedView that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing MaterializedView that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the MaterializedView to import is found.
         '''
         if __debug__:
@@ -154,6 +157,27 @@ class MaterializedView(
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         return typing.cast(None, jsii.invoke(self, "putTag", [value]))
 
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#create MaterializedView#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#delete MaterializedView#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#read MaterializedView#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#update MaterializedView#update}.
+        '''
+        value = MaterializedViewTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
+
     @jsii.member(jsii_name="resetComment")
     def reset_comment(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetComment", []))
@@ -173,6 +197,10 @@ class MaterializedView(
     @jsii.member(jsii_name="resetTag")
     def reset_tag(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTag", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -196,6 +224,11 @@ class MaterializedView(
     @jsii.member(jsii_name="tag")
     def tag(self) -> "MaterializedViewTagList":
         return typing.cast("MaterializedViewTagList", jsii.get(self, "tag"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "MaterializedViewTimeoutsOutputReference":
+        return typing.cast("MaterializedViewTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="commentInput")
@@ -247,6 +280,13 @@ class MaterializedView(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MaterializedViewTag"]]]:
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MaterializedViewTag"]]], jsii.get(self, "tagInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "MaterializedViewTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "MaterializedViewTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="warehouseInput")
@@ -389,6 +429,7 @@ class MaterializedView(
         "is_secure": "isSecure",
         "or_replace": "orReplace",
         "tag": "tag",
+        "timeouts": "timeouts",
     },
 )
 class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -412,6 +453,7 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         is_secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         or_replace: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         tag: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["MaterializedViewTag", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        timeouts: typing.Optional[typing.Union["MaterializedViewTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -421,19 +463,22 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param database: The database in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#database MaterializedView#database}
-        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#name MaterializedView#name}
-        :param schema: The schema in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#schema MaterializedView#schema}
-        :param statement: Specifies the query used to create the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#statement MaterializedView#statement}
-        :param warehouse: The warehouse name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#warehouse MaterializedView#warehouse}
-        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#comment MaterializedView#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#id MaterializedView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_secure: Specifies that the view is secure. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#is_secure MaterializedView#is_secure}
-        :param or_replace: Overwrites the View if it exists. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#or_replace MaterializedView#or_replace}
-        :param tag: tag block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#tag MaterializedView#tag}
+        :param database: The database in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#database MaterializedView#database}
+        :param name: Specifies the identifier for the view; must be unique for the schema in which the view is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#name MaterializedView#name}
+        :param schema: The schema in which to create the view. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#schema MaterializedView#schema}
+        :param statement: Specifies the query used to create the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#statement MaterializedView#statement}
+        :param warehouse: The warehouse name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#warehouse MaterializedView#warehouse}
+        :param comment: Specifies a comment for the view. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#comment MaterializedView#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#id MaterializedView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_secure: (Default: ``false``) Specifies that the view is secure. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#is_secure MaterializedView#is_secure}
+        :param or_replace: (Default: ``false``) Overwrites the View if it exists. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#or_replace MaterializedView#or_replace}
+        :param tag: tag block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#tag MaterializedView#tag}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#timeouts MaterializedView#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = MaterializedViewTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0ff7e13511d3668e2d7db47b457ee0c5c3e41b339256da7f45dc008e5e441ee7)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -453,6 +498,7 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument is_secure", value=is_secure, expected_type=type_hints["is_secure"])
             check_type(argname="argument or_replace", value=or_replace, expected_type=type_hints["or_replace"])
             check_type(argname="argument tag", value=tag, expected_type=type_hints["tag"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "database": database,
             "name": name,
@@ -484,6 +530,8 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["or_replace"] = or_replace
         if tag is not None:
             self._values["tag"] = tag
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -553,7 +601,7 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def database(self) -> builtins.str:
         '''The database in which to create the view. Don't use the | character.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#database MaterializedView#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#database MaterializedView#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -563,7 +611,7 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Specifies the identifier for the view; must be unique for the schema in which the view is created.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#name MaterializedView#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#name MaterializedView#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -573,7 +621,7 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def schema(self) -> builtins.str:
         '''The schema in which to create the view. Don't use the | character.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#schema MaterializedView#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#schema MaterializedView#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -583,7 +631,7 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def statement(self) -> builtins.str:
         '''Specifies the query used to create the view.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#statement MaterializedView#statement}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#statement MaterializedView#statement}
         '''
         result = self._values.get("statement")
         assert result is not None, "Required property 'statement' is missing"
@@ -593,7 +641,7 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def warehouse(self) -> builtins.str:
         '''The warehouse name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#warehouse MaterializedView#warehouse}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#warehouse MaterializedView#warehouse}
         '''
         result = self._values.get("warehouse")
         assert result is not None, "Required property 'warehouse' is missing"
@@ -603,14 +651,14 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the view.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#comment MaterializedView#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#comment MaterializedView#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#id MaterializedView#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#id MaterializedView#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -622,9 +670,9 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def is_secure(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Specifies that the view is secure.
+        '''(Default: ``false``) Specifies that the view is secure.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#is_secure MaterializedView#is_secure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#is_secure MaterializedView#is_secure}
         '''
         result = self._values.get("is_secure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -633,9 +681,9 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def or_replace(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Overwrites the View if it exists.
+        '''(Default: ``false``) Overwrites the View if it exists.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#or_replace MaterializedView#or_replace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#or_replace MaterializedView#or_replace}
         '''
         result = self._values.get("or_replace")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -646,10 +694,19 @@ class MaterializedViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MaterializedViewTag"]]]:
         '''tag block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#tag MaterializedView#tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#tag MaterializedView#tag}
         '''
         result = self._values.get("tag")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MaterializedViewTag"]]], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["MaterializedViewTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#timeouts MaterializedView#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["MaterializedViewTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -683,10 +740,10 @@ class MaterializedViewTag:
         schema: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Tag name, e.g. department. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#name MaterializedView#name}
-        :param value: Tag value, e.g. marketing_info. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#value MaterializedView#value}
-        :param database: Name of the database that the tag was created in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#database MaterializedView#database}
-        :param schema: Name of the schema that the tag was created in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#schema MaterializedView#schema}
+        :param name: Tag name, e.g. department. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#name MaterializedView#name}
+        :param value: Tag value, e.g. marketing_info. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#value MaterializedView#value}
+        :param database: Name of the database that the tag was created in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#database MaterializedView#database}
+        :param schema: Name of the schema that the tag was created in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#schema MaterializedView#schema}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__6f116971a4dac329705d1443bf0acea96423a38396bad245739969fcaf2693cc)
@@ -707,7 +764,7 @@ class MaterializedViewTag:
     def name(self) -> builtins.str:
         '''Tag name, e.g. department.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#name MaterializedView#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#name MaterializedView#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -717,7 +774,7 @@ class MaterializedViewTag:
     def value(self) -> builtins.str:
         '''Tag value, e.g. marketing_info.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#value MaterializedView#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#value MaterializedView#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -727,7 +784,7 @@ class MaterializedViewTag:
     def database(self) -> typing.Optional[builtins.str]:
         '''Name of the database that the tag was created in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#database MaterializedView#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#database MaterializedView#database}
         '''
         result = self._values.get("database")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -736,7 +793,7 @@ class MaterializedViewTag:
     def schema(self) -> typing.Optional[builtins.str]:
         '''Name of the schema that the tag was created in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/materialized_view#schema MaterializedView#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#schema MaterializedView#schema}
         '''
         result = self._values.get("schema")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -963,12 +1020,213 @@ class MaterializedViewTagOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.materializedView.MaterializedViewTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class MaterializedViewTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#create MaterializedView#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#delete MaterializedView#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#read MaterializedView#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#update MaterializedView#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d2bf857214c9b8232e644d54517d832f185de34242a08d095ac052fd5935ccd9)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#create MaterializedView#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#delete MaterializedView#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#read MaterializedView#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/materialized_view#update MaterializedView#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "MaterializedViewTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class MaterializedViewTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.materializedView.MaterializedViewTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4307bb1b88886d5a36def2633d8f6ef551eb25659404dbfe5477221896cff472)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ac7d1b1b04f873dfff0ede3d767b521b993b10bd107f83afdd4f332c3b130b70)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9cbda002f1aef078b4fabe40f63810f42111e93a73a1f998184fee85c9dca383)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__eb0b09b7f3d4811bc67d2d7293d42e9b7c0a59a25991cbb93f0ea65382235331)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8749ce68bad53857d1a4cdf426d8abe03dda4945c9dce6d48b6ad1f50188fc57)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MaterializedViewTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MaterializedViewTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MaterializedViewTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__49a1b1809811032153b494184c0c36bac1429d46c550f34403009ed75c3e71c5)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "MaterializedView",
     "MaterializedViewConfig",
     "MaterializedViewTag",
     "MaterializedViewTagList",
     "MaterializedViewTagOutputReference",
+    "MaterializedViewTimeouts",
+    "MaterializedViewTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -987,6 +1245,7 @@ def _typecheckingstub__6ec55b5678430ab9200010acd8def96eb8925c86668cb60a84a0cf9ce
     is_secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     or_replace: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     tag: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MaterializedViewTag, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    timeouts: typing.Optional[typing.Union[MaterializedViewTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -1086,6 +1345,7 @@ def _typecheckingstub__0ff7e13511d3668e2d7db47b457ee0c5c3e41b339256da7f45dc008e5
     is_secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     or_replace: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     tag: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MaterializedViewTag, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    timeouts: typing.Optional[typing.Union[MaterializedViewTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -1173,6 +1433,53 @@ def _typecheckingstub__a90d0f27128631f1cffb52bee5c05176a54b9981871b76c3e1e8c777e
 
 def _typecheckingstub__00e1d7434f5c349f6ca1f39484124e4aac60a39d58f95add57fea491904015c7(
     value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MaterializedViewTag]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d2bf857214c9b8232e644d54517d832f185de34242a08d095ac052fd5935ccd9(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4307bb1b88886d5a36def2633d8f6ef551eb25659404dbfe5477221896cff472(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ac7d1b1b04f873dfff0ede3d767b521b993b10bd107f83afdd4f332c3b130b70(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9cbda002f1aef078b4fabe40f63810f42111e93a73a1f998184fee85c9dca383(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__eb0b09b7f3d4811bc67d2d7293d42e9b7c0a59a25991cbb93f0ea65382235331(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8749ce68bad53857d1a4cdf426d8abe03dda4945c9dce6d48b6ad1f50188fc57(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__49a1b1809811032153b494184c0c36bac1429d46c550f34403009ed75c3e71c5(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MaterializedViewTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

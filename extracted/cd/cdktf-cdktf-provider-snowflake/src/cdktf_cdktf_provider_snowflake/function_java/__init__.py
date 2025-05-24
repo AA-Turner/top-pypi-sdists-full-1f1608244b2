@@ -1,7 +1,7 @@
 r'''
 # `snowflake_function_java`
 
-Refer to the Terraform Registry for docs: [`snowflake_function_java`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java).
+Refer to the Terraform Registry for docs: [`snowflake_function_java`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class FunctionJava(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.functionJava.FunctionJava",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java snowflake_function_java}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java snowflake_function_java}.'''
 
     def __init__(
         self,
@@ -72,6 +72,7 @@ class FunctionJava(
         runtime_version: typing.Optional[builtins.str] = None,
         secrets: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["FunctionJavaSecrets", typing.Dict[builtins.str, typing.Any]]]]] = None,
         target_path: typing.Optional[typing.Union["FunctionJavaTargetPath", typing.Dict[builtins.str, typing.Any]]] = None,
+        timeouts: typing.Optional[typing.Union["FunctionJavaTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         trace_level: typing.Optional[builtins.str] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -81,32 +82,33 @@ class FunctionJava(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java snowflake_function_java} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java snowflake_function_java} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param database: The database in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#database FunctionJava#database}
-        :param handler: The name of the handler method or class. If the handler is for a scalar UDF, returning a non-tabular value, the HANDLER value should be a method name, as in the following form: ``MyClass.myMethod``. If the handler is for a tabular UDF, the HANDLER value should be the name of a handler class. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#handler FunctionJava#handler}
-        :param name: The name of the function; the identifier does not need to be unique for the schema in which the function is created because UDFs are identified and resolved by the combination of the name and argument types. Check the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#name FunctionJava#name}
-        :param return_type: Specifies the results returned by the UDF, which determines the UDF type. Use ``<result_data_type>`` to create a scalar UDF that returns a single value with the specified data type. Use ``TABLE (col_name col_data_type, ...)`` to creates a table UDF that returns tabular results with the specified table column(s) and column type(s). For the details, consult the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#return_type FunctionJava#return_type}
-        :param schema: The schema in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#schema FunctionJava#schema}
-        :param arguments: arguments block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arguments FunctionJava#arguments}
-        :param comment: Specifies a comment for the function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#comment FunctionJava#comment}
-        :param enable_console_output: Enable stdout/stderr fast path logging for anonyous stored procs. This is a public parameter (similar to LOG_LEVEL). For more information, check `ENABLE_CONSOLE_OUTPUT docs <https://docs.snowflake.com/en/sql-reference/parameters#enable-console-output>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#enable_console_output FunctionJava#enable_console_output}
-        :param external_access_integrations: The names of `external access integrations <https://docs.snowflake.com/en/sql-reference/sql/create-external-access-integration>`_ needed in order for this function’s handler code to access external networks. An external access integration specifies `network rules <https://docs.snowflake.com/en/sql-reference/sql/create-network-rule>`_ and `secrets <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_ that specify external locations and credentials (if any) allowed for use by handler code when making requests of an external network, such as an external REST API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#external_access_integrations FunctionJava#external_access_integrations}
-        :param function_definition: Defines the handler code executed when the UDF is called. Wrapping ``$$`` signs are added by the provider automatically; do not include them. The ``function_definition`` value must be Java source code. For more information, see `Introduction to Java UDFs <https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-introduction>`_. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#function_definition FunctionJava#function_definition}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#id FunctionJava#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param imports: imports block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#imports FunctionJava#imports}
-        :param is_secure: Specifies that the function is secure. By design, the Snowflake's ``SHOW FUNCTIONS`` command does not provide information about secure functions (consult `function docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#id1>`_ and `Protecting Sensitive Information with Secure UDFs and Stored Procedures <https://docs.snowflake.com/en/developer-guide/secure-udf-procedure>`_) which is essential to manage/import function with Terraform. Use the role owning the function while managing secure functions. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#is_secure FunctionJava#is_secure}
-        :param log_level: LOG_LEVEL to use when filtering events For more information, check `LOG_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#log_level FunctionJava#log_level}
-        :param metric_level: METRIC_LEVEL value to control whether to emit metrics to Event Table For more information, check `METRIC_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#metric-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#metric_level FunctionJava#metric_level}
-        :param null_input_behavior: Specifies the behavior of the function when called with null inputs. Valid values are (case-insensitive): ``CALLED ON NULL INPUT`` | ``RETURNS NULL ON NULL INPUT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#null_input_behavior FunctionJava#null_input_behavior}
-        :param packages: The name and version number of Snowflake system packages required as dependencies. The value should be of the form ``package_name:version_number``, where ``package_name`` is ``snowflake_domain:package``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#packages FunctionJava#packages}
-        :param return_results_behavior: Specifies the behavior of the function when returning results. Valid values are (case-insensitive): ``VOLATILE`` | ``IMMUTABLE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#return_results_behavior FunctionJava#return_results_behavior}
-        :param runtime_version: Specifies the Java JDK runtime version to use. The supported versions of Java are 11.x and 17.x. If RUNTIME_VERSION is not set, Java JDK 11 is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#runtime_version FunctionJava#runtime_version}
-        :param secrets: secrets block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#secrets FunctionJava#secrets}
-        :param target_path: target_path block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#target_path FunctionJava#target_path}
-        :param trace_level: Trace level value to use when generating/filtering trace events For more information, check `TRACE_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#trace_level FunctionJava#trace_level}
+        :param database: The database in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#database FunctionJava#database}
+        :param handler: The name of the handler method or class. If the handler is for a scalar UDF, returning a non-tabular value, the HANDLER value should be a method name, as in the following form: ``MyClass.myMethod``. If the handler is for a tabular UDF, the HANDLER value should be the name of a handler class. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#handler FunctionJava#handler}
+        :param name: The name of the function; the identifier does not need to be unique for the schema in which the function is created because UDFs are identified and resolved by the combination of the name and argument types. Check the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#name FunctionJava#name}
+        :param return_type: Specifies the results returned by the UDF, which determines the UDF type. Use ``<result_data_type>`` to create a scalar UDF that returns a single value with the specified data type. Use ``TABLE (col_name col_data_type, ...)`` to creates a table UDF that returns tabular results with the specified table column(s) and column type(s). For the details, consult the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#return_type FunctionJava#return_type}
+        :param schema: The schema in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#schema FunctionJava#schema}
+        :param arguments: arguments block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arguments FunctionJava#arguments}
+        :param comment: (Default: ``user-defined function``) Specifies a comment for the function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#comment FunctionJava#comment}
+        :param enable_console_output: Enable stdout/stderr fast path logging for anonymous stored procs. This is a public parameter (similar to LOG_LEVEL). For more information, check `ENABLE_CONSOLE_OUTPUT docs <https://docs.snowflake.com/en/sql-reference/parameters#enable-console-output>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#enable_console_output FunctionJava#enable_console_output}
+        :param external_access_integrations: The names of `external access integrations <https://docs.snowflake.com/en/sql-reference/sql/create-external-access-integration>`_ needed in order for this function’s handler code to access external networks. An external access integration specifies `network rules <https://docs.snowflake.com/en/sql-reference/sql/create-network-rule>`_ and `secrets <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_ that specify external locations and credentials (if any) allowed for use by handler code when making requests of an external network, such as an external REST API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#external_access_integrations FunctionJava#external_access_integrations}
+        :param function_definition: Defines the handler code executed when the UDF is called. Wrapping ``$$`` signs are added by the provider automatically; do not include them. The ``function_definition`` value must be Java source code. For more information, see `Introduction to Java UDFs <https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-introduction>`_. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#function_definition FunctionJava#function_definition}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#id FunctionJava#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param imports: imports block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#imports FunctionJava#imports}
+        :param is_secure: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the function is secure. By design, the Snowflake's ``SHOW FUNCTIONS`` command does not provide information about secure functions (consult `function docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#id1>`_ and `Protecting Sensitive Information with Secure UDFs and Stored Procedures <https://docs.snowflake.com/en/developer-guide/secure-udf-procedure>`_) which is essential to manage/import function with Terraform. Use the role owning the function while managing secure functions. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#is_secure FunctionJava#is_secure}
+        :param log_level: LOG_LEVEL to use when filtering events For more information, check `LOG_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#log_level FunctionJava#log_level}
+        :param metric_level: METRIC_LEVEL value to control whether to emit metrics to Event Table For more information, check `METRIC_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#metric-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#metric_level FunctionJava#metric_level}
+        :param null_input_behavior: Specifies the behavior of the function when called with null inputs. Valid values are (case-insensitive): ``CALLED ON NULL INPUT`` | ``RETURNS NULL ON NULL INPUT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#null_input_behavior FunctionJava#null_input_behavior}
+        :param packages: The name and version number of Snowflake system packages required as dependencies. The value should be of the form ``package_name:version_number``, where ``package_name`` is ``snowflake_domain:package``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#packages FunctionJava#packages}
+        :param return_results_behavior: Specifies the behavior of the function when returning results. Valid values are (case-insensitive): ``VOLATILE`` | ``IMMUTABLE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#return_results_behavior FunctionJava#return_results_behavior}
+        :param runtime_version: Specifies the Java JDK runtime version to use. The supported versions of Java are 11.x and 17.x. If RUNTIME_VERSION is not set, Java JDK 11 is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#runtime_version FunctionJava#runtime_version}
+        :param secrets: secrets block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#secrets FunctionJava#secrets}
+        :param target_path: target_path block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#target_path FunctionJava#target_path}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#timeouts FunctionJava#timeouts}
+        :param trace_level: Trace level value to use when generating/filtering trace events For more information, check `TRACE_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#trace_level FunctionJava#trace_level}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -141,6 +143,7 @@ class FunctionJava(
             runtime_version=runtime_version,
             secrets=secrets,
             target_path=target_path,
+            timeouts=timeouts,
             trace_level=trace_level,
             connection=connection,
             count=count,
@@ -166,7 +169,7 @@ class FunctionJava(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the FunctionJava to import.
-        :param import_from_id: The id of the existing FunctionJava that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing FunctionJava that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the FunctionJava to import is found.
         '''
         if __debug__:
@@ -224,14 +227,35 @@ class FunctionJava(
         stage_location: builtins.str,
     ) -> None:
         '''
-        :param path_on_stage: Path for import on stage, without the leading ``/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
-        :param stage_location: Stage location without leading ``@``. To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#stage_location FunctionJava#stage_location}
+        :param path_on_stage: Path for import on stage, without the leading ``/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
+        :param stage_location: Stage location without leading ``@``. To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#stage_location FunctionJava#stage_location}
         '''
         value = FunctionJavaTargetPath(
             path_on_stage=path_on_stage, stage_location=stage_location
         )
 
         return typing.cast(None, jsii.invoke(self, "putTargetPath", [value]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#create FunctionJava#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#delete FunctionJava#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#read FunctionJava#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#update FunctionJava#update}.
+        '''
+        value = FunctionJavaTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetArguments")
     def reset_arguments(self) -> None:
@@ -297,6 +321,10 @@ class FunctionJava(
     def reset_target_path(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTargetPath", []))
 
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
+
     @jsii.member(jsii_name="resetTraceLevel")
     def reset_trace_level(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTraceLevel", []))
@@ -353,6 +381,11 @@ class FunctionJava(
     @jsii.member(jsii_name="targetPath")
     def target_path(self) -> "FunctionJavaTargetPathOutputReference":
         return typing.cast("FunctionJavaTargetPathOutputReference", jsii.get(self, "targetPath"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "FunctionJavaTimeoutsOutputReference":
+        return typing.cast("FunctionJavaTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="argumentsInput")
@@ -468,6 +501,13 @@ class FunctionJava(
     @jsii.member(jsii_name="targetPathInput")
     def target_path_input(self) -> typing.Optional["FunctionJavaTargetPath"]:
         return typing.cast(typing.Optional["FunctionJavaTargetPath"], jsii.get(self, "targetPathInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "FunctionJavaTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "FunctionJavaTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="traceLevelInput")
@@ -714,9 +754,9 @@ class FunctionJavaArguments:
         arg_default_value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param arg_data_type: The argument type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arg_data_type FunctionJava#arg_data_type}
-        :param arg_name: The argument name. The provider wraps it in double quotes by default, so be aware of that while referencing the argument in the function definition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arg_name FunctionJava#arg_name}
-        :param arg_default_value: Optional default value for the argument. For text values use single quotes. Numeric values can be unquoted. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arg_default_value FunctionJava#arg_default_value}
+        :param arg_data_type: The argument type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arg_data_type FunctionJava#arg_data_type}
+        :param arg_name: The argument name. The provider wraps it in double quotes by default, so be aware of that while referencing the argument in the function definition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arg_name FunctionJava#arg_name}
+        :param arg_default_value: Optional default value for the argument. For text values use single quotes. Numeric values can be unquoted. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arg_default_value FunctionJava#arg_default_value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5b94e6f99976bfbfa68d4285b9058d6f498f445aaf109409427cffd969db9039)
@@ -734,7 +774,7 @@ class FunctionJavaArguments:
     def arg_data_type(self) -> builtins.str:
         '''The argument type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arg_data_type FunctionJava#arg_data_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arg_data_type FunctionJava#arg_data_type}
         '''
         result = self._values.get("arg_data_type")
         assert result is not None, "Required property 'arg_data_type' is missing"
@@ -746,7 +786,7 @@ class FunctionJavaArguments:
 
         The provider wraps it in double quotes by default, so be aware of that while referencing the argument in the function definition.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arg_name FunctionJava#arg_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arg_name FunctionJava#arg_name}
         '''
         result = self._values.get("arg_name")
         assert result is not None, "Required property 'arg_name' is missing"
@@ -758,7 +798,7 @@ class FunctionJavaArguments:
 
         For text values use single quotes. Numeric values can be unquoted. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arg_default_value FunctionJava#arg_default_value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arg_default_value FunctionJava#arg_default_value}
         '''
         result = self._values.get("arg_default_value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -996,6 +1036,7 @@ class FunctionJavaArgumentsOutputReference(
         "runtime_version": "runtimeVersion",
         "secrets": "secrets",
         "target_path": "targetPath",
+        "timeouts": "timeouts",
         "trace_level": "traceLevel",
     },
 )
@@ -1031,6 +1072,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         runtime_version: typing.Optional[builtins.str] = None,
         secrets: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["FunctionJavaSecrets", typing.Dict[builtins.str, typing.Any]]]]] = None,
         target_path: typing.Optional[typing.Union["FunctionJavaTargetPath", typing.Dict[builtins.str, typing.Any]]] = None,
+        timeouts: typing.Optional[typing.Union["FunctionJavaTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         trace_level: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
@@ -1041,33 +1083,36 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param database: The database in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#database FunctionJava#database}
-        :param handler: The name of the handler method or class. If the handler is for a scalar UDF, returning a non-tabular value, the HANDLER value should be a method name, as in the following form: ``MyClass.myMethod``. If the handler is for a tabular UDF, the HANDLER value should be the name of a handler class. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#handler FunctionJava#handler}
-        :param name: The name of the function; the identifier does not need to be unique for the schema in which the function is created because UDFs are identified and resolved by the combination of the name and argument types. Check the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#name FunctionJava#name}
-        :param return_type: Specifies the results returned by the UDF, which determines the UDF type. Use ``<result_data_type>`` to create a scalar UDF that returns a single value with the specified data type. Use ``TABLE (col_name col_data_type, ...)`` to creates a table UDF that returns tabular results with the specified table column(s) and column type(s). For the details, consult the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#return_type FunctionJava#return_type}
-        :param schema: The schema in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#schema FunctionJava#schema}
-        :param arguments: arguments block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arguments FunctionJava#arguments}
-        :param comment: Specifies a comment for the function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#comment FunctionJava#comment}
-        :param enable_console_output: Enable stdout/stderr fast path logging for anonyous stored procs. This is a public parameter (similar to LOG_LEVEL). For more information, check `ENABLE_CONSOLE_OUTPUT docs <https://docs.snowflake.com/en/sql-reference/parameters#enable-console-output>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#enable_console_output FunctionJava#enable_console_output}
-        :param external_access_integrations: The names of `external access integrations <https://docs.snowflake.com/en/sql-reference/sql/create-external-access-integration>`_ needed in order for this function’s handler code to access external networks. An external access integration specifies `network rules <https://docs.snowflake.com/en/sql-reference/sql/create-network-rule>`_ and `secrets <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_ that specify external locations and credentials (if any) allowed for use by handler code when making requests of an external network, such as an external REST API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#external_access_integrations FunctionJava#external_access_integrations}
-        :param function_definition: Defines the handler code executed when the UDF is called. Wrapping ``$$`` signs are added by the provider automatically; do not include them. The ``function_definition`` value must be Java source code. For more information, see `Introduction to Java UDFs <https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-introduction>`_. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#function_definition FunctionJava#function_definition}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#id FunctionJava#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param imports: imports block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#imports FunctionJava#imports}
-        :param is_secure: Specifies that the function is secure. By design, the Snowflake's ``SHOW FUNCTIONS`` command does not provide information about secure functions (consult `function docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#id1>`_ and `Protecting Sensitive Information with Secure UDFs and Stored Procedures <https://docs.snowflake.com/en/developer-guide/secure-udf-procedure>`_) which is essential to manage/import function with Terraform. Use the role owning the function while managing secure functions. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#is_secure FunctionJava#is_secure}
-        :param log_level: LOG_LEVEL to use when filtering events For more information, check `LOG_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#log_level FunctionJava#log_level}
-        :param metric_level: METRIC_LEVEL value to control whether to emit metrics to Event Table For more information, check `METRIC_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#metric-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#metric_level FunctionJava#metric_level}
-        :param null_input_behavior: Specifies the behavior of the function when called with null inputs. Valid values are (case-insensitive): ``CALLED ON NULL INPUT`` | ``RETURNS NULL ON NULL INPUT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#null_input_behavior FunctionJava#null_input_behavior}
-        :param packages: The name and version number of Snowflake system packages required as dependencies. The value should be of the form ``package_name:version_number``, where ``package_name`` is ``snowflake_domain:package``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#packages FunctionJava#packages}
-        :param return_results_behavior: Specifies the behavior of the function when returning results. Valid values are (case-insensitive): ``VOLATILE`` | ``IMMUTABLE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#return_results_behavior FunctionJava#return_results_behavior}
-        :param runtime_version: Specifies the Java JDK runtime version to use. The supported versions of Java are 11.x and 17.x. If RUNTIME_VERSION is not set, Java JDK 11 is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#runtime_version FunctionJava#runtime_version}
-        :param secrets: secrets block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#secrets FunctionJava#secrets}
-        :param target_path: target_path block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#target_path FunctionJava#target_path}
-        :param trace_level: Trace level value to use when generating/filtering trace events For more information, check `TRACE_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#trace_level FunctionJava#trace_level}
+        :param database: The database in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#database FunctionJava#database}
+        :param handler: The name of the handler method or class. If the handler is for a scalar UDF, returning a non-tabular value, the HANDLER value should be a method name, as in the following form: ``MyClass.myMethod``. If the handler is for a tabular UDF, the HANDLER value should be the name of a handler class. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#handler FunctionJava#handler}
+        :param name: The name of the function; the identifier does not need to be unique for the schema in which the function is created because UDFs are identified and resolved by the combination of the name and argument types. Check the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#name FunctionJava#name}
+        :param return_type: Specifies the results returned by the UDF, which determines the UDF type. Use ``<result_data_type>`` to create a scalar UDF that returns a single value with the specified data type. Use ``TABLE (col_name col_data_type, ...)`` to creates a table UDF that returns tabular results with the specified table column(s) and column type(s). For the details, consult the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#return_type FunctionJava#return_type}
+        :param schema: The schema in which to create the function. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#schema FunctionJava#schema}
+        :param arguments: arguments block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arguments FunctionJava#arguments}
+        :param comment: (Default: ``user-defined function``) Specifies a comment for the function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#comment FunctionJava#comment}
+        :param enable_console_output: Enable stdout/stderr fast path logging for anonymous stored procs. This is a public parameter (similar to LOG_LEVEL). For more information, check `ENABLE_CONSOLE_OUTPUT docs <https://docs.snowflake.com/en/sql-reference/parameters#enable-console-output>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#enable_console_output FunctionJava#enable_console_output}
+        :param external_access_integrations: The names of `external access integrations <https://docs.snowflake.com/en/sql-reference/sql/create-external-access-integration>`_ needed in order for this function’s handler code to access external networks. An external access integration specifies `network rules <https://docs.snowflake.com/en/sql-reference/sql/create-network-rule>`_ and `secrets <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_ that specify external locations and credentials (if any) allowed for use by handler code when making requests of an external network, such as an external REST API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#external_access_integrations FunctionJava#external_access_integrations}
+        :param function_definition: Defines the handler code executed when the UDF is called. Wrapping ``$$`` signs are added by the provider automatically; do not include them. The ``function_definition`` value must be Java source code. For more information, see `Introduction to Java UDFs <https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-introduction>`_. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#function_definition FunctionJava#function_definition}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#id FunctionJava#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param imports: imports block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#imports FunctionJava#imports}
+        :param is_secure: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the function is secure. By design, the Snowflake's ``SHOW FUNCTIONS`` command does not provide information about secure functions (consult `function docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#id1>`_ and `Protecting Sensitive Information with Secure UDFs and Stored Procedures <https://docs.snowflake.com/en/developer-guide/secure-udf-procedure>`_) which is essential to manage/import function with Terraform. Use the role owning the function while managing secure functions. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#is_secure FunctionJava#is_secure}
+        :param log_level: LOG_LEVEL to use when filtering events For more information, check `LOG_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#log-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#log_level FunctionJava#log_level}
+        :param metric_level: METRIC_LEVEL value to control whether to emit metrics to Event Table For more information, check `METRIC_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#metric-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#metric_level FunctionJava#metric_level}
+        :param null_input_behavior: Specifies the behavior of the function when called with null inputs. Valid values are (case-insensitive): ``CALLED ON NULL INPUT`` | ``RETURNS NULL ON NULL INPUT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#null_input_behavior FunctionJava#null_input_behavior}
+        :param packages: The name and version number of Snowflake system packages required as dependencies. The value should be of the form ``package_name:version_number``, where ``package_name`` is ``snowflake_domain:package``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#packages FunctionJava#packages}
+        :param return_results_behavior: Specifies the behavior of the function when returning results. Valid values are (case-insensitive): ``VOLATILE`` | ``IMMUTABLE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#return_results_behavior FunctionJava#return_results_behavior}
+        :param runtime_version: Specifies the Java JDK runtime version to use. The supported versions of Java are 11.x and 17.x. If RUNTIME_VERSION is not set, Java JDK 11 is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#runtime_version FunctionJava#runtime_version}
+        :param secrets: secrets block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#secrets FunctionJava#secrets}
+        :param target_path: target_path block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#target_path FunctionJava#target_path}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#timeouts FunctionJava#timeouts}
+        :param trace_level: Trace level value to use when generating/filtering trace events For more information, check `TRACE_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#trace-level>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#trace_level FunctionJava#trace_level}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
         if isinstance(target_path, dict):
             target_path = FunctionJavaTargetPath(**target_path)
+        if isinstance(timeouts, dict):
+            timeouts = FunctionJavaTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b192f611a3b78f973dd3de602a2812b1164e5bc00d21d3593d9b2f31d2b97655)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -1098,6 +1143,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument runtime_version", value=runtime_version, expected_type=type_hints["runtime_version"])
             check_type(argname="argument secrets", value=secrets, expected_type=type_hints["secrets"])
             check_type(argname="argument target_path", value=target_path, expected_type=type_hints["target_path"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
             check_type(argname="argument trace_level", value=trace_level, expected_type=type_hints["trace_level"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "database": database,
@@ -1152,6 +1198,8 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["secrets"] = secrets
         if target_path is not None:
             self._values["target_path"] = target_path
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
         if trace_level is not None:
             self._values["trace_level"] = trace_level
 
@@ -1225,7 +1273,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#database FunctionJava#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#database FunctionJava#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -1237,7 +1285,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If the handler is for a scalar UDF, returning a non-tabular value, the HANDLER value should be a method name, as in the following form: ``MyClass.myMethod``. If the handler is for a tabular UDF, the HANDLER value should be the name of a handler class.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#handler FunctionJava#handler}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#handler FunctionJava#handler}
         '''
         result = self._values.get("handler")
         assert result is not None, "Required property 'handler' is missing"
@@ -1249,7 +1297,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         the identifier does not need to be unique for the schema in which the function is created because UDFs are identified and resolved by the combination of the name and argument types. Check the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#name FunctionJava#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#name FunctionJava#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1261,7 +1309,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Use ``<result_data_type>`` to create a scalar UDF that returns a single value with the specified data type. Use ``TABLE (col_name col_data_type, ...)`` to creates a table UDF that returns tabular results with the specified table column(s) and column type(s). For the details, consult the `docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#all-languages>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#return_type FunctionJava#return_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#return_type FunctionJava#return_type}
         '''
         result = self._values.get("return_type")
         assert result is not None, "Required property 'return_type' is missing"
@@ -1273,7 +1321,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#schema FunctionJava#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#schema FunctionJava#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -1285,16 +1333,16 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[FunctionJavaArguments]]]:
         '''arguments block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#arguments FunctionJava#arguments}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#arguments FunctionJava#arguments}
         '''
         result = self._values.get("arguments")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[FunctionJavaArguments]]], result)
 
     @builtins.property
     def comment(self) -> typing.Optional[builtins.str]:
-        '''Specifies a comment for the function.
+        '''(Default: ``user-defined function``) Specifies a comment for the function.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#comment FunctionJava#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#comment FunctionJava#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1303,11 +1351,11 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_console_output(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Enable stdout/stderr fast path logging for anonyous stored procs.
+        '''Enable stdout/stderr fast path logging for anonymous stored procs.
 
         This is a public parameter (similar to LOG_LEVEL). For more information, check `ENABLE_CONSOLE_OUTPUT docs <https://docs.snowflake.com/en/sql-reference/parameters#enable-console-output>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#enable_console_output FunctionJava#enable_console_output}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#enable_console_output FunctionJava#enable_console_output}
         '''
         result = self._values.get("enable_console_output")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1318,7 +1366,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''The names of `external access integrations <https://docs.snowflake.com/en/sql-reference/sql/create-external-access-integration>`_ needed in order for this function’s handler code to access external networks. An external access integration specifies `network rules <https://docs.snowflake.com/en/sql-reference/sql/create-network-rule>`_ and `secrets <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_ that specify external locations and credentials (if any) allowed for use by handler code when making requests of an external network, such as an external REST API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#external_access_integrations FunctionJava#external_access_integrations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#external_access_integrations FunctionJava#external_access_integrations}
         '''
         result = self._values.get("external_access_integrations")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1329,14 +1377,14 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Wrapping ``$$`` signs are added by the provider automatically; do not include them. The ``function_definition`` value must be Java source code. For more information, see `Introduction to Java UDFs <https://docs.snowflake.com/en/developer-guide/udf/java/udf-java-introduction>`_. To mitigate permadiff on this field, the provider replaces blank characters with a space. This can lead to false positives in cases where a change in case or run of whitespace is semantically significant.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#function_definition FunctionJava#function_definition}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#function_definition FunctionJava#function_definition}
         '''
         result = self._values.get("function_definition")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#id FunctionJava#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#id FunctionJava#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1350,18 +1398,18 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionJavaImports"]]]:
         '''imports block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#imports FunctionJava#imports}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#imports FunctionJava#imports}
         '''
         result = self._values.get("imports")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionJavaImports"]]], result)
 
     @builtins.property
     def is_secure(self) -> typing.Optional[builtins.str]:
-        '''Specifies that the function is secure.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies that the function is secure.
 
         By design, the Snowflake's ``SHOW FUNCTIONS`` command does not provide information about secure functions (consult `function docs <https://docs.snowflake.com/en/sql-reference/sql/create-function#id1>`_ and `Protecting Sensitive Information with Secure UDFs and Stored Procedures <https://docs.snowflake.com/en/developer-guide/secure-udf-procedure>`_) which is essential to manage/import function with Terraform. Use the role owning the function while managing secure functions. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#is_secure FunctionJava#is_secure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#is_secure FunctionJava#is_secure}
         '''
         result = self._values.get("is_secure")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1370,7 +1418,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def log_level(self) -> typing.Optional[builtins.str]:
         '''LOG_LEVEL to use when filtering events For more information, check `LOG_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#log-level>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#log_level FunctionJava#log_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#log_level FunctionJava#log_level}
         '''
         result = self._values.get("log_level")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1379,7 +1427,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def metric_level(self) -> typing.Optional[builtins.str]:
         '''METRIC_LEVEL value to control whether to emit metrics to Event Table For more information, check `METRIC_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#metric-level>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#metric_level FunctionJava#metric_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#metric_level FunctionJava#metric_level}
         '''
         result = self._values.get("metric_level")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1390,7 +1438,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid values are (case-insensitive): ``CALLED ON NULL INPUT`` | ``RETURNS NULL ON NULL INPUT``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#null_input_behavior FunctionJava#null_input_behavior}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#null_input_behavior FunctionJava#null_input_behavior}
         '''
         result = self._values.get("null_input_behavior")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1401,7 +1449,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The value should be of the form ``package_name:version_number``, where ``package_name`` is ``snowflake_domain:package``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#packages FunctionJava#packages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#packages FunctionJava#packages}
         '''
         result = self._values.get("packages")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1410,7 +1458,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def return_results_behavior(self) -> typing.Optional[builtins.str]:
         '''Specifies the behavior of the function when returning results. Valid values are (case-insensitive): ``VOLATILE`` | ``IMMUTABLE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#return_results_behavior FunctionJava#return_results_behavior}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#return_results_behavior FunctionJava#return_results_behavior}
         '''
         result = self._values.get("return_results_behavior")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1421,7 +1469,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The supported versions of Java are 11.x and 17.x. If RUNTIME_VERSION is not set, Java JDK 11 is used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#runtime_version FunctionJava#runtime_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#runtime_version FunctionJava#runtime_version}
         '''
         result = self._values.get("runtime_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1432,7 +1480,7 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionJavaSecrets"]]]:
         '''secrets block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#secrets FunctionJava#secrets}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#secrets FunctionJava#secrets}
         '''
         result = self._values.get("secrets")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionJavaSecrets"]]], result)
@@ -1441,16 +1489,25 @@ class FunctionJavaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def target_path(self) -> typing.Optional["FunctionJavaTargetPath"]:
         '''target_path block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#target_path FunctionJava#target_path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#target_path FunctionJava#target_path}
         '''
         result = self._values.get("target_path")
         return typing.cast(typing.Optional["FunctionJavaTargetPath"], result)
 
     @builtins.property
+    def timeouts(self) -> typing.Optional["FunctionJavaTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#timeouts FunctionJava#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["FunctionJavaTimeouts"], result)
+
+    @builtins.property
     def trace_level(self) -> typing.Optional[builtins.str]:
         '''Trace level value to use when generating/filtering trace events For more information, check `TRACE_LEVEL docs <https://docs.snowflake.com/en/sql-reference/parameters#trace-level>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#trace_level FunctionJava#trace_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#trace_level FunctionJava#trace_level}
         '''
         result = self._values.get("trace_level")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1480,8 +1537,8 @@ class FunctionJavaImports:
         stage_location: builtins.str,
     ) -> None:
         '''
-        :param path_on_stage: Path for import on stage, without the leading ``/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
-        :param stage_location: Stage location without leading ``@``. To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#stage_location FunctionJava#stage_location}
+        :param path_on_stage: Path for import on stage, without the leading ``/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
+        :param stage_location: Stage location without leading ``@``. To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#stage_location FunctionJava#stage_location}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c2938b79bce26ce1548357bc7d23b17db6db2144d51867b5934d18bfb074b309)
@@ -1496,7 +1553,7 @@ class FunctionJavaImports:
     def path_on_stage(self) -> builtins.str:
         '''Path for import on stage, without the leading ``/``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
         '''
         result = self._values.get("path_on_stage")
         assert result is not None, "Required property 'path_on_stage' is missing"
@@ -1508,7 +1565,7 @@ class FunctionJavaImports:
 
         To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#stage_location FunctionJava#stage_location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#stage_location FunctionJava#stage_location}
         '''
         result = self._values.get("stage_location")
         assert result is not None, "Required property 'stage_location' is missing"
@@ -2521,8 +2578,8 @@ class FunctionJavaSecrets:
         secret_variable_name: builtins.str,
     ) -> None:
         '''
-        :param secret_id: Fully qualified name of the allowed `secret <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_. You will receive an error if you specify a SECRETS value whose secret isn’t also included in an integration specified by the EXTERNAL_ACCESS_INTEGRATIONS parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#secret_id FunctionJava#secret_id}
-        :param secret_variable_name: The variable that will be used in handler code when retrieving information from the secret. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#secret_variable_name FunctionJava#secret_variable_name}
+        :param secret_id: Fully qualified name of the allowed `secret <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_. You will receive an error if you specify a SECRETS value whose secret isn’t also included in an integration specified by the EXTERNAL_ACCESS_INTEGRATIONS parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#secret_id FunctionJava#secret_id}
+        :param secret_variable_name: The variable that will be used in handler code when retrieving information from the secret. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#secret_variable_name FunctionJava#secret_variable_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4c52f6a663141096fa31c6842f52512b9af56b99137b866fb2b0d9b40d90d5d5)
@@ -2537,7 +2594,7 @@ class FunctionJavaSecrets:
     def secret_id(self) -> builtins.str:
         '''Fully qualified name of the allowed `secret <https://docs.snowflake.com/en/sql-reference/sql/create-secret>`_. You will receive an error if you specify a SECRETS value whose secret isn’t also included in an integration specified by the EXTERNAL_ACCESS_INTEGRATIONS parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#secret_id FunctionJava#secret_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#secret_id FunctionJava#secret_id}
         '''
         result = self._values.get("secret_id")
         assert result is not None, "Required property 'secret_id' is missing"
@@ -2547,7 +2604,7 @@ class FunctionJavaSecrets:
     def secret_variable_name(self) -> builtins.str:
         '''The variable that will be used in handler code when retrieving information from the secret.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#secret_variable_name FunctionJava#secret_variable_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#secret_variable_name FunctionJava#secret_variable_name}
         '''
         result = self._values.get("secret_variable_name")
         assert result is not None, "Required property 'secret_variable_name' is missing"
@@ -2979,8 +3036,8 @@ class FunctionJavaTargetPath:
         stage_location: builtins.str,
     ) -> None:
         '''
-        :param path_on_stage: Path for import on stage, without the leading ``/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
-        :param stage_location: Stage location without leading ``@``. To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#stage_location FunctionJava#stage_location}
+        :param path_on_stage: Path for import on stage, without the leading ``/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
+        :param stage_location: Stage location without leading ``@``. To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#stage_location FunctionJava#stage_location}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__736becd83439bb3edf0c54e1283a637b8c8654dceb1c8377c75a4c063f3b3ba6)
@@ -2995,7 +3052,7 @@ class FunctionJavaTargetPath:
     def path_on_stage(self) -> builtins.str:
         '''Path for import on stage, without the leading ``/``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#path_on_stage FunctionJava#path_on_stage}
         '''
         result = self._values.get("path_on_stage")
         assert result is not None, "Required property 'path_on_stage' is missing"
@@ -3007,7 +3064,7 @@ class FunctionJavaTargetPath:
 
         To use your user's stage set this to ``~``, otherwise pass fully qualified name of the stage (with every part contained in double quotes or use ``snowflake_stage.<your stage's resource name>.fully_qualified_name`` if you manage this stage through terraform).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/function_java#stage_location FunctionJava#stage_location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#stage_location FunctionJava#stage_location}
         '''
         result = self._values.get("stage_location")
         assert result is not None, "Required property 'stage_location' is missing"
@@ -3092,6 +3149,205 @@ class FunctionJavaTargetPathOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.functionJava.FunctionJavaTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class FunctionJavaTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#create FunctionJava#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#delete FunctionJava#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#read FunctionJava#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#update FunctionJava#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c42c8c3b11743402faa5555a5b95f2d54b542dcac2305c1d4a3f20666d129ac8)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#create FunctionJava#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#delete FunctionJava#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#read FunctionJava#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/function_java#update FunctionJava#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "FunctionJavaTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class FunctionJavaTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.functionJava.FunctionJavaTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c312ff1a3ab6cbe53630e253963d6fff477bc07687f4c372c8a04a12d37ed984)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7d04b726a2aef94e1f05a4400ae9624b0388ce056c5883fb030ef69302d8f94e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b8c5f4fc642e2b851c1f0fa1818f0eac0790aa25c2c8efc6bbeec84d94997e5c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__02ab8d38c8c5520de12feecff904e42cddeab64f86eb9ccb7e283a91199b0d66)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e58f7d04ab37c44bdbe68b7884cbe0f7fe35ffdca514357b174bd0bf99d29870)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FunctionJavaTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FunctionJavaTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FunctionJavaTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__39542d2c081dfb552d872f420eaa29a379367297ae3e91271ffcc77ad9822939)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "FunctionJava",
     "FunctionJavaArguments",
@@ -3124,6 +3380,8 @@ __all__ = [
     "FunctionJavaShowOutputOutputReference",
     "FunctionJavaTargetPath",
     "FunctionJavaTargetPathOutputReference",
+    "FunctionJavaTimeouts",
+    "FunctionJavaTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -3153,6 +3411,7 @@ def _typecheckingstub__22afeb6cf4af18e7a4914f8b1a23098516db9232cf41ec5eeb4955952
     runtime_version: typing.Optional[builtins.str] = None,
     secrets: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[FunctionJavaSecrets, typing.Dict[builtins.str, typing.Any]]]]] = None,
     target_path: typing.Optional[typing.Union[FunctionJavaTargetPath, typing.Dict[builtins.str, typing.Any]]] = None,
+    timeouts: typing.Optional[typing.Union[FunctionJavaTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     trace_level: typing.Optional[builtins.str] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -3410,6 +3669,7 @@ def _typecheckingstub__b192f611a3b78f973dd3de602a2812b1164e5bc00d21d3593d9b2f31d
     runtime_version: typing.Optional[builtins.str] = None,
     secrets: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[FunctionJavaSecrets, typing.Dict[builtins.str, typing.Any]]]]] = None,
     target_path: typing.Optional[typing.Union[FunctionJavaTargetPath, typing.Dict[builtins.str, typing.Any]]] = None,
+    timeouts: typing.Optional[typing.Union[FunctionJavaTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     trace_level: typing.Optional[builtins.str] = None,
 ) -> None:
     """Type checking stubs"""
@@ -3872,6 +4132,53 @@ def _typecheckingstub__457646347c7d4a77d8408caa0517222123ae4400779a9de122c6b9c93
 
 def _typecheckingstub__23e59b6decfc063db43d2302d8e3e692a1f881153bb7e77973c3e38102b70455(
     value: typing.Optional[FunctionJavaTargetPath],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c42c8c3b11743402faa5555a5b95f2d54b542dcac2305c1d4a3f20666d129ac8(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c312ff1a3ab6cbe53630e253963d6fff477bc07687f4c372c8a04a12d37ed984(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7d04b726a2aef94e1f05a4400ae9624b0388ce056c5883fb030ef69302d8f94e(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b8c5f4fc642e2b851c1f0fa1818f0eac0790aa25c2c8efc6bbeec84d94997e5c(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__02ab8d38c8c5520de12feecff904e42cddeab64f86eb9ccb7e283a91199b0d66(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e58f7d04ab37c44bdbe68b7884cbe0f7fe35ffdca514357b174bd0bf99d29870(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__39542d2c081dfb552d872f420eaa29a379367297ae3e91271ffcc77ad9822939(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FunctionJavaTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

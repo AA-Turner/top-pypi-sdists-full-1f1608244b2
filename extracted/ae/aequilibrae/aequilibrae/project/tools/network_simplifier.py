@@ -20,6 +20,7 @@ class NetworkSimplifier(WorkerThread):
     signal = SIGNAL(object)
 
     def __init__(self, project=None) -> None:
+        super().__init__(None)
 
         self.project = project or get_active_project()
         self.network = self.project.network

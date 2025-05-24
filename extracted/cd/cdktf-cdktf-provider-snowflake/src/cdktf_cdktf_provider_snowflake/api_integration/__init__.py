@@ -1,7 +1,7 @@
 r'''
 # `snowflake_api_integration`
 
-Refer to the Terraform Registry for docs: [`snowflake_api_integration`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration).
+Refer to the Terraform Registry for docs: [`snowflake_api_integration`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ApiIntegration(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.apiIntegration.ApiIntegration",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration snowflake_api_integration}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration snowflake_api_integration}.'''
 
     def __init__(
         self,
@@ -64,6 +64,7 @@ class ApiIntegration(
         enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         google_audience: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["ApiIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -72,23 +73,24 @@ class ApiIntegration(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration snowflake_api_integration} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration snowflake_api_integration} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param api_allowed_prefixes: Explicitly limits external functions that use the integration to reference one or more HTTPS proxy service endpoints and resources within those proxies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_allowed_prefixes ApiIntegration#api_allowed_prefixes}
-        :param api_provider: Specifies the HTTPS proxy service type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_provider ApiIntegration#api_provider}
-        :param name: Specifies the name of the API integration. This name follows the rules for Object Identifiers. The name should be unique among api integrations in your account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#name ApiIntegration#name}
-        :param api_aws_role_arn: ARN of a cloud platform role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_aws_role_arn ApiIntegration#api_aws_role_arn}
-        :param api_blocked_prefixes: Lists the endpoints and resources in the HTTPS proxy service that are not allowed to be called from Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_blocked_prefixes ApiIntegration#api_blocked_prefixes}
-        :param api_gcp_service_account: The service account used for communication with the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_gcp_service_account ApiIntegration#api_gcp_service_account}
-        :param api_key: The API key (also called a “subscription key”). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_key ApiIntegration#api_key}
-        :param azure_ad_application_id: The 'Application (client) id' of the Azure AD app for your remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#azure_ad_application_id ApiIntegration#azure_ad_application_id}
-        :param azure_tenant_id: Specifies the ID for your Office 365 tenant that all Azure API Management instances belong to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#azure_tenant_id ApiIntegration#azure_tenant_id}
-        :param comment: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#comment ApiIntegration#comment}.
-        :param enabled: Specifies whether this API integration is enabled or disabled. If the API integration is disabled, any external function that relies on it will not work. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#enabled ApiIntegration#enabled}
-        :param google_audience: The audience claim when generating the JWT (JSON Web Token) to authenticate to the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#google_audience ApiIntegration#google_audience}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#id ApiIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param api_allowed_prefixes: Explicitly limits external functions that use the integration to reference one or more HTTPS proxy service endpoints and resources within those proxies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_allowed_prefixes ApiIntegration#api_allowed_prefixes}
+        :param api_provider: Specifies the HTTPS proxy service type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_provider ApiIntegration#api_provider}
+        :param name: Specifies the name of the API integration. This name follows the rules for Object Identifiers. The name should be unique among api integrations in your account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#name ApiIntegration#name}
+        :param api_aws_role_arn: (Default: ``) ARN of a cloud platform role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_aws_role_arn ApiIntegration#api_aws_role_arn}
+        :param api_blocked_prefixes: Lists the endpoints and resources in the HTTPS proxy service that are not allowed to be called from Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_blocked_prefixes ApiIntegration#api_blocked_prefixes}
+        :param api_gcp_service_account: The service account used for communication with the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_gcp_service_account ApiIntegration#api_gcp_service_account}
+        :param api_key: The API key (also called a “subscription key”). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_key ApiIntegration#api_key}
+        :param azure_ad_application_id: (Default: ``) The 'Application (client) id' of the Azure AD app for your remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#azure_ad_application_id ApiIntegration#azure_ad_application_id}
+        :param azure_tenant_id: (Default: ``) Specifies the ID for your Office 365 tenant that all Azure API Management instances belong to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#azure_tenant_id ApiIntegration#azure_tenant_id}
+        :param comment: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#comment ApiIntegration#comment}.
+        :param enabled: (Default: ``true``) Specifies whether this API integration is enabled or disabled. If the API integration is disabled, any external function that relies on it will not work. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#enabled ApiIntegration#enabled}
+        :param google_audience: (Default: ``) The audience claim when generating the JWT (JSON Web Token) to authenticate to the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#google_audience ApiIntegration#google_audience}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#id ApiIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#timeouts ApiIntegration#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,6 +117,7 @@ class ApiIntegration(
             enabled=enabled,
             google_audience=google_audience,
             id=id,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -139,7 +142,7 @@ class ApiIntegration(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ApiIntegration to import.
-        :param import_from_id: The id of the existing ApiIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ApiIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ApiIntegration to import is found.
         '''
         if __debug__:
@@ -149,6 +152,27 @@ class ApiIntegration(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#create ApiIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#delete ApiIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#read ApiIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#update ApiIntegration#update}.
+        '''
+        value = ApiIntegrationTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetApiAwsRoleArn")
     def reset_api_aws_role_arn(self) -> None:
@@ -189,6 +213,10 @@ class ApiIntegration(
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetId", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -232,6 +260,11 @@ class ApiIntegration(
     @jsii.member(jsii_name="fullyQualifiedName")
     def fully_qualified_name(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "fullyQualifiedName"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "ApiIntegrationTimeoutsOutputReference":
+        return typing.cast("ApiIntegrationTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="apiAllowedPrefixesInput")
@@ -299,6 +332,13 @@ class ApiIntegration(
     @jsii.member(jsii_name="nameInput")
     def name_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "nameInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ApiIntegrationTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ApiIntegrationTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="apiAllowedPrefixes")
@@ -484,6 +524,7 @@ class ApiIntegration(
         "enabled": "enabled",
         "google_audience": "googleAudience",
         "id": "id",
+        "timeouts": "timeouts",
     },
 )
 class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -510,6 +551,7 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         google_audience: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["ApiIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -519,22 +561,25 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param api_allowed_prefixes: Explicitly limits external functions that use the integration to reference one or more HTTPS proxy service endpoints and resources within those proxies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_allowed_prefixes ApiIntegration#api_allowed_prefixes}
-        :param api_provider: Specifies the HTTPS proxy service type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_provider ApiIntegration#api_provider}
-        :param name: Specifies the name of the API integration. This name follows the rules for Object Identifiers. The name should be unique among api integrations in your account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#name ApiIntegration#name}
-        :param api_aws_role_arn: ARN of a cloud platform role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_aws_role_arn ApiIntegration#api_aws_role_arn}
-        :param api_blocked_prefixes: Lists the endpoints and resources in the HTTPS proxy service that are not allowed to be called from Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_blocked_prefixes ApiIntegration#api_blocked_prefixes}
-        :param api_gcp_service_account: The service account used for communication with the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_gcp_service_account ApiIntegration#api_gcp_service_account}
-        :param api_key: The API key (also called a “subscription key”). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_key ApiIntegration#api_key}
-        :param azure_ad_application_id: The 'Application (client) id' of the Azure AD app for your remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#azure_ad_application_id ApiIntegration#azure_ad_application_id}
-        :param azure_tenant_id: Specifies the ID for your Office 365 tenant that all Azure API Management instances belong to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#azure_tenant_id ApiIntegration#azure_tenant_id}
-        :param comment: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#comment ApiIntegration#comment}.
-        :param enabled: Specifies whether this API integration is enabled or disabled. If the API integration is disabled, any external function that relies on it will not work. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#enabled ApiIntegration#enabled}
-        :param google_audience: The audience claim when generating the JWT (JSON Web Token) to authenticate to the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#google_audience ApiIntegration#google_audience}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#id ApiIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param api_allowed_prefixes: Explicitly limits external functions that use the integration to reference one or more HTTPS proxy service endpoints and resources within those proxies. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_allowed_prefixes ApiIntegration#api_allowed_prefixes}
+        :param api_provider: Specifies the HTTPS proxy service type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_provider ApiIntegration#api_provider}
+        :param name: Specifies the name of the API integration. This name follows the rules for Object Identifiers. The name should be unique among api integrations in your account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#name ApiIntegration#name}
+        :param api_aws_role_arn: (Default: ``) ARN of a cloud platform role. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_aws_role_arn ApiIntegration#api_aws_role_arn}
+        :param api_blocked_prefixes: Lists the endpoints and resources in the HTTPS proxy service that are not allowed to be called from Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_blocked_prefixes ApiIntegration#api_blocked_prefixes}
+        :param api_gcp_service_account: The service account used for communication with the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_gcp_service_account ApiIntegration#api_gcp_service_account}
+        :param api_key: The API key (also called a “subscription key”). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_key ApiIntegration#api_key}
+        :param azure_ad_application_id: (Default: ``) The 'Application (client) id' of the Azure AD app for your remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#azure_ad_application_id ApiIntegration#azure_ad_application_id}
+        :param azure_tenant_id: (Default: ``) Specifies the ID for your Office 365 tenant that all Azure API Management instances belong to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#azure_tenant_id ApiIntegration#azure_tenant_id}
+        :param comment: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#comment ApiIntegration#comment}.
+        :param enabled: (Default: ``true``) Specifies whether this API integration is enabled or disabled. If the API integration is disabled, any external function that relies on it will not work. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#enabled ApiIntegration#enabled}
+        :param google_audience: (Default: ``) The audience claim when generating the JWT (JSON Web Token) to authenticate to the Google API Gateway. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#google_audience ApiIntegration#google_audience}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#id ApiIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#timeouts ApiIntegration#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = ApiIntegrationTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__599fea4ee0fc1c0ff8b2a16fef2ca6f3f89d9400f965f49111252edb04b93814)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -557,6 +602,7 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument enabled", value=enabled, expected_type=type_hints["enabled"])
             check_type(argname="argument google_audience", value=google_audience, expected_type=type_hints["google_audience"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "api_allowed_prefixes": api_allowed_prefixes,
             "api_provider": api_provider,
@@ -596,6 +642,8 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["google_audience"] = google_audience
         if id is not None:
             self._values["id"] = id
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -665,7 +713,7 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def api_allowed_prefixes(self) -> typing.List[builtins.str]:
         '''Explicitly limits external functions that use the integration to reference one or more HTTPS proxy service endpoints and resources within those proxies.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_allowed_prefixes ApiIntegration#api_allowed_prefixes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_allowed_prefixes ApiIntegration#api_allowed_prefixes}
         '''
         result = self._values.get("api_allowed_prefixes")
         assert result is not None, "Required property 'api_allowed_prefixes' is missing"
@@ -675,7 +723,7 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def api_provider(self) -> builtins.str:
         '''Specifies the HTTPS proxy service type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_provider ApiIntegration#api_provider}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_provider ApiIntegration#api_provider}
         '''
         result = self._values.get("api_provider")
         assert result is not None, "Required property 'api_provider' is missing"
@@ -687,7 +735,7 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This name follows the rules for Object Identifiers. The name should be unique among api integrations in your account.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#name ApiIntegration#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#name ApiIntegration#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -695,9 +743,9 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def api_aws_role_arn(self) -> typing.Optional[builtins.str]:
-        '''ARN of a cloud platform role.
+        '''(Default: ``) ARN of a cloud platform role.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_aws_role_arn ApiIntegration#api_aws_role_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_aws_role_arn ApiIntegration#api_aws_role_arn}
         '''
         result = self._values.get("api_aws_role_arn")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -706,7 +754,7 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def api_blocked_prefixes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Lists the endpoints and resources in the HTTPS proxy service that are not allowed to be called from Snowflake.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_blocked_prefixes ApiIntegration#api_blocked_prefixes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_blocked_prefixes ApiIntegration#api_blocked_prefixes}
         '''
         result = self._values.get("api_blocked_prefixes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -715,7 +763,7 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def api_gcp_service_account(self) -> typing.Optional[builtins.str]:
         '''The service account used for communication with the Google API Gateway.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_gcp_service_account ApiIntegration#api_gcp_service_account}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_gcp_service_account ApiIntegration#api_gcp_service_account}
         '''
         result = self._values.get("api_gcp_service_account")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -724,32 +772,32 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def api_key(self) -> typing.Optional[builtins.str]:
         '''The API key (also called a “subscription key”).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#api_key ApiIntegration#api_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#api_key ApiIntegration#api_key}
         '''
         result = self._values.get("api_key")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def azure_ad_application_id(self) -> typing.Optional[builtins.str]:
-        '''The 'Application (client) id' of the Azure AD app for your remote service.
+        '''(Default: ``) The 'Application (client) id' of the Azure AD app for your remote service.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#azure_ad_application_id ApiIntegration#azure_ad_application_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#azure_ad_application_id ApiIntegration#azure_ad_application_id}
         '''
         result = self._values.get("azure_ad_application_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def azure_tenant_id(self) -> typing.Optional[builtins.str]:
-        '''Specifies the ID for your Office 365 tenant that all Azure API Management instances belong to.
+        '''(Default: ``) Specifies the ID for your Office 365 tenant that all Azure API Management instances belong to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#azure_tenant_id ApiIntegration#azure_tenant_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#azure_tenant_id ApiIntegration#azure_tenant_id}
         '''
         result = self._values.get("azure_tenant_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def comment(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#comment ApiIntegration#comment}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#comment ApiIntegration#comment}.'''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -757,33 +805,42 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Specifies whether this API integration is enabled or disabled.
+        '''(Default: ``true``) Specifies whether this API integration is enabled or disabled.
 
         If the API integration is disabled, any external function that relies on it will not work.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#enabled ApiIntegration#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#enabled ApiIntegration#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def google_audience(self) -> typing.Optional[builtins.str]:
-        '''The audience claim when generating the JWT (JSON Web Token) to authenticate to the Google API Gateway.
+        '''(Default: ``) The audience claim when generating the JWT (JSON Web Token) to authenticate to the Google API Gateway.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#google_audience ApiIntegration#google_audience}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#google_audience ApiIntegration#google_audience}
         '''
         result = self._values.get("google_audience")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/api_integration#id ApiIntegration#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#id ApiIntegration#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         result = self._values.get("id")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["ApiIntegrationTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#timeouts ApiIntegration#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["ApiIntegrationTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -797,9 +854,210 @@ class ApiIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.apiIntegration.ApiIntegrationTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class ApiIntegrationTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#create ApiIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#delete ApiIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#read ApiIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#update ApiIntegration#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6e1da5b93c3bcd615dfa1a624fc56110cdb924edffbedcff18899e8539b866b9)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#create ApiIntegration#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#delete ApiIntegration#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#read ApiIntegration#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_integration#update ApiIntegration#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "ApiIntegrationTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class ApiIntegrationTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.apiIntegration.ApiIntegrationTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__77f4afdc8c0e676ea30ce12fbce8bc0f604c691b50a924932ab1161868fd9904)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c7e8b59594169d9a34db6fd62417e042bc1f929a3ccf70dc1a97d1c62d75ee21)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__34292a0ab727ac5e02b9cd9a28a84525e84fed80fc9be6d249c0fbea265db930)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9f46c76890631803ee9cee4a571c3f59c12797de82b8d7f701889c376709e44e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ebf2647f4905836c1d1941951a5d00b9e969fdfc059b8b43cca9ce597433a291)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ApiIntegrationTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ApiIntegrationTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ApiIntegrationTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e99ba4d6b3f6552a1e80e36becb8b1130af70cbcf5ae3db64b76904cacd62863)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "ApiIntegration",
     "ApiIntegrationConfig",
+    "ApiIntegrationTimeouts",
+    "ApiIntegrationTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -821,6 +1079,7 @@ def _typecheckingstub__204eb5fba5f9443c11ac1c6e430df6b8c3ba4b4d846d99c1b4702b004
     enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     google_audience: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[ApiIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -941,6 +1200,54 @@ def _typecheckingstub__599fea4ee0fc1c0ff8b2a16fef2ca6f3f89d9400f965f49111252edb0
     enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     google_audience: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[ApiIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6e1da5b93c3bcd615dfa1a624fc56110cdb924edffbedcff18899e8539b866b9(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__77f4afdc8c0e676ea30ce12fbce8bc0f604c691b50a924932ab1161868fd9904(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c7e8b59594169d9a34db6fd62417e042bc1f929a3ccf70dc1a97d1c62d75ee21(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__34292a0ab727ac5e02b9cd9a28a84525e84fed80fc9be6d249c0fbea265db930(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9f46c76890631803ee9cee4a571c3f59c12797de82b8d7f701889c376709e44e(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ebf2647f4905836c1d1941951a5d00b9e969fdfc059b8b43cca9ce597433a291(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e99ba4d6b3f6552a1e80e36becb8b1130af70cbcf5ae3db64b76904cacd62863(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ApiIntegrationTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

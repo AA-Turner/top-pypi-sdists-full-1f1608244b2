@@ -226,7 +226,7 @@ class DockerDeployment(AbstractDeployment):
     async def start(self):
         """Starts the runtime."""
         self._pull_image()
-        if self._config.python_standalone_dir is not None:
+        if self._config.python_standalone_dir:
             image_id = self._build_image()
         else:
             image_id = self._config.image
@@ -238,10 +238,13 @@ class DockerDeployment(AbstractDeployment):
         platform_arg = []
         if self._config.platform is not None:
             platform_arg = ["--platform", self._config.platform]
+        rm_arg = []
+        if self._config.remove_container:
+            rm_arg = ["--rm"]
         cmds = [
             "docker",
             "run",
-            "--rm",
+            *rm_arg,
             "-p",
             f"{self._config.port}:8000",
             *platform_arg,

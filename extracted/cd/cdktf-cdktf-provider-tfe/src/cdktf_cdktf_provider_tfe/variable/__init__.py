@@ -1,7 +1,7 @@
 r'''
 # `tfe_variable`
 
-Refer to the Terraform Registry for docs: [`tfe_variable`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable).
+Refer to the Terraform Registry for docs: [`tfe_variable`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Variable(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.variable.Variable",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable tfe_variable}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable tfe_variable}.'''
 
     def __init__(
         self,
@@ -68,19 +68,19 @@ class Variable(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable tfe_variable} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable tfe_variable} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#category Variable#category}
-        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#key Variable#key}
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#description Variable#description}.
-        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#hcl Variable#hcl}.
-        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#sensitive Variable#sensitive}.
-        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#value Variable#value}
-        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#value_wo Variable#value_wo}
-        :param variable_set_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#variable_set_id Variable#variable_set_id}.
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#workspace_id Variable#workspace_id}.
+        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#category Variable#category}
+        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#key Variable#key}
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#description Variable#description}.
+        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#hcl Variable#hcl}.
+        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#sensitive Variable#sensitive}.
+        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#value Variable#value}
+        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#value_wo Variable#value_wo}
+        :param variable_set_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#variable_set_id Variable#variable_set_id}.
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#workspace_id Variable#workspace_id}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -127,7 +127,7 @@ class Variable(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Variable to import.
-        :param import_from_id: The id of the existing Variable that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Variable that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Variable to import is found.
         '''
         if __debug__:
@@ -404,15 +404,15 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#category Variable#category}
-        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#key Variable#key}
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#description Variable#description}.
-        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#hcl Variable#hcl}.
-        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#sensitive Variable#sensitive}.
-        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#value Variable#value}
-        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#value_wo Variable#value_wo}
-        :param variable_set_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#variable_set_id Variable#variable_set_id}.
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#workspace_id Variable#workspace_id}.
+        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#category Variable#category}
+        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#key Variable#key}
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#description Variable#description}.
+        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#hcl Variable#hcl}.
+        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#sensitive Variable#sensitive}.
+        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#value Variable#value}
+        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#value_wo Variable#value_wo}
+        :param variable_set_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#variable_set_id Variable#variable_set_id}.
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#workspace_id Variable#workspace_id}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -535,7 +535,7 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def category(self) -> builtins.str:
         '''Whether this is a Terraform or environment variable. Valid values are "terraform" or "env".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#category Variable#category}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#category Variable#category}
         '''
         result = self._values.get("category")
         assert result is not None, "Required property 'category' is missing"
@@ -545,7 +545,7 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key(self) -> builtins.str:
         '''Name of the variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#key Variable#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#key Variable#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -553,7 +553,7 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#description Variable#description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#description Variable#description}.'''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -561,7 +561,7 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def hcl(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#hcl Variable#hcl}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#hcl Variable#hcl}.'''
         result = self._values.get("hcl")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -569,7 +569,7 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def sensitive(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#sensitive Variable#sensitive}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#sensitive Variable#sensitive}.'''
         result = self._values.get("sensitive")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -577,7 +577,7 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value(self) -> typing.Optional[builtins.str]:
         '''Value of the variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#value Variable#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#value Variable#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -586,20 +586,20 @@ class VariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value_wo(self) -> typing.Optional[builtins.str]:
         '''Value of the variable in write-only mode.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#value_wo Variable#value_wo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#value_wo Variable#value_wo}
         '''
         result = self._values.get("value_wo")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def variable_set_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#variable_set_id Variable#variable_set_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#variable_set_id Variable#variable_set_id}.'''
         result = self._values.get("variable_set_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def workspace_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/variable#workspace_id Variable#workspace_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/variable#workspace_id Variable#workspace_id}.'''
         result = self._values.get("workspace_id")
         return typing.cast(typing.Optional[builtins.str], result)
 

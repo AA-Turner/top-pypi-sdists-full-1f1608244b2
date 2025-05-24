@@ -1,7 +1,7 @@
 r'''
 # `snowflake_sequence`
 
-Refer to the Terraform Registry for docs: [`snowflake_sequence`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence).
+Refer to the Terraform Registry for docs: [`snowflake_sequence`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Sequence(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.sequence.Sequence",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence snowflake_sequence}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence snowflake_sequence}.'''
 
     def __init__(
         self,
@@ -58,6 +58,7 @@ class Sequence(
         id: typing.Optional[builtins.str] = None,
         increment: typing.Optional[jsii.Number] = None,
         ordering: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["SequenceTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -66,17 +67,18 @@ class Sequence(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence snowflake_sequence} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence snowflake_sequence} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param database: The database in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#database Sequence#database}
-        :param name: Specifies the name for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#name Sequence#name}
-        :param schema: The schema in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#schema Sequence#schema}
-        :param comment: Specifies a comment for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#comment Sequence#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#id Sequence#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param increment: The amount the sequence will increase by each time it is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#increment Sequence#increment}
-        :param ordering: The ordering of the sequence. Either ORDER or NOORDER. Default is ORDER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#ordering Sequence#ordering}
+        :param database: The database in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#database Sequence#database}
+        :param name: Specifies the name for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#name Sequence#name}
+        :param schema: The schema in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#schema Sequence#schema}
+        :param comment: (Default: ``) Specifies a comment for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#comment Sequence#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#id Sequence#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param increment: (Default: ``1``) The amount the sequence will increase by each time it is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#increment Sequence#increment}
+        :param ordering: (Default: ``ORDER``) The ordering of the sequence. Either ORDER or NOORDER. Default is ORDER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#ordering Sequence#ordering}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#timeouts Sequence#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -97,6 +99,7 @@ class Sequence(
             id=id,
             increment=increment,
             ordering=ordering,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -121,7 +124,7 @@ class Sequence(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Sequence to import.
-        :param import_from_id: The id of the existing Sequence that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Sequence that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Sequence to import is found.
         '''
         if __debug__:
@@ -131,6 +134,27 @@ class Sequence(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#create Sequence#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#delete Sequence#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#read Sequence#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#update Sequence#update}.
+        '''
+        value = SequenceTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetComment")
     def reset_comment(self) -> None:
@@ -147,6 +171,10 @@ class Sequence(
     @jsii.member(jsii_name="resetOrdering")
     def reset_ordering(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetOrdering", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -170,6 +198,11 @@ class Sequence(
     @jsii.member(jsii_name="nextValue")
     def next_value(self) -> jsii.Number:
         return typing.cast(jsii.Number, jsii.get(self, "nextValue"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "SequenceTimeoutsOutputReference":
+        return typing.cast("SequenceTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="commentInput")
@@ -205,6 +238,13 @@ class Sequence(
     @jsii.member(jsii_name="schemaInput")
     def schema_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "schemaInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "SequenceTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "SequenceTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="comment")
@@ -309,6 +349,7 @@ class Sequence(
         "id": "id",
         "increment": "increment",
         "ordering": "ordering",
+        "timeouts": "timeouts",
     },
 )
 class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -329,6 +370,7 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         id: typing.Optional[builtins.str] = None,
         increment: typing.Optional[jsii.Number] = None,
         ordering: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["SequenceTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -338,16 +380,19 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param database: The database in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#database Sequence#database}
-        :param name: Specifies the name for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#name Sequence#name}
-        :param schema: The schema in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#schema Sequence#schema}
-        :param comment: Specifies a comment for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#comment Sequence#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#id Sequence#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param increment: The amount the sequence will increase by each time it is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#increment Sequence#increment}
-        :param ordering: The ordering of the sequence. Either ORDER or NOORDER. Default is ORDER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#ordering Sequence#ordering}
+        :param database: The database in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#database Sequence#database}
+        :param name: Specifies the name for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#name Sequence#name}
+        :param schema: The schema in which to create the sequence. Don't use the | character. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#schema Sequence#schema}
+        :param comment: (Default: ``) Specifies a comment for the sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#comment Sequence#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#id Sequence#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param increment: (Default: ``1``) The amount the sequence will increase by each time it is used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#increment Sequence#increment}
+        :param ordering: (Default: ``ORDER``) The ordering of the sequence. Either ORDER or NOORDER. Default is ORDER. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#ordering Sequence#ordering}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#timeouts Sequence#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = SequenceTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d47236a5bf973dc3a2a2822388ae0345c6afd0042829275eda490fe018728763)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -364,6 +409,7 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument increment", value=increment, expected_type=type_hints["increment"])
             check_type(argname="argument ordering", value=ordering, expected_type=type_hints["ordering"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "database": database,
             "name": name,
@@ -391,6 +437,8 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["increment"] = increment
         if ordering is not None:
             self._values["ordering"] = ordering
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -460,7 +508,7 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def database(self) -> builtins.str:
         '''The database in which to create the sequence. Don't use the | character.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#database Sequence#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#database Sequence#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -470,7 +518,7 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Specifies the name for the sequence.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#name Sequence#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#name Sequence#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -480,7 +528,7 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def schema(self) -> builtins.str:
         '''The schema in which to create the sequence. Don't use the | character.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#schema Sequence#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#schema Sequence#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -488,16 +536,16 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def comment(self) -> typing.Optional[builtins.str]:
-        '''Specifies a comment for the sequence.
+        '''(Default: ``) Specifies a comment for the sequence.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#comment Sequence#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#comment Sequence#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#id Sequence#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#id Sequence#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -507,21 +555,30 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def increment(self) -> typing.Optional[jsii.Number]:
-        '''The amount the sequence will increase by each time it is used.
+        '''(Default: ``1``) The amount the sequence will increase by each time it is used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#increment Sequence#increment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#increment Sequence#increment}
         '''
         result = self._values.get("increment")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def ordering(self) -> typing.Optional[builtins.str]:
-        '''The ordering of the sequence. Either ORDER or NOORDER. Default is ORDER.
+        '''(Default: ``ORDER``) The ordering of the sequence. Either ORDER or NOORDER. Default is ORDER.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/sequence#ordering Sequence#ordering}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#ordering Sequence#ordering}
         '''
         result = self._values.get("ordering")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["SequenceTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#timeouts Sequence#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["SequenceTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -535,9 +592,210 @@ class SequenceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.sequence.SequenceTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class SequenceTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#create Sequence#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#delete Sequence#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#read Sequence#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#update Sequence#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f80baa9db7c9c561631e3335088f19c40e8c809c5af6861ec86fb81c89a5d841)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#create Sequence#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#delete Sequence#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#read Sequence#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/sequence#update Sequence#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "SequenceTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class SequenceTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.sequence.SequenceTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f008ca950c8939201ea459897acf7ccb755fe0ed21fce24e7ee0e4fd2a6244f9)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__93f70a5d94a670d221de28faa830846cc7eff36b0883131d7218988aac4a10b5)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0a6670f014d62819545c57fe1681d190b1ed9a47b3fe11e4a8b45ffb70392b88)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__52dd8a386b1f953429974cbe72984d5504929fd6f79e0f6a2514ef0e96b9ac16)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a0f72891f70bf0c1e729dbeaa912a011ea99036b332a0ef36917d583d81df859)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SequenceTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SequenceTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SequenceTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__cff9d38ba5a8412d599d7c0efb2930ddad303dab63dc52d23e03f65c603556df)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "Sequence",
     "SequenceConfig",
+    "SequenceTimeouts",
+    "SequenceTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -553,6 +811,7 @@ def _typecheckingstub__6906792e103eb61f1315f29eb7b29346beaa4c5781cf615cd69c0f094
     id: typing.Optional[builtins.str] = None,
     increment: typing.Optional[jsii.Number] = None,
     ordering: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[SequenceTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -631,6 +890,54 @@ def _typecheckingstub__d47236a5bf973dc3a2a2822388ae0345c6afd0042829275eda490fe01
     id: typing.Optional[builtins.str] = None,
     increment: typing.Optional[jsii.Number] = None,
     ordering: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[SequenceTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f80baa9db7c9c561631e3335088f19c40e8c809c5af6861ec86fb81c89a5d841(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f008ca950c8939201ea459897acf7ccb755fe0ed21fce24e7ee0e4fd2a6244f9(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__93f70a5d94a670d221de28faa830846cc7eff36b0883131d7218988aac4a10b5(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0a6670f014d62819545c57fe1681d190b1ed9a47b3fe11e4a8b45ffb70392b88(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__52dd8a386b1f953429974cbe72984d5504929fd6f79e0f6a2514ef0e96b9ac16(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a0f72891f70bf0c1e729dbeaa912a011ea99036b332a0ef36917d583d81df859(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__cff9d38ba5a8412d599d7c0efb2930ddad303dab63dc52d23e03f65c603556df(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SequenceTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

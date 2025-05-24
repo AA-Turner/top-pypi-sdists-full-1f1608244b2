@@ -1,7 +1,7 @@
 r'''
 # `data_tfe_project`
 
-Refer to the Terraform Registry for docs: [`data_tfe_project`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project).
+Refer to the Terraform Registry for docs: [`data_tfe_project`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataTfeProject(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataTfeProject.DataTfeProject",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project tfe_project}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project tfe_project}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class DataTfeProject(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project tfe_project} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project tfe_project} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: The name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project#name DataTfeProject#name}
-        :param organization: The name of the organization that the project belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project#organization DataTfeProject#organization}
+        :param name: The name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project#name DataTfeProject#name}
+        :param organization: The name of the organization that the project belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project#organization DataTfeProject#organization}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class DataTfeProject(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataTfeProject to import.
-        :param import_from_id: The id of the existing DataTfeProject that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataTfeProject that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataTfeProject to import is found.
         '''
         if __debug__:
@@ -236,8 +236,8 @@ class DataTfeProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: The name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project#name DataTfeProject#name}
-        :param organization: The name of the organization that the project belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project#organization DataTfeProject#organization}
+        :param name: The name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project#name DataTfeProject#name}
+        :param organization: The name of the organization that the project belongs to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project#organization DataTfeProject#organization}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -340,7 +340,7 @@ class DataTfeProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The name of the project.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project#name DataTfeProject#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project#name DataTfeProject#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -350,7 +350,7 @@ class DataTfeProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''The name of the organization that the project belongs to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/project#organization DataTfeProject#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/project#organization DataTfeProject#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)

@@ -1,7 +1,7 @@
 r'''
 # `tfe_registry_module`
 
-Refer to the Terraform Registry for docs: [`tfe_registry_module`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module).
+Refer to the Terraform Registry for docs: [`tfe_registry_module`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class RegistryModule(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.registryModule.RegistryModule",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module tfe_registry_module}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module tfe_registry_module}.'''
 
     def __init__(
         self,
@@ -69,20 +69,20 @@ class RegistryModule(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module tfe_registry_module} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module tfe_registry_module} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#id RegistryModule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param initial_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#initial_version RegistryModule#initial_version}.
-        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#module_provider RegistryModule#module_provider}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#name RegistryModule#name}.
-        :param namespace: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#namespace RegistryModule#namespace}.
-        :param no_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#no_code RegistryModule#no_code}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#organization RegistryModule#organization}.
-        :param registry_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#registry_name RegistryModule#registry_name}.
-        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#test_config RegistryModule#test_config}
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#vcs_repo RegistryModule#vcs_repo}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#id RegistryModule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param initial_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#initial_version RegistryModule#initial_version}.
+        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#module_provider RegistryModule#module_provider}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#name RegistryModule#name}.
+        :param namespace: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#namespace RegistryModule#namespace}.
+        :param no_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#no_code RegistryModule#no_code}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#organization RegistryModule#organization}.
+        :param registry_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#registry_name RegistryModule#registry_name}.
+        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#test_config RegistryModule#test_config}
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#vcs_repo RegistryModule#vcs_repo}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -130,7 +130,7 @@ class RegistryModule(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the RegistryModule to import.
-        :param import_from_id: The id of the existing RegistryModule that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing RegistryModule that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the RegistryModule to import is found.
         '''
         if __debug__:
@@ -166,12 +166,12 @@ class RegistryModule(
         tags: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param display_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#display_identifier RegistryModule#display_identifier}.
-        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#identifier RegistryModule#identifier}.
-        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#branch RegistryModule#branch}.
-        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#github_app_installation_id RegistryModule#github_app_installation_id}.
-        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#oauth_token_id RegistryModule#oauth_token_id}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#tags RegistryModule#tags}.
+        :param display_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#display_identifier RegistryModule#display_identifier}.
+        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#identifier RegistryModule#identifier}.
+        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#branch RegistryModule#branch}.
+        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#github_app_installation_id RegistryModule#github_app_installation_id}.
+        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#oauth_token_id RegistryModule#oauth_token_id}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#tags RegistryModule#tags}.
         '''
         value = RegistryModuleVcsRepo(
             display_identifier=display_identifier,
@@ -459,16 +459,16 @@ class RegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#id RegistryModule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param initial_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#initial_version RegistryModule#initial_version}.
-        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#module_provider RegistryModule#module_provider}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#name RegistryModule#name}.
-        :param namespace: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#namespace RegistryModule#namespace}.
-        :param no_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#no_code RegistryModule#no_code}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#organization RegistryModule#organization}.
-        :param registry_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#registry_name RegistryModule#registry_name}.
-        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#test_config RegistryModule#test_config}
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#vcs_repo RegistryModule#vcs_repo}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#id RegistryModule#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param initial_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#initial_version RegistryModule#initial_version}.
+        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#module_provider RegistryModule#module_provider}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#name RegistryModule#name}.
+        :param namespace: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#namespace RegistryModule#namespace}.
+        :param no_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#no_code RegistryModule#no_code}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#organization RegistryModule#organization}.
+        :param registry_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#registry_name RegistryModule#registry_name}.
+        :param test_config: test_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#test_config RegistryModule#test_config}
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#vcs_repo RegistryModule#vcs_repo}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -595,7 +595,7 @@ class RegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#id RegistryModule#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#id RegistryModule#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -605,25 +605,25 @@ class RegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def initial_version(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#initial_version RegistryModule#initial_version}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#initial_version RegistryModule#initial_version}.'''
         result = self._values.get("initial_version")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def module_provider(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#module_provider RegistryModule#module_provider}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#module_provider RegistryModule#module_provider}.'''
         result = self._values.get("module_provider")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#name RegistryModule#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#name RegistryModule#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def namespace(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#namespace RegistryModule#namespace}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#namespace RegistryModule#namespace}.'''
         result = self._values.get("namespace")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -631,19 +631,19 @@ class RegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def no_code(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#no_code RegistryModule#no_code}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#no_code RegistryModule#no_code}.'''
         result = self._values.get("no_code")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#organization RegistryModule#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#organization RegistryModule#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def registry_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#registry_name RegistryModule#registry_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#registry_name RegistryModule#registry_name}.'''
         result = self._values.get("registry_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -653,7 +653,7 @@ class RegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["RegistryModuleTestConfig"]]]:
         '''test_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#test_config RegistryModule#test_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#test_config RegistryModule#test_config}
         '''
         result = self._values.get("test_config")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["RegistryModuleTestConfig"]]], result)
@@ -662,7 +662,7 @@ class RegistryModuleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def vcs_repo(self) -> typing.Optional["RegistryModuleVcsRepo"]:
         '''vcs_repo block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#vcs_repo RegistryModule#vcs_repo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#vcs_repo RegistryModule#vcs_repo}
         '''
         result = self._values.get("vcs_repo")
         return typing.cast(typing.Optional["RegistryModuleVcsRepo"], result)
@@ -691,7 +691,7 @@ class RegistryModuleTestConfig:
         tests_enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param tests_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#tests_enabled RegistryModule#tests_enabled}.
+        :param tests_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#tests_enabled RegistryModule#tests_enabled}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__03169643c732e1eca86d229957609d7d8d47c62f216c1bce0e8e7227e94f71ce)
@@ -704,7 +704,7 @@ class RegistryModuleTestConfig:
     def tests_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#tests_enabled RegistryModule#tests_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#tests_enabled RegistryModule#tests_enabled}.'''
         result = self._values.get("tests_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -904,12 +904,12 @@ class RegistryModuleVcsRepo:
         tags: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param display_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#display_identifier RegistryModule#display_identifier}.
-        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#identifier RegistryModule#identifier}.
-        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#branch RegistryModule#branch}.
-        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#github_app_installation_id RegistryModule#github_app_installation_id}.
-        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#oauth_token_id RegistryModule#oauth_token_id}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#tags RegistryModule#tags}.
+        :param display_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#display_identifier RegistryModule#display_identifier}.
+        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#identifier RegistryModule#identifier}.
+        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#branch RegistryModule#branch}.
+        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#github_app_installation_id RegistryModule#github_app_installation_id}.
+        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#oauth_token_id RegistryModule#oauth_token_id}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#tags RegistryModule#tags}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ff17e2a43a1fe6421059a5a0a63bfe3416046a7e27a15064abb7286f34ffc2c5)
@@ -934,33 +934,33 @@ class RegistryModuleVcsRepo:
 
     @builtins.property
     def display_identifier(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#display_identifier RegistryModule#display_identifier}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#display_identifier RegistryModule#display_identifier}.'''
         result = self._values.get("display_identifier")
         assert result is not None, "Required property 'display_identifier' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def identifier(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#identifier RegistryModule#identifier}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#identifier RegistryModule#identifier}.'''
         result = self._values.get("identifier")
         assert result is not None, "Required property 'identifier' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def branch(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#branch RegistryModule#branch}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#branch RegistryModule#branch}.'''
         result = self._values.get("branch")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def github_app_installation_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#github_app_installation_id RegistryModule#github_app_installation_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#github_app_installation_id RegistryModule#github_app_installation_id}.'''
         result = self._values.get("github_app_installation_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def oauth_token_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#oauth_token_id RegistryModule#oauth_token_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#oauth_token_id RegistryModule#oauth_token_id}.'''
         result = self._values.get("oauth_token_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -968,7 +968,7 @@ class RegistryModuleVcsRepo:
     def tags(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/registry_module#tags RegistryModule#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/registry_module#tags RegistryModule#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 

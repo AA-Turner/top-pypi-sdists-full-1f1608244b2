@@ -14,7 +14,6 @@ dependencies = [
     "filelock",
     "gilknocker>=0.4.1",
     "httpx[http2]>=0.15",
-    "importlib-metadata",
     "invoke>=2.0",
     "ipywidgets",
     "jmespath",

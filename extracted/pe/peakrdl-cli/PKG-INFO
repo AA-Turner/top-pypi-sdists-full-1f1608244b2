@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: peakrdl-cli
-Version: 1.3.0
+Version: 1.4.0
 Summary: Command-line tool for control/status register automation and code generation.
 Author: Alex Mykyta
-License: GPLv3
+License: LGPLv3
 Project-URL: Source, https://github.com/SystemRDL/PeakRDL
 Project-URL: Tracker, https://github.com/SystemRDL/PeakRDL/issues
 Project-URL: Changelog, https://github.com/SystemRDL/PeakRDL/releases
@@ -14,7 +14,7 @@ Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
 Classifier: Operating System :: OS Independent
 Classifier: Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)
 Requires-Python: >=3.7

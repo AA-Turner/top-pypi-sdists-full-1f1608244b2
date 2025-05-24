@@ -2,9 +2,7 @@
 #ifndef GEOARROW_H_INCLUDED
 #define GEOARROW_H_INCLUDED
 
-#include <stdint.h>
-
-#include "geoarrow_type.h"
+#include "geoarrow/geoarrow_type.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,20 +98,19 @@ int64_t GeoArrowMetadataSerialize(const struct GeoArrowMetadataView* metadata_vi
 GeoArrowErrorCode GeoArrowSchemaSetMetadata(
     struct ArrowSchema* schema, const struct GeoArrowMetadataView* metadata_view);
 
-/// \brief Deprecated function used for backward compatability with very early
-/// versions of geoarrow
-GeoArrowErrorCode GeoArrowSchemaSetMetadataDeprecated(
-    struct ArrowSchema* schema, const struct GeoArrowMetadataView* metadata_view);
-
 /// \brief Update extension metadata associated with an existing ArrowSchema
 /// based on the extension metadata of another
 GeoArrowErrorCode GeoArrowSchemaSetMetadataFrom(struct ArrowSchema* schema,
                                                 const struct ArrowSchema* schema_src);
 
+/// \brief Set a GeoArrowMetadatView with the Crs definition of OGC:CRS84,
+/// the most commonly used CRS definition for longitude/latitude.
+void GeoArrowMetadataSetLonLat(struct GeoArrowMetadataView* metadata_view);
+
 /// \brief Unescape a coordinate reference system value
 ///
 /// The crs member of the GeoArrowMetadataView is a view into the extension metadata;
-/// however, in some cases this will be a quoted string (i.e., `"EPSG:4326"`) and in
+/// however, in some cases this will be a quoted string (i.e., `"OGC:CRS84"`) and in
 /// others it will be a JSON object (i.e., PROJJSON like
 /// `{"some key": "some value", ..}`). When passing this string elsewhere, you will
 /// almost always want the quoted value to be unescaped (i.e., the JSON string value),
@@ -281,6 +278,79 @@ GeoArrowErrorCode GeoArrowKernelInit(struct GeoArrowKernel* kernel, const char* 
 
 /// @}
 
+/// \defgroup geoarrow-geometry Zero-copy friendly scalar geometries
+///
+/// The GeoArrowGeometry, GeoArrowGeometry, and GeoArrowGeometryNode form the
+/// basis for iterating over single geometries in the GeoArrow C library. Whereas
+/// GeoArrow allows a more efficient implementation of many algorithms by treating
+/// Arrays as a whole, sometimes the concept of a scalar is needed to interact
+/// with other libraries or reduce the complexity of an operation.
+///
+/// - A GeoArrowGeometryNode is a view of a coordinate sequence (point, linestring, or
+///   polygon ring) or size (with children immediately following in depth-first order).
+/// - A GeoArrowGeometry is a view of a contiguous sequence of GeoArrowGeometryNodes,
+///   and owns neither the array of nodes nor the underlying coordinates.
+/// - A GeoArrowGeometry owns its array of nodes and optionally the underlying
+///   coordinates.
+///
+/// This approach is friendly to iteration over a potentially many items with few
+/// if any dynamic allocations.
+///
+/// @{
+
+/// \brief Initialize geometry for a GeoArrowGeometry
+///
+/// If GEOARROW_OK is returned, the caller is responsible for calling
+/// GeoArrowGeometryReset.
+GeoArrowErrorCode GeoArrowGeometryInit(struct GeoArrowGeometry* geom);
+
+/// \brief Free memory associated with a GeoArrowGeometry
+void GeoArrowGeometryReset(struct GeoArrowGeometry* geom);
+
+/// \brief Populate the nodes of a GeoArrowGeometry from a GeoArrowGeometryView
+///
+/// Copies nodes from src into a previously initialized GeoArrowGeometry. On success
+/// the destination owns its nodes but not any underlying coordinates.
+GeoArrowErrorCode GeoArrowGeometryShallowCopy(struct GeoArrowGeometryView src,
+                                              struct GeoArrowGeometry* dst);
+
+/// \brief Populate the coords and nodes of a GeoArrowGeometry from a GeoArrowGeometryView
+///
+/// Copies nodes and coords from src into a previously initialized GeoArrowGeometry. On
+/// success the destination owns its nodes but and any underlying coordinates.
+GeoArrowErrorCode GeoArrowGeometryDeepCopy(struct GeoArrowGeometryView src,
+                                           struct GeoArrowGeometry* dst);
+
+/// \brief Resize the nodes list
+///
+/// This can be used to truncate the nodes list to zero before populating
+/// its contents with another value. Use GeoArrowGeometryResizeNodesInline()
+/// when calling this in a loop.
+GeoArrowErrorCode GeoArrowGeometryResizeNodes(struct GeoArrowGeometry* geom,
+                                              int64_t size_nodes);
+
+/// \brief Append a node to the nodes list and initialize its contents
+///
+/// This can be used to truncate the nodes list to zero before populating
+/// its contents with another value. Use GeoArrowGeometryAppendNodeInline()
+/// when calling this in a loop.
+GeoArrowErrorCode GeoArrowGeometryAppendNode(struct GeoArrowGeometry* geom,
+                                             struct GeoArrowGeometryNode** out);
+
+/// \brief Export a GeoArrowGeometryView using a GeoArrowVisitor
+GeoArrowErrorCode GeoArrowGeometryViewVisit(struct GeoArrowGeometryView geometry,
+                                            struct GeoArrowVisitor* v);
+
+/// \brief Export a GeoArrowGeometry using a GeoArrowVisitor
+GeoArrowErrorCode GeoArrowGeometryVisit(const struct GeoArrowGeometry* geom,
+                                        struct GeoArrowVisitor* v);
+
+/// \brief Build a GeoArrowGeometry using a visitor
+void GeoArrowGeometryInitVisitor(struct GeoArrowGeometry* geom,
+                                 struct GeoArrowVisitor* v);
+
+/// @}
+
 /// \defgroup geoarrow-visitor Low-level reader/visitor interfaces
 ///
 /// The GeoArrow specification defines memory layouts for many types.
@@ -301,29 +371,63 @@ GeoArrowErrorCode GeoArrowKernelInit(struct GeoArrowKernel* kernel, const char* 
 /// \brief Initialize a GeoArrowVisitor with a visitor that does nothing
 void GeoArrowVisitorInitVoid(struct GeoArrowVisitor* v);
 
-/// \brief Populate a GeoArrowVisitor pointing to a GeoArrowBuilder
-GeoArrowErrorCode GeoArrowBuilderInitVisitor(struct GeoArrowBuilder* builder,
-                                             struct GeoArrowVisitor* v);
-
-/// \brief Visit the features of a GeoArrowArrayView
+/// \brief Visit the features of a native GeoArrowArrayView
 ///
 /// The caller must have initialized the GeoArrowVisitor with the appropriate
-/// writer before calling this function.
-GeoArrowErrorCode GeoArrowArrayViewVisit(const struct GeoArrowArrayView* array_view,
-                                         int64_t offset, int64_t length,
-                                         struct GeoArrowVisitor* v);
+/// writer before calling this function. This only works with GeoArrowArrayView
+/// instances pointing to native arrays, even though the GeoArrowArrayView can
+/// handle other types of arrays. Use the GeoArrowArrayReader for arbitrary input.
+GeoArrowErrorCode GeoArrowArrayViewVisitNative(const struct GeoArrowArrayView* array_view,
+                                               int64_t offset, int64_t length,
+                                               struct GeoArrowVisitor* v);
+
+/// \brief GeoArrow native array writer
+///
+/// This writer writes the "native" memory layouts (i.e., nested lists of
+/// coordinates) implemented as a visitor.
+struct GeoArrowNativeWriter {
+  /// \brief Implementation-specific details
+  void* private_data;
+};
+
+/// \brief Initialize the memory of a GeoArrowNativeWriter
+///
+/// If GEOARROW_OK is returned, the caller is responsible for calling
+/// GeoArrowNativeWriterReset().
+GeoArrowErrorCode GeoArrowNativeWriterInit(struct GeoArrowNativeWriter* writer,
+                                           enum GeoArrowType type);
+
+/// \brief Populate a GeoArrowVisitor pointing to this writer
+GeoArrowErrorCode GeoArrowNativeWriterInitVisitor(struct GeoArrowNativeWriter* writer,
+                                                  struct GeoArrowVisitor* v);
+
+/// \brief Finish an ArrowArray containing elements from the visited input
+///
+/// This function can be called more than once to support multiple batches.
+GeoArrowErrorCode GeoArrowNativeWriterFinish(struct GeoArrowNativeWriter* writer,
+                                             struct ArrowArray* array,
+                                             struct GeoArrowError* error);
+
+/// \brief Free resources held by a GeoArrowNativeWriter
+void GeoArrowNativeWriterReset(struct GeoArrowNativeWriter* writer);
 
 /// \brief Well-known text writer
 ///
 /// This struct also contains options for well-known text serialization.
 /// These options can be modified from the defaults after
 /// GeoArrowWKTWriterInit() and before GeoArrowWKTWriterInitVisitor().
+///
+/// Note that whether or not GeoArrow was compiled with ryu has a significant
+/// impact on the output: notably, ryu is locale-independent and much faster.
+/// GeoArrow can fall back on using snprintf(); however, this will result in
+/// invalid WKT for locales other than the C locale.
 struct GeoArrowWKTWriter {
   /// \brief The number of significant digits to include in the output (default: 16)
   int precision;
 
-  /// \brief Set to 0 to use the verbose (but still technically valid) MULTIPOINT
-  /// representation (i.e., MULTIPOINT((0 1), (2 3))).
+  /// \brief Set to 0 to use the verbose (but more valid) MULTIPOINT
+  /// representation (i.e., MULTIPOINT((0 1), (2 3)))). Defaults to 1 (because
+  /// this was the default GEOS behaviour at the time this was written).
   int use_flat_multipoint;
 
   /// \brief Constrain the maximum size of each element in the returned array
@@ -426,6 +530,11 @@ GeoArrowErrorCode GeoArrowWKBReaderVisit(struct GeoArrowWKBReader* reader,
                                          struct GeoArrowBufferView src,
                                          struct GeoArrowVisitor* v);
 
+GeoArrowErrorCode GeoArrowWKBReaderRead(struct GeoArrowWKBReader* reader,
+                                        struct GeoArrowBufferView src,
+                                        struct GeoArrowGeometryView* out,
+                                        struct GeoArrowError* error);
+
 /// \brief Free resources held by a GeoArrowWKBWriter
 void GeoArrowWKBReaderReset(struct GeoArrowWKBReader* reader);
 
@@ -434,20 +543,41 @@ struct GeoArrowArrayReader {
   void* private_data;
 };
 
-/// \brief Initialize the memory of a GeoArrowArrayReader
+/// \brief Initialize a GeoArrowArrayReader from a GeoArrowType
 ///
 /// If GEOARROW_OK is returned, the caller is responsible for calling
 /// GeoArrowArrayReaderReset().
-GeoArrowErrorCode GeoArrowArrayReaderInit(struct GeoArrowArrayReader* reader);
+GeoArrowErrorCode GeoArrowArrayReaderInitFromType(struct GeoArrowArrayReader* reader,
+                                                  enum GeoArrowType type);
+
+/// \brief Initialize a GeoArrowArrayReader from an ArrowSchema
+///
+/// If GEOARROW_OK is returned, the caller is responsible for calling
+/// GeoArrowArrayReaderReset().
+GeoArrowErrorCode GeoArrowArrayReaderInitFromSchema(struct GeoArrowArrayReader* reader,
+                                                    const struct ArrowSchema* schema,
+                                                    struct GeoArrowError* error);
+
+/// \brief Set a GeoArrowArray to read
+GeoArrowErrorCode GeoArrowArrayReaderSetArray(struct GeoArrowArrayReader* reader,
+                                              const struct ArrowArray* array,
+                                              struct GeoArrowError* error);
 
 /// \brief Visit a GeoArrowArray
 ///
 /// The caller must have initialized the GeoArrowVisitor with the appropriate
 /// writer before calling this function.
 GeoArrowErrorCode GeoArrowArrayReaderVisit(struct GeoArrowArrayReader* reader,
-                                           const struct GeoArrowArrayView* array_view,
                                            int64_t offset, int64_t length,
                                            struct GeoArrowVisitor* v);
+
+/// \brief Get a GeoArrowArrayView
+///
+/// If there is a GeoArrowArrayView underlying this GeoArrowArrayReader, populates
+/// out with the internal pointer. Returns an error code if there is no GeoArrowArrayView
+/// corresponding to this array.
+GeoArrowErrorCode GeoArrowArrayReaderArrayView(struct GeoArrowArrayReader* reader,
+                                               const struct GeoArrowArrayView** out);
 
 /// \brief Free resources held by a GeoArrowArrayReader
 void GeoArrowArrayReaderReset(struct GeoArrowArrayReader* reader);
@@ -471,6 +601,22 @@ GeoArrowErrorCode GeoArrowArrayWriterInitFromType(struct GeoArrowArrayWriter* wr
 GeoArrowErrorCode GeoArrowArrayWriterInitFromSchema(struct GeoArrowArrayWriter* writer,
                                                     const struct ArrowSchema* schema);
 
+/// \brief Set the precision to use for array writers writing to WKT
+///
+/// Returns EINVAL for precision values that are not valid or if the writer
+/// is not writing to WKT. Must be called before GeoArrowArrayWriterInitVisitor().
+/// The default precision value is 16. See GeoArrowWKTWriter for details.
+GeoArrowErrorCode GeoArrowArrayWriterSetPrecision(struct GeoArrowArrayWriter* writer,
+                                                  int precision);
+
+/// \brief Set the MULTIPOINT output mode when writing to WKT
+///
+/// Returns EINVAL if the writer is not writing to WKT. Must be called before
+/// GeoArrowArrayWriterInitVisitor(). The default value is 1. See GeoArrowWKTWriter for
+/// details.
+GeoArrowErrorCode GeoArrowArrayWriterSetFlatMultipoint(struct GeoArrowArrayWriter* writer,
+                                                       int flat_multipoint);
+
 /// \brief Populate a GeoArrowVisitor pointing to this writer
 GeoArrowErrorCode GeoArrowArrayWriterInitVisitor(struct GeoArrowArrayWriter* writer,
                                                  struct GeoArrowVisitor* v);
@@ -491,6 +637,6 @@ void GeoArrowArrayWriterReset(struct GeoArrowArrayWriter* writer);
 }
 #endif
 
-#include "geoarrow_type_inline.h"
+#include "geoarrow/geoarrow_type_inline.h"
 
 #endif

@@ -1,7 +1,7 @@
 r'''
 # `snowflake_account`
 
-Refer to the Terraform Registry for docs: [`snowflake_account`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account).
+Refer to the Terraform Registry for docs: [`snowflake_account`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Account(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.account.Account",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account snowflake_account}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account snowflake_account}.'''
 
     def __init__(
         self,
@@ -67,6 +67,7 @@ class Account(
         must_change_password: typing.Optional[builtins.str] = None,
         region: typing.Optional[builtins.str] = None,
         region_group: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["AccountTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -75,26 +76,27 @@ class Account(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account snowflake_account} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account snowflake_account} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param admin_name: Login name of the initial administrative user of the account. A new user is created in the new account with this name and password and granted the ACCOUNTADMIN role in the account. A login name can be any string consisting of letters, numbers, and underscores. Login names are always case-insensitive. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_name Account#admin_name}
-        :param edition: Snowflake Edition of the account. See more about Snowflake Editions in the `official documentation <https://docs.snowflake.com/en/user-guide/intro-editions>`_. Valid options are: ``STANDARD`` | ``ENTERPRISE`` | ``BUSINESS_CRITICAL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#edition Account#edition}
-        :param email: Email address of the initial administrative user of the account. This email address is used to send any notifications about the account. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#email Account#email}
-        :param grace_period_in_days: Specifies the number of days during which the account can be restored (“undropped”). The minimum is 3 days and the maximum is 90 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#grace_period_in_days Account#grace_period_in_days}
-        :param name: Specifies the identifier (i.e. name) for the account. It must be unique within an organization, regardless of which Snowflake Region the account is in and must start with an alphabetic character and cannot contain spaces or special characters except for underscores (_). Note that if the account name includes underscores, features that do not accept account names with underscores (e.g. Okta SSO or SCIM) can reference a version of the account name that substitutes hyphens (-) for the underscores. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#name Account#name}
-        :param admin_password: Password for the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_password Account#admin_password}
-        :param admin_rsa_public_key: Assigns a public key to the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_rsa_public_key Account#admin_rsa_public_key}
-        :param admin_user_type: Used for setting the type of the first user that is assigned the ACCOUNTADMIN role during account creation. Valid options are: ``PERSON`` | ``SERVICE`` | ``LEGACY_SERVICE`` External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_user_type Account#admin_user_type}
-        :param comment: Specifies a comment for the account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#comment Account#comment}
-        :param first_name: First name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#first_name Account#first_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#id Account#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_org_admin: Sets an account property that determines whether the ORGADMIN role is enabled in the account. Only an organization administrator (i.e. user with the ORGADMIN role) can set the property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#is_org_admin Account#is_org_admin}
-        :param last_name: Last name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#last_name Account#last_name}
-        :param must_change_password: Specifies whether the new user created to administer the account is forced to change their password upon first login into the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#must_change_password Account#must_change_password}
-        :param region: `Snowflake Region ID <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-snowflake-region-ids>`_ of the region where the account is created. If no value is provided, Snowflake creates the account in the same Snowflake Region as the current account (i.e. the account in which the CREATE ACCOUNT statement is executed.). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#region Account#region}
-        :param region_group: ID of the region group where the account is created. To retrieve the region group ID for existing accounts in your organization, execute the `SHOW REGIONS <https://docs.snowflake.com/en/sql-reference/sql/show-regions>`_ command. For information about when you might need to specify region group, see `Region groups <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-region-groups>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#region_group Account#region_group}
+        :param admin_name: Login name of the initial administrative user of the account. A new user is created in the new account with this name and password and granted the ACCOUNTADMIN role in the account. A login name can be any string consisting of letters, numbers, and underscores. Login names are always case-insensitive. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_name Account#admin_name}
+        :param edition: Snowflake Edition of the account. See more about Snowflake Editions in the `official documentation <https://docs.snowflake.com/en/user-guide/intro-editions>`_. Valid options are: ``STANDARD`` | ``ENTERPRISE`` | ``BUSINESS_CRITICAL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#edition Account#edition}
+        :param email: Email address of the initial administrative user of the account. This email address is used to send any notifications about the account. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#email Account#email}
+        :param grace_period_in_days: Specifies the number of days during which the account can be restored (“undropped”). The minimum is 3 days and the maximum is 90 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#grace_period_in_days Account#grace_period_in_days}
+        :param name: Specifies the identifier (i.e. name) for the account. It must be unique within an organization, regardless of which Snowflake Region the account is in and must start with an alphabetic character and cannot contain spaces or special characters except for underscores (_). Note that if the account name includes underscores, features that do not accept account names with underscores (e.g. Okta SSO or SCIM) can reference a version of the account name that substitutes hyphens (-) for the underscores. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#name Account#name}
+        :param admin_password: Password for the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_password Account#admin_password}
+        :param admin_rsa_public_key: Assigns a public key to the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_rsa_public_key Account#admin_rsa_public_key}
+        :param admin_user_type: Used for setting the type of the first user that is assigned the ACCOUNTADMIN role during account creation. Valid options are: ``PERSON`` | ``SERVICE`` | ``LEGACY_SERVICE`` External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_user_type Account#admin_user_type}
+        :param comment: Specifies a comment for the account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#comment Account#comment}
+        :param first_name: First name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#first_name Account#first_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#id Account#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_org_admin: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Sets an account property that determines whether the ORGADMIN role is enabled in the account. Only an organization administrator (i.e. user with the ORGADMIN role) can set the property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#is_org_admin Account#is_org_admin}
+        :param last_name: Last name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#last_name Account#last_name}
+        :param must_change_password: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether the new user created to administer the account is forced to change their password upon first login into the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#must_change_password Account#must_change_password}
+        :param region: `Snowflake Region ID <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-snowflake-region-ids>`_ of the region where the account is created. If no value is provided, Snowflake creates the account in the same Snowflake Region as the current account (i.e. the account in which the CREATE ACCOUNT statement is executed.). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#region Account#region}
+        :param region_group: ID of the region group where the account is created. To retrieve the region group ID for existing accounts in your organization, execute the `SHOW REGIONS <https://docs.snowflake.com/en/sql-reference/sql/show-regions>`_ command. For information about when you might need to specify region group, see `Region groups <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-region-groups>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#region_group Account#region_group}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#timeouts Account#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -124,6 +126,7 @@ class Account(
             must_change_password=must_change_password,
             region=region,
             region_group=region_group,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -148,7 +151,7 @@ class Account(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Account to import.
-        :param import_from_id: The id of the existing Account that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Account that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Account to import is found.
         '''
         if __debug__:
@@ -158,6 +161,25 @@ class Account(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#create Account#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#delete Account#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#read Account#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#update Account#update}.
+        '''
+        value = AccountTimeouts(create=create, delete=delete, read=read, update=update)
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetAdminPassword")
     def reset_admin_password(self) -> None:
@@ -203,6 +225,10 @@ class Account(
     def reset_region_group(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetRegionGroup", []))
 
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
+
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
         return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "synthesizeAttributes", []))
@@ -225,6 +251,11 @@ class Account(
     @jsii.member(jsii_name="showOutput")
     def show_output(self) -> "AccountShowOutputList":
         return typing.cast("AccountShowOutputList", jsii.get(self, "showOutput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "AccountTimeoutsOutputReference":
+        return typing.cast("AccountTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="adminNameInput")
@@ -305,6 +336,13 @@ class Account(
     @jsii.member(jsii_name="regionInput")
     def region_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "regionInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union["AccountTimeouts", _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union["AccountTimeouts", _cdktf_9a9027ec.IResolvable]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="adminName")
@@ -526,6 +564,7 @@ class Account(
         "must_change_password": "mustChangePassword",
         "region": "region",
         "region_group": "regionGroup",
+        "timeouts": "timeouts",
     },
 )
 class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -555,6 +594,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         must_change_password: typing.Optional[builtins.str] = None,
         region: typing.Optional[builtins.str] = None,
         region_group: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["AccountTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -564,25 +604,28 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param admin_name: Login name of the initial administrative user of the account. A new user is created in the new account with this name and password and granted the ACCOUNTADMIN role in the account. A login name can be any string consisting of letters, numbers, and underscores. Login names are always case-insensitive. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_name Account#admin_name}
-        :param edition: Snowflake Edition of the account. See more about Snowflake Editions in the `official documentation <https://docs.snowflake.com/en/user-guide/intro-editions>`_. Valid options are: ``STANDARD`` | ``ENTERPRISE`` | ``BUSINESS_CRITICAL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#edition Account#edition}
-        :param email: Email address of the initial administrative user of the account. This email address is used to send any notifications about the account. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#email Account#email}
-        :param grace_period_in_days: Specifies the number of days during which the account can be restored (“undropped”). The minimum is 3 days and the maximum is 90 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#grace_period_in_days Account#grace_period_in_days}
-        :param name: Specifies the identifier (i.e. name) for the account. It must be unique within an organization, regardless of which Snowflake Region the account is in and must start with an alphabetic character and cannot contain spaces or special characters except for underscores (_). Note that if the account name includes underscores, features that do not accept account names with underscores (e.g. Okta SSO or SCIM) can reference a version of the account name that substitutes hyphens (-) for the underscores. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#name Account#name}
-        :param admin_password: Password for the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_password Account#admin_password}
-        :param admin_rsa_public_key: Assigns a public key to the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_rsa_public_key Account#admin_rsa_public_key}
-        :param admin_user_type: Used for setting the type of the first user that is assigned the ACCOUNTADMIN role during account creation. Valid options are: ``PERSON`` | ``SERVICE`` | ``LEGACY_SERVICE`` External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_user_type Account#admin_user_type}
-        :param comment: Specifies a comment for the account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#comment Account#comment}
-        :param first_name: First name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#first_name Account#first_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#id Account#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param is_org_admin: Sets an account property that determines whether the ORGADMIN role is enabled in the account. Only an organization administrator (i.e. user with the ORGADMIN role) can set the property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#is_org_admin Account#is_org_admin}
-        :param last_name: Last name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#last_name Account#last_name}
-        :param must_change_password: Specifies whether the new user created to administer the account is forced to change their password upon first login into the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#must_change_password Account#must_change_password}
-        :param region: `Snowflake Region ID <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-snowflake-region-ids>`_ of the region where the account is created. If no value is provided, Snowflake creates the account in the same Snowflake Region as the current account (i.e. the account in which the CREATE ACCOUNT statement is executed.). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#region Account#region}
-        :param region_group: ID of the region group where the account is created. To retrieve the region group ID for existing accounts in your organization, execute the `SHOW REGIONS <https://docs.snowflake.com/en/sql-reference/sql/show-regions>`_ command. For information about when you might need to specify region group, see `Region groups <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-region-groups>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#region_group Account#region_group}
+        :param admin_name: Login name of the initial administrative user of the account. A new user is created in the new account with this name and password and granted the ACCOUNTADMIN role in the account. A login name can be any string consisting of letters, numbers, and underscores. Login names are always case-insensitive. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_name Account#admin_name}
+        :param edition: Snowflake Edition of the account. See more about Snowflake Editions in the `official documentation <https://docs.snowflake.com/en/user-guide/intro-editions>`_. Valid options are: ``STANDARD`` | ``ENTERPRISE`` | ``BUSINESS_CRITICAL`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#edition Account#edition}
+        :param email: Email address of the initial administrative user of the account. This email address is used to send any notifications about the account. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#email Account#email}
+        :param grace_period_in_days: Specifies the number of days during which the account can be restored (“undropped”). The minimum is 3 days and the maximum is 90 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#grace_period_in_days Account#grace_period_in_days}
+        :param name: Specifies the identifier (i.e. name) for the account. It must be unique within an organization, regardless of which Snowflake Region the account is in and must start with an alphabetic character and cannot contain spaces or special characters except for underscores (_). Note that if the account name includes underscores, features that do not accept account names with underscores (e.g. Okta SSO or SCIM) can reference a version of the account name that substitutes hyphens (-) for the underscores. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#name Account#name}
+        :param admin_password: Password for the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_password Account#admin_password}
+        :param admin_rsa_public_key: Assigns a public key to the initial administrative user of the account. Either admin_password or admin_rsa_public_key has to be specified. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_rsa_public_key Account#admin_rsa_public_key}
+        :param admin_user_type: Used for setting the type of the first user that is assigned the ACCOUNTADMIN role during account creation. Valid options are: ``PERSON`` | ``SERVICE`` | ``LEGACY_SERVICE`` External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_user_type Account#admin_user_type}
+        :param comment: Specifies a comment for the account. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#comment Account#comment}
+        :param first_name: First name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#first_name Account#first_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#id Account#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param is_org_admin: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Sets an account property that determines whether the ORGADMIN role is enabled in the account. Only an organization administrator (i.e. user with the ORGADMIN role) can set the property. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#is_org_admin Account#is_org_admin}
+        :param last_name: Last name of the initial administrative user of the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#last_name Account#last_name}
+        :param must_change_password: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether the new user created to administer the account is forced to change their password upon first login into the account. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#must_change_password Account#must_change_password}
+        :param region: `Snowflake Region ID <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-snowflake-region-ids>`_ of the region where the account is created. If no value is provided, Snowflake creates the account in the same Snowflake Region as the current account (i.e. the account in which the CREATE ACCOUNT statement is executed.). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#region Account#region}
+        :param region_group: ID of the region group where the account is created. To retrieve the region group ID for existing accounts in your organization, execute the `SHOW REGIONS <https://docs.snowflake.com/en/sql-reference/sql/show-regions>`_ command. For information about when you might need to specify region group, see `Region groups <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-region-groups>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#region_group Account#region_group}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#timeouts Account#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = AccountTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8b266165bc094077007b82aaae53c2057678021a29a5a57ee79781990bc91348)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -608,6 +651,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument must_change_password", value=must_change_password, expected_type=type_hints["must_change_password"])
             check_type(argname="argument region", value=region, expected_type=type_hints["region"])
             check_type(argname="argument region_group", value=region_group, expected_type=type_hints["region_group"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "admin_name": admin_name,
             "edition": edition,
@@ -651,6 +695,8 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["region"] = region
         if region_group is not None:
             self._values["region_group"] = region_group
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -722,7 +768,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         A new user is created in the new account with this name and password and granted the ACCOUNTADMIN role in the account. A login name can be any string consisting of letters, numbers, and underscores. Login names are always case-insensitive. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_name Account#admin_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_name Account#admin_name}
         '''
         result = self._values.get("admin_name")
         assert result is not None, "Required property 'admin_name' is missing"
@@ -734,7 +780,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         See more about Snowflake Editions in the `official documentation <https://docs.snowflake.com/en/user-guide/intro-editions>`_. Valid options are: ``STANDARD`` | ``ENTERPRISE`` | ``BUSINESS_CRITICAL``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#edition Account#edition}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#edition Account#edition}
         '''
         result = self._values.get("edition")
         assert result is not None, "Required property 'edition' is missing"
@@ -746,7 +792,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This email address is used to send any notifications about the account. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#email Account#email}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#email Account#email}
         '''
         result = self._values.get("email")
         assert result is not None, "Required property 'email' is missing"
@@ -758,7 +804,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The minimum is 3 days and the maximum is 90 days.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#grace_period_in_days Account#grace_period_in_days}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#grace_period_in_days Account#grace_period_in_days}
         '''
         result = self._values.get("grace_period_in_days")
         assert result is not None, "Required property 'grace_period_in_days' is missing"
@@ -768,7 +814,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Specifies the identifier (i.e. name) for the account. It must be unique within an organization, regardless of which Snowflake Region the account is in and must start with an alphabetic character and cannot contain spaces or special characters except for underscores (_). Note that if the account name includes underscores, features that do not accept account names with underscores (e.g. Okta SSO or SCIM) can reference a version of the account name that substitutes hyphens (-) for the underscores.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#name Account#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#name Account#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -780,7 +826,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Either admin_password or admin_rsa_public_key has to be specified. This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_password Account#admin_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_password Account#admin_password}
         '''
         result = self._values.get("admin_password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -791,7 +837,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Either admin_password or admin_rsa_public_key has to be specified. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_rsa_public_key Account#admin_rsa_public_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_rsa_public_key Account#admin_rsa_public_key}
         '''
         result = self._values.get("admin_rsa_public_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -802,7 +848,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid options are: ``PERSON`` | ``SERVICE`` | ``LEGACY_SERVICE`` External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#admin_user_type Account#admin_user_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#admin_user_type Account#admin_user_type}
         '''
         result = self._values.get("admin_user_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -811,7 +857,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the account.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#comment Account#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#comment Account#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -822,14 +868,14 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#first_name Account#first_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#first_name Account#first_name}
         '''
         result = self._values.get("first_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#id Account#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#id Account#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -839,11 +885,11 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def is_org_admin(self) -> typing.Optional[builtins.str]:
-        '''Sets an account property that determines whether the ORGADMIN role is enabled in the account.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Sets an account property that determines whether the ORGADMIN role is enabled in the account.
 
         Only an organization administrator (i.e. user with the ORGADMIN role) can set the property.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#is_org_admin Account#is_org_admin}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#is_org_admin Account#is_org_admin}
         '''
         result = self._values.get("is_org_admin")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -854,18 +900,18 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#last_name Account#last_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#last_name Account#last_name}
         '''
         result = self._values.get("last_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def must_change_password(self) -> typing.Optional[builtins.str]:
-        '''Specifies whether the new user created to administer the account is forced to change their password upon first login into the account.
+        '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether the new user created to administer the account is forced to change their password upon first login into the account.
 
         This field cannot be used whenever admin_user_type is set to SERVICE. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#must_change_password Account#must_change_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#must_change_password Account#must_change_password}
         '''
         result = self._values.get("must_change_password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -874,7 +920,7 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def region(self) -> typing.Optional[builtins.str]:
         '''`Snowflake Region ID <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-snowflake-region-ids>`_ of the region where the account is created. If no value is provided, Snowflake creates the account in the same Snowflake Region as the current account (i.e. the account in which the CREATE ACCOUNT statement is executed.).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#region Account#region}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#region Account#region}
         '''
         result = self._values.get("region")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -885,10 +931,19 @@ class AccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         To retrieve the region group ID for existing accounts in your organization, execute the `SHOW REGIONS <https://docs.snowflake.com/en/sql-reference/sql/show-regions>`_ command. For information about when you might need to specify region group, see `Region groups <https://docs.snowflake.com/en/user-guide/admin-account-identifier.html#label-region-groups>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/account#region_group Account#region_group}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#region_group Account#region_group}
         '''
         result = self._values.get("region_group")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["AccountTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#timeouts Account#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["AccountTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -1180,12 +1235,213 @@ class AccountShowOutputOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.account.AccountTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class AccountTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#create Account#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#delete Account#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#read Account#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#update Account#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b187420e7ff4a018bb3f35091d14a4d99d5cdefdd7dc48e2ed49f0a5bb2a633c)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#create Account#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#delete Account#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#read Account#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/account#update Account#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "AccountTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class AccountTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.account.AccountTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a1aa81549842ccdf8066551d39449e7e6be982e4bbdc9786bf515ff2137fab3)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2bd5bc145d7b3c1fe46c4e74acfa257b7c7c0c4e48c5577ed4e814daf54fdf8a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__65cdb2031f9e4abe94dcf872381c3dd40aabdf33e1192552e08da90f9ea45f3f)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__445f6678bc39f0fc78d4169f6e4a8bcdc4fab30ac458b64ebe114c3d53a8bb87)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4df87cfbb4b56bdaf370b005ea7b175f1a536681db12c815455fd472eb0f0a12)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[AccountTimeouts, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[AccountTimeouts, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[AccountTimeouts, _cdktf_9a9027ec.IResolvable]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f0c0732e709677d4e8e930392d40ce7c5de9ecb8cc191bd95bb91a87bf42b810)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "Account",
     "AccountConfig",
     "AccountShowOutput",
     "AccountShowOutputList",
     "AccountShowOutputOutputReference",
+    "AccountTimeouts",
+    "AccountTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -1210,6 +1466,7 @@ def _typecheckingstub__a29373c62148b7ac2a789ffbf18a14e4d195a99589893aeffac7dc5a2
     must_change_password: typing.Optional[builtins.str] = None,
     region: typing.Optional[builtins.str] = None,
     region_group: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[AccountTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -1351,6 +1608,7 @@ def _typecheckingstub__8b266165bc094077007b82aaae53c2057678021a29a5a57ee79781990
     must_change_password: typing.Optional[builtins.str] = None,
     region: typing.Optional[builtins.str] = None,
     region_group: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[AccountTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -1398,6 +1656,53 @@ def _typecheckingstub__b984dfe760bbe7cd439ea5e1b477b231f7135870293218f849206fc6e
 
 def _typecheckingstub__509e58dce6e65f2f624d4342982284e4a8fc7b42c7c39918bd65964248452454(
     value: typing.Optional[AccountShowOutput],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b187420e7ff4a018bb3f35091d14a4d99d5cdefdd7dc48e2ed49f0a5bb2a633c(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a1aa81549842ccdf8066551d39449e7e6be982e4bbdc9786bf515ff2137fab3(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2bd5bc145d7b3c1fe46c4e74acfa257b7c7c0c4e48c5577ed4e814daf54fdf8a(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__65cdb2031f9e4abe94dcf872381c3dd40aabdf33e1192552e08da90f9ea45f3f(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__445f6678bc39f0fc78d4169f6e4a8bcdc4fab30ac458b64ebe114c3d53a8bb87(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4df87cfbb4b56bdaf370b005ea7b175f1a536681db12c815455fd472eb0f0a12(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f0c0732e709677d4e8e930392d40ce7c5de9ecb8cc191bd95bb91a87bf42b810(
+    value: typing.Optional[typing.Union[AccountTimeouts, _cdktf_9a9027ec.IResolvable]],
 ) -> None:
     """Type checking stubs"""
     pass

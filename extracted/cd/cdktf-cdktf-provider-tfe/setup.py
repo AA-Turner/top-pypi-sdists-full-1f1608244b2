@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-tfe",
-    "version": "11.13.2",
+    "version": "11.14.0",
     "description": "Prebuilt tfe Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-tfe.git",
@@ -113,7 +113,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_tfe._jsii": [
-            "provider-tfe@11.13.2.jsii.tgz"
+            "provider-tfe@11.14.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_tfe": [
             "py.typed"

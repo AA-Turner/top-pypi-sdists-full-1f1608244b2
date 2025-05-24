@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#include "geoarrow.h"
+#include "geoarrow/geoarrow.h"
 
 const char* GeoArrowVersion(void) { return GEOARROW_VERSION; }
 
@@ -28,13 +28,5 @@ GeoArrowErrorCode GeoArrowErrorSet(struct GeoArrowError* error, const char* fmt,
     return ERANGE;
   } else {
     return GEOARROW_OK;
-  }
-}
-
-const char* GeoArrowErrorMessage(struct GeoArrowError* error) {
-  if (error == NULL) {
-    return "";
-  } else {
-    return error->message;
   }
 }

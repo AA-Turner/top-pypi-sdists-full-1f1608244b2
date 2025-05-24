@@ -210,6 +210,23 @@ class Client:
         result = await self.session.send_ping()
         return isinstance(result, mcp.types.EmptyResult)
 
+    async def cancel(
+        self,
+        request_id: str | int,
+        reason: str | None = None,
+    ) -> None:
+        """Send a cancellation notification for an in-progress request."""
+        notification = mcp.types.ClientNotification(
+            mcp.types.CancelledNotification(
+                method="notifications/cancelled",
+                params=mcp.types.CancelledNotificationParams(
+                    requestId=request_id,
+                    reason=reason,
+                ),
+            )
+        )
+        await self.session.send_notification(notification)
+
     async def progress(
         self,
         progress_token: str | int,
@@ -322,7 +339,12 @@ class Client:
             RuntimeError: If called while the client is not connected.
         """
         if isinstance(uri, str):
-            uri = AnyUrl(uri)  # Ensure AnyUrl
+            try:
+                uri = AnyUrl(uri)  # Ensure AnyUrl
+            except Exception as e:
+                raise ValueError(
+                    f"Provided resource URI is invalid: {str(uri)!r}"
+                ) from e
         result = await self.read_resource_mcp(uri)
         return result.contents
 

@@ -50,6 +50,11 @@ from .models.delete_account200_response import DeleteAccount200Response
 from .models.delete_account_request import DeleteAccountRequest
 from .models.delete_account_response import DeleteAccountResponse
 from .models.deleted_account import DeletedAccount
+from .models.downgrade_license import DowngradeLicense
+from .models.downgrade_license200_response import DowngradeLicense200Response
+from .models.downgrade_license_request import DowngradeLicenseRequest
+from .models.downgrade_license_response import DowngradeLicenseResponse
+from .models.downgraded_license import DowngradedLicense
 from .models.entitlement_requirement import EntitlementRequirement
 from .models.entitlement_type import EntitlementType
 from .models.error import Error
@@ -132,6 +137,11 @@ from .models.refresh_access_token import RefreshAccessToken
 from .models.refresh_access_token200_response import RefreshAccessToken200Response
 from .models.refresh_access_token_request import RefreshAccessTokenRequest
 from .models.refresh_access_token_response import RefreshAccessTokenResponse
+from .models.release_resources import ReleaseResources
+from .models.release_resources200_response import ReleaseResources200Response
+from .models.release_resources_request import ReleaseResourcesRequest
+from .models.release_resources_response import ReleaseResourcesResponse
+from .models.release_resources_status import ReleaseResourcesStatus
 from .models.resource_type import ResourceType
 from .models.service_account_credential import ServiceAccountCredential
 from .models.service_account_type import ServiceAccountType
@@ -141,6 +151,11 @@ from .models.time_range import TimeRange
 from .models.token_authentication import TokenAuthentication
 from .models.token_credential import TokenCredential
 from .models.token_type import TokenType
+from .models.transfer_data import TransferData
+from .models.transfer_data200_response import TransferData200Response
+from .models.transfer_data_request import TransferDataRequest
+from .models.transfer_data_response import TransferDataResponse
+from .models.transfer_data_status import TransferDataStatus
 from .models.unassign_entitlement import UnassignEntitlement
 from .models.unassign_entitlement200_response import UnassignEntitlement200Response
 from .models.unassign_entitlement_request import UnassignEntitlementRequest
@@ -205,6 +220,11 @@ __all__ = [
     "DeleteAccountRequest",
     "DeleteAccountResponse",
     "DeletedAccount",
+    "DowngradeLicense",
+    "DowngradeLicense200Response",
+    "DowngradeLicenseRequest",
+    "DowngradeLicenseResponse",
+    "DowngradedLicense",
     "EntitlementRequirement",
     "EntitlementType",
     "Error",
@@ -287,6 +307,11 @@ __all__ = [
     "RefreshAccessToken200Response",
     "RefreshAccessTokenRequest",
     "RefreshAccessTokenResponse",
+    "ReleaseResources",
+    "ReleaseResources200Response",
+    "ReleaseResourcesRequest",
+    "ReleaseResourcesResponse",
+    "ReleaseResourcesStatus",
     "ResourceType",
     "ServiceAccountCredential",
     "ServiceAccountType",
@@ -296,6 +321,11 @@ __all__ = [
     "TokenAuthentication",
     "TokenCredential",
     "TokenType",
+    "TransferData",
+    "TransferData200Response",
+    "TransferDataRequest",
+    "TransferDataResponse",
+    "TransferDataStatus",
     "UnassignEntitlement",
     "UnassignEntitlement200Response",
     "UnassignEntitlementRequest",

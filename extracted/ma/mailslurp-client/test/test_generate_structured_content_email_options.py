@@ -51,7 +51,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                             example = mailslurp_client.models.meta_data.metaData(), 
                             format = '0', 
                             items = mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                                default = mailslurp_client.models.meta_data.metaData(), 
                                 description = '0', 
+                                example = mailslurp_client.models.meta_data.metaData(), 
                                 format = '0', 
                                 max_items = 0, 
                                 min_items = 0, 
@@ -60,7 +62,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                                 pattern = '0', 
                                 properties = {
                                     'key' : mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                                        default = mailslurp_client.models.meta_data.metaData(), 
                                         description = '0', 
+                                        example = mailslurp_client.models.meta_data.metaData(), 
                                         format = '0', 
                                         max_items = 0, 
                                         min_items = 0, 
@@ -101,7 +105,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                             pattern = '0', 
                             properties = {
                                 'key' : mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                                    default = mailslurp_client.models.meta_data.metaData(), 
                                     description = '0', 
+                                    example = mailslurp_client.models.meta_data.metaData(), 
                                     format = '0', 
                                     max_items = 0, 
                                     min_items = 0, 
@@ -138,7 +144,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                     example = mailslurp_client.models.meta_data.metaData(), 
                     format = '0', 
                     items = mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                        default = mailslurp_client.models.meta_data.metaData(), 
                         description = '0', 
+                        example = mailslurp_client.models.meta_data.metaData(), 
                         format = '0', 
                         max_items = 0, 
                         min_items = 0, 
@@ -159,7 +167,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                     pattern = '0', 
                     properties = {
                         'key' : mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                            default = mailslurp_client.models.meta_data.metaData(), 
                             description = '0', 
+                            example = mailslurp_client.models.meta_data.metaData(), 
                             format = '0', 
                             max_items = 0, 
                             min_items = 0, 
@@ -202,7 +212,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                             example = mailslurp_client.models.meta_data.metaData(), 
                             format = '0', 
                             items = mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                                default = mailslurp_client.models.meta_data.metaData(), 
                                 description = '0', 
+                                example = mailslurp_client.models.meta_data.metaData(), 
                                 format = '0', 
                                 max_items = 0, 
                                 min_items = 0, 
@@ -211,7 +223,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                                 pattern = '0', 
                                 properties = {
                                     'key' : mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                                        default = mailslurp_client.models.meta_data.metaData(), 
                                         description = '0', 
+                                        example = mailslurp_client.models.meta_data.metaData(), 
                                         format = '0', 
                                         max_items = 0, 
                                         min_items = 0, 
@@ -252,7 +266,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                             pattern = '0', 
                             properties = {
                                 'key' : mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                                    default = mailslurp_client.models.meta_data.metaData(), 
                                     description = '0', 
+                                    example = mailslurp_client.models.meta_data.metaData(), 
                                     format = '0', 
                                     max_items = 0, 
                                     min_items = 0, 
@@ -289,7 +305,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                     example = mailslurp_client.models.meta_data.metaData(), 
                     format = '0', 
                     items = mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                        default = mailslurp_client.models.meta_data.metaData(), 
                         description = '0', 
+                        example = mailslurp_client.models.meta_data.metaData(), 
                         format = '0', 
                         max_items = 0, 
                         min_items = 0, 
@@ -310,7 +328,9 @@ class TestGenerateStructuredContentEmailOptions(unittest.TestCase):
                     pattern = '0', 
                     properties = {
                         'key' : mailslurp_client.models.structured_output_schema.StructuredOutputSchema(
+                            default = mailslurp_client.models.meta_data.metaData(), 
                             description = '0', 
+                            example = mailslurp_client.models.meta_data.metaData(), 
                             format = '0', 
                             max_items = 0, 
                             min_items = 0, 

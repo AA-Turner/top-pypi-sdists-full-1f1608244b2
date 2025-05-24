@@ -1,38 +1,21 @@
 Metadata-Version: 2.1
 Name: modin
-Version: 0.32.0
+Version: 0.33.0
 Summary: Modin: Make your pandas code run faster by changing one line of code.
 Home-page: https://github.com/modin-project/modin
 License: Apache 2
+Platform: UNKNOWN
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+Provides-Extra: dask
+Provides-Extra: ray
+Provides-Extra: mpi
+Provides-Extra: consortium-standard
+Provides-Extra: spreadsheet
+Provides-Extra: all
 License-File: LICENSE
 License-File: LICENSE_HEADER
 License-File: NOTICE
-Requires-Dist: pandas<2.3,>=2.2
-Requires-Dist: packaging>=21.0
-Requires-Dist: numpy>=1.22.4
-Requires-Dist: fsspec>=2022.11.0
-Requires-Dist: psutil>=5.8.0
-Provides-Extra: dask
-Requires-Dist: dask>=2.22.0; extra == "dask"
-Requires-Dist: distributed>=2.22.0; extra == "dask"
-Provides-Extra: ray
-Requires-Dist: ray!=2.5.0,>=2.1.0; extra == "ray"
-Requires-Dist: pyarrow>=10.0.1; extra == "ray"
-Provides-Extra: mpi
-Requires-Dist: unidist[mpi]>=0.2.1; extra == "mpi"
-Provides-Extra: consortium-standard
-Requires-Dist: dataframe-api-compat>=0.2.7; extra == "consortium-standard"
-Provides-Extra: spreadsheet
-Requires-Dist: modin-spreadsheet>=0.1.0; extra == "spreadsheet"
-Provides-Extra: all
-Requires-Dist: dask>=2.22.0; extra == "all"
-Requires-Dist: distributed>=2.22.0; extra == "all"
-Requires-Dist: ray!=2.5.0,>=2.1.0; extra == "all"
-Requires-Dist: pyarrow>=10.0.1; extra == "all"
-Requires-Dist: modin-spreadsheet>=0.1.0; extra == "all"
-Requires-Dist: dataframe-api-compat>=0.2.7; extra == "all"
 
 <p align="center"><a href="https://modin.readthedocs.io"><img width=77% alt="" src="https://github.com/modin-project/modin/raw/7c009c747caa90554607e30b9ac2bd1b190b8c7d/docs/img/MODIN_ver2_hrz.png?raw=true"></a></p>
 <h2 align="center">Scale your pandas workflows by changing one line of code</h2>
@@ -315,3 +298,5 @@ For more information on how to contribute to Modin, check out the
 ### License
 
 [Apache License 2.0](LICENSE)
+
+

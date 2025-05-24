@@ -1,7 +1,7 @@
 r'''
 # `snowflake_grant_account_role`
 
-Refer to the Terraform Registry for docs: [`snowflake_grant_account_role`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role).
+Refer to the Terraform Registry for docs: [`snowflake_grant_account_role`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class GrantAccountRole(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.grantAccountRole.GrantAccountRole",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role snowflake_grant_account_role}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role snowflake_grant_account_role}.'''
 
     def __init__(
         self,
@@ -54,6 +54,7 @@ class GrantAccountRole(
         role_name: builtins.str,
         id: typing.Optional[builtins.str] = None,
         parent_role_name: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["GrantAccountRoleTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         user_name: typing.Optional[builtins.str] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -63,14 +64,15 @@ class GrantAccountRole(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role snowflake_grant_account_role} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role snowflake_grant_account_role} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param role_name: The fully qualified name of the role which will be granted to the user or parent role. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#role_name GrantAccountRole#role_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#id GrantAccountRole#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param parent_role_name: The fully qualified name of the parent role which will create a parent-child relationship between the roles. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#parent_role_name GrantAccountRole#parent_role_name}
-        :param user_name: The fully qualified name of the user on which specified role will be granted. For more information about this resource, see `docs <./user>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#user_name GrantAccountRole#user_name}
+        :param role_name: The fully qualified name of the role which will be granted to the user or parent role. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#role_name GrantAccountRole#role_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#id GrantAccountRole#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param parent_role_name: The fully qualified name of the parent role which will create a parent-child relationship between the roles. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#parent_role_name GrantAccountRole#parent_role_name}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#timeouts GrantAccountRole#timeouts}
+        :param user_name: The fully qualified name of the user on which specified role will be granted. For more information about this resource, see `docs <./user>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#user_name GrantAccountRole#user_name}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -87,6 +89,7 @@ class GrantAccountRole(
             role_name=role_name,
             id=id,
             parent_role_name=parent_role_name,
+            timeouts=timeouts,
             user_name=user_name,
             connection=connection,
             count=count,
@@ -112,7 +115,7 @@ class GrantAccountRole(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the GrantAccountRole to import.
-        :param import_from_id: The id of the existing GrantAccountRole that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing GrantAccountRole that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the GrantAccountRole to import is found.
         '''
         if __debug__:
@@ -123,6 +126,27 @@ class GrantAccountRole(
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
 
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#create GrantAccountRole#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#delete GrantAccountRole#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#read GrantAccountRole#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#update GrantAccountRole#update}.
+        '''
+        value = GrantAccountRoleTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
+
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetId", []))
@@ -130,6 +154,10 @@ class GrantAccountRole(
     @jsii.member(jsii_name="resetParentRoleName")
     def reset_parent_role_name(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetParentRoleName", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="resetUserName")
     def reset_user_name(self) -> None:
@@ -149,6 +177,11 @@ class GrantAccountRole(
         return typing.cast(builtins.str, jsii.sget(cls, "tfResourceType"))
 
     @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "GrantAccountRoleTimeoutsOutputReference":
+        return typing.cast("GrantAccountRoleTimeoutsOutputReference", jsii.get(self, "timeouts"))
+
+    @builtins.property
     @jsii.member(jsii_name="idInput")
     def id_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "idInput"))
@@ -162,6 +195,13 @@ class GrantAccountRole(
     @jsii.member(jsii_name="roleNameInput")
     def role_name_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "roleNameInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "GrantAccountRoleTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "GrantAccountRoleTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="userNameInput")
@@ -231,6 +271,7 @@ class GrantAccountRole(
         "role_name": "roleName",
         "id": "id",
         "parent_role_name": "parentRoleName",
+        "timeouts": "timeouts",
         "user_name": "userName",
     },
 )
@@ -248,6 +289,7 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         role_name: builtins.str,
         id: typing.Optional[builtins.str] = None,
         parent_role_name: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["GrantAccountRoleTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         user_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
@@ -258,13 +300,16 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param role_name: The fully qualified name of the role which will be granted to the user or parent role. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#role_name GrantAccountRole#role_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#id GrantAccountRole#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param parent_role_name: The fully qualified name of the parent role which will create a parent-child relationship between the roles. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#parent_role_name GrantAccountRole#parent_role_name}
-        :param user_name: The fully qualified name of the user on which specified role will be granted. For more information about this resource, see `docs <./user>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#user_name GrantAccountRole#user_name}
+        :param role_name: The fully qualified name of the role which will be granted to the user or parent role. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#role_name GrantAccountRole#role_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#id GrantAccountRole#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param parent_role_name: The fully qualified name of the parent role which will create a parent-child relationship between the roles. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#parent_role_name GrantAccountRole#parent_role_name}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#timeouts GrantAccountRole#timeouts}
+        :param user_name: The fully qualified name of the user on which specified role will be granted. For more information about this resource, see `docs <./user>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#user_name GrantAccountRole#user_name}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = GrantAccountRoleTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__025ffc1e8bd48b6ac250411e1f13ea889cb31d0e0722124198b47ba94d6a2c57)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -277,6 +322,7 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument role_name", value=role_name, expected_type=type_hints["role_name"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument parent_role_name", value=parent_role_name, expected_type=type_hints["parent_role_name"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
             check_type(argname="argument user_name", value=user_name, expected_type=type_hints["user_name"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "role_name": role_name,
@@ -299,6 +345,8 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["id"] = id
         if parent_role_name is not None:
             self._values["parent_role_name"] = parent_role_name
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
         if user_name is not None:
             self._values["user_name"] = user_name
 
@@ -372,7 +420,7 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./account_role>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#role_name GrantAccountRole#role_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#role_name GrantAccountRole#role_name}
         '''
         result = self._values.get("role_name")
         assert result is not None, "Required property 'role_name' is missing"
@@ -380,7 +428,7 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#id GrantAccountRole#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#id GrantAccountRole#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -394,10 +442,19 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./account_role>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#parent_role_name GrantAccountRole#parent_role_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#parent_role_name GrantAccountRole#parent_role_name}
         '''
         result = self._values.get("parent_role_name")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["GrantAccountRoleTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#timeouts GrantAccountRole#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["GrantAccountRoleTimeouts"], result)
 
     @builtins.property
     def user_name(self) -> typing.Optional[builtins.str]:
@@ -405,7 +462,7 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For more information about this resource, see `docs <./user>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/grant_account_role#user_name GrantAccountRole#user_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#user_name GrantAccountRole#user_name}
         '''
         result = self._values.get("user_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -422,9 +479,210 @@ class GrantAccountRoleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.grantAccountRole.GrantAccountRoleTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class GrantAccountRoleTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#create GrantAccountRole#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#delete GrantAccountRole#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#read GrantAccountRole#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#update GrantAccountRole#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ec923a0915146e242814dcae1ea9eb9aa35dad0baf913d62ac4579296a1d3a3c)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#create GrantAccountRole#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#delete GrantAccountRole#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#read GrantAccountRole#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/grant_account_role#update GrantAccountRole#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "GrantAccountRoleTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class GrantAccountRoleTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.grantAccountRole.GrantAccountRoleTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1632d59dc1e3294cb58f693cd8144f703305734d94d07ec5a82b8ad8d5633998)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e47fce37cb9e078284741d24a12e26ebcdc0040089dc7826f239794881c97a51)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c0c118a4fe4f36582f81076e3e8b67fad0e8e1464c74f9f747b1d4f1ab1b5d50)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d8668cca4d3a6e14dd7eea24a4f1df1a619d8c391f7c6e428d86ffa97301ce91)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__89f9439dc2308a7bd183a6098fb6ab2560e72ec70c468ce56c004f2d51f37986)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantAccountRoleTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantAccountRoleTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantAccountRoleTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__89cbdf0759fd5c53602d018be624bd89b6d892b1ff5812947ae08dfe5dbac088)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "GrantAccountRole",
     "GrantAccountRoleConfig",
+    "GrantAccountRoleTimeouts",
+    "GrantAccountRoleTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -436,6 +694,7 @@ def _typecheckingstub__f72396ee777a5536771582b03f8e775f5802d47890b790a5fef4948da
     role_name: builtins.str,
     id: typing.Optional[builtins.str] = None,
     parent_role_name: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[GrantAccountRoleTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     user_name: typing.Optional[builtins.str] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -493,7 +752,55 @@ def _typecheckingstub__025ffc1e8bd48b6ac250411e1f13ea889cb31d0e0722124198b47ba94
     role_name: builtins.str,
     id: typing.Optional[builtins.str] = None,
     parent_role_name: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[GrantAccountRoleTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     user_name: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ec923a0915146e242814dcae1ea9eb9aa35dad0baf913d62ac4579296a1d3a3c(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1632d59dc1e3294cb58f693cd8144f703305734d94d07ec5a82b8ad8d5633998(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e47fce37cb9e078284741d24a12e26ebcdc0040089dc7826f239794881c97a51(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c0c118a4fe4f36582f81076e3e8b67fad0e8e1464c74f9f747b1d4f1ab1b5d50(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d8668cca4d3a6e14dd7eea24a4f1df1a619d8c391f7c6e428d86ffa97301ce91(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__89f9439dc2308a7bd183a6098fb6ab2560e72ec70c468ce56c004f2d51f37986(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__89cbdf0759fd5c53602d018be624bd89b6d892b1ff5812947ae08dfe5dbac088(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, GrantAccountRoleTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

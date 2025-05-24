@@ -1,7 +1,7 @@
 r'''
 # `tfe_organization_run_task_global_settings`
 
-Refer to the Terraform Registry for docs: [`tfe_organization_run_task_global_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings).
+Refer to the Terraform Registry for docs: [`tfe_organization_run_task_global_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OrganizationRunTaskGlobalSettings(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.organizationRunTaskGlobalSettings.OrganizationRunTaskGlobalSettings",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings tfe_organization_run_task_global_settings}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings tfe_organization_run_task_global_settings}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class OrganizationRunTaskGlobalSettings(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings tfe_organization_run_task_global_settings} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings tfe_organization_run_task_global_settings} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param enforcement_level: The enforcement level of the global task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#enforcement_level OrganizationRunTaskGlobalSettings#enforcement_level}
-        :param stages: Which stages the task will run in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#stages OrganizationRunTaskGlobalSettings#stages}
-        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#task_id OrganizationRunTaskGlobalSettings#task_id}
-        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#enabled OrganizationRunTaskGlobalSettings#enabled}
+        :param enforcement_level: The enforcement level of the global task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#enforcement_level OrganizationRunTaskGlobalSettings#enforcement_level}
+        :param stages: Which stages the task will run in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#stages OrganizationRunTaskGlobalSettings#stages}
+        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#task_id OrganizationRunTaskGlobalSettings#task_id}
+        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#enabled OrganizationRunTaskGlobalSettings#enabled}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class OrganizationRunTaskGlobalSettings(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OrganizationRunTaskGlobalSettings to import.
-        :param import_from_id: The id of the existing OrganizationRunTaskGlobalSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OrganizationRunTaskGlobalSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OrganizationRunTaskGlobalSettings to import is found.
         '''
         if __debug__:
@@ -260,10 +260,10 @@ class OrganizationRunTaskGlobalSettingsConfig(_cdktf_9a9027ec.TerraformMetaArgum
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param enforcement_level: The enforcement level of the global task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#enforcement_level OrganizationRunTaskGlobalSettings#enforcement_level}
-        :param stages: Which stages the task will run in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#stages OrganizationRunTaskGlobalSettings#stages}
-        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#task_id OrganizationRunTaskGlobalSettings#task_id}
-        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#enabled OrganizationRunTaskGlobalSettings#enabled}
+        :param enforcement_level: The enforcement level of the global task. Valid values are ``advisory`` and ``mandatory``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#enforcement_level OrganizationRunTaskGlobalSettings#enforcement_level}
+        :param stages: Which stages the task will run in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#stages OrganizationRunTaskGlobalSettings#stages}
+        :param task_id: The id of the run task. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#task_id OrganizationRunTaskGlobalSettings#task_id}
+        :param enabled: Whether the run task will be applied globally. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#enabled OrganizationRunTaskGlobalSettings#enabled}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -370,7 +370,7 @@ class OrganizationRunTaskGlobalSettingsConfig(_cdktf_9a9027ec.TerraformMetaArgum
     def enforcement_level(self) -> builtins.str:
         '''The enforcement level of the global task. Valid values are ``advisory`` and ``mandatory``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#enforcement_level OrganizationRunTaskGlobalSettings#enforcement_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#enforcement_level OrganizationRunTaskGlobalSettings#enforcement_level}
         '''
         result = self._values.get("enforcement_level")
         assert result is not None, "Required property 'enforcement_level' is missing"
@@ -380,7 +380,7 @@ class OrganizationRunTaskGlobalSettingsConfig(_cdktf_9a9027ec.TerraformMetaArgum
     def stages(self) -> typing.List[builtins.str]:
         '''Which stages the task will run in. Valid values are ``pre_plan``, ``post_plan``, ``pre_apply`` and ``post_apply``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#stages OrganizationRunTaskGlobalSettings#stages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#stages OrganizationRunTaskGlobalSettings#stages}
         '''
         result = self._values.get("stages")
         assert result is not None, "Required property 'stages' is missing"
@@ -390,7 +390,7 @@ class OrganizationRunTaskGlobalSettingsConfig(_cdktf_9a9027ec.TerraformMetaArgum
     def task_id(self) -> builtins.str:
         '''The id of the run task.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#task_id OrganizationRunTaskGlobalSettings#task_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#task_id OrganizationRunTaskGlobalSettings#task_id}
         '''
         result = self._values.get("task_id")
         assert result is not None, "Required property 'task_id' is missing"
@@ -402,7 +402,7 @@ class OrganizationRunTaskGlobalSettingsConfig(_cdktf_9a9027ec.TerraformMetaArgum
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the run task will be applied globally.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_run_task_global_settings#enabled OrganizationRunTaskGlobalSettings#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_run_task_global_settings#enabled OrganizationRunTaskGlobalSettings#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

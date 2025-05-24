@@ -1,7 +1,7 @@
 r'''
 # `snowflake_streamlit`
 
-Refer to the Terraform Registry for docs: [`snowflake_streamlit`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit).
+Refer to the Terraform Registry for docs: [`snowflake_streamlit`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Streamlit(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.streamlit.Streamlit",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit snowflake_streamlit}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit snowflake_streamlit}.'''
 
     def __init__(
         self,
@@ -61,6 +61,7 @@ class Streamlit(
         external_access_integrations: typing.Optional[typing.Sequence[builtins.str]] = None,
         id: typing.Optional[builtins.str] = None,
         query_warehouse: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["StreamlitTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         title: typing.Optional[builtins.str] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -70,21 +71,22 @@ class Streamlit(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit snowflake_streamlit} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit snowflake_streamlit} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param database: The database in which to create the streamlit Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#database Streamlit#database}
-        :param main_file: Specifies the filename of the Streamlit Python application. This filename is relative to the value of ``directory_location``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#main_file Streamlit#main_file}
-        :param name: String that specifies the identifier (i.e. name) for the streamlit; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#name Streamlit#name}
-        :param schema: The schema in which to create the streamlit. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#schema Streamlit#schema}
-        :param stage: The stage in which streamlit files are located. For more information about this resource, see `docs <./stage>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#stage Streamlit#stage}
-        :param comment: Specifies a comment for the streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#comment Streamlit#comment}
-        :param directory_location: Specifies the full path to the named stage containing the Streamlit Python files, media files, and the environment.yml file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#directory_location Streamlit#directory_location}
-        :param external_access_integrations: External access integrations connected to the Streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#external_access_integrations Streamlit#external_access_integrations}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#id Streamlit#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param query_warehouse: Specifies the warehouse where SQL queries issued by the Streamlit application are run. Due to Snowflake limitations warehouse identifier can consist of only upper-cased letters. For more information about this resource, see `docs <./warehouse>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#query_warehouse Streamlit#query_warehouse}
-        :param title: Specifies a title for the Streamlit app to display in Snowsight. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#title Streamlit#title}
+        :param database: The database in which to create the streamlit Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#database Streamlit#database}
+        :param main_file: Specifies the filename of the Streamlit Python application. This filename is relative to the value of ``directory_location``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#main_file Streamlit#main_file}
+        :param name: String that specifies the identifier (i.e. name) for the streamlit; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#name Streamlit#name}
+        :param schema: The schema in which to create the streamlit. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#schema Streamlit#schema}
+        :param stage: The stage in which streamlit files are located. For more information about this resource, see `docs <./stage>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#stage Streamlit#stage}
+        :param comment: Specifies a comment for the streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#comment Streamlit#comment}
+        :param directory_location: Specifies the full path to the named stage containing the Streamlit Python files, media files, and the environment.yml file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#directory_location Streamlit#directory_location}
+        :param external_access_integrations: External access integrations connected to the Streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#external_access_integrations Streamlit#external_access_integrations}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#id Streamlit#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param query_warehouse: Specifies the warehouse where SQL queries issued by the Streamlit application are run. Due to Snowflake limitations warehouse identifier can consist of only upper-cased letters. For more information about this resource, see `docs <./warehouse>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#query_warehouse Streamlit#query_warehouse}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#timeouts Streamlit#timeouts}
+        :param title: Specifies a title for the Streamlit app to display in Snowsight. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#title Streamlit#title}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -108,6 +110,7 @@ class Streamlit(
             external_access_integrations=external_access_integrations,
             id=id,
             query_warehouse=query_warehouse,
+            timeouts=timeouts,
             title=title,
             connection=connection,
             count=count,
@@ -133,7 +136,7 @@ class Streamlit(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Streamlit to import.
-        :param import_from_id: The id of the existing Streamlit that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Streamlit that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Streamlit to import is found.
         '''
         if __debug__:
@@ -143,6 +146,27 @@ class Streamlit(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#create Streamlit#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#delete Streamlit#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#read Streamlit#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#update Streamlit#update}.
+        '''
+        value = StreamlitTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetComment")
     def reset_comment(self) -> None:
@@ -163,6 +187,10 @@ class Streamlit(
     @jsii.member(jsii_name="resetQueryWarehouse")
     def reset_query_warehouse(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetQueryWarehouse", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="resetTitle")
     def reset_title(self) -> None:
@@ -195,6 +223,11 @@ class Streamlit(
     @jsii.member(jsii_name="showOutput")
     def show_output(self) -> "StreamlitShowOutputList":
         return typing.cast("StreamlitShowOutputList", jsii.get(self, "showOutput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "StreamlitTimeoutsOutputReference":
+        return typing.cast("StreamlitTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="commentInput")
@@ -247,6 +280,13 @@ class Streamlit(
     @jsii.member(jsii_name="stageInput")
     def stage_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "stageInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "StreamlitTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "StreamlitTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="titleInput")
@@ -407,6 +447,7 @@ class Streamlit(
         "external_access_integrations": "externalAccessIntegrations",
         "id": "id",
         "query_warehouse": "queryWarehouse",
+        "timeouts": "timeouts",
         "title": "title",
     },
 )
@@ -431,6 +472,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         external_access_integrations: typing.Optional[typing.Sequence[builtins.str]] = None,
         id: typing.Optional[builtins.str] = None,
         query_warehouse: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["StreamlitTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         title: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
@@ -441,20 +483,23 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param database: The database in which to create the streamlit Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#database Streamlit#database}
-        :param main_file: Specifies the filename of the Streamlit Python application. This filename is relative to the value of ``directory_location``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#main_file Streamlit#main_file}
-        :param name: String that specifies the identifier (i.e. name) for the streamlit; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#name Streamlit#name}
-        :param schema: The schema in which to create the streamlit. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#schema Streamlit#schema}
-        :param stage: The stage in which streamlit files are located. For more information about this resource, see `docs <./stage>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#stage Streamlit#stage}
-        :param comment: Specifies a comment for the streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#comment Streamlit#comment}
-        :param directory_location: Specifies the full path to the named stage containing the Streamlit Python files, media files, and the environment.yml file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#directory_location Streamlit#directory_location}
-        :param external_access_integrations: External access integrations connected to the Streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#external_access_integrations Streamlit#external_access_integrations}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#id Streamlit#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param query_warehouse: Specifies the warehouse where SQL queries issued by the Streamlit application are run. Due to Snowflake limitations warehouse identifier can consist of only upper-cased letters. For more information about this resource, see `docs <./warehouse>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#query_warehouse Streamlit#query_warehouse}
-        :param title: Specifies a title for the Streamlit app to display in Snowsight. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#title Streamlit#title}
+        :param database: The database in which to create the streamlit Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#database Streamlit#database}
+        :param main_file: Specifies the filename of the Streamlit Python application. This filename is relative to the value of ``directory_location``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#main_file Streamlit#main_file}
+        :param name: String that specifies the identifier (i.e. name) for the streamlit; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#name Streamlit#name}
+        :param schema: The schema in which to create the streamlit. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#schema Streamlit#schema}
+        :param stage: The stage in which streamlit files are located. For more information about this resource, see `docs <./stage>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#stage Streamlit#stage}
+        :param comment: Specifies a comment for the streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#comment Streamlit#comment}
+        :param directory_location: Specifies the full path to the named stage containing the Streamlit Python files, media files, and the environment.yml file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#directory_location Streamlit#directory_location}
+        :param external_access_integrations: External access integrations connected to the Streamlit. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#external_access_integrations Streamlit#external_access_integrations}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#id Streamlit#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param query_warehouse: Specifies the warehouse where SQL queries issued by the Streamlit application are run. Due to Snowflake limitations warehouse identifier can consist of only upper-cased letters. For more information about this resource, see `docs <./warehouse>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#query_warehouse Streamlit#query_warehouse}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#timeouts Streamlit#timeouts}
+        :param title: Specifies a title for the Streamlit app to display in Snowsight. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#title Streamlit#title}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = StreamlitTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0ffc28f664db56ec04e5526538c7c0399ea6bb4f0360ca97b3be6f83702cd262)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -474,6 +519,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument external_access_integrations", value=external_access_integrations, expected_type=type_hints["external_access_integrations"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument query_warehouse", value=query_warehouse, expected_type=type_hints["query_warehouse"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
             check_type(argname="argument title", value=title, expected_type=type_hints["title"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "database": database,
@@ -506,6 +552,8 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["id"] = id
         if query_warehouse is not None:
             self._values["query_warehouse"] = query_warehouse
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
         if title is not None:
             self._values["title"] = title
 
@@ -577,7 +625,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def database(self) -> builtins.str:
         '''The database in which to create the streamlit Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#database Streamlit#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#database Streamlit#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -587,7 +635,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def main_file(self) -> builtins.str:
         '''Specifies the filename of the Streamlit Python application. This filename is relative to the value of ``directory_location``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#main_file Streamlit#main_file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#main_file Streamlit#main_file}
         '''
         result = self._values.get("main_file")
         assert result is not None, "Required property 'main_file' is missing"
@@ -597,7 +645,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''String that specifies the identifier (i.e. name) for the streamlit; must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#name Streamlit#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#name Streamlit#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -609,7 +657,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#schema Streamlit#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#schema Streamlit#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -619,7 +667,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def stage(self) -> builtins.str:
         '''The stage in which streamlit files are located. For more information about this resource, see `docs <./stage>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#stage Streamlit#stage}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#stage Streamlit#stage}
         '''
         result = self._values.get("stage")
         assert result is not None, "Required property 'stage' is missing"
@@ -629,7 +677,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the streamlit.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#comment Streamlit#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#comment Streamlit#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -638,7 +686,7 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def directory_location(self) -> typing.Optional[builtins.str]:
         '''Specifies the full path to the named stage containing the Streamlit Python files, media files, and the environment.yml file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#directory_location Streamlit#directory_location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#directory_location Streamlit#directory_location}
         '''
         result = self._values.get("directory_location")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -649,14 +697,14 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''External access integrations connected to the Streamlit.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#external_access_integrations Streamlit#external_access_integrations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#external_access_integrations Streamlit#external_access_integrations}
         '''
         result = self._values.get("external_access_integrations")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#id Streamlit#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#id Streamlit#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -670,16 +718,25 @@ class StreamlitConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Due to Snowflake limitations warehouse identifier can consist of only upper-cased letters. For more information about this resource, see `docs <./warehouse>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#query_warehouse Streamlit#query_warehouse}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#query_warehouse Streamlit#query_warehouse}
         '''
         result = self._values.get("query_warehouse")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
+    def timeouts(self) -> typing.Optional["StreamlitTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#timeouts Streamlit#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["StreamlitTimeouts"], result)
+
+    @builtins.property
     def title(self) -> typing.Optional[builtins.str]:
         '''Specifies a title for the Streamlit app to display in Snowsight.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/streamlit#title Streamlit#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#title Streamlit#title}
         '''
         result = self._values.get("title")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1067,6 +1124,205 @@ class StreamlitShowOutputOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.streamlit.StreamlitTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class StreamlitTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#create Streamlit#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#delete Streamlit#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#read Streamlit#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#update Streamlit#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9291eedd30f028a9a8d618a672a41358a541e6ec935495d780a741a0239c20df)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#create Streamlit#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#delete Streamlit#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#read Streamlit#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/streamlit#update Streamlit#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "StreamlitTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class StreamlitTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.streamlit.StreamlitTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__66695c72e7aa9ff769aa79da67b03af67770a64e678ef87c63837b7de0b6dbc2)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6114c56a5edd95f287c8006cb387312763e948f461a82c904c3ca39275810542)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ca04137d909c816b48cb4ff43debee39412b156f250cd124dfbbecd73ab58a44)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__956756b04b4e7385663fc47ed81e15c1842f1c6121a0d241e33b5a297b57aa9b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ead0861738ba1fcd55c3249405377c235d6da94f09f4466e0d6be120ff8ff2b6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StreamlitTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StreamlitTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StreamlitTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__37d9787213377d044ab4787494bd0c60f3717255b2545a2304b9db98f9c5e647)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "Streamlit",
     "StreamlitConfig",
@@ -1076,6 +1332,8 @@ __all__ = [
     "StreamlitShowOutput",
     "StreamlitShowOutputList",
     "StreamlitShowOutputOutputReference",
+    "StreamlitTimeouts",
+    "StreamlitTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -1094,6 +1352,7 @@ def _typecheckingstub__0c38923072306b4c14a1b934200b3a769930df18acea120adf4714741
     external_access_integrations: typing.Optional[typing.Sequence[builtins.str]] = None,
     id: typing.Optional[builtins.str] = None,
     query_warehouse: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[StreamlitTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     title: typing.Optional[builtins.str] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -1200,6 +1459,7 @@ def _typecheckingstub__0ffc28f664db56ec04e5526538c7c0399ea6bb4f0360ca97b3be6f837
     external_access_integrations: typing.Optional[typing.Sequence[builtins.str]] = None,
     id: typing.Optional[builtins.str] = None,
     query_warehouse: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[StreamlitTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     title: typing.Optional[builtins.str] = None,
 ) -> None:
     """Type checking stubs"""
@@ -1295,6 +1555,53 @@ def _typecheckingstub__95590f4cfc25643e0faa8893ed23a0484f8b2be72cda4c67fa6f54ee9
 
 def _typecheckingstub__bace31b990311c6cc653cc63ec44c995ed0c51e9c6fb8adc97e310544aaa3f0c(
     value: typing.Optional[StreamlitShowOutput],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9291eedd30f028a9a8d618a672a41358a541e6ec935495d780a741a0239c20df(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__66695c72e7aa9ff769aa79da67b03af67770a64e678ef87c63837b7de0b6dbc2(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6114c56a5edd95f287c8006cb387312763e948f461a82c904c3ca39275810542(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ca04137d909c816b48cb4ff43debee39412b156f250cd124dfbbecd73ab58a44(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__956756b04b4e7385663fc47ed81e15c1842f1c6121a0d241e33b5a297b57aa9b(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ead0861738ba1fcd55c3249405377c235d6da94f09f4466e0d6be120ff8ff2b6(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__37d9787213377d044ab4787494bd0c60f3717255b2545a2304b9db98f9c5e647(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StreamlitTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

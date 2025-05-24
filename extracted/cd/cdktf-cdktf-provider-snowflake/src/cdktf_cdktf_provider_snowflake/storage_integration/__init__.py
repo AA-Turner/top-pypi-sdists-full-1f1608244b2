@@ -1,7 +1,7 @@
 r'''
 # `snowflake_storage_integration`
 
-Refer to the Terraform Registry for docs: [`snowflake_storage_integration`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration).
+Refer to the Terraform Registry for docs: [`snowflake_storage_integration`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class StorageIntegration(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.storageIntegration.StorageIntegration",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration snowflake_storage_integration}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration snowflake_storage_integration}.'''
 
     def __init__(
         self,
@@ -61,6 +61,7 @@ class StorageIntegration(
         storage_aws_object_acl: typing.Optional[builtins.str] = None,
         storage_aws_role_arn: typing.Optional[builtins.str] = None,
         storage_blocked_locations: typing.Optional[typing.Sequence[builtins.str]] = None,
+        timeouts: typing.Optional[typing.Union["StorageIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         type: typing.Optional[builtins.str] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -70,21 +71,22 @@ class StorageIntegration(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration snowflake_storage_integration} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration snowflake_storage_integration} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#name StorageIntegration#name}.
-        :param storage_allowed_locations: Explicitly limits external stages that use the integration to reference one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_allowed_locations StorageIntegration#storage_allowed_locations}
-        :param storage_provider: Specifies the storage provider for the integration. Valid options are: ``S3`` | ``S3GOV`` | ``S3CHINA`` | ``GCS`` | ``AZURE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_provider StorageIntegration#storage_provider}
-        :param azure_tenant_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#azure_tenant_id StorageIntegration#azure_tenant_id}.
-        :param comment: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#comment StorageIntegration#comment}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#enabled StorageIntegration#enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#id StorageIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param storage_aws_object_acl: "bucket-owner-full-control" Enables support for AWS access control lists (ACLs) to grant the bucket owner full control. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_aws_object_acl StorageIntegration#storage_aws_object_acl}
-        :param storage_aws_role_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_aws_role_arn StorageIntegration#storage_aws_role_arn}.
-        :param storage_blocked_locations: Explicitly prohibits external stages that use the integration from referencing one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_blocked_locations StorageIntegration#storage_blocked_locations}
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#type StorageIntegration#type}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#name StorageIntegration#name}.
+        :param storage_allowed_locations: Explicitly limits external stages that use the integration to reference one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_allowed_locations StorageIntegration#storage_allowed_locations}
+        :param storage_provider: Specifies the storage provider for the integration. Valid options are: ``S3`` | ``S3GOV`` | ``S3CHINA`` | ``GCS`` | ``AZURE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_provider StorageIntegration#storage_provider}
+        :param azure_tenant_id: (Default: ``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#azure_tenant_id StorageIntegration#azure_tenant_id}
+        :param comment: (Default: ``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#comment StorageIntegration#comment}
+        :param enabled: (Default: ``true``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#enabled StorageIntegration#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#id StorageIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param storage_aws_object_acl: "bucket-owner-full-control" Enables support for AWS access control lists (ACLs) to grant the bucket owner full control. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_aws_object_acl StorageIntegration#storage_aws_object_acl}
+        :param storage_aws_role_arn: (Default: ``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_aws_role_arn StorageIntegration#storage_aws_role_arn}
+        :param storage_blocked_locations: Explicitly prohibits external stages that use the integration from referencing one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_blocked_locations StorageIntegration#storage_blocked_locations}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#timeouts StorageIntegration#timeouts}
+        :param type: (Default: ``EXTERNAL_STAGE``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#type StorageIntegration#type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -108,6 +110,7 @@ class StorageIntegration(
             storage_aws_object_acl=storage_aws_object_acl,
             storage_aws_role_arn=storage_aws_role_arn,
             storage_blocked_locations=storage_blocked_locations,
+            timeouts=timeouts,
             type=type,
             connection=connection,
             count=count,
@@ -133,7 +136,7 @@ class StorageIntegration(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the StorageIntegration to import.
-        :param import_from_id: The id of the existing StorageIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing StorageIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the StorageIntegration to import is found.
         '''
         if __debug__:
@@ -143,6 +146,27 @@ class StorageIntegration(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#create StorageIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#delete StorageIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#read StorageIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#update StorageIntegration#update}.
+        '''
+        value = StorageIntegrationTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetAzureTenantId")
     def reset_azure_tenant_id(self) -> None:
@@ -171,6 +195,10 @@ class StorageIntegration(
     @jsii.member(jsii_name="resetStorageBlockedLocations")
     def reset_storage_blocked_locations(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetStorageBlockedLocations", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="resetType")
     def reset_type(self) -> None:
@@ -223,6 +251,11 @@ class StorageIntegration(
     @jsii.member(jsii_name="storageGcpServiceAccount")
     def storage_gcp_service_account(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "storageGcpServiceAccount"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "StorageIntegrationTimeoutsOutputReference":
+        return typing.cast("StorageIntegrationTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="azureTenantIdInput")
@@ -279,6 +312,13 @@ class StorageIntegration(
     @jsii.member(jsii_name="storageProviderInput")
     def storage_provider_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "storageProviderInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "StorageIntegrationTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "StorageIntegrationTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="typeInput")
@@ -442,6 +482,7 @@ class StorageIntegration(
         "storage_aws_object_acl": "storageAwsObjectAcl",
         "storage_aws_role_arn": "storageAwsRoleArn",
         "storage_blocked_locations": "storageBlockedLocations",
+        "timeouts": "timeouts",
         "type": "type",
     },
 )
@@ -466,6 +507,7 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         storage_aws_object_acl: typing.Optional[builtins.str] = None,
         storage_aws_role_arn: typing.Optional[builtins.str] = None,
         storage_blocked_locations: typing.Optional[typing.Sequence[builtins.str]] = None,
+        timeouts: typing.Optional[typing.Union["StorageIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
@@ -476,20 +518,23 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#name StorageIntegration#name}.
-        :param storage_allowed_locations: Explicitly limits external stages that use the integration to reference one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_allowed_locations StorageIntegration#storage_allowed_locations}
-        :param storage_provider: Specifies the storage provider for the integration. Valid options are: ``S3`` | ``S3GOV`` | ``S3CHINA`` | ``GCS`` | ``AZURE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_provider StorageIntegration#storage_provider}
-        :param azure_tenant_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#azure_tenant_id StorageIntegration#azure_tenant_id}.
-        :param comment: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#comment StorageIntegration#comment}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#enabled StorageIntegration#enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#id StorageIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param storage_aws_object_acl: "bucket-owner-full-control" Enables support for AWS access control lists (ACLs) to grant the bucket owner full control. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_aws_object_acl StorageIntegration#storage_aws_object_acl}
-        :param storage_aws_role_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_aws_role_arn StorageIntegration#storage_aws_role_arn}.
-        :param storage_blocked_locations: Explicitly prohibits external stages that use the integration from referencing one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_blocked_locations StorageIntegration#storage_blocked_locations}
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#type StorageIntegration#type}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#name StorageIntegration#name}.
+        :param storage_allowed_locations: Explicitly limits external stages that use the integration to reference one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_allowed_locations StorageIntegration#storage_allowed_locations}
+        :param storage_provider: Specifies the storage provider for the integration. Valid options are: ``S3`` | ``S3GOV`` | ``S3CHINA`` | ``GCS`` | ``AZURE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_provider StorageIntegration#storage_provider}
+        :param azure_tenant_id: (Default: ``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#azure_tenant_id StorageIntegration#azure_tenant_id}
+        :param comment: (Default: ``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#comment StorageIntegration#comment}
+        :param enabled: (Default: ``true``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#enabled StorageIntegration#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#id StorageIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param storage_aws_object_acl: "bucket-owner-full-control" Enables support for AWS access control lists (ACLs) to grant the bucket owner full control. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_aws_object_acl StorageIntegration#storage_aws_object_acl}
+        :param storage_aws_role_arn: (Default: ``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_aws_role_arn StorageIntegration#storage_aws_role_arn}
+        :param storage_blocked_locations: Explicitly prohibits external stages that use the integration from referencing one or more storage locations. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_blocked_locations StorageIntegration#storage_blocked_locations}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#timeouts StorageIntegration#timeouts}
+        :param type: (Default: ``EXTERNAL_STAGE``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#type StorageIntegration#type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = StorageIntegrationTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a43127f1ac7cb78a96586583cb01991fa4957e6e6d0419b6377964b79750f3b2)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -509,6 +554,7 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument storage_aws_object_acl", value=storage_aws_object_acl, expected_type=type_hints["storage_aws_object_acl"])
             check_type(argname="argument storage_aws_role_arn", value=storage_aws_role_arn, expected_type=type_hints["storage_aws_role_arn"])
             check_type(argname="argument storage_blocked_locations", value=storage_blocked_locations, expected_type=type_hints["storage_blocked_locations"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
             check_type(argname="argument type", value=type, expected_type=type_hints["type"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "name": name,
@@ -543,6 +589,8 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["storage_aws_role_arn"] = storage_aws_role_arn
         if storage_blocked_locations is not None:
             self._values["storage_blocked_locations"] = storage_blocked_locations
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
         if type is not None:
             self._values["type"] = type
 
@@ -612,7 +660,7 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#name StorageIntegration#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#name StorageIntegration#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
@@ -621,7 +669,7 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def storage_allowed_locations(self) -> typing.List[builtins.str]:
         '''Explicitly limits external stages that use the integration to reference one or more storage locations.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_allowed_locations StorageIntegration#storage_allowed_locations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_allowed_locations StorageIntegration#storage_allowed_locations}
         '''
         result = self._values.get("storage_allowed_locations")
         assert result is not None, "Required property 'storage_allowed_locations' is missing"
@@ -631,7 +679,7 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def storage_provider(self) -> builtins.str:
         '''Specifies the storage provider for the integration. Valid options are: ``S3`` | ``S3GOV`` | ``S3CHINA`` | ``GCS`` | ``AZURE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_provider StorageIntegration#storage_provider}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_provider StorageIntegration#storage_provider}
         '''
         result = self._values.get("storage_provider")
         assert result is not None, "Required property 'storage_provider' is missing"
@@ -639,13 +687,19 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def azure_tenant_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#azure_tenant_id StorageIntegration#azure_tenant_id}.'''
+        '''(Default: ``).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#azure_tenant_id StorageIntegration#azure_tenant_id}
+        '''
         result = self._values.get("azure_tenant_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def comment(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#comment StorageIntegration#comment}.'''
+        '''(Default: ``).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#comment StorageIntegration#comment}
+        '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -653,13 +707,16 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#enabled StorageIntegration#enabled}.'''
+        '''(Default: ``true``).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#enabled StorageIntegration#enabled}
+        '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#id StorageIntegration#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#id StorageIntegration#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -671,14 +728,17 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def storage_aws_object_acl(self) -> typing.Optional[builtins.str]:
         '''"bucket-owner-full-control" Enables support for AWS access control lists (ACLs) to grant the bucket owner full control.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_aws_object_acl StorageIntegration#storage_aws_object_acl}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_aws_object_acl StorageIntegration#storage_aws_object_acl}
         '''
         result = self._values.get("storage_aws_object_acl")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def storage_aws_role_arn(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_aws_role_arn StorageIntegration#storage_aws_role_arn}.'''
+        '''(Default: ``).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_aws_role_arn StorageIntegration#storage_aws_role_arn}
+        '''
         result = self._values.get("storage_aws_role_arn")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -686,14 +746,26 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def storage_blocked_locations(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Explicitly prohibits external stages that use the integration from referencing one or more storage locations.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#storage_blocked_locations StorageIntegration#storage_blocked_locations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#storage_blocked_locations StorageIntegration#storage_blocked_locations}
         '''
         result = self._values.get("storage_blocked_locations")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
+    def timeouts(self) -> typing.Optional["StorageIntegrationTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#timeouts StorageIntegration#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["StorageIntegrationTimeouts"], result)
+
+    @builtins.property
     def type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/storage_integration#type StorageIntegration#type}.'''
+        '''(Default: ``EXTERNAL_STAGE``).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#type StorageIntegration#type}
+        '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -709,9 +781,210 @@ class StorageIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.storageIntegration.StorageIntegrationTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class StorageIntegrationTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#create StorageIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#delete StorageIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#read StorageIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#update StorageIntegration#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2e69b00115e0f10d47700439b1b4894dd9c9bc04340925657ae66189608d9cfb)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#create StorageIntegration#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#delete StorageIntegration#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#read StorageIntegration#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/storage_integration#update StorageIntegration#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "StorageIntegrationTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class StorageIntegrationTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.storageIntegration.StorageIntegrationTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8f48ffd52ec1fb75b71e5dcd77641509e965860ddb38f4cf118a7f8d5b512ac9)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__377f19eab807c40c8dc309b7555cdcab6cd4df7c5c9185713f38e97e56b8c95c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fc92453f22e7d3840c93ce2bf1b74caf7c2b8e915b87d1c28d2054332b8f9f8f)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__20326de3de0bf7dbf3d669276d18713586f85419713d8f790816b467221b1db2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__34d46b4943ebb3c521f649c732edabe39eab2a8b7a534847a1119fc0e0a19746)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StorageIntegrationTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StorageIntegrationTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StorageIntegrationTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fda3c8cb1029fe43b3621d398ac69e63a141e3a06a84267293c27b9f5357cd03)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "StorageIntegration",
     "StorageIntegrationConfig",
+    "StorageIntegrationTimeouts",
+    "StorageIntegrationTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -730,6 +1003,7 @@ def _typecheckingstub__51e06e594b8133c3802ab069c41f0924981123dfabdc8d695593d0d93
     storage_aws_object_acl: typing.Optional[builtins.str] = None,
     storage_aws_role_arn: typing.Optional[builtins.str] = None,
     storage_blocked_locations: typing.Optional[typing.Sequence[builtins.str]] = None,
+    timeouts: typing.Optional[typing.Union[StorageIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     type: typing.Optional[builtins.str] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -836,7 +1110,55 @@ def _typecheckingstub__a43127f1ac7cb78a96586583cb01991fa4957e6e6d0419b6377964b79
     storage_aws_object_acl: typing.Optional[builtins.str] = None,
     storage_aws_role_arn: typing.Optional[builtins.str] = None,
     storage_blocked_locations: typing.Optional[typing.Sequence[builtins.str]] = None,
+    timeouts: typing.Optional[typing.Union[StorageIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     type: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2e69b00115e0f10d47700439b1b4894dd9c9bc04340925657ae66189608d9cfb(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8f48ffd52ec1fb75b71e5dcd77641509e965860ddb38f4cf118a7f8d5b512ac9(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__377f19eab807c40c8dc309b7555cdcab6cd4df7c5c9185713f38e97e56b8c95c(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fc92453f22e7d3840c93ce2bf1b74caf7c2b8e915b87d1c28d2054332b8f9f8f(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__20326de3de0bf7dbf3d669276d18713586f85419713d8f790816b467221b1db2(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__34d46b4943ebb3c521f649c732edabe39eab2a8b7a534847a1119fc0e0a19746(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fda3c8cb1029fe43b3621d398ac69e63a141e3a06a84267293c27b9f5357cd03(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, StorageIntegrationTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

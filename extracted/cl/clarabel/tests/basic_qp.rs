@@ -85,7 +85,7 @@ fn test_qp_univariate() {
     let cones = [NonnegativeConeT(1)];
 
     let settings = DefaultSettings::default();
-    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings);
+    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings).unwrap();
 
     solver.solve();
 
@@ -102,7 +102,7 @@ fn test_qp_feasible() {
 
     let settings = DefaultSettings::default();
 
-    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings);
+    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings).unwrap();
 
     solver.solve();
 
@@ -117,6 +117,31 @@ fn test_qp_feasible() {
 }
 
 #[test]
+fn test_qp_singleton_constraints() {
+    // problem with standard cones
+    let (P, c, A, b, cones) = basic_qp_data();
+    let settings = DefaultSettings::default();
+    let mut solver1 = DefaultSolver::new(&P, &c, &A, &b, &cones, settings.clone()).unwrap();
+    solver1.solve();
+
+    //problem with singleton constraints
+    let cones = vec![NonnegativeConeT(1); 6];
+    let mut solver2 = DefaultSolver::new(&P, &c, &A, &b, &cones, settings.clone()).unwrap();
+    solver2.solve();
+
+    //problem with SOC singleton constraints
+    let cones = vec![SecondOrderConeT(1); 6];
+    let mut solver3 = DefaultSolver::new(&P, &c, &A, &b, &cones, settings.clone()).unwrap();
+    solver3.solve();
+    assert_eq!(solver1.solution.status, solver2.solution.status);
+    assert_eq!(solver1.solution.status, solver3.solution.status);
+    assert_eq!(solver1.solution.obj_val, solver2.solution.obj_val);
+    assert_eq!(solver1.solution.obj_val, solver3.solution.obj_val);
+    assert_eq!(solver1.solution.x, solver2.solution.x);
+    assert_eq!(solver1.solution.x, solver3.solution.x);
+}
+
+#[test]
 fn test_qp_primal_infeasible() {
     let (P, c, A, mut b, cones) = basic_qp_data();
 
@@ -125,7 +150,7 @@ fn test_qp_primal_infeasible() {
 
     let settings = DefaultSettings::default();
 
-    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings);
+    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings).unwrap();
 
     solver.solve();
 
@@ -140,7 +165,7 @@ fn test_qp_dual_infeasible() {
 
     let settings = DefaultSettings::default();
 
-    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings);
+    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings).unwrap();
 
     solver.solve();
 
@@ -167,7 +192,7 @@ fn test_qp_dual_infeasible_ill_cond() {
 
     let settings = DefaultSettings::default();
 
-    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings);
+    let mut solver = DefaultSolver::new(&P, &c, &A, &b, &cones, settings).unwrap();
 
     solver.solve();
 

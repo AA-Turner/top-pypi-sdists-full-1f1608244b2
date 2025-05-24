@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import argparse
 import dataclasses
 import itertools as it
 import subprocess as sp
 from collections.abc import Iterable
 from functools import lru_cache
+from os import PathLike
 
 import ry
 from ry import FsPath, which
@@ -109,7 +111,7 @@ def _gen_api_content_readme(
     headers = (
         f'<h2 id="{mod_name}"><code>{mod_name}</code></h2>\n' for mod_name, _ in parts
     )
-    type_stub_bodies = (f"```python\n{content}\n```" for _, content in parts)
+    type_stub_bodies = (f"```python\n{content}\n```\n" for _, content in parts)
     # zipper the headers and bodies into a single chain
 
     yield from it.chain.from_iterable(zip(headers, type_stub_bodies))
@@ -123,24 +125,42 @@ def get_api_content_readme(
     return "\n".join(_gen_api_content_readme(line_length, indent_width))
 
 
-def update_api_docs() -> None:
+def write_text(
+    p: str | PathLike[str],
+    text: str,
+    *,
+    check: bool = False,
+) -> bool:
+    """Write text to a file, creating the file if it doesn't exist."""
+    filepath = FsPath(p)
+    # check if the file is up to date
+    current_text = filepath.read_text()
+    if current_text != text:
+        print(f"File is up to date: {filepath}")
+        if check:
+            msg = f"File is not up to date: {filepath}\n"
+            raise ValueError(msg)
+        else:
+            print(f"Writing to file: {filepath}")
+            filepath.write_text(text)
+            return True
+    else:
+        print(f"File is up to date: {filepath}")
+        return False
+
+
+def update_api_docs(
+    check: bool = False,
+) -> None:
     """Update the API.md file in ./docs/src/API.md"""
     filepath = REPO_ROOT / "docs" / "src" / "API.md"
     assert filepath.exists(), f"API.md does not exist: {filepath}"
     api_content_formatted = get_api_content_readme()
-    with open(filepath, "w", newline="\n") as f:
-        f.write(
-            "\n".join(
-                [
-                    "# API",
-                    "",
-                    api_content_formatted,
-                ]
-            )
-        )
+    parts = [api_content_formatted]
+    write_text(filepath, "\n".join(parts), check=check)
 
 
-def update_docs_examples() -> None:
+def update_docs_examples(check: bool = False) -> None:
     examples_root = REPO_ROOT / "examples"
     assert examples_root.exists(), f"examples_root does not exist: {examples_root}"
     files = ry.walkdir(examples_root, glob="**/*.py", files=True, dirs=False).collect()
@@ -172,26 +192,12 @@ def update_docs_examples() -> None:
     # write the file
     filepath = REPO_ROOT / "docs" / "src" / "examples.md"
     assert filepath.exists(), f"examples.md does not exist: {filepath}"
-    with open(filepath, "w", newline="\n") as f:
-        f.write(
-            "\n".join(
-                [
-                    "# Examples",
-                    "",
-                    "## Table of Contents",
-                    *toc,
-                    "",
-                    "___",
-                    "",
-                    *parts,
-                ]
-            )
-        )
+    write_text(filepath, "\n".join(parts), check=check)
 
 
-def update_docs() -> None:
-    update_api_docs()
-    update_docs_examples()
+def update_docs(check: bool = False) -> None:
+    update_api_docs(check=check)
+    update_docs_examples(check=check)
 
 
 def update_readme() -> None:
@@ -226,8 +232,19 @@ def update_readme() -> None:
 
 
 def main() -> None:
-    update_readme()
-    update_docs()
+    parser = argparse.ArgumentParser(
+        description="Update the API docs and examples in the README.md file."
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Check if the API docs are up to date.",
+    )
+
+    parsed = parser.parse_args()
+    update_docs(
+        check=parsed.check,
+    )
 
 
 if __name__ == "__main__":

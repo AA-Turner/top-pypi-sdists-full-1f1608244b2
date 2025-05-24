@@ -1,7 +1,7 @@
 r'''
 # `snowflake_file_format`
 
-Refer to the Terraform Registry for docs: [`snowflake_file_format`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format).
+Refer to the Terraform Registry for docs: [`snowflake_file_format`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class FileFormat(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.fileFormat.FileFormat",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format snowflake_file_format}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format snowflake_file_format}.'''
 
     def __init__(
         self,
@@ -86,6 +86,7 @@ class FileFormat(
         strip_outer_array: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         strip_outer_element: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         time_format: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["FileFormatTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         timestamp_format: typing.Optional[builtins.str] = None,
         trim_space: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
@@ -96,47 +97,48 @@ class FileFormat(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format snowflake_file_format} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format snowflake_file_format} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param database: The database in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#database FileFormat#database}
-        :param format_type: Specifies the format of the input files (for data loading) or output files (for data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#format_type FileFormat#format_type}
-        :param name: Specifies the identifier for the file format; must be unique for the database and schema in which the file format is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#name FileFormat#name}
-        :param schema: The schema in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#schema FileFormat#schema}
-        :param allow_duplicate: Boolean that specifies to allow duplicate object field names (only the last one will be preserved). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#allow_duplicate FileFormat#allow_duplicate}
-        :param binary_as_text: Boolean that specifies whether to interpret columns with no defined logical data type as UTF-8 text. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#binary_as_text FileFormat#binary_as_text}
-        :param binary_format: Defines the encoding format for binary input or output. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#binary_format FileFormat#binary_format}
-        :param comment: Specifies a comment for the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#comment FileFormat#comment}
-        :param compression: Specifies the current compression algorithm for the data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#compression FileFormat#compression}
-        :param date_format: Defines the format of date values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#date_format FileFormat#date_format}
-        :param disable_auto_convert: Boolean that specifies whether the XML parser disables automatic conversion of numeric and Boolean values from text to native representation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#disable_auto_convert FileFormat#disable_auto_convert}
-        :param disable_snowflake_data: Boolean that specifies whether the XML parser disables recognition of Snowflake semi-structured data tags. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#disable_snowflake_data FileFormat#disable_snowflake_data}
-        :param empty_field_as_null: Specifies whether to insert SQL NULL for empty fields in an input file, which are represented by two successive delimiters. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#empty_field_as_null FileFormat#empty_field_as_null}
-        :param enable_octal: Boolean that enables parsing of octal numbers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#enable_octal FileFormat#enable_octal}
-        :param encoding: String (constant) that specifies the character set of the source data when loading data into a table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#encoding FileFormat#encoding}
-        :param error_on_column_count_mismatch: Boolean that specifies whether to generate a parsing error if the number of delimited columns (i.e. fields) in an input file does not match the number of columns in the corresponding table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#error_on_column_count_mismatch FileFormat#error_on_column_count_mismatch}
-        :param escape: Single character string used as the escape character for field values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#escape FileFormat#escape}
-        :param escape_unenclosed_field: Single character string used as the escape character for unenclosed field values only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#escape_unenclosed_field FileFormat#escape_unenclosed_field}
-        :param field_delimiter: Specifies one or more singlebyte or multibyte characters that separate fields in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#field_delimiter FileFormat#field_delimiter}
-        :param field_optionally_enclosed_by: Character used to enclose strings. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#field_optionally_enclosed_by FileFormat#field_optionally_enclosed_by}
-        :param file_extension: Specifies the extension for files unloaded to a stage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#file_extension FileFormat#file_extension}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#id FileFormat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_utf8_errors: Boolean that specifies whether UTF-8 encoding errors produce error conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#ignore_utf8_errors FileFormat#ignore_utf8_errors}
-        :param null_if: String used to convert to and from SQL NULL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#null_if FileFormat#null_if}
-        :param parse_header: Boolean that specifies whether to use the first row headers in the data files to determine column names. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#parse_header FileFormat#parse_header}
-        :param preserve_space: Boolean that specifies whether the XML parser preserves leading and trailing spaces in element content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#preserve_space FileFormat#preserve_space}
-        :param record_delimiter: Specifies one or more singlebyte or multibyte characters that separate records in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#record_delimiter FileFormat#record_delimiter}
-        :param replace_invalid_characters: Boolean that specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#replace_invalid_characters FileFormat#replace_invalid_characters}
-        :param skip_blank_lines: Boolean that specifies to skip any blank lines encountered in the data files. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_blank_lines FileFormat#skip_blank_lines}
-        :param skip_byte_order_mark: Boolean that specifies whether to skip the BOM (byte order mark), if present in a data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_byte_order_mark FileFormat#skip_byte_order_mark}
-        :param skip_header: Number of lines at the start of the file to skip. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_header FileFormat#skip_header}
-        :param strip_null_values: Boolean that instructs the JSON parser to remove object fields or array elements containing null values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_null_values FileFormat#strip_null_values}
-        :param strip_outer_array: Boolean that instructs the JSON parser to remove outer brackets. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_outer_array FileFormat#strip_outer_array}
-        :param strip_outer_element: Boolean that specifies whether the XML parser strips out the outer XML element, exposing 2nd level elements as separate documents. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_outer_element FileFormat#strip_outer_element}
-        :param time_format: Defines the format of time values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#time_format FileFormat#time_format}
-        :param timestamp_format: Defines the format of timestamp values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#timestamp_format FileFormat#timestamp_format}
-        :param trim_space: Boolean that specifies whether to remove white space from fields. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#trim_space FileFormat#trim_space}
+        :param database: The database in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#database FileFormat#database}
+        :param format_type: Specifies the format of the input files (for data loading) or output files (for data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#format_type FileFormat#format_type}
+        :param name: Specifies the identifier for the file format; must be unique for the database and schema in which the file format is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#name FileFormat#name}
+        :param schema: The schema in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#schema FileFormat#schema}
+        :param allow_duplicate: Boolean that specifies to allow duplicate object field names (only the last one will be preserved). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#allow_duplicate FileFormat#allow_duplicate}
+        :param binary_as_text: Boolean that specifies whether to interpret columns with no defined logical data type as UTF-8 text. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#binary_as_text FileFormat#binary_as_text}
+        :param binary_format: Defines the encoding format for binary input or output. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#binary_format FileFormat#binary_format}
+        :param comment: Specifies a comment for the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#comment FileFormat#comment}
+        :param compression: Specifies the current compression algorithm for the data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#compression FileFormat#compression}
+        :param date_format: Defines the format of date values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#date_format FileFormat#date_format}
+        :param disable_auto_convert: Boolean that specifies whether the XML parser disables automatic conversion of numeric and Boolean values from text to native representation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#disable_auto_convert FileFormat#disable_auto_convert}
+        :param disable_snowflake_data: Boolean that specifies whether the XML parser disables recognition of Snowflake semi-structured data tags. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#disable_snowflake_data FileFormat#disable_snowflake_data}
+        :param empty_field_as_null: Specifies whether to insert SQL NULL for empty fields in an input file, which are represented by two successive delimiters. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#empty_field_as_null FileFormat#empty_field_as_null}
+        :param enable_octal: Boolean that enables parsing of octal numbers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#enable_octal FileFormat#enable_octal}
+        :param encoding: String (constant) that specifies the character set of the source data when loading data into a table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#encoding FileFormat#encoding}
+        :param error_on_column_count_mismatch: Boolean that specifies whether to generate a parsing error if the number of delimited columns (i.e. fields) in an input file does not match the number of columns in the corresponding table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#error_on_column_count_mismatch FileFormat#error_on_column_count_mismatch}
+        :param escape: Single character string used as the escape character for field values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#escape FileFormat#escape}
+        :param escape_unenclosed_field: Single character string used as the escape character for unenclosed field values only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#escape_unenclosed_field FileFormat#escape_unenclosed_field}
+        :param field_delimiter: Specifies one or more singlebyte or multibyte characters that separate fields in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#field_delimiter FileFormat#field_delimiter}
+        :param field_optionally_enclosed_by: Character used to enclose strings. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#field_optionally_enclosed_by FileFormat#field_optionally_enclosed_by}
+        :param file_extension: Specifies the extension for files unloaded to a stage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#file_extension FileFormat#file_extension}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#id FileFormat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_utf8_errors: Boolean that specifies whether UTF-8 encoding errors produce error conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#ignore_utf8_errors FileFormat#ignore_utf8_errors}
+        :param null_if: String used to convert to and from SQL NULL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#null_if FileFormat#null_if}
+        :param parse_header: Boolean that specifies whether to use the first row headers in the data files to determine column names. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#parse_header FileFormat#parse_header}
+        :param preserve_space: Boolean that specifies whether the XML parser preserves leading and trailing spaces in element content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#preserve_space FileFormat#preserve_space}
+        :param record_delimiter: Specifies one or more singlebyte or multibyte characters that separate records in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#record_delimiter FileFormat#record_delimiter}
+        :param replace_invalid_characters: Boolean that specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#replace_invalid_characters FileFormat#replace_invalid_characters}
+        :param skip_blank_lines: Boolean that specifies to skip any blank lines encountered in the data files. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_blank_lines FileFormat#skip_blank_lines}
+        :param skip_byte_order_mark: Boolean that specifies whether to skip the BOM (byte order mark), if present in a data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_byte_order_mark FileFormat#skip_byte_order_mark}
+        :param skip_header: Number of lines at the start of the file to skip. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_header FileFormat#skip_header}
+        :param strip_null_values: Boolean that instructs the JSON parser to remove object fields or array elements containing null values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_null_values FileFormat#strip_null_values}
+        :param strip_outer_array: Boolean that instructs the JSON parser to remove outer brackets. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_outer_array FileFormat#strip_outer_array}
+        :param strip_outer_element: Boolean that specifies whether the XML parser strips out the outer XML element, exposing 2nd level elements as separate documents. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_outer_element FileFormat#strip_outer_element}
+        :param time_format: Defines the format of time values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#time_format FileFormat#time_format}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#timeouts FileFormat#timeouts}
+        :param timestamp_format: Defines the format of timestamp values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#timestamp_format FileFormat#timestamp_format}
+        :param trim_space: Boolean that specifies whether to remove white space from fields. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#trim_space FileFormat#trim_space}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -185,6 +187,7 @@ class FileFormat(
             strip_outer_array=strip_outer_array,
             strip_outer_element=strip_outer_element,
             time_format=time_format,
+            timeouts=timeouts,
             timestamp_format=timestamp_format,
             trim_space=trim_space,
             connection=connection,
@@ -211,7 +214,7 @@ class FileFormat(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the FileFormat to import.
-        :param import_from_id: The id of the existing FileFormat that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing FileFormat that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the FileFormat to import is found.
         '''
         if __debug__:
@@ -221,6 +224,27 @@ class FileFormat(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#create FileFormat#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#delete FileFormat#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#read FileFormat#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#update FileFormat#update}.
+        '''
+        value = FileFormatTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetAllowDuplicate")
     def reset_allow_duplicate(self) -> None:
@@ -346,6 +370,10 @@ class FileFormat(
     def reset_time_format(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTimeFormat", []))
 
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
+
     @jsii.member(jsii_name="resetTimestampFormat")
     def reset_timestamp_format(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTimestampFormat", []))
@@ -371,6 +399,11 @@ class FileFormat(
     @jsii.member(jsii_name="fullyQualifiedName")
     def fully_qualified_name(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "fullyQualifiedName"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "FileFormatTimeoutsOutputReference":
+        return typing.cast("FileFormatTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="allowDuplicateInput")
@@ -578,6 +611,13 @@ class FileFormat(
     @jsii.member(jsii_name="timeFormatInput")
     def time_format_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "timeFormatInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "FileFormatTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "FileFormatTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="timestampFormatInput")
@@ -1161,6 +1201,7 @@ class FileFormat(
         "strip_outer_array": "stripOuterArray",
         "strip_outer_element": "stripOuterElement",
         "time_format": "timeFormat",
+        "timeouts": "timeouts",
         "timestamp_format": "timestampFormat",
         "trim_space": "trimSpace",
     },
@@ -1211,6 +1252,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         strip_outer_array: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         strip_outer_element: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         time_format: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["FileFormatTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         timestamp_format: typing.Optional[builtins.str] = None,
         trim_space: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
@@ -1222,46 +1264,49 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param database: The database in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#database FileFormat#database}
-        :param format_type: Specifies the format of the input files (for data loading) or output files (for data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#format_type FileFormat#format_type}
-        :param name: Specifies the identifier for the file format; must be unique for the database and schema in which the file format is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#name FileFormat#name}
-        :param schema: The schema in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#schema FileFormat#schema}
-        :param allow_duplicate: Boolean that specifies to allow duplicate object field names (only the last one will be preserved). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#allow_duplicate FileFormat#allow_duplicate}
-        :param binary_as_text: Boolean that specifies whether to interpret columns with no defined logical data type as UTF-8 text. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#binary_as_text FileFormat#binary_as_text}
-        :param binary_format: Defines the encoding format for binary input or output. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#binary_format FileFormat#binary_format}
-        :param comment: Specifies a comment for the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#comment FileFormat#comment}
-        :param compression: Specifies the current compression algorithm for the data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#compression FileFormat#compression}
-        :param date_format: Defines the format of date values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#date_format FileFormat#date_format}
-        :param disable_auto_convert: Boolean that specifies whether the XML parser disables automatic conversion of numeric and Boolean values from text to native representation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#disable_auto_convert FileFormat#disable_auto_convert}
-        :param disable_snowflake_data: Boolean that specifies whether the XML parser disables recognition of Snowflake semi-structured data tags. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#disable_snowflake_data FileFormat#disable_snowflake_data}
-        :param empty_field_as_null: Specifies whether to insert SQL NULL for empty fields in an input file, which are represented by two successive delimiters. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#empty_field_as_null FileFormat#empty_field_as_null}
-        :param enable_octal: Boolean that enables parsing of octal numbers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#enable_octal FileFormat#enable_octal}
-        :param encoding: String (constant) that specifies the character set of the source data when loading data into a table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#encoding FileFormat#encoding}
-        :param error_on_column_count_mismatch: Boolean that specifies whether to generate a parsing error if the number of delimited columns (i.e. fields) in an input file does not match the number of columns in the corresponding table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#error_on_column_count_mismatch FileFormat#error_on_column_count_mismatch}
-        :param escape: Single character string used as the escape character for field values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#escape FileFormat#escape}
-        :param escape_unenclosed_field: Single character string used as the escape character for unenclosed field values only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#escape_unenclosed_field FileFormat#escape_unenclosed_field}
-        :param field_delimiter: Specifies one or more singlebyte or multibyte characters that separate fields in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#field_delimiter FileFormat#field_delimiter}
-        :param field_optionally_enclosed_by: Character used to enclose strings. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#field_optionally_enclosed_by FileFormat#field_optionally_enclosed_by}
-        :param file_extension: Specifies the extension for files unloaded to a stage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#file_extension FileFormat#file_extension}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#id FileFormat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_utf8_errors: Boolean that specifies whether UTF-8 encoding errors produce error conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#ignore_utf8_errors FileFormat#ignore_utf8_errors}
-        :param null_if: String used to convert to and from SQL NULL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#null_if FileFormat#null_if}
-        :param parse_header: Boolean that specifies whether to use the first row headers in the data files to determine column names. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#parse_header FileFormat#parse_header}
-        :param preserve_space: Boolean that specifies whether the XML parser preserves leading and trailing spaces in element content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#preserve_space FileFormat#preserve_space}
-        :param record_delimiter: Specifies one or more singlebyte or multibyte characters that separate records in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#record_delimiter FileFormat#record_delimiter}
-        :param replace_invalid_characters: Boolean that specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#replace_invalid_characters FileFormat#replace_invalid_characters}
-        :param skip_blank_lines: Boolean that specifies to skip any blank lines encountered in the data files. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_blank_lines FileFormat#skip_blank_lines}
-        :param skip_byte_order_mark: Boolean that specifies whether to skip the BOM (byte order mark), if present in a data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_byte_order_mark FileFormat#skip_byte_order_mark}
-        :param skip_header: Number of lines at the start of the file to skip. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_header FileFormat#skip_header}
-        :param strip_null_values: Boolean that instructs the JSON parser to remove object fields or array elements containing null values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_null_values FileFormat#strip_null_values}
-        :param strip_outer_array: Boolean that instructs the JSON parser to remove outer brackets. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_outer_array FileFormat#strip_outer_array}
-        :param strip_outer_element: Boolean that specifies whether the XML parser strips out the outer XML element, exposing 2nd level elements as separate documents. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_outer_element FileFormat#strip_outer_element}
-        :param time_format: Defines the format of time values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#time_format FileFormat#time_format}
-        :param timestamp_format: Defines the format of timestamp values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#timestamp_format FileFormat#timestamp_format}
-        :param trim_space: Boolean that specifies whether to remove white space from fields. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#trim_space FileFormat#trim_space}
+        :param database: The database in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#database FileFormat#database}
+        :param format_type: Specifies the format of the input files (for data loading) or output files (for data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#format_type FileFormat#format_type}
+        :param name: Specifies the identifier for the file format; must be unique for the database and schema in which the file format is created. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#name FileFormat#name}
+        :param schema: The schema in which to create the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#schema FileFormat#schema}
+        :param allow_duplicate: Boolean that specifies to allow duplicate object field names (only the last one will be preserved). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#allow_duplicate FileFormat#allow_duplicate}
+        :param binary_as_text: Boolean that specifies whether to interpret columns with no defined logical data type as UTF-8 text. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#binary_as_text FileFormat#binary_as_text}
+        :param binary_format: Defines the encoding format for binary input or output. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#binary_format FileFormat#binary_format}
+        :param comment: Specifies a comment for the file format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#comment FileFormat#comment}
+        :param compression: Specifies the current compression algorithm for the data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#compression FileFormat#compression}
+        :param date_format: Defines the format of date values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#date_format FileFormat#date_format}
+        :param disable_auto_convert: Boolean that specifies whether the XML parser disables automatic conversion of numeric and Boolean values from text to native representation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#disable_auto_convert FileFormat#disable_auto_convert}
+        :param disable_snowflake_data: Boolean that specifies whether the XML parser disables recognition of Snowflake semi-structured data tags. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#disable_snowflake_data FileFormat#disable_snowflake_data}
+        :param empty_field_as_null: Specifies whether to insert SQL NULL for empty fields in an input file, which are represented by two successive delimiters. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#empty_field_as_null FileFormat#empty_field_as_null}
+        :param enable_octal: Boolean that enables parsing of octal numbers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#enable_octal FileFormat#enable_octal}
+        :param encoding: String (constant) that specifies the character set of the source data when loading data into a table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#encoding FileFormat#encoding}
+        :param error_on_column_count_mismatch: Boolean that specifies whether to generate a parsing error if the number of delimited columns (i.e. fields) in an input file does not match the number of columns in the corresponding table. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#error_on_column_count_mismatch FileFormat#error_on_column_count_mismatch}
+        :param escape: Single character string used as the escape character for field values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#escape FileFormat#escape}
+        :param escape_unenclosed_field: Single character string used as the escape character for unenclosed field values only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#escape_unenclosed_field FileFormat#escape_unenclosed_field}
+        :param field_delimiter: Specifies one or more singlebyte or multibyte characters that separate fields in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#field_delimiter FileFormat#field_delimiter}
+        :param field_optionally_enclosed_by: Character used to enclose strings. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#field_optionally_enclosed_by FileFormat#field_optionally_enclosed_by}
+        :param file_extension: Specifies the extension for files unloaded to a stage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#file_extension FileFormat#file_extension}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#id FileFormat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_utf8_errors: Boolean that specifies whether UTF-8 encoding errors produce error conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#ignore_utf8_errors FileFormat#ignore_utf8_errors}
+        :param null_if: String used to convert to and from SQL NULL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#null_if FileFormat#null_if}
+        :param parse_header: Boolean that specifies whether to use the first row headers in the data files to determine column names. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#parse_header FileFormat#parse_header}
+        :param preserve_space: Boolean that specifies whether the XML parser preserves leading and trailing spaces in element content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#preserve_space FileFormat#preserve_space}
+        :param record_delimiter: Specifies one or more singlebyte or multibyte characters that separate records in an input file (data loading) or unloaded file (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#record_delimiter FileFormat#record_delimiter}
+        :param replace_invalid_characters: Boolean that specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#replace_invalid_characters FileFormat#replace_invalid_characters}
+        :param skip_blank_lines: Boolean that specifies to skip any blank lines encountered in the data files. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_blank_lines FileFormat#skip_blank_lines}
+        :param skip_byte_order_mark: Boolean that specifies whether to skip the BOM (byte order mark), if present in a data file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_byte_order_mark FileFormat#skip_byte_order_mark}
+        :param skip_header: Number of lines at the start of the file to skip. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_header FileFormat#skip_header}
+        :param strip_null_values: Boolean that instructs the JSON parser to remove object fields or array elements containing null values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_null_values FileFormat#strip_null_values}
+        :param strip_outer_array: Boolean that instructs the JSON parser to remove outer brackets. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_outer_array FileFormat#strip_outer_array}
+        :param strip_outer_element: Boolean that specifies whether the XML parser strips out the outer XML element, exposing 2nd level elements as separate documents. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_outer_element FileFormat#strip_outer_element}
+        :param time_format: Defines the format of time values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#time_format FileFormat#time_format}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#timeouts FileFormat#timeouts}
+        :param timestamp_format: Defines the format of timestamp values in the data files (data loading) or table (data unloading). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#timestamp_format FileFormat#timestamp_format}
+        :param trim_space: Boolean that specifies whether to remove white space from fields. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#trim_space FileFormat#trim_space}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = FileFormatTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4f0ca45e58f9b02127267f919bdca2bf031f0eafbad9be71dab295739b89ca12)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -1306,6 +1351,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument strip_outer_array", value=strip_outer_array, expected_type=type_hints["strip_outer_array"])
             check_type(argname="argument strip_outer_element", value=strip_outer_element, expected_type=type_hints["strip_outer_element"])
             check_type(argname="argument time_format", value=time_format, expected_type=type_hints["time_format"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
             check_type(argname="argument timestamp_format", value=timestamp_format, expected_type=type_hints["timestamp_format"])
             check_type(argname="argument trim_space", value=trim_space, expected_type=type_hints["trim_space"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
@@ -1390,6 +1436,8 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["strip_outer_element"] = strip_outer_element
         if time_format is not None:
             self._values["time_format"] = time_format
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
         if timestamp_format is not None:
             self._values["timestamp_format"] = timestamp_format
         if trim_space is not None:
@@ -1463,7 +1511,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def database(self) -> builtins.str:
         '''The database in which to create the file format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#database FileFormat#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#database FileFormat#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -1473,7 +1521,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def format_type(self) -> builtins.str:
         '''Specifies the format of the input files (for data loading) or output files (for data unloading).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#format_type FileFormat#format_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#format_type FileFormat#format_type}
         '''
         result = self._values.get("format_type")
         assert result is not None, "Required property 'format_type' is missing"
@@ -1485,7 +1533,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         must be unique for the database and schema in which the file format is created.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#name FileFormat#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#name FileFormat#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1495,7 +1543,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def schema(self) -> builtins.str:
         '''The schema in which to create the file format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#schema FileFormat#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#schema FileFormat#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -1507,7 +1555,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies to allow duplicate object field names (only the last one will be preserved).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#allow_duplicate FileFormat#allow_duplicate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#allow_duplicate FileFormat#allow_duplicate}
         '''
         result = self._values.get("allow_duplicate")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1518,7 +1566,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether to interpret columns with no defined logical data type as UTF-8 text.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#binary_as_text FileFormat#binary_as_text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#binary_as_text FileFormat#binary_as_text}
         '''
         result = self._values.get("binary_as_text")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1527,7 +1575,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def binary_format(self) -> typing.Optional[builtins.str]:
         '''Defines the encoding format for binary input or output.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#binary_format FileFormat#binary_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#binary_format FileFormat#binary_format}
         '''
         result = self._values.get("binary_format")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1536,7 +1584,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the file format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#comment FileFormat#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#comment FileFormat#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1545,7 +1593,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def compression(self) -> typing.Optional[builtins.str]:
         '''Specifies the current compression algorithm for the data file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#compression FileFormat#compression}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#compression FileFormat#compression}
         '''
         result = self._values.get("compression")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1554,7 +1602,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def date_format(self) -> typing.Optional[builtins.str]:
         '''Defines the format of date values in the data files (data loading) or table (data unloading).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#date_format FileFormat#date_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#date_format FileFormat#date_format}
         '''
         result = self._values.get("date_format")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1565,7 +1613,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether the XML parser disables automatic conversion of numeric and Boolean values from text to native representation.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#disable_auto_convert FileFormat#disable_auto_convert}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#disable_auto_convert FileFormat#disable_auto_convert}
         '''
         result = self._values.get("disable_auto_convert")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1576,7 +1624,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether the XML parser disables recognition of Snowflake semi-structured data tags.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#disable_snowflake_data FileFormat#disable_snowflake_data}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#disable_snowflake_data FileFormat#disable_snowflake_data}
         '''
         result = self._values.get("disable_snowflake_data")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1587,7 +1635,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Specifies whether to insert SQL NULL for empty fields in an input file, which are represented by two successive delimiters.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#empty_field_as_null FileFormat#empty_field_as_null}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#empty_field_as_null FileFormat#empty_field_as_null}
         '''
         result = self._values.get("empty_field_as_null")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1598,7 +1646,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that enables parsing of octal numbers.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#enable_octal FileFormat#enable_octal}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#enable_octal FileFormat#enable_octal}
         '''
         result = self._values.get("enable_octal")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1607,7 +1655,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def encoding(self) -> typing.Optional[builtins.str]:
         '''String (constant) that specifies the character set of the source data when loading data into a table.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#encoding FileFormat#encoding}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#encoding FileFormat#encoding}
         '''
         result = self._values.get("encoding")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1618,7 +1666,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether to generate a parsing error if the number of delimited columns (i.e. fields) in an input file does not match the number of columns in the corresponding table.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#error_on_column_count_mismatch FileFormat#error_on_column_count_mismatch}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#error_on_column_count_mismatch FileFormat#error_on_column_count_mismatch}
         '''
         result = self._values.get("error_on_column_count_mismatch")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1627,7 +1675,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def escape(self) -> typing.Optional[builtins.str]:
         '''Single character string used as the escape character for field values.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#escape FileFormat#escape}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#escape FileFormat#escape}
         '''
         result = self._values.get("escape")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1636,7 +1684,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def escape_unenclosed_field(self) -> typing.Optional[builtins.str]:
         '''Single character string used as the escape character for unenclosed field values only.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#escape_unenclosed_field FileFormat#escape_unenclosed_field}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#escape_unenclosed_field FileFormat#escape_unenclosed_field}
         '''
         result = self._values.get("escape_unenclosed_field")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1645,7 +1693,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def field_delimiter(self) -> typing.Optional[builtins.str]:
         '''Specifies one or more singlebyte or multibyte characters that separate fields in an input file (data loading) or unloaded file (data unloading).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#field_delimiter FileFormat#field_delimiter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#field_delimiter FileFormat#field_delimiter}
         '''
         result = self._values.get("field_delimiter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1654,7 +1702,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def field_optionally_enclosed_by(self) -> typing.Optional[builtins.str]:
         '''Character used to enclose strings.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#field_optionally_enclosed_by FileFormat#field_optionally_enclosed_by}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#field_optionally_enclosed_by FileFormat#field_optionally_enclosed_by}
         '''
         result = self._values.get("field_optionally_enclosed_by")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1663,14 +1711,14 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def file_extension(self) -> typing.Optional[builtins.str]:
         '''Specifies the extension for files unloaded to a stage.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#file_extension FileFormat#file_extension}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#file_extension FileFormat#file_extension}
         '''
         result = self._values.get("file_extension")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#id FileFormat#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#id FileFormat#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1684,7 +1732,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether UTF-8 encoding errors produce error conditions.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#ignore_utf8_errors FileFormat#ignore_utf8_errors}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#ignore_utf8_errors FileFormat#ignore_utf8_errors}
         '''
         result = self._values.get("ignore_utf8_errors")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1693,7 +1741,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def null_if(self) -> typing.Optional[typing.List[builtins.str]]:
         '''String used to convert to and from SQL NULL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#null_if FileFormat#null_if}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#null_if FileFormat#null_if}
         '''
         result = self._values.get("null_if")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1704,7 +1752,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether to use the first row headers in the data files to determine column names.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#parse_header FileFormat#parse_header}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#parse_header FileFormat#parse_header}
         '''
         result = self._values.get("parse_header")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1715,7 +1763,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether the XML parser preserves leading and trailing spaces in element content.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#preserve_space FileFormat#preserve_space}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#preserve_space FileFormat#preserve_space}
         '''
         result = self._values.get("preserve_space")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1724,7 +1772,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def record_delimiter(self) -> typing.Optional[builtins.str]:
         '''Specifies one or more singlebyte or multibyte characters that separate records in an input file (data loading) or unloaded file (data unloading).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#record_delimiter FileFormat#record_delimiter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#record_delimiter FileFormat#record_delimiter}
         '''
         result = self._values.get("record_delimiter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1735,7 +1783,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether to replace invalid UTF-8 characters with the Unicode replacement character (�).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#replace_invalid_characters FileFormat#replace_invalid_characters}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#replace_invalid_characters FileFormat#replace_invalid_characters}
         '''
         result = self._values.get("replace_invalid_characters")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1746,7 +1794,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies to skip any blank lines encountered in the data files.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_blank_lines FileFormat#skip_blank_lines}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_blank_lines FileFormat#skip_blank_lines}
         '''
         result = self._values.get("skip_blank_lines")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1757,7 +1805,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether to skip the BOM (byte order mark), if present in a data file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_byte_order_mark FileFormat#skip_byte_order_mark}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_byte_order_mark FileFormat#skip_byte_order_mark}
         '''
         result = self._values.get("skip_byte_order_mark")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1766,7 +1814,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def skip_header(self) -> typing.Optional[jsii.Number]:
         '''Number of lines at the start of the file to skip.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#skip_header FileFormat#skip_header}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#skip_header FileFormat#skip_header}
         '''
         result = self._values.get("skip_header")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1777,7 +1825,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that instructs the JSON parser to remove object fields or array elements containing null values.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_null_values FileFormat#strip_null_values}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_null_values FileFormat#strip_null_values}
         '''
         result = self._values.get("strip_null_values")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1788,7 +1836,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that instructs the JSON parser to remove outer brackets.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_outer_array FileFormat#strip_outer_array}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_outer_array FileFormat#strip_outer_array}
         '''
         result = self._values.get("strip_outer_array")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1799,7 +1847,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether the XML parser strips out the outer XML element, exposing 2nd level elements as separate documents.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#strip_outer_element FileFormat#strip_outer_element}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#strip_outer_element FileFormat#strip_outer_element}
         '''
         result = self._values.get("strip_outer_element")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1808,16 +1856,25 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def time_format(self) -> typing.Optional[builtins.str]:
         '''Defines the format of time values in the data files (data loading) or table (data unloading).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#time_format FileFormat#time_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#time_format FileFormat#time_format}
         '''
         result = self._values.get("time_format")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
+    def timeouts(self) -> typing.Optional["FileFormatTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#timeouts FileFormat#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["FileFormatTimeouts"], result)
+
+    @builtins.property
     def timestamp_format(self) -> typing.Optional[builtins.str]:
         '''Defines the format of timestamp values in the data files (data loading) or table (data unloading).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#timestamp_format FileFormat#timestamp_format}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#timestamp_format FileFormat#timestamp_format}
         '''
         result = self._values.get("timestamp_format")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1828,7 +1885,7 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean that specifies whether to remove white space from fields.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/file_format#trim_space FileFormat#trim_space}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#trim_space FileFormat#trim_space}
         '''
         result = self._values.get("trim_space")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1845,9 +1902,210 @@ class FileFormatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.fileFormat.FileFormatTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class FileFormatTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#create FileFormat#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#delete FileFormat#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#read FileFormat#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#update FileFormat#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d32ebaa1da844ed9a0a181fb6108f19c4c82806fa69ca76c38b776afc816140c)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#create FileFormat#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#delete FileFormat#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#read FileFormat#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/file_format#update FileFormat#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "FileFormatTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class FileFormatTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.fileFormat.FileFormatTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fc9611d447f68c78ca5bb7276e32097770158b5ddc3a0f94d68f7ec7dcbd5194)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__afb1143b27c413710a96fe8ef4bfc43c10bf1db79aa10391d4399ae5e4d26357)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6d85060ca927ead07fd7ac92413d4e05157b6d0ddf4036e8beb6d52fc1993ee9)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b0b9cb93b5e7380a44557ea91f3667e619db463e114ccdef76e2617311ad2083)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ff4ece79b4ccb2348f251d0a52172bcafec6cf2ef1ec965eb9dbf200dbf978f6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FileFormatTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FileFormatTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FileFormatTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__94d952631f4105e0b677fcae3887f68be8239b9712c5e0cdde25405d48450e69)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "FileFormat",
     "FileFormatConfig",
+    "FileFormatTimeouts",
+    "FileFormatTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -1891,6 +2149,7 @@ def _typecheckingstub__1f871f5ae7e15dfafe2dca75b0a00526ac1d5f1c41417b02a0a659368
     strip_outer_array: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     strip_outer_element: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     time_format: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[FileFormatTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     timestamp_format: typing.Optional[builtins.str] = None,
     trim_space: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
@@ -2179,8 +2438,56 @@ def _typecheckingstub__4f0ca45e58f9b02127267f919bdca2bf031f0eafbad9be71dab295739
     strip_outer_array: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     strip_outer_element: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     time_format: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[FileFormatTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     timestamp_format: typing.Optional[builtins.str] = None,
     trim_space: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d32ebaa1da844ed9a0a181fb6108f19c4c82806fa69ca76c38b776afc816140c(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fc9611d447f68c78ca5bb7276e32097770158b5ddc3a0f94d68f7ec7dcbd5194(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__afb1143b27c413710a96fe8ef4bfc43c10bf1db79aa10391d4399ae5e4d26357(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6d85060ca927ead07fd7ac92413d4e05157b6d0ddf4036e8beb6d52fc1993ee9(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b0b9cb93b5e7380a44557ea91f3667e619db463e114ccdef76e2617311ad2083(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ff4ece79b4ccb2348f251d0a52172bcafec6cf2ef1ec965eb9dbf200dbf978f6(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__94d952631f4105e0b677fcae3887f68be8239b9712c5e0cdde25405d48450e69(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, FileFormatTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

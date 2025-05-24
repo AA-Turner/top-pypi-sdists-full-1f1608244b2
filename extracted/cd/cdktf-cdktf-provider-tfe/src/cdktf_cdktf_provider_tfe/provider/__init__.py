@@ -1,7 +1,7 @@
 r'''
 # `provider`
 
-Refer to the Terraform Registry for docs: [`tfe`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs).
+Refer to the Terraform Registry for docs: [`tfe`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TfeProvider(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.provider.TfeProvider",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs tfe}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs tfe}.'''
 
     def __init__(
         self,
@@ -57,15 +57,15 @@ class TfeProvider(
         ssl_skip_verify: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         token: typing.Optional[builtins.str] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs tfe} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs tfe} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#alias TfeProvider#alias}
-        :param hostname: The Terraform Enterprise hostname to connect to. Defaults to app.terraform.io. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#hostname TfeProvider#hostname}
-        :param organization: The organization to apply to a resource if one is not defined on the resource itself. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#organization TfeProvider#organization}
-        :param ssl_skip_verify: Whether or not to skip certificate verifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#ssl_skip_verify TfeProvider#ssl_skip_verify}
-        :param token: The token used to authenticate with Terraform Enterprise. We recommend omitting the token which can be set as credentials in the CLI config file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#token TfeProvider#token}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#alias TfeProvider#alias}
+        :param hostname: The Terraform Enterprise hostname to connect to. Defaults to app.terraform.io. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#hostname TfeProvider#hostname}
+        :param organization: The organization to apply to a resource if one is not defined on the resource itself. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#organization TfeProvider#organization}
+        :param ssl_skip_verify: Whether or not to skip certificate verifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#ssl_skip_verify TfeProvider#ssl_skip_verify}
+        :param token: The token used to authenticate with Terraform Enterprise. We recommend omitting the token which can be set as credentials in the CLI config file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#token TfeProvider#token}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__049200213ad1b10e27791506b4c753aea6f02c7d91bea2cbed4b36fd3ad22376)
@@ -94,7 +94,7 @@ class TfeProvider(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TfeProvider to import.
-        :param import_from_id: The id of the existing TfeProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TfeProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TfeProvider to import is found.
         '''
         if __debug__:
@@ -253,11 +253,11 @@ class TfeProviderConfig:
         token: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#alias TfeProvider#alias}
-        :param hostname: The Terraform Enterprise hostname to connect to. Defaults to app.terraform.io. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#hostname TfeProvider#hostname}
-        :param organization: The organization to apply to a resource if one is not defined on the resource itself. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#organization TfeProvider#organization}
-        :param ssl_skip_verify: Whether or not to skip certificate verifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#ssl_skip_verify TfeProvider#ssl_skip_verify}
-        :param token: The token used to authenticate with Terraform Enterprise. We recommend omitting the token which can be set as credentials in the CLI config file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#token TfeProvider#token}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#alias TfeProvider#alias}
+        :param hostname: The Terraform Enterprise hostname to connect to. Defaults to app.terraform.io. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#hostname TfeProvider#hostname}
+        :param organization: The organization to apply to a resource if one is not defined on the resource itself. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#organization TfeProvider#organization}
+        :param ssl_skip_verify: Whether or not to skip certificate verifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#ssl_skip_verify TfeProvider#ssl_skip_verify}
+        :param token: The token used to authenticate with Terraform Enterprise. We recommend omitting the token which can be set as credentials in the CLI config file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#token TfeProvider#token}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__dccebcf7b481da73a5f7e45a4a4c9de0069b5cc0efcbb5111b7823647cd51cbb)
@@ -282,7 +282,7 @@ class TfeProviderConfig:
     def alias(self) -> typing.Optional[builtins.str]:
         '''Alias name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#alias TfeProvider#alias}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#alias TfeProvider#alias}
         '''
         result = self._values.get("alias")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -291,7 +291,7 @@ class TfeProviderConfig:
     def hostname(self) -> typing.Optional[builtins.str]:
         '''The Terraform Enterprise hostname to connect to. Defaults to app.terraform.io.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#hostname TfeProvider#hostname}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#hostname TfeProvider#hostname}
         '''
         result = self._values.get("hostname")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -300,7 +300,7 @@ class TfeProviderConfig:
     def organization(self) -> typing.Optional[builtins.str]:
         '''The organization to apply to a resource if one is not defined on the resource itself.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#organization TfeProvider#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#organization TfeProvider#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -311,7 +311,7 @@ class TfeProviderConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether or not to skip certificate verifications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#ssl_skip_verify TfeProvider#ssl_skip_verify}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#ssl_skip_verify TfeProvider#ssl_skip_verify}
         '''
         result = self._values.get("ssl_skip_verify")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -323,7 +323,7 @@ class TfeProviderConfig:
         We recommend omitting
         the token which can be set as credentials in the CLI config file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs#token TfeProvider#token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs#token TfeProvider#token}
         '''
         result = self._values.get("token")
         return typing.cast(typing.Optional[builtins.str], result)

@@ -48,6 +48,9 @@ class StandardCapabilityName(str, Enum):
     REFRESH_ACCESS_TOKEN = 'refresh_access_token'
     UNASSIGN_ENTITLEMENT = 'unassign_entitlement'
     VALIDATE_CREDENTIALS = 'validate_credentials'
+    TRANSFER_DATA = 'transfer_data'
+    RELEASE_RESOURCES = 'release_resources'
+    DOWNGRADE_LICENSE = 'downgrade_license'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

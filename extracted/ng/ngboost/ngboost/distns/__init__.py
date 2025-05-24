@@ -4,12 +4,14 @@ from .cauchy import Cauchy
 from .distn import ClassificationDistn, Distn, RegressionDistn
 from .exponential import Exponential
 from .gamma import Gamma
+from .halfnormal import HalfNormal
 from .laplace import Laplace
 from .lognormal import LogNormal
 from .multivariate_normal import MultivariateNormal
 from .normal import Normal, NormalFixedMean, NormalFixedVar
 from .poisson import Poisson
 from .t import T, TFixedDf, TFixedDfFixedVar
+from .weibull import Weibull
 
 __all__ = [
     "Bernoulli",
@@ -20,6 +22,7 @@ __all__ = [
     "RegressionDistn",
     "Exponential",
     "Gamma",
+    "HalfNormal",
     "Laplace",
     "LogNormal",
     "MultivariateNormal",
@@ -30,4 +33,5 @@ __all__ = [
     "T",
     "TFixedDf",
     "TFixedDfFixedVar",
+    "Weibull",
 ]

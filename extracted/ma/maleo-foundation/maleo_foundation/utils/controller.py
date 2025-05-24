@@ -1,7 +1,7 @@
 import inspect
 from fastapi import status
 from functools import wraps
-from typing import Awaitable, Callable, Dict, List
+from typing import Awaitable, Callable, Dict, List, Union
 from maleo_foundation.types import BaseTypes
 from maleo_foundation.models.responses import BaseResponses
 from maleo_foundation.models.transfers.parameters.general \
@@ -53,33 +53,37 @@ class BaseControllerUtils:
                 if not isinstance(result.content, Dict):
                     return result
 
-                #* Process the fields if needed
-                if (result.success
+                #* Recursive function to apply expansion processors
+                def recursive_expand(data:Union[Dict, List], expand:BaseTypes.OptionalListOfStrings):
+                    if isinstance(data, list):
+                        for idx, item in enumerate(data):
+                            data[idx] = recursive_expand(item, expand)
+                        return data
+                    elif isinstance(data, Dict):
+                        #* Apply each processor to current dict
+                        for processor in field_expansion_processors or []:
+                            raw_parameters = {"data": data, "expand": expand}
+                            parameters = (
+                                BaseGeneralParametersTransfers
+                                .FieldExpansionProcessor
+                                .model_validate(raw_parameters)
+                            )
+                            data = processor(parameters)
+                        for key in data.keys():
+                            if isinstance(data[key], (Dict, List)):
+                                data[key] = recursive_expand(data[key], expand)
+                        return data
+                    else:
+                        return data
+
+                #* Process expansions recursively if needed
+                if (
+                    result.success
                     and result.content.get("data", None) is not None
                     and field_expansion_processors is not None
                 ):
                     data = result.content["data"]
-                    if isinstance(data, List):
-                        for idx, dt in enumerate(data):
-                            for processor in field_expansion_processors:
-                                raw_parameters = {"data": dt, "expand": expand}
-                                parameters = (
-                                    BaseGeneralParametersTransfers
-                                    .FieldExpansionProcessor
-                                    .model_validate(raw_parameters)
-                                )
-                                dt = processor(parameters)
-                                data[idx] = dt
-                    elif isinstance(data, Dict):
-                        raw_parameters = {"data": data, "expand": expand}
-                        parameters = (
-                            BaseGeneralParametersTransfers
-                            .FieldExpansionProcessor
-                            .model_validate(raw_parameters)
-                        )
-                        for processor in field_expansion_processors:
-                            data = processor(parameters)
-                    result.content["data"] = data
+                    result.content["data"] = recursive_expand(data, expand)
                     result.process_response()
 
                 return result

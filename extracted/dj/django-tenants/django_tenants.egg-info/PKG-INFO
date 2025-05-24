@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: django-tenants
-Version: 3.7.0
+Version: 3.8.0
 Summary: Tenant support for Django using PostgreSQL schemas.
 Home-page: https://github.com/django-tenants/django-tenants
 Author: Thomas Turner
@@ -13,14 +13,26 @@ Classifier: Framework :: Django
 Classifier: Framework :: Django :: 4.2
 Classifier: Framework :: Django :: 5.0
 Classifier: Framework :: Django :: 5.1
+Classifier: Framework :: Django :: 5.2
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 License-File: LICENSE
+Requires-Dist: Django<6.0,>=2.1
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
 
 django-tenants
 ==============

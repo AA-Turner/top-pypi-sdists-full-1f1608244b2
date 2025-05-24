@@ -53,6 +53,13 @@ llmobs_env_var = os.environ.get("DD_LLMOBS_ENABLED", "false").lower() in ("true"
 if llmobs_env_var:
     from ddtrace.llmobs import LLMObs
 
+exception_replay_env_var = os.environ.get(
+    "DD_EXCEPTION_REPLAY_ENABLED", "false"
+).lower() in ("true", "1")
+if exception_replay_env_var:
+    from ddtrace.debugging._exception.replay import SpanExceptionHandler
+    from ddtrace.debugging._uploader import LogsIntakeUploaderV1
+
 logger = logging.getLogger(__name__)
 
 DD_FLUSH_TO_LOG = "DD_FLUSH_TO_LOG"
@@ -224,6 +231,11 @@ class _LambdaDecorator(object):
             if llmobs_env_var:
                 LLMObs.enable()
 
+            # Enable Exception Replay
+            if exception_replay_env_var:
+                logger.debug("Enabling exception replay")
+                SpanExceptionHandler.enable()
+
             logger.debug("datadog_lambda_wrapper initialized")
         except Exception as e:
             logger.error(format_err_with_traceback(e))
@@ -393,6 +405,10 @@ class _LambdaDecorator(object):
 
             if llmobs_env_var:
                 LLMObs.flush()
+
+            # Flush exception replay
+            if exception_replay_env_var:
+                LogsIntakeUploaderV1._instance.periodic()
 
             if self.encode_authorizer_context and is_authorizer_response(self.response):
                 self._inject_authorizer_span_headers(

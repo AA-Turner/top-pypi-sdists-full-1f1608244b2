@@ -17,10 +17,12 @@ from aequilibrae.project.network import Network
 from aequilibrae.project.project_cleaning import clean
 from aequilibrae.project.project_creation import initialize_tables
 from aequilibrae.project.zoning import Zoning
+from aequilibrae.project.tools import MigrationManager
+from aequilibrae.project.database_connection import database_connection
 from aequilibrae.reference_files import spatialite_database, demo_init_py
 from aequilibrae.transit.transit import Transit
 from aequilibrae.utils.db_utils import commit_and_close
-from aequilibrae.utils.model_run_utils import import_directory_as_module
+from aequilibrae.utils.model_run_utils import import_file_as_module
 
 
 class Project:
@@ -144,6 +146,37 @@ class Project:
         allows the user to read the log or clear it"""
         return Log(self.project_base_path)
 
+    def upgrade(self):
+        """
+        Find and apply all applicable migrations.
+
+        All database upgrades are applied within a single transaction.
+
+        If skipping a specific migration is required, use the ``aequilbrae.project.tools.MigrationManager`` object
+        directly. Consult it's documentation page for details. Take care when skipping migrations.
+        """
+        global_logger.info("Starting database upgrades")
+        targets = [
+            (MigrationManager(MigrationManager.network_migration_file), database_connection("project")),
+        ]
+
+        if (self.project_base_path / "public_transport.sqlite").exists():
+            targets.append((MigrationManager(MigrationManager.transit_migration_file), database_connection("transit")))
+
+        try:
+            for mm, conn in targets:
+                with conn:
+                    mm.mark_all_as_seen(conn)
+
+            for mm, conn in targets:
+                with conn:
+                    mm.upgrade(conn)
+                    conn.execute("VACUUM")
+            global_logger.info("Completed database upgrades")
+        finally:
+            for _, conn in targets:
+                conn.close()
+
     def __load_objects(self):
         matrix_folder = self.project_base_path / "matrices"
         matrix_folder.mkdir(parents=True, exist_ok=True)
@@ -169,7 +202,7 @@ class Project:
         Refer to ``run/__init__.py`` file within the project folder for documentation.
         """
         entry_points = self.parameters["run"]
-        module = import_directory_as_module(self.project_base_path / "run", "aequilibrae.run")
+        module = import_file_as_module(self.project_base_path / "run" / "__init__.py", "aequilibrae.run")
         sentinal = object()
         for name, kwargs in entry_points.items():
             attr = getattr(module, name)

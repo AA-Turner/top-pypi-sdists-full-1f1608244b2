@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "geoarrow_type.h"
+#include "geoarrow/geoarrow_type.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,26 +27,18 @@ static inline enum GeoArrowGeometryType GeoArrowGeometryTypeFromType(
       break;
   }
 
-  int type_int = type;
-
-  if (type_int >= GEOARROW_TYPE_INTERLEAVED_POINT) {
-    type_int -= 10000;
+  int geometry_type = (int)type;
+  if (geometry_type >= GEOARROW_TYPE_INTERLEAVED_POINT) {
+    geometry_type -= 10000;
   }
 
-  if (type_int >= 4000) {
-    type_int -= 4000;
-  } else if (type_int >= 3000) {
-    type_int -= 3000;
-  } else if (type_int >= 2000) {
-    type_int -= 2000;
-  } else if (type_int >= 1000) {
-    type_int -= 1000;
-  }
-
-  if (type_int > 6 || type_int < 1) {
-    return GEOARROW_GEOMETRY_TYPE_GEOMETRY;
+  geometry_type = (int)geometry_type % 1000;
+  if (geometry_type == GEOARROW_GEOMETRY_TYPE_BOX) {
+    return GEOARROW_GEOMETRY_TYPE_BOX;
+  } else if (geometry_type <= 6 && geometry_type >= 1) {
+    return (enum GeoArrowGeometryType)geometry_type;
   } else {
-    return (enum GeoArrowGeometryType)type_int;
+    return GEOARROW_GEOMETRY_TYPE_GEOMETRY;
   }
 }
 
@@ -67,6 +59,8 @@ static inline const char* GeoArrowExtensionNameFromType(enum GeoArrowType type) 
 
   int geometry_type = GeoArrowGeometryTypeFromType(type);
   switch (geometry_type) {
+    case GEOARROW_GEOMETRY_TYPE_BOX:
+      return "geoarrow.box";
     case GEOARROW_GEOMETRY_TYPE_POINT:
       return "geoarrow.point";
     case GEOARROW_GEOMETRY_TYPE_LINESTRING:
@@ -81,6 +75,82 @@ static inline const char* GeoArrowExtensionNameFromType(enum GeoArrowType type) 
       return "geoarrow.multipolygon";
     default:
       return NULL;
+  }
+}
+
+/// \brief Returns a string representation of a GeoArrowDimensions
+/// \ingroup geoarrow-schema
+static inline const char* GeoArrowDimensionsString(enum GeoArrowDimensions dimensions) {
+  switch (dimensions) {
+    case GEOARROW_DIMENSIONS_UNKNOWN:
+      return "unknown";
+    case GEOARROW_DIMENSIONS_XY:
+      return "xy";
+    case GEOARROW_DIMENSIONS_XYZ:
+      return "xyz";
+    case GEOARROW_DIMENSIONS_XYM:
+      return "xym";
+    case GEOARROW_DIMENSIONS_XYZM:
+      return "xyzm";
+    default:
+      return "<not valid>";
+  }
+}
+
+/// \brief Returns a string representation of a GeoArrowCoordType
+/// \ingroup geoarrow-schema
+static inline const char* GeoArrowCoordTypeString(enum GeoArrowCoordType dimensions) {
+  switch (dimensions) {
+    case GEOARROW_COORD_TYPE_UNKNOWN:
+      return "unknown";
+    case GEOARROW_COORD_TYPE_SEPARATE:
+      return "separate";
+    case GEOARROW_COORD_TYPE_INTERLEAVED:
+      return "interleaved";
+    default:
+      return "<not valid>";
+  }
+}
+
+/// \brief Returns a string representation of a GeoArrowEdgeType
+/// \ingroup geoarrow-schema
+static inline const char* GeoArrowEdgeTypeString(enum GeoArrowEdgeType edge_type) {
+  switch (edge_type) {
+    case GEOARROW_EDGE_TYPE_PLANAR:
+      return "planar";
+    case GEOARROW_EDGE_TYPE_SPHERICAL:
+      return "spherical";
+    case GEOARROW_EDGE_TYPE_VINCENTY:
+      return "vincenty";
+    case GEOARROW_EDGE_TYPE_THOMAS:
+      return "thomas";
+    case GEOARROW_EDGE_TYPE_ANDOYER:
+      return "andoyer";
+    case GEOARROW_EDGE_TYPE_KARNEY:
+      return "karney";
+    default:
+      return "<not valid>";
+  }
+}
+
+/// \brief Returns a string representation of a GeoArrowCrsType
+/// \ingroup geoarrow-schema
+static inline const char* GeoArrowCrsTypeString(enum GeoArrowCrsType crs_type) {
+  switch (crs_type) {
+    case GEOARROW_CRS_TYPE_NONE:
+      return "none";
+    case GEOARROW_CRS_TYPE_UNKNOWN:
+      return "unknown";
+    case GEOARROW_CRS_TYPE_PROJJSON:
+      return "projjson";
+    case GEOARROW_CRS_TYPE_WKT2_2019:
+      return "wkt2:2019";
+    case GEOARROW_CRS_TYPE_AUTHORITY_CODE:
+      return "authority_code";
+    case GEOARROW_CRS_TYPE_SRID:
+      return "srid";
+    default:
+      return "<not valid>";
   }
 }
 
@@ -99,21 +169,19 @@ static inline enum GeoArrowDimensions GeoArrowDimensionsFromType(enum GeoArrowTy
       break;
   }
 
-  int geometry_type = GeoArrowGeometryTypeFromType(type);
-  int type_int = type;
-  type_int -= geometry_type;
-  if (type_int > 5000) {
+  int type_int = (int)type;
+  if (type_int >= GEOARROW_TYPE_INTERLEAVED_POINT) {
     type_int -= 10000;
   }
 
-  switch (type_int) {
+  switch (type_int / 1000) {
     case 0:
       return GEOARROW_DIMENSIONS_XY;
-    case 1000:
+    case 1:
       return GEOARROW_DIMENSIONS_XYZ;
-    case 2000:
+    case 2:
       return GEOARROW_DIMENSIONS_XYM;
-    case 3000:
+    case 3:
       return GEOARROW_DIMENSIONS_XYZM;
     default:
       return GEOARROW_DIMENSIONS_UNKNOWN;
@@ -146,6 +214,9 @@ static inline enum GeoArrowType GeoArrowMakeType(enum GeoArrowGeometryType geome
     return GEOARROW_TYPE_UNINITIALIZED;
   } else if (coord_type == GEOARROW_COORD_TYPE_UNKNOWN) {
     return GEOARROW_TYPE_UNINITIALIZED;
+  } else if (geometry_type == GEOARROW_GEOMETRY_TYPE_BOX &&
+             coord_type != GEOARROW_COORD_TYPE_SEPARATE) {
+    return GEOARROW_TYPE_UNINITIALIZED;
   }
 
   int type_int = (dimensions - 1) * 1000 + (coord_type - 1) * 10000 + geometry_type;
@@ -157,6 +228,8 @@ static inline enum GeoArrowType GeoArrowMakeType(enum GeoArrowGeometryType geome
 static inline const char* GeoArrowGeometryTypeString(
     enum GeoArrowGeometryType geometry_type) {
   switch (geometry_type) {
+    case GEOARROW_GEOMETRY_TYPE_GEOMETRY:
+      return "GEOMETRY";
     case GEOARROW_GEOMETRY_TYPE_POINT:
       return "POINT";
     case GEOARROW_GEOMETRY_TYPE_LINESTRING:
@@ -171,8 +244,10 @@ static inline const char* GeoArrowGeometryTypeString(
       return "MULTIPOLYGON";
     case GEOARROW_GEOMETRY_TYPE_GEOMETRYCOLLECTION:
       return "GEOMETRYCOLLECTION";
+    case GEOARROW_GEOMETRY_TYPE_BOX:
+      return "BOX";
     default:
-      return NULL;
+      return "<not valid>";
   }
 }
 
@@ -252,10 +327,93 @@ static inline void GeoArrowMapDimensions(enum GeoArrowDimensions src_dim,
 }
 
 // Four little-endian NANs
+#if defined(GEOARROW_NATIVE_ENDIAN) && GEOARROW_NATIVE_ENDIAN == 0x00
+static uint8_t _GeoArrowkEmptyPointCoords[] = {
+    0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xf8, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+#else
 static uint8_t _GeoArrowkEmptyPointCoords[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0xf8, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0xf8, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x7f};
+#endif
+
+/// \brief View a GeoArrowGeometry
+/// \ingroup geoarrow-geometry
+///
+/// The geometry_type must be a POINT or LINESTRING.
+static inline struct GeoArrowGeometryView GeoArrowGeometryAsView(
+    const struct GeoArrowGeometry* geom) {
+  struct GeoArrowGeometryView out;
+  out.root = geom->root;
+  out.size_nodes = geom->size_nodes;
+  return out;
+}
+
+/// \brief Set a node where coordinates are stored in a row-major (C) array
+/// \ingroup geoarrow-geometry
+///
+/// The geometry_type must be a POINT or LINESTRING.
+static inline void GeoArrowGeometryNodeSetInterleaved(
+    struct GeoArrowGeometryNode* node, enum GeoArrowGeometryType geometry_type,
+    enum GeoArrowDimensions dimensions, struct GeoArrowBufferView coords) {
+  node->geometry_type = (uint8_t)geometry_type;
+  node->dimensions = (uint8_t)dimensions;
+
+  int32_t coord_stride_bytes = _GeoArrowkNumDimensions[dimensions] * sizeof(double);
+  node->size = (uint32_t)(coords.size_bytes / coord_stride_bytes);
+  for (int i = 0; i < 4; i++) {
+    node->coord_stride[i] = coord_stride_bytes;
+    node->coords[i] = coords.data + (i * sizeof(double));
+  }
+}
+
+/// \brief Set a node where coordinates are stored in a column-major (Fortran) array
+/// \ingroup geoarrow-geometry
+///
+/// The geometry_type must be a POINT or LINESTRING.
+static inline void GeoArrowGeometryNodeSetSeparated(
+    struct GeoArrowGeometryNode* node, enum GeoArrowGeometryType geometry_type,
+    enum GeoArrowDimensions dimensions, struct GeoArrowBufferView coords) {
+  node->geometry_type = (uint8_t)geometry_type;
+  node->dimensions = (uint8_t)dimensions;
+
+  int64_t dimension_size_bytes = coords.size_bytes / _GeoArrowkNumDimensions[dimensions];
+  node->size = (uint32_t)(dimension_size_bytes / sizeof(double));
+  for (int i = 0; i < 4; i++) {
+    node->coord_stride[i] = sizeof(double);
+    node->coords[i] = coords.data + (i * dimension_size_bytes);
+  }
+}
+
+/// \brief Inline version of GeoArrowGeometryResizeNodes
+/// \ingroup geoarrow-geometry
+static inline GeoArrowErrorCode GeoArrowGeometryResizeNodesInline(
+    struct GeoArrowGeometry* geom, int64_t size_nodes) {
+  if (size_nodes < geom->capacity_nodes) {
+    geom->size_nodes = size_nodes;
+    return GEOARROW_OK;
+  } else {
+    return GeoArrowGeometryResizeNodes(geom, size_nodes);
+  }
+}
+
+/// \brief Inline version of GeoArrowGeometryAppendNode
+/// \ingroup geoarrow-geometry
+static inline GeoArrowErrorCode GeoArrowGeometryAppendNodeInline(
+    struct GeoArrowGeometry* geom, struct GeoArrowGeometryNode** out) {
+  if (geom->size_nodes < geom->capacity_nodes) {
+    *out = geom->root + (geom->size_nodes++);
+    memset(*out, 0, sizeof(struct GeoArrowGeometryNode));
+    for (uint32_t i = 0; i < 4; i++) {
+      (*out)->coords[i] = _GeoArrowkEmptyPointCoords;
+    }
+    return GEOARROW_OK;
+  } else {
+    return GeoArrowGeometryAppendNode(geom, out);
+  }
+}
 
 // Copies coordinates from one view to another keeping dimensions the same.
 // This function fills dimensions in dst but not in src with NAN; dimensions
@@ -335,7 +493,7 @@ static inline int GeoArrowBuilderOffsetCheck(struct GeoArrowBuilder* builder, in
 }
 
 static inline void GeoArrowBuilderOffsetAppendUnsafe(struct GeoArrowBuilder* builder,
-                                                     int32_t i, int32_t* data,
+                                                     int32_t i, const int32_t* data,
                                                      int64_t additional_size_elements) {
   struct GeoArrowWritableBufferView* buf = &builder->view.buffers[i + 1];
   memcpy(buf->data.as_uint8 + buf->size_bytes, data,
@@ -444,7 +602,7 @@ static inline GeoArrowErrorCode GeoArrowBuilderCoordsReserve(
 
       return GEOARROW_OK;
     default:
-      // Beacuse there is no include <errno.h> here yet
+      // Because there is no include <errno.h> here yet
       return -1;
   }
 }
@@ -474,7 +632,7 @@ static inline GeoArrowErrorCode GeoArrowBuilderOffsetReserve(
 }
 
 static inline GeoArrowErrorCode GeoArrowBuilderOffsetAppend(
-    struct GeoArrowBuilder* builder, int32_t i, int32_t* data,
+    struct GeoArrowBuilder* builder, int32_t i, const int32_t* data,
     int64_t additional_size_elements) {
   if (!GeoArrowBuilderOffsetCheck(builder, i, additional_size_elements)) {
     int result = GeoArrowBuilderOffsetReserve(builder, i, additional_size_elements);

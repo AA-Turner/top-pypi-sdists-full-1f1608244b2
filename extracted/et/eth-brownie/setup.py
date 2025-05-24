@@ -19,12 +19,12 @@ else:
         requirements_filename = "requirements.txt"
 
 with open(requirements_filename, "r") as f:
-    requirements = list(map(str.strip, f.read().split("\n")))[:-1]
+    requirements = [line.strip() for line in f if line.strip() and not line.startswith("#")]
 
 setup(
     name="eth-brownie",
     packages=find_packages(),
-    version="1.20.7",  # don't change this manually, use bumpversion instead
+    version="1.21.0",  # don't change this manually, use bumpversion instead
     license="MIT",
     description="A Python framework for Ethereum smart contract deployment, testing and interaction.",  # noqa: E501
     long_description=long_description,

@@ -1,7 +1,7 @@
 r'''
 # `data_tfe_registry_provider`
 
-Refer to the Terraform Registry for docs: [`data_tfe_registry_provider`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider).
+Refer to the Terraform Registry for docs: [`data_tfe_registry_provider`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataTfeRegistryProvider(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataTfeRegistryProvider.DataTfeRegistryProvider",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider tfe_registry_provider}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider tfe_registry_provider}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class DataTfeRegistryProvider(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider tfe_registry_provider} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider tfe_registry_provider} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#name DataTfeRegistryProvider#name}
-        :param namespace: The namespace of the provider. For private providers this is the same as the oraganization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#namespace DataTfeRegistryProvider#namespace}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#organization DataTfeRegistryProvider#organization}
-        :param registry_name: Whether this is a publicly maintained provider or private. Must be either ``public`` or ``private``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#registry_name DataTfeRegistryProvider#registry_name}
+        :param name: Name of the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#name DataTfeRegistryProvider#name}
+        :param namespace: The namespace of the provider. For private providers this is the same as the oraganization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#namespace DataTfeRegistryProvider#namespace}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#organization DataTfeRegistryProvider#organization}
+        :param registry_name: Whether this is a publicly maintained provider or private. Must be either ``public`` or ``private``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#registry_name DataTfeRegistryProvider#registry_name}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class DataTfeRegistryProvider(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataTfeRegistryProvider to import.
-        :param import_from_id: The id of the existing DataTfeRegistryProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataTfeRegistryProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataTfeRegistryProvider to import is found.
         '''
         if __debug__:
@@ -273,10 +273,10 @@ class DataTfeRegistryProviderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#name DataTfeRegistryProvider#name}
-        :param namespace: The namespace of the provider. For private providers this is the same as the oraganization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#namespace DataTfeRegistryProvider#namespace}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#organization DataTfeRegistryProvider#organization}
-        :param registry_name: Whether this is a publicly maintained provider or private. Must be either ``public`` or ``private``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#registry_name DataTfeRegistryProvider#registry_name}
+        :param name: Name of the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#name DataTfeRegistryProvider#name}
+        :param namespace: The namespace of the provider. For private providers this is the same as the oraganization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#namespace DataTfeRegistryProvider#namespace}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#organization DataTfeRegistryProvider#organization}
+        :param registry_name: Whether this is a publicly maintained provider or private. Must be either ``public`` or ``private``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#registry_name DataTfeRegistryProvider#registry_name}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -385,7 +385,7 @@ class DataTfeRegistryProviderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#name DataTfeRegistryProvider#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#name DataTfeRegistryProvider#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -395,7 +395,7 @@ class DataTfeRegistryProviderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def namespace(self) -> typing.Optional[builtins.str]:
         '''The namespace of the provider. For private providers this is the same as the oraganization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#namespace DataTfeRegistryProvider#namespace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#namespace DataTfeRegistryProvider#namespace}
         '''
         result = self._values.get("namespace")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -404,7 +404,7 @@ class DataTfeRegistryProviderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''Name of the organization. If omitted, organization must be defined in the provider config.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#organization DataTfeRegistryProvider#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#organization DataTfeRegistryProvider#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -413,7 +413,7 @@ class DataTfeRegistryProviderConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def registry_name(self) -> typing.Optional[builtins.str]:
         '''Whether this is a publicly maintained provider or private. Must be either ``public`` or ``private``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/registry_provider#registry_name DataTfeRegistryProvider#registry_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/registry_provider#registry_name DataTfeRegistryProvider#registry_name}
         '''
         result = self._values.get("registry_name")
         return typing.cast(typing.Optional[builtins.str], result)

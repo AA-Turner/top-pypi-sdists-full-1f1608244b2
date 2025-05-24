@@ -1,5 +1,6 @@
 """The maplibregl module provides the Map class for creating interactive maps using the maplibre.ipywidget module."""
 
+import json
 import logging
 import os
 import requests
@@ -154,12 +155,21 @@ class Map(MapWidget):
                         "The provided style URL is invalid. Falling back to 'dark-matter'."
                     )
                     style = "dark-matter"
+                else:
+                    style = json.loads(response.text)
             elif style.startswith("3d-"):
                 style = maptiler_3d_style(
                     style=style.replace("3d-", "").lower(),
                     exaggeration=kwargs.pop("exaggeration", 1),
                     tile_size=kwargs.pop("tile_size", 512),
                     hillshade=kwargs.pop("hillshade", True),
+                )
+            elif style.startswith("amazon-"):
+                style = construct_amazon_style(
+                    map_style=style.replace("amazon-", "").lower(),
+                    region=kwargs.pop("region", "us-east-1"),
+                    api_key=kwargs.pop("api_key", None),
+                    token=kwargs.pop("token", "AWS_MAPS_API_KEY"),
                 )
 
             elif style.lower() in carto_basemaps:
@@ -779,6 +789,8 @@ class Map(MapWidget):
             options=options, position=position, geojson=geojson, **kwargs
         )
 
+        self.controls["draw"] = position
+
     def add_globe_control(self, position: str = "top-right", **kwargs: Any) -> None:
         """
         Adds a globe control to the map.
@@ -797,6 +809,39 @@ class Map(MapWidget):
         """
         if "globe" not in self.controls:
             self.add_control(GlobeControl(), position=position, **kwargs)
+
+    def add_search_control(
+        self,
+        position: str = "top-right",
+        api_key: str = None,
+        collapsed: bool = True,
+        **kwargs: Any,
+    ) -> None:
+        """
+        Adds a search control to the map.
+
+        Args:
+            position (str): The position of the control on the map. Defaults to "top-right".
+            api_key (str): The API key for the search control. Defaults to None.
+                If not provided, it will be retrieved from the environment variable MAPTILER_KEY.
+            collapsed (bool): Whether the control is collapsed. Defaults to True.
+            **kwargs: Additional keyword arguments to be passed to the search control.
+                See https://eoda-dev.github.io/py-maplibregl/api/controls/#maplibre.controls.MapTilerGeocodingControl
+        """
+        from maplibre.controls import MapTilerGeocodingControl
+
+        if api_key is None:
+            api_key = common.get_api_key("MAPTILER_KEY")
+            if api_key is None:
+                print(
+                    "An MapTiler API key is required. Please set the MAPTILER_KEY environment variable."
+                )
+                return
+
+        control = MapTilerGeocodingControl(
+            api_key=api_key, collapsed=collapsed, **kwargs
+        )
+        self.add_control(control, position=position)
 
     def save_draw_features(self, filepath: str, indent=4, **kwargs) -> None:
         """
@@ -1006,7 +1051,12 @@ class Map(MapWidget):
                 max_zoom = basemap["max_zoom"]
             if "min_zoom" in basemap.keys():
                 min_zoom = basemap["min_zoom"]
-
+        elif basemap == "amazon-satellite":
+            region = kwargs.pop("region", "us-east-1")
+            token = kwargs.pop("token", "AWS_MAPS_API_KEY")
+            url = f"https://maps.geo.{region}.amazonaws.com/v2/tiles/raster.satellite/{{z}}/{{x}}/{{y}}?key={os.getenv(token)}"
+            attribution = "© Amazon"
+            print(url)
         elif basemap in basemaps:
             url = basemaps[basemap]["url"]
             if attribution is None:
@@ -1028,7 +1078,7 @@ class Map(MapWidget):
             attribution=attribution,
             max_zoom=max_zoom,
             min_zoom=min_zoom,
-            tile_size=256,
+            # tile_size=256,
             **kwargs,
         )
 
@@ -1958,6 +2008,17 @@ class Map(MapWidget):
         Returns:
             None
         """
+        if name == "background":
+            for layer in self.get_style_layers():
+                layer_type = layer.get("type")
+                if layer_type != "symbol":
+                    super().set_paint_property(
+                        layer["id"], f"{layer_type}-opacity", opacity
+                    )
+                else:
+                    super().set_paint_property(layer["id"], "icon-opacity", opacity)
+                    super().set_paint_property(layer["id"], "text-opacity", opacity)
+            return
 
         if name in self.layer_dict:
             layer_type = self.layer_dict[name]["layer"].to_dict()["type"]
@@ -1988,10 +2049,14 @@ class Map(MapWidget):
         Returns:
             None
         """
-        super().set_visibility(name, visible)
-        self.layer_dict[name]["visible"] = visible
-        # if self.layer_manager is not None:
-        #     self.layer_manager.refresh()
+
+        if name == "background":
+            for layer in self.get_style_layers():
+                super().set_visibility(layer["id"], visible)
+        else:
+            super().set_visibility(name, visible)
+        if name in self.layer_dict:
+            self.layer_dict[name]["visible"] = visible
 
     def layer_interact(self, name=None):
         """Create a layer widget for changing the visibility and opacity of a layer.
@@ -5153,6 +5218,7 @@ class Map(MapWidget):
     def add_annotation_widget(
         self,
         properties: Optional[Dict[str, List[Any]]] = None,
+        geojson: Optional[Union[str, dict]] = None,
         time_format: str = "%Y%m%dT%H%M%S",
         out_dir: Optional[str] = None,
         filename_prefix: str = "",
@@ -5166,6 +5232,10 @@ class Map(MapWidget):
         download: bool = True,
         name: str = None,
         paint: Dict[str, Any] = None,
+        options: Optional[Dict[str, Any]] = None,
+        controls: Optional[Dict[str, Any]] = None,
+        position: str = "top-right",
+        callback: Callable = None,
         add_header: bool = True,
         widget_icon: str = "mdi-drawing",
         close_icon: str = "mdi-close",
@@ -5200,11 +5270,14 @@ class Map(MapWidget):
             label (str, optional): Label for the annotation widget. Defaults to "Annotation".
             background_color (str, optional): Background color of the annotation widget. Defaults to "#f5f5f5".
             expanded (bool, optional): Whether the annotation widget is expanded by default. Defaults to True.
+            callback (Callable, optional): A callback function to be called when the export button is clicked.
+                Defaults to None.
             **kwargs (Any, optional): Additional keyword arguments for the add_to_sidebar method.
         """
         widget = create_vector_data(
             self,
             properties=properties,
+            geojson=geojson,
             time_format=time_format,
             out_dir=out_dir,
             filename_prefix=filename_prefix,
@@ -5218,7 +5291,11 @@ class Map(MapWidget):
             download=download,
             name=name,
             paint=paint,
+            options=options,
+            controls=controls,
+            position=position,
             return_sidebar=True,
+            callback=callback,
         )
         self.add_to_sidebar(
             widget,
@@ -5642,6 +5719,44 @@ class Container(v.Container):
     def on_width_change(self, change: dict) -> None:
         new_width = change["new"]
         self.set_sidebar_width(min_width=new_width, max_width=new_width)
+
+
+def construct_amazon_style(
+    map_style: str = "standard",
+    region: str = "us-east-1",
+    api_key: str = None,
+    token: str = "AWS_MAPS_API_KEY",
+) -> str:
+    """
+    Constructs a URL for an Amazon Map style.
+
+    Args:
+        map_style (str): The name of the MapTiler style to be accessed. It can be one of the following:
+            standard, monochrome, satellite, hybrid.
+        region (str): The region of the Amazon Map. It can be one of the following:
+            us-east-1, us-west-2, eu-central-1, eu-west-1, ap-northeast-1, ap-northeast-2, ap-southeast-1, etc.
+        api_key (str): The API key for the Amazon Map. If None, the function attempts to retrieve the API key using a predefined method.
+        token (str): The token for the Amazon Map. If None, the function attempts to retrieve the API key using a predefined method.
+
+    Returns:
+        str: The URL for the requested Amazon Map style.
+    """
+
+    if map_style.lower() not in ["standard", "monochrome", "satellite", "hybrid"]:
+        print(
+            "Invalid map style. Please choose from amazon-standard, amazon-monochrome, amazon-satellite, or amazon-hybrid."
+        )
+        return None
+
+    if api_key is None:
+        api_key = common.get_api_key(token)
+        if api_key is None:
+            print("An API key is required to use the Amazon Map style.")
+            return None
+
+    url = f"https://maps.geo.{region}.amazonaws.com/v2/styles/{map_style.title()}/descriptor?key={api_key}"
+    print(url)
+    return url
 
 
 def construct_maptiler_style(style: str, api_key: Optional[str] = None) -> str:
@@ -6678,6 +6793,7 @@ def open_gps_traces(
 def create_vector_data(
     m: Optional[Map] = None,
     properties: Optional[Dict[str, List[Any]]] = None,
+    geojson: Optional[Union[str, dict]] = None,
     time_format: str = "%Y%m%dT%H%M%S",
     column_widths: Optional[List[int]] = (9, 3),
     map_height: str = "600px",
@@ -6693,6 +6809,10 @@ def create_vector_data(
     download: bool = True,
     name: str = None,
     paint: Dict[str, Any] = None,
+    options: Optional[Dict[str, Any]] = None,
+    controls: Optional[Dict[str, Any]] = None,
+    position: str = "top-right",
+    callback: Callable = None,
     return_sidebar: bool = False,
     **kwargs: Any,
 ) -> widgets.VBox:
@@ -6736,6 +6856,8 @@ def create_vector_data(
         paint (Dict[str, Any], optional): A dictionary specifying the paint properties for the
             drawn features. This can include properties like "circle-radius", "circle-color",
             "circle-opacity", "circle-stroke-color", and "circle-stroke-width". Defaults to None.
+        callback (Callable, optional): A callback function to be called when the export button is clicked.
+            Defaults to None.
         return_sidebar (bool, optional): Whether to return the sidebar widget. Defaults to False.
 
         **kwargs (Any): Additional keyword arguments that may be passed to the add_geojson method.
@@ -6768,6 +6890,12 @@ def create_vector_data(
             "circle-stroke-width": 1,
         }
 
+    if geojson is not None and isinstance(geojson, str):
+        geojson = gpd.read_file(geojson).__geo_interface__
+        setattr(m, "geojson", geojson)
+
+    setattr(m, "draw_feature_collection_initial", geojson)
+
     def create_default_map():
         m = Map(style="liberty", height=map_height)
         m.add_basemap("Satellite")
@@ -6781,6 +6909,10 @@ def create_vector_data(
 
     if m is None:
         m = create_default_map()
+
+    m.add_draw_control(
+        options=options, controls=controls, position=position, geojson=geojson
+    )
 
     setattr(m, "draw_features", {})
 
@@ -6817,6 +6949,15 @@ def create_vector_data(
                     description=key,
                 )
                 prop_widgets.children += (prop_widget,)
+
+    if geojson is not None:
+        for feature in geojson["features"]:
+            feature_id = feature["id"]
+            if feature_id not in m.draw_features:
+                m.draw_features[feature_id] = {}
+                for prop_widget in prop_widgets.children:
+                    key = prop_widget.description
+                    m.draw_features[feature_id][key] = feature["properties"][key]
 
     def draw_change(lng_lat):
         if lng_lat.new:
@@ -6925,14 +7066,17 @@ def create_vector_data(
                 m.draw_feature_collection_all["features"][index]["properties"] = (
                     m.draw_features[feature_id]
                 )
-
-        gdf = gpd.GeoDataFrame.from_features(
-            m.draw_feature_collection_all, crs="EPSG:4326"
-        )
+        if callback is not None:
+            with output:
+                gdf = callback(m)
+        else:
+            gdf = gpd.GeoDataFrame.from_features(
+                m.draw_feature_collection_all, crs="EPSG:4326"
+            )
         gdf.to_file(filename)
         with output:
             if download:
-                download_link = common.create_download_link(filename, title="Download")
+                download_link = common.create_download_link(filename, title="⬇️")
                 display(download_link)
             else:
                 print(f"Exported: {os.path.basename(filename)}")
@@ -7465,8 +7609,8 @@ class LayerManagerWidget(v.ExpansionPanels):
         padding = "0px 5px 0px 5px"
 
         for name, info in list(self.m.layer_dict.items()):
-            if name == "background":
-                continue
+            # if name == "background":
+            #     continue
 
             visible = info.get("visible", True)
             opacity = info.get("opacity", 1.0)
@@ -7503,7 +7647,11 @@ class LayerManagerWidget(v.ExpansionPanels):
                 self.set_layer_opacity(layer_name, change["new"])
 
             def on_remove_clicked(btn, layer_name=name, row_ref=None):
-                self.m.remove_layer(layer_name)
+                if layer_name == "background":
+                    for layer in self.m.get_style_layers():
+                        self.m.add_call("removeLayer", layer["id"])
+                else:
+                    self.m.remove_layer(layer_name)
                 if row_ref in self.layers_box.children:
                     self.layers_box.children = tuple(
                         c for c in self.layers_box.children if c != row_ref
@@ -8187,11 +8335,19 @@ class DateFilterWidget(widgets.VBox):
                     map_widget.set_data("arrow", filtered_gdf.__geo_interface__)
 
                 for index, point_gdf in enumerate(gdfs[file_index + 1 :]):
-                    filtered = point_gdf[
-                        (point_gdf[date_col] >= start) & (point_gdf[date_col] <= end)
-                    ]
-                    if group_dropdown.value is not None:
+                    if date_col in point_gdf.columns:
+                        filtered = point_gdf[
+                            (point_gdf[date_col] >= start)
+                            & (point_gdf[date_col] <= end)
+                        ]
+                    else:
+                        filtered = point_gdf
+                    if (
+                        group_dropdown.value is not None
+                        and group_col in point_gdf.columns
+                    ):
                         filtered = filtered[filtered[group_col] == group_dropdown.value]
+
                     map_widget.set_data(
                         names[index + file_index + 1], filtered.__geo_interface__
                     )

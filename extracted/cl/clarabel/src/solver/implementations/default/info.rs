@@ -1,5 +1,8 @@
 use super::*;
 use crate::algebra::*;
+use crate::io::PrintTarget;
+use crate::solver::core::ffi::*;
+use crate::solver::core::kktsolvers::LinearSolverInfo;
 use crate::solver::core::{traits::Info, SolverStatus};
 use crate::solver::traits::Variables;
 use crate::timers::*;
@@ -9,7 +12,7 @@ use crate::timers::*;
 #[derive(Default, Debug, Clone)]
 pub struct DefaultInfo<T> {
     /// interior point path parameter μ
-    pub μ: T,
+    pub mu: T,
     /// interior point path parameter reduction ratio σ
     pub sigma: T,
     /// step length for the current iteration
@@ -37,21 +40,27 @@ pub struct DefaultInfo<T> {
 
     // previous iterate
     /// primal object value from previous iteration
-    prev_cost_primal: T,
+    pub(crate) prev_cost_primal: T,
     /// dual objective value from previous iteration
-    prev_cost_dual: T,
+    pub(crate) prev_cost_dual: T,
     /// primal residual from previous iteration
-    prev_res_primal: T,
+    pub(crate) prev_res_primal: T,
     /// dual residual from previous iteration
-    prev_res_dual: T,
+    pub(crate) prev_res_dual: T,
     /// absolute duality gap from previous iteration
-    prev_gap_abs: T,
+    pub(crate) prev_gap_abs: T,
     /// relative duality gap from previous iteration
-    prev_gap_rel: T,
+    pub(crate) prev_gap_rel: T,
     /// solve time
     pub solve_time: f64,
     /// solver status
     pub status: SolverStatus,
+
+    /// linear solver information
+    pub linsolver: LinearSolverInfo,
+
+    // target stream for printing
+    pub(crate) stream: PrintTarget,
 }
 
 impl<T> DefaultInfo<T>
@@ -62,6 +71,10 @@ where
     pub fn new() -> Self {
         Self::default()
     }
+}
+
+impl<T: FloatT> ClarabelFFI<Self> for DefaultInfo<T> {
+    type FFI = super::ffi::DefaultInfoFFI<T>;
 }
 
 impl<T> Info<T> for DefaultInfo<T>
@@ -240,7 +253,7 @@ where
     }
 
     fn save_scalars(&mut self, μ: T, α: T, σ: T, iter: u32) {
-        self.μ = μ;
+        self.mu = μ;
         self.step_length = α;
         self.sigma = σ;
         self.iterations = iter;

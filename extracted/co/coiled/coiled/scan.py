@@ -13,12 +13,12 @@ import sys
 import typing
 from base64 import urlsafe_b64encode
 from collections import defaultdict
+from importlib.metadata import Distribution, PackagePath, PathDistribution
 from logging import getLogger
 from pathlib import Path
 from typing import Dict, List, Set, cast
 from urllib.parse import urlparse
 
-from importlib_metadata import Distribution, PackagePath, PathDistribution
 from packaging.version import InvalidVersion
 from packaging.version import parse as parse_version
 from rich.progress import Progress
@@ -61,11 +61,11 @@ class ResilientDistribution(PathDistribution):
         if not text or not subdir:
             return
 
-        site_pkgs_path = cast(Path, self.locate_file("")).resolve()
+        site_pkgs_path = Path(str(self.locate_file(""))).resolve()
         for name in text.splitlines():
             # relpath will add .. to a path to make it relative to site-packages,
             # so use that instead of Path.relative_to (which will raise an error)
-            path = Path(os.path.relpath((subdir / name).resolve(), site_pkgs_path))
+            path = Path(os.path.relpath(Path(os.path.join(str(subdir), name)).resolve(), site_pkgs_path))
             yield f'"{path.as_posix()}"'
 
 
@@ -133,8 +133,8 @@ async def handle_conda_package(pkg: CondaPackage) -> PackageInfo | None:
             # removing the conda installed version
             return None
         else:
-            dist = ResilientDistribution(pkg.prefix / metadata_location)  # type: ignore
-            name = dist.metadata.get("Name") or pkg.name
+            dist = ResilientDistribution(pkg.prefix / metadata_location)
+            name = get_dist_name(dist)
             path = Path(str(dist._path))
     else:
         name = pkg.name
@@ -156,21 +156,46 @@ async def handle_conda_package(pkg: CondaPackage) -> PackageInfo | None:
     }
 
 
+def get_dist_name(dist: Distribution) -> str:
+    """Reliably get the name of a distribution
+
+    This is necessary because the importlib_metadata API is not consistent
+    across versions and platforms. Some distributions have a name attribute,
+    some have a metadata attribute, and some have both. This function
+    attempts to get the name from the metadata attribute first, and if that
+    fails, it falls back to the name attribute. If both fail, it tries to
+    get the name from the path attribute.
+    If all else fails, it returns an empty string.
+    """
+    name = ""
+    if hasattr(dist, "metadata"):
+        if hasattr(dist.metadata, "get"):
+            name = dist.metadata.get("Name")  # type: ignore
+        else:
+            try:
+                name = dist.metadata["Name"]
+            except KeyError:
+                name = ""
+    if not name:
+        if hasattr(dist, "name"):
+            name = dist.name
+        elif hasattr(dist, "_path"):
+            name = dist._path.stem  # type: ignore
+
+    return name
+
+
 async def handle_dist(dist: Distribution, locations: List[Path]) -> PackageInfo | CondaPlaceHolder | None:
     # Sometimes the dist name is blank (seemingly only on Windows?)
-    try:
-        if not dist.name:
-            return
-    # Newer versions of importlib_metadata will raise a KeyError instead
-    # of returning None
-    except KeyError:
+    dist_name = get_dist_name(dist)
+    if not dist_name:
         return
     installer = dist.read_text("INSTALLER") or ""
     installer = installer.rstrip()
     # dist._path can sometimes be a zipp.Path or something else
     dist_path = Path(str(dist._path))  # type: ignore
     if installer == "conda":
-        return CondaPlaceHolder(name=convert_conda_to_pypi_name(dist.name), path=dist_path)
+        return CondaPlaceHolder(name=convert_conda_to_pypi_name(dist_name), path=dist_path)
     elif dist_path.parent.suffix == ".egg":
         # .egg files are no longer allowed on PyPI and setuptools > 80.0
         # will not even install them, so let's ignore them
@@ -200,7 +225,7 @@ async def handle_dist(dist: Distribution, locations: List[Path]) -> PackageInfo 
                 if commit is not None:
                     pip_url += f"@{commit}"
                 return {
-                    "name": dist.name,
+                    "name": dist_name,
                     "path": dist_path,
                     "source": "pip",
                     "channel": None,
@@ -221,7 +246,7 @@ async def handle_dist(dist: Distribution, locations: List[Path]) -> PackageInfo 
                 if p.scheme == "file":
                     url = str(parse_file_uri(url))
                 return {
-                    "name": dist.name,
+                    "name": dist_name,
                     "path": dist_path,
                     "source": "pip",
                     "channel": None,
@@ -235,7 +260,7 @@ async def handle_dist(dist: Distribution, locations: List[Path]) -> PackageInfo 
                 # PEP-610 - Source is a local directory
                 path = parse_file_uri(url)
                 return {
-                    "name": dist.name,
+                    "name": dist_name,
                     "path": path,
                     "source": "pip",
                     "channel": None,
@@ -247,12 +272,12 @@ async def handle_dist(dist: Distribution, locations: List[Path]) -> PackageInfo 
                 }
         egg_links = []
         for location in locations:
-            egg_link_pth = location / Path(dist.name).with_suffix(".egg-link")
+            egg_link_pth = location / Path(dist_name).with_suffix(".egg-link")
             if egg_link_pth.is_file():
-                egg_links.append(location / Path(dist.name).with_suffix(".egg-link"))
+                egg_links.append(location / Path(dist_name).with_suffix(".egg-link"))
         if egg_links:
             return {
-                "name": dist.name,
+                "name": dist_name,
                 "path": dist_path.parent,
                 "source": "pip",
                 "channel": None,
@@ -263,7 +288,7 @@ async def handle_dist(dist: Distribution, locations: List[Path]) -> PackageInfo 
                 "wheel_target": str(dist_path.parent),
             }
         return {
-            "name": dist.name,
+            "name": dist_name,
             "path": dist_path,
             "source": "pip",
             "channel": None,

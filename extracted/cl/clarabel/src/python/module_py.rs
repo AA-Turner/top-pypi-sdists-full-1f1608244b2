@@ -46,7 +46,7 @@ fn clarabel(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(default_infinity_py, m)?)
         .unwrap();
     m.add_function(wrap_pyfunction!(buildinfo_py, m)?).unwrap();
-    m.add_function(wrap_pyfunction!(read_from_file_py, m)?)
+    m.add_function(wrap_pyfunction!(load_from_file_py, m)?)
         .unwrap();
 
     // API Cone types
@@ -62,6 +62,8 @@ fn clarabel(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_class::<PySolverStatus>()?;
     m.add_class::<PyDefaultSolution>()?;
     m.add_class::<PyDefaultSettings>()?;
+    m.add_class::<PyDefaultInfo>()?;
+    m.add_class::<PyLinearSolverInfo>()?;
 
     // Main solver object
     m.add_class::<PyDefaultSolver>()?;

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pip-check-reqs
-Version: 2.5.4
+Version: 2.5.5
 Summary: Find packages that should or should not be in requirements for a project
 Author-email: Adam Dangoor <adamdangoor@gmail.com>, Richard Jones <r1chardj0n3s@gmail.com>
 Maintainer-email: Adam Dangoor <adamdangoor@gmail.com>, Richard Jones <r1chardj0n3s@gmail.com>
@@ -26,8 +26,8 @@ License: The MIT License (MIT)
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE.
         
-Project-URL: Changelog, https://github.com/r1chardj0n3s/pip-check-reqs/blob/master/CHANGELOG.rst
-Project-URL: Homepage, https://github.com/r1chardj0n3s/pip-check-reqs
+Project-URL: Changelog, https://github.com/adamtheturtle/pip-check-reqs/blob/master/CHANGELOG.rst
+Project-URL: Homepage, https://github.com/adamtheturtle/pip-check-reqs
 Keywords: lint,pip
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
@@ -52,12 +52,12 @@ Requires-Dist: mypy==1.15.0; extra == "dev"
 Requires-Dist: pyenchant==3.2.2; extra == "dev"
 Requires-Dist: pylint==3.3.7; extra == "dev"
 Requires-Dist: pyproject-fmt==2.6.0; extra == "dev"
-Requires-Dist: pyright==1.1.397; extra == "dev"
+Requires-Dist: pyright==1.1.400; extra == "dev"
 Requires-Dist: pyroma==4.2; extra == "dev"
 Requires-Dist: pytest==8.3.5; extra == "dev"
 Requires-Dist: pytest-cov==6.1.1; extra == "dev"
 Requires-Dist: ruamel.yaml==0.18.10; extra == "dev"
-Requires-Dist: ruff==0.11.10; extra == "dev"
+Requires-Dist: ruff==0.11.11; extra == "dev"
 Dynamic: license-file
 
 |Build Status| |PyPI|

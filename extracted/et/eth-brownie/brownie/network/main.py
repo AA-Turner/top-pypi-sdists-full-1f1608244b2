@@ -22,7 +22,7 @@ def connect(network: str = None, launch_rpc: bool = True) -> None:
     """Connects to the network.
 
     Args:
-        network: string of of the name of the network to connect to
+        network: string of the name of the network to connect to
 
     Network information is retrieved from brownie-config.json"""
     if is_connected():
@@ -65,18 +65,15 @@ def disconnect(kill_rpc: bool = True) -> None:
     if not is_connected():
         raise ConnectionError("Not connected to any network")
     CONFIG.clear_active()
-    if kill_rpc and rpc.is_active():
-        if rpc.is_child():
-            rpc.kill()
+    if kill_rpc and rpc.is_active() and rpc.is_child():
+        rpc.kill()
     web3.disconnect()
     _notify_registry(0)
 
 
 def show_active() -> Optional[str]:
     """Returns the name of the currently active network"""
-    if not web3.provider:
-        return None
-    return CONFIG.active_network["id"]
+    return CONFIG.active_network["id"] if web3.provider else None
 
 
 def is_connected() -> bool:

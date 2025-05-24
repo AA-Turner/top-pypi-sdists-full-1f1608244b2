@@ -67423,21 +67423,35 @@ class scout_run_api_CreateRunDataSource(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'data_source': ConjureFieldDefinition('dataSource', scout_run_api_DataSource),
+            'data_source': ConjureFieldDefinition('dataSource', OptionalTypeWrapper[scout_run_api_DataSource]),
+            'data_source_rid': ConjureFieldDefinition('dataSourceRid', OptionalTypeWrapper[api_rids_DataSourceRid]),
             'offset': ConjureFieldDefinition('offset', OptionalTypeWrapper[scout_run_api_Duration]),
             'series_tags': ConjureFieldDefinition('seriesTags', Dict[api_TagName, api_TagValue])
         }
 
-    __slots__: List[str] = ['_data_source', '_offset', '_series_tags']
+    __slots__: List[str] = ['_data_source', '_data_source_rid', '_offset', '_series_tags']
 
-    def __init__(self, data_source: "scout_run_api_DataSource", series_tags: Dict[str, str], offset: Optional["scout_run_api_Duration"] = None) -> None:
+    def __init__(self, series_tags: Dict[str, str], data_source: Optional["scout_run_api_DataSource"] = None, data_source_rid: Optional[str] = None, offset: Optional["scout_run_api_Duration"] = None) -> None:
         self._data_source = data_source
+        self._data_source_rid = data_source_rid
         self._offset = offset
         self._series_tags = series_tags
 
     @builtins.property
-    def data_source(self) -> "scout_run_api_DataSource":
+    def data_source(self) -> Optional["scout_run_api_DataSource"]:
+        """
+        One of dataSource and dataSourceRid must be present.
+dataSourceRid takes precedence.
+        """
         return self._data_source
+
+    @builtins.property
+    def data_source_rid(self) -> Optional[str]:
+        """
+        One of dataSource and dataSourceRid must be present.
+dataSourceRid takes precedence.
+        """
+        return self._data_source_rid
 
     @builtins.property
     def offset(self) -> Optional["scout_run_api_Duration"]:
