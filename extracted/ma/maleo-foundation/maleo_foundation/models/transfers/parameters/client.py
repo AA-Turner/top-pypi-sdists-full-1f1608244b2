@@ -8,8 +8,8 @@ from maleo_foundation.models.schemas.parameter import BaseParameterSchemas
 class BaseClientParametersTransfers:
     class GetUnpaginatedMultiple(
         BaseParameterSchemas.SortColumns,
-        BaseGeneralSchemas.Search,
-        BaseGeneralSchemas.Statuses,
+        BaseParameterSchemas.Search,
+        BaseParameterSchemas.OptionalListOfStatuses,
         BaseParameterSchemas.DateFilters
     ):
         pass

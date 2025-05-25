@@ -10,11 +10,13 @@ debug_dump_communication = False
 try:
     import os
 
+    ## Environmental variables prepended with "PYTHON_CALDAV" are used for debug purposes,
+    ## environmental variables prepended with "CALDAV_" are for connection parameters
     debug_dump_communication = os.environ.get("PYTHON_CALDAV_COMMDUMP", False)
     ## one of DEBUG_PDB, DEBUG, DEVELOPMENT, PRODUCTION
     debugmode = os.environ["PYTHON_CALDAV_DEBUGMODE"]
 except:
-    if "dev" in __version__:
+    if "dev" in __version__ or __version__ == "(unknown)":
         debugmode = "DEVELOPMENT"
     else:
         debugmode = "PRODUCTION"
@@ -24,6 +26,23 @@ if debugmode.startswith("DEBUG"):
     log.setLevel(logging.DEBUG)
 else:
     log.setLevel(logging.WARNING)
+
+
+def errmsg(r) -> str:
+    """Utility for formatting a an error response to an error string"""
+    return "%s %s\n\n%s" % (r.status, r.reason, r.raw)
+
+
+def weirdness(*reasons):
+    from caldav.lib.debug import xmlstring
+
+    reason = " : ".join([xmlstring(x) for x in reasons])
+    log.warning(f"Deviation from expectations found: {reason}")
+    if debugmode == "DEBUG_PDB":
+        log.error(f"Dropping into debugger due to {reason}")
+        import pdb
+
+        pdb.set_trace()
 
 
 def assert_(condition: object) -> None:
@@ -43,7 +62,7 @@ def assert_(condition: object) -> None:
             raise
 
 
-ERR_FRAGMENT: str = "Please consider raising an issue at https://github.com/python-caldav/caldav/issues or reach out to t-caldav@tobixen.no, include this error and the traceback and tell what server you are using"
+ERR_FRAGMENT: str = "Please consider raising an issue at https://github.com/python-caldav/caldav/issues or reach out to t-caldav@tobixen.no, include this error and the traceback (if any) and tell what server you are using"
 
 
 class DAVError(Exception):

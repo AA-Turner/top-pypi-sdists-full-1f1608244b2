@@ -439,6 +439,7 @@ class TestUserHasAccount(NoSocketsTestCase):
 
     def test_return_false_if_user_does_not_exist(self):
         my_user = User(username='Dummy')
+        my_user.save()
         self.assertFalse(DiscordUser.objects.user_has_account(my_user))
 
     def test_return_false_if_not_called_with_user_object(self):

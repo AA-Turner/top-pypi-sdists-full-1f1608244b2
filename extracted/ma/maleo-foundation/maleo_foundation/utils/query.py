@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Table
 from sqlalchemy.ext.declarative import DeclarativeMeta
-from sqlalchemy.orm import Query
+from sqlalchemy.orm import Query, Session, aliased
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.expression import or_, asc, cast, desc
 from sqlalchemy.types import DATE, String, TEXT, TIMESTAMP
@@ -14,18 +14,22 @@ class BaseQueryUtils:
         query:Query,
         table:Type[DeclarativeMeta],
         column:str,
-        value:BaseTypes.OptionalAny
+        value:BaseTypes.OptionalAny = None,
+        include_null:bool = False
     ) -> Query:
-        if not value:
-            return query
         column_attr = getattr(table, column, None)
-        if not column_attr:
+        if column_attr is None or not isinstance(column_attr, InstrumentedAttribute):
             return query
-        if isinstance(value, list):
-            value_filters = [column_attr == val for val in value]
+
+        value_filters = []
+        if value is not None:
+            value_filters.extend([column_attr == val for val in value])
+        if include_null:
+            value_filters.append(column_attr.is_(None))
+
+        if value_filters:
             query = query.filter(or_(*value_filters))
-            return query
-        query = query.filter(column_attr == value)
+
         return query
 
     @staticmethod
@@ -33,15 +37,24 @@ class BaseQueryUtils:
         query:Query,
         table:Type[DeclarativeMeta],
         column:str,
-        ids:BaseTypes.OptionalListOfIntegers
+        ids:BaseTypes.OptionalListOfIntegers = None,
+        include_null:bool = False
     ) -> Query:
+        column_attr = getattr(table, column, None)
+        if column_attr is None or not isinstance(column_attr, InstrumentedAttribute):
+            return query
+        
+        id_filters = []
         if ids is not None:
-            column_attr = getattr(table, column, None)
-            if column_attr:
-                id_filters = [column_attr == id for id in ids]
-                query = query.filter(or_(*id_filters))
+            id_filters.extend([column_attr == id for id in ids])
+        if include_null:
+            id_filters.append(column_attr.is_(None))
+
+        if id_filters:
+            query = query.filter(or_(*id_filters))
+
         return query
-    
+
     @staticmethod
     def filter_timestamps(
         query:Query,
@@ -69,7 +82,7 @@ class BaseQueryUtils:
                 except KeyError:
                     continue
         return query
-    
+
     @staticmethod
     def filter_statuses(
         query:Query,
@@ -80,7 +93,79 @@ class BaseQueryUtils:
             status_filters = [table.status == status for status in statuses]
             query = query.filter(or_(*status_filters))
         return query
-    
+
+    @staticmethod
+    def filter_is_root(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        parent_column:str="parent_id",
+        is_root:BaseTypes.OptionalBoolean=None
+    ) -> Query:
+        parent_attr = getattr(table, parent_column, None)
+        if parent_attr is None or not isinstance(parent_attr, InstrumentedAttribute):
+            return query
+        if is_root is not None:
+            query = query.filter(parent_attr.is_(None) if is_root else parent_attr.is_not(None))
+        return query
+
+    @staticmethod
+    def filter_is_parent(
+        session:Session,
+        query:Query,
+        table:Type[DeclarativeMeta],
+        id_column:str="id",
+        parent_column:str="parent_id",
+        is_parent:BaseTypes.OptionalBoolean=None
+    ) -> Query:
+        id_attr = getattr(table, id_column, None)
+        if id_attr is None or not isinstance(id_attr, InstrumentedAttribute):
+            return query
+        parent_attr = getattr(table, parent_column, None)
+        if parent_attr is None or not isinstance(parent_attr, InstrumentedAttribute):
+            return query
+        if is_parent is not None:
+            child_table = aliased(table)
+            child_parent_attr = getattr(child_table, parent_column)
+            subq = session.query(child_table).filter(child_parent_attr == id_attr).exists()
+            query = query.filter(subq if is_parent else ~subq)
+        return query
+
+    @staticmethod
+    def filter_is_child(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        parent_column:str = "parent_id",
+        is_child:BaseTypes.OptionalBoolean = None
+    ) -> Query:
+        parent_attr = getattr(table, parent_column, None)
+        if parent_attr is None or not isinstance(parent_attr, InstrumentedAttribute):
+            return query
+        if is_child is not None:
+            query = query.filter(parent_attr.is_not(None) if is_child else parent_attr.is_(None))
+        return query
+
+    @staticmethod
+    def filter_is_leaf(
+        session:Session,
+        query:Query,
+        table:Type[DeclarativeMeta],
+        id_column:str="id",
+        parent_column:str="parent_id",
+        is_leaf:BaseTypes.OptionalBoolean=None
+    ) -> Query:
+        id_attr = getattr(table, id_column, None)
+        if id_attr is None or not isinstance(id_attr, InstrumentedAttribute):
+            return query
+        parent_attr = getattr(table, parent_column, None)
+        if parent_attr is None or not isinstance(parent_attr, InstrumentedAttribute):
+            return query
+        if is_leaf is not None:
+            child_table = aliased(table)
+            child_parent_attr = getattr(child_table, parent_column)
+            subq = session.query(child_table).filter(child_parent_attr == id_attr).exists()
+            query = query.filter(~subq if is_leaf else subq)
+        return query
+
     @staticmethod
     def filter_search(
         query:Query,
@@ -103,7 +188,8 @@ class BaseQueryUtils:
             if search_filters:
                 query = query.filter(or_(*search_filters))
         return query
-    
+
+
     @staticmethod
     def sort(
         query:Query,

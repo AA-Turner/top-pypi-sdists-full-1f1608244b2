@@ -289,7 +289,7 @@ class ValidateModelUploadRequest(_message.Message):
     def __init__(self, name: _Optional[str] = ..., skip_hf_config_validation: bool = ...) -> None: ...
 
 class ListModelsRequest(_message.Message):
-    __slots__ = ("parent", "page_size", "page_token", "filter", "order_by", "include_deployed_model_refs", "read_mask")
+    __slots__ = ("parent", "page_size", "page_token", "filter", "order_by", "include_deployed_model_refs", "read_mask", "show_internal")
     PARENT_FIELD_NUMBER: _ClassVar[int]
     PAGE_SIZE_FIELD_NUMBER: _ClassVar[int]
     PAGE_TOKEN_FIELD_NUMBER: _ClassVar[int]
@@ -297,6 +297,7 @@ class ListModelsRequest(_message.Message):
     ORDER_BY_FIELD_NUMBER: _ClassVar[int]
     INCLUDE_DEPLOYED_MODEL_REFS_FIELD_NUMBER: _ClassVar[int]
     READ_MASK_FIELD_NUMBER: _ClassVar[int]
+    SHOW_INTERNAL_FIELD_NUMBER: _ClassVar[int]
     parent: str
     page_size: int
     page_token: str
@@ -304,7 +305,8 @@ class ListModelsRequest(_message.Message):
     order_by: str
     include_deployed_model_refs: bool
     read_mask: _field_mask_pb2.FieldMask
-    def __init__(self, parent: _Optional[str] = ..., page_size: _Optional[int] = ..., page_token: _Optional[str] = ..., filter: _Optional[str] = ..., order_by: _Optional[str] = ..., include_deployed_model_refs: bool = ..., read_mask: _Optional[_Union[_field_mask_pb2.FieldMask, _Mapping]] = ...) -> None: ...
+    show_internal: bool
+    def __init__(self, parent: _Optional[str] = ..., page_size: _Optional[int] = ..., page_token: _Optional[str] = ..., filter: _Optional[str] = ..., order_by: _Optional[str] = ..., include_deployed_model_refs: bool = ..., read_mask: _Optional[_Union[_field_mask_pb2.FieldMask, _Mapping]] = ..., show_internal: bool = ...) -> None: ...
 
 class ListModelsResponse(_message.Message):
     __slots__ = ("models", "next_page_token", "total_size")

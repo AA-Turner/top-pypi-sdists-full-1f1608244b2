@@ -21,10 +21,8 @@ from __future__ import annotations
 
 import abc
 import warnings
-from enum import IntEnum
 from functools import cached_property
-from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Hashable, List, Literal, Optional, Union
+from typing import TYPE_CHECKING, Hashable, List, Optional
 
 import numpy as np
 import pandas
@@ -32,7 +30,6 @@ import pandas.core.resample
 from pandas._typing import DtypeBackend, IndexLabel, Suffixes
 from pandas.core.dtypes.common import is_number, is_scalar
 
-from modin.config.envvars import Backend, Execution
 from modin.core.dataframe.algebra.default2pandas import (
     BinaryDefault,
     CatDefault,
@@ -48,13 +45,9 @@ from modin.core.dataframe.algebra.default2pandas import (
     StrDefault,
     StructDefault,
 )
-from modin.core.dataframe.base.interchange.dataframe_protocol.dataframe import (
-    ProtocolDataframe,
-)
 from modin.error_message import ErrorMessage
 from modin.logging import ClassLogger
 from modin.logging.config import LogLevel
-from modin.logging.logger_decorator import disable_logging
 from modin.utils import MODIN_UNNAMED_SERIES_LABEL, try_cast_to_pandas
 
 from . import doc_utils
@@ -65,8 +58,6 @@ if TYPE_CHECKING:
     # TODO: should be ModinDataframe
     # https://github.com/modin-project/modin/issues/7244
     from modin.core.dataframe.pandas.dataframe.dataframe import PandasDataframe
-    from modin.pandas import DataFrame, Series
-    from modin.pandas.base import BasePandasDataset
 
 
 def _get_axis(axis):
@@ -83,8 +74,8 @@ def _get_axis(axis):
     callable(BaseQueryCompiler) -> pandas.Index
     """
 
-    def axis_getter(self: "BaseQueryCompiler") -> pandas.Index:
-        self._maybe_warn_on_default(message=f"DataFrame.get_axis({axis})")
+    def axis_getter(self):
+        ErrorMessage.default_to_pandas(f"DataFrame.get_axis({axis})")
         return self.to_pandas().axes[axis]
 
     return axis_getter
@@ -111,47 +102,6 @@ def _set_axis(axis):
         self.__dict__.update(new_qc.__dict__)
 
     return axis_setter
-
-
-class QCCoercionCost(IntEnum):  # noqa: PR01
-    """
-    Coercion costs between different Query Compiler backends.
-
-    Coercion costs between query compilers can be expressed
-    as integers in the range 0 to 1000, where 1000 is
-    considered impossible. Since coercion costs can be a
-    function of many variables ( dataset size, partitioning,
-    network throughput, and query time ) we define a set range
-    of cost values to simplify comparisons between two query
-    compilers / engines in a unified way.
-
-    COST_ZERO means there is no cost associated, or that the query compilers
-    are the same.
-
-    COST_IMPOSSIBLE means the coercion is effectively impossible, which can
-    occur if the target system is unable to store the data as a result
-    of the coercion. Currently this does not prevent coercion.
-    """
-
-    COST_ZERO = 0
-    COST_LOW = 250
-    COST_MEDIUM = 500
-    COST_HIGH = 750
-    COST_IMPOSSIBLE = 1000
-
-    @classmethod
-    def validate_coersion_cost(cls, cost: QCCoercionCost):
-        """
-        Validate that the coercion cost is within range.
-
-        Parameters
-        ----------
-        cost : QCCoercionCost
-        """
-        if int(cost) < int(QCCoercionCost.COST_ZERO) or int(cost) > int(
-            QCCoercionCost.COST_IMPOSSIBLE
-        ):
-            raise ValueError("Query compiler coercsion cost out of range")
 
 
 # FIXME: many of the BaseQueryCompiler methods are hiding actual arguments
@@ -194,74 +144,8 @@ class BaseQueryCompiler(
     for a list of requirements for subclassing this object.
     """
 
-    # four variables can handle reasonably complex automatic engine-switching
-    # behavior, though the operation overhead (both initial and per-row)
-    # values may vary by engine.
-    _MAX_SIZE_THIS_ENGINE_CAN_HANDLE: int = 1
-    _OPERATION_INITIALIZATION_OVERHEAD: int = 0
-    _OPERATION_PER_ROW_OVERHEAD: int = 0
-    _TRANSFER_THRESHOLD: int = 0
-
     _modin_frame: PandasDataframe
     _shape_hint: Optional[str]
-    _should_warn_on_default_to_pandas: bool = True
-
-    def _maybe_warn_on_default(self, *, message: str = "", reason: str = "") -> None:
-        """
-        If this class is configured to warn on default to pandas, warn.
-
-        Parameters
-        ----------
-        message : str, default: ""
-            Method that is defaulting to pandas.
-        reason : str, default: ""
-            Reason for default.
-        """
-        if self._should_warn_on_default_to_pandas:
-            ErrorMessage.default_to_pandas(message=message, reason=reason)
-
-    @disable_logging
-    def get_backend(self) -> str:
-        """
-        Get the backend for this query compiler.
-
-        Returns
-        -------
-        str
-            The backend for this query compiler.
-        """
-        return Backend.get_backend_for_execution(
-            Execution(
-                engine=self.engine,
-                storage_format=self.storage_format,
-            )
-        )
-
-    @property
-    @abc.abstractmethod
-    def storage_format(self) -> str:
-        """
-        The storage format for this query compiler.
-
-        Returns
-        -------
-        str
-            The storage format.
-        """
-        pass
-
-    @property
-    @abc.abstractmethod
-    def engine(self) -> str:
-        """
-        The engine for this query compiler.
-
-        Returns
-        -------
-        str
-            The engine.
-        """
-        pass
 
     def __wrap_in_qc(self, obj):
         """
@@ -305,7 +189,7 @@ class BaseQueryCompiler(
             The result of the `pandas_op`, converted back to ``BaseQueryCompiler``.
         """
         op_name = getattr(pandas_op, "__name__", str(pandas_op))
-        self._maybe_warn_on_default(message=op_name)
+        ErrorMessage.default_to_pandas(op_name)
         args = try_cast_to_pandas(args)
         kwargs = try_cast_to_pandas(kwargs)
 
@@ -319,213 +203,6 @@ class BaseQueryCompiler(
             return [self.__wrap_in_qc(obj) for obj in result]
         return self.__wrap_in_qc(result)
 
-    @disable_logging
-    def move_to_cost(
-        self,
-        other_qc_type: type,
-        api_cls_name: Optional[str],
-        operation: str,
-        arguments: MappingProxyType[str, Any],
-    ) -> int:
-        """
-        Return the coercion costs of this qc to other_qc type.
-
-        This is called for forced casting and opportunistic switching
-        decision points. Values returned must be within the acceptable
-        range of QCCoercionCost
-
-        The question is: What are the transfer costs associated with
-        moving this data to the other_qc_type?
-
-        Parameters
-        ----------
-        other_qc_type : QueryCompiler Class
-            The query compiler class to which we should return the cost of switching.
-        api_cls_name : Optional[str]
-            The name of the class performing the operation which can be used as a
-            consideration for the costing analysis. `None` means the function does not belong to a class.
-        operation : str
-            The operation being performed which can be used as a consideration
-            for the costing analysis.
-        arguments : MappingProxyType[str, Any]
-            The arguments to the operation.
-
-        Returns
-        -------
-        int
-            Cost of migrating the data from this qc to the other_qc or
-            None if the cost cannot be determined.
-        """
-        if isinstance(self, other_qc_type):
-            return QCCoercionCost.COST_ZERO
-        if self.__class__._transfer_threshold() <= 0:
-            return QCCoercionCost.COST_ZERO
-        cost = int(
-            (
-                QCCoercionCost.COST_IMPOSSIBLE
-                * self._max_shape()[0]
-                / self.__class__._transfer_threshold()
-            )
-        )
-        if cost > QCCoercionCost.COST_IMPOSSIBLE:
-            return QCCoercionCost.COST_IMPOSSIBLE
-        return cost
-
-    @classmethod
-    def _stay_cost_rows(
-        cls, rows: int, per_row_overhead: int, max_size: int, op_init_overhead: int
-    ) -> int:
-        """
-        Get the cost of staying on this query compiler for an operation.
-
-        Parameters
-        ----------
-        rows : int
-            The number of input rows.
-        per_row_overhead : int
-            Per-row cost of this operation.
-        max_size : int
-            Max rows for this query compiler.
-        op_init_overhead : int
-            Overhead cost of this operation.
-
-        Returns
-        -------
-        int
-            Cost of staying on this query compiler.
-        """
-        if rows > max_size:
-            return QCCoercionCost.COST_IMPOSSIBLE
-        cost_all_rows = rows * per_row_overhead
-        normalized_cost_all_rows = (
-            cost_all_rows / max_size * QCCoercionCost.COST_IMPOSSIBLE
-        )
-        total_cost = normalized_cost_all_rows + op_init_overhead
-        if total_cost > QCCoercionCost.COST_IMPOSSIBLE:
-            return QCCoercionCost.COST_IMPOSSIBLE
-        return int(total_cost)
-
-    @disable_logging
-    def stay_cost(
-        self,
-        api_cls_name: Optional[str],
-        operation: str,
-        arguments: MappingProxyType[str, Any],
-    ) -> Optional[int]:
-        """
-        Return the "opportunity cost" of not moving the data.
-
-        This is called for opportunistic decision points where we
-        have a single data frame which may be moved to another engine.
-        This is can often the inverse of the move_to_cost, but it can
-        be independently calculated and different. For instance, the
-        move_to_cost may include the cost of network transmission to
-        the other engine, where as the cost returned by 'stay_cost'
-        may be simply the cost of running the operation locally.
-
-        The question is: What is the cost of running this operation on
-        the current dataframe?
-
-        Values returned must be within the acceptable range of
-        QCCoercionCost
-
-        Parameters
-        ----------
-        api_cls_name : str
-            The class name performing the operation which can be used as a
-            consideration for the costing analysis. `None` means the function is
-            not associated with a class.
-        operation : str, default: None
-            The operation being performed which can be used as a consideration
-            for the costing analysis.
-        arguments : MappingProxyType[str, Any]
-            The arguments to the operation.
-
-        Returns
-        -------
-        Optional[int]
-            Cost of doing this operation on the current backend.
-        """
-        return self._stay_cost_rows(
-            self._max_shape()[0],
-            self._OPERATION_PER_ROW_OVERHEAD,
-            self.__class__._engine_max_size(),
-            self._OPERATION_INITIALIZATION_OVERHEAD,
-        )
-
-    @disable_logging
-    @classmethod
-    def move_to_me_cost(
-        cls,
-        other_qc: BaseQueryCompiler,
-        api_cls_name: Optional[str],
-        operation: str,
-        arguments: MappingProxyType[str, Any],
-    ) -> Optional[int]:
-        """
-        Return the execution and hidden coercion costs from other_qc.
-
-        This can be implemented as a class method version of stay_cost, though
-        since this class is not yet instantiated it may have a different
-        implementation. It may also include hidden transport or serialization
-        costs.
-
-        Values returned must be within the acceptable range of QCCoercionCost.
-
-        The question is: What is the cost of executing this operation if it
-        were to move to this query compiler?
-
-        Parameters
-        ----------
-        other_qc : BaseQueryCompiler
-            The query compiler from which we should return the cost of switching.
-        api_cls_name : Optional[str]
-            The class name performing the operation which can be used as a
-            consideration for the costing analysis. `None` means the function
-            is not associated with a class.
-        operation : str
-            The operation being performed which can be used as a consideration
-            for the costing analysis.
-        arguments : MappingProxyType[str, Any]
-            The arguments to the operation.
-
-        Returns
-        -------
-        Optional[int]
-            Cost of migrating the data from other_qc to this qc or
-            None if the cost cannot be determined.
-        """
-        row_count = other_qc._max_shape()[0]
-
-        return cls._stay_cost_rows(
-            row_count,
-            cls._OPERATION_PER_ROW_OVERHEAD,
-            cls._engine_max_size(),
-            cls._OPERATION_INITIALIZATION_OVERHEAD,
-        )
-
-    @classmethod
-    def _engine_max_size(cls) -> int:
-        """Maximum number of rows this engine can handle."""
-        return cls._MAX_SIZE_THIS_ENGINE_CAN_HANDLE
-
-    @classmethod
-    def _transfer_threshold(cls) -> int:
-        """Maximum number of rows this backend can handle before transferring data to another backend."""
-        return cls._TRANSFER_THRESHOLD
-
-    @disable_logging
-    def max_cost(self) -> int:
-        """
-        Return the max cost allowed by this engine.
-
-        Returns
-        -------
-        int
-            Max cost allowed for migrating the data to this qc.
-        """
-        return QCCoercionCost.COST_IMPOSSIBLE
-
     # Abstract Methods and Fields: Must implement in children classes
     # In some cases, there you may be able to use the same implementation for
     # some of these abstract methods, but for the sake of generality they are
@@ -536,21 +213,6 @@ class BaseQueryCompiler(
     lazy_column_types = False
     lazy_column_labels = False
     lazy_column_count = False
-
-    def _max_shape(self) -> tuple[int, int]:
-        """
-        Return the maximum dimensions of the frame.
-
-        For lazily evaluated engines the shape of the dataset may be expensive to
-        determine (see lazy_shape), but the maximum shape can be calculated
-        inexpensively.
-
-        Returns
-        -------
-        Tuple
-            Maximum shape of the dataframe (height, width).
-        """
-        return self.get_axis_len(axis=0), self.get_axis_len(axis=1)
 
     @property
     def lazy_shape(self):
@@ -807,84 +469,10 @@ class BaseQueryCompiler(
 
     # END To NumPy
 
-    def do_array_ufunc_implementation(
-        self,
-        frame: BasePandasDataset,
-        ufunc: np.ufunc,
-        method: str,
-        *inputs: Any,
-        **kwargs: Any,
-    ) -> Union["DataFrame", "Series", Any]:
-        """
-        Apply the provided NumPy ufunc to the underlying data.
-
-        This method is called by the ``__array_ufunc__`` dispatcher on BasePandasDataset.
-
-        Unlike other query compiler methods, this function directly operates on the input DataFrame/Series
-        to allow for easier argument processing. The default implementation defaults to pandas, but
-        a query compiler sub-class may override this method to provide a distributed implementation.
-
-        See NumPy docs: https://numpy.org/doc/stable/user/basics.subclassing.html#array-ufunc-for-ufuncs
-
-        Parameters
-        ----------
-        frame : BasePandasDataset
-            The DataFrame or Series on which the ufunc was called. Its query compiler must match ``self``.
-
-        ufunc : np.ufunc
-            The function to apply.
-
-        method : str
-            The name of the function to apply.
-
-        *inputs : Any
-            Positional arguments to pass to ``ufunc``.
-
-        **kwargs : Any
-            Keyword arguments to pass to ``ufunc``.
-
-        Returns
-        -------
-        DataFrame, Series, or Any
-            The result of applying the ufunc to ``frame``.
-        """
-        assert (
-            self is frame._query_compiler
-        ), "array ufunc called with mismatched query compiler and input frame"
-        # we can't use the regular default_to_pandas() method because self is one of the
-        # `inputs` to __array_ufunc__, and pandas has some checks on the identity of the
-        # inputs [1]. The usual default to pandas will call _to_pandas() on the inputs
-        # as well as on self, but that gives inputs[0] a different identity from self.
-        #
-        # [1] https://github.com/pandas-dev/pandas/blob/2c4c072ade78b96a9eb05097a5fcf4347a3768f3/pandas/_libs/ops_dispatch.pyx#L99-L109
-        self._maybe_warn_on_default(message="__array_ufunc__")
-        pandas_self = frame._to_pandas()
-        pandas_result = pandas_self.__array_ufunc__(
-            ufunc,
-            method,
-            *(
-                pandas_self if each_input is frame else try_cast_to_pandas(each_input)
-                for each_input in inputs
-            ),
-            **try_cast_to_pandas(kwargs),
-        )
-        if isinstance(pandas_result, pandas.DataFrame):
-            from modin.pandas import DataFrame
-
-            return DataFrame(pandas_result)
-        elif isinstance(pandas_result, pandas.Series):
-            from modin.pandas import Series
-
-            return Series(pandas_result)
-        # ufuncs are required to be one-to-one mappings, so this branch should never be hit
-        return pandas_result  # pragma: no cover
-
     # Dataframe exchange protocol
 
     @abc.abstractmethod
-    def to_interchange_dataframe(
-        self, nan_as_null: bool = False, allow_copy: bool = True
-    ) -> ProtocolDataframe:
+    def to_dataframe(self, nan_as_null: bool = False, allow_copy: bool = True):
         """
         Get a DataFrame exchange protocol object representing data of the Modin DataFrame.
 
@@ -913,13 +501,13 @@ class BaseQueryCompiler(
 
     @classmethod
     @abc.abstractmethod
-    def from_interchange_dataframe(cls, df: ProtocolDataframe, data_cls):
+    def from_dataframe(cls, df, data_cls):
         """
         Build QueryCompiler from a DataFrame object supporting the dataframe exchange protocol `__dataframe__()`.
 
         Parameters
         ----------
-        df : ProtocolDataframe
+        df : DataFrame
             The DataFrame object supporting the dataframe exchange protocol.
         data_cls : type
             :py:class:`~modin.core.dataframe.pandas.dataframe.dataframe.PandasDataframe` class
@@ -1059,18 +647,6 @@ class BaseQueryCompiler(
     def eq(self, other, **kwargs):  # noqa: PR02
         return BinaryDefault.register(pandas.DataFrame.eq)(self, other=other, **kwargs)
 
-    @doc_utils.doc_binary_method(
-        operation="equality comparison", sign="==", op_type="series_comparison"
-    )
-    def series_eq(self, other, **kwargs):  # noqa: PR02
-        return BinaryDefault.register(pandas.Series.eq)(
-            self,
-            other=other,
-            squeeze_self=True,
-            squeeze_other=kwargs.pop("squeeze_other", False),
-            **kwargs,
-        )
-
     @doc_utils.add_refer_to("DataFrame.equals")
     def equals(self, other):  # noqa: PR01, RT01
         return BinaryDefault.register(pandas.DataFrame.equals)(self, other=other)
@@ -1110,36 +686,10 @@ class BaseQueryCompiler(
         return BinaryDefault.register(pandas.DataFrame.ge)(self, other=other, **kwargs)
 
     @doc_utils.doc_binary_method(
-        operation="greater than or equal comparison",
-        sign=">=",
-        op_type="series_comparison",
-    )
-    def series_ge(self, other, **kwargs):  # noqa: PR02
-        return BinaryDefault.register(pandas.Series.ge)(
-            self,
-            other=other,
-            squeeze_self=True,
-            squeeze_other=kwargs.pop("squeeze_other", False),
-            **kwargs,
-        )
-
-    @doc_utils.doc_binary_method(
         operation="greater than comparison", sign=">", op_type="comparison"
     )
     def gt(self, other, **kwargs):  # noqa: PR02
         return BinaryDefault.register(pandas.DataFrame.gt)(self, other=other, **kwargs)
-
-    @doc_utils.doc_binary_method(
-        operation="greater than comparison", sign=">", op_type="series_comparison"
-    )
-    def series_gt(self, other, **kwargs):  # noqa: PR02
-        return BinaryDefault.register(pandas.Series.gt)(
-            self,
-            other=other,
-            squeeze_self=True,
-            squeeze_other=kwargs.pop("squeeze_other", False),
-            **kwargs,
-        )
 
     @doc_utils.doc_binary_method(
         operation="less than or equal comparison", sign="<=", op_type="comparison"
@@ -1148,36 +698,10 @@ class BaseQueryCompiler(
         return BinaryDefault.register(pandas.DataFrame.le)(self, other=other, **kwargs)
 
     @doc_utils.doc_binary_method(
-        operation="less than or equal comparison",
-        sign="<=",
-        op_type="series_comparison",
-    )
-    def series_le(self, other, **kwargs):  # noqa: PR02
-        return BinaryDefault.register(pandas.Series.le)(
-            self,
-            other=other,
-            squeeze_self=True,
-            squeeze_other=kwargs.pop("squeeze_other", False),
-            **kwargs,
-        )
-
-    @doc_utils.doc_binary_method(
         operation="less than comparison", sign="<", op_type="comparison"
     )
     def lt(self, other, **kwargs):  # noqa: PR02
         return BinaryDefault.register(pandas.DataFrame.lt)(self, other=other, **kwargs)
-
-    @doc_utils.doc_binary_method(
-        operation="less than", sign="<", op_type="series_comparison"
-    )
-    def series_lt(self, other, **kwargs):  # noqa: PR02
-        return BinaryDefault.register(pandas.Series.lt)(
-            self,
-            other=other,
-            squeeze_self=True,
-            squeeze_other=kwargs.pop("squeeze_other", False),
-            **kwargs,
-        )
 
     @doc_utils.doc_binary_method(operation="modulo", sign="%")
     def mod(self, other, **kwargs):  # noqa: PR02
@@ -1293,18 +817,6 @@ class BaseQueryCompiler(
     )
     def ne(self, other, **kwargs):  # noqa: PR02
         return BinaryDefault.register(pandas.DataFrame.ne)(self, other=other, **kwargs)
-
-    @doc_utils.doc_binary_method(
-        operation="not equal comparison", sign="!=", op_type="series_comparison"
-    )
-    def series_ne(self, other, **kwargs):  # noqa: PR02
-        return BinaryDefault.register(pandas.Series.ne)(
-            self,
-            other=other,
-            squeeze_self=True,
-            squeeze_other=kwargs.pop("squeeze_other", False),
-            **kwargs,
-        )
 
     @doc_utils.doc_binary_method(operation="exponential power", sign="**")
     def pow(self, other, **kwargs):  # noqa: PR02
@@ -1635,7 +1147,6 @@ class BaseQueryCompiler(
         allow_exact_matches: bool = True,
         direction: str = "backward",
     ):  # noqa: GL08
-        self._maybe_warn_on_default(message="`merge_asof`")
         # Pandas fallbacks for tricky cases:
         if (
             # No idea how this works or why it does what it does; and in fact
@@ -2369,7 +1880,7 @@ class BaseQueryCompiler(
     # END Abstract map partitions operations
 
     @doc_utils.add_refer_to("DataFrame.stack")
-    def stack(self, level, dropna, sort):
+    def stack(self, level, dropna):
         """
         Stack the prescribed level(s) from columns to index.
 
@@ -2377,17 +1888,13 @@ class BaseQueryCompiler(
         ----------
         level : int or label
         dropna : bool
-        sort : bool
 
         Returns
         -------
         BaseQueryCompiler
         """
         return DataFrameDefault.register(pandas.DataFrame.stack)(
-            self,
-            level=level,
-            dropna=dropna,
-            sort=sort,
+            self, level=level, dropna=dropna
         )
 
     # Abstract map partitions across select indices
@@ -4687,24 +4194,6 @@ class BaseQueryCompiler(
         """
         return self.index if axis == 0 else self.columns
 
-    def get_axis_len(self, axis: Literal[0, 1]) -> int:
-        """
-        Return the length of the specified axis.
-
-        A query compiler may choose to override this method if it has a more efficient way
-        of computing the length of an axis without materializing it.
-
-        Parameters
-        ----------
-        axis : {0, 1}
-            Axis to return labels on.
-
-        Returns
-        -------
-        int
-        """
-        return len(self.get_axis(axis))
-
     def take_2d_labels(
         self,
         index,
@@ -4993,13 +4482,12 @@ class BaseQueryCompiler(
             return df
 
         if not is_scalar(item):
-            broadcasted_item, _, _, _ = broadcast_item(
+            broadcasted_item, _ = broadcast_item(
                 self,
                 row_numeric_index,
                 col_numeric_index,
                 item,
                 need_columns_reindex=need_columns_reindex,
-                sort_lookups_and_item=False,
             )
         else:
             broadcasted_item = item

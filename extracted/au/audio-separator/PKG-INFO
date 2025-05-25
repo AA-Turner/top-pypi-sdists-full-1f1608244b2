@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: audio-separator
-Version: 0.33.0
+Version: 0.34.0
 Summary: Easy to use audio stem separation, using various models from UVR trained primarily by @Anjok07
 License: MIT
 Keywords: audio,sound,karaoke
@@ -20,6 +20,7 @@ Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Multimedia :: Sound/Audio
 Classifier: Topic :: Multimedia :: Sound/Audio :: Mixers
 Provides-Extra: cpu
+Provides-Extra: dml
 Provides-Extra: gpu
 Requires-Dist: audioop-lts (>=0.2.1) ; python_version >= "3.13" and python_version < "4.0"
 Requires-Dist: beartype (>=0.18.5,<0.19.0)
@@ -33,6 +34,7 @@ Requires-Dist: numpy (>=2)
 Requires-Dist: onnx-weekly
 Requires-Dist: onnx2torch-py313 (>=1.6)
 Requires-Dist: onnxruntime (>=1.17) ; extra == "cpu"
+Requires-Dist: onnxruntime-directml (>=1.17) ; extra == "dml"
 Requires-Dist: onnxruntime-gpu (>=1.17) ; extra == "gpu"
 Requires-Dist: pydub (>=0.25)
 Requires-Dist: pyyaml
@@ -43,6 +45,7 @@ Requires-Dist: samplerate (==0.1.0)
 Requires-Dist: scipy (>=1.13.0,<2.0.0)
 Requires-Dist: six (>=1.16)
 Requires-Dist: torch (>=2.3)
+Requires-Dist: torch_directml ; extra == "dml"
 Requires-Dist: tqdm
 Project-URL: Documentation, https://github.com/karaokenerds/python-audio-separator/blob/main/README.md
 Project-URL: Homepage, https://github.com/karaokenerds/python-audio-separator
@@ -540,6 +543,10 @@ poetry install --extras "cpu"
 or
 ```sh
 poetry install --extras "gpu"
+```
+or
+```sh
+poetry install --extras "dml"
 ```
 
 ### Running the Command-Line Interface Locally

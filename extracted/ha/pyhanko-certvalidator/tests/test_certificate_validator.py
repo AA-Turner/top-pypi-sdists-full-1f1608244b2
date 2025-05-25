@@ -15,7 +15,8 @@ from pyhanko_certvalidator.errors import (
     InvalidCertificateError,
     PathValidationError,
 )
-from tests.common import load_cert_object, load_nist_cert
+
+from .common import load_cert_object, load_nist_cert
 
 
 @pytest.mark.asyncio

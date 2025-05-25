@@ -1,3 +1,4 @@
+from typing import ClassVar
 from django.contrib.auth.models import User
 from django.db import models
 from sortedm2m.fields import SortedManyToManyField
@@ -40,7 +41,7 @@ class Application(models.Model):
     reviewer_character = models.ForeignKey(EveCharacter, on_delete=models.SET_NULL, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    objects = ApplicationManager()
+    objects: ClassVar[ApplicationManager] = ApplicationManager()
 
     def __str__(self):
         return str(self.user) + " Application To " + str(self.form)

@@ -25,9 +25,6 @@ from pandas._typing import ArrayLike, DtypeBackend, Scalar, npt
 from pandas.core.dtypes.common import is_list_like
 
 from modin.core.storage_formats import BaseQueryCompiler
-from modin.core.storage_formats.pandas.query_compiler_caster import (
-    wrap_free_function_in_argument_caster,
-)
 from modin.error_message import ErrorMessage
 from modin.logging import enable_logging
 from modin.pandas.io import to_pandas
@@ -38,8 +35,9 @@ from .dataframe import DataFrame
 from .series import Series
 
 
+@_inherit_docstrings(pandas.isna, apilink="pandas.isna")
 @enable_logging
-def _isna(
+def isna(
     obj,
 ) -> bool | npt.NDArray[np.bool_] | Series | DataFrame:  # noqa: PR01, RT01, D200
     """
@@ -51,15 +49,12 @@ def _isna(
         return pandas.isna(obj)
 
 
-_inherit_isna_docstring = _inherit_docstrings(pandas.isnull, apilink="pandas.isna")
-
-isna = _inherit_isna_docstring(wrap_free_function_in_argument_caster("isna")(_isna))
-
-isnull = _inherit_isna_docstring(wrap_free_function_in_argument_caster("isnull")(_isna))
+isnull = isna
 
 
+@_inherit_docstrings(pandas.notna, apilink="pandas.notna")
 @enable_logging
-def _notna(
+def notna(
     obj,
 ) -> bool | npt.NDArray[np.bool_] | Series | DataFrame:  # noqa: PR01, RT01, D200
     """
@@ -71,18 +66,11 @@ def _notna(
         return pandas.notna(obj)
 
 
-_inherit_notna_docstring = _inherit_docstrings(pandas.notna, apilink="pandas.notna")
-
-notnull = _inherit_notna_docstring(
-    wrap_free_function_in_argument_caster("notnull")(_notna)
-)
-
-notna = _inherit_notna_docstring(wrap_free_function_in_argument_caster("notna")(_notna))
+notnull = notna
 
 
 @_inherit_docstrings(pandas.merge, apilink="pandas.merge")
 @enable_logging
-@wrap_free_function_in_argument_caster("merge")
 def merge(
     left,
     right,
@@ -130,7 +118,6 @@ def merge(
 
 @_inherit_docstrings(pandas.merge_ordered, apilink="pandas.merge_ordered")
 @enable_logging
-@wrap_free_function_in_argument_caster("merge_ordered")
 def merge_ordered(
     left,
     right,
@@ -169,7 +156,6 @@ def merge_ordered(
 
 @_inherit_docstrings(pandas.merge_asof, apilink="pandas.merge_asof")
 @enable_logging
-@wrap_free_function_in_argument_caster("merge_asof")
 def merge_asof(
     left,
     right,
@@ -240,7 +226,6 @@ def merge_asof(
 
 @_inherit_docstrings(pandas.pivot_table, apilink="pandas.pivot_table")
 @enable_logging
-@wrap_free_function_in_argument_caster("pivot_table")
 def pivot_table(
     data,
     values=None,
@@ -275,7 +260,6 @@ def pivot_table(
 
 @_inherit_docstrings(pandas.pivot, apilink="pandas.pivot")
 @enable_logging
-@wrap_free_function_in_argument_caster("pivot")
 def pivot(
     data, *, columns, index=no_default, values=no_default
 ) -> DataFrame:  # noqa: PR01, RT01, D200
@@ -289,7 +273,6 @@ def pivot(
 
 @_inherit_docstrings(pandas.to_numeric, apilink="pandas.to_numeric")
 @enable_logging
-@wrap_free_function_in_argument_caster("to_numeric")
 def to_numeric(
     arg,
     errors="raise",
@@ -310,7 +293,6 @@ def to_numeric(
 
 @_inherit_docstrings(pandas.qcut, apilink="pandas.qcut")
 @enable_logging
-@wrap_free_function_in_argument_caster("qcut")
 def qcut(
     x, q, labels=None, retbins=False, precision=3, duplicates="raise"
 ):  # noqa: PR01, RT01, D200
@@ -330,7 +312,6 @@ def qcut(
 
 @_inherit_docstrings(pandas.cut, apilink="pandas.cut")
 @enable_logging
-@wrap_free_function_in_argument_caster("cut")
 def cut(
     x,
     bins,
@@ -385,7 +366,6 @@ def cut(
 
 @_inherit_docstrings(pandas.unique, apilink="pandas.unique")
 @enable_logging
-@wrap_free_function_in_argument_caster("unique")
 def unique(values) -> ArrayLike:  # noqa: PR01, RT01, D200
     """
     Return unique values based on a hash table.
@@ -395,7 +375,6 @@ def unique(values) -> ArrayLike:  # noqa: PR01, RT01, D200
 
 # Adding docstring since pandas docs don't have web section for this function.
 @enable_logging
-@wrap_free_function_in_argument_caster("value_counts")
 def value_counts(
     values, sort=True, ascending=False, normalize=False, bins=None, dropna=True
 ) -> Series:
@@ -438,7 +417,6 @@ def value_counts(
 
 @_inherit_docstrings(pandas.concat, apilink="pandas.concat")
 @enable_logging
-@wrap_free_function_in_argument_caster(name="concat")
 def concat(
     objs: "Iterable[DataFrame | Series] | Mapping[Hashable, DataFrame | Series]",
     *,
@@ -588,7 +566,6 @@ def concat(
 
 @_inherit_docstrings(pandas.to_datetime, apilink="pandas.to_datetime")
 @enable_logging
-@wrap_free_function_in_argument_caster("to_datetime")
 def to_datetime(
     arg,
     errors="raise",
@@ -635,7 +612,6 @@ def to_datetime(
 
 @_inherit_docstrings(pandas.get_dummies, apilink="pandas.get_dummies")
 @enable_logging
-@wrap_free_function_in_argument_caster("get_dummies")
 def get_dummies(
     data,
     prefix=None,
@@ -685,7 +661,6 @@ def get_dummies(
 
 @_inherit_docstrings(pandas.melt, apilink="pandas.melt")
 @enable_logging
-@wrap_free_function_in_argument_caster("melt")
 def melt(
     frame,
     id_vars=None,
@@ -710,7 +685,6 @@ def melt(
 
 @_inherit_docstrings(pandas.crosstab, apilink="pandas.crosstab")
 @enable_logging
-@wrap_free_function_in_argument_caster("crosstab")
 def crosstab(
     index,
     columns,
@@ -744,7 +718,6 @@ def crosstab(
 
 # Adding docstring since pandas docs don't have web section for this function.
 @enable_logging
-@wrap_free_function_in_argument_caster("lreshape")
 def lreshape(data: DataFrame, groups, dropna=True) -> DataFrame:
     """
     Reshape wide-format data to long. Generalized inverse of ``DataFrame.pivot``.
@@ -775,7 +748,6 @@ def lreshape(data: DataFrame, groups, dropna=True) -> DataFrame:
 
 @_inherit_docstrings(pandas.wide_to_long, apilink="pandas.wide_to_long")
 @enable_logging
-@wrap_free_function_in_argument_caster("wide_to_long")
 def wide_to_long(
     df: DataFrame, stubnames, i, j, sep: str = "", suffix: str = r"\d+"
 ) -> DataFrame:  # noqa: PR01, RT01, D200
@@ -797,7 +769,6 @@ def wide_to_long(
     )
 
 
-@wrap_free_function_in_argument_caster("_determine_name")
 def _determine_name(objs: Iterable[BaseQueryCompiler], axis: Union[int, str]):
     """
     Determine names of index after concatenation along passed axis.
@@ -831,7 +802,6 @@ def _determine_name(objs: Iterable[BaseQueryCompiler], axis: Union[int, str]):
 
 @_inherit_docstrings(pandas.to_datetime, apilink="pandas.to_timedelta")
 @enable_logging
-@wrap_free_function_in_argument_caster("to_timedelta")
 def to_timedelta(
     arg, unit=None, errors="raise"
 ) -> Scalar | pandas.Index | Series:  # noqa: PR01, RT01, D200

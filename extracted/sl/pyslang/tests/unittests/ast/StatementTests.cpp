@@ -1314,6 +1314,27 @@ endmodule
     CHECK(diags[1].code == diag::NoDefaultClocking);
 }
 
+TEST_CASE("Cycle delay in interface") {
+    auto tree = SyntaxTree::fromText(R"(
+interface intf(
+    input clk
+);
+
+    default clocking cb @(posedge clk);
+    endclocking
+
+    task zeroDelay();
+        ##0;
+    endtask
+
+endinterface
+)");
+
+    Compilation compilation;
+    compilation.addSyntaxTree(tree);
+    NO_COMPILATION_ERRORS;
+}
+
 TEST_CASE("Synchronous drives") {
     auto tree = SyntaxTree::fromText(R"(
 module m;
@@ -2027,4 +2048,14 @@ endmodule
     Compilation compilation;
     compilation.addSyntaxTree(tree);
     NO_COMPILATION_ERRORS;
+}
+
+TEST_CASE("Conditional statement with pattern and explicit block crash regress") {
+    auto tree = SyntaxTree::fromText(R"(
+always begin union instr:if(instr matches begin c T i:
+)");
+
+    Compilation compilation;
+    compilation.addSyntaxTree(tree);
+    compilation.getAllDiagnostics();
 }

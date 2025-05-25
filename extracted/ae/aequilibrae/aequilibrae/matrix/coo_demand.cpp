@@ -18,7 +18,7 @@
             "-fopenmp"
         ],
         "include_dirs": [
-            "/tmp/build-env-8vs2qbpg/lib/python3.12/site-packages/numpy/core/include"
+            "/tmp/build-env-8kfrmba0/lib/python3.12/site-packages/numpy/core/include"
         ],
         "language": "c++",
         "name": "aequilibrae.matrix.coo_demand",

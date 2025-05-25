@@ -6,7 +6,7 @@ import DIRAC
 import numpy as np
 
 from CTADIRAC.Core.Utilities.tool_box import DATA_LEVEL_METADATA_ID
-from CTADIRAC.Interfaces.API.CTAJob import CTAJob, MetadataDict
+from CTADIRAC.Interfaces.API.CTAJob import CTAJob
 
 
 class MCPipeJob(CTAJob):
@@ -39,26 +39,12 @@ class MCPipeJob(CTAJob):
         self.degraded_values = [1]
         self.particle = None
 
-    def define_simulation_metadata(self) -> MetadataDict:
-        return MetadataDict(
-            array_layout=self.array_layout,
-            site=self.site,
-            particle=self.particle,
-            phiP=180 if self.pointing_dir == "North" else 0,
-            thetaP=float(self.zenith_angle),
-            sct="True" if self.sct else "False",
-            outputType=self.output_type,
-        )
-
-    def set_output_metadata(self, metadata: MetadataDict = {}) -> None:
-        input_metadata: MetadataDict = self.define_simulation_metadata()
-        super().set_output_metadata(metadata=input_metadata)
-
     def set_degraded_mirror_reflectivity(self, degraded_mirror_reflectivity=False):
         """Set the values of degraded mirror reflectivity to simulate
 
         Parameters:
-        degraded_mirror_reflectivity -- a boolean to set if to simulate a degraded mirror reflectivity (0.3 to 1.0 in steps of 0.05)
+        degraded_mirror_reflectivity -- a boolean to set if to simulate a degraded mirror reflectivity
+        (0.3 to 1.0 in steps of 0.05)
         """
         if degraded_mirror_reflectivity:
             DIRAC.gLogger.info("Set simulations with degraded mirror reflectivities")
@@ -188,7 +174,8 @@ class MCPipeJob(CTAJob):
         else:
             moon_str = str(moon).replace("'", "")
             DIRAC.gLogger.error(
-                f"Unknown moon option: {moon_str}. Options for simulation step are: \n [dark] \n [dark, half] \n [dark, half, full] "
+                f"Unknown moon option: {moon_str}. Options for simulation step are: \n [dark] \n [dark, half] \n \
+                 [dark, half, full] "
             )
             DIRAC.exit(-1)
 

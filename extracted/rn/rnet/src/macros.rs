@@ -109,3 +109,11 @@ macro_rules! define_enum_with_conversion {
         }
     };
 }
+
+macro_rules! extract_option {
+    ($ob:expr, $params:expr, $field:ident) => {
+        if let Ok(value) = $ob.get_item(stringify!($field)) {
+            $params.$field = value.extract()?;
+        }
+    };
+}

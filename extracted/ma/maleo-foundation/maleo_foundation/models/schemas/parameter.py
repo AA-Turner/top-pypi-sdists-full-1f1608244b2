@@ -8,6 +8,18 @@ from maleo_foundation.types import BaseTypes
 from maleo_foundation.extended_types import ExtendedTypes
 
 class BaseParameterSchemas:
+    class IdentifierType(BaseModel):
+        identifier:BaseEnums.IdentifierTypes = Field(..., description="Data's identifier type")
+
+    class IdentifierValue(BaseModel):
+        value:BaseTypes.IdentifierValue = Field(..., description="Data's identifier value")
+
+    class OptionalListOfIds(BaseModel):
+        ids:BaseTypes.OptionalListOfIntegers = Field(None, description="Specific Ids")
+
+    class OptionalListOfUuids(BaseModel):
+        uuids:BaseTypes.OptionalListOfUUIDs = Field(None, description="Specific Uuids")
+
     class Filters(BaseModel):
         filters:BaseTypes.ListOfStrings = Field([], description="Filters for date range, e.g. 'created_at|from::<ISO_DATETIME>|to::<ISO_DATETIME>'.")
 
@@ -28,6 +40,33 @@ class BaseParameterSchemas:
     class DateFilters(BaseModel):
         date_filters:ExtendedTypes.ListOfDateFilters = Field([], description="Date filters to be applied")
 
+    class OptionalListOfStatuses(BaseModel):
+        statuses:BaseTypes.OptionalListOfStatuses = Field(None, description="Data's status")
+
+    class IsRoot(BaseModel):
+        is_root:BaseTypes.OptionalBoolean = Field(None, description="Whether data is root")
+
+    class IsParent(BaseModel):
+        is_parent:BaseTypes.OptionalBoolean = Field(None, description="Whether data is parent")
+
+    class IsChild(BaseModel):
+        is_child:BaseTypes.OptionalBoolean = Field(None, description="Whether data is child")
+
+    class IsLeaf(BaseModel):
+        is_leaf:BaseTypes.OptionalBoolean = Field(None, description="Whether data is leaf")
+
+    class OptionalListOfCodes(BaseModel):
+        codes:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Codes")
+
+    class OptionalListOfKeys(BaseModel):
+        keys:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Keys")
+
+    class OptionalListOfNames(BaseModel):
+        names:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Names")
+
+    class Search(BaseModel):
+        search:BaseTypes.OptionalString = Field(None, description="Search string.")
+
     class Sorts(BaseModel):
         sorts:BaseTypes.ListOfStrings = Field(["id.asc"], description="Sorting columns in 'column_name.asc' or 'column_name.desc' format.")
 
@@ -38,3 +77,9 @@ class BaseParameterSchemas:
 
     class SortColumns(BaseModel):
         sort_columns:ExtendedTypes.ListOfSortColumns = Field([BaseGeneralSchemas.SortColumn(name="id", order=BaseEnums.SortOrder.ASC)], description="List of columns to be sorted")
+
+    class Expand(BaseModel):
+        expand:BaseTypes.OptionalListOfStrings = Field(None, description="Expanded field(s)")
+
+    class Data(BaseModel):
+        data:BaseTypes.StringToAnyDict = Field(..., description="Data")

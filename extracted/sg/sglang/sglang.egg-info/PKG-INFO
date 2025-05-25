@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sglang
-Version: 0.4.6.post4
+Version: 0.4.6.post5
 Summary: SGLang is yet another fast serving framework for large language models and vision language models.
 License:                                  Apache License
                                    Version 2.0, January 2004
@@ -220,13 +220,13 @@ Requires-Dist: setproctitle
 Provides-Extra: runtime-common
 Requires-Dist: compressed-tensors; extra == "runtime-common"
 Requires-Dist: datasets; extra == "runtime-common"
-Requires-Dist: decord; extra == "runtime-common"
 Requires-Dist: fastapi; extra == "runtime-common"
 Requires-Dist: hf_transfer; extra == "runtime-common"
 Requires-Dist: huggingface_hub; extra == "runtime-common"
 Requires-Dist: interegular; extra == "runtime-common"
 Requires-Dist: llguidance<0.8.0,>=0.7.11; extra == "runtime-common"
 Requires-Dist: modelscope; extra == "runtime-common"
+Requires-Dist: msgspec; extra == "runtime-common"
 Requires-Dist: ninja; extra == "runtime-common"
 Requires-Dist: orjson; extra == "runtime-common"
 Requires-Dist: packaging; extra == "runtime-common"
@@ -239,7 +239,7 @@ Requires-Dist: pynvml; extra == "runtime-common"
 Requires-Dist: python-multipart; extra == "runtime-common"
 Requires-Dist: pyzmq>=25.1.2; extra == "runtime-common"
 Requires-Dist: soundfile==0.13.1; extra == "runtime-common"
-Requires-Dist: torchao>=0.9.0; extra == "runtime-common"
+Requires-Dist: torchao==0.9.0; extra == "runtime-common"
 Requires-Dist: transformers==4.51.1; extra == "runtime-common"
 Requires-Dist: uvicorn; extra == "runtime-common"
 Requires-Dist: uvloop; extra == "runtime-common"
@@ -247,7 +247,7 @@ Requires-Dist: xgrammar==0.1.19; extra == "runtime-common"
 Requires-Dist: blobfile==3.0.0; extra == "runtime-common"
 Provides-Extra: srt
 Requires-Dist: sglang[runtime_common]; extra == "srt"
-Requires-Dist: sgl-kernel==0.1.2.post1; extra == "srt"
+Requires-Dist: sgl-kernel==0.1.4; extra == "srt"
 Requires-Dist: flashinfer_python==0.2.5; extra == "srt"
 Requires-Dist: torch==2.6.0; extra == "srt"
 Requires-Dist: torchvision==0.21.0; extra == "srt"
@@ -262,6 +262,7 @@ Requires-Dist: torchvision; extra == "blackwell"
 Requires-Dist: cuda-python; extra == "blackwell"
 Requires-Dist: outlines<=0.1.11,>=0.0.44; extra == "blackwell"
 Requires-Dist: einops; extra == "blackwell"
+Requires-Dist: flashinfer_python==0.2.5; extra == "blackwell"
 Provides-Extra: srt-hip
 Requires-Dist: sglang[runtime_common]; extra == "srt-hip"
 Requires-Dist: torch; extra == "srt-hip"
@@ -289,44 +290,53 @@ Provides-Extra: litellm
 Requires-Dist: litellm>=1.0.0; extra == "litellm"
 Provides-Extra: torch-memory-saver
 Requires-Dist: torch_memory_saver>=0.0.4; extra == "torch-memory-saver"
+Provides-Extra: decord
+Requires-Dist: decord; extra == "decord"
 Provides-Extra: test
+Requires-Dist: accelerate; extra == "test"
 Requires-Dist: jsonlines; extra == "test"
 Requires-Dist: matplotlib; extra == "test"
 Requires-Dist: pandas; extra == "test"
-Requires-Dist: sentence_transformers; extra == "test"
-Requires-Dist: accelerate; extra == "test"
 Requires-Dist: peft; extra == "test"
+Requires-Dist: timm; extra == "test"
+Requires-Dist: sentence_transformers; extra == "test"
 Provides-Extra: all
 Requires-Dist: sglang[srt]; extra == "all"
 Requires-Dist: sglang[openai]; extra == "all"
 Requires-Dist: sglang[anthropic]; extra == "all"
 Requires-Dist: sglang[litellm]; extra == "all"
 Requires-Dist: sglang[torch_memory_saver]; extra == "all"
+Requires-Dist: sglang[decord]; extra == "all"
 Provides-Extra: all-hip
 Requires-Dist: sglang[srt_hip]; extra == "all-hip"
 Requires-Dist: sglang[openai]; extra == "all-hip"
 Requires-Dist: sglang[anthropic]; extra == "all-hip"
 Requires-Dist: sglang[litellm]; extra == "all-hip"
+Requires-Dist: sglang[decord]; extra == "all-hip"
 Provides-Extra: all-xpu
 Requires-Dist: sglang[srt_xpu]; extra == "all-xpu"
 Requires-Dist: sglang[openai]; extra == "all-xpu"
 Requires-Dist: sglang[anthropic]; extra == "all-xpu"
 Requires-Dist: sglang[litellm]; extra == "all-xpu"
+Requires-Dist: sglang[decord]; extra == "all-xpu"
 Provides-Extra: all-hpu
 Requires-Dist: sglang[srt_hpu]; extra == "all-hpu"
 Requires-Dist: sglang[openai]; extra == "all-hpu"
 Requires-Dist: sglang[anthropic]; extra == "all-hpu"
 Requires-Dist: sglang[litellm]; extra == "all-hpu"
+Requires-Dist: sglang[decord]; extra == "all-hpu"
 Provides-Extra: all-cpu
 Requires-Dist: sglang[srt_cpu]; extra == "all-cpu"
 Requires-Dist: sglang[openai]; extra == "all-cpu"
 Requires-Dist: sglang[anthropic]; extra == "all-cpu"
 Requires-Dist: sglang[litellm]; extra == "all-cpu"
+Requires-Dist: sglang[decord]; extra == "all-cpu"
 Provides-Extra: all-npu
 Requires-Dist: sglang[srt_npu]; extra == "all-npu"
 Requires-Dist: sglang[openai]; extra == "all-npu"
 Requires-Dist: sglang[anthropic]; extra == "all-npu"
 Requires-Dist: sglang[litellm]; extra == "all-npu"
+Requires-Dist: sglang[decord]; extra == "all-npu"
 Provides-Extra: dev
 Requires-Dist: sglang[all]; extra == "dev"
 Requires-Dist: sglang[test]; extra == "dev"
@@ -352,7 +362,7 @@ Dynamic: license-file
 [![license](https://img.shields.io/github/license/sgl-project/sglang.svg)](https://github.com/sgl-project/sglang/tree/main/LICENSE)
 [![issue resolution](https://img.shields.io/github/issues-closed-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
 [![open issues](https://img.shields.io/github/issues-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
-[![](https://img.shields.io/badge/Gurubase-(experimental)-006BFF)](https://gurubase.io/g/sglang)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sgl-project/sglang)
 
 </div>
 
@@ -403,16 +413,15 @@ The core features include:
 - [Contribution Guide](https://docs.sglang.ai/references/contribution_guide.html)
 
 ## Benchmark and Performance
-Learn more in the release blogs: [v0.2 blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/), [v0.3 blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/), [v0.4 blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/)
+Learn more in the release blogs: [v0.2 blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/), [v0.3 blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/), [v0.4 blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/).
 
 ## Roadmap
 [Development Roadmap (2025 H1)](https://github.com/sgl-project/sglang/issues/4042)
 
 ## Adoption and Sponsorship
-The project has been deployed to large-scale production, generating trillions of tokens every day.
-It is supported by the following institutions: AMD, Atlas Cloud, Baseten, Cursor, DataCrunch, Etched, Google Cloud, Hyperbolic, Iflytek, InnoMatrix, Jam & Tea Studios, LinkedIn, LMSYS, Meituan, Nebius, Novita AI, NVIDIA, Oracle, RunPod, Stanford, UC Berkeley, UCLA, xAI, and 01.AI.
+SGLang has been deployed at large scale, serving trillions of tokens in production every day. It is trusted and adopted by a broad range of leading enterprises and institutions, including xAI, NVIDIA, AMD, Google Cloud, Oracle Cloud, LinkedIn, Cursor, Voltage Park, Atlas Cloud, DataCrunch, Baseten, Nebius, Novita, InnoMatrix, RunPod, Stanford, UC Berkeley, UCLA, ETCHED, Jam & Tea Studios, Hyperbolic, as well as major technology organizations across North America and Asia. As an open-source LLM inference engine, SGLang has become the de facto standard in the industry, with production deployments running on over 100,000 GPUs worldwide.
 
-<img src="https://raw.githubusercontent.com/sgl-project/sgl-learning-materials/main/slides/adoption.png" alt="logo" width="800" margin="10px"></img>
+<img src="https://raw.githubusercontent.com/sgl-project/sgl-learning-materials/refs/heads/main/slides/adoption.png" alt="logo" width="800" margin="10px"></img>
 
 ## Contact Us
 

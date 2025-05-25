@@ -36,8 +36,11 @@ from pyhanko_certvalidator.fetchers import (
 from pyhanko_certvalidator.ltv.poe import POEManager
 from pyhanko_certvalidator.path import QualifiedPolicy, ValidationPath
 from pyhanko_certvalidator.policy_decl import (
+    CertRevTrustPolicy,
     DisallowWeakAlgorithmsPolicy,
     NonRevokedStatusAssertion,
+    RevocationCheckingPolicy,
+    RevocationCheckingRule,
 )
 from pyhanko_certvalidator.registry import (
     CertificateRegistry,
@@ -50,6 +53,7 @@ from pyhanko_certvalidator.validate import async_validate_path, validate_path
 from .common import (
     FIXTURES_DIR,
     load_cert_object,
+    load_crl,
     load_nist_cert,
     load_nist_crl,
     load_openssl_ors,
@@ -57,45 +61,58 @@ from .common import (
 from .constants import TEST_REQUEST_TIMEOUT
 
 
-class MockOCSPFetcher(OCSPFetcher):
+class MockFetcher:
+    def __init__(self, *args, **kwargs):
+        self.calls = 0
+        super().__init__(*args, **kwargs)
+
+
+class MockOCSPFetcher(OCSPFetcher, MockFetcher):
     def fetched_responses(self) -> Iterable[ocsp.OCSPResponse]:
         return ()
 
     def fetched_responses_for_cert(
         self, cert: x509.Certificate
     ) -> Iterable[ocsp.OCSPResponse]:
+        self.calls += 1
         return ()
 
     async def fetch(self, cert: x509.Certificate, authority: Authority):
+        self.calls += 1
         raise OCSPFetchError("No connection")
 
 
-class MockOCSPFetcherWithValidationError(MockOCSPFetcher):
+class MockOCSPFetcherWithValidationError(MockOCSPFetcher, MockFetcher):
     async def fetch(self, cert: x509.Certificate, authority: Authority):
+        self.calls += 1
         raise OCSPValidationError("Something went wrong")
 
 
-class MockCRLFetcher(CRLFetcher):
+class MockCRLFetcher(CRLFetcher, MockFetcher):
     def fetched_crls_for_cert(
         self, cert: x509.Certificate
     ) -> Iterable[crl.CertificateList]:
+        self.calls += 1
         return ()
 
     def fetched_crls(self) -> Iterable[crl.CertificateList]:
         return ()
 
     async def fetch(self, cert: x509.Certificate, *, use_deltas=None):
+        self.calls += 1
         raise CRLFetchError("No connection")
 
 
-class MockCertFetcher(CertificateFetcher):
+class MockCertFetcher(CertificateFetcher, MockFetcher):
     def fetched_certs(self) -> Iterable[x509.Certificate]:
         return ()
 
     def fetch_cert_issuers(self, cert):
+        self.calls += 1
         return self
 
     def fetch_crl_issuers(self, certificate_list):
+        self.calls += 1
         return self
 
     def __aiter__(self):
@@ -666,6 +683,77 @@ def test_nist_pkits(test_case: PKITSTestCase):
                     )
 
 
+def nist_revocation_tests():
+    specs = read_pkits_test_params()
+    return [spec for spec in specs if spec.check_revocation]
+
+
+class ReturnPredeterminedCRLs(CRLFetcher):
+    def __init__(self, crls):
+        self.crls = crls
+
+    def fetched_crls_for_cert(
+        self, cert: x509.Certificate
+    ) -> Iterable[crl.CertificateList]:
+        raise KeyError()
+
+    def fetched_crls(self) -> Iterable[crl.CertificateList]:
+        return ()
+
+    async def fetch(self, cert: x509.Certificate, *, use_deltas=None):
+        return self.crls
+
+
+@freeze_time('2022-05-01')
+@pytest.mark.parametrize(
+    'test_case', nist_revocation_tests(), ids=lambda case: str(case.test_info)
+)
+def test_nist_pkits_with_simulated_crl_downloads(test_case: PKITSTestCase):
+
+    fetchers = Fetchers(
+        ocsp_fetcher=MockOCSPFetcher(),
+        crl_fetcher=ReturnPredeterminedCRLs(test_case.crls),
+        cert_fetcher=MockCertFetcher(),
+    )
+
+    # TODO rework failure messages and realign fixtures
+    #  so we can do message validations here.
+    #  Also consider having multiple variant runs with
+    #  slightly different revo policies
+    policy = RevocationCheckingPolicy(
+        RevocationCheckingRule.CRL_REQUIRED,
+        RevocationCheckingRule.CRL_REQUIRED,
+    )
+    context = ValidationContext(
+        trust_roots=test_case.roots,
+        other_certs=test_case.other_certs,
+        allow_fetching=True,
+        fetchers=fetchers,
+        revinfo_policy=CertRevTrustPolicy(
+            revocation_checking_policy=policy,
+        ),
+        # adjust default algo policy to pass NIST tests
+        algorithm_usage_policy=DisallowWeakAlgorithmsPolicy(
+            weak_hash_algos={'md2', 'md5'}, dsa_key_size_threshold=1024
+        ),
+    )
+
+    if test_case.path is None:
+        paths = context.path_builder.build_paths(test_case.cert)
+        assert 1 == len(paths)
+        path: ValidationPath = paths[0]
+    else:
+        path = test_case.path
+
+    err = test_case.expected_error
+    params = test_case.pkix_params
+    if err is not None:
+        with pytest.raises(err.err_class):
+            validate_path(context, path, parameters=params)
+    else:
+        validate_path(context, path, parameters=params)
+
+
 @dataclass(frozen=True)
 class PKITSUserNoticeTestCase:
     test_info: CannedTestInfo
@@ -845,3 +933,147 @@ async def test_building_trust_path_with_pkcs7_in_different_orders(cert_order):
     ]
 
     assert trust_path in paths_common_name
+
+
+@freeze_time('2020-11-29')
+def test_do_not_fetch_crl_if_cache_sufficient():
+    cert = load_cert_object('ades', 'time-slide', 'certs', 'alice.crt')
+    ca_certs = [load_cert_object('ades', 'time-slide', 'certs', 'root.crt')]
+    other_certs = [
+        load_cert_object('ades', 'time-slide', 'certs', 'interm.crt')
+    ]
+    crls = [
+        load_crl('ades', 'time-slide', 'interm-2020-10-01.crl'),
+        load_crl('ades', 'time-slide', 'root-2020-10-01.crl'),
+    ]
+    moment = datetime(2020, 10, 2, tzinfo=timezone.utc)
+    fetchers = MockFetcherBackend().get_fetchers()
+
+    crl_fetcher = MockCRLFetcher()
+    fetchers = Fetchers(
+        ocsp_fetcher=MockOCSPFetcher(),
+        crl_fetcher=crl_fetcher,
+        cert_fetcher=MockCertFetcher(),
+    )
+    context = ValidationContext(
+        trust_roots=ca_certs,
+        other_certs=other_certs,
+        crls=crls,
+        allow_fetching=True,
+        fetchers=fetchers,
+        moment=moment,
+        revocation_mode='require',
+    )
+
+    assert crl_fetcher.calls == 0
+
+    paths = context.path_builder.build_paths(cert)
+    assert 1 == len(paths)
+    path = paths[0]
+    assert 3 == len(path)
+    validate_path(context, path)
+
+
+@freeze_time('2022-05-01')
+def test_41503_invalid_deltacrl_test3_combine_cache_with_fetched():
+    cert = load_nist_cert('InvaliddeltaCRLTest4EE.crt')
+    ca_certs = [load_nist_cert('TrustAnchorRootCertificate.crt')]
+    other_certs = [load_nist_cert('deltaCRLCA1Cert.crt')]
+    crls = [
+        load_nist_crl('deltaCRLCA1CRL.crl'),
+        load_nist_crl('TrustAnchorRootCRL.crl'),
+        # the delta CRL will only be returned later
+    ]
+
+    class DeltaCRLFetcher(CRLFetcher, MockFetcher):
+        def fetched_crls_for_cert(
+            self, cert: x509.Certificate
+        ) -> Iterable[crl.CertificateList]:
+            raise KeyError()
+
+        def fetched_crls(self) -> Iterable[crl.CertificateList]:
+            return ()
+
+        async def fetch(self, cert: x509.Certificate, *, use_deltas=None):
+            self.calls += 1
+            return [load_nist_crl('deltaCRLCA1deltaCRL.crl')]
+
+    fetchers = Fetchers(
+        ocsp_fetcher=MockOCSPFetcher(),
+        crl_fetcher=DeltaCRLFetcher(),
+        cert_fetcher=MockCertFetcher(),
+    )
+    context = ValidationContext(
+        trust_roots=ca_certs,
+        other_certs=other_certs,
+        crls=crls,
+        allow_fetching=True,
+        fetchers=fetchers,
+        revocation_mode="require",
+        weak_hash_algos={'md2', 'md5'},
+    )
+
+    paths = context.path_builder.build_paths(cert)
+    assert 1 == len(paths)
+    path: ValidationPath = paths[0]
+    with pytest.raises(RevokedError, match=".*revoked at 08:30:00.*"):
+        validate_path(context, path)
+
+
+@freeze_time('2022-05-01')
+def test_fail_validation_if_required_delta_crl_not_available():
+    cert = load_nist_cert('InvaliddeltaCRLTest4EE.crt')
+    ca_certs = [load_nist_cert('TrustAnchorRootCertificate.crt')]
+    other_certs = [load_nist_cert('deltaCRLCA1Cert.crt')]
+    crls = [
+        load_nist_crl('deltaCRLCA1CRL.crl'),
+        load_nist_crl('TrustAnchorRootCRL.crl'),
+    ]
+
+    context = ValidationContext(
+        trust_roots=ca_certs,
+        other_certs=other_certs,
+        crls=crls,
+        allow_fetching=False,
+        revocation_mode="require",
+        weak_hash_algos={'md2', 'md5'},
+    )
+
+    paths = context.path_builder.build_paths(cert)
+    assert 1 == len(paths)
+    path: ValidationPath = paths[0]
+    with pytest.raises(InsufficientRevinfoError, match=".*Delta CRL.*"):
+        validate_path(context, path)
+
+
+def test_context_retrieve_all_crls():
+
+    cert = load_nist_cert('InvaliddeltaCRLTest4EE.crt')
+    ca_certs = [load_nist_cert('TrustAnchorRootCertificate.crt')]
+    other_certs = [load_nist_cert('deltaCRLCA1Cert.crt')]
+    crl1 = load_nist_crl('deltaCRLCA1CRL.crl')
+    crl2 = load_nist_crl('TrustAnchorRootCRL.crl')
+    crl3 = load_nist_crl('deltaCRLCA1deltaCRL.crl')
+    crls = [crl1, crl2]
+
+    context = ValidationContext(
+        trust_roots=ca_certs,
+        other_certs=other_certs,
+        crls=crls,
+        allow_fetching=True,
+        fetchers=Fetchers(
+            ocsp_fetcher=MockOCSPFetcher(),
+            crl_fetcher=ReturnPredeterminedCRLs([crl3]),
+            cert_fetcher=MockCertFetcher(),
+        ),
+        revocation_mode="require",
+        weak_hash_algos={'md2', 'md5'},
+    )
+
+    with pytest.warns(DeprecationWarning):
+        retrieved_crls = context.retrieve_crls(cert)
+    assert {c.dump() for c in retrieved_crls} == {
+        crl1.dump(),
+        crl2.dump(),
+        crl3.dump(),
+    }

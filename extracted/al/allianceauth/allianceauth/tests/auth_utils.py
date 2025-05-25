@@ -79,6 +79,13 @@ class AuthUtils:
             return cls.create_state('Member', 100, disconnect_signals=True)
 
     @classmethod
+    def get_blue_state(cls):
+        try:
+            return State.objects.get(name='Blue')
+        except State.DoesNotExist:
+            return cls.create_state('Blue', 50, disconnect_signals=True)
+
+    @classmethod
     def get_guest_state(cls):
         cls.disconnect_signals()
         state = get_guest_state()

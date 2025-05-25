@@ -1,4 +1,5 @@
 import logging
+from typing import ClassVar
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -56,7 +57,7 @@ class Notification(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     viewed = models.BooleanField(default=False, db_index=True)
 
-    objects = NotificationManager()
+    objects: ClassVar[NotificationManager] = NotificationManager()
 
     def __str__(self) -> str:
         return f"{self.user}: {self.title}"

@@ -16,6 +16,7 @@ from DIRAC.Resources.Catalog.FileCatalogClient import FileCatalogClient
 
 # DIRAC imports
 from CTADIRAC.Core.Utilities.tool_box import get_dataset_MQ
+from CTADIRAC.Interfaces.API.CTAJob import MetadataDict
 from CTADIRAC.Interfaces.API.CtapipeApplyModelsJob import CtapipeApplyModelsJob
 from CTADIRAC.Interfaces.API.CtapipeMergeJob import CtapipeMergeJob
 from CTADIRAC.Interfaces.API.CtapipeProcessJob import CtapipeProcessJob
@@ -111,6 +112,7 @@ class WorkflowElementDefinition:
                     "div_ang",
                     "random_mono_probability",
                     "instrument_random_seeds",
+                    "systematic_uncertainty_to_test",
                 ]
             )
         elif self.we_type == "ctapipeprocessing":
@@ -206,6 +208,8 @@ class WorkflowElement(WorkflowElementDefinition):
             self.job.set_random_mono_probability(value)
         elif key == "instrument_random_seeds":
             self.job.set_instrument_random_seeds(value)
+        elif key == "systematic_uncertainty_to_test":
+            self.job.set_systematic_uncertainty_to_test(value)
         elif key == "group_size":
             setattr(self.job, key, value)
             self.prod_step.GroupSize = self.job.group_size
@@ -367,7 +371,16 @@ class WorkflowElement(WorkflowElementDefinition):
                 metadata["merged"] = merged
             self.job.set_output_metadata(metadata)
         elif self.we_type in self.allowed_simulation_types:
-            self.job.set_output_metadata()
+            metadata: MetadataDict = MetadataDict(
+                array_layout=self.job.array_layout,
+                site=self.job.site,
+                particle=self.job.particle,
+                phiP=180 if self.job.pointing_dir == "North" else 0,
+                thetaP=float(self.job.zenith_angle),
+                sct="True" if self.job.sct else "False",
+                outputType=self.job.output_type,
+            )
+            self.job.set_output_metadata(metadata)
 
     def get_merging_level(self) -> int:
         """Get the merging level from parent step or from the user query"""

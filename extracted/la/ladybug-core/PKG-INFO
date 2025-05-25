@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ladybug-core
-Version: 0.44.11
+Version: 0.44.12
 Summary: Python library to load, analyze and modify EnergyPlus Weather files (epw).
 Home-page: https://github.com/ladybug-tools/ladybug
 Author: Ladybug Tools

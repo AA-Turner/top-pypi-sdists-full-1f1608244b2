@@ -5,6 +5,7 @@
 import os
 from typing import List, Optional, TypeVar, Union
 
+from fireworks._const import FIREWORKS_API_BASE_URL, FIREWORKS_GATEWAY_ADDR
 import grpclib
 import grpc
 from grpclib.client import Channel
@@ -17,12 +18,21 @@ from fireworks.control_plane.generated.protos_grpcio.gateway.supervised_fine_tun
     SupervisedFineTuningJob as SyncSupervisedFineTuningJob,
     CreateSupervisedFineTuningJobRequest as SyncCreateSupervisedFineTuningJobRequest,
 )
+from fireworks.control_plane.generated.protos_grpcio.gateway.deployed_model_pb2 import (
+    DeployedModel as SyncDeployedModel,
+    CreateDeployedModelRequest as SyncCreateDeployedModelRequest,
+    GetDeployedModelRequest as SyncGetDeployedModelRequest,
+    ListDeployedModelsRequest as SyncListDeployedModelsRequest,
+    ListDeployedModelsResponse as SyncListDeployedModelsResponse,
+    DeleteDeployedModelRequest as SyncDeleteDeployedModelRequest,
+)
 from fireworks.control_plane.generated.protos_grpcio.gateway.dataset_pb2 import (
     Dataset as SyncDataset,
     CreateDatasetRequest as SyncCreateDatasetRequest,
     DeleteDatasetRequest as SyncDeleteDatasetRequest,
     ListDatasetsRequest as SyncListDatasetsRequest,
     GetDatasetUploadEndpointRequest as SyncGetDatasetUploadEndpointRequest,
+    GetDatasetRequest as SyncGetDatasetRequest,
     ValidateDatasetUploadRequest as SyncValidateDatasetUploadRequest,
 )
 from fireworks.control_plane.generated.protos_grpcio.gateway.supervised_fine_tuning_job_pb2 import (
@@ -39,6 +49,12 @@ from fireworks.control_plane.generated.protos_grpcio.gateway.deployment_pb2 impo
     ScaleDeploymentRequest as SyncScaleDeploymentRequest,
     GetDeploymentRequest as SyncGetDeploymentRequest,
     DeleteDeploymentRequest as SyncDeleteDeploymentRequest,
+)
+from fireworks.control_plane.generated.protos_grpcio.gateway.model_pb2 import (
+    ListServerlessLoraModelsRequest as SyncListServerlessLoraModelsRequest,
+    ListServerlessLoraModelsResponse as SyncListServerlessLoraModelsResponse,
+    Model as SyncModel,
+    GetModelRequest as SyncGetModelRequest,
 )
 from fireworks.control_plane.generated.protos.gateway import (
     AcceleratorType,
@@ -106,7 +122,7 @@ class Gateway:
     def __init__(
         self,
         *,
-        server_addr: str = "gateway.fireworks.ai:443",
+        server_addr: str = FIREWORKS_GATEWAY_ADDR,
         api_key: Optional[str] = None,
     ) -> None:
         """
@@ -210,6 +226,13 @@ class Gateway:
         request.parent = f"accounts/{account_id}"
         response = await self._stub.list_datasets(request)
         return response.datasets
+
+    async def get_dataset_sync(self, name: str) -> SyncDataset:
+        account_id = self.account_id()
+        response = await self._sync_stub.GetDataset(
+            SyncGetDatasetRequest(name=f"accounts/{account_id}/datasets/{name}")
+        )
+        return response
 
     def list_datasets_sync(
         self,
@@ -341,6 +364,36 @@ class Gateway:
         )
         return deployments.deployments
 
+    def list_serverless_lora_sync(self) -> SyncListServerlessLoraModelsResponse:
+        loras = self._sync_stub.ListServerlessLoraModels(SyncListServerlessLoraModelsRequest())
+        return loras
+
+    def create_deployed_model_sync(self, request: SyncCreateDeployedModelRequest) -> SyncDeployedModel:
+        account_id = self.account_id()
+        request.parent = f"accounts/{account_id}"
+        return self._sync_stub.CreateDeployedModel(request)
+
+    def get_deployed_model_sync(self, name: str) -> Optional[SyncDeployedModel]:
+        try:
+            return self._sync_stub.GetDeployedModel(SyncGetDeployedModelRequest(name=name))
+        except grpclib.exceptions.GRPCError as e:
+            if e.status == grpclib.Status.NOT_FOUND:
+                return None
+            raise e
+
+    def list_deployed_models_sync(self, request: SyncListDeployedModelsRequest) -> SyncListDeployedModelsResponse:
+        account_id = self.account_id()
+        request.parent = f"accounts/{account_id}"
+        return self._sync_stub.ListDeployedModels(request)
+
+    def delete_deployed_model_sync(self, name: str) -> None:
+        try:
+            self._sync_stub.DeleteDeployedModel(SyncDeleteDeployedModelRequest(name=name))
+        except grpclib.exceptions.GRPCError as e:
+            if e.status == grpclib.Status.NOT_FOUND:
+                return
+            raise e
+
     async def create_deployment(
         self,
         deployment: Deployment,
@@ -398,8 +451,11 @@ class Gateway:
     async def get_deployment(self, name: str) -> Deployment:
         return await self._stub.get_deployment(GetDeploymentRequest(name=name))
 
-    def get_deployment_sync(self, name: str) -> Deployment:
+    def get_deployment_sync(self, name: str) -> SyncDeployment:
         return self._sync_stub.GetDeployment(SyncGetDeploymentRequest(name=name))
+
+    def get_model_sync(self, name: str) -> SyncModel:
+        return self._sync_stub.GetModel(SyncGetModelRequest(name=name))
 
     @sync_cache
     def account_id(self) -> str:
@@ -407,7 +463,7 @@ class Gateway:
         # and read x-fireworks-account-id from headers of the response
         with httpx.Client() as client:
             response = client.get(
-                "https://api.fireworks.ai/verifyApiKey",
+                f"{FIREWORKS_API_BASE_URL}/verifyApiKey",
                 headers={
                     "Authorization": f"Bearer {self._api_key}",
                 },

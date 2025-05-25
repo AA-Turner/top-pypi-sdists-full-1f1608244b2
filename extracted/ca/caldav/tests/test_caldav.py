@@ -11,7 +11,6 @@ import codecs
 import logging
 import random
 import sys
-import tempfile
 import threading
 import time
 import uuid
@@ -20,14 +19,13 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
+from urllib.parse import urlparse
 
 import icalendar
 import pytest
-import requests
 import vobject
 from requests.packages import urllib3
 
-from . import compatibility_issues
 from .conf import caldav_servers
 from .conf import client
 from .conf import proxy
@@ -41,6 +39,7 @@ from .conf import xandikos_host
 from .conf import xandikos_port
 from .proxy import NonThreadingHTTPServer
 from .proxy import ProxyHandler
+from caldav import compatibility_hints
 from caldav.davclient import DAVClient
 from caldav.davclient import DAVResponse
 from caldav.elements import cdav
@@ -58,21 +57,6 @@ from caldav.objects import Event
 from caldav.objects import FreeBusy
 from caldav.objects import Principal
 from caldav.objects import Todo
-
-if test_xandikos:
-    import asyncio
-
-    import aiohttp
-    import aiohttp.web
-    from xandikos.web import XandikosApp, XandikosBackend
-
-if test_radicale:
-    import radicale.config
-    import radicale
-    import radicale.server
-    import socket
-
-from urllib.parse import urlparse
 
 log = logging.getLogger("caldav")
 
@@ -154,6 +138,8 @@ uids_used = (
     "test4",
     "test5",
     "test6",
+    "c26921f4-0653-11ef-b756-58ce2a14e2e5",
+    "e2a2e13e-34f2-11f0-ae12-1c1bb5134174",
 )
 ## TODO: todo7 is an item without uid.  Should be taken care of somehow.
 
@@ -455,7 +441,7 @@ sched = sched_template % (
     len(rfc6638_users) < 3,
     reason="need at least three users in rfc6638_users to be set in order to run this test",
 )
-class TestScheduling(object):
+class TestScheduling:
     """Testing support of RFC6638.
     TODO: work in progress.  Stalled a bit due to lack of proper testing accounts.  I haven't managed to get this test to pass at any systems yet, but I believe the problem is not on the library side.
     * icloud: cannot really test much with only one test account
@@ -505,6 +491,8 @@ class TestScheduling(object):
                 self.principals[i].calendar(name=calendar_name).delete()
             except error.NotFoundError:
                 pass
+        for c in self.clients:
+            c.teardown()
 
     ## TODO
     # def testFreeBusy(self):
@@ -570,7 +558,15 @@ class TestScheduling(object):
     ## inbox/outbox?
 
 
-class RepeatedFunctionalTestsBaseClass(object):
+def _delay_decorator(f, t=20):
+    def foo(*a, **kwa):
+        time.sleep(t)
+        return f(*a, **kwa)
+
+    return foo
+
+
+class RepeatedFunctionalTestsBaseClass:
     """This is a class with functional tests (tests that goes through
     basic functionality and actively communicates with third parties)
     that we want to repeat for all configured caldav_servers.
@@ -589,12 +585,12 @@ class RepeatedFunctionalTestsBaseClass(object):
 
     def check_compatibility_flag(self, flag):
         ## yield an assertion error if checking for the wrong thig
-        assert flag in compatibility_issues.incompatibility_description
+        assert flag in compatibility_hints.incompatibility_description
         return flag in self.incompatibilities
 
     def skip_on_compatibility_flag(self, flag):
         if self.check_compatibility_flag(flag):
-            msg = compatibility_issues.incompatibility_description[flag]
+            msg = compatibility_hints.incompatibility_description[flag]
             pytest.skip("Test skipped due to server incompatibility issue: " + msg)
 
     def setup_method(self):
@@ -604,7 +600,7 @@ class RepeatedFunctionalTestsBaseClass(object):
         self.calendars_used = []
 
         for flag in self.server_params.get("incompatibilities", []):
-            assert flag in compatibility_issues.incompatibility_description
+            assert flag in compatibility_hints.incompatibility_description
             self.incompatibilities.add(flag)
 
         if self.check_compatibility_flag("unique_calendar_ids"):
@@ -617,15 +613,10 @@ class RepeatedFunctionalTestsBaseClass(object):
         self.caldav = client(**self.server_params)
 
         if self.check_compatibility_flag("rate_limited"):
-
-            def delay_decorator(f):
-                def foo(*a, **kwa):
-                    time.sleep(60)
-                    return f(*a, **kwa)
-
-                return foo
-
-            self.caldav.request = delay_decorator(self.caldav.request)
+            self.caldav.request = _delay_decorator(self.caldav.request)
+        if self.check_compatibility_flag("search_delay"):
+            Calendar._search = Calendar.search
+            Calendar.search = _delay_decorator(Calendar.search)
 
         if False and self.check_compatibility_flag("no-current-user-principal"):
             self.principal = Principal(
@@ -645,11 +636,14 @@ class RepeatedFunctionalTestsBaseClass(object):
         logging.debug("##############################")
 
     def teardown_method(self):
+        if self.check_compatibility_flag("search_delay"):
+            Calendar.search = Calendar._search
         logging.debug("############################")
         logging.debug("############## test teardown_method")
         logging.debug("############################")
         self._cleanup("post")
-        logging.debug("############## test teardown_method done")
+        logging.debug("############## test teardown_method almost done")
+        self.caldav.teardown(self.caldav)
 
     def _cleanup(self, mode=None):
         if self.cleanup_regime in ("pre", "post") and self.cleanup_regime != mode:
@@ -761,6 +755,7 @@ class RepeatedFunctionalTestsBaseClass(object):
 
     def testSchedulingInfo(self):
         self.skip_on_compatibility_flag("no_scheduling")
+        self.skip_on_compatibility_flag("no_scheduling_calendar_user_address_set")
         calendar_user_address_set = self.principal.calendar_user_address_set()
         me_a_participant = self.principal.get_vcal_address()
 
@@ -860,10 +855,13 @@ class RepeatedFunctionalTestsBaseClass(object):
             pytest.skip("Unable to set up proxy server")
 
         threadobj = threading.Thread(target=proxy_httpd.serve_forever)
+        conn_params = self.server_params.copy()
+        for special in ("setup", "teardown", "name"):
+            if special in conn_params:
+                conn_params.pop(special)
         try:
             threadobj.start()
             assert threadobj.is_alive()
-            conn_params = self.server_params.copy()
             conn_params["proxy"] = proxy
             c = client(**conn_params)
             p = c.principal()
@@ -879,7 +877,6 @@ class RepeatedFunctionalTestsBaseClass(object):
         try:
             threadobj.start()
             assert threadobj.is_alive()
-            conn_params = self.server_params.copy()
             conn_params["proxy"] = proxy_noport
             c = client(**conn_params)
             p = c.principal()
@@ -945,11 +942,38 @@ class RepeatedFunctionalTestsBaseClass(object):
         event = c.event_by_uid("test1")
         ## TODO: work in progress ... see https://github.com/python-caldav/caldav/issues/399
 
+    def testMultiGet(self):
+        self.skip_on_compatibility_flag("read_only")
+        c = self._fixCalendar()
+
+        event1 = c.save_event(
+            uid="test1",
+            dtstart=datetime(2015, 10, 10, 8, 7, 6),
+            dtend=datetime(2015, 10, 10, 9, 7, 6),
+            summary="test1",
+        )
+
+        event2 = c.save_event(
+            uid="test2",
+            dtstart=datetime(2015, 10, 10, 8, 7, 6),
+            dtend=datetime(2015, 10, 10, 9, 7, 6),
+            summary="test2",
+        )
+
+        results = c.calendar_multiget([event1.url, event2.url])
+        assert len(results) == 2
+        assert set([x.icalendar_component["uid"] for x in results]) == {
+            "test1",
+            "test2",
+        }
+
     def testCreateEvent(self):
         self.skip_on_compatibility_flag("read_only")
         c = self._fixCalendar()
 
         existing_events = c.events()
+        existing_urls = {x.url for x in existing_events}
+        cleanse = lambda events: [x for x in events if x.url not in existing_urls]
 
         if not self.check_compatibility_flag("no_mkcalendar"):
             ## we're supposed to be working towards a brand new calendar
@@ -959,13 +983,13 @@ class RepeatedFunctionalTestsBaseClass(object):
         c.save_event(broken_ev1)
 
         # c.events() should give a full list of events
-        events = c.events()
-        assert len(events) == len(existing_events) + 1
+        events = cleanse(c.events())
+        assert len(events) == 1
 
         # We should be able to access the calender through the URL
         c2 = self.caldav.calendar(url=c.url)
-        events2 = c2.events()
-        assert len(events2) == len(existing_events) + 1
+        events2 = cleanse(c2.events())
+        assert len(events2) == 1
         assert events2[0].url == events[0].url
 
         if not self.check_compatibility_flag(
@@ -976,7 +1000,7 @@ class RepeatedFunctionalTestsBaseClass(object):
             ## may break if we have multiple calendars with the same name
             if not self.check_compatibility_flag("no_delete_calendar"):
                 assert c2.url == c.url
-                events2 = c2.events()
+                events2 = cleanse(c2.events())
                 assert len(events2) == 1
                 assert events2[0].url == events[0].url
 
@@ -990,6 +1014,47 @@ class RepeatedFunctionalTestsBaseClass(object):
         events = c.events()
         assert len(events) == len(existing_events) + 2
         ev2.delete()
+
+    def testAlarm(self):
+        ## Ref https://github.com/python-caldav/caldav/issues/132
+        c = self._fixCalendar()
+        ev = c.save_event(
+            dtstart=datetime(2015, 10, 10, 8, 0, 0),
+            summary="This is a test event",
+            uid="test1",
+            dtend=datetime(2016, 10, 10, 9, 0, 0),
+            alarm_trigger=timedelta(minutes=-15),
+            alarm_action="AUDIO",
+        )
+
+        self.skip_on_compatibility_flag("no_alarmsearch")
+
+        ## So we have an alarm that goes off 07:45 for an event starting 08:00
+
+        ## Search for alarms after 8 should find nothing
+        ## (search for an alarm 07:55 - 08:05 should most likely find nothing).
+        assert (
+            len(
+                c.search(
+                    event=True,
+                    alarm_start=datetime(2015, 10, 10, 8, 1),
+                    alarm_end=datetime(2015, 10, 10, 8, 7),
+                )
+            )
+            == 0
+        )
+
+        ## Search for alarms from 07:40 to 07:55 should definitively find the alarm.
+        assert (
+            len(
+                c.search(
+                    event=True,
+                    alarm_start=datetime(2015, 10, 10, 7, 40),
+                    alarm_end=datetime(2015, 10, 10, 7, 55),
+                )
+            )
+            == 1
+        )
 
     def testCalendarByFullURL(self):
         """
@@ -1024,9 +1089,7 @@ class RepeatedFunctionalTestsBaseClass(object):
         if not self.check_compatibility_flag("no_recurring"):
             c.save_event(evr)
             objcnt += 1
-        if not self.check_compatibility_flag(
-            "no_todo"
-        ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+        if not self.check_compatibility_flag("no_todo"):
             c.save_todo(todo)
             c.save_todo(todo2)
             c.save_todo(todo3)
@@ -1155,9 +1218,7 @@ class RepeatedFunctionalTestsBaseClass(object):
         if not self.check_compatibility_flag("no_recurring"):
             c.save_event(evr)
             objcnt += 1
-        if not self.check_compatibility_flag(
-            "no_todo"
-        ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+        if not self.check_compatibility_flag("no_todo"):
             c.save_todo(todo)
             c.save_todo(todo2)
             c.save_todo(todo3)
@@ -1250,12 +1311,10 @@ class RepeatedFunctionalTestsBaseClass(object):
         c2 = self._fixCalendar(name="Yapp", cal_id=self.testcal_id2)
 
         e1_ = c1.save_event(ev1)
-        if not self.check_compatibility_flag("event_by_url_is_broken"):
-            e1_.load()
+        e1_.load()
         e1 = c1.events()[0]
         assert e1.url == e1_.url
-        if not self.check_compatibility_flag("event_by_url_is_broken"):
-            e1.load()
+        e1.load()
         if (
             not self.check_compatibility_flag("unique_calendar_ids")
             and self.cleanup_regime == "post"
@@ -1359,6 +1418,8 @@ class RepeatedFunctionalTestsBaseClass(object):
         self.skip_on_compatibility_flag("no_search")
         c = self._fixCalendar()
 
+        num_existing = len(c.events())
+
         c.save_event(ev1)
         c.save_event(ev3)
         c.save_event(evr)
@@ -1366,13 +1427,13 @@ class RepeatedFunctionalTestsBaseClass(object):
         ## Search without any parameters should yield everything on calendar
         all_events = c.search()
         if self.check_compatibility_flag("search_needs_comptype"):
-            assert len(all_events) <= 3
+            assert len(all_events) <= 3 + num_existing
         else:
-            assert len(all_events) == 3
+            assert len(all_events) == 3 + num_existing
 
         ## Search with comp_class set to Event should yield all events on calendar
         all_events = c.search(comp_class=Event)
-        assert len(all_events) == 3
+        assert len(all_events) == 3 + num_existing
 
         ## Search with todo flag set should yield no events
         try:
@@ -1426,54 +1487,53 @@ class RepeatedFunctionalTestsBaseClass(object):
         self.skip_on_compatibility_flag("text_search_not_working")
 
         ## category
-        if not self.check_compatibility_flag("radicale_breaks_on_category_search"):
-            some_events = c.search(comp_class=Event, category="PERSONAL")
-            if not self.check_compatibility_flag("category_search_yields_nothing"):
+        some_events = c.search(comp_class=Event, category="PERSONAL")
+        if not self.check_compatibility_flag("category_search_yields_nothing"):
+            assert len(some_events) == 1
+        some_events = c.search(comp_class=Event, category="personal")
+        if not self.check_compatibility_flag("category_search_yields_nothing"):
+            if self.check_compatibility_flag("text_search_is_case_insensitive"):
                 assert len(some_events) == 1
-            some_events = c.search(comp_class=Event, category="personal")
-            if not self.check_compatibility_flag("category_search_yields_nothing"):
-                if self.check_compatibility_flag("text_search_is_case_insensitive"):
-                    assert len(some_events) == 1
-                else:
-                    assert len(some_events) == 0
-
-            ## This is not a very useful search, and it's sort of a client side bug that we allow it at all.
-            ## It will not match if categories field is set to "PERSONAL,ANNIVERSARY,SPECIAL OCCASION"
-            ## It may not match since the above is to be considered equivalent to the raw data entered.
-            some_events = c.search(
-                comp_class=Event, category="ANNIVERSARY,PERSONAL,SPECIAL OCCASION"
-            )
-            assert len(some_events) in (0, 1)
-            ## TODO: This is actually a bug. We need to do client side filtering
-            some_events = c.search(comp_class=Event, category="PERSON")
-            if self.check_compatibility_flag("text_search_is_exact_match_sometimes"):
-                assert len(some_events) in (0, 1)
-            if self.check_compatibility_flag("text_search_is_exact_match_only"):
+            else:
                 assert len(some_events) == 0
-            elif not self.check_compatibility_flag("category_search_yields_nothing"):
-                assert len(some_events) == 1
 
-            ## I expect "logical and" when combining category with a date range
-            no_events = c.search(
-                comp_class=Event,
-                category="PERSONAL",
-                start=datetime(2006, 7, 13, 13, 0),
-                end=datetime(2006, 7, 15, 13, 0),
-            )
-            if not self.check_compatibility_flag(
-                "category_search_yields_nothing"
-            ) and not self.check_compatibility_flag("combined_search_not_working"):
-                assert len(no_events) == 0
-            some_events = c.search(
-                comp_class=Event,
-                category="PERSONAL",
-                start=datetime(1997, 11, 1, 13, 0),
-                end=datetime(1997, 11, 3, 13, 0),
-            )
-            if not self.check_compatibility_flag(
-                "category_search_yields_nothing"
-            ) and not self.check_compatibility_flag("combined_search_not_working"):
-                assert len(some_events) == 1
+        ## This is not a very useful search, and it's sort of a client side bug that we allow it at all.
+        ## It will not match if categories field is set to "PERSONAL,ANNIVERSARY,SPECIAL OCCASION"
+        ## It may not match since the above is to be considered equivalent to the raw data entered.
+        some_events = c.search(
+            comp_class=Event, category="ANNIVERSARY,PERSONAL,SPECIAL OCCASION"
+        )
+        assert len(some_events) in (0, 1)
+        ## TODO: This is actually a bug. We need to do client side filtering
+        some_events = c.search(comp_class=Event, category="PERSON")
+        if self.check_compatibility_flag("text_search_is_exact_match_sometimes"):
+            assert len(some_events) in (0, 1)
+        if self.check_compatibility_flag("text_search_is_exact_match_only"):
+            assert len(some_events) == 0
+        elif not self.check_compatibility_flag("category_search_yields_nothing"):
+            assert len(some_events) == 1
+
+        ## I expect "logical and" when combining category with a date range
+        no_events = c.search(
+            comp_class=Event,
+            category="PERSONAL",
+            start=datetime(2006, 7, 13, 13, 0),
+            end=datetime(2006, 7, 15, 13, 0),
+        )
+        if not self.check_compatibility_flag(
+            "category_search_yields_nothing"
+        ) and not self.check_compatibility_flag("combined_search_not_working"):
+            assert len(no_events) == 0
+        some_events = c.search(
+            comp_class=Event,
+            category="PERSONAL",
+            start=datetime(1997, 11, 1, 13, 0),
+            end=datetime(1997, 11, 3, 13, 0),
+        )
+        if not self.check_compatibility_flag(
+            "category_search_yields_nothing"
+        ) and not self.check_compatibility_flag("combined_search_not_working"):
+            assert len(some_events) == 1
 
         some_events = c.search(comp_class=Event, summary="Bastille Day Party")
         assert len(some_events) == 1
@@ -1500,11 +1560,50 @@ class RepeatedFunctionalTestsBaseClass(object):
         assert len(all_events) == 3
         assert all_events[0].instance.vevent.summary.value == "Our Blissful Anniversary"
 
+        ## A more robust check for the sort key
+        all_events = c.search(sort_keys=("DTSTART",))
+        assert len(all_events) == 3
+        assert str(all_events[0].icalendar_component["DTSTART"].dt) < str(
+            all_events[1].icalendar_component["DTSTART"].dt
+        )
+        assert str(all_events[1].icalendar_component["DTSTART"].dt) < str(
+            all_events[2].icalendar_component["DTSTART"].dt
+        )
+        all_events = c.search(sort_keys=("DTSTART",), sort_reverse=True)
+        assert str(all_events[0].icalendar_component["DTSTART"].dt) > str(
+            all_events[1].icalendar_component["DTSTART"].dt
+        )
+        assert str(all_events[1].icalendar_component["DTSTART"].dt) > str(
+            all_events[2].icalendar_component["DTSTART"].dt
+        )
+
+        ## Ref https://github.com/python-caldav/caldav/issues/448
+        all_events = c.search(sort_keys=("DTSTART"))
+        assert len(all_events) == 3
+        assert str(all_events[0].icalendar_component["DTSTART"].dt) < str(
+            all_events[1].icalendar_component["DTSTART"].dt
+        )
+        assert str(all_events[1].icalendar_component["DTSTART"].dt) < str(
+            all_events[2].icalendar_component["DTSTART"].dt
+        )
+        all_events = c.search(sort_keys=("DTSTART"), sort_reverse=True)
+        assert str(all_events[0].icalendar_component["DTSTART"].dt) > str(
+            all_events[1].icalendar_component["DTSTART"].dt
+        )
+        assert str(all_events[1].icalendar_component["DTSTART"].dt) > str(
+            all_events[2].icalendar_component["DTSTART"].dt
+        )
+
     def testSearchSortTodo(self):
         self.skip_on_compatibility_flag("read_only")
         self.skip_on_compatibility_flag("no_todo")
         self.skip_on_compatibility_flag("no_search")
         c = self._fixCalendar(supported_calendar_component_set=["VTODO"])
+        pre_todos = c.todos()
+        pre_todo_uid_map = {x.icalendar_component["uid"] for x in pre_todos}
+        cleanse = lambda tasks: [
+            x for x in tasks if x.icalendar_component["uid"] not in pre_todo_uid_map
+        ]
         t1 = c.save_todo(
             summary="1 task overdue",
             due=date(2022, 12, 12),
@@ -1544,14 +1643,22 @@ class RepeatedFunctionalTestsBaseClass(object):
                 "test" + str(x) for x in order
             ]
 
-        all_tasks = c.search(todo=True, sort_keys=("uid",))
+        all_tasks = cleanse(c.search(todo=True, sort_keys=("uid",)))
         check_order(all_tasks, (1, 2, 3, 4, 6))
 
-        all_tasks = c.search(sort_keys=("summary",))
+        all_tasks = cleanse(c.search(sort_keys=("summary",)))
         check_order(all_tasks, (1, 2, 3, 4, 5, 6))
 
-        all_tasks = c.search(
-            sort_keys=("isnt_overdue", "categories", "dtstart", "priority", "status")
+        all_tasks = cleanse(
+            c.search(
+                sort_keys=(
+                    "isnt_overdue",
+                    "categories",
+                    "dtstart",
+                    "priority",
+                    "status",
+                )
+            )
         )
         ## This is difficult ...
         ## * 1 is the only one that is overdue, and False sorts before True, so 1 comes first
@@ -1567,6 +1674,8 @@ class RepeatedFunctionalTestsBaseClass(object):
         self.skip_on_compatibility_flag("no_search")
         c = self._fixCalendar(supported_calendar_component_set=["VTODO"])
 
+        pre_cnt = len(c.todos())
+
         t1 = c.save_todo(todo)
         t2 = c.save_todo(todo2)
         t3 = c.save_todo(todo3)
@@ -1577,13 +1686,13 @@ class RepeatedFunctionalTestsBaseClass(object):
         ## Search without any parameters should yield everything on calendar
         all_todos = c.search()
         if self.check_compatibility_flag("search_needs_comptype"):
-            assert len(all_todos) <= 6
+            assert len(all_todos) <= 6 + pre_cnt
         else:
-            assert len(all_todos) == 6
+            assert len(all_todos) == 6 + pre_cnt
 
         ## Search with comp_class set to Event should yield all events on calendar
         all_todos = c.search(comp_class=Event)
-        assert len(all_todos) == 0
+        assert len(all_todos) == 0 + pre_cnt
 
         ## Search with todo flag set should yield all 6 tasks
         ## (Except, if the calendar server does not support is-not-defined very
@@ -1591,57 +1700,55 @@ class RepeatedFunctionalTestsBaseClass(object):
         ## https://gitlab.com/davical-project/davical/-/issues/281 )
         all_todos = c.search(todo=True)
         if self.check_compatibility_flag("isnotdefined_not_working"):
-            assert len(all_todos) in (3, 6)
+            assert len(all_todos) - pre_cnt in (3, 6)
         else:
-            assert len(all_todos) == 6
+            assert len(all_todos) == 6 + pre_cnt
 
         ## Search for misc text fields
         ## UID is a special case, supported by almost all servers
         some_todos = c.search(comp_class=Todo, uid="19970901T130000Z-123404@host.com")
         if not self.check_compatibility_flag("text_search_not_working"):
-            assert len(some_todos) == 1
+            assert len(some_todos) == 1 + pre_cnt
 
         ## class ... hm, all 6 example todos are 'CONFIDENTIAL' ...
         some_todos = c.search(comp_class=Todo, class_="CONFIDENTIAL")
         if not self.check_compatibility_flag("text_search_not_working"):
-            assert len(some_todos) == 6
+            assert len(some_todos) == 6 + pre_cnt
 
         ## category
-        self.skip_on_compatibility_flag("radicale_breaks_on_category_search")
-
         ## Too much copying of the examples ...
         some_todos = c.search(comp_class=Todo, category="FINANCE")
         if not self.check_compatibility_flag(
             "category_search_yields_nothing"
         ) and not self.check_compatibility_flag("text_search_not_working"):
-            assert len(some_todos) == 6
+            assert len(some_todos) == 6 + pre_cnt
         some_todos = c.search(comp_class=Todo, category="finance")
         if not self.check_compatibility_flag(
             "category_search_yields_nothing"
         ) and not self.check_compatibility_flag("text_search_not_working"):
             if self.check_compatibility_flag("text_search_is_case_insensitive"):
-                assert len(some_todos) == 6
+                assert len(some_todos) == 6 + pre_cnt
             else:
-                assert len(some_todos) == 0
+                assert len(some_todos) == 0 + pre_cnt
 
         ## This is not a very useful search, and it's sort of a client side bug that we allow it at all.
         ## It will not match if categories field is set to "PERSONAL,ANNIVERSARY,SPECIAL OCCASION"
         ## It may not match since the above is to be considered equivalent to the raw data entered.
         some_todos = c.search(comp_class=Todo, category="FAMILY,FINANCE")
         if not self.check_compatibility_flag("text_search_not_working"):
-            assert len(some_todos) in (0, 6)
+            assert len(some_todos) - pre_cnt in (0, 6)
         ## TODO: We should consider to do client side filtering to ensure exact
         ## match only on components having MIL as a category (and not FAMILY)
         some_todos = c.search(comp_class=Todo, category="MIL")
         if self.check_compatibility_flag("text_search_is_exact_match_sometimes"):
-            assert len(some_todos) in (0, 6)
+            assert len(some_todos) - pre_cnt in (0, 6)
         elif self.check_compatibility_flag("text_search_is_exact_match_only"):
-            assert len(some_todos) == 0
+            assert len(some_todos) - pre_cnt == 0
         elif not self.check_compatibility_flag(
             "category_search_yields_nothing"
         ) and not self.check_compatibility_flag("text_search_not_working"):
             ## This is the correct thing, according to the letter of the RFC
-            assert len(some_todos) == 6
+            assert len(some_todos) - pre_cnt == 6
 
         ## completing events, and it should not show up anymore
         t3.complete()
@@ -1649,11 +1756,11 @@ class RepeatedFunctionalTestsBaseClass(object):
         t6.complete()
 
         some_todos = c.search(todo=True)
-        assert len(some_todos) == 3
+        assert len(some_todos) == 3 + pre_cnt
 
         ## unless we specifically ask for completed tasks
         all_todos = c.search(todo=True, include_completed=True)
-        assert len(all_todos) == 6
+        assert len(all_todos) == 6 + pre_cnt
 
     def testWrongPassword(self):
         if (
@@ -1664,12 +1771,15 @@ class RepeatedFunctionalTestsBaseClass(object):
             pytest.skip(
                 "Testing with wrong password skipped as calendar server does not require a password"
             )
-        server_params = self.server_params.copy()
-        server_params["password"] = (
-            codecs.encode(server_params["password"], "rot13") + "!"
+        connect_params = self.server_params.copy()
+        for delme in ("setup", "teardown", "name"):
+            if delme in connect_params:
+                connect_params.pop(delme)
+        connect_params["password"] = (
+            codecs.encode(connect_params["password"], "rot13") + "!"
         )
         with pytest.raises(error.AuthorizationError):
-            client(**server_params).principal()
+            client(**connect_params).principal()
 
     def testCreateChildParent(self):
         self.skip_on_compatibility_flag("read_only")
@@ -1734,6 +1844,34 @@ class RepeatedFunctionalTestsBaseClass(object):
         assert len(foo["PARENT"]) == 1
         foo = parent_.get_relatives(relfilter=lambda x: x.params.get("GAP"))
 
+        ## verify the check_reverse_relations method (TODO: move to a separate test)
+        assert parent_.check_reverse_relations() == []
+        assert child_.check_reverse_relations() == []
+        assert grandparent_.check_reverse_relations() == []
+
+        ## My grandchild is also my child ... that sounds fishy
+        grandparent_.set_relation(child, reltype="CHILD", set_reverse=False)
+
+        ## The check_reverse should tell that something is amiss
+        missing_parent = grandparent_.check_reverse_relations()
+        assert len(missing_parent) == 1
+        assert missing_parent[0][0].icalendar_component["uid"] == "ctuid2"
+        assert missing_parent[0][1] == "PARENT"
+        ## But only when run on the grandparent.  The child is blissfully
+        ## unaware who the second parent is (even if reloading it).
+        child_.load()
+        assert child_.check_reverse_relations() == []
+
+        ## We should be able to fix the missing parent
+        grandparent_.fix_reverse_relations()
+        assert not grandparent_.check_reverse_relations()
+
+        ## TODO:
+        ## This does not work out.  A relation to some object that is not on
+        ## the calendar is not flagged - but perhaps it shouldn't be flagged?
+        # child.delete()
+        # assert parent_.check_reverse_relations()
+
     def testSetDue(self):
         self.skip_on_compatibility_flag("read_only")
         self.skip_on_compatibility_flag("no_todo")
@@ -1795,6 +1933,8 @@ class RepeatedFunctionalTestsBaseClass(object):
             uid="ctuid3",
             child=[some_todo.id],
         )
+
+        assert not parent.check_reverse_relations()
 
         ## The above updates the some_todo object on the server side, but the local object is not
         ## updated ... until we reload it
@@ -1868,6 +2008,7 @@ class RepeatedFunctionalTestsBaseClass(object):
             uid="ctuid1",
         )
         assert len(c.journals()) == 2
+        assert len(c.search(journal=True)) == 2
         todos = c.todos()
         events = c.events()
         assert todos + events == []
@@ -2449,14 +2590,14 @@ class RepeatedFunctionalTestsBaseClass(object):
 
         # add event
         e1 = c.save_event(ev1)
-        if not self.check_compatibility_flag(
+
+        todo_ok = not self.check_compatibility_flag(
             "no_todo"
-        ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+        ) and not self.check_compatibility_flag("no_events_and_tasks_on_same_calendar")
+        if todo_ok:
             t1 = c.save_todo(todo)
         assert e1.url is not None
-        if not self.check_compatibility_flag(
-            "no_todo"
-        ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+        if todo_ok:
             assert t1.url is not None
         if not self.check_compatibility_flag("event_by_url_is_broken"):
             assert c.event_by_url(e1.url).url == e1.url
@@ -2470,25 +2611,19 @@ class RepeatedFunctionalTestsBaseClass(object):
         ## (but some calendars may throw a "409 Conflict")
         if not self.check_compatibility_flag("no_overwrite"):
             e2 = c.save_event(ev1)
-            if not self.check_compatibility_flag(
-                "no_todo"
-            ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+            if todo_ok:
                 t2 = c.save_todo(todo)
 
             ## add same event with "no_create".  Should work like a charm.
             e2 = c.save_event(ev1, no_create=no_create)
-            if not self.check_compatibility_flag(
-                "no_todo"
-            ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+            if todo_ok:
                 t2 = c.save_todo(todo, no_create=no_create)
 
             ## this should also work.
             e2.instance.vevent.summary.value = e2.instance.vevent.summary.value + "!"
             e2.save(no_create=no_create)
 
-            if not self.check_compatibility_flag(
-                "no_todo"
-            ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+            if todo_ok:
                 t2.instance.vtodo.summary.value = t2.instance.vtodo.summary.value + "!"
                 t2.save(no_create=no_create)
 
@@ -2500,17 +2635,13 @@ class RepeatedFunctionalTestsBaseClass(object):
         if not self.check_compatibility_flag("object_by_uid_is_broken"):
             with pytest.raises(error.ConsistencyError):
                 c.save_event(ev1, no_overwrite=True)
-            if not self.check_compatibility_flag(
-                "no_todo"
-            ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+            if todo_ok:
                 with pytest.raises(error.ConsistencyError):
                     c.save_todo(todo, no_overwrite=True)
 
         # delete event
         e1.delete()
-        if not self.check_compatibility_flag(
-            "no_todo"
-        ) and not self.check_compatibility_flag("no_todo_on_standard_calendar"):
+        if todo_ok:
             t1.delete()
 
         if self.check_compatibility_flag("non_existing_raises_other"):
@@ -2724,6 +2855,7 @@ class RepeatedFunctionalTestsBaseClass(object):
         c = self._fixCalendar()
 
         # evr2 is a bi-weekly event starting 2024-04-11
+        ## It has an exception, edited summary for recurrence id 20240425T123000Z
         e = c.save_event(evr2)
 
         r = c.search(
@@ -2787,7 +2919,9 @@ class RepeatedFunctionalTestsBaseClass(object):
         """
         urls = [self.principal.url, self._fixCalendar().url]
         connect_params = self.server_params.copy()
-        connect_params.pop("url")
+        for delme in ("url", "setup", "teardown", "name"):
+            if delme in connect_params:
+                connect_params.pop(delme)
         for url in urls:
             conn = client(**connect_params, url=url)
             principal = conn.principal()
@@ -2808,19 +2942,26 @@ class RepeatedFunctionalTestsBaseClass(object):
 # (maybe a custom nose test loader really would be the better option?)
 # -- Tobias Brox <t-caldav@tobixen.no>, 2013-10-10
 
+## TODO: The better way is probably to use @pytest.mark.parametrize
+## -- Tobias Brox <t-caldav@tobixen.no>, 2024-11-15
+
 _servernames = set()
 for _caldav_server in caldav_servers:
-    # create a unique identifier out of the server domain name
-    _parsed_url = urlparse(_caldav_server["url"])
-    _servername = _parsed_url.hostname.replace(".", "_").replace("-", "_") + str(
-        _parsed_url.port or ""
-    )
-    while _servername in _servernames:
-        _servername = _servername + "_"
-    _servernames.add(_servername)
+    if "name" in _caldav_server:
+        _servername = _caldav_server["name"]
+    else:
+        # create a unique identifier out of the server domain name
+        _parsed_url = urlparse(_caldav_server["url"])
+        _servername = _parsed_url.hostname.replace(".", "_").replace("-", "_") + str(
+            _parsed_url.port or ""
+        )
+        while _servername in _servernames:
+            _servername = _servername + "_"
+        _servername = _servername.capitalize()
+        _servernames.add(_servername)
 
     # create a classname and a class
-    _classname = "TestForServer_" + _servername
+    _classname = "TestForServer" + _servername
 
     # inject the new class into this namespace
     vars()[_classname] = type(
@@ -2828,139 +2969,3 @@ for _caldav_server in caldav_servers:
         (RepeatedFunctionalTestsBaseClass,),
         {"server_params": _caldav_server},
     )
-
-
-class TestLocalRadicale(RepeatedFunctionalTestsBaseClass):
-    """
-    Sets up a local Radicale server and runs the functional tests towards it
-    """
-
-    def setup_method(self):
-        if not test_radicale:
-            pytest.skip("Skipping Radicale test due to configuration")
-        self.serverdir = tempfile.TemporaryDirectory()
-        self.serverdir.__enter__()
-        self.configuration = radicale.config.load("")
-        self.configuration.update(
-            {"storage": {"filesystem_folder": self.serverdir.name}}
-        )
-        self.server = radicale.server
-        self.server_params = {
-            "url": "http://%s:%i/" % (radicale_host, radicale_port),
-            "username": "user1",
-            "password": "any-password-seems-to-work",
-        }
-        self.server_params["backwards_compatibility_url"] = (
-            self.server_params["url"] + "user1"
-        )
-        self.server_params["incompatibilities"] = compatibility_issues.radicale
-        self.shutdown_socket, self.shutdown_socket_out = socket.socketpair()
-        self.radicale_thread = threading.Thread(
-            target=self.server.serve,
-            args=(self.configuration, self.shutdown_socket_out),
-        )
-        self.radicale_thread.start()
-        i = 0
-        while True:
-            try:
-                requests.get(self.server_params["url"])
-                break
-            except:
-                time.sleep(0.05)
-                i += 1
-                assert i < 100
-        try:
-            RepeatedFunctionalTestsBaseClass.setup_method(self)
-        except:
-            logging.critical("something bad happened in setup", exc_info=True)
-            self.teardown_method()
-
-    def teardown_method(self):
-        if not test_radicale:
-            return
-        self.shutdown_socket.close()
-        i = 0
-        self.serverdir.__exit__(None, None, None)
-        RepeatedFunctionalTestsBaseClass.teardown_method(self)
-
-
-class TestLocalXandikos(RepeatedFunctionalTestsBaseClass):
-    """
-    Sets up a local Xandikos server and runs the functional tests towards it
-    """
-
-    def setup_method(self):
-        if not test_xandikos:
-            pytest.skip("Skipping Xadikos test due to configuration")
-
-        ## TODO: https://github.com/jelmer/xandikos/issues/131#issuecomment-1054805270 suggests a simpler way to launch the xandikos server
-
-        self.serverdir = tempfile.TemporaryDirectory()
-        self.serverdir.__enter__()
-        ## Most of the stuff below is cargo-cult-copied from xandikos.web.main
-        ## Later jelmer created some API that could be used for this
-        ## Threshold put high due to https://github.com/jelmer/xandikos/issues/235
-        ## index_threshold not supported in latest release yet
-        # self.backend = XandikosBackend(path=self.serverdir.name, index_threshold=0, paranoid=True)
-        # self.backend = XandikosBackend(path=self.serverdir.name, index_threshold=9999, paranoid=True)
-        self.backend = XandikosBackend(path=self.serverdir.name)
-        self.backend._mark_as_principal("/sometestuser/")
-        self.backend.create_principal("/sometestuser/", create_defaults=True)
-        mainapp = XandikosApp(
-            self.backend, current_user_principal="sometestuser", strict=True
-        )
-
-        async def xandikos_handler(request):
-            return await mainapp.aiohttp_handler(request, "/")
-
-        self.xapp = aiohttp.web.Application()
-        self.xapp.router.add_route("*", "/{path_info:.*}", xandikos_handler)
-        ## https://stackoverflow.com/questions/51610074/how-to-run-an-aiohttp-server-in-a-thread
-        self.xapp_loop = asyncio.new_event_loop()
-        self.xapp_runner = aiohttp.web.AppRunner(self.xapp)
-        asyncio.set_event_loop(self.xapp_loop)
-        self.xapp_loop.run_until_complete(self.xapp_runner.setup())
-        self.xapp_site = aiohttp.web.TCPSite(
-            self.xapp_runner, host=xandikos_host, port=xandikos_port
-        )
-        self.xapp_loop.run_until_complete(self.xapp_site.start())
-
-        def aiohttp_server():
-            self.xapp_loop.run_forever()
-
-        self.xandikos_thread = threading.Thread(target=aiohttp_server)
-        self.xandikos_thread.start()
-        self.server_params = {"url": "http://%s:%i/" % (xandikos_host, xandikos_port)}
-        self.server_params["backwards_compatibility_url"] = (
-            self.server_params["url"] + "sometestuser"
-        )
-        self.server_params["incompatibilities"] = compatibility_issues.xandikos
-        RepeatedFunctionalTestsBaseClass.setup_method(self)
-
-    def teardown_method(self):
-        if not test_xandikos:
-            return
-        self.xapp_loop.stop()
-
-        ## ... but the thread may be stuck waiting for a request ...
-        def silly_request():
-            try:
-                requests.get(self.server_params["url"])
-            except:
-                pass
-
-        threading.Thread(target=silly_request).start()
-        i = 0
-        while self.xapp_loop.is_running():
-            time.sleep(0.05)
-            i += 1
-            assert i < 100
-        self.xapp_loop.run_until_complete(self.xapp_runner.cleanup())
-        i = 0
-        while self.xandikos_thread.is_alive():
-            time.sleep(0.05)
-            i += 1
-            assert i < 100
-
-        self.serverdir.__exit__(None, None, None)
-        RepeatedFunctionalTestsBaseClass.teardown_method(self)

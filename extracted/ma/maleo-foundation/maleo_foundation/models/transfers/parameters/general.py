@@ -1,20 +1,23 @@
 from __future__ import annotations
 from maleo_foundation.models.schemas.general import BaseGeneralSchemas
+from maleo_foundation.models.schemas.parameter import BaseParameterSchemas
 
 class BaseGeneralParametersTransfers:
     class FieldExpansionProcessor(
-        BaseGeneralSchemas.Expand,
-        BaseGeneralSchemas.Data
+        BaseParameterSchemas.Expand,
+        BaseParameterSchemas.Data
     ): pass
 
-    class GetSingleQuery(BaseGeneralSchemas.Statuses): pass
+    class GetSingleQuery(BaseParameterSchemas.OptionalListOfStatuses): pass
 
     class BaseGetSingle(
-        BaseGeneralSchemas.IdentifierValue,
-        BaseGeneralSchemas.IdentifierType
-    ):
-        pass
+        BaseParameterSchemas.IdentifierValue,
+        BaseParameterSchemas.IdentifierType
+    ): pass
 
-    class GetSingle(BaseGeneralSchemas.Statuses, BaseGetSingle): pass
+    class GetSingle(
+        BaseParameterSchemas.OptionalListOfStatuses,
+        BaseGetSingle
+    ): pass
 
     class StatusUpdate(BaseGeneralSchemas.Status): pass

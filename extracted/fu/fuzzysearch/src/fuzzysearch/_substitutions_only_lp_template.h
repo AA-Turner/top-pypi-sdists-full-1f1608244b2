@@ -1,5 +1,4 @@
-#define DO_FREES \
-    free(sub_counts); \
+#define RELEASE_BUFFERS \
     PyBuffer_Release(&subseq_pybuf); \
     PyBuffer_Release(&seq_pybuf)
 
@@ -9,37 +8,32 @@ FUNCTION_NAME(PyObject *self, PyObject *args)
 {
     /* input params */
     Py_buffer subseq_pybuf, seq_pybuf;
-    int max_substitutions_input;
+    int max_substitutions;
 
     const char *subsequence;
     const char *sequence;
     Py_ssize_t subseq_len, seq_len;
-    unsigned int max_substitutions;
-    unsigned int *sub_counts = NULL;
+    int *sub_counts = NULL;
     Py_ssize_t seq_idx, subseq_idx, count_idx;
 
     DECLARE_VARS;
 
+    const char* argspec = "y*y*i";
+
     if (unlikely(!PyArg_ParseTuple(
         args,
-#ifdef IS_PY3K
-        "y*y*i",
-#else
-        "s*s*i",
-#endif
+        argspec,
         &subseq_pybuf,
         &seq_pybuf,
-        &max_substitutions_input
+        &max_substitutions
     ))) {
         return NULL;
     }
 
-    if (unlikely(max_substitutions_input < 0)) {
+    if (unlikely(max_substitutions < 0)) {
         PyErr_SetString(PyExc_ValueError, "max_l_dist must be non-negative");
         goto error;
     }
-    /// TODO: check for overflow
-    max_substitutions = (unsigned int) max_substitutions_input;
 
     if (unlikely(!(
         is_simple_buffer(subseq_pybuf) &&
@@ -67,6 +61,7 @@ FUNCTION_NAME(PyObject *self, PyObject *args)
     PREPARE;
 
     if (unlikely(seq_len < subseq_len)) {
+        RELEASE_BUFFERS;
         RETURN_AT_END;
     }
 
@@ -74,12 +69,13 @@ FUNCTION_NAME(PyObject *self, PyObject *args)
         for (seq_idx = 0; seq_idx <= seq_len - subseq_len; ++seq_idx) {
             OUTPUT_VALUE(seq_idx);
         }
+        RELEASE_BUFFERS;
         RETURN_AT_END;
     }
 
-    sub_counts = (unsigned int *) malloc (sizeof(unsigned int) * subseq_len);
+    sub_counts = (int *) malloc (sizeof(int) * subseq_len);
     if (sub_counts == NULL) {
-        DO_FREES;
+        RELEASE_BUFFERS;
         return PyErr_NoMemory();
     }
 
@@ -107,11 +103,13 @@ FUNCTION_NAME(PyObject *self, PyObject *args)
         sub_counts[count_idx] = 0;
     }
 
+    free(sub_counts);
+    RELEASE_BUFFERS;
     RETURN_AT_END;
 
 error:
-    DO_FREES;
+    RELEASE_BUFFERS;
     return NULL;
 }
 
-#undef DO_FREES
+#undef RELEASE_BUFFERS

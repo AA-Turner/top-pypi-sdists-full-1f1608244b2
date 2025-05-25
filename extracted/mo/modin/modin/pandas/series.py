@@ -29,21 +29,15 @@ from pandas.core.common import apply_if_callable, is_bool_indexer
 from pandas.core.dtypes.common import is_dict_like, is_list_like
 from pandas.core.series import _coerce_method
 from pandas.io.formats.info import SeriesInfo
-from pandas.util._decorators import doc
 from pandas.util._validators import validate_bool_kwarg
 
 from modin.config import PersistentPickle
-from modin.core.storage_formats.pandas.query_compiler_caster import (
-    EXTENSION_DICT_TYPE,
-    EXTENSION_NO_LOOKUP,
-)
 from modin.logging import disable_logging
 from modin.pandas.io import from_pandas, to_pandas
 from modin.utils import (
     MODIN_UNNAMED_SERIES_LABEL,
     _inherit_docstrings,
     import_optional_dependency,
-    sentinel,
 )
 
 from .accessor import CachedAccessor, SparseAccessor
@@ -56,21 +50,17 @@ from .series_utils import (
     StringMethods,
     StructAccessor,
 )
-from .utils import (
-    GET_BACKEND_DOC,
-    SET_BACKEND_DOC,
-    _doc_binary_op,
-    cast_function_modin2pandas,
-    is_scalar,
-)
+from .utils import _doc_binary_op, cast_function_modin2pandas, is_scalar
 
 if TYPE_CHECKING:
     import numpy.typing as npt
-    from typing_extensions import Self
 
     from modin.core.storage_formats import BaseQueryCompiler
 
     from .dataframe import DataFrame
+
+# Dictionary of extensions assigned to this class
+_SERIES_EXTENSIONS_ = {}
 
 
 @_inherit_docstrings(
@@ -108,8 +98,6 @@ class Series(BasePandasDataset):
 
     _pandas_class = pandas.Series
     __array_priority__ = pandas.Series.__array_priority__
-
-    _extensions: EXTENSION_DICT_TYPE = EXTENSION_DICT_TYPE(dict)
 
     def __init__(
         self,
@@ -344,32 +332,6 @@ class Series(BasePandasDataset):
         return self.rfloordiv(right)
 
     @disable_logging
-    def __getattribute__(self, key: str) -> Any:
-        """
-        Get attribute identified by `key`.
-
-        Parameters
-        ----------
-        key : str
-            Key to get.
-
-        Returns
-        -------
-        Any
-            The attribute.
-        """
-        # NOTE that to get an attribute, python calls __getattribute__() first and
-        # then falls back to __getattr__() if the former raises an AttributeError.
-        if key not in EXTENSION_NO_LOOKUP:
-            extensions_result = self._getattribute__from_extension_impl(
-                key, __class__._extensions
-            )
-            if extensions_result is not sentinel:
-                return extensions_result
-
-        return super().__getattribute__(key)
-
-    @disable_logging
     def __getattr__(self, key: Hashable) -> Any:
         """
         Return item identified by `key`.
@@ -388,11 +350,12 @@ class Series(BasePandasDataset):
         First try to use `__getattribute__` method. If it fails
         try to get `key` from `Series` fields.
         """
-        # NOTE that to get an attribute, python calls __getattribute__() first and
-        # then falls back to __getattr__() if the former raises an AttributeError.
-        if key not in _ATTRS_NO_LOOKUP and key in self._query_compiler.index:
-            return self[key]
-        raise AttributeError(f"'Series' object has no attribute '{key}'")
+        try:
+            return _SERIES_EXTENSIONS_.get(key, object.__getattribute__(self, key))
+        except AttributeError as err:
+            if key not in _ATTRS_NO_LOOKUP and key in self.index:
+                return self[key]
+            raise err
 
     __float__ = _coerce_method(float)
     __int__ = _coerce_method(int)
@@ -482,8 +445,8 @@ class Series(BasePandasDataset):
             name_str = "Name: {}, ".format(str(self.name))
         else:
             name_str = ""
-        if len(self) > num_rows:
-            len_str = "Length: {}, ".format(len(self))
+        if len(self.index) > num_rows:
+            len_str = "Length: {}, ".format(len(self.index))
         else:
             len_str = ""
         dtype_str = "dtype: {}".format(
@@ -536,48 +499,6 @@ class Series(BasePandasDataset):
             self._setitem_slice(key, value)
         else:
             self.loc[key] = value
-
-    @disable_logging
-    def __setattr__(self, name: str, value: Any) -> None:
-        """
-        Set attribute `name` to `value`.
-
-        Parameters
-        ----------
-        name : str
-            Name of the attribute to set.
-        value : Any
-            Value to set.
-
-        Returns
-        -------
-        None
-        """
-        # An extension property is only accessible if the backend supports it.
-        extension = self._get_extension(name, __class__._extensions)
-        if extension is not sentinel and hasattr(extension, "__set__"):
-            return extension.__set__(self, value)
-        return super().__setattr__(name, value)
-
-    @disable_logging
-    def __delattr__(self, name) -> None:
-        """
-        Delete attribute `name`.
-
-        Parameters
-        ----------
-        name : str
-            Name of the attribute to delete.
-
-        Returns
-        -------
-        None
-        """
-        # An extension property is only accessible if the backend supports it.
-        extension = self._get_extension(name, __class__._extensions)
-        if extension is not sentinel and hasattr(extension, "__delete__"):
-            return extension.__delete__(self)
-        return super().__delattr__(name)
 
     @_doc_binary_op(operation="subtraction", bin_op="sub")
     def __sub__(self, right) -> Series:
@@ -825,9 +746,7 @@ class Series(BasePandasDataset):
         """
         Return int position of the largest value in the Series.
         """
-        result = self.reset_index(drop=True).idxmax(
-            axis=axis, skipna=skipna, *args, **kwargs
-        )
+        result = self.idxmax(axis=axis, skipna=skipna, *args, **kwargs)
         if np.isnan(result) or result is pandas.NA:
             result = -1
         return result
@@ -838,9 +757,7 @@ class Series(BasePandasDataset):
         """
         Return int position of the smallest value in the Series.
         """
-        result = self.reset_index(drop=True).idxmin(
-            axis=axis, skipna=skipna, *args, **kwargs
-        )
+        result = self.idxmin(axis=axis, skipna=skipna, *args, **kwargs)
         if np.isnan(result) or result is pandas.NA:
             result = -1
         return result
@@ -1049,7 +966,7 @@ class Series(BasePandasDataset):
         """
         if isinstance(other, BasePandasDataset):
             common = self.index.union(other.index)
-            if len(common) > len(self) or len(common) > len(other):
+            if len(common) > len(self.index) or len(common) > len(other.index):
                 raise ValueError("Matrices are not aligned")
 
             qc = other.reindex(index=common)._query_compiler
@@ -1105,12 +1022,7 @@ class Series(BasePandasDataset):
         """
         Indicate duplicate Series values.
         """
-        name = self.name
-        result = self.to_frame().duplicated(keep=keep)
-        # DataFrame.duplicated drops the name, so we need to manually restore it
-        if name is not None:
-            result.name = name
-        return result
+        return self.to_frame().duplicated(keep=keep)
 
     def eq(
         self, other, level=None, fill_value=None, axis=0
@@ -1119,14 +1031,7 @@ class Series(BasePandasDataset):
         Return Equal to of series and `other`, element-wise (binary operator `eq`).
         """
         new_self, new_other = self._prepare_inter_op(other)
-        return new_self._binary_op(
-            "eq",
-            new_other,
-            level=level,
-            fill_value=fill_value,
-            axis=axis,
-            squeeze_other=isinstance(other, Series),
-        )
+        return super(Series, new_self).eq(new_other, level=level, axis=axis)
 
     def equals(self, other) -> bool:  # noqa: PR01, RT01, D200
         """
@@ -1225,7 +1130,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).floordiv(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     def ge(
@@ -1235,14 +1140,7 @@ class Series(BasePandasDataset):
         Return greater than or equal to of series and `other`, element-wise (binary operator `ge`).
         """
         new_self, new_other = self._prepare_inter_op(other)
-        return new_self._binary_op(
-            "ge",
-            new_other,
-            level=level,
-            fill_value=fill_value,
-            axis=axis,
-            squeeze_other=isinstance(other, Series),
-        )
+        return super(Series, new_self).ge(new_other, level=level, axis=axis)
 
     def groupby(
         self,
@@ -1290,14 +1188,7 @@ class Series(BasePandasDataset):
         Return greater than of series and `other`, element-wise (binary operator `gt`).
         """
         new_self, new_other = self._prepare_inter_op(other)
-        return new_self._binary_op(
-            "gt",
-            new_other,
-            level=level,
-            fill_value=fill_value,
-            axis=axis,
-            squeeze_other=isinstance(other, Series),
-        )
+        return super(Series, new_self).gt(new_other, level=level, axis=axis)
 
     def hist(
         self,
@@ -1415,14 +1306,7 @@ class Series(BasePandasDataset):
         Return less than or equal to of series and `other`, element-wise (binary operator `le`).
         """
         new_self, new_other = self._prepare_inter_op(other)
-        return new_self._binary_op(
-            "le",
-            new_other,
-            level=level,
-            fill_value=fill_value,
-            axis=axis,
-            squeeze_other=isinstance(other, Series),
-        )
+        return super(Series, new_self).le(new_other, level=level, axis=axis)
 
     def lt(
         self, other, level=None, fill_value=None, axis=0
@@ -1431,14 +1315,7 @@ class Series(BasePandasDataset):
         Return less than of series and `other`, element-wise (binary operator `lt`).
         """
         new_self, new_other = self._prepare_inter_op(other)
-        return new_self._binary_op(
-            "lt",
-            new_other,
-            level=level,
-            fill_value=fill_value,
-            axis=axis,
-            squeeze_other=isinstance(other, Series),
-        )
+        return super(Series, new_self).lt(new_other, level=level, axis=axis)
 
     def map(self, arg, na_action=None) -> Series:  # noqa: PR01, RT01, D200
         """
@@ -1525,7 +1402,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).mod(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     def mode(self, dropna=True) -> Series:  # noqa: PR01, RT01, D200
@@ -1542,7 +1419,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).mul(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     multiply = mul
@@ -1555,7 +1432,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).rmul(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     def ne(
@@ -1565,14 +1442,7 @@ class Series(BasePandasDataset):
         Return not equal to of series and `other`, element-wise (binary operator `ne`).
         """
         new_self, new_other = self._prepare_inter_op(other)
-        return new_self._binary_op(
-            "ne",
-            new_other,
-            level=level,
-            fill_value=fill_value,
-            axis=axis,
-            squeeze_other=isinstance(other, Series),
-        )
+        return super(Series, new_self).ne(new_other, level=level, axis=axis)
 
     def nlargest(self, n=5, keep="first") -> Series:  # noqa: PR01, RT01, D200
         """
@@ -1692,7 +1562,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).pow(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     @_inherit_docstrings(pandas.Series.prod, apilink="pandas.Series.prod")
@@ -1785,29 +1655,6 @@ class Series(BasePandasDataset):
             mapper=mapper, index=index, axis=axis, copy=copy, inplace=inplace
         )
 
-    def _set_axis_name(self, name, axis=0, inplace=False) -> Union[Series, None]:
-        """
-        Alter the name of the axis.
-
-        Parameters
-        ----------
-        name : str
-            Name for the Series.
-        axis : str or int, default: 0
-            The axis to set the label.
-            Only 0 is valid for Series.
-        inplace : bool, default: False
-            Whether to modify `self` directly or return a copy.
-
-        Returns
-        -------
-        Series or None
-        """
-        self._get_axis_number(axis)  # raises ValueError if not 0
-        renamed = self if inplace else self.copy()
-        renamed.index = renamed.index.set_names(name)
-        return None if inplace else renamed
-
     def rename(
         self,
         index=None,
@@ -1867,7 +1714,7 @@ class Series(BasePandasDataset):
             name = 0 if self.name is None else self.name
 
         if drop and level is None:
-            new_idx = pandas.RangeIndex(len(self))
+            new_idx = pandas.RangeIndex(len(self.index))
             if inplace:
                 self.index = new_idx
             else:
@@ -1916,7 +1763,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).rfloordiv(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     def rmod(
@@ -1927,7 +1774,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).rmod(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     def rpow(
@@ -1938,7 +1785,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).rpow(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     def rsub(
@@ -1949,7 +1796,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).rsub(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     def rtruediv(
@@ -1960,7 +1807,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).rtruediv(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     rdiv = rtruediv
@@ -2095,7 +1942,7 @@ class Series(BasePandasDataset):
         if axis is not None:
             # Validate `axis`
             pandas.Series._get_axis_number(axis)
-        if len(self) == 1:
+        if len(self.index) == 1:
             return self._reduce_dimension(self._query_compiler)
         else:
             return self.copy()
@@ -2108,7 +1955,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).sub(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     subtract = sub
@@ -2283,7 +2130,7 @@ class Series(BasePandasDataset):
         """
         new_self, new_other = self._prepare_inter_op(other)
         return super(Series, new_self).truediv(
-            new_other, level=level, fill_value=fill_value, axis=axis
+            new_other, level=level, fill_value=None, axis=axis
         )
 
     div = divide = truediv
@@ -2413,7 +2260,7 @@ class Series(BasePandasDataset):
         """
         Indicate whether Series is empty.
         """
-        return len(self) == 0
+        return len(self.index) == 0
 
     @property
     def hasnans(self) -> bool:  # noqa: RT01, D200
@@ -2754,7 +2601,7 @@ class Series(BasePandasDataset):
         if is_bool_indexer(key):
             return self.__constructor__(
                 query_compiler=self._query_compiler.getitem_row_array(
-                    pandas.RangeIndex(len(self))[key]
+                    pandas.RangeIndex(len(self.index))[key]
                 )
             )
         # TODO: More efficiently handle `tuple` case for `Series.__getitem__`
@@ -2866,29 +2713,3 @@ class Series(BasePandasDataset):
         return self._inflate_light, (self._query_compiler, self.name, pid)
 
     # Persistance support methods - END
-
-    @doc(SET_BACKEND_DOC, class_name=__qualname__)
-    def set_backend(
-        self,
-        backend: str,
-        inplace: bool = False,
-        *,
-        switch_operation: Optional[str] = None,
-    ) -> Optional[Self]:
-        return super().set_backend(
-            backend=backend, inplace=inplace, switch_operation=switch_operation
-        )
-
-    move_to = set_backend
-
-    @doc(GET_BACKEND_DOC, class_name=__qualname__)
-    @disable_logging
-    def get_backend(self) -> str:
-        return super().get_backend()
-
-    @disable_logging
-    @_inherit_docstrings(BasePandasDataset._copy_into)
-    def _copy_into(self, other: Series):
-        other._query_compiler = self._query_compiler
-        other._siblings = self._siblings
-        return None

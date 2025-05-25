@@ -1,5 +1,6 @@
 import random
 import string
+from typing import ClassVar
 from passlib.hash import bcrypt_sha256
 
 from django.db import models
@@ -116,7 +117,7 @@ class MumbleUser(AbstractServiceModel):
         help_text="Timestamp of the users Last Disconnection to Mumble"
     )
 
-    objects = MumbleManager()
+    objects: ClassVar[MumbleManager] = MumbleManager()
 
     def __str__(self):
         return self.username

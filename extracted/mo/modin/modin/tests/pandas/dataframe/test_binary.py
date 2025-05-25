@@ -17,12 +17,9 @@ import pandas
 import pytest
 
 import modin.pandas as pd
-from modin.config import NPartitions, StorageFormat
+from modin.config import NativeDataframeMode, NPartitions, StorageFormat
 from modin.core.dataframe.pandas.partitioning.axis_partition import (
     PandasDataframeAxisPartition,
-)
-from modin.core.storage_formats.pandas.query_compiler_caster import (
-    _assert_casting_functions_wrap_same_implementation,
 )
 from modin.tests.pandas.utils import (
     CustomIntegerForAddition,
@@ -35,10 +32,7 @@ from modin.tests.pandas.utils import (
     test_data_keys,
     test_data_values,
 )
-from modin.tests.test_utils import (
-    df_or_series_using_native_execution,
-    warns_that_defaulting_to_pandas_if,
-)
+from modin.tests.test_utils import warns_that_defaulting_to_pandas
 from modin.utils import get_current_execution
 
 NPartitions.put(4)
@@ -157,9 +151,7 @@ def test_math_functions_level(op):
     )
 
     # Defaults to pandas
-    with warns_that_defaulting_to_pandas_if(
-        not df_or_series_using_native_execution(modin_df)
-    ):
+    with warns_that_defaulting_to_pandas():
         # Operation against self for sanity check
         getattr(modin_df, op)(modin_df, axis=0, level=1)
 
@@ -189,9 +181,7 @@ def test_math_functions_level(op):
     ],
 )
 def test_math_alias(math_op, alias):
-    _assert_casting_functions_wrap_same_implementation(
-        getattr(pd.DataFrame, math_op), getattr(pd.DataFrame, alias)
-    )
+    assert getattr(pd.DataFrame, math_op) == getattr(pd.DataFrame, alias)
 
 
 @pytest.mark.parametrize("other", ["as_left", 4, 4.0, "a"])
@@ -219,6 +209,10 @@ def test_comparison(data, op, other, request):
 @pytest.mark.skipif(
     StorageFormat.get() != "Pandas",
     reason="Modin on this engine doesn't create virtual partitions.",
+)
+@pytest.mark.skipif(
+    NativeDataframeMode.get() == "Pandas",
+    reason="NativeQueryCompiler does not contain partitions.",
 )
 @pytest.mark.parametrize(
     "left_virtual,right_virtual", [(True, False), (False, True), (True, True)]
@@ -253,9 +247,7 @@ def test_multi_level_comparison(data, op):
     modin_df_multi_level.index = new_idx
 
     # Defaults to pandas
-    with warns_that_defaulting_to_pandas_if(
-        not df_or_series_using_native_execution(modin_df_multi_level)
-    ):
+    with warns_that_defaulting_to_pandas():
         # Operation against self for sanity check
         getattr(modin_df_multi_level, op)(modin_df_multi_level, axis=0, level=1)
 

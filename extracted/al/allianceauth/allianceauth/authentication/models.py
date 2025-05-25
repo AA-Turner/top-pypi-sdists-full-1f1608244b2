@@ -1,4 +1,5 @@
 import logging
+from typing import ClassVar
 
 from django.contrib.auth.models import User, Permission
 from django.db import models, transaction
@@ -27,7 +28,7 @@ class State(models.Model):
                                             help_text="Factions to whose members this state is available.")
     public = models.BooleanField(default=False, help_text="Make this state available to any character.")
 
-    objects = StateManager()
+    objects: ClassVar[StateManager] = StateManager()
 
     class Meta:
         ordering = ['-priority']
@@ -137,8 +138,10 @@ class UserProfile(models.Model):
                     sender=self.__class__, user=self.user, state=self.state
                 )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.user)
+
+
 class CharacterOwnership(models.Model):
     class Meta:
         default_permissions = ('change', 'delete')
@@ -148,7 +151,7 @@ class CharacterOwnership(models.Model):
     owner_hash = models.CharField(max_length=28, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='character_ownerships')
 
-    objects = CharacterOwnershipManager()
+    objects: ClassVar[CharacterOwnershipManager] = CharacterOwnershipManager()
 
     def __str__(self):
         return f"{self.user}: {self.character}"

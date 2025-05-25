@@ -2,7 +2,6 @@ from __future__ import annotations
 from fastapi import status
 from pydantic import Field, model_validator
 from typing import Dict, Type, Union
-from maleo_foundation.models.schemas.general import BaseGeneralSchemas
 from maleo_foundation.models.schemas.result import BaseResultSchemas
 from maleo_foundation.types import BaseTypes
 
@@ -83,7 +82,7 @@ class BaseResponses:
             total_pages = (total_data // limit) + (1 if total_data % limit > 0 else 0)
 
             #* Assign computed pagination object before validation
-            values["pagination"] = BaseGeneralSchemas.ExtendedPagination(
+            values["pagination"] = BaseResultSchemas.ExtendedPagination(
                 page=page,
                 limit=limit,
                 data_count=len(data),

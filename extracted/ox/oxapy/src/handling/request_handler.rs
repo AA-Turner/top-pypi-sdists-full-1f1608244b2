@@ -1,4 +1,5 @@
-use std::{collections::HashMap, mem::transmute, sync::Arc};
+use std::collections::HashMap;
+use std::sync::Arc;
 
 use http_body_util::{BodyExt, Full};
 use hyper::{
@@ -15,7 +16,7 @@ use crate::{
     session::SessionStore,
     status::Status,
     templating::Template,
-    IntoPyException, MatchRoute, ProcessRequest, RequestContext,
+    IntoPyException, ProcessRequest, RequestContext,
 };
 
 fn convert_to_hyper_response(
@@ -52,15 +53,13 @@ pub async fn handle_request(
         .unwrap();
 
     for router in &routers {
-        if let Some(route) = router.find(&request.method, &request.uri) {
+        if let Some(route_info) = router.find(&request.method, &request.uri) {
             let (response_sender, mut respond_receive) = channel(channel_capacity);
 
-            let route: MatchRoute = unsafe { transmute(route) };
-
             let process_request = ProcessRequest {
-                request: request.clone(),
+                request,
                 router: router.clone(),
-                route,
+                route_info,
                 response_sender,
                 cors: cors.clone(),
             };
@@ -149,7 +148,7 @@ async fn convert_hyper_request(
             let MultiPart { fields, files } = parse_mutltipart(content_type, body_bytes)
                 .await
                 .into_py_exception()?;
-            request.form_data = Some(fields);
+            request.form = Some(fields);
             request.files = Some(files);
         }
     }

@@ -89,7 +89,6 @@ class Block(google.protobuf.message.Message):
 
         BORDER_FIELD_NUMBER: builtins.int
         HEIGHT_CONFIG_FIELD_NUMBER: builtins.int
-        WIDTH_CONFIG_FIELD_NUMBER: builtins.int
         GAP_CONFIG_FIELD_NUMBER: builtins.int
         SCALE_FIELD_NUMBER: builtins.int
         DIRECTION_FIELD_NUMBER: builtins.int
@@ -99,9 +98,9 @@ class Block(google.protobuf.message.Message):
         direction: global___Block.FlexContainer.Direction.ValueType
         wrap: builtins.bool
         @property
-        def height_config(self) -> streamlit.proto.HeightConfig_pb2.HeightConfig: ...
-        @property
-        def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
+        def height_config(self) -> streamlit.proto.HeightConfig_pb2.HeightConfig:
+            """TODO (lwilby): move this to use block level field."""
+
         @property
         def gap_config(self) -> streamlit.proto.GapSize_pb2.GapConfig: ...
         def __init__(
@@ -109,14 +108,13 @@ class Block(google.protobuf.message.Message):
             *,
             border: builtins.bool = ...,
             height_config: streamlit.proto.HeightConfig_pb2.HeightConfig | None = ...,
-            width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
             gap_config: streamlit.proto.GapSize_pb2.GapConfig | None = ...,
             scale: builtins.float = ...,
             direction: global___Block.FlexContainer.Direction.ValueType = ...,
             wrap: builtins.bool = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["gap_config", b"gap_config", "height_config", b"height_config", "width_config", b"width_config"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["border", b"border", "direction", b"direction", "gap_config", b"gap_config", "height_config", b"height_config", "scale", b"scale", "width_config", b"width_config", "wrap", b"wrap"]) -> None: ...
+        def HasField(self, field_name: typing.Literal["gap_config", b"gap_config", "height_config", b"height_config"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing.Literal["border", b"border", "direction", b"direction", "gap_config", b"gap_config", "height_config", b"height_config", "scale", b"scale", "wrap", b"wrap"]) -> None: ...
 
     @typing.final
     class Column(google.protobuf.message.Message):
@@ -315,7 +313,9 @@ class Block(google.protobuf.message.Message):
         avatar: builtins.str
         avatar_type: global___Block.ChatMessage.AvatarType.ValueType
         @property
-        def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
+        def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig:
+            """TODO (lwilby): move this to use block level field."""
+
         def __init__(
             self,
             *,
@@ -341,6 +341,8 @@ class Block(google.protobuf.message.Message):
     FLEX_CONTAINER_FIELD_NUMBER: builtins.int
     ALLOW_EMPTY_FIELD_NUMBER: builtins.int
     ID_FIELD_NUMBER: builtins.int
+    HEIGHT_CONFIG_FIELD_NUMBER: builtins.int
+    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     allow_empty: builtins.bool
     id: builtins.str
     @property
@@ -365,6 +367,10 @@ class Block(google.protobuf.message.Message):
     def dialog(self) -> global___Block.Dialog: ...
     @property
     def flex_container(self) -> global___Block.FlexContainer: ...
+    @property
+    def height_config(self) -> streamlit.proto.HeightConfig_pb2.HeightConfig: ...
+    @property
+    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
     def __init__(
         self,
         *,
@@ -381,11 +387,17 @@ class Block(google.protobuf.message.Message):
         flex_container: global___Block.FlexContainer | None = ...,
         allow_empty: builtins.bool = ...,
         id: builtins.str | None = ...,
+        height_config: streamlit.proto.HeightConfig_pb2.HeightConfig | None = ...,
+        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_id", b"_id", "chat_message", b"chat_message", "column", b"column", "dialog", b"dialog", "expandable", b"expandable", "flex_container", b"flex_container", "form", b"form", "horizontal", b"horizontal", "id", b"id", "popover", b"popover", "tab", b"tab", "tab_container", b"tab_container", "type", b"type", "vertical", b"vertical"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_id", b"_id", "allow_empty", b"allow_empty", "chat_message", b"chat_message", "column", b"column", "dialog", b"dialog", "expandable", b"expandable", "flex_container", b"flex_container", "form", b"form", "horizontal", b"horizontal", "id", b"id", "popover", b"popover", "tab", b"tab", "tab_container", b"tab_container", "type", b"type", "vertical", b"vertical"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_height_config", b"_height_config", "_id", b"_id", "_width_config", b"_width_config", "chat_message", b"chat_message", "column", b"column", "dialog", b"dialog", "expandable", b"expandable", "flex_container", b"flex_container", "form", b"form", "height_config", b"height_config", "horizontal", b"horizontal", "id", b"id", "popover", b"popover", "tab", b"tab", "tab_container", b"tab_container", "type", b"type", "vertical", b"vertical", "width_config", b"width_config"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_height_config", b"_height_config", "_id", b"_id", "_width_config", b"_width_config", "allow_empty", b"allow_empty", "chat_message", b"chat_message", "column", b"column", "dialog", b"dialog", "expandable", b"expandable", "flex_container", b"flex_container", "form", b"form", "height_config", b"height_config", "horizontal", b"horizontal", "id", b"id", "popover", b"popover", "tab", b"tab", "tab_container", b"tab_container", "type", b"type", "vertical", b"vertical", "width_config", b"width_config"]) -> None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_height_config", b"_height_config"]) -> typing.Literal["height_config"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_id", b"_id"]) -> typing.Literal["id"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["type", b"type"]) -> typing.Literal["vertical", "horizontal", "column", "expandable", "form", "tab_container", "tab", "chat_message", "popover", "dialog", "flex_container"] | None: ...
 

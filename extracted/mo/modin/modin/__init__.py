@@ -12,7 +12,10 @@
 # governing permissions and limitations under the License.
 
 import warnings
-from typing import Any, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, Optional, Tuple, Type, Union
+
+if TYPE_CHECKING:
+    from .config import Engine, StorageFormat
 
 from . import _version
 
@@ -34,7 +37,9 @@ warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="Large object of size")
 
 
-def set_execution(engine: Any = None, storage_format: Any = None) -> Tuple[Any, Any]:
+def set_execution(
+    engine: Any = None, storage_format: Any = None
+) -> Tuple["Engine", "StorageFormat"]:
     """
     Method to set the _pair_ of execution engine and storage format format simultaneously.
     This is needed because there might be cases where switching one by one would be
@@ -42,7 +47,7 @@ def set_execution(engine: Any = None, storage_format: Any = None) -> Tuple[Any, 
 
     The method returns pair of old values, so it is easy to return back.
     """
-    from .config import Backend, Engine, Execution, StorageFormat
+    from .config import Engine, StorageFormat
 
     old_engine, old_storage_format = None, None
     # defer callbacks until both entities are set
@@ -55,13 +60,6 @@ def set_execution(engine: Any = None, storage_format: Any = None) -> Tuple[Any, 
         Engine._check_callbacks(old_engine)
     if old_storage_format is not None:
         StorageFormat._check_callbacks(old_storage_format)
-    old_backend = Backend.get()
-    Backend._put_nocallback(
-        Backend.get_backend_for_execution(
-            Execution(engine=Engine.get(), storage_format=StorageFormat.get())
-        )
-    )
-    Backend._check_callbacks(old_backend)
 
     return old_engine, old_storage_format
 

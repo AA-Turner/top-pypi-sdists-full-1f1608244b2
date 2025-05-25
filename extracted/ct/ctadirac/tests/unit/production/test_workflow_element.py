@@ -1,5 +1,7 @@
 from copy import deepcopy
 
+from DIRAC.Interfaces.API.Job import Job
+
 from CTADIRAC.Interfaces.API.CTAJob import MetadataDict
 from CTADIRAC.Interfaces.API.CtapipeApplyModelsJob import CtapipeApplyModelsJob
 from CTADIRAC.Interfaces.API.CtapipeMergeJob import CtapipeMergeJob
@@ -12,7 +14,6 @@ from CTADIRAC.ProductionSystem.Client.WorkflowElement import (
     WorkflowElement,
     WorkflowElementDefinition,
 )
-from DIRAC.Interfaces.API.Job import Job
 from tests.unit.production import (
     COMMON_CONFIG,
     CTAPIPE_PROCESS_OUTPUT_METADATA,
@@ -58,11 +59,76 @@ def test_we_set_constrained_job_attribute() -> None:
     workflow_elmt_sim.set_constrained_job_attribute("particle", "gamma-diffuse")
     assert workflow_elmt_sim.job.particle == "gamma-diffuse"
 
+    assert getattr(workflow_elmt_sim, "version", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("version", "2024-02-05")
+    assert workflow_elmt_sim.job.version == "2024-02-05"
+
+    assert getattr(workflow_elmt_sim, "pointing_dir", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("pointing_dir", "North")
+    assert workflow_elmt_sim.job.pointing_dir == "North"
+
+    assert getattr(workflow_elmt_sim, "layout", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("layout", "alpha")
+    assert workflow_elmt_sim.job.layout == "--alpha"
+
+    assert getattr(workflow_elmt_sim, "moon", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("moon", "dark, half")
+    assert workflow_elmt_sim.job.output_file_metadata["nsb"] == [1, 5]
+    workflow_elmt_sim.set_constrained_job_attribute("moon", "dark")
+    assert workflow_elmt_sim.job.output_file_metadata["nsb"] == [1]
+
+    assert getattr(workflow_elmt_sim, "sct", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("sct", "all")
+    assert workflow_elmt_sim.job.sct == "--with-all-scts"
+    workflow_elmt_sim.set_constrained_job_attribute("sct", "non-alpha")
+    assert workflow_elmt_sim.job.sct == "--with-sct"
+
+    assert getattr(workflow_elmt_sim, "only_corsika", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("only_corsika", True)
+    assert workflow_elmt_sim.job.only_corsika == "--without-multipipe"
+    assert workflow_elmt_sim.job.program_category == "airshower_sim"
+    assert workflow_elmt_sim.job.prog_name == "corsika"
+
+    assert getattr(workflow_elmt_sim, "magic", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("magic", True)
+    assert workflow_elmt_sim.job.magic == "--with-magic"
+
+    assert getattr(workflow_elmt_sim, "sequential", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("sequential", True)
+    assert workflow_elmt_sim.job.sequential == "--sequential"
+
+    assert getattr(workflow_elmt_sim, "div_ang", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute(
+        "div_ang", "0.0022, 0.0043, 0.008, 0.01135, 0.01453"
+    )
+    assert workflow_elmt_sim.job.div_ang == [
+        "0.0022",
+        "0.0043",
+        "0.008",
+        "0.01135",
+        "0.01453",
+    ]
+
+    assert getattr(workflow_elmt_sim, "random_mono_probability", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("random_mono_probability", 0.01)
+    assert (
+        workflow_elmt_sim.job.random_mono_probability
+        == "--random-mono-probability 0.01"
+    )
+
+    assert getattr(workflow_elmt_sim, "instrument_random_seeds", None) is None
+    workflow_elmt_sim.set_constrained_job_attribute("instrument_random_seeds", True)
+    assert workflow_elmt_sim.job.instrument_random_seeds == "--instrument-random-seeds"
+
     # Processing of CORSIKA files with sim_telarray
     workflow_elmt_simtel = WorkflowElement(None, "simtelprocessing")
     assert getattr(workflow_elmt_simtel, "moon", None) is None
     workflow_elmt_simtel.set_constrained_job_attribute("moon", "dark")
     assert workflow_elmt_simtel.job.output_file_metadata["nsb"] == 1
+    workflow_elmt_simtel.set_constrained_job_attribute(
+        "systematic_uncertainty_to_test", "test"
+    )
+    assert workflow_elmt_simtel.job.systematic_uncertainty_to_test == "test"
 
     # Processing
     workflow_elmt_proc = WorkflowElement(

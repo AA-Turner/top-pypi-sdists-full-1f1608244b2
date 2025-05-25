@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bec_lib
-Version: 3.35.5
+Version: 3.35.6
 Summary: BEC library
 Project-URL: Bug Tracker, https://gitlab.psi.ch/bec/bec/issues
 Project-URL: Homepage, https://gitlab.psi.ch/bec/bec
@@ -21,6 +21,7 @@ Requires-Dist: prettytable~=3.9
 Requires-Dist: psutil~=5.9
 Requires-Dist: pydantic~=2.8
 Requires-Dist: pylint~=3.0
+Requires-Dist: python-dotenv~=1.0
 Requires-Dist: pyyaml~=6.0
 Requires-Dist: redis~=5.0
 Requires-Dist: requests~=2.31

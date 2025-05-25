@@ -1,6 +1,5 @@
 from __future__ import annotations
 from pydantic import model_validator
-from maleo_foundation.models.schemas.general import BaseGeneralSchemas
 from maleo_foundation.models.schemas.result import BaseResultSchemas
 
 class BaseClientServiceResultsTransfers:
@@ -22,7 +21,7 @@ class BaseClientServiceResultsTransfers:
             pagination = values.get("pagination")
             if pagination is None:
                 raise ValueError("Pagination field did not exists")
-            pagination = BaseGeneralSchemas.ExtendedPagination.model_validate(pagination)
+            pagination = BaseResultSchemas.ExtendedPagination.model_validate(pagination)
             values["page"] = pagination.page
             values["limit"] = pagination.limit
             values["total_data"] = pagination.total_data

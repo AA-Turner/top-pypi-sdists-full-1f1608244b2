@@ -20,7 +20,6 @@ limitations under the License.
 import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -36,17 +35,13 @@ class Code(google.protobuf.message.Message):
     SHOW_LINE_NUMBERS_FIELD_NUMBER: builtins.int
     WRAP_LINES_FIELD_NUMBER: builtins.int
     HEIGHT_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     code_text: builtins.str
     """Content to display."""
     language: builtins.str
     show_line_numbers: builtins.bool
     wrap_lines: builtins.bool
     height: builtins.int
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig:
-        """Width configuration"""
-
+    """deprecated use height on Element.proto"""
     def __init__(
         self,
         *,
@@ -55,9 +50,7 @@ class Code(google.protobuf.message.Message):
         show_line_numbers: builtins.bool = ...,
         wrap_lines: builtins.bool = ...,
         height: builtins.int = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["code_text", b"code_text", "height", b"height", "language", b"language", "show_line_numbers", b"show_line_numbers", "width_config", b"width_config", "wrap_lines", b"wrap_lines"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["code_text", b"code_text", "height", b"height", "language", b"language", "show_line_numbers", b"show_line_numbers", "wrap_lines", b"wrap_lines"]) -> None: ...
 
 global___Code = Code

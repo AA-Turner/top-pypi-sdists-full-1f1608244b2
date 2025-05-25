@@ -66,7 +66,7 @@ class TimerForm(forms.ModelForm):
             future_time = datetime.timedelta(days=days_left, hours=hours_left, minutes=minutes_left)
             current_time = timezone.now()
             eve_time = current_time + future_time
-            logger.debug(f"Determined timer eve time is {eve_time} - current time {current_time}, adding {future_time}")
+            logger.debug(f"Determined timer EVE time is {eve_time} - current time {current_time}, adding {future_time}")
         elif absolute_time:
             # Use absolute time
             eve_time = absolute_time

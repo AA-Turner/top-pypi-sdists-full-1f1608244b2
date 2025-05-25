@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: object-storage-proxy
-Version: 0.4.2
+Version: 0.4.3
 Classifier: License :: Other/Proprietary License
 Classifier: Programming Language :: Rust
 Classifier: Programming Language :: Python :: Implementation :: CPython
@@ -27,6 +27,8 @@ Project-URL: BugTracker, https://github.com/opensourceworks-org/object-storage-p
 > 📌 **Note:** This project is still under heavy development, and its APIs are subject to change.
 
 ## Introduction
+
+[Documentation Home](https://osp.flexworks.eu)
 
 A fast and safe in-process reverse proxy server, based on Cloudflare's [pingora](https://github.com/cloudflare/pingora?tab=readme-ov-file), to reverse proxy AWS and IBM Cloud Object Storage buckets and integrate your Authentication and Authorization services.
 

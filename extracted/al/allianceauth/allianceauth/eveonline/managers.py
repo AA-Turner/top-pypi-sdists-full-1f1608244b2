@@ -14,10 +14,10 @@ class EveCharacterProviderManager:
 class EveCharacterManager(models.Manager):
     provider = EveCharacterProviderManager()
 
-    def create_character(self, character_id):
+    def create_character(self, character_id) -> models.Model:
         return self.create_character_obj(self.provider.get_character(character_id))
 
-    def create_character_obj(self, character: providers.Character):
+    def create_character_obj(self, character: providers.Character) -> models.Model:
         return self.create(
             character_id=character.id,
             character_name=character.name,

@@ -1,12 +1,12 @@
 import pytest
-from CTADIRAC.Interfaces.API.CtapipeMergeJob import CtapipeMergeJob
-from CTADIRAC.Interfaces.API.CtapipeProcessJob import CtapipeProcessJob
 from CTADIRAC.Interfaces.API.CTAJob import (
     MetadataDict,
 )
-from ruamel.yaml import YAML
+from CTADIRAC.Interfaces.API.CtapipeMergeJob import CtapipeMergeJob
+from CTADIRAC.Interfaces.API.CtapipeProcessJob import CtapipeProcessJob
 from CTADIRAC.Interfaces.API.MCPipeJob import MCPipeJob
-
+from CTADIRAC.Interfaces.API.MCSimTelProcessJob import MCSimTelProcessJob
+from ruamel.yaml import YAML
 from tests.unit.production import (
     COMMON_CONFIG,
     CTAPIPE_PROCESS_METADATA,
@@ -18,7 +18,6 @@ from tests.unit.production import (
     SIMULATION_CONFIG,
     SIMULATION_OUTPUT_METADATA,
 )
-
 
 yaml = YAML(typ="safe", pure=True)
 software_version = "v0.19.2"
@@ -37,6 +36,7 @@ def test_metadata_dict() -> None:
 sim_job = MCPipeJob()
 process_job = CtapipeProcessJob()
 merge_job = CtapipeMergeJob()
+sim_process_job = MCSimTelProcessJob()
 
 
 def test_set_output_metadata() -> None:
@@ -50,7 +50,7 @@ def test_set_output_metadata() -> None:
     sim_job.MCCampaign = COMMON_CONFIG["MCCampaign"]
     sim_job.configuration_id = COMMON_CONFIG["configuration_id"]
     assert sim_job.output_metadata == MetadataDict()
-    sim_job.set_output_metadata()
+    sim_job.set_output_metadata(SIMULATION_OUTPUT_METADATA)
     assert sim_job.output_metadata == SIMULATION_OUTPUT_METADATA
 
     # Processing Job:
@@ -114,6 +114,21 @@ def test_set_moon() -> None:
     assert sim_job.moon == "--with-full-moon"
     assert sim_job.output_file_metadata["nsb"] == [1, 5, 19]
 
+    moon: str = "dark"
+    sim_process_job.set_moon(moon)
+    assert sim_process_job.moon == ""
+    assert sim_process_job.output_file_metadata["nsb"] == 1
+
+    moon: str = "half"
+    sim_process_job.set_moon(moon)
+    assert sim_process_job.moon == "--with-half-moon"
+    assert sim_process_job.output_file_metadata["nsb"] == 5
+
+    moon: str = "full"
+    sim_process_job.set_moon(moon)
+    assert sim_process_job.moon == "--with-full-moon"
+    assert sim_process_job.output_file_metadata["nsb"] == 19
+
 
 def test_set_div_ang() -> None:
     div_ang = [
@@ -146,3 +161,35 @@ def set_sct() -> None:
     sim_job.set_sct("non-alpha")
     assert sim_job.sct == "--with-sct"
     assert sim_job.version == sim_version + "-sc"
+
+
+def test_set_systematic_uncertainty_to_test() -> None:
+    systematic_uncertainty_to_test: str = "LaPalma/clouds/ID1"
+    sim_process_job.set_systematic_uncertainty_to_test(systematic_uncertainty_to_test)
+    assert (
+        sim_process_job.systematic_uncertainty_to_test == systematic_uncertainty_to_test
+    )
+
+
+def test_run_sim_telarray(mocker):
+    systematic_uncertainty_to_test: str = "LaPalma/clouds/ID1"
+    sim_process_job.set_systematic_uncertainty_to_test(systematic_uncertainty_to_test)
+
+    mock_step = {"Value": {"name": "", "descr_short": ""}}
+    mock_set_exec = mocker.patch.object(
+        sim_process_job, "setExecutable", return_value=mock_step
+    )
+
+    sim_process_job.run_sim_telarray(debug=False)
+
+    mock_set_exec.assert_called_once_with(
+        "./dirac_sim_telarray_process",
+        arguments="LaPalma/clouds/ID1",
+        logFile="Simtel_Log.txt",
+    )
+
+    assert mock_step["Value"]["name"] == "Step_Simtel"
+    assert (
+        mock_step["Value"]["descr_short"]
+        == "Run sim_telarray processing of CORSIKA file"
+    )

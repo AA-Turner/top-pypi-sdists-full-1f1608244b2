@@ -164,6 +164,7 @@ class ProdDataManager:
                     "array_layout",
                     process_program_version,
                     "sct",
+                    "systematics",
                 )
                 if k in md
             },

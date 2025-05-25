@@ -15,7 +15,6 @@
 
 from modin.core.dataframe.base.dataframe.utils import Axis
 from modin.core.dataframe.pandas.dataframe.dataframe import PandasDataframe
-from modin.utils import _inherit_docstrings
 
 from ..partitioning.partition_manager import PandasOnRayDataframePartitionManager
 
@@ -67,8 +66,3 @@ class PandasOnRayDataframe(PandasDataframe):
             dims = [part.width(False) for part in parts]
 
         return self._partition_mgr_cls.materialize_futures(dims)
-
-    @property
-    @_inherit_docstrings(PandasDataframe.engine)
-    def engine(self) -> str:
-        return "Ray"

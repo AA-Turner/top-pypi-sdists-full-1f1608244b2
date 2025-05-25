@@ -1,10 +1,13 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: caldav
-Version: 1.4.0
+Version: 1.5.0
 Summary: CalDAV (RFC4791) client library
 Author-email: Cyril Robert <cyril@hippie.io>
 License: GPL
-Project-URL: Homepage, https://github.com/python-caldav/caldav
+Project-URL: Repository, https://github.com/python-caldav/caldav
+Project-URL: Issues, https://github.com/python-caldav/caldav/issues
+Project-URL: Documentation, https://caldav.readthedocs.io/
+Project-URL: Changelog, https://github.com/python-caldav/caldav/blob/master/CHANGELOG.md
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: GNU General Public License (GPL)
@@ -17,6 +20,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Office/Business :: Scheduling
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Description-Content-Type: text/markdown
@@ -38,6 +42,8 @@ Requires-Dist: tzlocal; extra == "test"
 Requires-Dist: xandikos==0.2.7; python_version < "3.9" and extra == "test"
 Requires-Dist: dulwich==0.20.50; python_version < "3.9" and extra == "test"
 Requires-Dist: xandikos; python_version >= "3.9" and extra == "test"
+Requires-Dist: radicale; extra == "test"
+Dynamic: license-file
 
 # caldav
 

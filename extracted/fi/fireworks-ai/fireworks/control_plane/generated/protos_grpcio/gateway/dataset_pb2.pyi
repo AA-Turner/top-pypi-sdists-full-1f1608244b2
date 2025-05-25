@@ -257,20 +257,22 @@ class GetDatasetDownloadEndpointResponse(_message.Message):
     def __init__(self, filename_to_signed_urls: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class ListDatasetsRequest(_message.Message):
-    __slots__ = ("parent", "page_size", "page_token", "filter", "order_by", "read_mask")
+    __slots__ = ("parent", "page_size", "page_token", "filter", "order_by", "read_mask", "show_internal")
     PARENT_FIELD_NUMBER: _ClassVar[int]
     PAGE_SIZE_FIELD_NUMBER: _ClassVar[int]
     PAGE_TOKEN_FIELD_NUMBER: _ClassVar[int]
     FILTER_FIELD_NUMBER: _ClassVar[int]
     ORDER_BY_FIELD_NUMBER: _ClassVar[int]
     READ_MASK_FIELD_NUMBER: _ClassVar[int]
+    SHOW_INTERNAL_FIELD_NUMBER: _ClassVar[int]
     parent: str
     page_size: int
     page_token: str
     filter: str
     order_by: str
     read_mask: _field_mask_pb2.FieldMask
-    def __init__(self, parent: _Optional[str] = ..., page_size: _Optional[int] = ..., page_token: _Optional[str] = ..., filter: _Optional[str] = ..., order_by: _Optional[str] = ..., read_mask: _Optional[_Union[_field_mask_pb2.FieldMask, _Mapping]] = ...) -> None: ...
+    show_internal: bool
+    def __init__(self, parent: _Optional[str] = ..., page_size: _Optional[int] = ..., page_token: _Optional[str] = ..., filter: _Optional[str] = ..., order_by: _Optional[str] = ..., read_mask: _Optional[_Union[_field_mask_pb2.FieldMask, _Mapping]] = ..., show_internal: bool = ...) -> None: ...
 
 class ListDatasetsResponse(_message.Message):
     __slots__ = ("datasets", "next_page_token", "total_size")

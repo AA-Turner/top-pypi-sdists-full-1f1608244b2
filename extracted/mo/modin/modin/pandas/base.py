@@ -67,7 +67,6 @@ from pandas.core.dtypes.common import (
 )
 from pandas.core.indexes.api import ensure_index
 from pandas.core.methods.describe import _refine_percentiles
-from pandas.util._decorators import doc
 from pandas.util._validators import (
     validate_ascending,
     validate_bool_kwarg,
@@ -75,22 +74,11 @@ from pandas.util._validators import (
 )
 
 from modin import pandas as pd
-from modin.config import Backend
-from modin.core.storage_formats.pandas.query_compiler_caster import (
-    EXTENSION_NO_LOOKUP,
-    QueryCompilerCaster,
-)
 from modin.error_message import ErrorMessage
 from modin.logging import ClassLogger, disable_logging
 from modin.pandas.accessor import CachedAccessor, ModinAPI
-from modin.pandas.api.extensions.extensions import EXTENSION_DICT_TYPE
-from modin.pandas.utils import GET_BACKEND_DOC, SET_BACKEND_DOC, is_scalar
-from modin.utils import (
-    _inherit_docstrings,
-    expanduser_path_arg,
-    sentinel,
-    try_cast_to_pandas,
-)
+from modin.pandas.utils import is_scalar
+from modin.utils import _inherit_docstrings, expanduser_path_arg, try_cast_to_pandas
 
 from .utils import _doc_binary_op, is_full_grab_slice
 
@@ -105,6 +93,9 @@ if TYPE_CHECKING:
     from .series import Series
     from .window import Expanding, Rolling, Window
 
+# Similar to pandas, sentinel value to use as kwarg in place of None when None has
+# special meaning and needs to be distinguished from a user explicitly passing None.
+sentinel = object()
 
 # Do not lookup certain attributes in columns or index, as they're used for some
 # special purposes, like serving remote context
@@ -114,10 +105,7 @@ _ATTRS_NO_LOOKUP = {
     "_ipython_canary_method_should_not_exist_",
     "_ipython_display_",
     "_repr_mimebundle_",
-    # Also avoid looking up the attributes that we use to implement the
-    # extension system.
-} | EXTENSION_NO_LOOKUP
-
+}
 
 _DEFAULT_BEHAVIOUR = {
     "__init__",
@@ -206,7 +194,7 @@ def _get_repr_axis_label_indexer(labels, num_for_repr):
 
 
 @_inherit_docstrings(pandas.DataFrame, apilink=["pandas.DataFrame", "pandas.Series"])
-class BasePandasDataset(QueryCompilerCaster, ClassLogger):
+class BasePandasDataset(ClassLogger):
     """
     Implement most of the common code that exists in DataFrame/Series.
 
@@ -220,9 +208,6 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
     _pandas_class = pandas.core.generic.NDFrame
     _query_compiler: BaseQueryCompiler
     _siblings: list[BasePandasDataset]
-
-    _extensions: EXTENSION_DICT_TYPE = EXTENSION_DICT_TYPE(dict)
-    _pinned: bool = False
 
     @cached_property
     def _is_dataframe(self) -> bool:
@@ -303,9 +288,7 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
             A pandas dataset with `num_rows` or fewer rows and `num_cols` or fewer columns.
         """
         # Fast track for empty dataframe.
-        if len(self) == 0 or (
-            self._is_dataframe and self._query_compiler.get_axis_len(1) == 0
-        ):
+        if len(self.index) == 0 or (self._is_dataframe and len(self.columns) == 0):
             return pandas.DataFrame(
                 index=self.index,
                 columns=self.columns if self._is_dataframe else None,
@@ -526,17 +509,6 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
         ]
         if op in exclude_list:
             kwargs.pop("axis")
-        # Series logical operations take an additional fill_value argument that DF does not
-        series_specialize_list = [
-            "eq",
-            "ge",
-            "gt",
-            "le",
-            "lt",
-            "ne",
-        ]
-        if not self._is_dataframe and op in series_specialize_list:
-            op = "series_" + op
         new_query_compiler = getattr(self._query_compiler, op)(other, **kwargs)
         return self._create_or_update_from_compiler(new_query_compiler)
 
@@ -1021,7 +993,7 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
                 return result._query_compiler
             return result
         elif isinstance(func, dict):
-            if self._query_compiler.get_axis_len(1) != len(set(self.columns)):
+            if len(self.columns) != len(set(self.columns)):
                 warnings.warn(
                     "duplicate column names not supported with apply().",
                     FutureWarning,
@@ -2877,7 +2849,7 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
             axis_length = len(axis_labels)
         else:
             # Getting rows requires indices instead of labels. RangeIndex provides this.
-            axis_labels = pandas.RangeIndex(len(self))
+            axis_labels = pandas.RangeIndex(len(self.index))
             axis_length = len(axis_labels)
         if weights is not None:
             # Index of the weights Series should correspond to the index of the
@@ -3234,7 +3206,7 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
         """
         if n != 0:
             return self.iloc[-n:]
-        return self.iloc[len(self) :]
+        return self.iloc[len(self.index) :]
 
     def take(self, indices, axis=0, **kwargs) -> Self:  # noqa: PR01, RT01, D200
         """
@@ -4166,7 +4138,7 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
         -------
         int
         """
-        return self._query_compiler.get_axis_len(0)
+        return len(self.index)
 
     @_doc_binary_op(
         operation="less than comparison",
@@ -4339,16 +4311,6 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
         -------
         Any
         """
-        # NOTE that to get an attribute, python calls __getattribute__() first and
-        # then falls back to __getattr__() if the former raises an AttributeError.
-
-        if item not in EXTENSION_NO_LOOKUP:
-            extensions_result = self._getattribute__from_extension_impl(
-                item, __class__._extensions
-            )
-            if extensions_result is not sentinel:
-                return extensions_result
-
         attr = super().__getattribute__(item)
         if item not in _DEFAULT_BEHAVIOUR and not self._query_compiler.lazy_shape:
             # We default to pandas on empty DataFrames. This avoids a large amount of
@@ -4384,161 +4346,32 @@ class BasePandasDataset(QueryCompilerCaster, ClassLogger):
         BasePandasDataset
             The result of the ufunc applied to the `BasePandasDataset`.
         """
-        return self._query_compiler.do_array_ufunc_implementation(
-            self, ufunc, method, *inputs, **kwargs
+        # we can't use the regular default_to_pandas() method because self is one of the
+        # `inputs` to __array_ufunc__, and pandas has some checks on the identity of the
+        # inputs [1]. The usual default to pandas will call _to_pandas() on the inputs
+        # as well as on self, but that gives inputs[0] a different identity from self.
+        #
+        # [1] https://github.com/pandas-dev/pandas/blob/2c4c072ade78b96a9eb05097a5fcf4347a3768f3/pandas/_libs/ops_dispatch.pyx#L99-L109
+        ErrorMessage.default_to_pandas(message="__array_ufunc__")
+        pandas_self = self._to_pandas()
+        pandas_result = pandas_self.__array_ufunc__(
+            ufunc,
+            method,
+            *(
+                pandas_self if each_input is self else try_cast_to_pandas(each_input)
+                for each_input in inputs
+            ),
+            **try_cast_to_pandas(kwargs),
         )
+        if isinstance(pandas_result, pandas.DataFrame):
+            from .dataframe import DataFrame
+
+            return DataFrame(pandas_result)
+        elif isinstance(pandas_result, pandas.Series):
+            from .series import Series
+
+            return Series(pandas_result)
+        return pandas_result
 
     # namespace for additional Modin functions that are not available in Pandas
     modin: ModinAPI = CachedAccessor("modin", ModinAPI)
-
-    @disable_logging
-    def is_backend_pinned(self) -> bool:
-        """
-        Get whether this object's data is pinned to a particular backend.
-
-        Returns
-        -------
-        bool
-            True if the data is pinned.
-        """
-        return self._pinned
-
-    def _set_backend_pinned(
-        self, pinned: bool, inplace: bool = False
-    ) -> Optional[Self]:
-        """
-        Update whether this object's data is pinned to a particular backend.
-
-        Parameters
-        ----------
-        pinned : bool
-            Whether the data is pinned.
-
-        inplace : bool, default: False
-            Whether to update the object in place.
-
-        Returns
-        -------
-        Optional[Self]
-            The object with the new pin state, if `inplace` is False. Otherwise, None.
-        """
-        change = (self.is_backend_pinned() and not pinned) or (
-            not self.is_backend_pinned() and pinned
-        )
-        if inplace:
-            self._pinned = pinned
-            return None
-        else:
-            if change:
-                new_obj = self.__constructor__(query_compiler=self._query_compiler)
-                new_obj._pinned = pinned
-                return new_obj
-            return self
-
-    @doc(SET_BACKEND_DOC, class_name=__qualname__)
-    def set_backend(
-        self, backend: str, inplace: bool = False, *, switch_operation: str = None
-    ) -> Optional[Self]:
-        # TODO(https://github.com/modin-project/modin/issues/7467): refactor
-        # to avoid this cyclic import in most places we do I/O, e.g. in
-        # modin/pandas/io.py
-        from modin.core.execution.dispatching.factories.dispatcher import (
-            FactoryDispatcher,
-        )
-
-        progress_split_count = 2
-        progress_iter = iter(range(progress_split_count))
-        self_backend = self.get_backend()
-        normalized_backend = Backend.normalize(backend)
-        if normalized_backend != self_backend:
-            try:
-                from tqdm.auto import trange
-
-                max_rows, max_cols = self._query_compiler._max_shape()
-                if switch_operation is None:
-                    desc = (
-                        f"Transferring data from {self_backend} to {normalized_backend}"
-                        + f" with max estimated shape {max_rows}x{max_cols}"
-                    )
-                else:
-                    desc = (
-                        f"Transferring data from {self_backend} to {normalized_backend} for"
-                        + f" '{switch_operation}' with max estimated shape {max_rows}x{max_cols}"
-                    )
-                progress_iter = iter(trange(progress_split_count, desc=desc))
-            except ImportError:
-                # Iterate over blank range(2) if tqdm is not installed
-                pass
-        else:
-            return None if inplace else self
-        # If tqdm is imported and a conversion is necessary, then display a progress bar.
-        next(progress_iter)
-        pandas_self = self._query_compiler.to_pandas()
-        next(progress_iter)
-        query_compiler = FactoryDispatcher.from_pandas(df=pandas_self, backend=backend)
-        try:
-            next(progress_iter)
-        except StopIteration:
-            # Last call to next informs tqdm that the operation is done
-            pass
-        if inplace:
-            self._update_inplace(query_compiler)
-            # Always unpin after an explicit set_backend operation
-            self._pinned = False
-            return None
-        else:
-            return self.__constructor__(query_compiler=query_compiler)
-
-    move_to = set_backend
-
-    @doc(GET_BACKEND_DOC, class_name=__qualname__)
-    @disable_logging
-    def get_backend(self) -> str:
-        return self._query_compiler.get_backend()
-
-    @disable_logging
-    def __setattr__(self, key: str, value: Any) -> None:
-        """
-        Set attribute on this `BasePandasDataset`.
-
-        Parameters
-        ----------
-        key : str
-            The attribute name.
-        value : Any
-            The attribute value.
-
-        Returns
-        -------
-        None
-        """
-        # An extension property is only accessible if the backend supports it.
-        extension = self._get_extension(key, __class__._extensions)
-        if extension is not sentinel and hasattr(extension, "__set__"):
-            return extension.__set__(self, value)
-        return super().__setattr__(key, value)
-
-    @disable_logging
-    def __delattr__(self, name) -> None:
-        """
-        Delete attribute on this `BasePandasDataset`.
-
-        Parameters
-        ----------
-        name : str
-            The attribute name.
-
-        Returns
-        -------
-        None
-        """
-        # An extension property is only accessible if the backend supports it.
-        extension = self._get_extension(name, __class__._extensions)
-        if extension is not sentinel and hasattr(extension, "__delete__"):
-            return extension.__delete__(self)
-        return super().__delattr__(name)
-
-    @disable_logging
-    @_inherit_docstrings(QueryCompilerCaster._get_query_compiler)
-    def _get_query_compiler(self):
-        return getattr(self, "_query_compiler", None)

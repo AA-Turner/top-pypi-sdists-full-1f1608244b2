@@ -3,10 +3,15 @@ from datetime import timedelta
 import inspect
 import re
 import os
+import json
 import sys
 import time
+import uuid
 
+from fireworks._const import FIREWORKS_API_BASE_URL
+from fireworks.client.api import ChatCompletionMessageToolCall
 import grpc
+from pydantic import ValidationError
 from ._list_fireworks_models_response_cached import models
 from fireworks.client.error import RateLimitError
 from fireworks.client.api_client import FireworksClient
@@ -24,10 +29,10 @@ from typing import (
     Optional,
     Union,
     overload,
+    TYPE_CHECKING,
 )
 from fireworks.client.error import BadGatewayError, ServiceUnavailableError
 from fireworks.dataset import Dataset
-from fireworks.supervised_fine_tuning_job import SupervisedFineTuningJob
 from fireworks.gateway import Gateway
 from google.protobuf.duration_pb2 import Duration
 from fireworks.control_plane.generated.protos_grpcio.gateway.deployment_pb2 import (
@@ -39,6 +44,15 @@ from fireworks.control_plane.generated.protos_grpcio.gateway.deployment_pb2 impo
     Region as SyncRegion,
     DirectRouteType as SyncDirectRouteType,
     AutoTune as SyncAutoTune,
+)
+from fireworks.control_plane.generated.protos_grpcio.gateway.model_pb2 import (
+    Model as SyncModel,
+)
+from fireworks.control_plane.generated.protos_grpcio.gateway.deployed_model_pb2 import (
+    CreateDeployedModelRequest as SyncCreateDeployedModelRequest,
+    DeployedModel as SyncDeployedModel,
+    GetDeployedModelRequest as SyncGetDeployedModelRequest,
+    ListDeployedModelsRequest as SyncListDeployedModelsRequest,
 )
 from fireworks.control_plane.generated.protos.gateway import (
     AcceleratorType as AcceleratorTypeEnum,
@@ -57,7 +71,9 @@ from fireworks.control_plane.generated.protos.gateway import (
     SupervisedFineTuningJobWeightPrecision,
     WandbConfig,
 )
-from fireworks.supervised_fine_tuning_job.SupervisedFineTuningJob import SupervisedFineTuningJobWeightPrecisionLiteral
+from fireworks.supervised_fine_tuning_job.supervised_fine_tuning_job import (
+    SupervisedFineTuningJobWeightPrecisionLiteral,
+)
 import asyncio
 import logging
 import atexit
@@ -75,17 +91,14 @@ from fireworks._literals import (
     AcceleratorTypeLiteral,
     ReasoningEffort,
 )
+from fireworks._logger import logger
+from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
+from rich.text import Text
 
-# Configure logger with a consistent format for better debugging
-logger = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.propagate = False  # Prevent duplicate logs
-
-if os.environ.get("FIREWORKS_SDK_DEBUG"):
-    logger.setLevel(logging.DEBUG)
+# Type checking imports to avoid circular imports
+if TYPE_CHECKING:
+    from fireworks.supervised_fine_tuning_job import SupervisedFineTuningJob
 
 DEFAULT_MAX_RETRIES = 5
 DEFAULT_DELAY = 0.5
@@ -112,6 +125,7 @@ class ChatCompletion:
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion:
@@ -125,6 +139,7 @@ class ChatCompletion:
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
         extra_headers=None,
         **kwargs,
     ) -> Generator[ChatCompletionChunk, None, None]:
@@ -137,6 +152,7 @@ class ChatCompletion:
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, Generator[ChatCompletionChunk, None, None]]:
@@ -155,8 +171,9 @@ class ChatCompletion:
                     response_format=response_format,
                     reasoning_effort=reasoning_effort,
                     max_tokens=max_tokens,
+                    temperature=temperature if temperature is not None else self._llm.temperature,
                     **kwargs,
-                )
+                )  # type: ignore
                 if self._llm.enable_metrics:
                     end_time = time.time()
                     self._llm._metrics.add_metric("time_to_last_token", end_time - start_time)
@@ -176,6 +193,7 @@ class ChatCompletion:
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion: ...
@@ -188,6 +206,7 @@ class ChatCompletion:
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
         extra_headers=None,
         **kwargs,
     ) -> AsyncGenerator[ChatCompletionChunk, None]:
@@ -200,6 +219,7 @@ class ChatCompletion:
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, AsyncGenerator[ChatCompletionChunk, None]]:
@@ -216,6 +236,7 @@ class ChatCompletion:
                     response_format=response_format,
                     reasoning_effort=reasoning_effort,
                     max_tokens=max_tokens,
+                    temperature=temperature if temperature is not None else self._llm.temperature,
                     **kwargs,
                 )
                 if stream:
@@ -353,9 +374,10 @@ class LLM:
         self,
         model: str,
         deployment_type: DeploymentTypeLiteral,
-        name: Optional[str] = None,
+        deployment_name: Optional[str] = None,
+        deployment_display_name: Optional[str] = None,
         api_key: Optional[str] = None,
-        base_url: str = "https://api.fireworks.ai/inference/v1",
+        base_url: str = f"{FIREWORKS_API_BASE_URL}/inference/v1",
         accelerator_type: Union[AcceleratorTypeLiteral, NotGiven] = NOT_GIVEN,
         scale_up_window: timedelta = timedelta(seconds=1),
         scale_down_window: timedelta = timedelta(minutes=1),
@@ -365,7 +387,7 @@ class LLM:
         region: Optional[RegionLiteral] = None,
         description: Optional[str] = None,
         annotations: Optional[dict[str, str]] = None,
-        min_replica_count: Optional[int] = None,
+        min_replica_count: Optional[int] = 0,
         max_replica_count: Optional[int] = None,
         replica_count: Optional[int] = None,
         accelerator_count: Optional[int] = None,
@@ -402,6 +424,7 @@ class LLM:
         direct_route_type: Optional[Literal["INTERNET", "GCP_PRIVATE_SERVICE_CONNECT", "AWS_PRIVATELINK"]] = None,
         direct_route_handle: Optional[str] = None,
         long_prompt_optimized: Optional[bool] = None,
+        temperature: Optional[float] = None,
     ):
         """
         Initialize the LLM.
@@ -415,6 +438,15 @@ class LLM:
                 have workloads that would benefit from dedicated resources, we
                 recommend using "on-demand". Otherwise, you can enforce that you
                 only use "serverless" by setting this parameter to "serverless".
+            deployment_name: The name of the deployment to use. If not provided,
+                the deployment name will be generated from the filename of the
+                caller where this LLM was instantiated. If specified, it is used
+                to identify a deployment in the SDK. This can useful when you want
+                to specifically use a deployment that already exists.
+            deployment_display_name: The display name of the deployment to use.
+                If not provided, the deployment display name will be generated
+                from the filename of the caller where this LLM was instantiated.
+                This is used to identify a deployment in the SDK.
             api_key: The API key to use.
             base_url: The base URL to use.
             accelerator_type: The accelerator type to use.
@@ -431,22 +463,24 @@ class LLM:
         if deployment_type is None:
             raise ValueError('deployment_type is required - must be one of "serverless", "on-demand", or "auto"')
         self._client = FireworksClient(api_key=api_key, base_url=base_url)
-        if name is not None and name == "":
+        if deployment_display_name is not None and deployment_display_name == "":
             raise ValueError("name must be non-empty")
-        if name and not is_valid_resource_name(name):
+        if deployment_display_name and not is_valid_resource_name(deployment_display_name):
             raise ValueError("LLM name must only contain lowercase a-z, 0-9, and hyphen (-)")
-        self._name = name
+        self._deployment_name = deployment_name
+        self._gateway = Gateway(api_key=api_key)
+        self._deployment_display_name = deployment_display_name
         self._model = model
         self.chat = Chat(self, self.model)
         self.deployment_type: DeploymentTypeLiteral = deployment_type
+        self.deployment_strategy = self._compute_deployment_strategy()
         self.max_retries = max_retries
         self.enable_metrics = enable_metrics
-        self._gateway = Gateway(api_key=api_key)
         self._metrics = Metrics()
 
         # This needs to be run in __init__ to ensure we capture deployment name
         # inside of this thread
-        self._get_deployment_name()
+        self._get_deployment_display_name()
 
         if isinstance(accelerator_type, str):
             self._accelerator_type = AcceleratorTypeEnum.from_string(accelerator_type)
@@ -469,7 +503,7 @@ class LLM:
             scale_down_window=Duration(seconds=int(scale_down_window.total_seconds())),
             scale_to_zero_window=Duration(seconds=int(scale_to_zero_window.total_seconds())),
         )
-        self._region = region
+        self._region: Optional[RegionLiteral] = region
         self._description = description
         self._annotations = annotations
         self._min_replica_count = min_replica_count
@@ -495,6 +529,7 @@ class LLM:
         self._num_peft_device_cached = num_peft_device_cached
         self._direct_route_type = direct_route_type
         self._direct_route_handle = direct_route_handle
+        self._temperature = temperature
         self._auto_tune = AutoTune()
         self._auto_tune_sync = SyncAutoTune()
         if long_prompt_optimized is not None:
@@ -507,9 +542,31 @@ class LLM:
             )
 
     @property
+    def deployment_name(self):
+        """
+        Properly converts provided deployment name to a full resource name if
+        only the ID was provided. Does not query the API to get the full
+        resource name if deployment name was not provided on instantiation.
+        """
+        if self._deployment_name is None:
+            return None
+        if self._deployment_name.startswith("accounts/"):
+            return self._deployment_name
+        return f"accounts/{self._gateway.account_id()}/deployments/{self._deployment_name}"
+
+    @property
+    def temperature(self):
+        return self._temperature
+
+    @property
     def model(self):
         if not self._model.startswith("accounts/fireworks/models/") and "/" not in self._model:
-            return f"accounts/fireworks/models/{self._model}"
+            model = f"accounts/fireworks/models/{self._model}"
+            if self.is_model_on_fireworks_account(model):
+                return model
+        if not self._model.startswith("accounts/"):
+            account_id = self._gateway.account_id()
+            return f"accounts/{account_id}/models/{self._model}"
         return self._model
 
     @staticmethod
@@ -543,18 +600,28 @@ class LLM:
 
     @property
     def deployment_display_name(self) -> str:
-        return self._get_deployment_name()
+        """
+        IMPORTANT: This is used to identify a deployment in the SDK.
+
+        This is the name that will be used to display the deployment in the UI.
+
+        Not sure if we should really be using deployment name for querying
+        existing deployments but this way we don't have to worry about name
+        collisions since display name is not a unique identifier for
+        deployments.
+        """
+        return self._get_deployment_display_name()
 
     @sync_cache
-    def _get_deployment_name(self):
+    def _get_deployment_display_name(self):
         """
         If a name was specified, deployment name will be the specified name.
         Otherwise, the deployment name will be generated from the filename of the caller where this LLM was instantiated.
 
         In Jupyter notebooks, we'll use the actual notebook filename rather than the temporary execution file.
         """
-        if self._name is not None:
-            return self._name
+        if self._deployment_display_name is not None:
+            return self._deployment_display_name
 
         # Check if running in a Jupyter notebook environment
         try:
@@ -609,15 +676,73 @@ class LLM:
         """
         Checks if the model is available on serverless.
         """
-        return self._is_available_on_serverless()
+        return self.is_model_available_on_serverless(self.model)
 
-    def deployment_strategy(self) -> DeploymentStrategyLiteral:
-        return self._deployment_strategy()
-
-    def delete(self, ignore_checks: bool = False):
+    def delete_deployment(self, ignore_checks: bool = False):
+        """
+        If there is an existing deployment, delete it.
+        """
         deployment = self.get_deployment()
         if deployment is None:
             logger.debug("No deployment found to delete")
+            return
+        if self.is_peft_addon():
+            logger.debug(f"Deleting deployed model {deployment.name}")
+            self._gateway.delete_deployed_model_sync(deployment.name)
+
+            # Use rich console for beautiful logging
+            console = Console()
+
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                TimeElapsedColumn(),
+                console=console,
+                transient=False,
+            ) as progress:
+                task = progress.add_task(
+                    f"Deleting serverless LoRA model [bold cyan]{self.model}[/bold cyan]...", total=None
+                )
+
+                start_time = time.time()
+                last_log_time = 0
+
+                while True:
+                    current_time = time.time()
+
+                    # Try to get the deployed model to check if it still exists
+                    deployed_model = self._gateway.get_deployed_model_sync(deployment.name)
+
+                    if deployed_model is None:
+                        # Deployed model no longer exists, deletion is complete
+                        total_time = time.time() - start_time
+                        progress.update(
+                            task,
+                            description=f"✅ Serverless LoRA model [bold green]{self.model}[/bold green] deleted successfully!",
+                        )
+                        console.print(f"[bold green]✅ Deletion completed in {total_time:.2f} seconds![/bold green]")
+                        logger.debug(f"Deployed model {deployment.name} no longer exists (deleted successfully)")
+                        break
+
+                    # Update progress description with current state
+                    state_name = SyncDeployedModel.State.Name(deployed_model.state)
+                    progress.update(
+                        task,
+                        description=f"Deleting serverless LoRA model [bold cyan]{self.model}[/bold cyan] - State: [yellow]{state_name}[/yellow]",
+                    )
+
+                    # Log detailed info every 10 seconds
+                    if current_time - last_log_time >= 10:
+                        elapsed_so_far = current_time - start_time
+                        console.print(
+                            f"[dim]Waiting for deployed model {deployed_model.name} to be deleted, "
+                            f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s[/dim]"
+                        )
+                        last_log_time = current_time
+
+                    # Wait before checking again
+                    time.sleep(2)
+
             return
         logger.debug(f"Deleting deployment {deployment.name}")
         self._gateway.delete_deployment_sync(deployment.name, ignore_checks)
@@ -631,15 +756,18 @@ class LLM:
             deployment = self.get_deployment()
             time.sleep(1)
 
-    @sync_cache
-    def _deployment_strategy(self) -> DeploymentStrategyLiteral:
+    def _compute_deployment_strategy(self) -> DeploymentStrategyLiteral:
         """
-        Determines whether to use serverless or dedicated deployment based on model availability
-        and configured deployment type.
+        Determine whether to use serverless or dedicated deployment based on
+        model availability, configured deployment type, and model type.
 
         Returns:
-            bool: True if a dedicated deployment is needed, False if serverless can be used.
+            DeploymentStrategyLiteral: The deployment strategy to use.
         """
+        logger.debug(
+            f"Computing deployment strategy for model {self.model} with deployment_type {self.deployment_type}"
+        )
+
         if self.is_available_on_serverless():
             if self.deployment_type == "serverless" or self.deployment_type == "auto":
                 logger.debug(f"Model {self.model} is available on serverless, using serverless deployment")
@@ -650,34 +778,72 @@ class LLM:
                 )
                 return "on-demand"
         else:
+            # Check if model supports serverless deployment
+            if self.deployment_type in ["serverless", "auto"] and self.is_peft_addon():
+                logger.debug(f"Checking if model {self.model} supports serverless LoRA")
+
+                # If model supports serverless LoRA, use serverless deployment
+                if self.supports_serverless_lora():
+                    logger.debug(f"Model {self.model} supports serverless LoRA, using serverless deployment")
+                    return "serverless-lora"
+
+                # If deployment type is explicitly serverless but model doesn't support it, raise error
+                if self.deployment_type == "serverless":
+                    raise ValueError(
+                        f"Model {self.model} is not Serverless LoRA enabled and deployment_type is serverless. "
+                        f'Use deployment_type of "auto" or "on-demand" instead to deploy this LoRA onto an on-demand deployment.'
+                    )
+
+                if self.deployment_type == "auto":
+                    """
+                    If the model is not available on serverless, but the deployment type is auto,
+                    we will deploy the base model with addons enabled, and load the LoRA onto it.
+                    This is useful for models that are not available on serverless, but only want to use a single deployment
+                    to save on GPU costs. If you really want
+                    """
+                    return "on-demand-lora"
+
+            # Default to on-demand deployment if model is not available on serverless
             logger.debug(
                 f"Model {self.model} is not available on serverless, continuing to check for existing deployment"
             )
             return "on-demand"
 
-    @sync_cache
-    def _is_available_on_serverless(self):
-        logger.debug(f"Checking if {self.model} is available on serverless")
-        models = self._list_fireworks_models()
+    @classmethod
+    def is_model_on_fireworks_account(cls, model: str) -> Optional[Model]:
+        """
+        Check if the model is on the fireworks account.
+        If it is, return the model object.
+        If it is not, return None.
+        """
+        models = cls.list_fireworks_models()
+        model_obj = next((m for m in models if m.name == model), None)
+        return model_obj
 
-        # find model in models
-        model = next((m for m in models if m.name == self.model), None)
-        if model is None:
+    @classmethod
+    @sync_cache
+    def is_model_available_on_serverless(cls, model: str) -> bool:
+        logger.debug(f"Checking if {model} is available on serverless")
+        model_obj = cls.is_model_on_fireworks_account(model)
+        if model_obj is None:
             return False
-        logger.debug(f"Found model {self.model} on under fireworks account")
-        is_serverless = self._is_model_on_serverless_account(model)
-        logger.debug(f"Model {self.model} is {'serverless' if is_serverless else 'not serverless'}")
+        logger.debug(f"Found model {model} on under fireworks account")
+        is_serverless = cls.is_model_deployed_on_serverless_account(model_obj)
+        logger.debug(f"Model {model} is {'serverless' if is_serverless else 'not serverless'}")
         return is_serverless
 
-    def _list_fireworks_models(self) -> List[Model]:
+    @classmethod
+    def list_fireworks_models(cls) -> List[Model]:
         """
-        Find all models on the fireworks account
+        Find all models on the fireworks account. Does not change often, so we
+        embed the Gateway response as a variable in another file and return that
+        instead. See the comment on what query is used to get the models.
         """
         # models = await self._gateway.list_models(parent="accounts/fireworks", include_deployed_model_refs=True)
         return models
 
-    @staticmethod
-    def _is_model_on_serverless_account(model: Model) -> bool:
+    @classmethod
+    def is_model_deployed_on_serverless_account(cls, model: Model) -> bool:
         """
         Check if the model is deployed on a serverless-enabled account.
 
@@ -704,29 +870,240 @@ class LLM:
                         return True
         return False
 
-    def _query_existing_deployment(self) -> Optional[SyncDeployment]:
+    def get_deployment(self) -> Optional[Union[SyncDeployment, SyncDeployedModel]]:
         """
-        Queries all deployments for the same model and accelerator type (if given) and returns the first one.
+        Queries all deployments for the same model and display name and returns
+        the first one. If a deployment name is provided, it will return the
+        deployment with that name.
         """
+        if self.is_peft_addon():
+            if self.deployment_name is not None:
+                deployed_model = self._gateway.get_deployed_model_sync(self.deployment_name)
+                if deployed_model is None:
+                    return None
+                if deployed_model.model != self.model:
+                    raise ValueError(f"Deployed model {self.deployment_name} is not for model {self.model}")
+                return deployed_model
+            request = SyncListDeployedModelsRequest(
+                filter=f'display_name="{self.deployment_display_name}" AND model="{self.model}"'
+            )
+            deployed_models = self._gateway.list_deployed_models_sync(request)
+            deployed_model = next(iter(deployed_models.deployed_models), None)
+            if deployed_model is None:
+                return None
+            return deployed_model
+
+        if self.deployment_name is not None:
+            deployment = self._gateway.get_deployment_sync(self.deployment_name)
+            if deployment.base_model != self.model:
+                raise ValueError(f"Deployment {self.deployment_name} is not for model {self.model}")
+            return deployment
         deployments = self._gateway.list_deployments_sync(
             filter=f'display_name="{self.deployment_display_name}" AND base_model="{self.model}"'
         )
         deployment = next(iter(deployments), None)
         return deployment
 
+    def supports_serverless_lora(self) -> bool:
+        loras = self._gateway.list_serverless_lora_sync()
+        if self.peft_base_model is None:
+            return False
+        base_model_supported = any(lora_model == self.peft_base_model for lora_model in loras.models)
+        if not base_model_supported:
+            return False
+        is_base_model_serverless = self.is_model_available_on_serverless(self.peft_base_model)
+        if not is_base_model_serverless:
+            return False
+        return True
+
     def _ensure_deployment_ready(self) -> None:
         """
-        If a deployment is inferred for this LLM, ensure it's deployed and
-        ready. A deployment is required if the model is not available on
-        serverless or this LLM has deployment_type="on-demand".
-
-        This method uses a lock to prevent concurrent calls from multiple coroutines.
+        Ensure this LLM is deployed in any way, otherwise raise an error if it
+        can't be deployed based on the deployment_type.
         """
-        deployment_strategy = self.deployment_strategy()
-        if deployment_strategy == "serverless":
+        if self.deployment_strategy == "serverless":
+            # no deployment needed, just return
             return
 
-        deployment = self._query_existing_deployment()
+        deployment = self.get_deployment()
+
+        if self.deployment_strategy == "serverless-lora":
+            if deployment is not None:
+                deployed_model = deployment
+            else:
+                request = SyncCreateDeployedModelRequest()
+                request.deployed_model.display_name = self.deployment_display_name
+                request.deployed_model.model = self.model
+                deployed_model = self._gateway.create_deployed_model_sync(request)
+
+            if deployed_model.state == SyncDeployedModel.State.DEPLOYED:
+                return
+
+            # Use rich console for beautiful logging
+            console = Console()
+
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                TimeElapsedColumn(),
+                console=console,
+                transient=False,
+            ) as progress:
+                task = progress.add_task(
+                    f"Deploying serverless LoRA model [bold cyan]{self.model}[/bold cyan]...", total=None
+                )
+
+                start_time = time.time()
+                last_log_time = 0
+
+                while deployed_model.state != SyncDeployedModel.State.DEPLOYED:
+                    current_time = time.time()
+
+                    # Update progress description with current state
+                    state_name = SyncDeployedModel.State.Name(deployed_model.state)
+                    progress.update(
+                        task,
+                        description=f"Deploying serverless LoRA model [bold cyan]{self.model}[/bold cyan] - State: [yellow]{state_name}[/yellow]",
+                    )
+
+                    # Log detailed info every 10 seconds
+                    if current_time - last_log_time >= 10:
+                        elapsed_so_far = current_time - start_time
+                        console.print(
+                            f"[dim]Waiting for deployed model {deployed_model.name} to be ready, "
+                            f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s[/dim]"
+                        )
+                        last_log_time = current_time
+
+                    # Check if deployment failed
+                    if deployed_model.state == SyncDeployedModel.State.STATE_UNSPECIFIED:
+                        raise ValueError(f"Deployed model {deployed_model.name} failed to deploy")
+
+                    # Wait before checking again
+                    time.sleep(2)
+
+                    # Get updated deployed model state
+                    updated_deployed_model = self._gateway.get_deployed_model_sync(deployed_model.name)
+                    if updated_deployed_model is None:
+                        raise ValueError(
+                            f"Deployed model {deployed_model.name} was unexpectedly deleted during deployment"
+                        )
+                    deployed_model = updated_deployed_model
+
+                total_time = time.time() - start_time
+                progress.update(
+                    task,
+                    description=f"✅ Serverless LoRA model [bold green]{self.model}[/bold green] deployed successfully!",
+                )
+                console.print(f"[bold green]✅ Deployment completed in {total_time:.2f} seconds![/bold green]")
+
+            return
+
+        if self.deployment_strategy == "on-demand-lora":
+            # first ensure that the base model is deployed with enable_addons=True
+            if self.peft_base_model is None:
+                raise ValueError(f"PEFT base model is not set for {self.model}")
+
+            base_model_llm = LLM(
+                model=self.peft_base_model,
+                deployment_type="on-demand",
+                enable_addons=True,
+                min_replica_count=self._min_replica_count,
+                max_replica_count=self._max_replica_count,
+                replica_count=self._replica_count,
+                accelerator_count=self._accelerator_count,
+                world_size=self._world_size,
+                generator_count=self._generator_count,
+                region=self._region,
+                annotations=self._annotations,
+                description=self._description,
+            )
+            base_model_llm.apply()
+            base_model_deployment = base_model_llm.get_deployment()
+
+            if base_model_deployment is None:
+                raise ValueError(f"Base model {self.peft_base_model} is not deployed")
+            if deployment is not None and deployment.state == SyncDeployedModel.State.DEPLOYED:
+                return
+            if deployment is not None and deployment.state == SyncDeployment.State.STATE_UNSPECIFIED:
+                logger.debug(f"Deployment {deployment.name} is in FAILED state, deleting it")
+                self.delete_deployment()
+                logger.debug(f"Successfully deleted failed deployment {deployment.name}")
+                deployment = None
+
+            # now load the LoRA onto the base model deployment
+            request = SyncCreateDeployedModelRequest()
+            request.deployed_model.display_name = self.deployment_display_name
+            request.deployed_model.model = self.model
+            request.deployed_model.deployment = base_model_deployment.name
+            self._gateway.create_deployed_model_sync(request)
+
+            # Use rich console for beautiful logging
+            console = Console()
+
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                TimeElapsedColumn(),
+                console=console,
+                transient=False,
+            ) as progress:
+                task = progress.add_task(
+                    f"Loading LoRA model [bold cyan]{self.model}[/bold cyan] onto base model deployment...", total=None
+                )
+
+                start_time = time.time()
+                last_log_time = 0
+
+                while True:
+                    current_time = time.time()
+
+                    # Try to get the deployed model to check its state
+                    deployed_model = self._gateway.get_deployed_model_sync(request.deployed_model.name)
+
+                    if deployed_model is None:
+                        raise ValueError(
+                            f"Deployed model {request.deployed_model.name} was unexpectedly deleted during deployment"
+                        )
+
+                    # Check if deployment is complete
+                    if deployed_model.state == SyncDeployedModel.State.DEPLOYED:
+                        total_time = time.time() - start_time
+                        progress.update(
+                            task,
+                            description=f"✅ LoRA model [bold green]{self.model}[/bold green] loaded successfully!",
+                        )
+                        console.print(f"[bold green]✅ Loading completed in {total_time:.2f} seconds![/bold green]")
+                        break
+
+                    # Check if deployment failed
+                    if deployed_model.state == SyncDeployedModel.State.STATE_UNSPECIFIED:
+                        raise ValueError(f"Deployed model {deployed_model.name} failed to deploy")
+
+                    # Update progress description with current state
+                    state_name = SyncDeployedModel.State.Name(deployed_model.state)
+                    progress.update(
+                        task,
+                        description=f"Loading LoRA model [bold cyan]{self.model}[/bold cyan] - State: [yellow]{state_name}[/yellow]",
+                    )
+
+                    # Log detailed info every 10 seconds
+                    if current_time - last_log_time >= 10:
+                        elapsed_so_far = current_time - start_time
+                        console.print(
+                            f"[dim]Waiting for deployed model {deployed_model.name} to be ready, "
+                            f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s[/dim]"
+                        )
+                        last_log_time = current_time
+
+                    # Wait before checking again
+                    time.sleep(2)
+
+        if deployment is not None and deployment.state == SyncDeployment.State.FAILED:
+            logger.debug(f"Deployment {deployment.name} is in FAILED state, deleting it")
+            self.delete_deployment()
+            logger.debug(f"Successfully deleted failed deployment {deployment.name}")
+            deployment = None
 
         if deployment is None:
             logger.debug(f"No existing deployment found, creating deployment for {self.model}")
@@ -797,11 +1174,13 @@ class LLM:
             # poll deployment status until it's ready
             start_time = time.time()
             last_log_time = 0
-            while created_deployment.state != DeploymentState.READY:
+            while created_deployment.state != SyncDeployment.State.READY:
                 current_time = time.time()
                 # wait for 9 seconds
                 time.sleep(9)
                 created_deployment = self._gateway.get_deployment_sync(created_deployment.name)
+                if created_deployment.state == DeploymentState.FAILED:
+                    raise ValueError(f"Deployment {created_deployment.name} failed to be created")
                 if current_time - last_log_time >= 10:
                     elapsed_so_far = current_time - start_time
                     logger.debug(
@@ -813,7 +1192,7 @@ class LLM:
             logger.debug(
                 f"Deployment {created_deployment.name} state is READY, checking replicas now (Became READY in {total_time:.2f} seconds)"
             )
-        else:
+        elif isinstance(deployment, SyncDeployment):
             logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
 
             field_mask = SyncFieldMask()
@@ -831,17 +1210,47 @@ class LLM:
                 deployment.autoscaling_policy.scale_to_zero_window = self._autoscaling_policy.scale_to_zero_window  # type: ignore
                 field_mask.paths.append("autoscaling_policy")
 
-            if self._min_replica_count is not None and deployment.min_replica_count != self._min_replica_count:
-                logger.debug(f"Updating min_replica_count for {deployment.name} to {self._min_replica_count}")
-                deployment.min_replica_count = self._min_replica_count
-                field_mask.paths.append("min_replica_count")
+            for field, value in [
+                ("region", self._region),
+                ("description", self._description),
+                ("annotations", self._annotations),
+                ("min_replica_count", self._min_replica_count),
+                ("max_replica_count", self._max_replica_count),
+                ("replica_count", self._replica_count),
+                ("accelerator_count", self._accelerator_count),
+                ("precision", self._precision),
+                ("world_size", self._world_size),
+                ("generator_count", self._generator_count),
+                ("disaggregated_prefill_count", self._disaggregated_prefill_count),
+                ("disaggregated_prefill_world_size", self._disaggregated_prefill_world_size),
+                ("max_batch_size", self._max_batch_size),
+                ("cluster", self._cluster),
+                ("enable_addons", self._enable_addons),
+                ("live_merge", self._live_merge),
+                ("draft_token_count", self._draft_token_count),
+                ("draft_model", self._draft_model),
+                ("ngram_speculation_length", self._ngram_speculation_length),
+                ("max_peft_batch_size", self._max_peft_batch_size),
+                ("kv_cache_memory_pct", self._kv_cache_memory_pct),
+                ("enable_session_affinity", self._enable_session_affinity),
+                ("direct_route_api_keys", self._direct_route_api_keys),
+                ("num_peft_device_cached", self._num_peft_device_cached),
+                ("direct_route_type", self._direct_route_type),
+                ("direct_route_handle", self._direct_route_handle),
+            ]:
+                if value is not None and getattr(deployment, field) != value:
+                    logger.debug(f"Updating {field} for {deployment.name} to {value}")
+                    setattr(deployment, field, value)
+                    field_mask.paths.append(field)
 
-            if deployment.accelerator_type != self._accelerator_type and self._accelerator_type is not NOT_GIVEN:
+            if (
+                deployment.accelerator_type != self._accelerator_type_sync
+                and self._accelerator_type_sync is not NOT_GIVEN
+            ):
                 raise ValueError(
-                    f'Deployment with name "{deployment.name}" has accelerator type {deployment.accelerator_type}, ',
-                    f"but the LLM has accelerator type {self._accelerator_type}. You must specify a different name ",
-                    f"for this LLM to use a different accelerator type since it is not possible to change the accelerator ",
-                    f"type of an existing deployment.",
+                    f'Deployment "{deployment.name}" has accelerator type {deployment.accelerator_type}, '
+                    f"but LLM has accelerator type {self._accelerator_type}. Please use a different deployment_display_name "
+                    f"to use a different accelerator type, as accelerator type cannot be changed for existing deployments."
                 )
 
             if len(field_mask.paths) > 0:
@@ -868,6 +1277,8 @@ class LLM:
                     current_time = time.time()
                     time.sleep(1)
                     deployment = self._gateway.get_deployment_sync(deployment.name)
+                    if deployment.state == SyncDeployment.State.FAILED:
+                        raise ValueError(f"Deployment {deployment.name} failed to scale up")
                     if current_time - last_log_time >= 10:
                         elapsed_so_far = current_time - start_time
                         logger.debug(
@@ -886,6 +1297,11 @@ class LLM:
         deployment = self.get_deployment()
         if deployment is None:
             return None
+        if isinstance(deployment, SyncDeployedModel):
+            raise ValueError(
+                f"Deployment {deployment.name} is a LoRA add-on, not a deployment. Please use the deployment_name "
+                f"argument to specify a deployment name."
+            )
         self._gateway.scale_deployment_sync(deployment.name, 0)
         return deployment
 
@@ -912,8 +1328,27 @@ class LLM:
             and deployment.autoscaling_policy.scale_to_zero_window == self._autoscaling_policy.scale_to_zero_window
         )
 
-    def get_deployment(self) -> Optional[SyncDeployment]:
-        return self._query_existing_deployment()
+    @sync_cache
+    def get_model(self) -> Optional[SyncModel]:
+        return self._gateway.get_model_sync(self.model)
+
+    def is_peft_addon(self) -> bool:
+        model = self.get_model()
+        if model is None:
+            return False
+        return model.kind == SyncModel.Kind.HF_PEFT_ADDON
+
+    @property
+    def peft_base_model(self) -> Optional[str]:
+        """
+        If this LLM is a PEFT addon, returns the name of the base model.
+        """
+        if not self.is_peft_addon():
+            return None
+        model = self.get_model()
+        if model is None:
+            return None
+        return model.peft_details.base_model
 
     def model_id(self):
         """
@@ -923,8 +1358,10 @@ class LLM:
         if self.is_available_on_serverless():
             return self.model
         deployment = self.get_deployment()
+        if isinstance(deployment, SyncDeployedModel):
+            return deployment.name  # accounts/<account_id>/deployedModels/<id>
         if deployment is None:
-            if self.deployment_strategy() == "on-demand":
+            if self.deployment_strategy == "on-demand":
                 raise ValueError(
                     f"Model {self.model} is not available on serverless and no deployment exists. Make sure to call apply() before calling model_id() or call the model to trigger a deployment."
                 )
@@ -938,7 +1375,7 @@ class LLM:
     def __repr__(self):
         return f"LLM(model={self.model})"
 
-    def fine_tune(
+    def _create_fine_tuning_job(
         self,
         name: str,
         dataset_or_id: Union[Dataset, str],
@@ -959,20 +1396,20 @@ class LLM:
         nodes: Optional[int] = None,
         batch_size: Optional[int] = None,
         output_model: Optional[str] = None,
-    ):
+    ) -> "SupervisedFineTuningJob":
         """
-        Creates a fine-tuning job for this dataset. If the fine-tuning job already exists, it will block until the job is ready.
+        Common logic for creating and syncing a fine-tuning job.
 
-        Args:
-            dataset_or_id: The dataset instance to fine-tune on or the dataset id to fine-tune on.
-            output_model_name: The name of the output model.
-            epochs: The number of epochs to fine-tune for.
-            learning_rate: The learning rate to use for fine-tuning.
+        Returns the synced job ready for polling.
         """
+        # Import here to avoid circular import
+        from fireworks.supervised_fine_tuning_job import SupervisedFineTuningJob
+
         if name is None:
             raise ValueError("name is required")
         if not is_valid_resource_name(name):
             raise ValueError("job name must only contain lowercase a-z, 0-9, and hyphen (-)")
+
         job = SupervisedFineTuningJob(
             name=name,
             dataset_or_id=dataset_or_id,
@@ -997,26 +1434,152 @@ class LLM:
         )
         job = job.sync()
         if job.id is not None:
-            logger.info(f'Synced fine-tuning job "{name}". See https://fireworks.ai/dashboard/fine-tuning/{job.id}.')
+            base_url = "dev.fireworks.ai" if "dev." in FIREWORKS_API_BASE_URL else "fireworks.ai"
+            logger.info(
+                f'Synced fine-tuning job "{name}". See https://{base_url}/dashboard/fine-tuning/supervised/{job.id}.'
+            )
         else:
             logger.info(f'Synced fine-tuning job "{name}".')
-        # poll until job is COMPLETED
-        while job.state != JobState.COMPLETED:
-            if job.state == JobState.FAILED:
-                raise ValueError(f'Fine-tuning job "{name}" failed')
-            if job.create_time is not None:
-                curr_time = time.time()
-                create_time = job.create_time.timestamp()
-                delta_seconds = int(curr_time - create_time)
-                minutes = delta_seconds // 60
-                seconds = delta_seconds % 60
-                time_str = f"{seconds}s" if minutes == 0 else f"{minutes}m{seconds}s"
-                logger.info(f'Fine-tuning job "{name}" is in state {job.state}. Job was created {time_str} ago.')
-            time.sleep(5)
-            job = job.get()
-            if job is None:
-                raise ValueError(f'Fine-tuning job "{name}" not found')
-        logger.info(f'Fine-tuning job "{name}" completed')
-        if job.output_model is None:
-            raise ValueError(f'Fine-tuning job "{name}" did not create an output model')
-        return LLM(model=job.output_model, deployment_type=self.deployment_type)
+
+        return job
+
+    def create_supervised_fine_tuning_job(
+        self,
+        name: str,
+        dataset_or_id: Union[Dataset, str],
+        epochs: Optional[int] = None,
+        learning_rate: Optional[float] = None,
+        lora_rank: Optional[int] = None,
+        jinja_template: Optional[str] = None,
+        early_stop: Optional[bool] = None,
+        max_context_length: Optional[int] = None,
+        base_model_weight_precision: Optional[SupervisedFineTuningJobWeightPrecisionLiteral] = None,
+        wandb_config: Optional[WandbConfig] = None,
+        evaluation_dataset: Optional[str] = None,
+        accelerator_type: Optional[AcceleratorTypeLiteral] = None,
+        accelerator_count: Optional[int] = None,
+        is_turbo: Optional[bool] = None,
+        eval_auto_carveout: Optional[bool] = None,
+        region: Optional[RegionLiteral] = None,
+        nodes: Optional[int] = None,
+        batch_size: Optional[int] = None,
+        output_model: Optional[str] = None,
+    ) -> "SupervisedFineTuningJob":
+        """
+        Creates a fine-tuning job for this dataset. If the fine-tuning job already exists, it will block until the job is ready.
+
+        Args:
+            name: The name of the fine-tuning job. Must only contain lowercase a-z, 0-9, and hyphen (-).
+            dataset_or_id: The dataset instance to fine-tune on or the dataset id to fine-tune on.
+            epochs: The number of epochs to fine-tune for.
+            learning_rate: The learning rate to use for fine-tuning.
+            lora_rank: The rank to use for LoRA fine-tuning.
+            jinja_template: The Jinja template to use for formatting the dataset.
+            early_stop: Whether to enable early stopping.
+            max_context_length: The maximum context length to use during fine-tuning.
+            base_model_weight_precision: The weight precision to use for the base model.
+            wandb_config: Configuration for Weights & Biases integration.
+            evaluation_dataset: ID of the dataset to use for evaluation.
+            accelerator_type: The type of accelerator to use for fine-tuning.
+            accelerator_count: The number of accelerators to use.
+            is_turbo: Whether to use turbo mode for faster fine-tuning.
+            eval_auto_carveout: Whether to automatically carve out evaluation data.
+            region: The region to run the fine-tuning job in.
+            nodes: The number of nodes to use for distributed training.
+            batch_size: The batch size to use during training.
+            output_model: The name of the output model to create. If not provided, it will be the same as the name argument.
+
+        Returns:
+            Fine-tuned LLM
+        """
+        job = self._create_fine_tuning_job(
+            name=name,
+            dataset_or_id=dataset_or_id,
+            epochs=epochs,
+            learning_rate=learning_rate,
+            lora_rank=lora_rank,
+            jinja_template=jinja_template,
+            early_stop=early_stop,
+            max_context_length=max_context_length,
+            base_model_weight_precision=base_model_weight_precision,
+            wandb_config=wandb_config,
+            evaluation_dataset=evaluation_dataset,
+            accelerator_type=accelerator_type,
+            accelerator_count=accelerator_count,
+            is_turbo=is_turbo,
+            eval_auto_carveout=eval_auto_carveout,
+            region=region,
+            nodes=nodes,
+            batch_size=batch_size,
+            output_model=output_model if output_model is not None else name,
+        )
+        return job
+
+    async def acreate_supervised_fine_tuning_job(
+        self,
+        name: str,
+        dataset_or_id: Union[Dataset, str],
+        epochs: Optional[int] = None,
+        learning_rate: Optional[float] = None,
+        lora_rank: Optional[int] = None,
+        jinja_template: Optional[str] = None,
+        early_stop: Optional[bool] = None,
+        max_context_length: Optional[int] = None,
+        base_model_weight_precision: Optional[SupervisedFineTuningJobWeightPrecisionLiteral] = None,
+        wandb_config: Optional[WandbConfig] = None,
+        evaluation_dataset: Optional[str] = None,
+        accelerator_type: Optional[AcceleratorTypeLiteral] = None,
+        accelerator_count: Optional[int] = None,
+        is_turbo: Optional[bool] = None,
+        eval_auto_carveout: Optional[bool] = None,
+        region: Optional[RegionLiteral] = None,
+        nodes: Optional[int] = None,
+        batch_size: Optional[int] = None,
+        output_model: Optional[str] = None,
+    ) -> "SupervisedFineTuningJob":
+        """
+        Creates a fine-tuning job for this dataset. If the fine-tuning job already exists, it will block until the job is ready.
+
+        Args:
+            name: The name of the fine-tuning job.
+            dataset_or_id: The dataset instance to fine-tune on or the dataset id to fine-tune on.
+            epochs: The number of epochs to fine-tune for.
+            learning_rate: The learning rate to use for fine-tuning.
+            lora_rank: The LoRA rank to use for fine-tuning.
+            jinja_template: The Jinja template to use for fine-tuning.
+            early_stop: Whether to use early stopping.
+            max_context_length: The maximum context length to use.
+            base_model_weight_precision: The weight precision to use for the base model.
+            wandb_config: The Weights & Biases configuration to use.
+            evaluation_dataset: The evaluation dataset to use.
+            accelerator_type: The accelerator type to use.
+            accelerator_count: The number of accelerators to use.
+            is_turbo: Whether to use turbo mode.
+            eval_auto_carveout: Whether to use automatic evaluation carveout.
+            region: The region to use.
+            nodes: The number of nodes to use.
+            batch_size: The batch size to use.
+            output_model: The name of the output model.
+        """
+        job = self._create_fine_tuning_job(
+            name=name,
+            dataset_or_id=dataset_or_id,
+            epochs=epochs,
+            learning_rate=learning_rate,
+            lora_rank=lora_rank,
+            jinja_template=jinja_template,
+            early_stop=early_stop,
+            max_context_length=max_context_length,
+            base_model_weight_precision=base_model_weight_precision,
+            wandb_config=wandb_config,
+            evaluation_dataset=evaluation_dataset,
+            accelerator_type=accelerator_type,
+            accelerator_count=accelerator_count,
+            is_turbo=is_turbo,
+            eval_auto_carveout=eval_auto_carveout,
+            region=region,
+            nodes=nodes,
+            batch_size=batch_size,
+            output_model=output_model if output_model is not None else name,
+        )
+        return job

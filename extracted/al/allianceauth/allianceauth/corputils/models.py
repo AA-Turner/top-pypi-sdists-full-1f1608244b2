@@ -1,5 +1,6 @@
 import logging
 import os
+from typing import ClassVar
 
 from allianceauth.authentication.models import CharacterOwnership, UserProfile
 from bravado.exception import HTTPForbidden
@@ -40,9 +41,9 @@ class CorpStats(models.Model):
         verbose_name = "corp stats"
         verbose_name_plural = "corp stats"
 
-    objects = CorpStatsManager()
+    objects: ClassVar[CorpStatsManager] = CorpStatsManager()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.__class__.__name__} for {self.corp}"
 
     def update(self):

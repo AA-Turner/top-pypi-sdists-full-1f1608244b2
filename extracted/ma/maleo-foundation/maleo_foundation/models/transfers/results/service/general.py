@@ -1,6 +1,5 @@
 from __future__ import annotations
 from pydantic import model_validator
-from maleo_foundation.models.schemas.general import BaseGeneralSchemas
 from maleo_foundation.models.schemas.result import BaseResultSchemas
 
 class BaseServiceGeneralResultsTransfers:
@@ -30,7 +29,7 @@ class BaseServiceGeneralResultsTransfers:
             total_pages = (total_data // limit) + (1 if total_data % limit > 0 else 0)
 
             #* Assign computed pagination object before validation
-            values["pagination"] = BaseGeneralSchemas.ExtendedPagination(
+            values["pagination"] = BaseResultSchemas.ExtendedPagination(
                 page=page,
                 limit=limit,
                 data_count=len(data),
