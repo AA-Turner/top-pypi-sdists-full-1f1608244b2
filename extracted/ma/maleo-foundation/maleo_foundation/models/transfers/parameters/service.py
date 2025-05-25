@@ -9,8 +9,8 @@ from maleo_foundation.models.schemas.parameter import BaseParameterSchemas
 class BaseServiceParametersTransfers:
     class GetUnpaginatedMultipleQuery(
         BaseParameterSchemas.Sorts,
-        BaseGeneralSchemas.Search,
-        BaseGeneralSchemas.Statuses,
+        BaseParameterSchemas.Search,
+        BaseParameterSchemas.OptionalListOfStatuses,
         BaseParameterSchemas.Filters
     ): pass
 

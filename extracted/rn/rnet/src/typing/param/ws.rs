@@ -1,9 +1,5 @@
-use crate::{
-    extract_option,
-    typing::{
-        CookieExtractor, HeaderMapExtractor, IpAddrExtractor, ProxyExtractor,
-        UrlEncodedValuesExtractor,
-    },
+use crate::typing::{
+    CookieExtractor, HeaderMapExtractor, IpAddrExtractor, ProxyExtractor, UrlEncodedValuesExtractor,
 };
 use pyo3::{prelude::*, pybacked::PyBackedStr};
 

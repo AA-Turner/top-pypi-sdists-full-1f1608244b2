@@ -11,6 +11,8 @@
 # ANY KIND, either express or implied. See the License for the specific language
 # governing permissions and limitations under the License.
 
+import contextlib
+
 import numpy as np
 import pandas
 import pytest
@@ -19,12 +21,7 @@ from numpy.testing import assert_array_equal
 import modin.pandas as pd
 from modin.pandas.io import to_pandas
 from modin.pandas.testing import assert_frame_equal
-from modin.tests.test_utils import (
-    current_execution_is_native,
-    df_or_series_using_native_execution,
-    warns_that_defaulting_to_pandas,
-    warns_that_defaulting_to_pandas_if,
-)
+from modin.tests.test_utils import warns_that_defaulting_to_pandas
 from modin.utils import get_current_execution
 
 from .utils import (
@@ -84,17 +81,17 @@ def test_merge():
 
     join_types = ["outer", "inner"]
     for how in join_types:
-        with warns_that_defaulting_to_pandas_if(
-            how == "outer" and not df_or_series_using_native_execution(modin_df)
+        with (
+            warns_that_defaulting_to_pandas()
+            if how == "outer"
+            else contextlib.nullcontext()
         ):
             modin_result = pd.merge(modin_df, modin_df2, how=how)
         pandas_result = pandas.merge(pandas_df, pandas_df2, how=how)
         df_equals(modin_result, pandas_result)
 
         # left_on and right_index
-        with warns_that_defaulting_to_pandas_if(
-            not df_or_series_using_native_execution(modin_df)
-        ):
+        with warns_that_defaulting_to_pandas():
             modin_result = pd.merge(
                 modin_df, modin_df2, how=how, left_on="col1", right_index=True
             )
@@ -104,9 +101,7 @@ def test_merge():
         df_equals(modin_result, pandas_result)
 
         # left_index and right_on
-        with warns_that_defaulting_to_pandas_if(
-            not df_or_series_using_native_execution(modin_df)
-        ):
+        with warns_that_defaulting_to_pandas():
             modin_result = pd.merge(
                 modin_df, modin_df2, how=how, left_index=True, right_on="col1"
             )
@@ -116,9 +111,11 @@ def test_merge():
         df_equals(modin_result, pandas_result)
 
         # left_on and right_on col1
-        with warns_that_defaulting_to_pandas_if(
-            how == "outer" and not df_or_series_using_native_execution(modin_df)
-        ):
+        if how == "outer":
+            warning_catcher = warns_that_defaulting_to_pandas()
+        else:
+            warning_catcher = contextlib.nullcontext()
+        with warning_catcher:
             modin_result = pd.merge(
                 modin_df, modin_df2, how=how, left_on="col1", right_on="col1"
             )
@@ -128,9 +125,11 @@ def test_merge():
         df_equals(modin_result, pandas_result)
 
         # left_on and right_on col2
-        with warns_that_defaulting_to_pandas_if(
-            how == "outer" and not df_or_series_using_native_execution(modin_df)
-        ):
+        if how == "outer":
+            warning_catcher = warns_that_defaulting_to_pandas()
+        else:
+            warning_catcher = contextlib.nullcontext()
+        with warning_catcher:
             modin_result = pd.merge(
                 modin_df, modin_df2, how=how, left_on="col2", right_on="col2"
             )
@@ -167,7 +166,7 @@ def test_merge_ordered():
     modin_df_a = pd.DataFrame(data_a)
     modin_df_b = pd.DataFrame(data_b)
 
-    with warns_that_defaulting_to_pandas_if(not current_execution_is_native()):
+    with warns_that_defaulting_to_pandas():
         df = pd.merge_ordered(
             modin_df_a, modin_df_b, fill_method="ffill", left_by="group"
         )
@@ -503,8 +502,8 @@ def test_pivot():
     with pytest.raises(ValueError):
         pd.pivot(test_df["bar"], index="foo", columns="bar", values="baz")
 
-    if not (get_current_execution() == "BaseOnPython" or current_execution_is_native()):
-        # FIXME: Failed for some reason on 'BaseOnPython' and 'NativeOnNative'
+    if get_current_execution() != "BaseOnPython":
+        # FIXME: Failed for some reason on 'BaseOnPython'
         # https://github.com/modin-project/modin/issues/6240
         df_equals(
             pd.pivot(test_df, columns="bar"),
@@ -718,7 +717,6 @@ def test_qcut(retbins):
     pandas_series = pandas.Series(range(10))
     modin_series = pd.Series(range(10))
     pandas_result = pandas.qcut(pandas_series, 4, retbins=retbins)
-    # NOTE that qcut() defaults to pandas at the API layer.
     with warns_that_defaulting_to_pandas():
         modin_result = pd.qcut(modin_series, 4, retbins=retbins)
     if retbins:
@@ -781,7 +779,7 @@ def test_cut(retbins, bins, labels):
         )
     except Exception as pd_e:
         with pytest.raises(Exception) as md_e:
-            with warns_that_defaulting_to_pandas_if(not current_execution_is_native()):
+            with warns_that_defaulting_to_pandas():
                 md_result = pd.cut(
                     pd.Series(range(1000)), retbins=retbins, bins=bins, labels=labels
                 )
@@ -789,7 +787,7 @@ def test_cut(retbins, bins, labels):
             md_e.value, type(pd_e)
         ), f"Got Modin Exception type {type(md_e.value)}, but pandas Exception type {type(pd_e)} was expected"
     else:
-        with warns_that_defaulting_to_pandas_if(not current_execution_is_native()):
+        with warns_that_defaulting_to_pandas():
             md_result = pd.cut(
                 pd.Series(range(1000)), retbins=retbins, bins=bins, labels=labels
             )
@@ -809,8 +807,6 @@ def test_cut(retbins, bins, labels):
 def test_cut_fallback():
     # Test case for falling back to pandas for cut.
     pandas_result = pandas.cut(range(5), 4)
-    # note that we default to pandas at the API layer here, so we warn
-    # regardless of whether we are on native execution.
     with warns_that_defaulting_to_pandas():
         modin_result = pd.cut(range(5), 4)
     df_equals(modin_result, pandas_result)
@@ -928,7 +924,6 @@ def test_default_to_pandas_warning_message(func, regex):
 
 def test_empty_dataframe():
     df = pd.DataFrame(columns=["a", "b"])
-    # NOTE that we default to pandas at the API layer.
     with warns_that_defaulting_to_pandas():
         df[(df.a == 1) & (df.b == 2)]
 

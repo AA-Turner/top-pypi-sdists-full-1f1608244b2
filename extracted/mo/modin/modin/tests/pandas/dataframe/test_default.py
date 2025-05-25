@@ -18,18 +18,16 @@ import matplotlib
 import numpy as np
 import pandas
 import pandas._libs.lib as lib
-import pyarrow as pa
 import pytest
 from numpy.testing import assert_array_equal
 
 import modin.pandas as pd
-from modin.config import Engine, NPartitions, StorageFormat
+from modin.config import Engine, NativeDataframeMode, NPartitions, StorageFormat
 from modin.pandas.io import to_pandas
 from modin.tests.pandas.utils import (
     axis_keys,
     axis_values,
     create_test_dfs,
-    create_test_series,
     default_to_pandas_ignore_string,
     df_equals,
     eval_general,
@@ -44,11 +42,7 @@ from modin.tests.pandas.utils import (
     test_data_resample,
     test_data_values,
 )
-from modin.tests.test_utils import (
-    current_execution_is_native,
-    df_or_series_using_native_execution,
-    warns_that_defaulting_to_pandas_if,
-)
+from modin.tests.test_utils import warns_that_defaulting_to_pandas
 from modin.utils import get_current_execution
 
 NPartitions.put(4)
@@ -93,9 +87,7 @@ pytestmark = [
 )
 def test_ops_defaulting_to_pandas(op, make_args):
     modin_df = pd.DataFrame(test_data_diff_dtype).drop(["str_col", "bool_col"], axis=1)
-    with warns_that_defaulting_to_pandas_if(
-        not df_or_series_using_native_execution(modin_df)
-    ):
+    with warns_that_defaulting_to_pandas():
         operation = getattr(modin_df, op)
         if make_args is not None:
             operation(**make_args(modin_df))
@@ -109,7 +101,7 @@ def test_ops_defaulting_to_pandas(op, make_args):
 
 def test_style():
     data = test_data_values[0]
-    with warns_that_defaulting_to_pandas_if(not current_execution_is_native()):
+    with warns_that_defaulting_to_pandas():
         pd.DataFrame(data).style
 
 
@@ -117,9 +109,7 @@ def test_to_timestamp():
     idx = pd.date_range("1/1/2012", periods=5, freq="M")
     df = pd.DataFrame(np.random.randint(0, 100, size=(len(idx), 4)), index=idx)
 
-    with warns_that_defaulting_to_pandas_if(
-        not df_or_series_using_native_execution(df)
-    ):
+    with warns_that_defaulting_to_pandas():
         df.to_period().to_timestamp()
 
 
@@ -134,7 +124,7 @@ def test_to_numpy(data):
 
 
 @pytest.mark.skipif(
-    StorageFormat.get() != "Pandas",
+    NativeDataframeMode.get() == "Pandas",
     reason="NativeQueryCompiler does not contain partitions.",
 )
 @pytest.mark.parametrize("data", test_data_values, ids=test_data_keys)
@@ -148,9 +138,7 @@ def test_asfreq():
     index = pd.date_range("1/1/2000", periods=4, freq="min")
     series = pd.Series([0.0, None, 2.0, 3.0], index=index)
     df = pd.DataFrame({"s": series})
-    with warns_that_defaulting_to_pandas_if(
-        not df_or_series_using_native_execution(df)
-    ):
+    with warns_that_defaulting_to_pandas():
         # We are only testing that this defaults to pandas, so we will just check for
         # the warning
         df.asfreq(freq="30S")
@@ -310,7 +298,8 @@ class TestCorr:
                 {"a": [1, np.nan, 3, 4, 5, 6], "b": [1, 2, 1, 4, 5, np.nan]}
             )
             modin_df = pd.concat([modin_df.iloc[:3], modin_df.iloc[3:]])
-            assert modin_df._query_compiler._modin_frame._partitions.shape == (2, 1)
+            if NativeDataframeMode.get() == "Default":
+                assert modin_df._query_compiler._modin_frame._partitions.shape == (2, 1)
             eval_general(
                 modin_df, pandas_df, lambda df: df.corr(min_periods=min_periods)
             )
@@ -327,6 +316,10 @@ class TestCorr:
     @pytest.mark.skipif(
         StorageFormat.get() != "Pandas",
         reason="doesn't make sense for non-partitioned executions",
+    )
+    @pytest.mark.skipif(
+        NativeDataframeMode.get() == "Pandas",
+        reason="NativeQueryCompiler does not contain partitions.",
     )
     def test_corr_nans_in_different_partitions(self):
         # NaN in the first partition
@@ -618,7 +611,10 @@ def test_pivot(data, index, columns, values, request):
         or "default-one_column-several_columns_index" in request.node.callspec.id
         or "default-one_column-one_column_index" in request.node.callspec.id
         or (
-            (current_execution == "BaseOnPython" or current_execution_is_native())
+            (
+                current_execution in ("BaseOnPython",)
+                or NativeDataframeMode.get() == "Pandas"
+            )
             and index is lib.no_default
         )
     ):
@@ -998,7 +994,8 @@ def test_resampler_functions_with_arg(rule, axis, method_arg):
             "DateColumn",
             marks=pytest.mark.xfail(
                 condition=Engine.get() in ("Ray", "Unidist", "Dask", "Python")
-                and StorageFormat.get() != "Base",
+                and StorageFormat.get() != "Base"
+                and NativeDataframeMode.get() == "Default",
                 reason="https://github.com/modin-project/modin/issues/6399",
             ),
         ),
@@ -1182,16 +1179,6 @@ def test_stack(data, is_multi_idx, is_multi_col):
         df_equals(modin_df.stack(level=0), pandas_df.stack(level=0))
         df_equals(modin_df.stack(level=[0, 1]), pandas_df.stack(level=[0, 1]))
         df_equals(modin_df.stack(level=[0, 1, 2]), pandas_df.stack(level=[0, 1, 2]))
-
-
-@pytest.mark.parametrize("sort", [True, False])
-def test_stack_sort(sort):
-    # Example frame slightly modified from pandas docs to be unsorted
-    cols = pd.MultiIndex.from_tuples([("weight", "pounds"), ("weight", "kg")])
-    modin_df, pandas_df = create_test_dfs(
-        [[1, 2], [2, 4]], index=["cat", "dog"], columns=cols
-    )
-    df_equals(modin_df.stack(sort=sort), pandas_df.stack(sort=sort))
 
 
 @pytest.mark.parametrize("data", test_data_values, ids=test_data_keys)
@@ -1535,16 +1522,3 @@ def test_series_does_not_warn_distributing_takes_time():
     with warnings.catch_warnings():
         warnings.filterwarnings("error", regex, UserWarning)
         pd.Series(np.random.randint(1_000_000, size=(2_400_000)))
-
-
-@pytest.mark.parametrize("dtype", [np.int64, pd.ArrowDtype(pa.int64())])
-def test_empty_df_dtypes(dtype):
-    df = pd.DataFrame({"A": []}, dtype=dtype)
-    assert df.dtypes["A"] == dtype
-
-
-def test_array_ufunc():
-    modin_df, pandas_df = create_test_dfs([[1, 2], [3, 4]])
-    eval_general(modin_df, pandas_df, np.sqrt)
-    modin_ser, pandas_ser = create_test_series([1, 2, 3, 4, 9])
-    eval_general(modin_ser, pandas_ser, np.sqrt)

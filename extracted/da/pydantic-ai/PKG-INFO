@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pydantic-ai
-Version: 0.2.6
+Version: 0.2.7
 Summary: Agent Framework / shim to use Pydantic with LLMs
 Project-URL: Homepage, https://ai.pydantic.dev
 Project-URL: Source, https://github.com/pydantic/pydantic-ai
@@ -28,9 +28,9 @@ Classifier: Topic :: Internet
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Requires-Python: >=3.9
-Requires-Dist: pydantic-ai-slim[a2a,anthropic,bedrock,cli,cohere,evals,google,groq,mcp,mistral,openai,vertexai]==0.2.6
+Requires-Dist: pydantic-ai-slim[a2a,anthropic,bedrock,cli,cohere,evals,google,groq,mcp,mistral,openai,vertexai]==0.2.7
 Provides-Extra: examples
-Requires-Dist: pydantic-ai-examples==0.2.6; extra == 'examples'
+Requires-Dist: pydantic-ai-examples==0.2.7; extra == 'examples'
 Provides-Extra: logfire
 Requires-Dist: logfire>=3.11.0; extra == 'logfire'
 Description-Content-Type: text/markdown
@@ -52,6 +52,7 @@ Description-Content-Type: text/markdown
   <a href="https://pypi.python.org/pypi/pydantic-ai"><img src="https://img.shields.io/pypi/v/pydantic-ai.svg" alt="PyPI"></a>
   <a href="https://github.com/pydantic/pydantic-ai"><img src="https://img.shields.io/pypi/pyversions/pydantic-ai.svg" alt="versions"></a>
   <a href="https://github.com/pydantic/pydantic-ai/blob/main/LICENSE"><img src="https://img.shields.io/github/license/pydantic/pydantic-ai.svg?v" alt="license"></a>
+  <a href="https://logfire.pydantic.dev/docs/join-slack/"><img src="https://img.shields.io/badge/Slack-Join%20Slack-4A154B?logo=slack" alt="Join Slack" /></a>
 </div>
 
 ---

@@ -61,6 +61,7 @@ CELERYBEAT_SCHEDULE = {
     'esi_cleanup_token': {
         'task': 'esi.tasks.cleanup_token',
         'schedule': crontab(minute='0', hour='0'),
+        'apply_offset': True,
     },
     'run_model_update': {
         'task': 'allianceauth.eveonline.tasks.run_model_update',

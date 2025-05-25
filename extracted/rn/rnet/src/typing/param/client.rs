@@ -1,9 +1,6 @@
-use crate::{
-    extract_option,
-    typing::{
-        HeaderMapExtractor, HeadersOrderExtractor, ImpersonateExtractor, IpAddrExtractor,
-        LookupIpStrategy, SslVerify, TlsVersion, proxy::ProxyListExtractor,
-    },
+use crate::typing::{
+    HeaderMapExtractor, HeadersOrderExtractor, ImpersonateExtractor, IpAddrExtractor,
+    LookupIpStrategy, SslVerify, TlsVersion, proxy::ProxyListExtractor,
 };
 use pyo3::{prelude::*, pybacked::PyBackedStr};
 

@@ -224,22 +224,19 @@ class Parameter(object):
     _deprecation_descriptor: Optional[DeprecationDescriptor] = None
 
     @classmethod
-    def _warn_if_deprecated(cls) -> None:
-        """Warn that the variable is deprecated if it has a deprecation descriptor."""
-        if cls._deprecation_descriptor is not None:
-            warnings.warn(
-                cls._deprecation_descriptor.deprecation_message(), FutureWarning
-            )
-
-    @classmethod
-    def _get_value_from_config(cls) -> Any:
+    def _get_raw_from_config(cls) -> str:
         """
         Read the value from config storage.
 
         Returns
         -------
-        Any
-            Config raw value if it's set, otherwise `_UNSET`.
+        str
+            Config raw value.
+
+        Raises
+        ------
+        KeyError
+            If value is absent.
 
         Notes
         -----
@@ -335,15 +332,21 @@ class Parameter(object):
         Any
             Decoded and verified config value.
         """
-        cls._warn_if_deprecated()
+        if cls._deprecation_descriptor is not None:
+            warnings.warn(
+                cls._deprecation_descriptor.deprecation_message(), FutureWarning
+            )
         if cls._value is _UNSET:
             # get the value from env
-            config_value = cls._get_value_from_config()
-            if config_value is _UNSET:
+            try:
+                raw = cls._get_raw_from_config()
+            except KeyError:
                 cls._value = cls._get_default()
                 cls._value_source = ValueSource.DEFAULT
             else:
-                cls._value = config_value
+                if not _TYPE_PARAMS[cls.type].verify(raw):
+                    raise ValueError(f"Unsupported raw value: {raw}")
+                cls._value = _TYPE_PARAMS[cls.type].decode(raw)
                 cls._value_source = ValueSource.GOT_FROM_CFG_SOURCE
         return cls._value
 
@@ -357,26 +360,12 @@ class Parameter(object):
         value : Any
             Config value to set.
         """
-        cls._warn_if_deprecated()
+        if cls._deprecation_descriptor is not None:
+            warnings.warn(
+                cls._deprecation_descriptor.deprecation_message(), FutureWarning
+            )
         cls._check_callbacks(cls._put_nocallback(value))
         cls._value_source = ValueSource.SET_BY_USER
-
-    @classmethod
-    def normalize(cls, value: Any) -> Any:
-        """
-        Normalize config value.
-
-        Parameters
-        ----------
-        value : Any
-            Config value to normalize.
-
-        Returns
-        -------
-        Any
-            Normalized config value.
-        """
-        return _TYPE_PARAMS[cls.type].normalize(value)
 
     @classmethod
     def once(cls, onvalue: Any, callback: Callable) -> None:
@@ -393,7 +382,7 @@ class Parameter(object):
         callback : callable
             Callable that should be executed if config value matches `onvalue`.
         """
-        onvalue = cls.normalize(onvalue)
+        onvalue = _TYPE_PARAMS[cls.type].normalize(onvalue)
         if onvalue == cls.get():
             callback(cls)
         else:
@@ -416,7 +405,7 @@ class Parameter(object):
         """
         if not _TYPE_PARAMS[cls.type].verify(value):
             raise ValueError(f"Unsupported value: {value}")
-        value = cls.normalize(value)
+        value = _TYPE_PARAMS[cls.type].normalize(value)
         oldvalue, cls._value = cls.get(), value
         return oldvalue
 
@@ -455,7 +444,7 @@ class Parameter(object):
         if cls.choices is not None:
             if not _TYPE_PARAMS[cls.type].verify(choice):
                 raise ValueError(f"Unsupported choice value: {choice}")
-            choice = cls.normalize(choice)
+            choice = _TYPE_PARAMS[cls.type].normalize(choice)
             if choice not in cls.choices:
                 cls.choices += (choice,)
             return choice

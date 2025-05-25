@@ -1,6 +1,7 @@
 import logging
 
 from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 class MenuConfig(AppConfig):
     name = "allianceauth.menu"
     label = "menu"
+    verbose_name = _("Menu")
 
     def ready(self):
         from allianceauth.menu.core import smart_sync

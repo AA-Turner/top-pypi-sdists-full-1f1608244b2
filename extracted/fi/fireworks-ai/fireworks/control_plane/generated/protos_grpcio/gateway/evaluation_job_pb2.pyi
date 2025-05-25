@@ -1,3 +1,4 @@
+from . import deployment_pb2 as _deployment_pb2
 from . import job_progress_pb2 as _job_progress_pb2
 from . import options_pb2 as _options_pb2
 from . import status_pb2 as _status_pb2
@@ -14,7 +15,7 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class EvaluationJob(_message.Message):
-    __slots__ = ("name", "display_name", "create_time", "created_by", "state", "status", "evaluator", "input_dataset", "output_dataset", "metrics", "output_stats", "update_time", "reinforcement_fine_tuning_epoch_id", "skip_dataset_validation", "job_progress")
+    __slots__ = ("name", "display_name", "create_time", "created_by", "state", "status", "evaluator", "input_dataset", "output_dataset", "metrics", "output_stats", "update_time", "reinforcement_fine_tuning_epoch_id", "skip_dataset_validation", "job_progress", "region")
     class MetricsEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -37,6 +38,7 @@ class EvaluationJob(_message.Message):
     REINFORCEMENT_FINE_TUNING_EPOCH_ID_FIELD_NUMBER: _ClassVar[int]
     SKIP_DATASET_VALIDATION_FIELD_NUMBER: _ClassVar[int]
     JOB_PROGRESS_FIELD_NUMBER: _ClassVar[int]
+    REGION_FIELD_NUMBER: _ClassVar[int]
     name: str
     display_name: str
     create_time: _timestamp_pb2.Timestamp
@@ -52,7 +54,8 @@ class EvaluationJob(_message.Message):
     reinforcement_fine_tuning_epoch_id: str
     skip_dataset_validation: bool
     job_progress: _job_progress_pb2.JobProgress
-    def __init__(self, name: _Optional[str] = ..., display_name: _Optional[str] = ..., create_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_by: _Optional[str] = ..., state: _Optional[_Union[_status_pb2.JobState, str]] = ..., status: _Optional[_Union[_status_pb2.Status, _Mapping]] = ..., evaluator: _Optional[str] = ..., input_dataset: _Optional[str] = ..., output_dataset: _Optional[str] = ..., metrics: _Optional[_Mapping[str, float]] = ..., output_stats: _Optional[str] = ..., update_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., reinforcement_fine_tuning_epoch_id: _Optional[str] = ..., skip_dataset_validation: bool = ..., job_progress: _Optional[_Union[_job_progress_pb2.JobProgress, _Mapping]] = ...) -> None: ...
+    region: _deployment_pb2.Region
+    def __init__(self, name: _Optional[str] = ..., display_name: _Optional[str] = ..., create_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_by: _Optional[str] = ..., state: _Optional[_Union[_status_pb2.JobState, str]] = ..., status: _Optional[_Union[_status_pb2.Status, _Mapping]] = ..., evaluator: _Optional[str] = ..., input_dataset: _Optional[str] = ..., output_dataset: _Optional[str] = ..., metrics: _Optional[_Mapping[str, float]] = ..., output_stats: _Optional[str] = ..., update_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., reinforcement_fine_tuning_epoch_id: _Optional[str] = ..., skip_dataset_validation: bool = ..., job_progress: _Optional[_Union[_job_progress_pb2.JobProgress, _Mapping]] = ..., region: _Optional[_Union[_deployment_pb2.Region, str]] = ...) -> None: ...
 
 class GetEvaluationJobRequest(_message.Message):
     __slots__ = ("name", "read_mask")

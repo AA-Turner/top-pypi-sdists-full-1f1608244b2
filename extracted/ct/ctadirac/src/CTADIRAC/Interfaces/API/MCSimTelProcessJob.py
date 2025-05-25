@@ -1,6 +1,5 @@
 import DIRAC
 
-from CTADIRAC.Interfaces.API.CTAJob import MetadataDict
 from CTADIRAC.Interfaces.API.MCPipeJob import MCPipeJob
 
 
@@ -11,9 +10,7 @@ class MCSimTelProcessJob(MCPipeJob):
         super().__init__(we_type="simtelprocessing")
         self.setType("DL0_Reprocessing")
         self.setName("SimTelProcessing")
-
-    def set_output_metadata(self, metadata: MetadataDict = {}) -> None:
-        super(MCPipeJob, self).set_output_metadata(metadata)
+        self.systematic_uncertainty_to_test = ""
 
     def set_moon(self, moon="dark") -> None:
         """Set to simulate with various moon conditions
@@ -33,12 +30,27 @@ class MCSimTelProcessJob(MCPipeJob):
         if isinstance(moon, list) or moon not in moon_options:
             moon_str = str(moon).replace("'", "")
             DIRAC.gLogger.error(
-                f"Unknown moon option: {moon_str}. Options for simulation step are: \n dark \n half \n full "
+                f"Unknown moon option: {moon_str}. "
+                "Options for simulation step are: \n dark \n half \n full "
             )
             DIRAC.exit(-1)
         else:
             DIRAC.gLogger.info(f"Set simulations with {moon} conditions")
             self.moon, self.output_file_metadata["nsb"] = moon_options[moon]
+
+    def set_systematic_uncertainty_to_test(
+        self, systematic_uncertainty_to_test
+    ) -> None:
+        """Set the systematic uncertainty to test in the simulation
+
+        Parameters:
+        systematic_uncertainty_to_test -- the systematic uncertainty to test in the simulation
+        """
+
+        DIRAC.gLogger.info(
+            f"Set systematic uncertainty to test to: {systematic_uncertainty_to_test}"
+        )
+        self.systematic_uncertainty_to_test = systematic_uncertainty_to_test
 
     def run_sim_telarray(self, debug=False) -> None:
         """
@@ -46,13 +58,10 @@ class MCSimTelProcessJob(MCPipeJob):
         """
         prod_exe = "./dirac_sim_telarray_process"
 
-        prod_args = ""
+        prod_args = self.systematic_uncertainty_to_test
 
         cs_step = self.setExecutable(
-            prod_exe,
-            arguments=prod_args,
-            logFile="Simtel_Log.txt",
-            modulesList=["cta_script"],
+            prod_exe, arguments=prod_args, logFile="Simtel_Log.txt"
         )
         cs_step["Value"]["name"] = "Step_Simtel"
         cs_step["Value"]["descr_short"] = "Run sim_telarray processing of CORSIKA file"

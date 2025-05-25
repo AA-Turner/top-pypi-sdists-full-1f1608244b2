@@ -57,6 +57,7 @@ class Timer(models.Model):
         ANCHORING = "ANCHORING", _("Anchoring")
         UNANCHORING = "UNANCHORING", _("Unanchoring")
         ABANDONED = "ABANDONED", _("Abandoned")
+        THEFT = "THEFT", _("Theft")
 
     details = models.CharField(max_length=254, default="")
     system = models.CharField(max_length=254, default="")

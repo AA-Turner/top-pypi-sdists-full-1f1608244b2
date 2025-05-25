@@ -10,8 +10,9 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific language
 # governing permissions and limitations under the License.
+
+import contextlib
 import json
-import platform
 from pathlib import Path
 
 import numpy as np
@@ -28,10 +29,7 @@ from modin.tests.pandas.utils import (
     test_data,
     time_parsing_csv_path,
 )
-from modin.tests.test_utils import (
-    warns_that_defaulting_to_pandas,
-    warns_that_defaulting_to_pandas_if,
-)
+from modin.tests.test_utils import warns_that_defaulting_to_pandas
 from modin.utils import try_cast_to_pandas
 
 
@@ -138,7 +136,11 @@ class TestCsvGlob:
     def test_read_csv_glob_4373(self, tmp_path):
         columns, filename = ["col0"], str(tmp_path / "1x1.csv")
         df = pd.DataFrame([[1]], columns=columns)
-        with warns_that_defaulting_to_pandas_if(df._query_compiler.engine == "Dask"):
+        with (
+            warns_that_defaulting_to_pandas()
+            if Engine.get() == "Dask"
+            else contextlib.nullcontext()
+        ):
             df.to_csv(filename)
 
         kwargs = {"filepath_or_buffer": filename, "usecols": columns}
@@ -265,8 +267,10 @@ def test_distributed_pickling(
 
     filename = Path(filename) if pathlike else filename
 
-    with warns_that_defaulting_to_pandas_if(
-        filename_param == "test_default_to_pickle.pkl"
+    with (
+        warns_that_defaulting_to_pandas()
+        if filename_param == "test_default_to_pickle.pkl"
+        else contextlib.nullcontext()
     ):
         getattr(df.modin, to_func)(str(tmp_path / filename), compression=compression)
         pickled_df = getattr(pd, read_func)(
@@ -289,8 +293,10 @@ def test_parquet_glob(tmp_path, filename):
 
     filename_param = filename
 
-    with warns_that_defaulting_to_pandas_if(
-        filename_param == "test_parquet_glob.parquet"
+    with (
+        warns_that_defaulting_to_pandas()
+        if filename_param == "test_parquet_glob.parquet"
+        else contextlib.nullcontext()
     ):
         df.modin.to_parquet_glob(str(tmp_path / filename))
         read_df = pd.read_parquet_glob(str(tmp_path / filename))
@@ -311,7 +317,11 @@ def test_json_glob(tmp_path, filename):
 
     filename_param = filename
 
-    with warns_that_defaulting_to_pandas_if(filename_param == "test_json_glob.json"):
+    with (
+        warns_that_defaulting_to_pandas()
+        if filename_param == "test_json_glob.json"
+        else contextlib.nullcontext()
+    ):
         df.modin.to_json_glob(str(tmp_path / filename))
         read_df = pd.read_json_glob(str(tmp_path / filename))
     df_equals(read_df, df)
@@ -325,17 +335,17 @@ def test_json_glob(tmp_path, filename):
     "filename",
     ["test_xml_glob.xml", "test_xml_glob*.xml"],
 )
-@pytest.mark.skipif(
-    platform.system() == "Windows",
-    reason="https://github.com/modin-project/modin/issues/7497",
-)
 def test_xml_glob(tmp_path, filename):
     data = test_data["int_data"]
     df = pd.DataFrame(data)
 
     filename_param = filename
 
-    with warns_that_defaulting_to_pandas_if(filename_param == "test_xml_glob.xml"):
+    with (
+        warns_that_defaulting_to_pandas()
+        if filename_param == "test_xml_glob.xml"
+        else contextlib.nullcontext()
+    ):
         df.modin.to_xml_glob(str(tmp_path / filename), index=False)
         read_df = pd.read_xml_glob(str(tmp_path / filename))
 

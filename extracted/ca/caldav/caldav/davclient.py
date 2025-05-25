@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import logging
+import os
 import sys
 from types import TracebackType
 from typing import Any
@@ -44,6 +45,24 @@ if sys.version_info < (3, 11):
 else:
     from typing import Self
 
+## TODO: this is also declared in davclient.DAVClient.__init__(...)
+## TODO: it should be consolidated, duplication is a bad thing
+## TODO: and it's almost certain that we'll forget to update this list
+CONNKEYS = set(
+    (
+        "url",
+        "proxy",
+        "username",
+        "password",
+        "timeout",
+        "headers",
+        "huge_tree",
+        "ssl_verify_cert",
+        "ssl_cert",
+        "auth",
+    )
+)
+
 
 class DAVResponse:
     """
@@ -73,56 +92,31 @@ class DAVResponse:
         if davclient:
             self.huge_tree = davclient.huge_tree
 
-        ## TODO: this if/else/elif could possibly be refactored, or we should
-        ## consider to do streaming into the xmltree library as originally
-        ## intended.  It only makes sense for really huge payloads though.
-        if self.headers.get("Content-Type", "").startswith(
-            "text/xml"
-        ) or self.headers.get("Content-Type", "").startswith("application/xml"):
-            try:
-                content_length = int(self.headers["Content-Length"])
-            except:
-                content_length = -1
-            if content_length == 0 or not self._raw:
-                self._raw = ""
-                self.tree = None
-                log.debug("No content delivered")
-            else:
-                ## With response.raw we could be streaming the content, but it does not work because
-                ## the stream often is compressed.  We could add uncompression on the fly, but not
-                ## considered worth the effort as for now.
-                # self.tree = etree.parse(response.raw, parser=etree.XMLParser(remove_blank_text=True))
-                try:
-                    self.tree = etree.XML(
-                        self._raw,
-                        parser=etree.XMLParser(
-                            remove_blank_text=True, huge_tree=self.huge_tree
-                        ),
-                    )
-                except:
-                    logging.critical(
-                        "Expected some valid XML from the server, but got this: \n"
-                        + str(self._raw),
-                        exc_info=True,
-                    )
-                    raise
-                if log.level <= logging.DEBUG:
-                    log.debug(etree.tostring(self.tree, pretty_print=True))
-        elif self.headers.get("Content-Type", "").startswith(
-            "text/calendar"
-        ) or self.headers.get("Content-Type", "").startswith("text/plain"):
-            ## text/plain is typically for errors, we shouldn't see it on 200/207 responses.
-            ## TODO: may want to log an error if it's text/plain and 200/207.
-            ## Logic here was moved when refactoring
-            pass
+        content_type = self.headers.get("Content-Type", "")
+        xml = ["text/xml", "application/xml"]
+        no_xml = ["text/plain", "text/calendar", "application/octet-stream"]
+        expect_xml = any((content_type.startswith(x) for x in xml))
+        expect_no_xml = any((content_type.startswith(x) for x in no_xml))
+        if content_type and not expect_xml and not expect_no_xml:
+            error.weirdness(f"Unexpected content type: {content_type}")
+        try:
+            content_length = int(self.headers["Content-Length"])
+        except:
+            content_length = -1
+        if content_length == 0 or not self._raw:
+            self._raw = ""
+            self.tree = None
+            log.debug("No content delivered")
         else:
-            ## Probably no content type given (iCloud).  Some servers
-            ## give text/html as the default when no content is
-            ## delivered or on errors (ref
-            ## https://github.com/python-caldav/caldav/issues/142).
-            ## TODO: maybe just remove all of the code above in this if/else and let all
-            ## data be parsed through this code.
+            ## For really huge objects we should pass the object as a stream to the
+            ## XML parser, like this:
+            # self.tree = etree.parse(response.raw, parser=etree.XMLParser(remove_blank_text=True))
+            ## However, we would also need to decompress on the fly.  I won't bother now.
             try:
+                ## https://github.com/python-caldav/caldav/issues/142
+                ## We cannot trust the content=type (iCloud, OX and others).
+                ## We'll try to parse the content as XML no matter
+                ## the content type given.
                 self.tree = etree.XML(
                     self._raw,
                     parser=etree.XMLParser(
@@ -130,7 +124,30 @@ class DAVResponse:
                     ),
                 )
             except:
-                pass
+                ## Content wasn't XML.  What does the content-type say?
+                ## expect_no_xml means text/plain or text/calendar
+                ## expect_no_xml -> ok, pass on, with debug logging
+                ## expect_xml means text/xml or application/xml
+                ## expect_xml -> raise an error
+                ## anything else (text/plain, text/html, ''),
+                ## log an error and continue
+                if not expect_no_xml or log.level <= logging.DEBUG:
+                    if not expect_no_xml:
+                        _log = logging.critical
+                    else:
+                        _log = logging.debug
+                        ## The statement below may not be true.
+                        ## We may be expecting something else
+                    _log(
+                        "Expected some valid XML from the server, but got this: \n"
+                        + str(self._raw),
+                        exc_info=True,
+                    )
+                if expect_xml:
+                    raise
+            else:
+                if log.level <= logging.DEBUG:
+                    log.debug(etree.tostring(self.tree, pretty_print=True))
 
         ## this if will always be true as for now, see other comments on streaming.
         if hasattr(self, "_raw"):
@@ -154,7 +171,7 @@ class DAVResponse:
         ## TODO: this should not really be needed?
         if not hasattr(self, "_raw"):
             self._raw = etree.tostring(cast(_Element, self.tree), pretty_print=True)
-        return self._raw.decode()
+        return to_normal_str(self._raw)
 
     def _strip_to_multistatus(self):
         """
@@ -211,6 +228,7 @@ class DAVResponse:
         status = None
         href: Optional[str] = None
         propstats: List[_Element] = []
+        check_404 = False  ## special for purelymail
         error.assert_(response.tag == dav.Response.tag)
         for elem in response:
             if elem.tag == dav.Status.tag:
@@ -220,16 +238,36 @@ class DAVResponse:
                 self.validate_status(status)
             elif elem.tag == dav.Href.tag:
                 assert not href
+                # Fix for https://github.com/python-caldav/caldav/issues/471
+                # Confluence server quotes the user email twice. We unquote it manually.
+                if "%2540" in elem.text:
+                    elem.text = elem.text.replace("%2540", "%40")
                 href = unquote(elem.text)
             elif elem.tag == dav.PropStat.tag:
                 propstats.append(elem)
+            elif elem.tag == "{DAV:}error":
+                ## This happens with purelymail on a 404.
+                ## This code is mostly moot, but in debug
+                ## mode I want to be sure we do not toss away any data
+                children = elem.getchildren()
+                error.assert_(len(children) == 1)
+                error.assert_(
+                    children[0].tag == "{https://purelymail.com}does-not-exist"
+                )
+                check_404 = True
             else:
-                error.assert_(False)
+                ## i.e. purelymail may contain one more tag, <error>...</error>
+                ## This is probably not a breach of the standard.  It may
+                ## probably be ignored.  But it's something we may want to
+                ## know.
+                error.weirdness("unexpected element found in response", elem)
         error.assert_(href)
+        if check_404:
+            error.assert_("404" in status)
         ## TODO: is this safe/sane?
         ## Ref https://github.com/python-caldav/caldav/issues/435 the paths returned may be absolute URLs,
         ## but the caller expects them to be paths.  Could we have issues when a server has same path
-        ## but different URLs for different elements?
+        ## but different URLs for different elements?  Perhaps href should always be made into an URL-object?
         if ":" in href:
             href = unquote(URL(href).path)
         return (cast(str, href), propstats, status)
@@ -245,6 +283,7 @@ class DAVResponse:
         self.sync_token will be populated if found, self.objects will be populated.
         """
         self.objects: Dict[str, Dict[str, _Element]] = {}
+        self.statuses: Dict[str, str] = {}
 
         if "Schedule-Tag" in self.headers:
             self.schedule_tag = self.headers["Schedule-Tag"]
@@ -262,6 +301,7 @@ class DAVResponse:
             ## but then there was https://github.com/python-caldav/caldav/issues/136
             if href not in self.objects:
                 self.objects[href] = {}
+                self.statuses[href] = status
 
             ## The properties may be delivered either in one
             ## propstat with multiple props or in multiple
@@ -293,7 +333,12 @@ class DAVResponse:
         values = []
         if proptag in props_found:
             prop_xml = props_found[proptag]
-            error.assert_(not prop_xml.items())
+            if prop_xml.items():
+                from caldav.lib.debug import xmlstring
+
+                log.error(
+                    f"If you see this, please add a report at https://github.com/python-caldav/caldav/issues/209 - in _expand_simple_prop, dealing with {proptag}, extra items found: {xmlstring(prop_xml)}."
+                )
             if not xpath and len(prop_xml) == 0:
                 if prop_xml.text:
                     values.append(prop_xml.text)
@@ -315,7 +360,7 @@ class DAVResponse:
             error.assert_(len(values) == 1)
             return values[0]
 
-    ## TODO: "expand" does not feel quite right.
+    ## TODO: word "expand" does not feel quite right.
     def expand_simple_props(
         self,
         props: Iterable[BaseElement] = None,
@@ -378,7 +423,7 @@ class DAVClient:
         timeout: Optional[int] = None,
         ssl_verify_cert: Union[bool, str] = True,
         ssl_cert: Union[str, Tuple[str, str], None] = None,
-        headers: Dict[str, str] = None,
+        headers: Mapping[str, str] = None,
         huge_tree: bool = False,
     ) -> None:
         """
@@ -421,12 +466,14 @@ class DAVClient:
             self.proxy = _proxy
 
         # Build global headers
-        self.headers = {
-            "User-Agent": "python-caldav/" + __version__,
-            "Content-Type": "text/xml",
-            "Accept": "text/xml, text/calendar",
-        }
-        self.headers.update(headers)
+        self.headers = CaseInsensitiveDict(
+            {
+                "User-Agent": "python-caldav/" + __version__,
+                "Content-Type": "text/xml",
+                "Accept": "text/xml, text/calendar",
+            }
+        )
+        self.headers.update(headers or {})
         if self.url.username is not None:
             username = unquote(self.url.username)
             password = unquote(self.url.password)
@@ -640,7 +687,7 @@ class DAVClient:
         headers = headers or {}
 
         combined_headers = self.headers.copy()
-        combined_headers.update(headers)
+        combined_headers.update(headers or {})
         if (body is None or body == "") and "Content-Type" in combined_headers:
             del combined_headers["Content-Type"]
 
@@ -691,20 +738,25 @@ class DAVClient:
             if not r.status_code == 401:
                 raise
 
+        ## Returned headers
+        r_headers = CaseInsensitiveDict(r.headers)
         if (
             r.status_code == 401
-            and "WWW-Authenticate" in r.headers
+            and "WWW-Authenticate" in r_headers
             and not self.auth
             and self.username
         ):
-            auth_types = self.extract_auth_types(r.headers["WWW-Authenticate"])
-
-            if self.password and self.username and "digest" in auth_types:
+            auth_types = self.extract_auth_types(r_headers["WWW-Authenticate"])
+            if self.username and "digest" in auth_types:
                 self.auth = requests.auth.HTTPDigestAuth(self.username, self.password)
-            elif self.password and self.username and "basic" in auth_types:
+            elif self.username and "basic" in auth_types:
                 self.auth = requests.auth.HTTPBasicAuth(self.username, self.password)
             elif self.password and "bearer" in auth_types:
                 self.auth = HTTPBearerAuth(self.password)
+            elif "bearer" in auth_types:
+                raise error.AuthorizationError(
+                    reason="Server provides bearer auth, but no password given.  The bearer token should be configured as password"
+                )
             else:
                 raise NotImplementedError(
                     "The server does not provide any of the currently "
@@ -715,7 +767,7 @@ class DAVClient:
 
         elif (
             r.status_code == 401
-            and "WWW-Authenticate" in r.headers
+            and "WWW-Authenticate" in r_headers
             and self.auth
             and self.password
             and isinstance(self.password, bytes)
@@ -729,7 +781,7 @@ class DAVClient:
             ## sequence and not a string (see commit 13a4714, which
             ## introduced this regression)
 
-            auth_types = self.extract_auth_types(r.headers["WWW-Authenticate"])
+            auth_types = self.extract_auth_types(r_headers["WWW-Authenticate"])
 
             if self.password and self.username and "digest" in auth_types:
                 self.auth = requests.auth.HTTPDigestAuth(
@@ -789,3 +841,83 @@ class DAVClient:
                 commlog.write(b"\n")
 
         return response
+
+
+def auto_calendars(
+    configfile: str = f"{os.environ.get('HOME')}/.config/calendar.conf",
+    testconfig=False,
+    environment: bool = True,
+    config_data: dict = None,
+    config_name: str = None,
+) -> Iterable["Calendar"]:
+    """
+    This will replace plann.lib.findcalendars()
+    """
+    raise NotImplementedError("auto_calendars not implemented yet")
+
+
+def auto_calendar(*largs, **kwargs) -> Iterable["Calendar"]:
+    """
+    Alternative to auto_calendars - in most use cases, one calendar suffices
+    """
+    return next(auto_calendars(*largs, **kwargs), None)
+
+
+def auto_conn(
+    configfile: str = f"{os.environ.get('HOME')}/.config/calendar.conf",
+    testconfig=False,
+    environment: bool = True,
+    config_data: dict = None,
+    name: str = None,
+) -> "DAVClient":
+    """
+    Normally you would like to look into auto_calendars or
+    auto_calendar instead.  However, in some cases it's needed
+    with a DAVClient object rather than a Calendar object.
+
+    This function will yield a DAVClient object.  It will not try to
+    connect (see auto_calendars for that).  It will read configuration
+    from various sources, dependent on the parameters given, in this
+    order:
+
+    * Data from the given dict
+    * Environment variables prepended with "CALDAV_"
+    * Data from `./tests/conf.py` or `./conf.py` (this includes the possibility to spin up a test server)
+    * Configuration file.  Documented in the plann project as for now.  (TODO - move it)
+
+    """
+    if config_data:
+        return DAVClient(**config_data)
+
+    if testconfig:
+        sys.path.insert(0, "tests")
+        sys.path.insert(1, ".")
+        ## TODO: move the code from client into here
+        try:
+            from conf import client
+
+            try:
+                idx = int(name)
+                name = None
+            except ValueError:
+                idx = None
+            try:
+                conn = client(idx, name, **config_data)
+                if conn:
+                    return conn
+            except:
+                error.weirdness("traceback from client()")
+        except ImportError:
+            pass
+        finally:
+            sys.path = sys.path[2:]
+
+    if environment:
+        raise NotImplementedError(
+            "Not possible to configure the caldav server through environmental variables yet"
+        )
+
+    if configfile:
+        raise NotImplementedError(
+            "Support for configuration file not made yet (TODO: copy the code from the plann tool)"
+        )

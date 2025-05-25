@@ -17,14 +17,9 @@ Contain IO dispatcher class.
 Dispatcher routes the work to execution-specific functions.
 """
 
-from typing import Union
-
-from pandas._libs.lib import NoDefault, no_default
-
-from modin.config import Backend, Engine, IsExperimental, StorageFormat
+from modin.config import Engine, IsExperimental, StorageFormat
 from modin.core.execution.dispatching.factories import factories
-from modin.core.storage_formats.base import BaseQueryCompiler
-from modin.utils import _inherit_docstrings
+from modin.utils import _inherit_docstrings, get_current_execution
 
 
 class FactoryNotFoundError(AttributeError):
@@ -115,39 +110,28 @@ class FactoryDispatcher(object):
     def get_factory(cls) -> factories.BaseFactory:
         """Get current factory."""
         if cls.__factory is None:
+            from modin.pandas import _update_engine
 
-            from modin.pandas import _initialize_engine
-
-            Engine.subscribe(
-                lambda engine_parameter: _initialize_engine(engine_parameter.get())
-            )
-            Backend.subscribe(cls._update_factory)
-        return_value = cls.__factory
-        return return_value
+            Engine.subscribe(_update_engine)
+            Engine.subscribe(cls._update_factory)
+            StorageFormat.subscribe(cls._update_factory)
+        return cls.__factory
 
     @classmethod
-    def _get_prepared_factory_for_backend(cls, backend) -> factories.BaseFactory:
+    def _update_factory(cls, *args):
         """
-        Get factory for the specified backend.
+        Update and prepare factory with a new one specified via Modin config.
 
         Parameters
         ----------
-        backend : str
-            Backend name.
-
-        Returns
-        -------
-        factories.BaseFactory
-            Factory for the specified backend.
+        *args : iterable
+            This parameters serves the compatibility purpose.
+            Does not affect the result.
         """
-        execution = Backend.get_execution_for_backend(backend)
-        from modin.pandas import _initialize_engine
-
-        _initialize_engine(execution.engine)
-        factory_name = f"{execution.storage_format}On{execution.engine}Factory"
+        factory_name = get_current_execution() + "Factory"
         experimental_factory_name = "Experimental" + factory_name
         try:
-            factory = getattr(factories, factory_name, None) or getattr(
+            cls.__factory = getattr(factories, factory_name, None) or getattr(
                 factories, experimental_factory_name
             )
         except AttributeError:
@@ -161,54 +145,26 @@ class FactoryDispatcher(object):
                 raise FactoryNotFoundError(
                     msg.format(factory_name, experimental_factory_name)
                 )
-            factory = StubFactory.set_failing_name(factory_name)
+            cls.__factory = StubFactory.set_failing_name(factory_name)
         else:
             try:
-                factory.prepare()
+                cls.__factory.prepare()
             except ModuleNotFoundError as err:
+                # incorrectly initialized, should be reset to None again
+                # so that an unobvious error does not appear in the following code:
+                # "AttributeError: 'NoneType' object has no attribute 'from_non_pandas'"
+                cls.__factory = None
                 raise ModuleNotFoundError(
                     f"Make sure all required packages are installed: {str(err)}"
                 ) from err
-        return factory
+            except BaseException:
+                cls.__factory = None
+                raise
 
     @classmethod
-    def _update_factory(cls, *args):
-        """
-        Update and prepare factory with a new one specified via Modin config.
-
-        Parameters
-        ----------
-        *args : iterable
-            This parameters serves the compatibility purpose.
-            Does not affect the result.
-        """
-        cls.__factory = cls._get_prepared_factory_for_backend(Backend.get())
-
-    @classmethod
-    def from_pandas(
-        cls, df, backend: Union[str, NoDefault] = no_default
-    ) -> BaseQueryCompiler:
-        """
-        Create a Modin query compiler from a pandas DataFrame.
-
-        Parameters
-        ----------
-        df : pandas.DataFrame
-            The pandas DataFrame to convert.
-        backend : str or NoDefault, default: NoDefault
-            The backend to use for the resulting query compiler. If NoDefault,
-            use the current global default ``Backend`` from the Modin config.
-
-        Returns
-        -------
-        BaseQueryCompiler
-            A Modin query compiler that wraps the input pandas DataFrame.
-        """
-        return (
-            cls.get_factory()
-            if backend is no_default
-            else cls._get_prepared_factory_for_backend(backend)
-        )._from_pandas(df)
+    @_inherit_docstrings(factories.BaseFactory._from_pandas)
+    def from_pandas(cls, df):
+        return cls.get_factory()._from_pandas(df)
 
     @classmethod
     @_inherit_docstrings(factories.BaseFactory._from_arrow)
@@ -221,9 +177,9 @@ class FactoryDispatcher(object):
         return cls.get_factory()._from_non_pandas(*args, **kwargs)
 
     @classmethod
-    @_inherit_docstrings(factories.BaseFactory._from_interchange_dataframe)
-    def from_interchange_dataframe(cls, *args, **kwargs):
-        return cls.get_factory()._from_interchange_dataframe(*args, **kwargs)
+    @_inherit_docstrings(factories.BaseFactory._from_dataframe)
+    def from_dataframe(cls, *args, **kwargs):
+        return cls.get_factory()._from_dataframe(*args, **kwargs)
 
     @classmethod
     @_inherit_docstrings(factories.BaseFactory._from_ray)

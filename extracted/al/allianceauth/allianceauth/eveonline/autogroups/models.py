@@ -1,4 +1,5 @@
 import logging
+from typing import ClassVar
 from django.db import models, transaction
 from django.contrib.auth.models import Group, User
 from django.core.exceptions import ObjectDoesNotExist
@@ -38,13 +39,13 @@ class AutogroupsConfigManager(models.Manager):
         """
         if state is None:
             state = user.profile.state
-        for config in self.filter(states=state):
-            # grant user new groups for their state
-            config.update_group_membership_for_user(user)
         for config in self.exclude(states=state):
             # ensure user does not have groups from previous state
             config.remove_user_from_alliance_groups(user)
             config.remove_user_from_corp_groups(user)
+        for config in self.filter(states=state):
+            # grant user new groups for their state
+            config.update_group_membership_for_user(user)
 
 
 class AutogroupsConfig(models.Model):
@@ -78,7 +79,7 @@ class AutogroupsConfig(models.Model):
         max_length=10, default='', blank=True,
         help_text='Any spaces in the group name will be replaced with this.')
 
-    objects = AutogroupsConfigManager()
+    objects: ClassVar[AutogroupsConfigManager] = AutogroupsConfigManager()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

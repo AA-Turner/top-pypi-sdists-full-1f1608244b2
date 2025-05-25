@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: flask_inputfilter
-Version: 0.5.3
+Version: 0.5.4
 Summary: A library to easily filter and validate input data in Flask applications
 Author-email: Leander Cain Slotosch <slotosch.leander@outlook.de>
 License: MIT

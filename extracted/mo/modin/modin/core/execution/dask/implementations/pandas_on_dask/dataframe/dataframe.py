@@ -14,7 +14,6 @@
 """Module houses class that implements ``PandasDataframe``."""
 
 from modin.core.dataframe.pandas.dataframe.dataframe import PandasDataframe
-from modin.utils import _inherit_docstrings
 
 from ..partitioning.partition_manager import PandasOnDaskDataframePartitionManager
 
@@ -67,8 +66,3 @@ class PandasOnDaskDataframe(PandasDataframe):
 
         address = default_client().scheduler_info()["address"]
         return self.reconnect, (address, self.__dict__)
-
-    @property
-    @_inherit_docstrings(PandasDataframe.engine)
-    def engine(self) -> str:
-        return "Dask"

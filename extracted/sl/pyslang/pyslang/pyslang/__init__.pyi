@@ -7,9 +7,6 @@ import pybind11_stubgen.typing_ext
 import typing
 __all__ = ['ASTContext', 'ASTFlags', 'AbortAssertionExpr', 'AcceptOnPropertyExprSyntax', 'ActionBlockSyntax', 'AnonymousProgramSymbol', 'AnonymousProgramSyntax', 'AnsiPortListSyntax', 'AnsiUdpPortListSyntax', 'ArbitrarySymbolExpression', 'ArgumentDirection', 'ArgumentListSyntax', 'ArgumentSyntax', 'ArrayOrRandomizeMethodExpressionSyntax', 'AssertionExpr', 'AssertionExprKind', 'AssertionInstanceExpression', 'AssertionItemPortListSyntax', 'AssertionItemPortSyntax', 'AssertionKind', 'AssertionPortSymbol', 'AssignmentExpression', 'AssignmentPatternExpressionBase', 'AssignmentPatternExpressionSyntax', 'AssignmentPatternItemSyntax', 'AssignmentPatternSyntax', 'AssociativeArrayType', 'AttributeInstanceSyntax', 'AttributeSpecSyntax', 'AttributeSymbol', 'BadExpressionSyntax', 'Bag', 'BeginKeywordsDirectiveSyntax', 'BinSelectWithFilterExpr', 'BinSelectWithFilterExprSyntax', 'BinaryAssertionExpr', 'BinaryAssertionOperator', 'BinaryBinsSelectExpr', 'BinaryBinsSelectExprSyntax', 'BinaryBlockEventExpressionSyntax', 'BinaryConditionalDirectiveExpressionSyntax', 'BinaryEventExpressionSyntax', 'BinaryExpression', 'BinaryExpressionSyntax', 'BinaryOperator', 'BinaryPropertyExprSyntax', 'BinarySequenceExprSyntax', 'BindDirectiveSyntax', 'BindTargetListSyntax', 'BinsSelectConditionExprSyntax', 'BinsSelectExpr', 'BinsSelectExprKind', 'BinsSelectExpressionSyntax', 'BinsSelectionSyntax', 'BitSelectSyntax', 'BlockCoverageEventSyntax', 'BlockEventExpressionSyntax', 'BlockEventListControl', 'BlockStatement', 'BlockStatementSyntax', 'BreakStatement', 'BufferID', 'BumpAllocator', 'CHandleType', 'CallExpression', 'CaseAssertionExpr', 'CaseGenerateSyntax', 'CaseItemSyntax', 'CasePropertyExprSyntax', 'CaseStatement', 'CaseStatementCondition', 'CaseStatementSyntax', 'CastExpressionSyntax', 'CellConfigRuleSyntax', 'ChargeStrengthSyntax', 'CheckerDataDeclarationSyntax', 'CheckerDeclarationSyntax', 'CheckerInstanceBodySymbol', 'CheckerInstanceStatementSyntax', 'CheckerInstanceSymbol', 'CheckerInstantiationSyntax', 'CheckerSymbol', 'ClassDeclarationSyntax', 'ClassMethodDeclarationSyntax', 'ClassMethodPrototypeSyntax', 'ClassNameSyntax', 'ClassPropertyDeclarationSyntax', 'ClassPropertySymbol', 'ClassSpecifierSyntax', 'ClassType', 'ClockVarSymbol', 'ClockingAssertionExpr', 'ClockingBlockSymbol', 'ClockingDeclarationSyntax', 'ClockingDirectionSyntax', 'ClockingEventExpression', 'ClockingItemSyntax', 'ClockingPropertyExprSyntax', 'ClockingSequenceExprSyntax', 'ClockingSkew', 'ClockingSkewSyntax', 'ColonExpressionClauseSyntax', 'CommandLineOptions', 'Compilation', 'CompilationFlags', 'CompilationOptions', 'CompilationUnitSymbol', 'CompilationUnitSyntax', 'ConcatenationExpression', 'ConcatenationExpressionSyntax', 'ConcurrentAssertionMemberSyntax', 'ConcurrentAssertionStatement', 'ConcurrentAssertionStatementSyntax', 'ConditionBinsSelectExpr', 'ConditionalAssertionExpr', 'ConditionalBranchDirectiveSyntax', 'ConditionalConstraint', 'ConditionalConstraintSyntax', 'ConditionalDirectiveExpressionSyntax', 'ConditionalExpression', 'ConditionalExpressionSyntax', 'ConditionalPathDeclarationSyntax', 'ConditionalPatternSyntax', 'ConditionalPredicateSyntax', 'ConditionalPropertyExprSyntax', 'ConditionalStatement', 'ConditionalStatementSyntax', 'ConfigBlockSymbol', 'ConfigCellIdentifierSyntax', 'ConfigDeclarationSyntax', 'ConfigInstanceIdentifierSyntax', 'ConfigLiblistSyntax', 'ConfigRuleClauseSyntax', 'ConfigRuleSyntax', 'ConfigUseClauseSyntax', 'ConstantPattern', 'ConstantRange', 'ConstantValue', 'Constraint', 'ConstraintBlockFlags', 'ConstraintBlockSymbol', 'ConstraintBlockSyntax', 'ConstraintDeclarationSyntax', 'ConstraintItemSyntax', 'ConstraintKind', 'ConstraintList', 'ConstraintPrototypeSyntax', 'ContinueStatement', 'ContinuousAssignSymbol', 'ContinuousAssignSyntax', 'ConversionExpression', 'ConversionKind', 'CopyClassExpression', 'CopyClassExpressionSyntax', 'CoverCrossBodySymbol', 'CoverCrossSymbol', 'CoverCrossSyntax', 'CoverageBinInitializerSyntax', 'CoverageBinSymbol', 'CoverageBinsArraySizeSyntax', 'CoverageBinsSyntax', 'CoverageIffClauseSyntax', 'CoverageOptionSetter', 'CoverageOptionSyntax', 'CovergroupBodySymbol', 'CovergroupDeclarationSyntax', 'CovergroupType', 'CoverpointSymbol', 'CoverpointSyntax', 'CrossIdBinsSelectExpr', 'CycleDelayControl', 'DPIExportSyntax', 'DPIImportSyntax', 'DPIOpenArrayType', 'DataDeclarationSyntax', 'DataTypeExpression', 'DataTypeSyntax', 'DeclaratorSyntax', 'DeclaredType', 'DefParamAssignmentSyntax', 'DefParamSymbol', 'DefParamSyntax', 'DefaultCaseItemSyntax', 'DefaultClockingReferenceSyntax', 'DefaultConfigRuleSyntax', 'DefaultCoverageBinInitializerSyntax', 'DefaultDecayTimeDirectiveSyntax', 'DefaultDisableDeclarationSyntax', 'DefaultDistItemSyntax', 'DefaultExtendsClauseArgSyntax', 'DefaultFunctionPortSyntax', 'DefaultNetTypeDirectiveSyntax', 'DefaultPropertyCaseItemSyntax', 'DefaultRsCaseItemSyntax', 'DefaultSkewItemSyntax', 'DefaultTriregStrengthDirectiveSyntax', 'DeferredAssertionSyntax', 'DefineDirectiveSyntax', 'DefinitionKind', 'DefinitionSymbol', 'Delay3Control', 'Delay3Syntax', 'DelayControl', 'DelaySyntax', 'DelayedSequenceElementSyntax', 'DelayedSequenceExprSyntax', 'DiagCode', 'DiagGroup', 'DiagSubsystem', 'Diagnostic', 'DiagnosticClient', 'DiagnosticEngine', 'DiagnosticSeverity', 'Diagnostics', 'Diags', 'DimensionKind', 'DimensionSpecifierSyntax', 'DirectiveSyntax', 'DisableConstraintSyntax', 'DisableForkStatement', 'DisableForkStatementSyntax', 'DisableIffAssertionExpr', 'DisableIffSyntax', 'DisableSoftConstraint', 'DisableStatement', 'DisableStatementSyntax', 'DistConstraintListSyntax', 'DistExpression', 'DistItemBaseSyntax', 'DistItemSyntax', 'DistWeightSyntax', 'DividerClauseSyntax', 'DoWhileLoopStatement', 'DoWhileStatementSyntax', 'DotMemberClauseSyntax', 'DriveStrengthSyntax', 'Driver', 'DriverKind', 'DynamicArrayType', 'EdgeControlSpecifierSyntax', 'EdgeDescriptorSyntax', 'EdgeKind', 'EdgeSensitivePathSuffixSyntax', 'ElabSystemTaskKind', 'ElabSystemTaskSymbol', 'ElabSystemTaskSyntax', 'ElementSelectExpression', 'ElementSelectExpressionSyntax', 'ElementSelectSyntax', 'ElseClauseSyntax', 'ElseConstraintClauseSyntax', 'ElsePropertyClauseSyntax', 'EmptyArgumentExpression', 'EmptyArgumentSyntax', 'EmptyIdentifierNameSyntax', 'EmptyMemberSymbol', 'EmptyMemberSyntax', 'EmptyNonAnsiPortSyntax', 'EmptyPortConnectionSyntax', 'EmptyQueueExpressionSyntax', 'EmptyStatement', 'EmptyStatementSyntax', 'EmptyTimingCheckArgSyntax', 'EnumType', 'EnumTypeSyntax', 'EnumValueSymbol', 'EqualsAssertionArgClauseSyntax', 'EqualsTypeClauseSyntax', 'EqualsValueClauseSyntax', 'ErrorType', 'EvalContext', 'EvalFlags', 'EvaluatedDimension', 'EventControlSyntax', 'EventControlWithExpressionSyntax', 'EventExpressionSyntax', 'EventListControl', 'EventTriggerStatement', 'EventTriggerStatementSyntax', 'EventType', 'ExplicitAnsiPortSyntax', 'ExplicitImportSymbol', 'ExplicitNonAnsiPortSyntax', 'Expression', 'ExpressionConstraint', 'ExpressionConstraintSyntax', 'ExpressionCoverageBinInitializerSyntax', 'ExpressionKind', 'ExpressionOrDistSyntax', 'ExpressionPatternSyntax', 'ExpressionStatement', 'ExpressionStatementSyntax', 'ExpressionSyntax', 'ExpressionTimingCheckArgSyntax', 'ExtendsClauseSyntax', 'ExternInterfaceMethodSyntax', 'ExternModuleDeclSyntax', 'ExternUdpDeclSyntax', 'FieldSymbol', 'FilePathSpecSyntax', 'FirstMatchAssertionExpr', 'FirstMatchSequenceExprSyntax', 'FixedSizeUnpackedArrayType', 'FloatingType', 'ForLoopStatement', 'ForLoopStatementSyntax', 'ForVariableDeclarationSyntax', 'ForeachConstraint', 'ForeachLoopListSyntax', 'ForeachLoopStatement', 'ForeachLoopStatementSyntax', 'ForeverLoopStatement', 'ForeverStatementSyntax', 'FormalArgumentSymbol', 'ForwardTypeRestriction', 'ForwardTypeRestrictionSyntax', 'ForwardTypedefDeclarationSyntax', 'ForwardingTypedefSymbol', 'FunctionDeclarationSyntax', 'FunctionPortBaseSyntax', 'FunctionPortListSyntax', 'FunctionPortSyntax', 'FunctionPrototypeSyntax', 'GenerateBlockArraySymbol', 'GenerateBlockSymbol', 'GenerateBlockSyntax', 'GenerateRegionSyntax', 'GenericClassDefSymbol', 'GenvarDeclarationSyntax', 'GenvarSymbol', 'HierarchicalInstanceSyntax', 'HierarchicalValueExpression', 'HierarchyInstantiationSyntax', 'IdWithExprCoverageBinInitializerSyntax', 'IdentifierNameSyntax', 'IdentifierSelectNameSyntax', 'IfGenerateSyntax', 'IfNonePathDeclarationSyntax', 'IffEventClauseSyntax', 'ImmediateAssertionMemberSyntax', 'ImmediateAssertionStatement', 'ImmediateAssertionStatementSyntax', 'ImplementsClauseSyntax', 'ImplicationConstraint', 'ImplicationConstraintSyntax', 'ImplicitAnsiPortSyntax', 'ImplicitEventControl', 'ImplicitEventControlSyntax', 'ImplicitNonAnsiPortSyntax', 'ImplicitTypeSyntax', 'IncludeDirectiveSyntax', 'InsideExpression', 'InsideExpressionSyntax', 'InstanceArraySymbol', 'InstanceBodySymbol', 'InstanceConfigRuleSyntax', 'InstanceNameSyntax', 'InstanceSymbol', 'InstanceSymbolBase', 'IntegerLiteral', 'IntegerTypeSyntax', 'IntegerVectorExpressionSyntax', 'IntegralFlags', 'IntegralType', 'InterfacePortHeaderSyntax', 'InterfacePortSymbol', 'IntersectClauseSyntax', 'InvalidAssertionExpr', 'InvalidBinsSelectExpr', 'InvalidConstraint', 'InvalidExpression', 'InvalidPattern', 'InvalidStatement', 'InvalidTimingControl', 'InvocationExpressionSyntax', 'IteratorSymbol', 'JumpStatementSyntax', 'KeywordNameSyntax', 'KeywordTypeSyntax', 'LValue', 'LValueReferenceExpression', 'LanguageVersion', 'LetDeclSymbol', 'LetDeclarationSyntax', 'LexerOptions', 'LibraryDeclarationSyntax', 'LibraryIncDirClauseSyntax', 'LibraryIncludeStatementSyntax', 'LibraryMapSyntax', 'LineDirectiveSyntax', 'LiteralBase', 'LiteralExpressionSyntax', 'LocalAssertionVarSymbol', 'LocalVariableDeclarationSyntax', 'Lookup', 'LookupFlags', 'LookupLocation', 'LookupResult', 'LookupResultFlags', 'LoopConstraintSyntax', 'LoopGenerateSyntax', 'LoopStatementSyntax', 'MacroActualArgumentListSyntax', 'MacroActualArgumentSyntax', 'MacroArgumentDefaultSyntax', 'MacroFormalArgumentListSyntax', 'MacroFormalArgumentSyntax', 'MacroUsageSyntax', 'MatchesClauseSyntax', 'MemberAccessExpression', 'MemberAccessExpressionSyntax', 'MemberSyntax', 'MethodFlags', 'MethodPrototypeSymbol', 'MinTypMax', 'MinTypMaxExpression', 'MinTypMaxExpressionSyntax', 'ModportClockingPortSyntax', 'ModportClockingSymbol', 'ModportDeclarationSyntax', 'ModportExplicitPortSyntax', 'ModportItemSyntax', 'ModportNamedPortSyntax', 'ModportPortSymbol', 'ModportPortSyntax', 'ModportSimplePortListSyntax', 'ModportSubroutinePortListSyntax', 'ModportSubroutinePortSyntax', 'ModportSymbol', 'ModuleDeclarationSyntax', 'ModuleHeaderSyntax', 'MultiPortSymbol', 'MultipleConcatenationExpressionSyntax', 'NameSyntax', 'NameValuePragmaExpressionSyntax', 'NamedArgumentSyntax', 'NamedBlockClauseSyntax', 'NamedConditionalDirectiveExpressionSyntax', 'NamedLabelSyntax', 'NamedParamAssignmentSyntax', 'NamedPortConnectionSyntax', 'NamedStructurePatternMemberSyntax', 'NamedTypeSyntax', 'NamedValueExpression', 'NetAliasSymbol', 'NetAliasSyntax', 'NetDeclarationSyntax', 'NetPortHeaderSyntax', 'NetStrengthSyntax', 'NetSymbol', 'NetType', 'NetTypeDeclarationSyntax', 'NewArrayExpression', 'NewArrayExpressionSyntax', 'NewClassExpression', 'NewClassExpressionSyntax', 'NewCovergroupExpression', 'NonAnsiPortListSyntax', 'NonAnsiPortSyntax', 'NonAnsiUdpPortListSyntax', 'NonConstantFunction', 'Null', 'NullLiteral', 'NullType', 'NumberPragmaExpressionSyntax', 'OneStepDelayControl', 'OneStepDelaySyntax', 'OrderedArgumentSyntax', 'OrderedParamAssignmentSyntax', 'OrderedPortConnectionSyntax', 'OrderedStructurePatternMemberSyntax', 'PackageExportAllDeclarationSyntax', 'PackageExportDeclarationSyntax', 'PackageImportDeclarationSyntax', 'PackageImportItemSyntax', 'PackageSymbol', 'PackedArrayType', 'PackedStructType', 'PackedUnionType', 'ParamAssignmentSyntax', 'ParameterDeclarationBaseSyntax', 'ParameterDeclarationStatementSyntax', 'ParameterDeclarationSyntax', 'ParameterPortListSyntax', 'ParameterSymbol', 'ParameterSymbolBase', 'ParameterValueAssignmentSyntax', 'ParenExpressionListSyntax', 'ParenPragmaExpressionSyntax', 'ParenthesizedBinsSelectExprSyntax', 'ParenthesizedConditionalDirectiveExpressionSyntax', 'ParenthesizedEventExpressionSyntax', 'ParenthesizedExpressionSyntax', 'ParenthesizedPatternSyntax', 'ParenthesizedPropertyExprSyntax', 'ParenthesizedSequenceExprSyntax', 'ParserOptions', 'PathDeclarationSyntax', 'PathDescriptionSyntax', 'PathSuffixSyntax', 'Pattern', 'PatternCaseItemSyntax', 'PatternCaseStatement', 'PatternKind', 'PatternSyntax', 'PatternVarSymbol', 'PortConcatenationSyntax', 'PortConnection', 'PortConnectionSyntax', 'PortDeclarationSyntax', 'PortExpressionSyntax', 'PortHeaderSyntax', 'PortListSyntax', 'PortReferenceSyntax', 'PortSymbol', 'PostfixUnaryExpressionSyntax', 'PragmaDirectiveSyntax', 'PragmaExpressionSyntax', 'PredefinedIntegerType', 'PrefixUnaryExpressionSyntax', 'PreprocessorOptions', 'PrimaryBlockEventExpressionSyntax', 'PrimaryExpressionSyntax', 'PrimitiveInstanceSymbol', 'PrimitiveInstantiationSyntax', 'PrimitivePortDirection', 'PrimitivePortSymbol', 'PrimitiveSymbol', 'ProceduralAssignStatement', 'ProceduralAssignStatementSyntax', 'ProceduralBlockKind', 'ProceduralBlockSymbol', 'ProceduralBlockSyntax', 'ProceduralCheckerStatement', 'ProceduralDeassignStatement', 'ProceduralDeassignStatementSyntax', 'ProductionSyntax', 'PropertyCaseItemSyntax', 'PropertyDeclarationSyntax', 'PropertyExprSyntax', 'PropertySpecSyntax', 'PropertySymbol', 'PropertyType', 'PullStrengthSyntax', 'PulseStyleDeclarationSyntax', 'PulseStyleKind', 'PulseStyleSymbol', 'QueueDimensionSpecifierSyntax', 'QueueType', 'RandCaseItemSyntax', 'RandCaseStatement', 'RandCaseStatementSyntax', 'RandJoinClauseSyntax', 'RandMode', 'RandSeqProductionSymbol', 'RandSequenceStatement', 'RandSequenceStatementSyntax', 'RangeCoverageBinInitializerSyntax', 'RangeDimensionSpecifierSyntax', 'RangeListSyntax', 'RangeSelectExpression', 'RangeSelectSyntax', 'RangeSelectionKind', 'RealLiteral', 'RepeatLoopStatement', 'RepeatedEventControl', 'RepeatedEventControlSyntax', 'ReplicatedAssignmentPatternExpression', 'ReplicatedAssignmentPatternSyntax', 'ReplicationExpression', 'ReportedDiagnostic', 'ReturnStatement', 'ReturnStatementSyntax', 'RootSymbol', 'RsCaseItemSyntax', 'RsCaseSyntax', 'RsCodeBlockSyntax', 'RsElseClauseSyntax', 'RsIfElseSyntax', 'RsProdItemSyntax', 'RsProdSyntax', 'RsRepeatSyntax', 'RsRuleSyntax', 'RsWeightClauseSyntax', 'SVInt', 'ScalarType', 'Scope', 'ScopedNameSyntax', 'ScriptSession', 'SelectorSyntax', 'SequenceConcatExpr', 'SequenceDeclarationSyntax', 'SequenceExprSyntax', 'SequenceMatchListSyntax', 'SequenceRange', 'SequenceRepetition', 'SequenceRepetitionSyntax', 'SequenceSymbol', 'SequenceType', 'SequenceWithMatchExpr', 'SetExprBinsSelectExpr', 'SignalEventControl', 'SignalEventExpressionSyntax', 'SignedCastExpressionSyntax', 'SimpleAssertionExpr', 'SimpleAssignmentPatternExpression', 'SimpleAssignmentPatternSyntax', 'SimpleBinsSelectExprSyntax', 'SimpleDirectiveSyntax', 'SimplePathSuffixSyntax', 'SimplePragmaExpressionSyntax', 'SimplePropertyExprSyntax', 'SimpleSequenceExprSyntax', 'SimpleSystemSubroutine', 'SolveBeforeConstraint', 'SolveBeforeConstraintSyntax', 'SourceBuffer', 'SourceLibrary', 'SourceLoader', 'SourceLocation', 'SourceManager', 'SourceOptions', 'SourceRange', 'SpecifyBlockSymbol', 'SpecifyBlockSyntax', 'SpecparamDeclarationSyntax', 'SpecparamDeclaratorSyntax', 'SpecparamSymbol', 'StandardCaseItemSyntax', 'StandardPropertyCaseItemSyntax', 'StandardRsCaseItemSyntax', 'Statement', 'StatementBlockKind', 'StatementBlockSymbol', 'StatementKind', 'StatementList', 'StatementSyntax', 'StreamExpressionSyntax', 'StreamExpressionWithRangeSyntax', 'StreamingConcatenationExpression', 'StreamingConcatenationExpressionSyntax', 'StringLiteral', 'StringType', 'StrongWeakAssertionExpr', 'StrongWeakPropertyExprSyntax', 'StructUnionMemberSyntax', 'StructUnionTypeSyntax', 'StructurePattern', 'StructurePatternMemberSyntax', 'StructurePatternSyntax', 'StructuredAssignmentPatternExpression', 'StructuredAssignmentPatternSyntax', 'SubroutineKind', 'SubroutineSymbol', 'SuperNewDefaultedArgsExpressionSyntax', 'Symbol', 'SymbolKind', 'SyntaxKind', 'SyntaxNode', 'SyntaxPrinter', 'SyntaxTree', 'SystemNameSyntax', 'SystemSubroutine', 'SystemTimingCheckKind', 'SystemTimingCheckSymbol', 'SystemTimingCheckSyntax', 'TaggedPattern', 'TaggedPatternSyntax', 'TaggedUnionExpression', 'TaggedUnionExpressionSyntax', 'TempVarSymbol', 'TextDiagnosticClient', 'TimeLiteral', 'TimeScale', 'TimeScaleDirectiveSyntax', 'TimeScaleMagnitude', 'TimeScaleValue', 'TimeUnit', 'TimeUnitsDeclarationSyntax', 'TimedStatement', 'TimingCheckArgSyntax', 'TimingCheckEventArgSyntax', 'TimingCheckEventConditionSyntax', 'TimingControl', 'TimingControlExpressionSyntax', 'TimingControlKind', 'TimingControlStatementSyntax', 'TimingControlSyntax', 'TimingPathSymbol', 'Token', 'TokenKind', 'TransListCoverageBinInitializerSyntax', 'TransRangeSyntax', 'TransRepeatRangeSyntax', 'TransSetSyntax', 'TransparentMemberSymbol', 'Trivia', 'TriviaKind', 'Type', 'TypeAliasType', 'TypeAssignmentSyntax', 'TypeParameterDeclarationSyntax', 'TypeParameterSymbol', 'TypePrinter', 'TypePrintingOptions', 'TypeRefType', 'TypeReferenceExpression', 'TypeReferenceSyntax', 'TypedefDeclarationSyntax', 'UdpBodySyntax', 'UdpDeclarationSyntax', 'UdpEdgeFieldSyntax', 'UdpEntrySyntax', 'UdpFieldBaseSyntax', 'UdpInitialStmtSyntax', 'UdpInputPortDeclSyntax', 'UdpOutputPortDeclSyntax', 'UdpPortDeclSyntax', 'UdpPortListSyntax', 'UdpSimpleFieldSyntax', 'UnaryAssertionExpr', 'UnaryAssertionOperator', 'UnaryBinsSelectExpr', 'UnaryBinsSelectExprSyntax', 'UnaryConditionalDirectiveExpressionSyntax', 'UnaryExpression', 'UnaryOperator', 'UnaryPropertyExprSyntax', 'UnarySelectPropertyExprSyntax', 'UnbasedUnsizedIntegerLiteral', 'Unbounded', 'UnboundedLiteral', 'UnboundedType', 'UnconditionalBranchDirectiveSyntax', 'UnconnectedDrive', 'UnconnectedDriveDirectiveSyntax', 'UndefDirectiveSyntax', 'UninstantiatedDefSymbol', 'UniquePriorityCheck', 'UniquenessConstraint', 'UniquenessConstraintSyntax', 'UnpackedStructType', 'UnpackedUnionType', 'UntypedType', 'UserDefinedNetDeclarationSyntax', 'ValueDriver', 'ValueExpressionBase', 'ValueRangeExpression', 'ValueRangeExpressionSyntax', 'ValueRangeKind', 'ValueSymbol', 'VariableDeclStatement', 'VariableDimensionSyntax', 'VariableFlags', 'VariableLifetime', 'VariablePattern', 'VariablePatternSyntax', 'VariablePortHeaderSyntax', 'VariableSymbol', 'VersionInfo', 'VirtualInterfaceType', 'VirtualInterfaceTypeSyntax', 'Visibility', 'VisitAction', 'VoidCastedCallStatementSyntax', 'VoidType', 'WaitForkStatement', 'WaitForkStatementSyntax', 'WaitOrderStatement', 'WaitOrderStatementSyntax', 'WaitStatement', 'WaitStatementSyntax', 'WhileLoopStatement', 'WildcardDimensionSpecifierSyntax', 'WildcardImportSymbol', 'WildcardPattern', 'WildcardPatternSyntax', 'WildcardPortConnectionSyntax', 'WildcardPortListSyntax', 'WildcardUdpPortListSyntax', 'WithClauseSyntax', 'WithFunctionClauseSyntax', 'WithFunctionSampleSyntax', 'clog2', 'literalBaseFromChar', 'logic_t']
 class ASTContext:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self, scope: ..., lookupLocation: ..., flags: ASTFlags = ...) -> None:
         ...
     def addAssertionBacktrace(self, diag: ...) -> None:
@@ -250,9 +247,6 @@ class ASTFlags:
     TypeOperator: typing.ClassVar[ASTFlags]  # value = <ASTFlags.TypeOperator: 2199023255552>
     UnevaluatedBranch: typing.ClassVar[ASTFlags]  # value = <ASTFlags.UnevaluatedBranch: 2>
     __members__: typing.ClassVar[dict[str, ASTFlags]]  # value = {'None_': <ASTFlags.None_: 0>, 'InsideConcatenation': <ASTFlags.InsideConcatenation: 1>, 'UnevaluatedBranch': <ASTFlags.UnevaluatedBranch: 2>, 'AllowDataType': <ASTFlags.AllowDataType: 4>, 'AssignmentAllowed': <ASTFlags.AssignmentAllowed: 8>, 'AssignmentDisallowed': <ASTFlags.AssignmentDisallowed: 16>, 'NonProcedural': <ASTFlags.NonProcedural: 32>, 'StaticInitializer': <ASTFlags.StaticInitializer: 64>, 'StreamingAllowed': <ASTFlags.StreamingAllowed: 128>, 'TopLevelStatement': <ASTFlags.TopLevelStatement: 256>, 'AllowUnboundedLiteral': <ASTFlags.AllowUnboundedLiteral: 512>, 'AllowUnboundedLiteralArithmetic': <ASTFlags.AllowUnboundedLiteralArithmetic: 1024>, 'Function': <ASTFlags.Function: 2048>, 'Final': <ASTFlags.Final: 4096>, 'NonBlockingTimingControl': <ASTFlags.NonBlockingTimingControl: 8192>, 'EventExpression': <ASTFlags.EventExpression: 16384>, 'AllowTypeReferences': <ASTFlags.AllowTypeReferences: 32768>, 'AssertionExpr': <ASTFlags.AssertionExpr: 65536>, 'AllowClockingBlock': <ASTFlags.AllowClockingBlock: 131072>, 'AssertionInstanceArgCheck': <ASTFlags.AssertionInstanceArgCheck: 262144>, 'AssertionDelayOrRepetition': <ASTFlags.AssertionDelayOrRepetition: 524288>, 'LValue': <ASTFlags.LValue: 1048576>, 'PropertyNegation': <ASTFlags.PropertyNegation: 2097152>, 'PropertyTimeAdvance': <ASTFlags.PropertyTimeAdvance: 4194304>, 'RecursivePropertyArg': <ASTFlags.RecursivePropertyArg: 8388608>, 'ConcurrentAssertActionBlock': <ASTFlags.ConcurrentAssertActionBlock: 16777216>, 'AllowCoverageSampleFormal': <ASTFlags.AllowCoverageSampleFormal: 33554432>, 'AllowCoverpoint': <ASTFlags.AllowCoverpoint: 67108864>, 'AllowNetType': <ASTFlags.AllowNetType: 134217728>, 'OutputArg': <ASTFlags.OutputArg: 268435456>, 'ProceduralAssign': <ASTFlags.ProceduralAssign: 536870912>, 'ProceduralForceRelease': <ASTFlags.ProceduralForceRelease: 1073741824>, 'AllowInterconnect': <ASTFlags.AllowInterconnect: 2147483648>, 'NotADriver': <ASTFlags.NotADriver: 4294967296>, 'StreamingWithRange': <ASTFlags.StreamingWithRange: 8589934592>, 'SpecifyBlock': <ASTFlags.SpecifyBlock: 17179869184>, 'SpecparamInitializer': <ASTFlags.SpecparamInitializer: 34359738368>, 'DPIArg': <ASTFlags.DPIArg: 68719476736>, 'AssertionDefaultArg': <ASTFlags.AssertionDefaultArg: 137438953472>, 'LAndRValue': <ASTFlags.LAndRValue: 274877906944>, 'NoReference': <ASTFlags.NoReference: 549755813888>, 'ConfigParam': <ASTFlags.ConfigParam: 1099511627776>, 'TypeOperator': <ASTFlags.TypeOperator: 2199023255552>, 'ForkJoinAnyNone': <ASTFlags.ForkJoinAnyNone: 4398046511104>, 'DisallowUDNT': <ASTFlags.DisallowUDNT: 8796093022208>, 'BindInstantiation': <ASTFlags.BindInstantiation: 17592186044416>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -291,9 +285,6 @@ class AbortAssertionExpr(AssertionExpr):
         Accept: typing.ClassVar[AbortAssertionExpr.Action]  # value = <Action.Accept: 0>
         Reject: typing.ClassVar[AbortAssertionExpr.Action]  # value = <Action.Reject: 1>
         __members__: typing.ClassVar[dict[str, AbortAssertionExpr.Action]]  # value = {'Accept': <Action.Accept: 0>, 'Reject': <Action.Reject: 1>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -322,9 +313,6 @@ class AbortAssertionExpr(AssertionExpr):
             ...
     Accept: typing.ClassVar[AbortAssertionExpr.Action]  # value = <Action.Accept: 0>
     Reject: typing.ClassVar[AbortAssertionExpr.Action]  # value = <Action.Reject: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def action(self) -> ...:
         ...
@@ -343,46 +331,26 @@ class AcceptOnPropertyExprSyntax(PropertyExprSyntax):
     expr: PropertyExprSyntax
     keyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ActionBlockSyntax(SyntaxNode):
     elseClause: ElseClauseSyntax
     statement: StatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AnonymousProgramSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class AnonymousProgramSyntax(MemberSyntax):
     endkeyword: Token
     keyword: Token
     members: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AnsiPortListSyntax(PortListSyntax):
     closeParen: Token
     openParen: Token
     ports: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AnsiUdpPortListSyntax(UdpPortListSyntax):
     closeParen: Token
     openParen: Token
     ports: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ArbitrarySymbolExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def symbol(self) -> ...:
         ...
@@ -403,9 +371,6 @@ class ArgumentDirection:
     Out: typing.ClassVar[ArgumentDirection]  # value = <ArgumentDirection.Out: 1>
     Ref: typing.ClassVar[ArgumentDirection]  # value = <ArgumentDirection.Ref: 3>
     __members__: typing.ClassVar[dict[str, ArgumentDirection]]  # value = {'In': <ArgumentDirection.In: 0>, 'Out': <ArgumentDirection.Out: 1>, 'InOut': <ArgumentDirection.InOut: 2>, 'Ref': <ArgumentDirection.Ref: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -436,25 +401,14 @@ class ArgumentListSyntax(SyntaxNode):
     closeParen: Token
     openParen: Token
     parameters: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ArgumentSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ArrayOrRandomizeMethodExpressionSyntax(ExpressionSyntax):
     args: ParenExpressionListSyntax
     constraints: ConstraintBlockSyntax
     method: ExpressionSyntax
     with: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AssertionExpr:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     @property
@@ -510,9 +464,6 @@ class AssertionExprKind:
     StrongWeak: typing.ClassVar[AssertionExprKind]  # value = <AssertionExprKind.StrongWeak: 8>
     Unary: typing.ClassVar[AssertionExprKind]  # value = <AssertionExprKind.Unary: 4>
     __members__: typing.ClassVar[dict[str, AssertionExprKind]]  # value = {'Invalid': <AssertionExprKind.Invalid: 0>, 'Simple': <AssertionExprKind.Simple: 1>, 'SequenceConcat': <AssertionExprKind.SequenceConcat: 2>, 'SequenceWithMatch': <AssertionExprKind.SequenceWithMatch: 3>, 'Unary': <AssertionExprKind.Unary: 4>, 'Binary': <AssertionExprKind.Binary: 5>, 'FirstMatch': <AssertionExprKind.FirstMatch: 6>, 'Clocking': <AssertionExprKind.Clocking: 7>, 'StrongWeak': <AssertionExprKind.StrongWeak: 8>, 'Abort': <AssertionExprKind.Abort: 9>, 'Conditional': <AssertionExprKind.Conditional: 10>, 'Case': <AssertionExprKind.Case: 11>, 'DisableIff': <AssertionExprKind.DisableIff: 12>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -540,9 +491,6 @@ class AssertionExprKind:
     def value(self) -> int:
         ...
 class AssertionInstanceExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[tuple[..., Expression | AssertionExpr | TimingControl]]:
         ...
@@ -562,9 +510,6 @@ class AssertionItemPortListSyntax(SyntaxNode):
     closeParen: Token
     openParen: Token
     ports: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AssertionItemPortSyntax(SyntaxNode):
     attributes: ...
     defaultValue: EqualsAssertionArgClauseSyntax
@@ -573,9 +518,6 @@ class AssertionItemPortSyntax(SyntaxNode):
     local: Token
     name: Token
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AssertionKind:
     """
     Members:
@@ -599,9 +541,6 @@ class AssertionKind:
     Expect: typing.ClassVar[AssertionKind]  # value = <AssertionKind.Expect: 5>
     Restrict: typing.ClassVar[AssertionKind]  # value = <AssertionKind.Restrict: 4>
     __members__: typing.ClassVar[dict[str, AssertionKind]]  # value = {'Assert': <AssertionKind.Assert: 0>, 'Assume': <AssertionKind.Assume: 1>, 'CoverProperty': <AssertionKind.CoverProperty: 2>, 'CoverSequence': <AssertionKind.CoverSequence: 3>, 'Restrict': <AssertionKind.Restrict: 4>, 'Expect': <AssertionKind.Expect: 5>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -629,9 +568,6 @@ class AssertionKind:
     def value(self) -> int:
         ...
 class AssertionPortSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def direction(self) -> ArgumentDirection | None:
         ...
@@ -642,9 +578,6 @@ class AssertionPortSymbol(Symbol):
     def type(self) -> ...:
         ...
 class AssignmentExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isCompound(self) -> bool:
         ...
@@ -667,33 +600,19 @@ class AssignmentExpression(Expression):
     def timingControl(self) -> TimingControl:
         ...
 class AssignmentPatternExpressionBase(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elements(self) -> span[Expression]:
         ...
 class AssignmentPatternExpressionSyntax(PrimaryExpressionSyntax):
     pattern: AssignmentPatternSyntax
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AssignmentPatternItemSyntax(SyntaxNode):
     colon: Token
     expr: ExpressionSyntax
     key: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AssignmentPatternSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class AssociativeArrayType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elementType(self) -> Type:
         ...
@@ -706,35 +625,20 @@ class AttributeInstanceSyntax(SyntaxNode):
     openParen: Token
     openStar: Token
     specs: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AttributeSpecSyntax(SyntaxNode):
     name: Token
     value: EqualsValueClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class AttributeSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def value(self) -> ConstantValue:
         ...
 class BadExpressionSyntax(ExpressionSyntax):
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class Bag:
     compilationOptions: CompilationOptions
     lexerOptions: ...
     parserOptions: ...
     preprocessorOptions: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @typing.overload
     def __init__(self) -> None:
         ...
@@ -743,13 +647,7 @@ class Bag:
         ...
 class BeginKeywordsDirectiveSyntax(DirectiveSyntax):
     versionSpecifier: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinSelectWithFilterExpr(BinsSelectExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> BinsSelectExpr:
         ...
@@ -766,13 +664,7 @@ class BinSelectWithFilterExprSyntax(BinsSelectExpressionSyntax):
     matchesClause: MatchesClauseSyntax
     openParen: Token
     with: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinaryAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def left(self) -> AssertionExpr:
         ...
@@ -832,9 +724,6 @@ class BinaryAssertionOperator:
     UntilWith: typing.ClassVar[BinaryAssertionOperator]  # value = <BinaryAssertionOperator.UntilWith: 8>
     Within: typing.ClassVar[BinaryAssertionOperator]  # value = <BinaryAssertionOperator.Within: 4>
     __members__: typing.ClassVar[dict[str, BinaryAssertionOperator]]  # value = {'And': <BinaryAssertionOperator.And: 0>, 'Or': <BinaryAssertionOperator.Or: 1>, 'Intersect': <BinaryAssertionOperator.Intersect: 2>, 'Throughout': <BinaryAssertionOperator.Throughout: 3>, 'Within': <BinaryAssertionOperator.Within: 4>, 'Iff': <BinaryAssertionOperator.Iff: 5>, 'Until': <BinaryAssertionOperator.Until: 6>, 'SUntil': <BinaryAssertionOperator.SUntil: 7>, 'UntilWith': <BinaryAssertionOperator.UntilWith: 8>, 'SUntilWith': <BinaryAssertionOperator.SUntilWith: 9>, 'Implies': <BinaryAssertionOperator.Implies: 10>, 'OverlappedImplication': <BinaryAssertionOperator.OverlappedImplication: 11>, 'NonOverlappedImplication': <BinaryAssertionOperator.NonOverlappedImplication: 12>, 'OverlappedFollowedBy': <BinaryAssertionOperator.OverlappedFollowedBy: 13>, 'NonOverlappedFollowedBy': <BinaryAssertionOperator.NonOverlappedFollowedBy: 14>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -873,9 +762,6 @@ class BinaryBinsSelectExpr(BinsSelectExpr):
         And: typing.ClassVar[BinaryBinsSelectExpr.Op]  # value = <Op.And: 0>
         Or: typing.ClassVar[BinaryBinsSelectExpr.Op]  # value = <Op.Or: 1>
         __members__: typing.ClassVar[dict[str, BinaryBinsSelectExpr.Op]]  # value = {'And': <Op.And: 0>, 'Or': <Op.Or: 1>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -904,9 +790,6 @@ class BinaryBinsSelectExpr(BinsSelectExpr):
             ...
     And: typing.ClassVar[BinaryBinsSelectExpr.Op]  # value = <Op.And: 0>
     Or: typing.ClassVar[BinaryBinsSelectExpr.Op]  # value = <Op.Or: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def left(self) -> BinsSelectExpr:
         ...
@@ -920,34 +803,19 @@ class BinaryBinsSelectExprSyntax(BinsSelectExpressionSyntax):
     left: BinsSelectExpressionSyntax
     op: Token
     right: BinsSelectExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinaryBlockEventExpressionSyntax(BlockEventExpressionSyntax):
     left: BlockEventExpressionSyntax
     orKeyword: Token
     right: BlockEventExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinaryConditionalDirectiveExpressionSyntax(ConditionalDirectiveExpressionSyntax):
     left: ConditionalDirectiveExpressionSyntax
     op: Token
     right: ConditionalDirectiveExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinaryEventExpressionSyntax(EventExpressionSyntax):
     left: EventExpressionSyntax
     operatorToken: Token
     right: EventExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinaryExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def left(self) -> Expression:
         ...
@@ -962,9 +830,6 @@ class BinaryExpressionSyntax(ExpressionSyntax):
     left: ExpressionSyntax
     operatorToken: Token
     right: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinaryOperator:
     """
     Members:
@@ -1054,9 +919,6 @@ class BinaryOperator:
     WildcardEquality: typing.ClassVar[BinaryOperator]  # value = <BinaryOperator.WildcardEquality: 17>
     WildcardInequality: typing.ClassVar[BinaryOperator]  # value = <BinaryOperator.WildcardInequality: 18>
     __members__: typing.ClassVar[dict[str, BinaryOperator]]  # value = {'Add': <BinaryOperator.Add: 0>, 'Subtract': <BinaryOperator.Subtract: 1>, 'Multiply': <BinaryOperator.Multiply: 2>, 'Divide': <BinaryOperator.Divide: 3>, 'Mod': <BinaryOperator.Mod: 4>, 'BinaryAnd': <BinaryOperator.BinaryAnd: 5>, 'BinaryOr': <BinaryOperator.BinaryOr: 6>, 'BinaryXor': <BinaryOperator.BinaryXor: 7>, 'BinaryXnor': <BinaryOperator.BinaryXnor: 8>, 'Equality': <BinaryOperator.Equality: 9>, 'Inequality': <BinaryOperator.Inequality: 10>, 'CaseEquality': <BinaryOperator.CaseEquality: 11>, 'CaseInequality': <BinaryOperator.CaseInequality: 12>, 'GreaterThanEqual': <BinaryOperator.GreaterThanEqual: 13>, 'GreaterThan': <BinaryOperator.GreaterThan: 14>, 'LessThanEqual': <BinaryOperator.LessThanEqual: 15>, 'LessThan': <BinaryOperator.LessThan: 16>, 'WildcardEquality': <BinaryOperator.WildcardEquality: 17>, 'WildcardInequality': <BinaryOperator.WildcardInequality: 18>, 'LogicalAnd': <BinaryOperator.LogicalAnd: 19>, 'LogicalOr': <BinaryOperator.LogicalOr: 20>, 'LogicalImplication': <BinaryOperator.LogicalImplication: 21>, 'LogicalEquivalence': <BinaryOperator.LogicalEquivalence: 22>, 'LogicalShiftLeft': <BinaryOperator.LogicalShiftLeft: 23>, 'LogicalShiftRight': <BinaryOperator.LogicalShiftRight: 24>, 'ArithmeticShiftLeft': <BinaryOperator.ArithmeticShiftLeft: 25>, 'ArithmeticShiftRight': <BinaryOperator.ArithmeticShiftRight: 26>, 'Power': <BinaryOperator.Power: 27>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -1087,43 +949,25 @@ class BinaryPropertyExprSyntax(PropertyExprSyntax):
     left: PropertyExprSyntax
     op: Token
     right: PropertyExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinarySequenceExprSyntax(SequenceExprSyntax):
     left: SequenceExprSyntax
     op: Token
     right: SequenceExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BindDirectiveSyntax(MemberSyntax):
     bind: Token
     instantiation: MemberSyntax
     target: NameSyntax
     targetInstances: BindTargetListSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BindTargetListSyntax(SyntaxNode):
     colon: Token
     targets: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinsSelectConditionExprSyntax(BinsSelectExpressionSyntax):
     binsof: Token
     closeParen: Token
     intersects: IntersectClauseSyntax
     name: NameSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BinsSelectExpr:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     @property
@@ -1161,9 +1005,6 @@ class BinsSelectExprKind:
     Unary: typing.ClassVar[BinsSelectExprKind]  # value = <BinsSelectExprKind.Unary: 2>
     WithFilter: typing.ClassVar[BinsSelectExprKind]  # value = <BinsSelectExprKind.WithFilter: 5>
     __members__: typing.ClassVar[dict[str, BinsSelectExprKind]]  # value = {'Invalid': <BinsSelectExprKind.Invalid: 0>, 'Condition': <BinsSelectExprKind.Condition: 1>, 'Unary': <BinsSelectExprKind.Unary: 2>, 'Binary': <BinsSelectExprKind.Binary: 3>, 'SetExpr': <BinsSelectExprKind.SetExpr: 4>, 'WithFilter': <BinsSelectExprKind.WithFilter: 5>, 'CrossId': <BinsSelectExprKind.CrossId: 6>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -1191,9 +1032,7 @@ class BinsSelectExprKind:
     def value(self) -> int:
         ...
 class BinsSelectExpressionSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class BinsSelectionSyntax(MemberSyntax):
     equals: Token
     expr: BinsSelectExpressionSyntax
@@ -1201,47 +1040,27 @@ class BinsSelectionSyntax(MemberSyntax):
     keyword: Token
     name: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BitSelectSyntax(SelectorSyntax):
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BlockCoverageEventSyntax(SyntaxNode):
     atat: Token
     closeParen: Token
     expr: BlockEventExpressionSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BlockEventExpressionSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class BlockEventListControl(TimingControl):
     class Event:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def isBegin(self) -> bool:
             ...
         @property
         def target(self) -> ...:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def events(self) -> span[...]:
         ...
 class BlockStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def blockKind(self) -> StatementBlockKind:
         ...
@@ -1257,18 +1076,10 @@ class BlockStatementSyntax(StatementSyntax):
     end: Token
     endBlockName: NamedBlockClauseSyntax
     items: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class BreakStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class BufferID:
     placeholder: typing.ClassVar[BufferID]  # value = BufferID(4294967295)
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def getPlaceholder() -> BufferID:
         ...
@@ -1296,20 +1107,12 @@ class BufferID:
     def id(self) -> int:
         ...
 class BumpAllocator:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
 class CHandleType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class CallExpression(Expression):
     class IteratorCallInfo:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def iterExpr(self) -> Expression:
             ...
@@ -1317,9 +1120,6 @@ class CallExpression(Expression):
         def iterVar(self) -> ...:
             ...
     class RandomizeCallInfo:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def constraintRestrictions(self) -> span[str]:
             ...
@@ -1327,9 +1127,6 @@ class CallExpression(Expression):
         def inlineConstraints(self) -> Constraint:
             ...
     class SystemCallInfo:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def extraInfo(self) -> None | CallExpression.IteratorCallInfo | CallExpression.RandomizeCallInfo:
             ...
@@ -1339,9 +1136,6 @@ class CallExpression(Expression):
         @property
         def subroutine(self) -> SystemSubroutine:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[Expression]:
         ...
@@ -1362,18 +1156,12 @@ class CallExpression(Expression):
         ...
 class CaseAssertionExpr(AssertionExpr):
     class ItemGroup:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def body(self) -> AssertionExpr:
             ...
         @property
         def expressions(self) -> span[...]:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def defaultCase(self) -> AssertionExpr:
         ...
@@ -1390,13 +1178,8 @@ class CaseGenerateSyntax(MemberSyntax):
     items: ...
     keyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CaseItemSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class CasePropertyExprSyntax(PropertyExprSyntax):
     caseKeyword: Token
     closeParen: Token
@@ -1404,23 +1187,14 @@ class CasePropertyExprSyntax(PropertyExprSyntax):
     expr: ExpressionSyntax
     items: ...
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CaseStatement(Statement):
     class ItemGroup:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expressions(self) -> span[Expression]:
             ...
         @property
         def stmt(self) -> Statement:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def check(self) -> UniquePriorityCheck:
         ...
@@ -1453,9 +1227,6 @@ class CaseStatementCondition:
     WildcardJustZ: typing.ClassVar[CaseStatementCondition]  # value = <CaseStatementCondition.WildcardJustZ: 2>
     WildcardXOrZ: typing.ClassVar[CaseStatementCondition]  # value = <CaseStatementCondition.WildcardXOrZ: 1>
     __members__: typing.ClassVar[dict[str, CaseStatementCondition]]  # value = {'Normal': <CaseStatementCondition.Normal: 0>, 'WildcardXOrZ': <CaseStatementCondition.WildcardXOrZ: 1>, 'WildcardJustZ': <CaseStatementCondition.WildcardJustZ: 2>, 'Inside': <CaseStatementCondition.Inside: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -1491,37 +1262,22 @@ class CaseStatementSyntax(StatementSyntax):
     matchesOrInside: Token
     openParen: Token
     uniqueOrPriority: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CastExpressionSyntax(ExpressionSyntax):
     apostrophe: Token
     left: ExpressionSyntax
     right: ParenthesizedExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CellConfigRuleSyntax(ConfigRuleSyntax):
     cell: Token
     name: ConfigCellIdentifierSyntax
     ruleClause: ConfigRuleClauseSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ChargeStrengthSyntax(NetStrengthSyntax):
     closeParen: Token
     openParen: Token
     strength: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CheckerDataDeclarationSyntax(MemberSyntax):
     data: DataDeclarationSyntax
     rand: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CheckerDeclarationSyntax(MemberSyntax):
     end: Token
     endBlockName: NamedBlockClauseSyntax
@@ -1530,13 +1286,7 @@ class CheckerDeclarationSyntax(MemberSyntax):
     name: Token
     portList: AssertionItemPortListSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CheckerInstanceBodySymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def checker(self) -> ...:
         ...
@@ -1545,14 +1295,8 @@ class CheckerInstanceBodySymbol(Symbol, Scope):
         ...
 class CheckerInstanceStatementSyntax(StatementSyntax):
     instance: CheckerInstantiationSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CheckerInstanceSymbol(InstanceSymbolBase):
     class Connection:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def actual(self) -> Expression | AssertionExpr | TimingControl:
             ...
@@ -1565,9 +1309,6 @@ class CheckerInstanceSymbol(InstanceSymbolBase):
         @property
         def outputInitialExpr(self) -> Expression:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> ...:
         ...
@@ -1579,13 +1320,7 @@ class CheckerInstantiationSyntax(MemberSyntax):
     parameters: ParameterValueAssignmentSyntax
     semi: Token
     type: NameSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CheckerSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def ports(self) -> span[AssertionPortSymbol]:
         ...
@@ -1601,38 +1336,20 @@ class ClassDeclarationSyntax(MemberSyntax):
     parameters: ParameterPortListSyntax
     semi: Token
     virtualOrInterface: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClassMethodDeclarationSyntax(MemberSyntax):
     declaration: FunctionDeclarationSyntax
     qualifiers: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClassMethodPrototypeSyntax(MemberSyntax):
     prototype: FunctionPrototypeSyntax
     qualifiers: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClassNameSyntax(NameSyntax):
     identifier: Token
     parameters: ParameterValueAssignmentSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClassPropertyDeclarationSyntax(MemberSyntax):
     declaration: MemberSyntax
     qualifiers: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClassPropertySymbol(VariableSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def randMode(self) -> RandMode:
         ...
@@ -1642,13 +1359,7 @@ class ClassPropertySymbol(VariableSymbol):
 class ClassSpecifierSyntax(SyntaxNode):
     colon: Token
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClassType(Type, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def baseClass(self) -> Type:
         ...
@@ -1677,9 +1388,6 @@ class ClassType(Type, Scope):
     def isInterface(self) -> bool:
         ...
 class ClockVarSymbol(VariableSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def direction(self) -> ArgumentDirection:
         ...
@@ -1690,9 +1398,6 @@ class ClockVarSymbol(VariableSymbol):
     def outputSkew(self) -> ClockingSkew:
         ...
 class ClockingAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def clocking(self) -> TimingControl:
         ...
@@ -1700,9 +1405,6 @@ class ClockingAssertionExpr(AssertionExpr):
     def expr(self) -> AssertionExpr:
         ...
 class ClockingBlockSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def defaultInputSkew(self) -> ClockingSkew:
         ...
@@ -1722,21 +1424,12 @@ class ClockingDeclarationSyntax(MemberSyntax):
     globalOrDefault: Token
     items: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClockingDirectionSyntax(SyntaxNode):
     input: Token
     inputSkew: ClockingSkewSyntax
     output: Token
     outputSkew: ClockingSkewSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClockingEventExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def timingControl(self) -> TimingControl:
         ...
@@ -1744,25 +1437,13 @@ class ClockingItemSyntax(MemberSyntax):
     decls: ...
     direction: ClockingDirectionSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClockingPropertyExprSyntax(PropertyExprSyntax):
     event: TimingControlSyntax
     expr: PropertyExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClockingSequenceExprSyntax(SequenceExprSyntax):
     event: TimingControlSyntax
     expr: SequenceExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ClockingSkew:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def delay(self) -> TimingControl:
         ...
@@ -1775,23 +1456,14 @@ class ClockingSkew:
 class ClockingSkewSyntax(SyntaxNode):
     delay: TimingControlSyntax
     edge: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ColonExpressionClauseSyntax(SyntaxNode):
     colon: Token
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CommandLineOptions:
     expandEnvVars: bool
     ignoreDuplicates: bool
     ignoreProgramName: bool
     supportsComments: bool
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
 class Compilation:
@@ -1799,14 +1471,8 @@ class Compilation:
         configRoot: ...
         configRule: ...
         definition: ...
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __init__(self) -> None:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @typing.overload
     def __init__(self) -> None:
         ...
@@ -1991,9 +1657,6 @@ class CompilationFlags:
     StrictDriverChecking: typing.ClassVar[CompilationFlags]  # value = <CompilationFlags.StrictDriverChecking: 32>
     SuppressUnused: typing.ClassVar[CompilationFlags]  # value = <CompilationFlags.SuppressUnused: 128>
     __members__: typing.ClassVar[dict[str, CompilationFlags]]  # value = {'None_': <CompilationFlags.None_: 0>, 'AllowHierarchicalConst': <CompilationFlags.AllowHierarchicalConst: 1>, 'RelaxEnumConversions': <CompilationFlags.RelaxEnumConversions: 2>, 'AllowUseBeforeDeclare': <CompilationFlags.AllowUseBeforeDeclare: 4>, 'AllowDupInitialDrivers': <CompilationFlags.AllowDupInitialDrivers: 8>, 'AllowTopLevelIfacePorts': <CompilationFlags.AllowTopLevelIfacePorts: 16>, 'StrictDriverChecking': <CompilationFlags.StrictDriverChecking: 32>, 'LintMode': <CompilationFlags.LintMode: 64>, 'SuppressUnused': <CompilationFlags.SuppressUnused: 128>, 'IgnoreUnknownModules': <CompilationFlags.IgnoreUnknownModules: 256>, 'RelaxStringConversions': <CompilationFlags.RelaxStringConversions: 512>, 'AllowRecursiveImplicitCall': <CompilationFlags.AllowRecursiveImplicitCall: 1024>, 'AllowBareValParamAssignment': <CompilationFlags.AllowBareValParamAssignment: 2048>, 'AllowSelfDeterminedStreamConcat': <CompilationFlags.AllowSelfDeterminedStreamConcat: 4096>, 'AllowMultiDrivenLocals': <CompilationFlags.AllowMultiDrivenLocals: 8192>, 'AllowMergingAnsiPorts': <CompilationFlags.AllowMergingAnsiPorts: 16384>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -2037,28 +1700,16 @@ class CompilationOptions:
     paramOverrides: list[str]
     topModules: set[str]
     typoCorrectionLimit: int
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
 class CompilationUnitSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def timeScale(self) -> TimeScale | None:
         ...
 class CompilationUnitSyntax(SyntaxNode):
     endOfFile: Token
     members: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConcatenationExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def operands(self) -> span[Expression]:
         ...
@@ -2066,18 +1717,9 @@ class ConcatenationExpressionSyntax(PrimaryExpressionSyntax):
     closeBrace: Token
     expressions: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConcurrentAssertionMemberSyntax(MemberSyntax):
     statement: ConcurrentAssertionStatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConcurrentAssertionStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def assertionKind(self) -> AssertionKind:
         ...
@@ -2097,13 +1739,7 @@ class ConcurrentAssertionStatementSyntax(StatementSyntax):
     openParen: Token
     propertyOrSequence: Token
     propertySpec: PropertySpecSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionBinsSelectExpr(BinsSelectExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def intersects(self) -> span[...]:
         ...
@@ -2111,9 +1747,6 @@ class ConditionBinsSelectExpr(BinsSelectExpr):
     def target(self) -> ...:
         ...
 class ConditionalAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def condition(self) -> ...:
         ...
@@ -2126,13 +1759,7 @@ class ConditionalAssertionExpr(AssertionExpr):
 class ConditionalBranchDirectiveSyntax(DirectiveSyntax):
     disabledTokens: ...
     expr: ConditionalDirectiveExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionalConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elseBody(self) -> Constraint:
         ...
@@ -2149,27 +1776,16 @@ class ConditionalConstraintSyntax(ConstraintItemSyntax):
     elseClause: ElseConstraintClauseSyntax
     ifKeyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionalDirectiveExpressionSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ConditionalExpression(Expression):
     class Condition:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
         @property
         def pattern(self) -> Pattern:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def conditions(self) -> span[...]:
         ...
@@ -2186,29 +1802,17 @@ class ConditionalExpressionSyntax(ExpressionSyntax):
     predicate: ConditionalPredicateSyntax
     question: Token
     right: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionalPathDeclarationSyntax(MemberSyntax):
     closeParen: Token
     keyword: Token
     openParen: Token
     path: PathDeclarationSyntax
     predicate: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionalPatternSyntax(SyntaxNode):
     expr: ExpressionSyntax
     matchesClause: MatchesClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionalPredicateSyntax(SyntaxNode):
     conditions: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionalPropertyExprSyntax(PropertyExprSyntax):
     closeParen: Token
     condition: ExpressionSyntax
@@ -2216,23 +1820,14 @@ class ConditionalPropertyExprSyntax(PropertyExprSyntax):
     expr: PropertyExprSyntax
     ifKeyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConditionalStatement(Statement):
     class Condition:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
         @property
         def pattern(self) -> Pattern:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def check(self) -> UniquePriorityCheck:
         ...
@@ -2253,20 +1848,12 @@ class ConditionalStatementSyntax(StatementSyntax):
     predicate: ConditionalPredicateSyntax
     statement: StatementSyntax
     uniqueOrPriority: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConfigBlockSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ConfigCellIdentifierSyntax(SyntaxNode):
     cell: Token
     dot: Token
     library: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConfigDeclarationSyntax(MemberSyntax):
     blockName: NamedBlockClauseSyntax
     config: Token
@@ -2278,42 +1865,23 @@ class ConfigDeclarationSyntax(MemberSyntax):
     semi1: Token
     semi2: Token
     topCells: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConfigInstanceIdentifierSyntax(SyntaxNode):
     dot: Token
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConfigLiblistSyntax(ConfigRuleClauseSyntax):
     liblist: Token
     libraries: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConfigRuleClauseSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ConfigRuleSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ConfigUseClauseSyntax(ConfigRuleClauseSyntax):
     colon: Token
     config: Token
     name: ConfigCellIdentifierSyntax
     paramAssignments: ParameterValueAssignmentSyntax
     use: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConstantPattern(Pattern):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> ...:
         ...
@@ -2321,9 +1889,6 @@ class ConstantRange:
     __hash__: typing.ClassVar[None] = None
     left: int
     right: int
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, arg0: ConstantRange) -> bool:
         ...
     @typing.overload
@@ -2361,9 +1926,6 @@ class ConstantRange:
     def width(self) -> int:
         ...
 class ConstantValue:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __bool__(self) -> bool:
         ...
     def __eq__(self, arg0: ConstantValue) -> bool:
@@ -2425,9 +1987,6 @@ class ConstantValue:
     def value(self) -> typing.Any:
         ...
 class Constraint:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     @property
@@ -2468,9 +2027,6 @@ class ConstraintBlockFlags:
     Pure: typing.ClassVar[ConstraintBlockFlags]  # value = <ConstraintBlockFlags.Pure: 2>
     Static: typing.ClassVar[ConstraintBlockFlags]  # value = <ConstraintBlockFlags.Static: 4>
     __members__: typing.ClassVar[dict[str, ConstraintBlockFlags]]  # value = {'None_': <ConstraintBlockFlags.None_: 0>, 'Pure': <ConstraintBlockFlags.Pure: 2>, 'Static': <ConstraintBlockFlags.Static: 4>, 'Extern': <ConstraintBlockFlags.Extern: 8>, 'ExplicitExtern': <ConstraintBlockFlags.ExplicitExtern: 16>, 'Initial': <ConstraintBlockFlags.Initial: 32>, 'Extends': <ConstraintBlockFlags.Extends: 64>, 'Final': <ConstraintBlockFlags.Final: 128>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -2498,9 +2054,6 @@ class ConstraintBlockFlags:
     def value(self) -> int:
         ...
 class ConstraintBlockSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def constraints(self) -> Constraint:
         ...
@@ -2514,22 +2067,14 @@ class ConstraintBlockSyntax(ConstraintItemSyntax):
     closeBrace: Token
     items: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConstraintDeclarationSyntax(MemberSyntax):
     block: ConstraintBlockSyntax
     keyword: Token
     name: NameSyntax
     qualifiers: ...
     specifiers: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConstraintItemSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ConstraintKind:
     """
     Members:
@@ -2562,9 +2107,6 @@ class ConstraintKind:
     SolveBefore: typing.ClassVar[ConstraintKind]  # value = <ConstraintKind.SolveBefore: 7>
     Uniqueness: typing.ClassVar[ConstraintKind]  # value = <ConstraintKind.Uniqueness: 5>
     __members__: typing.ClassVar[dict[str, ConstraintKind]]  # value = {'Invalid': <ConstraintKind.Invalid: 0>, 'List': <ConstraintKind.List: 1>, 'Expression': <ConstraintKind.Expression: 2>, 'Implication': <ConstraintKind.Implication: 3>, 'Conditional': <ConstraintKind.Conditional: 4>, 'Uniqueness': <ConstraintKind.Uniqueness: 5>, 'DisableSoft': <ConstraintKind.DisableSoft: 6>, 'SolveBefore': <ConstraintKind.SolveBefore: 7>, 'Foreach': <ConstraintKind.Foreach: 8>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -2592,9 +2134,6 @@ class ConstraintKind:
     def value(self) -> int:
         ...
 class ConstraintList(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def list(self) -> span[Constraint]:
         ...
@@ -2604,17 +2143,9 @@ class ConstraintPrototypeSyntax(MemberSyntax):
     qualifiers: ...
     semi: Token
     specifiers: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ContinueStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ContinuousAssignSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def assignment(self) -> Expression:
         ...
@@ -2630,13 +2161,7 @@ class ContinuousAssignSyntax(MemberSyntax):
     delay: TimingControlSyntax
     semi: Token
     strength: DriveStrengthSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ConversionExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def conversionKind(self) -> ConversionKind:
         ...
@@ -2666,9 +2191,6 @@ class ConversionKind:
     Propagated: typing.ClassVar[ConversionKind]  # value = <ConversionKind.Propagated: 1>
     StreamingConcat: typing.ClassVar[ConversionKind]  # value = <ConversionKind.StreamingConcat: 2>
     __members__: typing.ClassVar[dict[str, ConversionKind]]  # value = {'Implicit': <ConversionKind.Implicit: 0>, 'Propagated': <ConversionKind.Propagated: 1>, 'StreamingConcat': <ConversionKind.StreamingConcat: 2>, 'Explicit': <ConversionKind.Explicit: 3>, 'BitstreamCast': <ConversionKind.BitstreamCast: 4>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -2696,29 +2218,17 @@ class ConversionKind:
     def value(self) -> int:
         ...
 class CopyClassExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def sourceExpr(self) -> Expression:
         ...
 class CopyClassExpressionSyntax(ExpressionSyntax):
     expr: ExpressionSyntax
     scopedNew: NameSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CoverCrossBodySymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def crossQueueType(self) -> ...:
         ...
 class CoverCrossSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def iffExpr(self) -> Expression:
         ...
@@ -2737,13 +2247,8 @@ class CoverCrossSyntax(MemberSyntax):
     label: NamedLabelSyntax
     members: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CoverageBinInitializerSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class CoverageBinSymbol(Symbol):
     class BinKind:
         """
@@ -2759,9 +2264,6 @@ class CoverageBinSymbol(Symbol):
         IgnoreBins: typing.ClassVar[CoverageBinSymbol.BinKind]  # value = <BinKind.IgnoreBins: 2>
         IllegalBins: typing.ClassVar[CoverageBinSymbol.BinKind]  # value = <BinKind.IllegalBins: 1>
         __members__: typing.ClassVar[dict[str, CoverageBinSymbol.BinKind]]  # value = {'Bins': <BinKind.Bins: 0>, 'IllegalBins': <BinKind.IllegalBins: 1>, 'IgnoreBins': <BinKind.IgnoreBins: 2>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -2806,9 +2308,6 @@ class CoverageBinSymbol(Symbol):
             Nonconsecutive: typing.ClassVar[CoverageBinSymbol.TransRangeList.RepeatKind]  # value = <RepeatKind.Nonconsecutive: 2>
             None_: typing.ClassVar[CoverageBinSymbol.TransRangeList.RepeatKind]  # value = <RepeatKind.None_: 0>
             __members__: typing.ClassVar[dict[str, CoverageBinSymbol.TransRangeList.RepeatKind]]  # value = {'None_': <RepeatKind.None_: 0>, 'Consecutive': <RepeatKind.Consecutive: 1>, 'Nonconsecutive': <RepeatKind.Nonconsecutive: 2>, 'GoTo': <RepeatKind.GoTo: 3>}
-            @staticmethod
-            def _pybind11_conduit_v1_(*args, **kwargs):
-                ...
             def __eq__(self, other: typing.Any) -> bool:
                 ...
             def __getstate__(self) -> int:
@@ -2839,9 +2338,6 @@ class CoverageBinSymbol(Symbol):
         GoTo: typing.ClassVar[CoverageBinSymbol.TransRangeList.RepeatKind]  # value = <RepeatKind.GoTo: 3>
         Nonconsecutive: typing.ClassVar[CoverageBinSymbol.TransRangeList.RepeatKind]  # value = <RepeatKind.Nonconsecutive: 2>
         None_: typing.ClassVar[CoverageBinSymbol.TransRangeList.RepeatKind]  # value = <RepeatKind.None_: 0>
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def items(self) -> span[Expression]:
             ...
@@ -2857,9 +2353,6 @@ class CoverageBinSymbol(Symbol):
     Bins: typing.ClassVar[CoverageBinSymbol.BinKind]  # value = <BinKind.Bins: 0>
     IgnoreBins: typing.ClassVar[CoverageBinSymbol.BinKind]  # value = <BinKind.IgnoreBins: 2>
     IllegalBins: typing.ClassVar[CoverageBinSymbol.BinKind]  # value = <BinKind.IllegalBins: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def binsKind(self) -> ...:
         ...
@@ -2897,9 +2390,6 @@ class CoverageBinsArraySizeSyntax(SyntaxNode):
     closeBracket: Token
     expr: ExpressionSyntax
     openBracket: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CoverageBinsSyntax(MemberSyntax):
     equals: Token
     iff: CoverageIffClauseSyntax
@@ -2909,21 +2399,12 @@ class CoverageBinsSyntax(MemberSyntax):
     semi: Token
     size: CoverageBinsArraySizeSyntax
     wildcard: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CoverageIffClauseSyntax(SyntaxNode):
     closeParen: Token
     expr: ExpressionSyntax
     iff: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CoverageOptionSetter:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expression(self) -> Expression:
         ...
@@ -2936,13 +2417,7 @@ class CoverageOptionSetter:
 class CoverageOptionSyntax(MemberSyntax):
     expr: ExpressionSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CovergroupBodySymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def options(self) -> span[CoverageOptionSetter]:
         ...
@@ -2956,13 +2431,7 @@ class CovergroupDeclarationSyntax(MemberSyntax):
     name: Token
     portList: FunctionPortListSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CovergroupType(Type, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[FormalArgumentSymbol]:
         ...
@@ -2976,9 +2445,6 @@ class CovergroupType(Type, Scope):
     def coverageEvent(self) -> TimingControl:
         ...
 class CoverpointSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def coverageExpr(self) -> Expression:
         ...
@@ -3001,17 +2467,9 @@ class CoverpointSyntax(MemberSyntax):
     members: ...
     openBrace: Token
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class CrossIdBinsSelectExpr(BinsSelectExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class CycleDelayControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> ...:
         ...
@@ -3023,9 +2481,6 @@ class DPIExportSyntax(MemberSyntax):
     name: Token
     semi: Token
     specString: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DPIImportSyntax(MemberSyntax):
     c_identifier: Token
     equals: Token
@@ -3034,13 +2489,7 @@ class DPIImportSyntax(MemberSyntax):
     property: Token
     semi: Token
     specString: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DPIOpenArrayType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elementType(self) -> Type:
         ...
@@ -3052,28 +2501,15 @@ class DataDeclarationSyntax(MemberSyntax):
     modifiers: ...
     semi: Token
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DataTypeExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class DataTypeSyntax(ExpressionSyntax):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class DeclaratorSyntax(SyntaxNode):
     dimensions: ...
     initializer: EqualsValueClauseSyntax
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DeclaredType:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def initializer(self) -> Expression:
         ...
@@ -3095,13 +2531,7 @@ class DeclaredType:
 class DefParamAssignmentSyntax(SyntaxNode):
     name: NameSyntax
     setter: EqualsValueClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefParamSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def initializer(self) -> Expression:
         ...
@@ -3115,116 +2545,65 @@ class DefParamSyntax(MemberSyntax):
     assignments: ...
     defparam: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultCaseItemSyntax(CaseItemSyntax):
     clause: SyntaxNode
     colon: Token
     defaultKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultClockingReferenceSyntax(MemberSyntax):
     clocking: Token
     defaultKeyword: Token
     name: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultConfigRuleSyntax(ConfigRuleSyntax):
     defaultKeyword: Token
     liblist: ConfigLiblistSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultCoverageBinInitializerSyntax(CoverageBinInitializerSyntax):
     defaultKeyword: Token
     sequenceKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultDecayTimeDirectiveSyntax(DirectiveSyntax):
     time: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultDisableDeclarationSyntax(MemberSyntax):
     defaultKeyword: Token
     disableKeyword: Token
     expr: ExpressionSyntax
     iffKeyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultDistItemSyntax(DistItemBaseSyntax):
     defaultKeyword: Token
     weight: DistWeightSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultExtendsClauseArgSyntax(SyntaxNode):
     closeParen: Token
     defaultKeyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultFunctionPortSyntax(FunctionPortBaseSyntax):
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultNetTypeDirectiveSyntax(DirectiveSyntax):
     netType: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultPropertyCaseItemSyntax(PropertyCaseItemSyntax):
     colon: Token
     defaultKeyword: Token
     expr: PropertyExprSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultRsCaseItemSyntax(RsCaseItemSyntax):
     colon: Token
     defaultKeyword: Token
     item: RsProdItemSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultSkewItemSyntax(MemberSyntax):
     direction: ClockingDirectionSyntax
     keyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefaultTriregStrengthDirectiveSyntax(DirectiveSyntax):
     strength: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DeferredAssertionSyntax(SyntaxNode):
     finalKeyword: Token
     hash: Token
     zero: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefineDirectiveSyntax(DirectiveSyntax):
     body: ...
     formalArguments: MacroFormalArgumentListSyntax
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DefinitionKind:
     """
     Members:
@@ -3239,9 +2618,6 @@ class DefinitionKind:
     Module: typing.ClassVar[DefinitionKind]  # value = <DefinitionKind.Module: 0>
     Program: typing.ClassVar[DefinitionKind]  # value = <DefinitionKind.Program: 2>
     __members__: typing.ClassVar[dict[str, DefinitionKind]]  # value = {'Module': <DefinitionKind.Module: 0>, 'Interface': <DefinitionKind.Interface: 1>, 'Program': <DefinitionKind.Program: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -3269,9 +2645,6 @@ class DefinitionKind:
     def value(self) -> int:
         ...
 class DefinitionSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     def getArticleKindString(self) -> str:
@@ -3297,9 +2670,6 @@ class DefinitionSymbol(Symbol):
     def unconnectedDrive(self) -> UnconnectedDrive:
         ...
 class Delay3Control(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr1(self) -> ...:
         ...
@@ -3318,22 +2688,13 @@ class Delay3Syntax(TimingControlSyntax):
     delay3: ExpressionSyntax
     hash: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DelayControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> ...:
         ...
 class DelaySyntax(TimingControlSyntax):
     delayValue: ExpressionSyntax
     hash: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DelayedSequenceElementSyntax(SyntaxNode):
     closeBracket: Token
     delayVal: ExpressionSyntax
@@ -3342,19 +2703,10 @@ class DelayedSequenceElementSyntax(SyntaxNode):
     op: Token
     openBracket: Token
     range: SelectorSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DelayedSequenceExprSyntax(SequenceExprSyntax):
     elements: ...
     first: SequenceExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DiagCode:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __bool__(self) -> bool:
         ...
     def __eq__(self, arg0: DiagCode) -> bool:
@@ -3376,9 +2728,6 @@ class DiagCode:
     def getSubsystem(self) -> DiagSubsystem:
         ...
 class DiagGroup:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self, name: str, diags: list[DiagCode]) -> None:
         ...
     def __repr__(self) -> str:
@@ -3443,9 +2792,6 @@ class DiagSubsystem:
     Tidy: typing.ClassVar[DiagSubsystem]  # value = <DiagSubsystem.Tidy: 15>
     Types: typing.ClassVar[DiagSubsystem]  # value = <DiagSubsystem.Types: 9>
     __members__: typing.ClassVar[dict[str, DiagSubsystem]]  # value = {'Invalid': <DiagSubsystem.Invalid: 0>, 'General': <DiagSubsystem.General: 1>, 'Lexer': <DiagSubsystem.Lexer: 2>, 'Numeric': <DiagSubsystem.Numeric: 3>, 'Preprocessor': <DiagSubsystem.Preprocessor: 4>, 'Parser': <DiagSubsystem.Parser: 5>, 'Declarations': <DiagSubsystem.Declarations: 6>, 'Expressions': <DiagSubsystem.Expressions: 7>, 'Statements': <DiagSubsystem.Statements: 8>, 'Types': <DiagSubsystem.Types: 9>, 'Lookup': <DiagSubsystem.Lookup: 10>, 'SysFuncs': <DiagSubsystem.SysFuncs: 11>, 'ConstEval': <DiagSubsystem.ConstEval: 12>, 'Compilation': <DiagSubsystem.Compilation: 13>, 'Meta': <DiagSubsystem.Meta: 14>, 'Tidy': <DiagSubsystem.Tidy: 15>, 'Netlist': <DiagSubsystem.Netlist: 16>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -3474,9 +2820,6 @@ class DiagSubsystem:
         ...
 class Diagnostic:
     __hash__: typing.ClassVar[None] = None
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, arg0: Diagnostic) -> bool:
         ...
     def __init__(self, code: DiagCode, location: SourceLocation) -> None:
@@ -3501,17 +2844,11 @@ class Diagnostic:
     def symbol(self) -> ...:
         ...
 class DiagnosticClient:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def report(self, diagnostic: ReportedDiagnostic) -> None:
         ...
     def setEngine(self, engine: DiagnosticEngine) -> None:
         ...
 class DiagnosticEngine:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def reportAll(sourceManager: SourceManager, diag: span[Diagnostic]) -> str:
         ...
@@ -3602,9 +2939,6 @@ class DiagnosticSeverity:
     Note: typing.ClassVar[DiagnosticSeverity]  # value = <DiagnosticSeverity.Note: 1>
     Warning: typing.ClassVar[DiagnosticSeverity]  # value = <DiagnosticSeverity.Warning: 2>
     __members__: typing.ClassVar[dict[str, DiagnosticSeverity]]  # value = {'Ignored': <DiagnosticSeverity.Ignored: 0>, 'Note': <DiagnosticSeverity.Note: 1>, 'Warning': <DiagnosticSeverity.Warning: 2>, 'Error': <DiagnosticSeverity.Error: 3>, 'Fatal': <DiagnosticSeverity.Fatal: 4>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -3632,9 +2966,6 @@ class DiagnosticSeverity:
     def value(self) -> int:
         ...
 class Diagnostics:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __getitem__(self, arg0: int) -> Diagnostic:
         ...
     def __init__(self) -> None:
@@ -4787,9 +4118,6 @@ class Diags:
     WrongLanguageVersion: typing.ClassVar[DiagCode]  # value = DiagCode(WrongLanguageVersion)
     WrongNumberAssignmentPatterns: typing.ClassVar[DiagCode]  # value = DiagCode(WrongNumberAssignmentPatterns)
     WrongSpecifyDelayCount: typing.ClassVar[DiagCode]  # value = DiagCode(WrongSpecifyDelayCount)
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DimensionKind:
     """
     Members:
@@ -4816,9 +4144,6 @@ class DimensionKind:
     Range: typing.ClassVar[DimensionKind]  # value = <DimensionKind.Range: 1>
     Unknown: typing.ClassVar[DimensionKind]  # value = <DimensionKind.Unknown: 0>
     __members__: typing.ClassVar[dict[str, DimensionKind]]  # value = {'Unknown': <DimensionKind.Unknown: 0>, 'Range': <DimensionKind.Range: 1>, 'AbbreviatedRange': <DimensionKind.AbbreviatedRange: 2>, 'Dynamic': <DimensionKind.Dynamic: 3>, 'Associative': <DimensionKind.Associative: 4>, 'Queue': <DimensionKind.Queue: 5>, 'DPIOpenArray': <DimensionKind.DPIOpenArray: 6>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -4846,37 +4171,21 @@ class DimensionKind:
     def value(self) -> int:
         ...
 class DimensionSpecifierSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class DirectiveSyntax(SyntaxNode):
     directive: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DisableConstraintSyntax(ConstraintItemSyntax):
     disable: Token
     name: ExpressionSyntax
     semi: Token
     soft: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DisableForkStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class DisableForkStatementSyntax(StatementSyntax):
     disable: Token
     fork: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DisableIffAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def condition(self) -> ...:
         ...
@@ -4889,20 +4198,11 @@ class DisableIffSyntax(SyntaxNode):
     expr: ExpressionSyntax
     iff: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DisableSoftConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def target(self) -> ...:
         ...
 class DisableStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def target(self) -> Expression:
         ...
@@ -4910,22 +4210,13 @@ class DisableStatementSyntax(StatementSyntax):
     disable: Token
     name: NameSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DistConstraintListSyntax(SyntaxNode):
     closeBrace: Token
     dist: Token
     items: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DistExpression(Expression):
     class DistItem:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def value(self) -> Expression:
             ...
@@ -4944,9 +4235,6 @@ class DistExpression(Expression):
             PerRange: typing.ClassVar[DistExpression.DistWeight.Kind]  # value = <Kind.PerRange: 1>
             PerValue: typing.ClassVar[DistExpression.DistWeight.Kind]  # value = <Kind.PerValue: 0>
             __members__: typing.ClassVar[dict[str, DistExpression.DistWeight.Kind]]  # value = {'PerValue': <Kind.PerValue: 0>, 'PerRange': <Kind.PerRange: 1>}
-            @staticmethod
-            def _pybind11_conduit_v1_(*args, **kwargs):
-                ...
             def __eq__(self, other: typing.Any) -> bool:
                 ...
             def __getstate__(self) -> int:
@@ -4975,18 +4263,12 @@ class DistExpression(Expression):
                 ...
         PerRange: typing.ClassVar[DistExpression.DistWeight.Kind]  # value = <Kind.PerRange: 1>
         PerValue: typing.ClassVar[DistExpression.DistWeight.Kind]  # value = <Kind.PerValue: 0>
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
         @property
         def kind(self) -> ...:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def defaultWeight(self) -> ...:
         ...
@@ -4997,32 +4279,18 @@ class DistExpression(Expression):
     def left(self) -> Expression:
         ...
 class DistItemBaseSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class DistItemSyntax(DistItemBaseSyntax):
     range: ExpressionSyntax
     weight: DistWeightSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DistWeightSyntax(SyntaxNode):
     expr: ExpressionSyntax
     extraOp: Token
     op: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DividerClauseSyntax(SyntaxNode):
     divide: Token
     value: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DoWhileLoopStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> Statement:
         ...
@@ -5037,29 +4305,17 @@ class DoWhileStatementSyntax(StatementSyntax):
     semi: Token
     statement: StatementSyntax
     whileKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DotMemberClauseSyntax(SyntaxNode):
     dot: Token
     member: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class DriveStrengthSyntax(NetStrengthSyntax):
     closeParen: Token
     comma: Token
     openParen: Token
     strength0: Token
     strength1: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class Driver:
     languageVersion: LanguageVersion
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def addStandardArgs(self) -> None:
@@ -5113,9 +4369,6 @@ class DriverKind:
     Other: typing.ClassVar[DriverKind]  # value = <DriverKind.Other: 2>
     Procedural: typing.ClassVar[DriverKind]  # value = <DriverKind.Procedural: 0>
     __members__: typing.ClassVar[dict[str, DriverKind]]  # value = {'Procedural': <DriverKind.Procedural: 0>, 'Continuous': <DriverKind.Continuous: 1>, 'Other': <DriverKind.Other: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -5143,9 +4396,6 @@ class DriverKind:
     def value(self) -> int:
         ...
 class DynamicArrayType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elementType(self) -> Type:
         ...
@@ -5153,15 +4403,9 @@ class EdgeControlSpecifierSyntax(SyntaxNode):
     closeBracket: Token
     descriptors: ...
     openBracket: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EdgeDescriptorSyntax(SyntaxNode):
     t1: Token
     t2: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EdgeKind:
     """
     Members:
@@ -5179,9 +4423,6 @@ class EdgeKind:
     None: typing.ClassVar[EdgeKind]  # value = <EdgeKind.None: 0>
     PosEdge: typing.ClassVar[EdgeKind]  # value = <EdgeKind.PosEdge: 1>
     __members__: typing.ClassVar[dict[str, EdgeKind]]  # value = {'None': <EdgeKind.None: 0>, 'PosEdge': <EdgeKind.PosEdge: 1>, 'NegEdge': <EdgeKind.NegEdge: 2>, 'BothEdges': <EdgeKind.BothEdges: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -5215,9 +4456,6 @@ class EdgeSensitivePathSuffixSyntax(PathSuffixSyntax):
     openParen: Token
     outputs: ...
     polarityOperator: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ElabSystemTaskKind:
     """
     Members:
@@ -5238,9 +4476,6 @@ class ElabSystemTaskKind:
     StaticAssert: typing.ClassVar[ElabSystemTaskKind]  # value = <ElabSystemTaskKind.StaticAssert: 4>
     Warning: typing.ClassVar[ElabSystemTaskKind]  # value = <ElabSystemTaskKind.Warning: 2>
     __members__: typing.ClassVar[dict[str, ElabSystemTaskKind]]  # value = {'Fatal': <ElabSystemTaskKind.Fatal: 0>, 'Error': <ElabSystemTaskKind.Error: 1>, 'Warning': <ElabSystemTaskKind.Warning: 2>, 'Info': <ElabSystemTaskKind.Info: 3>, 'StaticAssert': <ElabSystemTaskKind.StaticAssert: 4>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -5268,9 +4503,6 @@ class ElabSystemTaskKind:
     def value(self) -> int:
         ...
 class ElabSystemTaskSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def assertCondition(self) -> Expression:
         ...
@@ -5284,13 +4516,7 @@ class ElabSystemTaskSyntax(MemberSyntax):
     arguments: ArgumentListSyntax
     name: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ElementSelectExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def selector(self) -> Expression:
         ...
@@ -5300,92 +4526,44 @@ class ElementSelectExpression(Expression):
 class ElementSelectExpressionSyntax(ExpressionSyntax):
     left: ExpressionSyntax
     select: ElementSelectSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ElementSelectSyntax(SyntaxNode):
     closeBracket: Token
     openBracket: Token
     selector: SelectorSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ElseClauseSyntax(SyntaxNode):
     clause: SyntaxNode
     elseKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ElseConstraintClauseSyntax(SyntaxNode):
     constraints: ConstraintItemSyntax
     elseKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ElsePropertyClauseSyntax(SyntaxNode):
     elseKeyword: Token
     expr: PropertyExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyArgumentExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class EmptyArgumentSyntax(ArgumentSyntax):
     placeholder: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyIdentifierNameSyntax(NameSyntax):
     placeholder: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyMemberSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class EmptyMemberSyntax(MemberSyntax):
     qualifiers: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyNonAnsiPortSyntax(NonAnsiPortSyntax):
     placeholder: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyPortConnectionSyntax(PortConnectionSyntax):
     placeholder: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyQueueExpressionSyntax(PrimaryExpressionSyntax):
     closeBrace: Token
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class EmptyStatementSyntax(StatementSyntax):
     semicolon: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EmptyTimingCheckArgSyntax(TimingCheckArgSyntax):
     placeholder: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EnumType(IntegralType, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def baseType(self) -> Type:
         ...
@@ -5399,43 +4577,23 @@ class EnumTypeSyntax(DataTypeSyntax):
     keyword: Token
     members: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EnumValueSymbol(ValueSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def value(self) -> ConstantValue:
         ...
 class EqualsAssertionArgClauseSyntax(SyntaxNode):
     equals: Token
     expr: PropertyExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EqualsTypeClauseSyntax(SyntaxNode):
     equals: Token
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EqualsValueClauseSyntax(SyntaxNode):
     equals: Token
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ErrorType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class EvalContext:
     class Frame:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def callLocation(self) -> ...:
             ...
@@ -5449,9 +4607,6 @@ class EvalContext:
         def temporaries(self) -> dict[..., ...]:
             ...
     queueTarget: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self, astCtx: ..., flags: EvalFlags = ...) -> None:
         ...
     def createLocal(self, symbol: ..., value: ... = None) -> ...:
@@ -5523,9 +4678,6 @@ class EvalFlags:
     None_: typing.ClassVar[EvalFlags]  # value = <EvalFlags.None_: 0>
     SpecparamsAllowed: typing.ClassVar[EvalFlags]  # value = <EvalFlags.SpecparamsAllowed: 4>
     __members__: typing.ClassVar[dict[str, EvalFlags]]  # value = {'None_': <EvalFlags.None_: 0>, 'IsScript': <EvalFlags.IsScript: 1>, 'CacheResults': <EvalFlags.CacheResults: 2>, 'SpecparamsAllowed': <EvalFlags.SpecparamsAllowed: 4>, 'CovergroupExpr': <EvalFlags.CovergroupExpr: 8>, 'AllowUnboundedPlaceholder': <EvalFlags.AllowUnboundedPlaceholder: 16>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -5553,9 +4705,6 @@ class EvalFlags:
     def value(self) -> int:
         ...
 class EvaluatedDimension:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def associativeType(self) -> ...:
         ...
@@ -5574,30 +4723,16 @@ class EvaluatedDimension:
 class EventControlSyntax(TimingControlSyntax):
     at: Token
     eventName: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EventControlWithExpressionSyntax(TimingControlSyntax):
     at: Token
     expr: EventExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EventExpressionSyntax(SequenceExprSyntax):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class EventListControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def events(self) -> span[TimingControl]:
         ...
 class EventTriggerStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isNonBlocking(self) -> bool:
         ...
@@ -5612,13 +4747,8 @@ class EventTriggerStatementSyntax(StatementSyntax):
     semi: Token
     timing: TimingControlSyntax
     trigger: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class EventType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ExplicitAnsiPortSyntax(MemberSyntax):
     closeParen: Token
     direction: Token
@@ -5626,13 +4756,7 @@ class ExplicitAnsiPortSyntax(MemberSyntax):
     expr: ExpressionSyntax
     name: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExplicitImportSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def importName(self) -> str:
         ...
@@ -5654,13 +4778,7 @@ class ExplicitNonAnsiPortSyntax(NonAnsiPortSyntax):
     expr: PortExpressionSyntax
     name: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class Expression:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     def eval(self, context: EvalContext) -> ...:
@@ -5708,9 +4826,6 @@ class Expression:
     def type(self) -> ...:
         ...
 class ExpressionConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> ...:
         ...
@@ -5721,14 +4836,8 @@ class ExpressionConstraintSyntax(ConstraintItemSyntax):
     expr: ExpressionSyntax
     semi: Token
     soft: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExpressionCoverageBinInitializerSyntax(CoverageBinInitializerSyntax):
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExpressionKind:
     """
     Members:
@@ -5857,9 +4966,6 @@ class ExpressionKind:
     UnboundedLiteral: typing.ClassVar[ExpressionKind]  # value = <ExpressionKind.UnboundedLiteral: 6>
     ValueRange: typing.ClassVar[ExpressionKind]  # value = <ExpressionKind.ValueRange: 31>
     __members__: typing.ClassVar[dict[str, ExpressionKind]]  # value = {'Invalid': <ExpressionKind.Invalid: 0>, 'IntegerLiteral': <ExpressionKind.IntegerLiteral: 1>, 'RealLiteral': <ExpressionKind.RealLiteral: 2>, 'TimeLiteral': <ExpressionKind.TimeLiteral: 3>, 'UnbasedUnsizedIntegerLiteral': <ExpressionKind.UnbasedUnsizedIntegerLiteral: 4>, 'NullLiteral': <ExpressionKind.NullLiteral: 5>, 'UnboundedLiteral': <ExpressionKind.UnboundedLiteral: 6>, 'StringLiteral': <ExpressionKind.StringLiteral: 7>, 'NamedValue': <ExpressionKind.NamedValue: 8>, 'HierarchicalValue': <ExpressionKind.HierarchicalValue: 9>, 'UnaryOp': <ExpressionKind.UnaryOp: 10>, 'BinaryOp': <ExpressionKind.BinaryOp: 11>, 'ConditionalOp': <ExpressionKind.ConditionalOp: 12>, 'Inside': <ExpressionKind.Inside: 13>, 'Assignment': <ExpressionKind.Assignment: 14>, 'Concatenation': <ExpressionKind.Concatenation: 15>, 'Replication': <ExpressionKind.Replication: 16>, 'Streaming': <ExpressionKind.Streaming: 17>, 'ElementSelect': <ExpressionKind.ElementSelect: 18>, 'RangeSelect': <ExpressionKind.RangeSelect: 19>, 'MemberAccess': <ExpressionKind.MemberAccess: 20>, 'Call': <ExpressionKind.Call: 21>, 'Conversion': <ExpressionKind.Conversion: 22>, 'DataType': <ExpressionKind.DataType: 23>, 'TypeReference': <ExpressionKind.TypeReference: 24>, 'ArbitrarySymbol': <ExpressionKind.ArbitrarySymbol: 25>, 'LValueReference': <ExpressionKind.LValueReference: 26>, 'SimpleAssignmentPattern': <ExpressionKind.SimpleAssignmentPattern: 27>, 'StructuredAssignmentPattern': <ExpressionKind.StructuredAssignmentPattern: 28>, 'ReplicatedAssignmentPattern': <ExpressionKind.ReplicatedAssignmentPattern: 29>, 'EmptyArgument': <ExpressionKind.EmptyArgument: 30>, 'ValueRange': <ExpressionKind.ValueRange: 31>, 'Dist': <ExpressionKind.Dist: 32>, 'NewArray': <ExpressionKind.NewArray: 33>, 'NewClass': <ExpressionKind.NewClass: 34>, 'NewCovergroup': <ExpressionKind.NewCovergroup: 35>, 'CopyClass': <ExpressionKind.CopyClass: 36>, 'MinTypMax': <ExpressionKind.MinTypMax: 37>, 'ClockingEvent': <ExpressionKind.ClockingEvent: 38>, 'AssertionInstance': <ExpressionKind.AssertionInstance: 39>, 'TaggedUnion': <ExpressionKind.TaggedUnion: 40>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -5889,72 +4995,40 @@ class ExpressionKind:
 class ExpressionOrDistSyntax(ExpressionSyntax):
     distribution: DistConstraintListSyntax
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExpressionPatternSyntax(PatternSyntax):
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExpressionStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> Expression:
         ...
 class ExpressionStatementSyntax(StatementSyntax):
     expr: ExpressionSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExpressionSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ExpressionTimingCheckArgSyntax(TimingCheckArgSyntax):
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExtendsClauseSyntax(SyntaxNode):
     arguments: ArgumentListSyntax
     baseName: NameSyntax
     defaultedArg: DefaultExtendsClauseArgSyntax
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExternInterfaceMethodSyntax(MemberSyntax):
     externKeyword: Token
     forkJoin: Token
     prototype: FunctionPrototypeSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExternModuleDeclSyntax(MemberSyntax):
     actualAttributes: ...
     externKeyword: Token
     header: ModuleHeaderSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ExternUdpDeclSyntax(MemberSyntax):
     actualAttributes: ...
     externKeyword: Token
     name: Token
     portList: UdpPortListSyntax
     primitive: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class FieldSymbol(VariableSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def bitOffset(self) -> int:
         ...
@@ -5966,13 +5040,7 @@ class FieldSymbol(VariableSymbol):
         ...
 class FilePathSpecSyntax(SyntaxNode):
     path: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class FirstMatchAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def matchItems(self) -> span[...]:
         ...
@@ -5985,13 +5053,7 @@ class FirstMatchSequenceExprSyntax(SequenceExprSyntax):
     first_match: Token
     matchList: SequenceMatchListSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class FixedSizeUnpackedArrayType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elementType(self) -> Type:
         ...
@@ -6013,9 +5075,6 @@ class FloatingType(Type):
         RealTime: typing.ClassVar[FloatingType.Kind]  # value = <Kind.RealTime: 2>
         ShortReal: typing.ClassVar[FloatingType.Kind]  # value = <Kind.ShortReal: 1>
         __members__: typing.ClassVar[dict[str, FloatingType.Kind]]  # value = {'Real': <Kind.Real: 0>, 'ShortReal': <Kind.ShortReal: 1>, 'RealTime': <Kind.RealTime: 2>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -6045,16 +5104,10 @@ class FloatingType(Type):
     Real: typing.ClassVar[FloatingType.Kind]  # value = <Kind.Real: 0>
     RealTime: typing.ClassVar[FloatingType.Kind]  # value = <Kind.RealTime: 2>
     ShortReal: typing.ClassVar[FloatingType.Kind]  # value = <Kind.ShortReal: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def floatKind(self) -> ...:
         ...
 class ForLoopStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> Statement:
         ...
@@ -6080,20 +5133,11 @@ class ForLoopStatementSyntax(StatementSyntax):
     statement: StatementSyntax
     steps: ...
     stopExpr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ForVariableDeclarationSyntax(SyntaxNode):
     declarator: DeclaratorSyntax
     type: DataTypeSyntax
     varKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ForeachConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arrayRef(self) -> ...:
         ...
@@ -6110,23 +5154,14 @@ class ForeachLoopListSyntax(SyntaxNode):
     loopVariables: ...
     openBracket: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ForeachLoopStatement(Statement):
     class LoopDim:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def loopVar(self) -> ...:
             ...
         @property
         def range(self) -> ConstantRange | None:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arrayRef(self) -> Expression:
         ...
@@ -6140,26 +5175,14 @@ class ForeachLoopStatementSyntax(StatementSyntax):
     keyword: Token
     loopList: ForeachLoopListSyntax
     statement: StatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ForeverLoopStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> Statement:
         ...
 class ForeverStatementSyntax(StatementSyntax):
     foreverKeyword: Token
     statement: StatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class FormalArgumentSymbol(VariableSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def defaultValue(self) -> Expression:
         ...
@@ -6189,9 +5212,6 @@ class ForwardTypeRestriction:
     Struct: typing.ClassVar[ForwardTypeRestriction]  # value = <ForwardTypeRestriction.Struct: 2>
     Union: typing.ClassVar[ForwardTypeRestriction]  # value = <ForwardTypeRestriction.Union: 3>
     __members__: typing.ClassVar[dict[str, ForwardTypeRestriction]]  # value = {'None': <ForwardTypeRestriction.None: 0>, 'Enum': <ForwardTypeRestriction.Enum: 1>, 'Struct': <ForwardTypeRestriction.Struct: 2>, 'Union': <ForwardTypeRestriction.Union: 3>, 'Class': <ForwardTypeRestriction.Class: 4>, 'InterfaceClass': <ForwardTypeRestriction.InterfaceClass: 5>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -6221,21 +5241,12 @@ class ForwardTypeRestriction:
 class ForwardTypeRestrictionSyntax(SyntaxNode):
     keyword1: Token
     keyword2: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ForwardTypedefDeclarationSyntax(MemberSyntax):
     name: Token
     semi: Token
     typeRestriction: ForwardTypeRestrictionSyntax
     typedefKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ForwardingTypedefSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def nextForwardDecl(self) -> ForwardingTypedefSymbol:
         ...
@@ -6251,20 +5262,12 @@ class FunctionDeclarationSyntax(MemberSyntax):
     items: ...
     prototype: FunctionPrototypeSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class FunctionPortBaseSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class FunctionPortListSyntax(SyntaxNode):
     closeParen: Token
     openParen: Token
     ports: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class FunctionPortSyntax(FunctionPortBaseSyntax):
     attributes: ...
     constKeyword: Token
@@ -6273,9 +5276,6 @@ class FunctionPortSyntax(FunctionPortBaseSyntax):
     direction: Token
     staticKeyword: Token
     varKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class FunctionPrototypeSyntax(SyntaxNode):
     keyword: Token
     lifetime: Token
@@ -6283,13 +5283,7 @@ class FunctionPrototypeSyntax(SyntaxNode):
     portList: FunctionPortListSyntax
     returnType: DataTypeSyntax
     specifiers: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class GenerateBlockArraySymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def constructIndex(self) -> int:
         ...
@@ -6303,9 +5297,6 @@ class GenerateBlockArraySymbol(Symbol, Scope):
     def valid(self) -> bool:
         ...
 class GenerateBlockSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arrayIndex(self) -> SVInt:
         ...
@@ -6325,20 +5316,11 @@ class GenerateBlockSyntax(MemberSyntax):
     endName: NamedBlockClauseSyntax
     label: NamedLabelSyntax
     members: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class GenerateRegionSyntax(MemberSyntax):
     endgenerate: Token
     keyword: Token
     members: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class GenericClassDefSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def defaultSpecialization(self) -> Type:
         ...
@@ -6355,50 +5337,28 @@ class GenvarDeclarationSyntax(MemberSyntax):
     identifiers: ...
     keyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class GenvarSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class HierarchicalInstanceSyntax(SyntaxNode):
     closeParen: Token
     connections: ...
     decl: InstanceNameSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class HierarchicalValueExpression(ValueExpressionBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class HierarchyInstantiationSyntax(MemberSyntax):
     instances: ...
     parameters: ParameterValueAssignmentSyntax
     semi: Token
     type: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IdWithExprCoverageBinInitializerSyntax(CoverageBinInitializerSyntax):
     id: Token
     withClause: WithClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IdentifierNameSyntax(NameSyntax):
     identifier: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IdentifierSelectNameSyntax(NameSyntax):
     identifier: Token
     selectors: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IfGenerateSyntax(MemberSyntax):
     block: MemberSyntax
     closeParen: Token
@@ -6406,30 +5366,15 @@ class IfGenerateSyntax(MemberSyntax):
     elseClause: ElseClauseSyntax
     keyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IfNonePathDeclarationSyntax(MemberSyntax):
     keyword: Token
     path: PathDeclarationSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IffEventClauseSyntax(SyntaxNode):
     expr: ExpressionSyntax
     iff: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImmediateAssertionMemberSyntax(MemberSyntax):
     statement: ImmediateAssertionStatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImmediateAssertionStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def assertionKind(self) -> AssertionKind:
         ...
@@ -6453,19 +5398,10 @@ class ImmediateAssertionStatementSyntax(StatementSyntax):
     delay: DeferredAssertionSyntax
     expr: ParenthesizedExpressionSyntax
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImplementsClauseSyntax(SyntaxNode):
     interfaces: ...
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImplicationConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> Constraint:
         ...
@@ -6476,48 +5412,25 @@ class ImplicationConstraintSyntax(ConstraintItemSyntax):
     arrow: Token
     constraints: ConstraintItemSyntax
     left: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImplicitAnsiPortSyntax(MemberSyntax):
     declarator: DeclaratorSyntax
     header: PortHeaderSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImplicitEventControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ImplicitEventControlSyntax(TimingControlSyntax):
     at: Token
     closeParen: Token
     openParen: Token
     star: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImplicitNonAnsiPortSyntax(NonAnsiPortSyntax):
     expr: PortExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ImplicitTypeSyntax(DataTypeSyntax):
     dimensions: ...
     placeholder: Token
     signing: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IncludeDirectiveSyntax(DirectiveSyntax):
     fileName: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class InsideExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def left(self) -> Expression:
         ...
@@ -6528,13 +5441,7 @@ class InsideExpressionSyntax(ExpressionSyntax):
     expr: ExpressionSyntax
     inside: Token
     ranges: RangeListSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class InstanceArraySymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arrayName(self) -> str:
         ...
@@ -6545,9 +5452,6 @@ class InstanceArraySymbol(Symbol, Scope):
     def range(self) -> ConstantRange:
         ...
 class InstanceBodySymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def findPort(self, portName: str) -> Symbol:
         ...
     def hasSameType(self, other: InstanceBodySymbol) -> bool:
@@ -6570,19 +5474,10 @@ class InstanceConfigRuleSyntax(ConfigRuleSyntax):
     ruleClause: ConfigRuleClauseSyntax
     semi: Token
     topModule: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class InstanceNameSyntax(SyntaxNode):
     dimensions: ...
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class InstanceSymbol(InstanceSymbolBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @typing.overload
     def getPortConnection(self, port: PortSymbol) -> PortConnection:
         ...
@@ -6608,9 +5503,6 @@ class InstanceSymbol(InstanceSymbolBase):
     def portConnections(self) -> span[PortConnection]:
         ...
 class InstanceSymbolBase(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arrayName(self) -> str:
         ...
@@ -6618,9 +5510,6 @@ class InstanceSymbolBase(Symbol):
     def arrayPath(self) -> span[int]:
         ...
 class IntegerLiteral(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isDeclaredUnsized(self) -> bool:
         ...
@@ -6631,16 +5520,10 @@ class IntegerTypeSyntax(DataTypeSyntax):
     dimensions: ...
     keyword: Token
     signing: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IntegerVectorExpressionSyntax(PrimaryExpressionSyntax):
     base: Token
     size: Token
     value: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IntegralFlags:
     """
     Members:
@@ -6661,9 +5544,6 @@ class IntegralFlags:
     TwoState: typing.ClassVar[IntegralFlags]  # value = <IntegralFlags.Unsigned: 0>
     Unsigned: typing.ClassVar[IntegralFlags]  # value = <IntegralFlags.Unsigned: 0>
     __members__: typing.ClassVar[dict[str, IntegralFlags]]  # value = {'Unsigned': <IntegralFlags.Unsigned: 0>, 'TwoState': <IntegralFlags.Unsigned: 0>, 'Signed': <IntegralFlags.Signed: 1>, 'FourState': <IntegralFlags.FourState: 2>, 'Reg': <IntegralFlags.Reg: 4>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -6691,9 +5571,6 @@ class IntegralFlags:
     def value(self) -> int:
         ...
 class IntegralType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def getBitVectorRange(self) -> ConstantRange:
         ...
     def isDeclaredReg(self) -> bool:
@@ -6701,13 +5578,7 @@ class IntegralType(Type):
 class InterfacePortHeaderSyntax(PortHeaderSyntax):
     modport: DotMemberClauseSyntax
     nameOrKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class InterfacePortSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def connection(self) -> tuple[Symbol, ...]:
         ...
@@ -6729,68 +5600,34 @@ class InterfacePortSymbol(Symbol):
 class IntersectClauseSyntax(SyntaxNode):
     intersect: Token
     ranges: RangeListSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class InvalidAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class InvalidBinsSelectExpr(BinsSelectExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class InvalidConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class InvalidExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class InvalidPattern(Pattern):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class InvalidStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class InvalidTimingControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class InvocationExpressionSyntax(ExpressionSyntax):
     arguments: ArgumentListSyntax
     attributes: ...
     left: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class IteratorSymbol(TempVarSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class JumpStatementSyntax(StatementSyntax):
     breakOrContinue: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class KeywordNameSyntax(NameSyntax):
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class KeywordTypeSyntax(DataTypeSyntax):
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LValue:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def bad(self) -> bool:
@@ -6802,9 +5639,7 @@ class LValue:
     def store(self, value: ...) -> None:
         ...
 class LValueReferenceExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class LanguageVersion:
     """
     Members:
@@ -6819,9 +5654,6 @@ class LanguageVersion:
     __members__: typing.ClassVar[dict[str, LanguageVersion]]  # value = {'v1800_2017': <LanguageVersion.v1800_2017: 0>, 'v1800_2023': <LanguageVersion.v1800_2023: 1>, 'Default': <LanguageVersion.v1800_2017: 0>}
     v1800_2017: typing.ClassVar[LanguageVersion]  # value = <LanguageVersion.v1800_2017: 0>
     v1800_2023: typing.ClassVar[LanguageVersion]  # value = <LanguageVersion.v1800_2023: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -6849,9 +5681,6 @@ class LanguageVersion:
     def value(self) -> int:
         ...
 class LetDeclSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def ports(self) -> span[AssertionPortSymbol]:
         ...
@@ -6862,15 +5691,9 @@ class LetDeclarationSyntax(MemberSyntax):
     let: Token
     portList: AssertionItemPortListSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LexerOptions:
     languageVersion: LanguageVersion
     maxErrors: int
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
 class LibraryDeclarationSyntax(MemberSyntax):
@@ -6879,36 +5702,21 @@ class LibraryDeclarationSyntax(MemberSyntax):
     library: Token
     name: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LibraryIncDirClauseSyntax(SyntaxNode):
     filePaths: ...
     incdir: Token
     minus: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LibraryIncludeStatementSyntax(MemberSyntax):
     filePath: FilePathSpecSyntax
     include: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LibraryMapSyntax(SyntaxNode):
     endOfFile: Token
     members: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LineDirectiveSyntax(DirectiveSyntax):
     fileName: Token
     level: Token
     lineNumber: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LiteralBase:
     """
     Members:
@@ -6926,9 +5734,6 @@ class LiteralBase:
     Hex: typing.ClassVar[LiteralBase]  # value = <LiteralBase.Hex: 3>
     Octal: typing.ClassVar[LiteralBase]  # value = <LiteralBase.Octal: 1>
     __members__: typing.ClassVar[dict[str, LiteralBase]]  # value = {'Binary': <LiteralBase.Binary: 0>, 'Octal': <LiteralBase.Octal: 1>, 'Decimal': <LiteralBase.Decimal: 2>, 'Hex': <LiteralBase.Hex: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -6957,25 +5762,14 @@ class LiteralBase:
         ...
 class LiteralExpressionSyntax(PrimaryExpressionSyntax):
     literal: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LocalAssertionVarSymbol(VariableSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class LocalVariableDeclarationSyntax(MemberSyntax):
     declarators: ...
     semi: Token
     type: DataTypeSyntax
     var: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class Lookup:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def ensureAccessible(symbol: ..., context: ASTContext, sourceRange: SourceRange | None) -> bool:
         ...
@@ -7071,9 +5865,6 @@ class LookupFlags:
     Type: typing.ClassVar[LookupFlags]  # value = <LookupFlags.Type: 1>
     TypeReference: typing.ClassVar[LookupFlags]  # value = <LookupFlags.TypeReference: 4096>
     __members__: typing.ClassVar[dict[str, LookupFlags]]  # value = {'None_': <LookupFlags.None_: 0>, 'Type': <LookupFlags.Type: 1>, 'AllowDeclaredAfter': <LookupFlags.AllowDeclaredAfter: 2>, 'DisallowWildcardImport': <LookupFlags.DisallowWildcardImport: 4>, 'NoUndeclaredError': <LookupFlags.NoUndeclaredError: 8>, 'NoUndeclaredErrorIfUninstantiated': <LookupFlags.NoUndeclaredErrorIfUninstantiated: 16>, 'AllowIncompleteForwardTypedefs': <LookupFlags.AllowIncompleteForwardTypedefs: 32>, 'NoParentScope': <LookupFlags.NoParentScope: 64>, 'NoSelectors': <LookupFlags.NoSelectors: 128>, 'AllowRoot': <LookupFlags.AllowRoot: 256>, 'AllowUnit': <LookupFlags.AllowUnit: 512>, 'IfacePortConn': <LookupFlags.IfacePortConn: 1024>, 'StaticInitializer': <LookupFlags.StaticInitializer: 2048>, 'ForceHierarchical': <LookupFlags.ForceHierarchical: 18>, 'TypeReference': <LookupFlags.TypeReference: 4096>, 'AlwaysAllowUpward': <LookupFlags.AlwaysAllowUpward: 8192>, 'DisallowUnitReferences': <LookupFlags.DisallowUnitReferences: 16384>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -7105,9 +5896,6 @@ class LookupLocation:
     max: typing.ClassVar[LookupLocation]  # value = <pyslang.LookupLocation object>
     min: typing.ClassVar[LookupLocation]  # value = <pyslang.LookupLocation object>
     @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
-    @staticmethod
     def after(symbol: ...) -> LookupLocation:
         ...
     @staticmethod
@@ -7131,9 +5919,6 @@ class LookupLocation:
         ...
 class LookupResult:
     class MemberSelector:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def dotLocation(self) -> SourceLocation:
             ...
@@ -7143,9 +5928,6 @@ class LookupResult:
         @property
         def nameRange(self) -> SourceRange:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def clear(self) -> None:
@@ -7198,9 +5980,6 @@ class LookupResultFlags:
     SuppressUndeclared: typing.ClassVar[LookupResultFlags]  # value = <LookupResultFlags.SuppressUndeclared: 4>
     WasImported: typing.ClassVar[LookupResultFlags]  # value = <LookupResultFlags.WasImported: 1>
     __members__: typing.ClassVar[dict[str, LookupResultFlags]]  # value = {'None_': <LookupResultFlags.None_: 0>, 'WasImported': <LookupResultFlags.WasImported: 1>, 'IsHierarchical': <LookupResultFlags.IsHierarchical: 2>, 'SuppressUndeclared': <LookupResultFlags.SuppressUndeclared: 4>, 'FromTypeParam': <LookupResultFlags.FromTypeParam: 8>, 'FromForwardTypedef': <LookupResultFlags.FromForwardTypedef: 16>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -7231,9 +6010,6 @@ class LoopConstraintSyntax(ConstraintItemSyntax):
     constraints: ConstraintItemSyntax
     foreachKeyword: Token
     loopList: ForeachLoopListSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LoopGenerateSyntax(MemberSyntax):
     block: MemberSyntax
     closeParen: Token
@@ -7247,64 +6023,34 @@ class LoopGenerateSyntax(MemberSyntax):
     semi1: Token
     semi2: Token
     stopExpr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class LoopStatementSyntax(StatementSyntax):
     closeParen: Token
     expr: ExpressionSyntax
     openParen: Token
     repeatOrWhile: Token
     statement: StatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MacroActualArgumentListSyntax(SyntaxNode):
     args: ...
     closeParen: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MacroActualArgumentSyntax(SyntaxNode):
     tokens: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MacroArgumentDefaultSyntax(SyntaxNode):
     equals: Token
     tokens: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MacroFormalArgumentListSyntax(SyntaxNode):
     args: ...
     closeParen: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MacroFormalArgumentSyntax(SyntaxNode):
     defaultValue: MacroArgumentDefaultSyntax
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MacroUsageSyntax(DirectiveSyntax):
     args: MacroActualArgumentListSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MatchesClauseSyntax(SyntaxNode):
     matchesKeyword: Token
     pattern: PatternSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MemberAccessExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def member(self) -> ...:
         ...
@@ -7315,14 +6061,8 @@ class MemberAccessExpressionSyntax(ExpressionSyntax):
     dot: Token
     left: ExpressionSyntax
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MemberSyntax(SyntaxNode):
     attributes: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MethodFlags:
     """
     Members:
@@ -7379,9 +6119,6 @@ class MethodFlags:
     Static: typing.ClassVar[MethodFlags]  # value = <MethodFlags.Static: 4>
     Virtual: typing.ClassVar[MethodFlags]  # value = <MethodFlags.Virtual: 1>
     __members__: typing.ClassVar[dict[str, MethodFlags]]  # value = {'None_': <MethodFlags.None_: 0>, 'Virtual': <MethodFlags.Virtual: 1>, 'Pure': <MethodFlags.Pure: 2>, 'Static': <MethodFlags.Static: 4>, 'Constructor': <MethodFlags.Constructor: 8>, 'InterfaceExtern': <MethodFlags.InterfaceExtern: 16>, 'ModportImport': <MethodFlags.ModportImport: 32>, 'ModportExport': <MethodFlags.ModportExport: 64>, 'DPIImport': <MethodFlags.DPIImport: 128>, 'DPIContext': <MethodFlags.DPIContext: 256>, 'BuiltIn': <MethodFlags.BuiltIn: 512>, 'Randomize': <MethodFlags.Randomize: 1024>, 'ForkJoin': <MethodFlags.ForkJoin: 2048>, 'DefaultedSuperArg': <MethodFlags.DefaultedSuperArg: 4096>, 'Initial': <MethodFlags.Initial: 8192>, 'Extends': <MethodFlags.Extends: 16384>, 'Final': <MethodFlags.Final: 32768>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -7410,18 +6147,12 @@ class MethodFlags:
         ...
 class MethodPrototypeSymbol(Symbol, Scope):
     class ExternImpl:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def impl(self) -> SubroutineSymbol:
             ...
         @property
         def nextImpl(self) -> MethodPrototypeSymbol.ExternImpl:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[FormalArgumentSymbol]:
         ...
@@ -7463,9 +6194,6 @@ class MinTypMax:
     Min: typing.ClassVar[MinTypMax]  # value = <MinTypMax.Min: 0>
     Typ: typing.ClassVar[MinTypMax]  # value = <MinTypMax.Typ: 1>
     __members__: typing.ClassVar[dict[str, MinTypMax]]  # value = {'Min': <MinTypMax.Min: 0>, 'Typ': <MinTypMax.Typ: 1>, 'Max': <MinTypMax.Max: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -7493,9 +6221,6 @@ class MinTypMax:
     def value(self) -> int:
         ...
 class MinTypMaxExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def max(self) -> Expression:
         ...
@@ -7514,19 +6239,10 @@ class MinTypMaxExpressionSyntax(ExpressionSyntax):
     max: ExpressionSyntax
     min: ExpressionSyntax
     typ: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportClockingPortSyntax(MemberSyntax):
     clocking: Token
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportClockingSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def target(self) -> Symbol:
         ...
@@ -7534,33 +6250,18 @@ class ModportDeclarationSyntax(MemberSyntax):
     items: ...
     keyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportExplicitPortSyntax(ModportPortSyntax):
     closeParen: Token
     dot: Token
     expr: ExpressionSyntax
     name: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportItemSyntax(SyntaxNode):
     name: Token
     ports: AnsiPortListSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportNamedPortSyntax(ModportPortSyntax):
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportPortSymbol(ValueSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def direction(self) -> ArgumentDirection:
         ...
@@ -7571,30 +6272,16 @@ class ModportPortSymbol(ValueSymbol):
     def internalSymbol(self) -> Symbol:
         ...
 class ModportPortSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ModportSimplePortListSyntax(MemberSyntax):
     direction: Token
     ports: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportSubroutinePortListSyntax(MemberSyntax):
     importExport: Token
     ports: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportSubroutinePortSyntax(ModportPortSyntax):
     prototype: FunctionPrototypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModportSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def hasExports(self) -> bool:
         ...
@@ -7603,9 +6290,6 @@ class ModuleDeclarationSyntax(MemberSyntax):
     endmodule: Token
     header: ModuleHeaderSyntax
     members: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ModuleHeaderSyntax(SyntaxNode):
     imports: ...
     lifetime: Token
@@ -7614,13 +6298,7 @@ class ModuleHeaderSyntax(SyntaxNode):
     parameters: ParameterPortListSyntax
     ports: PortListSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class MultiPortSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def direction(self) -> ArgumentDirection:
         ...
@@ -7641,84 +6319,47 @@ class MultipleConcatenationExpressionSyntax(PrimaryExpressionSyntax):
     concatenation: ConcatenationExpressionSyntax
     expression: ExpressionSyntax
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NameSyntax(ExpressionSyntax):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class NameValuePragmaExpressionSyntax(PragmaExpressionSyntax):
     equals: Token
     name: Token
     value: PragmaExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedArgumentSyntax(ArgumentSyntax):
     closeParen: Token
     dot: Token
     expr: PropertyExprSyntax
     name: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedBlockClauseSyntax(SyntaxNode):
     colon: Token
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedConditionalDirectiveExpressionSyntax(ConditionalDirectiveExpressionSyntax):
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedLabelSyntax(SyntaxNode):
     colon: Token
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedParamAssignmentSyntax(ParamAssignmentSyntax):
     closeParen: Token
     dot: Token
     expr: ExpressionSyntax
     name: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedPortConnectionSyntax(PortConnectionSyntax):
     closeParen: Token
     dot: Token
     expr: PropertyExprSyntax
     name: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedStructurePatternMemberSyntax(StructurePatternMemberSyntax):
     colon: Token
     name: Token
     pattern: PatternSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedTypeSyntax(DataTypeSyntax):
     name: NameSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NamedValueExpression(ValueExpressionBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class NetAliasSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def netReferences(self) -> span[Expression]:
         ...
@@ -7726,9 +6367,6 @@ class NetAliasSyntax(MemberSyntax):
     keyword: Token
     nets: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NetDeclarationSyntax(MemberSyntax):
     declarators: ...
     delay: TimingControlSyntax
@@ -7737,20 +6375,12 @@ class NetDeclarationSyntax(MemberSyntax):
     semi: Token
     strength: NetStrengthSyntax
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NetPortHeaderSyntax(PortHeaderSyntax):
     dataType: DataTypeSyntax
     direction: Token
     netType: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NetStrengthSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class NetSymbol(ValueSymbol):
     class ExpansionHint:
         """
@@ -7766,9 +6396,6 @@ class NetSymbol(ValueSymbol):
         Scalared: typing.ClassVar[NetSymbol.ExpansionHint]  # value = <ExpansionHint.Scalared: 2>
         Vectored: typing.ClassVar[NetSymbol.ExpansionHint]  # value = <ExpansionHint.Vectored: 1>
         __members__: typing.ClassVar[dict[str, NetSymbol.ExpansionHint]]  # value = {'None_': <ExpansionHint.None_: 0>, 'Vectored': <ExpansionHint.Vectored: 1>, 'Scalared': <ExpansionHint.Scalared: 2>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -7798,9 +6425,6 @@ class NetSymbol(ValueSymbol):
     None_: typing.ClassVar[NetSymbol.ExpansionHint]  # value = <ExpansionHint.None_: 0>
     Scalared: typing.ClassVar[NetSymbol.ExpansionHint]  # value = <ExpansionHint.Scalared: 2>
     Vectored: typing.ClassVar[NetSymbol.ExpansionHint]  # value = <ExpansionHint.Vectored: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def chargeStrength(self) -> ... | None:
         ...
@@ -7870,9 +6494,6 @@ class NetType(Symbol):
         WOr: typing.ClassVar[NetType.NetKind]  # value = <NetKind.WOr: 3>
         Wire: typing.ClassVar[NetType.NetKind]  # value = <NetKind.Wire: 1>
         __members__: typing.ClassVar[dict[str, NetType.NetKind]]  # value = {'Unknown': <NetKind.Unknown: 0>, 'Wire': <NetKind.Wire: 1>, 'WAnd': <NetKind.WAnd: 2>, 'WOr': <NetKind.WOr: 3>, 'Tri': <NetKind.Tri: 4>, 'TriAnd': <NetKind.TriAnd: 5>, 'TriOr': <NetKind.TriOr: 6>, 'Tri0': <NetKind.Tri0: 7>, 'Tri1': <NetKind.Tri1: 8>, 'TriReg': <NetKind.TriReg: 9>, 'Supply0': <NetKind.Supply0: 10>, 'Supply1': <NetKind.Supply1: 11>, 'UWire': <NetKind.UWire: 12>, 'Interconnect': <NetKind.Interconnect: 13>, 'UserDefined': <NetKind.UserDefined: 14>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -7915,9 +6536,6 @@ class NetType(Symbol):
     WOr: typing.ClassVar[NetType.NetKind]  # value = <NetKind.WOr: 3>
     Wire: typing.ClassVar[NetType.NetKind]  # value = <NetKind.Wire: 1>
     @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
-    @staticmethod
     def getSimulatedNetType(internal: NetType, external: NetType, shouldWarn: bool) -> NetType:
         ...
     @property
@@ -7941,13 +6559,7 @@ class NetTypeDeclarationSyntax(MemberSyntax):
     semi: Token
     type: DataTypeSyntax
     withFunction: WithFunctionClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NewArrayExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def initExpr(self) -> Expression:
         ...
@@ -7960,13 +6572,7 @@ class NewArrayExpressionSyntax(ExpressionSyntax):
     newKeyword: NameSyntax
     openBracket: Token
     sizeExpr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NewClassExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def constructorCall(self) -> Expression:
         ...
@@ -7976,13 +6582,7 @@ class NewClassExpression(Expression):
 class NewClassExpressionSyntax(ExpressionSyntax):
     argList: ArgumentListSyntax
     scopedNew: NameSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NewCovergroupExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[Expression]:
         ...
@@ -7990,114 +6590,61 @@ class NonAnsiPortListSyntax(PortListSyntax):
     closeParen: Token
     openParen: Token
     ports: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NonAnsiPortSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class NonAnsiUdpPortListSyntax(UdpPortListSyntax):
     closeParen: Token
     openParen: Token
     ports: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class NonConstantFunction(SimpleSystemSubroutine):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self, name: str, returnType: ..., requiredArgs: int = 0, argTypes: list[...] = [], isMethod: bool = False) -> None:
         ...
 class Null:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def __repr__(self) -> str:
         ...
 class NullLiteral(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class NullType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class NumberPragmaExpressionSyntax(PragmaExpressionSyntax):
     base: Token
     size: Token
     value: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class OneStepDelayControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class OneStepDelaySyntax(TimingControlSyntax):
     hash: Token
     oneStep: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class OrderedArgumentSyntax(ArgumentSyntax):
     expr: PropertyExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class OrderedParamAssignmentSyntax(ParamAssignmentSyntax):
     expr: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class OrderedPortConnectionSyntax(PortConnectionSyntax):
     expr: PropertyExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class OrderedStructurePatternMemberSyntax(StructurePatternMemberSyntax):
     pattern: PatternSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PackageExportAllDeclarationSyntax(MemberSyntax):
     doubleColon: Token
     keyword: Token
     semi: Token
     star1: Token
     star2: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PackageExportDeclarationSyntax(MemberSyntax):
     items: ...
     keyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PackageImportDeclarationSyntax(MemberSyntax):
     items: ...
     keyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PackageImportItemSyntax(SyntaxNode):
     doubleColon: Token
     item: Token
     package: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PackageSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def findForImport(self, name: str) -> Symbol:
         ...
     @property
@@ -8116,9 +6663,6 @@ class PackageSymbol(Symbol, Scope):
     def timeScale(self) -> TimeScale | None:
         ...
 class PackedArrayType(IntegralType):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elementType(self) -> Type:
         ...
@@ -8126,16 +6670,10 @@ class PackedArrayType(IntegralType):
     def range(self) -> ConstantRange:
         ...
 class PackedStructType(IntegralType, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def systemId(self) -> int:
         ...
 class PackedUnionType(IntegralType, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isSoft(self) -> bool:
         ...
@@ -8149,38 +6687,21 @@ class PackedUnionType(IntegralType, Scope):
     def tagBits(self) -> int:
         ...
 class ParamAssignmentSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class ParameterDeclarationBaseSyntax(SyntaxNode):
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParameterDeclarationStatementSyntax(MemberSyntax):
     parameter: ParameterDeclarationBaseSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParameterDeclarationSyntax(ParameterDeclarationBaseSyntax):
     declarators: ...
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParameterPortListSyntax(SyntaxNode):
     closeParen: Token
     declarations: ...
     hash: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParameterSymbol(ValueSymbol, ParameterSymbolBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isOverridden(self) -> bool:
         ...
@@ -8188,9 +6709,6 @@ class ParameterSymbol(ValueSymbol, ParameterSymbolBase):
     def value(self) -> ConstantValue:
         ...
 class ParameterSymbolBase:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isBodyParam(self) -> bool:
         ...
@@ -8205,81 +6723,48 @@ class ParameterValueAssignmentSyntax(SyntaxNode):
     hash: Token
     openParen: Token
     parameters: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenExpressionListSyntax(SyntaxNode):
     closeParen: Token
     expressions: ...
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenPragmaExpressionSyntax(PragmaExpressionSyntax):
     closeParen: Token
     openParen: Token
     values: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenthesizedBinsSelectExprSyntax(BinsSelectExpressionSyntax):
     closeParen: Token
     expr: BinsSelectExpressionSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenthesizedConditionalDirectiveExpressionSyntax(ConditionalDirectiveExpressionSyntax):
     closeParen: Token
     openParen: Token
     operand: ConditionalDirectiveExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenthesizedEventExpressionSyntax(EventExpressionSyntax):
     closeParen: Token
     expr: EventExpressionSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenthesizedExpressionSyntax(PrimaryExpressionSyntax):
     closeParen: Token
     expression: ExpressionSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenthesizedPatternSyntax(PatternSyntax):
     closeParen: Token
     openParen: Token
     pattern: PatternSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenthesizedPropertyExprSyntax(PropertyExprSyntax):
     closeParen: Token
     expr: PropertyExprSyntax
     matchList: SequenceMatchListSyntax
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParenthesizedSequenceExprSyntax(SequenceExprSyntax):
     closeParen: Token
     expr: SequenceExprSyntax
     matchList: SequenceMatchListSyntax
     openParen: Token
     repetition: SequenceRepetitionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ParserOptions:
     languageVersion: LanguageVersion
     maxRecursionDepth: int
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
 class PathDeclarationSyntax(MemberSyntax):
@@ -8289,9 +6774,6 @@ class PathDeclarationSyntax(MemberSyntax):
     equals: Token
     openParen: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PathDescriptionSyntax(SyntaxNode):
     closeParen: Token
     edgeIdentifier: Token
@@ -8300,17 +6782,9 @@ class PathDescriptionSyntax(SyntaxNode):
     pathOperator: Token
     polarityOperator: Token
     suffix: PathSuffixSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PathSuffixSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class Pattern:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     def eval(self, context: EvalContext, value: ..., conditionKind: ...) -> ...:
@@ -8333,14 +6807,8 @@ class PatternCaseItemSyntax(CaseItemSyntax):
     pattern: PatternSyntax
     statement: StatementSyntax
     tripleAnd: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PatternCaseStatement(Statement):
     class ItemGroup:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def filter(self) -> Expression:
             ...
@@ -8350,9 +6818,6 @@ class PatternCaseStatement(Statement):
         @property
         def stmt(self) -> Statement:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def check(self) -> UniquePriorityCheck:
         ...
@@ -8391,9 +6856,6 @@ class PatternKind:
     Variable: typing.ClassVar[PatternKind]  # value = <PatternKind.Variable: 3>
     Wildcard: typing.ClassVar[PatternKind]  # value = <PatternKind.Wildcard: 1>
     __members__: typing.ClassVar[dict[str, PatternKind]]  # value = {'Invalid': <PatternKind.Invalid: 0>, 'Wildcard': <PatternKind.Wildcard: 1>, 'Constant': <PatternKind.Constant: 2>, 'Variable': <PatternKind.Variable: 3>, 'Tagged': <PatternKind.Tagged: 4>, 'Structure': <PatternKind.Structure: 5>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -8421,24 +6883,14 @@ class PatternKind:
     def value(self) -> int:
         ...
 class PatternSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PatternVarSymbol(TempVarSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PortConcatenationSyntax(PortExpressionSyntax):
     closeBrace: Token
     openBrace: Token
     references: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PortConnection:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expression(self) -> Expression:
         ...
@@ -8450,38 +6902,20 @@ class PortConnection:
         ...
 class PortConnectionSyntax(SyntaxNode):
     attributes: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PortDeclarationSyntax(MemberSyntax):
     declarators: ...
     header: PortHeaderSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PortExpressionSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PortHeaderSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PortListSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PortReferenceSyntax(PortExpressionSyntax):
     name: Token
     select: ElementSelectSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PortSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def direction(self) -> ArgumentDirection:
         ...
@@ -8513,19 +6947,11 @@ class PostfixUnaryExpressionSyntax(ExpressionSyntax):
     attributes: ...
     operand: ExpressionSyntax
     operatorToken: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PragmaDirectiveSyntax(DirectiveSyntax):
     args: ...
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PragmaExpressionSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PredefinedIntegerType(IntegralType):
     class Kind:
         """
@@ -8550,9 +6976,6 @@ class PredefinedIntegerType(IntegralType):
         ShortInt: typing.ClassVar[PredefinedIntegerType.Kind]  # value = <Kind.ShortInt: 0>
         Time: typing.ClassVar[PredefinedIntegerType.Kind]  # value = <Kind.Time: 5>
         __members__: typing.ClassVar[dict[str, PredefinedIntegerType.Kind]]  # value = {'ShortInt': <Kind.ShortInt: 0>, 'Int': <Kind.Int: 1>, 'LongInt': <Kind.LongInt: 2>, 'Byte': <Kind.Byte: 3>, 'Integer': <Kind.Integer: 4>, 'Time': <Kind.Time: 5>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -8585,9 +7008,6 @@ class PredefinedIntegerType(IntegralType):
     LongInt: typing.ClassVar[PredefinedIntegerType.Kind]  # value = <Kind.LongInt: 2>
     ShortInt: typing.ClassVar[PredefinedIntegerType.Kind]  # value = <Kind.ShortInt: 0>
     Time: typing.ClassVar[PredefinedIntegerType.Kind]  # value = <Kind.Time: 5>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def integerKind(self) -> ...:
         ...
@@ -8595,9 +7015,6 @@ class PrefixUnaryExpressionSyntax(ExpressionSyntax):
     attributes: ...
     operand: ExpressionSyntax
     operatorToken: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PreprocessorOptions:
     additionalIncludePaths: list[os.PathLike]
     ignoreDirectives: set[str]
@@ -8606,25 +7023,14 @@ class PreprocessorOptions:
     predefineSource: str
     predefines: list[str]
     undefines: list[str]
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
 class PrimaryBlockEventExpressionSyntax(BlockEventExpressionSyntax):
     keyword: Token
     name: NameSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PrimaryExpressionSyntax(ExpressionSyntax):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PrimitiveInstanceSymbol(InstanceSymbolBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def delay(self) -> TimingControl:
         ...
@@ -8643,9 +7049,6 @@ class PrimitiveInstantiationSyntax(MemberSyntax):
     semi: Token
     strength: NetStrengthSyntax
     type: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PrimitivePortDirection:
     """
     Members:
@@ -8663,9 +7066,6 @@ class PrimitivePortDirection:
     Out: typing.ClassVar[PrimitivePortDirection]  # value = <PrimitivePortDirection.Out: 1>
     OutReg: typing.ClassVar[PrimitivePortDirection]  # value = <PrimitivePortDirection.OutReg: 2>
     __members__: typing.ClassVar[dict[str, PrimitivePortDirection]]  # value = {'In': <PrimitivePortDirection.In: 0>, 'Out': <PrimitivePortDirection.Out: 1>, 'OutReg': <PrimitivePortDirection.OutReg: 2>, 'InOut': <PrimitivePortDirection.InOut: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -8693,9 +7093,6 @@ class PrimitivePortDirection:
     def value(self) -> int:
         ...
 class PrimitivePortSymbol(ValueSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def direction(self) -> PrimitivePortDirection:
         ...
@@ -8717,9 +7114,6 @@ class PrimitiveSymbol(Symbol, Scope):
         NOutput: typing.ClassVar[PrimitiveSymbol.PrimitiveKind]  # value = <PrimitiveKind.NOutput: 3>
         UserDefined: typing.ClassVar[PrimitiveSymbol.PrimitiveKind]  # value = <PrimitiveKind.UserDefined: 0>
         __members__: typing.ClassVar[dict[str, PrimitiveSymbol.PrimitiveKind]]  # value = {'UserDefined': <PrimitiveKind.UserDefined: 0>, 'Fixed': <PrimitiveKind.Fixed: 1>, 'NInput': <PrimitiveKind.NInput: 2>, 'NOutput': <PrimitiveKind.NOutput: 3>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -8747,9 +7141,6 @@ class PrimitiveSymbol(Symbol, Scope):
         def value(self) -> int:
             ...
     class TableEntry:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def inputs(self) -> str:
             ...
@@ -8763,9 +7154,6 @@ class PrimitiveSymbol(Symbol, Scope):
     NInput: typing.ClassVar[PrimitiveSymbol.PrimitiveKind]  # value = <PrimitiveKind.NInput: 2>
     NOutput: typing.ClassVar[PrimitiveSymbol.PrimitiveKind]  # value = <PrimitiveKind.NOutput: 3>
     UserDefined: typing.ClassVar[PrimitiveSymbol.PrimitiveKind]  # value = <PrimitiveKind.UserDefined: 0>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def initVal(self) -> ConstantValue:
         ...
@@ -8782,9 +7170,6 @@ class PrimitiveSymbol(Symbol, Scope):
     def table(self) -> span[...]:
         ...
 class ProceduralAssignStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def assignment(self) -> Expression:
         ...
@@ -8795,9 +7180,6 @@ class ProceduralAssignStatementSyntax(StatementSyntax):
     expr: ExpressionSyntax
     keyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ProceduralBlockKind:
     """
     Members:
@@ -8821,9 +7203,6 @@ class ProceduralBlockKind:
     Final: typing.ClassVar[ProceduralBlockKind]  # value = <ProceduralBlockKind.Final: 1>
     Initial: typing.ClassVar[ProceduralBlockKind]  # value = <ProceduralBlockKind.Initial: 0>
     __members__: typing.ClassVar[dict[str, ProceduralBlockKind]]  # value = {'Initial': <ProceduralBlockKind.Initial: 0>, 'Final': <ProceduralBlockKind.Final: 1>, 'Always': <ProceduralBlockKind.Always: 2>, 'AlwaysComb': <ProceduralBlockKind.AlwaysComb: 3>, 'AlwaysLatch': <ProceduralBlockKind.AlwaysLatch: 4>, 'AlwaysFF': <ProceduralBlockKind.AlwaysFF: 5>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -8851,9 +7230,6 @@ class ProceduralBlockKind:
     def value(self) -> int:
         ...
 class ProceduralBlockSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> Statement:
         ...
@@ -8866,20 +7242,11 @@ class ProceduralBlockSymbol(Symbol):
 class ProceduralBlockSyntax(MemberSyntax):
     keyword: Token
     statement: StatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ProceduralCheckerStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def instances(self) -> span[...]:
         ...
 class ProceduralDeassignStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isRelease(self) -> bool:
         ...
@@ -8890,9 +7257,6 @@ class ProceduralDeassignStatementSyntax(StatementSyntax):
     keyword: Token
     semi: Token
     variable: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ProductionSyntax(SyntaxNode):
     colon: Token
     dataType: DataTypeSyntax
@@ -8900,13 +7264,8 @@ class ProductionSyntax(SyntaxNode):
     portList: FunctionPortListSyntax
     rules: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PropertyCaseItemSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PropertyDeclarationSyntax(MemberSyntax):
     end: Token
     endBlockName: NamedBlockClauseSyntax
@@ -8917,45 +7276,26 @@ class PropertyDeclarationSyntax(MemberSyntax):
     propertySpec: PropertySpecSyntax
     semi: Token
     variables: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PropertyExprSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PropertySpecSyntax(SyntaxNode):
     clocking: TimingControlSyntax
     disable: DisableIffSyntax
     expr: PropertyExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PropertySymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def ports(self) -> span[AssertionPortSymbol]:
         ...
 class PropertyType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class PullStrengthSyntax(NetStrengthSyntax):
     closeParen: Token
     openParen: Token
     strength: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PulseStyleDeclarationSyntax(MemberSyntax):
     inputs: ...
     keyword: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class PulseStyleKind:
     """
     Members:
@@ -8973,9 +7313,6 @@ class PulseStyleKind:
     OnEvent: typing.ClassVar[PulseStyleKind]  # value = <PulseStyleKind.OnEvent: 0>
     ShowCancelled: typing.ClassVar[PulseStyleKind]  # value = <PulseStyleKind.ShowCancelled: 2>
     __members__: typing.ClassVar[dict[str, PulseStyleKind]]  # value = {'OnEvent': <PulseStyleKind.OnEvent: 0>, 'OnDetect': <PulseStyleKind.OnDetect: 1>, 'ShowCancelled': <PulseStyleKind.ShowCancelled: 2>, 'NoShowCancelled': <PulseStyleKind.NoShowCancelled: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -9003,9 +7340,6 @@ class PulseStyleKind:
     def value(self) -> int:
         ...
 class PulseStyleSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def pulseStyleKind(self) -> PulseStyleKind:
         ...
@@ -9015,13 +7349,7 @@ class PulseStyleSymbol(Symbol):
 class QueueDimensionSpecifierSyntax(DimensionSpecifierSyntax):
     dollar: Token
     maxSizeClause: ColonExpressionClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class QueueType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elementType(self) -> Type:
         ...
@@ -9032,23 +7360,14 @@ class RandCaseItemSyntax(SyntaxNode):
     colon: Token
     expr: ExpressionSyntax
     statement: StatementSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RandCaseStatement(Statement):
     class Item:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
         @property
         def stmt(self) -> Statement:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def items(self) -> span[...]:
         ...
@@ -9056,16 +7375,10 @@ class RandCaseStatementSyntax(StatementSyntax):
     endCase: Token
     items: ...
     randCase: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RandJoinClauseSyntax(SyntaxNode):
     expr: ParenthesizedExpressionSyntax
     join: Token
     rand: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RandMode:
     """
     Members:
@@ -9080,9 +7393,6 @@ class RandMode:
     Rand: typing.ClassVar[RandMode]  # value = <RandMode.Rand: 1>
     RandC: typing.ClassVar[RandMode]  # value = <RandMode.RandC: 2>
     __members__: typing.ClassVar[dict[str, RandMode]]  # value = {'None': <RandMode.None: 0>, 'Rand': <RandMode.Rand: 1>, 'RandC': <RandMode.RandC: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -9111,9 +7421,6 @@ class RandMode:
         ...
 class RandSeqProductionSymbol(Symbol, Scope):
     class CaseItem:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expressions(self) -> span[Expression]:
             ...
@@ -9121,9 +7428,6 @@ class RandSeqProductionSymbol(Symbol, Scope):
         def item(self) -> RandSeqProductionSymbol.ProdItem:
             ...
     class CaseProd(RandSeqProductionSymbol.ProdBase):
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def defaultItem(self) -> RandSeqProductionSymbol.ProdItem | None:
             ...
@@ -9134,16 +7438,10 @@ class RandSeqProductionSymbol(Symbol, Scope):
         def items(self) -> span[RandSeqProductionSymbol.CaseItem]:
             ...
     class CodeBlockProd(RandSeqProductionSymbol.ProdBase):
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def block(self) -> StatementBlockSymbol:
             ...
     class IfElseProd(RandSeqProductionSymbol.ProdBase):
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def elseItem(self) -> RandSeqProductionSymbol.ProdItem | None:
             ...
@@ -9154,16 +7452,10 @@ class RandSeqProductionSymbol(Symbol, Scope):
         def ifItem(self) -> RandSeqProductionSymbol.ProdItem:
             ...
     class ProdBase:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def kind(self) -> RandSeqProductionSymbol.ProdKind:
             ...
     class ProdItem(RandSeqProductionSymbol.ProdBase):
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def args(self) -> span[Expression]:
             ...
@@ -9190,9 +7482,6 @@ class RandSeqProductionSymbol(Symbol, Scope):
         Item: typing.ClassVar[RandSeqProductionSymbol.ProdKind]  # value = <ProdKind.Item: 0>
         Repeat: typing.ClassVar[RandSeqProductionSymbol.ProdKind]  # value = <ProdKind.Repeat: 3>
         __members__: typing.ClassVar[dict[str, RandSeqProductionSymbol.ProdKind]]  # value = {'Item': <ProdKind.Item: 0>, 'CodeBlock': <ProdKind.CodeBlock: 1>, 'IfElse': <ProdKind.IfElse: 2>, 'Repeat': <ProdKind.Repeat: 3>, 'Case': <ProdKind.Case: 4>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -9220,9 +7509,6 @@ class RandSeqProductionSymbol(Symbol, Scope):
         def value(self) -> int:
             ...
     class RepeatProd(RandSeqProductionSymbol.ProdBase):
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
@@ -9230,9 +7516,6 @@ class RandSeqProductionSymbol(Symbol, Scope):
         def item(self) -> RandSeqProductionSymbol.ProdItem:
             ...
     class Rule:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def codeBlock(self) -> RandSeqProductionSymbol.CodeBlockProd | None:
             ...
@@ -9251,9 +7534,6 @@ class RandSeqProductionSymbol(Symbol, Scope):
         @property
         def weightExpr(self) -> Expression:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[FormalArgumentSymbol]:
         ...
@@ -9264,9 +7544,6 @@ class RandSeqProductionSymbol(Symbol, Scope):
     def rules(self) -> span[...]:
         ...
 class RandSequenceStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def firstProduction(self) -> ...:
         ...
@@ -9277,31 +7554,16 @@ class RandSequenceStatementSyntax(StatementSyntax):
     openParen: Token
     productions: ...
     randsequence: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RangeCoverageBinInitializerSyntax(CoverageBinInitializerSyntax):
     ranges: RangeListSyntax
     withClause: WithClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RangeDimensionSpecifierSyntax(DimensionSpecifierSyntax):
     selector: SelectorSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RangeListSyntax(SyntaxNode):
     closeBrace: Token
     openBrace: Token
     valueRanges: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RangeSelectExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def left(self) -> Expression:
         ...
@@ -9318,9 +7580,6 @@ class RangeSelectSyntax(SelectorSyntax):
     left: ExpressionSyntax
     range: Token
     right: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RangeSelectionKind:
     """
     Members:
@@ -9335,9 +7594,6 @@ class RangeSelectionKind:
     IndexedUp: typing.ClassVar[RangeSelectionKind]  # value = <RangeSelectionKind.IndexedUp: 1>
     Simple: typing.ClassVar[RangeSelectionKind]  # value = <RangeSelectionKind.Simple: 0>
     __members__: typing.ClassVar[dict[str, RangeSelectionKind]]  # value = {'Simple': <RangeSelectionKind.Simple: 0>, 'IndexedUp': <RangeSelectionKind.IndexedUp: 1>, 'IndexedDown': <RangeSelectionKind.IndexedDown: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -9365,16 +7621,10 @@ class RangeSelectionKind:
     def value(self) -> int:
         ...
 class RealLiteral(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def value(self) -> float:
         ...
 class RepeatLoopStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> Statement:
         ...
@@ -9382,9 +7632,6 @@ class RepeatLoopStatement(Statement):
     def count(self) -> Expression:
         ...
 class RepeatedEventControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def event(self) -> TimingControl:
         ...
@@ -9397,13 +7644,7 @@ class RepeatedEventControlSyntax(TimingControlSyntax):
     expr: ExpressionSyntax
     openParen: Token
     repeat: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ReplicatedAssignmentPatternExpression(AssignmentPatternExpressionBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def count(self) -> Expression:
         ...
@@ -9414,13 +7655,7 @@ class ReplicatedAssignmentPatternSyntax(AssignmentPatternSyntax):
     innerOpenBrace: Token
     items: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ReplicationExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def concat(self) -> Expression:
         ...
@@ -9428,9 +7663,6 @@ class ReplicationExpression(Expression):
     def count(self) -> Expression:
         ...
 class ReportedDiagnostic:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expansionLocs(self) -> span[SourceLocation]:
         ...
@@ -9453,9 +7685,6 @@ class ReportedDiagnostic:
     def shouldShowIncludeStack(self) -> bool:
         ...
 class ReturnStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> Expression:
         ...
@@ -9463,13 +7692,7 @@ class ReturnStatementSyntax(StatementSyntax):
     returnKeyword: Token
     returnValue: ExpressionSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RootSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def compilationUnits(self) -> span[CompilationUnitSymbol]:
         ...
@@ -9477,9 +7700,7 @@ class RootSymbol(Symbol, Scope):
     def topInstances(self) -> span[...]:
         ...
 class RsCaseItemSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class RsCaseSyntax(RsProdSyntax):
     closeParen: Token
     endcase: Token
@@ -9487,22 +7708,13 @@ class RsCaseSyntax(RsProdSyntax):
     items: ...
     keyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RsCodeBlockSyntax(RsProdSyntax):
     closeBrace: Token
     items: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RsElseClauseSyntax(SyntaxNode):
     item: RsProdItemSyntax
     keyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RsIfElseSyntax(RsProdSyntax):
     closeParen: Token
     condition: ExpressionSyntax
@@ -9510,46 +7722,26 @@ class RsIfElseSyntax(RsProdSyntax):
     ifItem: RsProdItemSyntax
     keyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RsProdItemSyntax(RsProdSyntax):
     argList: ArgumentListSyntax
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RsProdSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class RsRepeatSyntax(RsProdSyntax):
     closeParen: Token
     expr: ExpressionSyntax
     item: RsProdItemSyntax
     keyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RsRuleSyntax(SyntaxNode):
     prods: ...
     randJoin: RandJoinClauseSyntax
     weightClause: RsWeightClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class RsWeightClauseSyntax(SyntaxNode):
     codeBlock: RsProdSyntax
     colonEqual: Token
     weight: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SVInt:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def concat(arg0: span[SVInt]) -> SVInt:
         ...
@@ -9866,9 +8058,6 @@ class ScalarType(IntegralType):
         Logic: typing.ClassVar[ScalarType.Kind]  # value = <Kind.Logic: 1>
         Reg: typing.ClassVar[ScalarType.Kind]  # value = <Kind.Reg: 2>
         __members__: typing.ClassVar[dict[str, ScalarType.Kind]]  # value = {'Bit': <Kind.Bit: 0>, 'Logic': <Kind.Logic: 1>, 'Reg': <Kind.Reg: 2>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -9898,16 +8087,10 @@ class ScalarType(IntegralType):
     Bit: typing.ClassVar[ScalarType.Kind]  # value = <Kind.Bit: 0>
     Logic: typing.ClassVar[ScalarType.Kind]  # value = <Kind.Logic: 1>
     Reg: typing.ClassVar[ScalarType.Kind]  # value = <Kind.Reg: 2>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def scalarKind(self) -> ...:
         ...
 class Scope:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __getitem__(self, arg0: int) -> typing.Any:
         ...
     def __iter__(self) -> typing.Iterator[Symbol]:
@@ -9943,13 +8126,7 @@ class ScopedNameSyntax(NameSyntax):
     left: NameSyntax
     right: NameSyntax
     separator: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ScriptSession:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def eval(self, text: str) -> ...:
@@ -9964,23 +8141,15 @@ class ScriptSession:
     def compilation(self) -> Compilation:
         ...
 class SelectorSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class SequenceConcatExpr(AssertionExpr):
     class Element:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def delay(self) -> SequenceRange:
             ...
         @property
         def sequence(self) -> AssertionExpr:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def elements(self) -> span[...]:
         ...
@@ -9994,23 +8163,12 @@ class SequenceDeclarationSyntax(MemberSyntax):
     semi: Token
     seqExpr: SequenceExprSyntax
     variables: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SequenceExprSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class SequenceMatchListSyntax(SyntaxNode):
     comma: Token
     items: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SequenceRange:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def max(self) -> int | None:
         ...
@@ -10032,9 +8190,6 @@ class SequenceRepetition:
         GoTo: typing.ClassVar[SequenceRepetition.Kind]  # value = <Kind.GoTo: 2>
         Nonconsecutive: typing.ClassVar[SequenceRepetition.Kind]  # value = <Kind.Nonconsecutive: 1>
         __members__: typing.ClassVar[dict[str, SequenceRepetition.Kind]]  # value = {'Consecutive': <Kind.Consecutive: 0>, 'Nonconsecutive': <Kind.Nonconsecutive: 1>, 'GoTo': <Kind.GoTo: 2>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -10064,9 +8219,6 @@ class SequenceRepetition:
     Consecutive: typing.ClassVar[SequenceRepetition.Kind]  # value = <Kind.Consecutive: 0>
     GoTo: typing.ClassVar[SequenceRepetition.Kind]  # value = <Kind.GoTo: 2>
     Nonconsecutive: typing.ClassVar[SequenceRepetition.Kind]  # value = <Kind.Nonconsecutive: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def kind(self) -> ...:
         ...
@@ -10078,24 +8230,13 @@ class SequenceRepetitionSyntax(SyntaxNode):
     op: Token
     openBracket: Token
     selector: SelectorSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SequenceSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def ports(self) -> span[AssertionPortSymbol]:
         ...
 class SequenceType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class SequenceWithMatchExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> AssertionExpr:
         ...
@@ -10106,9 +8247,6 @@ class SequenceWithMatchExpr(AssertionExpr):
     def repetition(self) -> SequenceRepetition | None:
         ...
 class SetExprBinsSelectExpr(BinsSelectExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> ...:
         ...
@@ -10116,9 +8254,6 @@ class SetExprBinsSelectExpr(BinsSelectExpr):
     def matchesExpr(self) -> ...:
         ...
 class SignalEventControl(TimingControl):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def edge(self) -> ...:
         ...
@@ -10132,20 +8267,11 @@ class SignalEventExpressionSyntax(EventExpressionSyntax):
     edge: Token
     expr: ExpressionSyntax
     iffClause: IffEventClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SignedCastExpressionSyntax(ExpressionSyntax):
     apostrophe: Token
     inner: ParenthesizedExpressionSyntax
     signing: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SimpleAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> ...:
         ...
@@ -10153,57 +8279,29 @@ class SimpleAssertionExpr(AssertionExpr):
     def repetition(self) -> SequenceRepetition | None:
         ...
 class SimpleAssignmentPatternExpression(AssignmentPatternExpressionBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class SimpleAssignmentPatternSyntax(AssignmentPatternSyntax):
     closeBrace: Token
     items: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SimpleBinsSelectExprSyntax(BinsSelectExpressionSyntax):
     expr: ExpressionSyntax
     matchesClause: MatchesClauseSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SimpleDirectiveSyntax(DirectiveSyntax):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class SimplePathSuffixSyntax(PathSuffixSyntax):
     outputs: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SimplePragmaExpressionSyntax(PragmaExpressionSyntax):
     value: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SimplePropertyExprSyntax(PropertyExprSyntax):
     expr: SequenceExprSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SimpleSequenceExprSyntax(SequenceExprSyntax):
     expr: ExpressionSyntax
     repetition: SequenceRepetitionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SimpleSystemSubroutine(SystemSubroutine):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self, name: str, kind: SubroutineKind, requiredArgs: int, argTypes: list[...], returnType: ..., isMethod: bool, isFirstArgLValue: bool = False) -> None:
         ...
 class SolveBeforeConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def after(self) -> span[...]:
         ...
@@ -10216,13 +8314,7 @@ class SolveBeforeConstraintSyntax(ConstraintItemSyntax):
     beforeExpr: ...
     semi: Token
     solve: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SourceBuffer:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __bool__(self) -> bool:
         ...
     def __init__(self) -> None:
@@ -10237,18 +8329,12 @@ class SourceBuffer:
     def library(self) -> SourceLibrary:
         ...
 class SourceLibrary:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     @property
     def name(self) -> str:
         ...
 class SourceLoader:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self, sourceManager: ...) -> None:
         ...
     def addFiles(self, pattern: str) -> None:
@@ -10278,9 +8364,6 @@ class SourceLoader:
         ...
 class SourceLocation:
     NoLocation: typing.ClassVar[SourceLocation]  # value = SourceLocation(268435455, 68719476735)
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __bool__(self) -> bool:
         ...
     def __eq__(self, arg0: SourceLocation) -> bool:
@@ -10312,9 +8395,6 @@ class SourceLocation:
     def offset(self) -> int:
         ...
 class SourceManager:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def addDiagnosticDirective(self, location: SourceLocation, name: str, severity: ...) -> None:
@@ -10386,16 +8466,10 @@ class SourceOptions:
     numThreads: int | None
     onlyLint: bool
     singleUnit: bool
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
 class SourceRange:
     __hash__: typing.ClassVar[None] = None
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, arg0: SourceRange) -> bool:
         ...
     @typing.overload
@@ -10413,24 +8487,16 @@ class SourceRange:
     def start(self) -> SourceLocation:
         ...
 class SpecifyBlockSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class SpecifyBlockSyntax(MemberSyntax):
     endspecify: Token
     items: ...
     specify: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SpecparamDeclarationSyntax(MemberSyntax):
     declarators: ...
     keyword: Token
     semi: Token
     type: ImplicitTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SpecparamDeclaratorSyntax(SyntaxNode):
     closeParen: Token
     comma: Token
@@ -10439,13 +8505,7 @@ class SpecparamDeclaratorSyntax(SyntaxNode):
     openParen: Token
     value1: ExpressionSyntax
     value2: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SpecparamSymbol(ValueSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isPathPulse(self) -> bool:
         ...
@@ -10468,25 +8528,16 @@ class StandardCaseItemSyntax(CaseItemSyntax):
     clause: SyntaxNode
     colon: Token
     expressions: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StandardPropertyCaseItemSyntax(PropertyCaseItemSyntax):
     colon: Token
     expr: PropertyExprSyntax
     expressions: ...
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StandardRsCaseItemSyntax(RsCaseItemSyntax):
     colon: Token
     expressions: ...
     item: RsProdItemSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class Statement:
     class EvalResult:
         """
@@ -10511,9 +8562,6 @@ class Statement:
         Return: typing.ClassVar[Statement.EvalResult]  # value = <EvalResult.Return: 2>
         Success: typing.ClassVar[Statement.EvalResult]  # value = <EvalResult.Success: 1>
         __members__: typing.ClassVar[dict[str, Statement.EvalResult]]  # value = {'Fail': <EvalResult.Fail: 0>, 'Success': <EvalResult.Success: 1>, 'Return': <EvalResult.Return: 2>, 'Break': <EvalResult.Break: 3>, 'Continue': <EvalResult.Continue: 4>, 'Disable': <EvalResult.Disable: 5>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -10540,9 +8588,6 @@ class Statement:
         @property
         def value(self) -> int:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     def eval(self, context: EvalContext) -> ...:
@@ -10582,9 +8627,6 @@ class StatementBlockKind:
     JoinNone: typing.ClassVar[StatementBlockKind]  # value = <StatementBlockKind.JoinNone: 3>
     Sequential: typing.ClassVar[StatementBlockKind]  # value = <StatementBlockKind.Sequential: 0>
     __members__: typing.ClassVar[dict[str, StatementBlockKind]]  # value = {'Sequential': <StatementBlockKind.Sequential: 0>, 'JoinAll': <StatementBlockKind.JoinAll: 1>, 'JoinAny': <StatementBlockKind.JoinAny: 2>, 'JoinNone': <StatementBlockKind.JoinNone: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -10612,9 +8654,6 @@ class StatementBlockKind:
     def value(self) -> int:
         ...
 class StatementBlockSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def blockKind(self) -> StatementBlockKind:
         ...
@@ -10722,9 +8761,6 @@ class StatementKind:
     WaitOrder: typing.ClassVar[StatementKind]  # value = <StatementKind.WaitOrder: 25>
     WhileLoop: typing.ClassVar[StatementKind]  # value = <StatementKind.WhileLoop: 16>
     __members__: typing.ClassVar[dict[str, StatementKind]]  # value = {'Invalid': <StatementKind.Invalid: 0>, 'Empty': <StatementKind.Empty: 1>, 'List': <StatementKind.List: 2>, 'Block': <StatementKind.Block: 3>, 'ExpressionStatement': <StatementKind.ExpressionStatement: 4>, 'VariableDeclaration': <StatementKind.VariableDeclaration: 5>, 'Return': <StatementKind.Return: 6>, 'Continue': <StatementKind.Continue: 7>, 'Break': <StatementKind.Break: 8>, 'Disable': <StatementKind.Disable: 9>, 'Conditional': <StatementKind.Conditional: 10>, 'Case': <StatementKind.Case: 11>, 'PatternCase': <StatementKind.PatternCase: 12>, 'ForLoop': <StatementKind.ForLoop: 13>, 'RepeatLoop': <StatementKind.RepeatLoop: 14>, 'ForeachLoop': <StatementKind.ForeachLoop: 15>, 'WhileLoop': <StatementKind.WhileLoop: 16>, 'DoWhileLoop': <StatementKind.DoWhileLoop: 17>, 'ForeverLoop': <StatementKind.ForeverLoop: 18>, 'Timed': <StatementKind.Timed: 19>, 'ImmediateAssertion': <StatementKind.ImmediateAssertion: 20>, 'ConcurrentAssertion': <StatementKind.ConcurrentAssertion: 21>, 'DisableFork': <StatementKind.DisableFork: 22>, 'Wait': <StatementKind.Wait: 23>, 'WaitFork': <StatementKind.WaitFork: 24>, 'WaitOrder': <StatementKind.WaitOrder: 25>, 'EventTrigger': <StatementKind.EventTrigger: 26>, 'ProceduralAssign': <StatementKind.ProceduralAssign: 27>, 'ProceduralDeassign': <StatementKind.ProceduralDeassign: 28>, 'RandCase': <StatementKind.RandCase: 29>, 'RandSequence': <StatementKind.RandSequence: 30>, 'ProceduralChecker': <StatementKind.ProceduralChecker: 31>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -10752,35 +8788,20 @@ class StatementKind:
     def value(self) -> int:
         ...
 class StatementList(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def list(self) -> span[Statement]:
         ...
 class StatementSyntax(SyntaxNode):
     attributes: ...
     label: NamedLabelSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StreamExpressionSyntax(SyntaxNode):
     expression: ExpressionSyntax
     withRange: StreamExpressionWithRangeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StreamExpressionWithRangeSyntax(SyntaxNode):
     range: ElementSelectSyntax
     withKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StreamingConcatenationExpression(Expression):
     class StreamExpression:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def constantWithWidth(self) -> int | None:
             ...
@@ -10790,9 +8811,6 @@ class StreamingConcatenationExpression(Expression):
         @property
         def withExpr(self) -> Expression:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def bitstreamWidth(self) -> int:
         ...
@@ -10813,13 +8831,7 @@ class StreamingConcatenationExpressionSyntax(PrimaryExpressionSyntax):
     openBrace: Token
     operatorToken: Token
     sliceSize: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StringLiteral(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def intValue(self) -> ...:
         ...
@@ -10830,9 +8842,7 @@ class StringLiteral(Expression):
     def value(self) -> str:
         ...
 class StringType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class StrongWeakAssertionExpr(AssertionExpr):
     class Strength:
         """
@@ -10845,9 +8855,6 @@ class StrongWeakAssertionExpr(AssertionExpr):
         Strong: typing.ClassVar[StrongWeakAssertionExpr.Strength]  # value = <Strength.Strong: 0>
         Weak: typing.ClassVar[StrongWeakAssertionExpr.Strength]  # value = <Strength.Weak: 1>
         __members__: typing.ClassVar[dict[str, StrongWeakAssertionExpr.Strength]]  # value = {'Strong': <Strength.Strong: 0>, 'Weak': <Strength.Weak: 1>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -10876,9 +8883,6 @@ class StrongWeakAssertionExpr(AssertionExpr):
             ...
     Strong: typing.ClassVar[StrongWeakAssertionExpr.Strength]  # value = <Strength.Strong: 0>
     Weak: typing.ClassVar[StrongWeakAssertionExpr.Strength]  # value = <Strength.Weak: 1>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> AssertionExpr:
         ...
@@ -10890,18 +8894,12 @@ class StrongWeakPropertyExprSyntax(PropertyExprSyntax):
     expr: SequenceExprSyntax
     keyword: Token
     openParen: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StructUnionMemberSyntax(SyntaxNode):
     attributes: ...
     declarators: ...
     randomQualifier: Token
     semi: Token
     type: DataTypeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StructUnionTypeSyntax(DataTypeSyntax):
     closeBrace: Token
     dimensions: ...
@@ -10911,42 +8909,25 @@ class StructUnionTypeSyntax(DataTypeSyntax):
     packed: Token
     signing: Token
     taggedOrSoft: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StructurePattern(Pattern):
     class FieldPattern:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def field(self) -> ...:
             ...
         @property
         def pattern(self) -> Pattern:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def patterns(self) -> span[...]:
         ...
 class StructurePatternMemberSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class StructurePatternSyntax(PatternSyntax):
     closeBrace: Token
     members: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class StructuredAssignmentPatternExpression(AssignmentPatternExpressionBase):
     class IndexSetter:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
@@ -10954,9 +8935,6 @@ class StructuredAssignmentPatternExpression(AssignmentPatternExpressionBase):
         def index(self) -> Expression:
             ...
     class MemberSetter:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
@@ -10964,18 +8942,12 @@ class StructuredAssignmentPatternExpression(AssignmentPatternExpressionBase):
         def member(self) -> ...:
             ...
     class TypeSetter:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def expr(self) -> Expression:
             ...
         @property
         def type(self) -> ...:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def defaultSetter(self) -> Expression:
         ...
@@ -10992,9 +8964,6 @@ class StructuredAssignmentPatternSyntax(AssignmentPatternSyntax):
     closeBrace: Token
     items: ...
     openBrace: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SubroutineKind:
     """
     Members:
@@ -11006,9 +8975,6 @@ class SubroutineKind:
     Function: typing.ClassVar[SubroutineKind]  # value = <SubroutineKind.Function: 0>
     Task: typing.ClassVar[SubroutineKind]  # value = <SubroutineKind.Task: 1>
     __members__: typing.ClassVar[dict[str, SubroutineKind]]  # value = {'Function': <SubroutineKind.Function: 0>, 'Task': <SubroutineKind.Task: 1>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -11036,9 +9002,6 @@ class SubroutineKind:
     def value(self) -> int:
         ...
 class SubroutineSymbol(Symbol, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[FormalArgumentSymbol]:
         ...
@@ -11074,13 +9037,7 @@ class SuperNewDefaultedArgsExpressionSyntax(ExpressionSyntax):
     defaultKeyword: Token
     openParen: Token
     scopedNew: NameSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class Symbol:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     @typing.overload
@@ -11448,9 +9405,6 @@ class SymbolKind:
     VoidType: typing.ClassVar[SymbolKind]  # value = <SymbolKind.VoidType: 24>
     WildcardImport: typing.ClassVar[SymbolKind]  # value = <SymbolKind.WildcardImport: 52>
     __members__: typing.ClassVar[dict[str, SymbolKind]]  # value = {'Unknown': <SymbolKind.Unknown: 0>, 'Root': <SymbolKind.Root: 1>, 'Definition': <SymbolKind.Definition: 2>, 'CompilationUnit': <SymbolKind.CompilationUnit: 3>, 'DeferredMember': <SymbolKind.DeferredMember: 4>, 'TransparentMember': <SymbolKind.TransparentMember: 5>, 'EmptyMember': <SymbolKind.EmptyMember: 6>, 'PredefinedIntegerType': <SymbolKind.PredefinedIntegerType: 7>, 'ScalarType': <SymbolKind.ScalarType: 8>, 'FloatingType': <SymbolKind.FloatingType: 9>, 'EnumType': <SymbolKind.EnumType: 10>, 'EnumValue': <SymbolKind.EnumValue: 11>, 'PackedArrayType': <SymbolKind.PackedArrayType: 12>, 'FixedSizeUnpackedArrayType': <SymbolKind.FixedSizeUnpackedArrayType: 13>, 'DynamicArrayType': <SymbolKind.DynamicArrayType: 14>, 'DPIOpenArrayType': <SymbolKind.DPIOpenArrayType: 15>, 'AssociativeArrayType': <SymbolKind.AssociativeArrayType: 16>, 'QueueType': <SymbolKind.QueueType: 17>, 'PackedStructType': <SymbolKind.PackedStructType: 18>, 'UnpackedStructType': <SymbolKind.UnpackedStructType: 19>, 'PackedUnionType': <SymbolKind.PackedUnionType: 20>, 'UnpackedUnionType': <SymbolKind.UnpackedUnionType: 21>, 'ClassType': <SymbolKind.ClassType: 22>, 'CovergroupType': <SymbolKind.CovergroupType: 23>, 'VoidType': <SymbolKind.VoidType: 24>, 'NullType': <SymbolKind.NullType: 25>, 'CHandleType': <SymbolKind.CHandleType: 26>, 'StringType': <SymbolKind.StringType: 27>, 'EventType': <SymbolKind.EventType: 28>, 'UnboundedType': <SymbolKind.UnboundedType: 29>, 'TypeRefType': <SymbolKind.TypeRefType: 30>, 'UntypedType': <SymbolKind.UntypedType: 31>, 'SequenceType': <SymbolKind.SequenceType: 32>, 'PropertyType': <SymbolKind.PropertyType: 33>, 'VirtualInterfaceType': <SymbolKind.VirtualInterfaceType: 34>, 'TypeAlias': <SymbolKind.TypeAlias: 35>, 'ErrorType': <SymbolKind.ErrorType: 36>, 'ForwardingTypedef': <SymbolKind.ForwardingTypedef: 37>, 'NetType': <SymbolKind.NetType: 38>, 'Parameter': <SymbolKind.Parameter: 39>, 'TypeParameter': <SymbolKind.TypeParameter: 40>, 'Port': <SymbolKind.Port: 41>, 'MultiPort': <SymbolKind.MultiPort: 42>, 'InterfacePort': <SymbolKind.InterfacePort: 43>, 'Modport': <SymbolKind.Modport: 44>, 'ModportPort': <SymbolKind.ModportPort: 45>, 'ModportClocking': <SymbolKind.ModportClocking: 46>, 'Instance': <SymbolKind.Instance: 47>, 'InstanceBody': <SymbolKind.InstanceBody: 48>, 'InstanceArray': <SymbolKind.InstanceArray: 49>, 'Package': <SymbolKind.Package: 50>, 'ExplicitImport': <SymbolKind.ExplicitImport: 51>, 'WildcardImport': <SymbolKind.WildcardImport: 52>, 'Attribute': <SymbolKind.Attribute: 53>, 'Genvar': <SymbolKind.Genvar: 54>, 'GenerateBlock': <SymbolKind.GenerateBlock: 55>, 'GenerateBlockArray': <SymbolKind.GenerateBlockArray: 56>, 'ProceduralBlock': <SymbolKind.ProceduralBlock: 57>, 'StatementBlock': <SymbolKind.StatementBlock: 58>, 'Net': <SymbolKind.Net: 59>, 'Variable': <SymbolKind.Variable: 60>, 'FormalArgument': <SymbolKind.FormalArgument: 61>, 'Field': <SymbolKind.Field: 62>, 'ClassProperty': <SymbolKind.ClassProperty: 63>, 'Subroutine': <SymbolKind.Subroutine: 64>, 'ContinuousAssign': <SymbolKind.ContinuousAssign: 65>, 'ElabSystemTask': <SymbolKind.ElabSystemTask: 66>, 'GenericClassDef': <SymbolKind.GenericClassDef: 67>, 'MethodPrototype': <SymbolKind.MethodPrototype: 68>, 'UninstantiatedDef': <SymbolKind.UninstantiatedDef: 69>, 'Iterator': <SymbolKind.Iterator: 70>, 'PatternVar': <SymbolKind.PatternVar: 71>, 'ConstraintBlock': <SymbolKind.ConstraintBlock: 72>, 'DefParam': <SymbolKind.DefParam: 73>, 'Specparam': <SymbolKind.Specparam: 74>, 'Primitive': <SymbolKind.Primitive: 75>, 'PrimitivePort': <SymbolKind.PrimitivePort: 76>, 'PrimitiveInstance': <SymbolKind.PrimitiveInstance: 77>, 'SpecifyBlock': <SymbolKind.SpecifyBlock: 78>, 'Sequence': <SymbolKind.Sequence: 79>, 'Property': <SymbolKind.Property: 80>, 'AssertionPort': <SymbolKind.AssertionPort: 81>, 'ClockingBlock': <SymbolKind.ClockingBlock: 82>, 'ClockVar': <SymbolKind.ClockVar: 83>, 'LocalAssertionVar': <SymbolKind.LocalAssertionVar: 84>, 'LetDecl': <SymbolKind.LetDecl: 85>, 'Checker': <SymbolKind.Checker: 86>, 'CheckerInstance': <SymbolKind.CheckerInstance: 87>, 'CheckerInstanceBody': <SymbolKind.CheckerInstanceBody: 88>, 'RandSeqProduction': <SymbolKind.RandSeqProduction: 89>, 'CovergroupBody': <SymbolKind.CovergroupBody: 90>, 'Coverpoint': <SymbolKind.Coverpoint: 91>, 'CoverCross': <SymbolKind.CoverCross: 92>, 'CoverCrossBody': <SymbolKind.CoverCrossBody: 93>, 'CoverageBin': <SymbolKind.CoverageBin: 94>, 'TimingPath': <SymbolKind.TimingPath: 95>, 'PulseStyle': <SymbolKind.PulseStyle: 96>, 'SystemTimingCheck': <SymbolKind.SystemTimingCheck: 97>, 'AnonymousProgram': <SymbolKind.AnonymousProgram: 98>, 'NetAlias': <SymbolKind.NetAlias: 99>, 'ConfigBlock': <SymbolKind.ConfigBlock: 100>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -13090,9 +11044,6 @@ class SyntaxKind:
     WithinSequenceExpr: typing.ClassVar[SyntaxKind]  # value = <SyntaxKind.WithinSequenceExpr: 534>
     XorAssignmentExpression: typing.ClassVar[SyntaxKind]  # value = <SyntaxKind.XorAssignmentExpression: 535>
     __members__: typing.ClassVar[dict[str, SyntaxKind]]  # value = {'Unknown': <SyntaxKind.Unknown: 0>, 'SyntaxList': <SyntaxKind.SyntaxList: 1>, 'TokenList': <SyntaxKind.TokenList: 2>, 'SeparatedList': <SyntaxKind.SeparatedList: 3>, 'AcceptOnPropertyExpr': <SyntaxKind.AcceptOnPropertyExpr: 4>, 'ActionBlock': <SyntaxKind.ActionBlock: 5>, 'AddAssignmentExpression': <SyntaxKind.AddAssignmentExpression: 6>, 'AddExpression': <SyntaxKind.AddExpression: 7>, 'AlwaysBlock': <SyntaxKind.AlwaysBlock: 8>, 'AlwaysCombBlock': <SyntaxKind.AlwaysCombBlock: 9>, 'AlwaysFFBlock': <SyntaxKind.AlwaysFFBlock: 10>, 'AlwaysLatchBlock': <SyntaxKind.AlwaysLatchBlock: 11>, 'AndAssignmentExpression': <SyntaxKind.AndAssignmentExpression: 12>, 'AndPropertyExpr': <SyntaxKind.AndPropertyExpr: 13>, 'AndSequenceExpr': <SyntaxKind.AndSequenceExpr: 14>, 'AnonymousProgram': <SyntaxKind.AnonymousProgram: 15>, 'AnsiPortList': <SyntaxKind.AnsiPortList: 16>, 'AnsiUdpPortList': <SyntaxKind.AnsiUdpPortList: 17>, 'ArgumentList': <SyntaxKind.ArgumentList: 18>, 'ArithmeticLeftShiftAssignmentExpression': <SyntaxKind.ArithmeticLeftShiftAssignmentExpression: 19>, 'ArithmeticRightShiftAssignmentExpression': <SyntaxKind.ArithmeticRightShiftAssignmentExpression: 20>, 'ArithmeticShiftLeftExpression': <SyntaxKind.ArithmeticShiftLeftExpression: 21>, 'ArithmeticShiftRightExpression': <SyntaxKind.ArithmeticShiftRightExpression: 22>, 'ArrayAndMethod': <SyntaxKind.ArrayAndMethod: 23>, 'ArrayOrMethod': <SyntaxKind.ArrayOrMethod: 24>, 'ArrayOrRandomizeMethodExpression': <SyntaxKind.ArrayOrRandomizeMethodExpression: 25>, 'ArrayUniqueMethod': <SyntaxKind.ArrayUniqueMethod: 26>, 'ArrayXorMethod': <SyntaxKind.ArrayXorMethod: 27>, 'AscendingRangeSelect': <SyntaxKind.AscendingRangeSelect: 28>, 'AssertPropertyStatement': <SyntaxKind.AssertPropertyStatement: 29>, 'AssertionItemPort': <SyntaxKind.AssertionItemPort: 30>, 'AssertionItemPortList': <SyntaxKind.AssertionItemPortList: 31>, 'AssignmentExpression': <SyntaxKind.AssignmentExpression: 32>, 'AssignmentPatternExpression': <SyntaxKind.AssignmentPatternExpression: 33>, 'AssignmentPatternItem': <SyntaxKind.AssignmentPatternItem: 34>, 'AssumePropertyStatement': <SyntaxKind.AssumePropertyStatement: 35>, 'AttributeInstance': <SyntaxKind.AttributeInstance: 36>, 'AttributeSpec': <SyntaxKind.AttributeSpec: 37>, 'BadExpression': <SyntaxKind.BadExpression: 38>, 'BeginKeywordsDirective': <SyntaxKind.BeginKeywordsDirective: 39>, 'BinSelectWithFilterExpr': <SyntaxKind.BinSelectWithFilterExpr: 40>, 'BinaryAndExpression': <SyntaxKind.BinaryAndExpression: 41>, 'BinaryBinsSelectExpr': <SyntaxKind.BinaryBinsSelectExpr: 42>, 'BinaryBlockEventExpression': <SyntaxKind.BinaryBlockEventExpression: 43>, 'BinaryConditionalDirectiveExpression': <SyntaxKind.BinaryConditionalDirectiveExpression: 44>, 'BinaryEventExpression': <SyntaxKind.BinaryEventExpression: 45>, 'BinaryOrExpression': <SyntaxKind.BinaryOrExpression: 46>, 'BinaryXnorExpression': <SyntaxKind.BinaryXnorExpression: 47>, 'BinaryXorExpression': <SyntaxKind.BinaryXorExpression: 48>, 'BindDirective': <SyntaxKind.BindDirective: 49>, 'BindTargetList': <SyntaxKind.BindTargetList: 50>, 'BinsSelectConditionExpr': <SyntaxKind.BinsSelectConditionExpr: 51>, 'BinsSelection': <SyntaxKind.BinsSelection: 52>, 'BitSelect': <SyntaxKind.BitSelect: 53>, 'BitType': <SyntaxKind.BitType: 54>, 'BlockCoverageEvent': <SyntaxKind.BlockCoverageEvent: 55>, 'BlockingEventTriggerStatement': <SyntaxKind.BlockingEventTriggerStatement: 56>, 'ByteType': <SyntaxKind.ByteType: 57>, 'CHandleType': <SyntaxKind.CHandleType: 58>, 'CaseEqualityExpression': <SyntaxKind.CaseEqualityExpression: 59>, 'CaseGenerate': <SyntaxKind.CaseGenerate: 60>, 'CaseInequalityExpression': <SyntaxKind.CaseInequalityExpression: 61>, 'CasePropertyExpr': <SyntaxKind.CasePropertyExpr: 62>, 'CaseStatement': <SyntaxKind.CaseStatement: 63>, 'CastExpression': <SyntaxKind.CastExpression: 64>, 'CellConfigRule': <SyntaxKind.CellConfigRule: 65>, 'CellDefineDirective': <SyntaxKind.CellDefineDirective: 66>, 'ChargeStrength': <SyntaxKind.ChargeStrength: 67>, 'CheckerDataDeclaration': <SyntaxKind.CheckerDataDeclaration: 68>, 'CheckerDeclaration': <SyntaxKind.CheckerDeclaration: 69>, 'CheckerInstanceStatement': <SyntaxKind.CheckerInstanceStatement: 70>, 'CheckerInstantiation': <SyntaxKind.CheckerInstantiation: 71>, 'ClassDeclaration': <SyntaxKind.ClassDeclaration: 72>, 'ClassMethodDeclaration': <SyntaxKind.ClassMethodDeclaration: 73>, 'ClassMethodPrototype': <SyntaxKind.ClassMethodPrototype: 74>, 'ClassName': <SyntaxKind.ClassName: 75>, 'ClassPropertyDeclaration': <SyntaxKind.ClassPropertyDeclaration: 76>, 'ClassSpecifier': <SyntaxKind.ClassSpecifier: 77>, 'ClockingDeclaration': <SyntaxKind.ClockingDeclaration: 78>, 'ClockingDirection': <SyntaxKind.ClockingDirection: 79>, 'ClockingItem': <SyntaxKind.ClockingItem: 80>, 'ClockingPropertyExpr': <SyntaxKind.ClockingPropertyExpr: 81>, 'ClockingSequenceExpr': <SyntaxKind.ClockingSequenceExpr: 82>, 'ClockingSkew': <SyntaxKind.ClockingSkew: 83>, 'ColonExpressionClause': <SyntaxKind.ColonExpressionClause: 84>, 'CompilationUnit': <SyntaxKind.CompilationUnit: 85>, 'ConcatenationExpression': <SyntaxKind.ConcatenationExpression: 86>, 'ConcurrentAssertionMember': <SyntaxKind.ConcurrentAssertionMember: 87>, 'ConditionalConstraint': <SyntaxKind.ConditionalConstraint: 88>, 'ConditionalExpression': <SyntaxKind.ConditionalExpression: 89>, 'ConditionalPathDeclaration': <SyntaxKind.ConditionalPathDeclaration: 90>, 'ConditionalPattern': <SyntaxKind.ConditionalPattern: 91>, 'ConditionalPredicate': <SyntaxKind.ConditionalPredicate: 92>, 'ConditionalPropertyExpr': <SyntaxKind.ConditionalPropertyExpr: 93>, 'ConditionalStatement': <SyntaxKind.ConditionalStatement: 94>, 'ConfigCellIdentifier': <SyntaxKind.ConfigCellIdentifier: 95>, 'ConfigDeclaration': <SyntaxKind.ConfigDeclaration: 96>, 'ConfigInstanceIdentifier': <SyntaxKind.ConfigInstanceIdentifier: 97>, 'ConfigLiblist': <SyntaxKind.ConfigLiblist: 98>, 'ConfigUseClause': <SyntaxKind.ConfigUseClause: 99>, 'ConstraintBlock': <SyntaxKind.ConstraintBlock: 100>, 'ConstraintDeclaration': <SyntaxKind.ConstraintDeclaration: 101>, 'ConstraintPrototype': <SyntaxKind.ConstraintPrototype: 102>, 'ConstructorName': <SyntaxKind.ConstructorName: 103>, 'ContinuousAssign': <SyntaxKind.ContinuousAssign: 104>, 'CopyClassExpression': <SyntaxKind.CopyClassExpression: 105>, 'CoverCross': <SyntaxKind.CoverCross: 106>, 'CoverPropertyStatement': <SyntaxKind.CoverPropertyStatement: 107>, 'CoverSequenceStatement': <SyntaxKind.CoverSequenceStatement: 108>, 'CoverageBins': <SyntaxKind.CoverageBins: 109>, 'CoverageBinsArraySize': <SyntaxKind.CoverageBinsArraySize: 110>, 'CoverageIffClause': <SyntaxKind.CoverageIffClause: 111>, 'CoverageOption': <SyntaxKind.CoverageOption: 112>, 'CovergroupDeclaration': <SyntaxKind.CovergroupDeclaration: 113>, 'Coverpoint': <SyntaxKind.Coverpoint: 114>, 'CycleDelay': <SyntaxKind.CycleDelay: 115>, 'DPIExport': <SyntaxKind.DPIExport: 116>, 'DPIImport': <SyntaxKind.DPIImport: 117>, 'DataDeclaration': <SyntaxKind.DataDeclaration: 118>, 'Declarator': <SyntaxKind.Declarator: 119>, 'DefParam': <SyntaxKind.DefParam: 120>, 'DefParamAssignment': <SyntaxKind.DefParamAssignment: 121>, 'DefaultCaseItem': <SyntaxKind.DefaultCaseItem: 122>, 'DefaultClockingReference': <SyntaxKind.DefaultClockingReference: 123>, 'DefaultConfigRule': <SyntaxKind.DefaultConfigRule: 124>, 'DefaultCoverageBinInitializer': <SyntaxKind.DefaultCoverageBinInitializer: 125>, 'DefaultDecayTimeDirective': <SyntaxKind.DefaultDecayTimeDirective: 126>, 'DefaultDisableDeclaration': <SyntaxKind.DefaultDisableDeclaration: 127>, 'DefaultDistItem': <SyntaxKind.DefaultDistItem: 128>, 'DefaultExtendsClauseArg': <SyntaxKind.DefaultExtendsClauseArg: 129>, 'DefaultFunctionPort': <SyntaxKind.DefaultFunctionPort: 130>, 'DefaultNetTypeDirective': <SyntaxKind.DefaultNetTypeDirective: 131>, 'DefaultPatternKeyExpression': <SyntaxKind.DefaultPatternKeyExpression: 132>, 'DefaultPropertyCaseItem': <SyntaxKind.DefaultPropertyCaseItem: 133>, 'DefaultRsCaseItem': <SyntaxKind.DefaultRsCaseItem: 134>, 'DefaultSkewItem': <SyntaxKind.DefaultSkewItem: 135>, 'DefaultTriregStrengthDirective': <SyntaxKind.DefaultTriregStrengthDirective: 136>, 'DeferredAssertion': <SyntaxKind.DeferredAssertion: 137>, 'DefineDirective': <SyntaxKind.DefineDirective: 138>, 'Delay3': <SyntaxKind.Delay3: 139>, 'DelayControl': <SyntaxKind.DelayControl: 140>, 'DelayModeDistributedDirective': <SyntaxKind.DelayModeDistributedDirective: 141>, 'DelayModePathDirective': <SyntaxKind.DelayModePathDirective: 142>, 'DelayModeUnitDirective': <SyntaxKind.DelayModeUnitDirective: 143>, 'DelayModeZeroDirective': <SyntaxKind.DelayModeZeroDirective: 144>, 'DelayedSequenceElement': <SyntaxKind.DelayedSequenceElement: 145>, 'DelayedSequenceExpr': <SyntaxKind.DelayedSequenceExpr: 146>, 'DescendingRangeSelect': <SyntaxKind.DescendingRangeSelect: 147>, 'DisableConstraint': <SyntaxKind.DisableConstraint: 148>, 'DisableForkStatement': <SyntaxKind.DisableForkStatement: 149>, 'DisableIff': <SyntaxKind.DisableIff: 150>, 'DisableStatement': <SyntaxKind.DisableStatement: 151>, 'DistConstraintList': <SyntaxKind.DistConstraintList: 152>, 'DistItem': <SyntaxKind.DistItem: 153>, 'DistWeight': <SyntaxKind.DistWeight: 154>, 'DivideAssignmentExpression': <SyntaxKind.DivideAssignmentExpression: 155>, 'DivideExpression': <SyntaxKind.DivideExpression: 156>, 'DividerClause': <SyntaxKind.DividerClause: 157>, 'DoWhileStatement': <SyntaxKind.DoWhileStatement: 158>, 'DotMemberClause': <SyntaxKind.DotMemberClause: 159>, 'DriveStrength': <SyntaxKind.DriveStrength: 160>, 'EdgeControlSpecifier': <SyntaxKind.EdgeControlSpecifier: 161>, 'EdgeDescriptor': <SyntaxKind.EdgeDescriptor: 162>, 'EdgeSensitivePathSuffix': <SyntaxKind.EdgeSensitivePathSuffix: 163>, 'ElabSystemTask': <SyntaxKind.ElabSystemTask: 164>, 'ElementSelect': <SyntaxKind.ElementSelect: 165>, 'ElementSelectExpression': <SyntaxKind.ElementSelectExpression: 166>, 'ElsIfDirective': <SyntaxKind.ElsIfDirective: 167>, 'ElseClause': <SyntaxKind.ElseClause: 168>, 'ElseConstraintClause': <SyntaxKind.ElseConstraintClause: 169>, 'ElseDirective': <SyntaxKind.ElseDirective: 170>, 'ElsePropertyClause': <SyntaxKind.ElsePropertyClause: 171>, 'EmptyArgument': <SyntaxKind.EmptyArgument: 172>, 'EmptyIdentifierName': <SyntaxKind.EmptyIdentifierName: 173>, 'EmptyMember': <SyntaxKind.EmptyMember: 174>, 'EmptyNonAnsiPort': <SyntaxKind.EmptyNonAnsiPort: 175>, 'EmptyPortConnection': <SyntaxKind.EmptyPortConnection: 176>, 'EmptyQueueExpression': <SyntaxKind.EmptyQueueExpression: 177>, 'EmptyStatement': <SyntaxKind.EmptyStatement: 178>, 'EmptyTimingCheckArg': <SyntaxKind.EmptyTimingCheckArg: 179>, 'EndCellDefineDirective': <SyntaxKind.EndCellDefineDirective: 180>, 'EndIfDirective': <SyntaxKind.EndIfDirective: 181>, 'EndKeywordsDirective': <SyntaxKind.EndKeywordsDirective: 182>, 'EndProtectDirective': <SyntaxKind.EndProtectDirective: 183>, 'EndProtectedDirective': <SyntaxKind.EndProtectedDirective: 184>, 'EnumType': <SyntaxKind.EnumType: 185>, 'EqualityExpression': <SyntaxKind.EqualityExpression: 186>, 'EqualsAssertionArgClause': <SyntaxKind.EqualsAssertionArgClause: 187>, 'EqualsTypeClause': <SyntaxKind.EqualsTypeClause: 188>, 'EqualsValueClause': <SyntaxKind.EqualsValueClause: 189>, 'EventControl': <SyntaxKind.EventControl: 190>, 'EventControlWithExpression': <SyntaxKind.EventControlWithExpression: 191>, 'EventType': <SyntaxKind.EventType: 192>, 'ExpectPropertyStatement': <SyntaxKind.ExpectPropertyStatement: 193>, 'ExplicitAnsiPort': <SyntaxKind.ExplicitAnsiPort: 194>, 'ExplicitNonAnsiPort': <SyntaxKind.ExplicitNonAnsiPort: 195>, 'ExpressionConstraint': <SyntaxKind.ExpressionConstraint: 196>, 'ExpressionCoverageBinInitializer': <SyntaxKind.ExpressionCoverageBinInitializer: 197>, 'ExpressionOrDist': <SyntaxKind.ExpressionOrDist: 198>, 'ExpressionPattern': <SyntaxKind.ExpressionPattern: 199>, 'ExpressionStatement': <SyntaxKind.ExpressionStatement: 200>, 'ExpressionTimingCheckArg': <SyntaxKind.ExpressionTimingCheckArg: 201>, 'ExtendsClause': <SyntaxKind.ExtendsClause: 202>, 'ExternInterfaceMethod': <SyntaxKind.ExternInterfaceMethod: 203>, 'ExternModuleDecl': <SyntaxKind.ExternModuleDecl: 204>, 'ExternUdpDecl': <SyntaxKind.ExternUdpDecl: 205>, 'FilePathSpec': <SyntaxKind.FilePathSpec: 206>, 'FinalBlock': <SyntaxKind.FinalBlock: 207>, 'FirstMatchSequenceExpr': <SyntaxKind.FirstMatchSequenceExpr: 208>, 'FollowedByPropertyExpr': <SyntaxKind.FollowedByPropertyExpr: 209>, 'ForLoopStatement': <SyntaxKind.ForLoopStatement: 210>, 'ForVariableDeclaration': <SyntaxKind.ForVariableDeclaration: 211>, 'ForeachLoopList': <SyntaxKind.ForeachLoopList: 212>, 'ForeachLoopStatement': <SyntaxKind.ForeachLoopStatement: 213>, 'ForeverStatement': <SyntaxKind.ForeverStatement: 214>, 'ForwardTypeRestriction': <SyntaxKind.ForwardTypeRestriction: 215>, 'ForwardTypedefDeclaration': <SyntaxKind.ForwardTypedefDeclaration: 216>, 'FunctionDeclaration': <SyntaxKind.FunctionDeclaration: 217>, 'FunctionPort': <SyntaxKind.FunctionPort: 218>, 'FunctionPortList': <SyntaxKind.FunctionPortList: 219>, 'FunctionPrototype': <SyntaxKind.FunctionPrototype: 220>, 'GenerateBlock': <SyntaxKind.GenerateBlock: 221>, 'GenerateRegion': <SyntaxKind.GenerateRegion: 222>, 'GenvarDeclaration': <SyntaxKind.GenvarDeclaration: 223>, 'GreaterThanEqualExpression': <SyntaxKind.GreaterThanEqualExpression: 224>, 'GreaterThanExpression': <SyntaxKind.GreaterThanExpression: 225>, 'HierarchicalInstance': <SyntaxKind.HierarchicalInstance: 226>, 'HierarchyInstantiation': <SyntaxKind.HierarchyInstantiation: 227>, 'IdWithExprCoverageBinInitializer': <SyntaxKind.IdWithExprCoverageBinInitializer: 228>, 'IdentifierName': <SyntaxKind.IdentifierName: 229>, 'IdentifierSelectName': <SyntaxKind.IdentifierSelectName: 230>, 'IfDefDirective': <SyntaxKind.IfDefDirective: 231>, 'IfGenerate': <SyntaxKind.IfGenerate: 232>, 'IfNDefDirective': <SyntaxKind.IfNDefDirective: 233>, 'IfNonePathDeclaration': <SyntaxKind.IfNonePathDeclaration: 234>, 'IffEventClause': <SyntaxKind.IffEventClause: 235>, 'IffPropertyExpr': <SyntaxKind.IffPropertyExpr: 236>, 'ImmediateAssertStatement': <SyntaxKind.ImmediateAssertStatement: 237>, 'ImmediateAssertionMember': <SyntaxKind.ImmediateAssertionMember: 238>, 'ImmediateAssumeStatement': <SyntaxKind.ImmediateAssumeStatement: 239>, 'ImmediateCoverStatement': <SyntaxKind.ImmediateCoverStatement: 240>, 'ImplementsClause': <SyntaxKind.ImplementsClause: 241>, 'ImplicationConstraint': <SyntaxKind.ImplicationConstraint: 242>, 'ImplicationPropertyExpr': <SyntaxKind.ImplicationPropertyExpr: 243>, 'ImplicitAnsiPort': <SyntaxKind.ImplicitAnsiPort: 244>, 'ImplicitEventControl': <SyntaxKind.ImplicitEventControl: 245>, 'ImplicitNonAnsiPort': <SyntaxKind.ImplicitNonAnsiPort: 246>, 'ImplicitType': <SyntaxKind.ImplicitType: 247>, 'ImpliesPropertyExpr': <SyntaxKind.ImpliesPropertyExpr: 248>, 'IncludeDirective': <SyntaxKind.IncludeDirective: 249>, 'InequalityExpression': <SyntaxKind.InequalityExpression: 250>, 'InitialBlock': <SyntaxKind.InitialBlock: 251>, 'InsideExpression': <SyntaxKind.InsideExpression: 252>, 'InstanceConfigRule': <SyntaxKind.InstanceConfigRule: 253>, 'InstanceName': <SyntaxKind.InstanceName: 254>, 'IntType': <SyntaxKind.IntType: 255>, 'IntegerLiteralExpression': <SyntaxKind.IntegerLiteralExpression: 256>, 'IntegerType': <SyntaxKind.IntegerType: 257>, 'IntegerVectorExpression': <SyntaxKind.IntegerVectorExpression: 258>, 'InterfaceDeclaration': <SyntaxKind.InterfaceDeclaration: 259>, 'InterfaceHeader': <SyntaxKind.InterfaceHeader: 260>, 'InterfacePortHeader': <SyntaxKind.InterfacePortHeader: 261>, 'IntersectClause': <SyntaxKind.IntersectClause: 262>, 'IntersectSequenceExpr': <SyntaxKind.IntersectSequenceExpr: 263>, 'InvocationExpression': <SyntaxKind.InvocationExpression: 264>, 'JumpStatement': <SyntaxKind.JumpStatement: 265>, 'LessThanEqualExpression': <SyntaxKind.LessThanEqualExpression: 266>, 'LessThanExpression': <SyntaxKind.LessThanExpression: 267>, 'LetDeclaration': <SyntaxKind.LetDeclaration: 268>, 'LibraryDeclaration': <SyntaxKind.LibraryDeclaration: 269>, 'LibraryIncDirClause': <SyntaxKind.LibraryIncDirClause: 270>, 'LibraryIncludeStatement': <SyntaxKind.LibraryIncludeStatement: 271>, 'LibraryMap': <SyntaxKind.LibraryMap: 272>, 'LineDirective': <SyntaxKind.LineDirective: 273>, 'LocalScope': <SyntaxKind.LocalScope: 274>, 'LocalVariableDeclaration': <SyntaxKind.LocalVariableDeclaration: 275>, 'LogicType': <SyntaxKind.LogicType: 276>, 'LogicalAndExpression': <SyntaxKind.LogicalAndExpression: 277>, 'LogicalEquivalenceExpression': <SyntaxKind.LogicalEquivalenceExpression: 278>, 'LogicalImplicationExpression': <SyntaxKind.LogicalImplicationExpression: 279>, 'LogicalLeftShiftAssignmentExpression': <SyntaxKind.LogicalLeftShiftAssignmentExpression: 280>, 'LogicalOrExpression': <SyntaxKind.LogicalOrExpression: 281>, 'LogicalRightShiftAssignmentExpression': <SyntaxKind.LogicalRightShiftAssignmentExpression: 282>, 'LogicalShiftLeftExpression': <SyntaxKind.LogicalShiftLeftExpression: 283>, 'LogicalShiftRightExpression': <SyntaxKind.LogicalShiftRightExpression: 284>, 'LongIntType': <SyntaxKind.LongIntType: 285>, 'LoopConstraint': <SyntaxKind.LoopConstraint: 286>, 'LoopGenerate': <SyntaxKind.LoopGenerate: 287>, 'LoopStatement': <SyntaxKind.LoopStatement: 288>, 'MacroActualArgument': <SyntaxKind.MacroActualArgument: 289>, 'MacroActualArgumentList': <SyntaxKind.MacroActualArgumentList: 290>, 'MacroArgumentDefault': <SyntaxKind.MacroArgumentDefault: 291>, 'MacroFormalArgument': <SyntaxKind.MacroFormalArgument: 292>, 'MacroFormalArgumentList': <SyntaxKind.MacroFormalArgumentList: 293>, 'MacroUsage': <SyntaxKind.MacroUsage: 294>, 'MatchesClause': <SyntaxKind.MatchesClause: 295>, 'MemberAccessExpression': <SyntaxKind.MemberAccessExpression: 296>, 'MinTypMaxExpression': <SyntaxKind.MinTypMaxExpression: 297>, 'ModAssignmentExpression': <SyntaxKind.ModAssignmentExpression: 298>, 'ModExpression': <SyntaxKind.ModExpression: 299>, 'ModportClockingPort': <SyntaxKind.ModportClockingPort: 300>, 'ModportDeclaration': <SyntaxKind.ModportDeclaration: 301>, 'ModportExplicitPort': <SyntaxKind.ModportExplicitPort: 302>, 'ModportItem': <SyntaxKind.ModportItem: 303>, 'ModportNamedPort': <SyntaxKind.ModportNamedPort: 304>, 'ModportSimplePortList': <SyntaxKind.ModportSimplePortList: 305>, 'ModportSubroutinePort': <SyntaxKind.ModportSubroutinePort: 306>, 'ModportSubroutinePortList': <SyntaxKind.ModportSubroutinePortList: 307>, 'ModuleDeclaration': <SyntaxKind.ModuleDeclaration: 308>, 'ModuleHeader': <SyntaxKind.ModuleHeader: 309>, 'MultipleConcatenationExpression': <SyntaxKind.MultipleConcatenationExpression: 310>, 'MultiplyAssignmentExpression': <SyntaxKind.MultiplyAssignmentExpression: 311>, 'MultiplyExpression': <SyntaxKind.MultiplyExpression: 312>, 'NameValuePragmaExpression': <SyntaxKind.NameValuePragmaExpression: 313>, 'NamedArgument': <SyntaxKind.NamedArgument: 314>, 'NamedBlockClause': <SyntaxKind.NamedBlockClause: 315>, 'NamedConditionalDirectiveExpression': <SyntaxKind.NamedConditionalDirectiveExpression: 316>, 'NamedLabel': <SyntaxKind.NamedLabel: 317>, 'NamedParamAssignment': <SyntaxKind.NamedParamAssignment: 318>, 'NamedPortConnection': <SyntaxKind.NamedPortConnection: 319>, 'NamedStructurePatternMember': <SyntaxKind.NamedStructurePatternMember: 320>, 'NamedType': <SyntaxKind.NamedType: 321>, 'NetAlias': <SyntaxKind.NetAlias: 322>, 'NetDeclaration': <SyntaxKind.NetDeclaration: 323>, 'NetPortHeader': <SyntaxKind.NetPortHeader: 324>, 'NetTypeDeclaration': <SyntaxKind.NetTypeDeclaration: 325>, 'NewArrayExpression': <SyntaxKind.NewArrayExpression: 326>, 'NewClassExpression': <SyntaxKind.NewClassExpression: 327>, 'NoUnconnectedDriveDirective': <SyntaxKind.NoUnconnectedDriveDirective: 328>, 'NonAnsiPortList': <SyntaxKind.NonAnsiPortList: 329>, 'NonAnsiUdpPortList': <SyntaxKind.NonAnsiUdpPortList: 330>, 'NonblockingAssignmentExpression': <SyntaxKind.NonblockingAssignmentExpression: 331>, 'NonblockingEventTriggerStatement': <SyntaxKind.NonblockingEventTriggerStatement: 332>, 'NullLiteralExpression': <SyntaxKind.NullLiteralExpression: 333>, 'NumberPragmaExpression': <SyntaxKind.NumberPragmaExpression: 334>, 'OneStepDelay': <SyntaxKind.OneStepDelay: 335>, 'OrAssignmentExpression': <SyntaxKind.OrAssignmentExpression: 336>, 'OrPropertyExpr': <SyntaxKind.OrPropertyExpr: 337>, 'OrSequenceExpr': <SyntaxKind.OrSequenceExpr: 338>, 'OrderedArgument': <SyntaxKind.OrderedArgument: 339>, 'OrderedParamAssignment': <SyntaxKind.OrderedParamAssignment: 340>, 'OrderedPortConnection': <SyntaxKind.OrderedPortConnection: 341>, 'OrderedStructurePatternMember': <SyntaxKind.OrderedStructurePatternMember: 342>, 'PackageDeclaration': <SyntaxKind.PackageDeclaration: 343>, 'PackageExportAllDeclaration': <SyntaxKind.PackageExportAllDeclaration: 344>, 'PackageExportDeclaration': <SyntaxKind.PackageExportDeclaration: 345>, 'PackageHeader': <SyntaxKind.PackageHeader: 346>, 'PackageImportDeclaration': <SyntaxKind.PackageImportDeclaration: 347>, 'PackageImportItem': <SyntaxKind.PackageImportItem: 348>, 'ParallelBlockStatement': <SyntaxKind.ParallelBlockStatement: 349>, 'ParameterDeclaration': <SyntaxKind.ParameterDeclaration: 350>, 'ParameterDeclarationStatement': <SyntaxKind.ParameterDeclarationStatement: 351>, 'ParameterPortList': <SyntaxKind.ParameterPortList: 352>, 'ParameterValueAssignment': <SyntaxKind.ParameterValueAssignment: 353>, 'ParenExpressionList': <SyntaxKind.ParenExpressionList: 354>, 'ParenPragmaExpression': <SyntaxKind.ParenPragmaExpression: 355>, 'ParenthesizedBinsSelectExpr': <SyntaxKind.ParenthesizedBinsSelectExpr: 356>, 'ParenthesizedConditionalDirectiveExpression': <SyntaxKind.ParenthesizedConditionalDirectiveExpression: 357>, 'ParenthesizedEventExpression': <SyntaxKind.ParenthesizedEventExpression: 358>, 'ParenthesizedExpression': <SyntaxKind.ParenthesizedExpression: 359>, 'ParenthesizedPattern': <SyntaxKind.ParenthesizedPattern: 360>, 'ParenthesizedPropertyExpr': <SyntaxKind.ParenthesizedPropertyExpr: 361>, 'ParenthesizedSequenceExpr': <SyntaxKind.ParenthesizedSequenceExpr: 362>, 'PathDeclaration': <SyntaxKind.PathDeclaration: 363>, 'PathDescription': <SyntaxKind.PathDescription: 364>, 'PatternCaseItem': <SyntaxKind.PatternCaseItem: 365>, 'PortConcatenation': <SyntaxKind.PortConcatenation: 366>, 'PortDeclaration': <SyntaxKind.PortDeclaration: 367>, 'PortReference': <SyntaxKind.PortReference: 368>, 'PostdecrementExpression': <SyntaxKind.PostdecrementExpression: 369>, 'PostincrementExpression': <SyntaxKind.PostincrementExpression: 370>, 'PowerExpression': <SyntaxKind.PowerExpression: 371>, 'PragmaDirective': <SyntaxKind.PragmaDirective: 372>, 'PrimaryBlockEventExpression': <SyntaxKind.PrimaryBlockEventExpression: 373>, 'PrimitiveInstantiation': <SyntaxKind.PrimitiveInstantiation: 374>, 'ProceduralAssignStatement': <SyntaxKind.ProceduralAssignStatement: 375>, 'ProceduralDeassignStatement': <SyntaxKind.ProceduralDeassignStatement: 376>, 'ProceduralForceStatement': <SyntaxKind.ProceduralForceStatement: 377>, 'ProceduralReleaseStatement': <SyntaxKind.ProceduralReleaseStatement: 378>, 'Production': <SyntaxKind.Production: 379>, 'ProgramDeclaration': <SyntaxKind.ProgramDeclaration: 380>, 'ProgramHeader': <SyntaxKind.ProgramHeader: 381>, 'PropertyDeclaration': <SyntaxKind.PropertyDeclaration: 382>, 'PropertySpec': <SyntaxKind.PropertySpec: 383>, 'PropertyType': <SyntaxKind.PropertyType: 384>, 'ProtectDirective': <SyntaxKind.ProtectDirective: 385>, 'ProtectedDirective': <SyntaxKind.ProtectedDirective: 386>, 'PullStrength': <SyntaxKind.PullStrength: 387>, 'PulseStyleDeclaration': <SyntaxKind.PulseStyleDeclaration: 388>, 'QueueDimensionSpecifier': <SyntaxKind.QueueDimensionSpecifier: 389>, 'RandCaseItem': <SyntaxKind.RandCaseItem: 390>, 'RandCaseStatement': <SyntaxKind.RandCaseStatement: 391>, 'RandJoinClause': <SyntaxKind.RandJoinClause: 392>, 'RandSequenceStatement': <SyntaxKind.RandSequenceStatement: 393>, 'RangeCoverageBinInitializer': <SyntaxKind.RangeCoverageBinInitializer: 394>, 'RangeDimensionSpecifier': <SyntaxKind.RangeDimensionSpecifier: 395>, 'RangeList': <SyntaxKind.RangeList: 396>, 'RealLiteralExpression': <SyntaxKind.RealLiteralExpression: 397>, 'RealTimeType': <SyntaxKind.RealTimeType: 398>, 'RealType': <SyntaxKind.RealType: 399>, 'RegType': <SyntaxKind.RegType: 400>, 'RepeatedEventControl': <SyntaxKind.RepeatedEventControl: 401>, 'ReplicatedAssignmentPattern': <SyntaxKind.ReplicatedAssignmentPattern: 402>, 'ResetAllDirective': <SyntaxKind.ResetAllDirective: 403>, 'RestrictPropertyStatement': <SyntaxKind.RestrictPropertyStatement: 404>, 'ReturnStatement': <SyntaxKind.ReturnStatement: 405>, 'RootScope': <SyntaxKind.RootScope: 406>, 'RsCase': <SyntaxKind.RsCase: 407>, 'RsCodeBlock': <SyntaxKind.RsCodeBlock: 408>, 'RsElseClause': <SyntaxKind.RsElseClause: 409>, 'RsIfElse': <SyntaxKind.RsIfElse: 410>, 'RsProdItem': <SyntaxKind.RsProdItem: 411>, 'RsRepeat': <SyntaxKind.RsRepeat: 412>, 'RsRule': <SyntaxKind.RsRule: 413>, 'RsWeightClause': <SyntaxKind.RsWeightClause: 414>, 'SUntilPropertyExpr': <SyntaxKind.SUntilPropertyExpr: 415>, 'SUntilWithPropertyExpr': <SyntaxKind.SUntilWithPropertyExpr: 416>, 'ScopedName': <SyntaxKind.ScopedName: 417>, 'SequenceDeclaration': <SyntaxKind.SequenceDeclaration: 418>, 'SequenceMatchList': <SyntaxKind.SequenceMatchList: 419>, 'SequenceRepetition': <SyntaxKind.SequenceRepetition: 420>, 'SequenceType': <SyntaxKind.SequenceType: 421>, 'SequentialBlockStatement': <SyntaxKind.SequentialBlockStatement: 422>, 'ShortIntType': <SyntaxKind.ShortIntType: 423>, 'ShortRealType': <SyntaxKind.ShortRealType: 424>, 'SignalEventExpression': <SyntaxKind.SignalEventExpression: 425>, 'SignedCastExpression': <SyntaxKind.SignedCastExpression: 426>, 'SimpleAssignmentPattern': <SyntaxKind.SimpleAssignmentPattern: 427>, 'SimpleBinsSelectExpr': <SyntaxKind.SimpleBinsSelectExpr: 428>, 'SimplePathSuffix': <SyntaxKind.SimplePathSuffix: 429>, 'SimplePragmaExpression': <SyntaxKind.SimplePragmaExpression: 430>, 'SimplePropertyExpr': <SyntaxKind.SimplePropertyExpr: 431>, 'SimpleRangeSelect': <SyntaxKind.SimpleRangeSelect: 432>, 'SimpleSequenceExpr': <SyntaxKind.SimpleSequenceExpr: 433>, 'SolveBeforeConstraint': <SyntaxKind.SolveBeforeConstraint: 434>, 'SpecifyBlock': <SyntaxKind.SpecifyBlock: 435>, 'SpecparamDeclaration': <SyntaxKind.SpecparamDeclaration: 436>, 'SpecparamDeclarator': <SyntaxKind.SpecparamDeclarator: 437>, 'StandardCaseItem': <SyntaxKind.StandardCaseItem: 438>, 'StandardPropertyCaseItem': <SyntaxKind.StandardPropertyCaseItem: 439>, 'StandardRsCaseItem': <SyntaxKind.StandardRsCaseItem: 440>, 'StreamExpression': <SyntaxKind.StreamExpression: 441>, 'StreamExpressionWithRange': <SyntaxKind.StreamExpressionWithRange: 442>, 'StreamingConcatenationExpression': <SyntaxKind.StreamingConcatenationExpression: 443>, 'StringLiteralExpression': <SyntaxKind.StringLiteralExpression: 444>, 'StringType': <SyntaxKind.StringType: 445>, 'StrongWeakPropertyExpr': <SyntaxKind.StrongWeakPropertyExpr: 446>, 'StructType': <SyntaxKind.StructType: 447>, 'StructUnionMember': <SyntaxKind.StructUnionMember: 448>, 'StructurePattern': <SyntaxKind.StructurePattern: 449>, 'StructuredAssignmentPattern': <SyntaxKind.StructuredAssignmentPattern: 450>, 'SubtractAssignmentExpression': <SyntaxKind.SubtractAssignmentExpression: 451>, 'SubtractExpression': <SyntaxKind.SubtractExpression: 452>, 'SuperHandle': <SyntaxKind.SuperHandle: 453>, 'SuperNewDefaultedArgsExpression': <SyntaxKind.SuperNewDefaultedArgsExpression: 454>, 'SystemName': <SyntaxKind.SystemName: 455>, 'SystemTimingCheck': <SyntaxKind.SystemTimingCheck: 456>, 'TaggedPattern': <SyntaxKind.TaggedPattern: 457>, 'TaggedUnionExpression': <SyntaxKind.TaggedUnionExpression: 458>, 'TaskDeclaration': <SyntaxKind.TaskDeclaration: 459>, 'ThisHandle': <SyntaxKind.ThisHandle: 460>, 'ThroughoutSequenceExpr': <SyntaxKind.ThroughoutSequenceExpr: 461>, 'TimeLiteralExpression': <SyntaxKind.TimeLiteralExpression: 462>, 'TimeScaleDirective': <SyntaxKind.TimeScaleDirective: 463>, 'TimeType': <SyntaxKind.TimeType: 464>, 'TimeUnitsDeclaration': <SyntaxKind.TimeUnitsDeclaration: 465>, 'TimingCheckEventArg': <SyntaxKind.TimingCheckEventArg: 466>, 'TimingCheckEventCondition': <SyntaxKind.TimingCheckEventCondition: 467>, 'TimingControlExpression': <SyntaxKind.TimingControlExpression: 468>, 'TimingControlStatement': <SyntaxKind.TimingControlStatement: 469>, 'TransListCoverageBinInitializer': <SyntaxKind.TransListCoverageBinInitializer: 470>, 'TransRange': <SyntaxKind.TransRange: 471>, 'TransRepeatRange': <SyntaxKind.TransRepeatRange: 472>, 'TransSet': <SyntaxKind.TransSet: 473>, 'TypeAssignment': <SyntaxKind.TypeAssignment: 474>, 'TypeParameterDeclaration': <SyntaxKind.TypeParameterDeclaration: 475>, 'TypeReference': <SyntaxKind.TypeReference: 476>, 'TypedefDeclaration': <SyntaxKind.TypedefDeclaration: 477>, 'UdpBody': <SyntaxKind.UdpBody: 478>, 'UdpDeclaration': <SyntaxKind.UdpDeclaration: 479>, 'UdpEdgeField': <SyntaxKind.UdpEdgeField: 480>, 'UdpEntry': <SyntaxKind.UdpEntry: 481>, 'UdpInitialStmt': <SyntaxKind.UdpInitialStmt: 482>, 'UdpInputPortDecl': <SyntaxKind.UdpInputPortDecl: 483>, 'UdpOutputPortDecl': <SyntaxKind.UdpOutputPortDecl: 484>, 'UdpSimpleField': <SyntaxKind.UdpSimpleField: 485>, 'UnaryBinsSelectExpr': <SyntaxKind.UnaryBinsSelectExpr: 486>, 'UnaryBitwiseAndExpression': <SyntaxKind.UnaryBitwiseAndExpression: 487>, 'UnaryBitwiseNandExpression': <SyntaxKind.UnaryBitwiseNandExpression: 488>, 'UnaryBitwiseNorExpression': <SyntaxKind.UnaryBitwiseNorExpression: 489>, 'UnaryBitwiseNotExpression': <SyntaxKind.UnaryBitwiseNotExpression: 490>, 'UnaryBitwiseOrExpression': <SyntaxKind.UnaryBitwiseOrExpression: 491>, 'UnaryBitwiseXnorExpression': <SyntaxKind.UnaryBitwiseXnorExpression: 492>, 'UnaryBitwiseXorExpression': <SyntaxKind.UnaryBitwiseXorExpression: 493>, 'UnaryConditionalDirectiveExpression': <SyntaxKind.UnaryConditionalDirectiveExpression: 494>, 'UnaryLogicalNotExpression': <SyntaxKind.UnaryLogicalNotExpression: 495>, 'UnaryMinusExpression': <SyntaxKind.UnaryMinusExpression: 496>, 'UnaryPlusExpression': <SyntaxKind.UnaryPlusExpression: 497>, 'UnaryPredecrementExpression': <SyntaxKind.UnaryPredecrementExpression: 498>, 'UnaryPreincrementExpression': <SyntaxKind.UnaryPreincrementExpression: 499>, 'UnaryPropertyExpr': <SyntaxKind.UnaryPropertyExpr: 500>, 'UnarySelectPropertyExpr': <SyntaxKind.UnarySelectPropertyExpr: 501>, 'UnbasedUnsizedLiteralExpression': <SyntaxKind.UnbasedUnsizedLiteralExpression: 502>, 'UnconnectedDriveDirective': <SyntaxKind.UnconnectedDriveDirective: 503>, 'UndefDirective': <SyntaxKind.UndefDirective: 504>, 'UndefineAllDirective': <SyntaxKind.UndefineAllDirective: 505>, 'UnionType': <SyntaxKind.UnionType: 506>, 'UniquenessConstraint': <SyntaxKind.UniquenessConstraint: 507>, 'UnitScope': <SyntaxKind.UnitScope: 508>, 'UntilPropertyExpr': <SyntaxKind.UntilPropertyExpr: 509>, 'UntilWithPropertyExpr': <SyntaxKind.UntilWithPropertyExpr: 510>, 'Untyped': <SyntaxKind.Untyped: 511>, 'UserDefinedNetDeclaration': <SyntaxKind.UserDefinedNetDeclaration: 512>, 'ValueRangeExpression': <SyntaxKind.ValueRangeExpression: 513>, 'VariableDimension': <SyntaxKind.VariableDimension: 514>, 'VariablePattern': <SyntaxKind.VariablePattern: 515>, 'VariablePortHeader': <SyntaxKind.VariablePortHeader: 516>, 'VirtualInterfaceType': <SyntaxKind.VirtualInterfaceType: 517>, 'VoidCastedCallStatement': <SyntaxKind.VoidCastedCallStatement: 518>, 'VoidType': <SyntaxKind.VoidType: 519>, 'WaitForkStatement': <SyntaxKind.WaitForkStatement: 520>, 'WaitOrderStatement': <SyntaxKind.WaitOrderStatement: 521>, 'WaitStatement': <SyntaxKind.WaitStatement: 522>, 'WildcardDimensionSpecifier': <SyntaxKind.WildcardDimensionSpecifier: 523>, 'WildcardEqualityExpression': <SyntaxKind.WildcardEqualityExpression: 524>, 'WildcardInequalityExpression': <SyntaxKind.WildcardInequalityExpression: 525>, 'WildcardLiteralExpression': <SyntaxKind.WildcardLiteralExpression: 526>, 'WildcardPattern': <SyntaxKind.WildcardPattern: 527>, 'WildcardPortConnection': <SyntaxKind.WildcardPortConnection: 528>, 'WildcardPortList': <SyntaxKind.WildcardPortList: 529>, 'WildcardUdpPortList': <SyntaxKind.WildcardUdpPortList: 530>, 'WithClause': <SyntaxKind.WithClause: 531>, 'WithFunctionClause': <SyntaxKind.WithFunctionClause: 532>, 'WithFunctionSample': <SyntaxKind.WithFunctionSample: 533>, 'WithinSequenceExpr': <SyntaxKind.WithinSequenceExpr: 534>, 'XorAssignmentExpression': <SyntaxKind.XorAssignmentExpression: 535>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -13120,9 +11071,6 @@ class SyntaxKind:
     def value(self) -> int:
         ...
 class SyntaxNode:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __getitem__(self, arg0: int) -> typing.Any:
         ...
     def __iter__(self) -> typing.Iterator[typing.Any]:
@@ -13155,9 +11103,6 @@ class SyntaxNode:
     def sourceRange(self) -> SourceRange:
         ...
 class SyntaxPrinter:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def printFile(tree: SyntaxTree) -> str:
         ...
@@ -13198,9 +11143,6 @@ class SyntaxPrinter:
     def str(self) -> str:
         ...
 class SyntaxTree:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def fromBuffer(buffer: SourceBuffer, sourceManager: SourceManager, options: Bag = ..., inheritedMacros: span[...] = []) -> SyntaxTree:
         ...
@@ -13266,9 +11208,6 @@ class SyntaxTree:
         ...
 class SystemNameSyntax(NameSyntax):
     systemIdentifier: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class SystemSubroutine:
     class WithClauseMode:
         """
@@ -13284,9 +11223,6 @@ class SystemSubroutine:
         None_: typing.ClassVar[SystemSubroutine.WithClauseMode]  # value = <WithClauseMode.None_: 0>
         Randomize: typing.ClassVar[SystemSubroutine.WithClauseMode]  # value = <WithClauseMode.Randomize: 2>
         __members__: typing.ClassVar[dict[str, SystemSubroutine.WithClauseMode]]  # value = {'None_': <WithClauseMode.None_: 0>, 'Iterator': <WithClauseMode.Iterator: 1>, 'Randomize': <WithClauseMode.Randomize: 2>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -13317,9 +11253,6 @@ class SystemSubroutine:
     kind: SubroutineKind
     name: str
     withClauseMode: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def unevaluatedContext(sourceContext: ASTContext) -> ASTContext:
         ...
@@ -13391,9 +11324,6 @@ class SystemTimingCheckKind:
     Unknown: typing.ClassVar[SystemTimingCheckKind]  # value = <SystemTimingCheckKind.Unknown: 0>
     Width: typing.ClassVar[SystemTimingCheckKind]  # value = <SystemTimingCheckKind.Width: 11>
     __members__: typing.ClassVar[dict[str, SystemTimingCheckKind]]  # value = {'Unknown': <SystemTimingCheckKind.Unknown: 0>, 'Setup': <SystemTimingCheckKind.Setup: 1>, 'Hold': <SystemTimingCheckKind.Hold: 2>, 'SetupHold': <SystemTimingCheckKind.SetupHold: 3>, 'Recovery': <SystemTimingCheckKind.Recovery: 4>, 'Removal': <SystemTimingCheckKind.Removal: 5>, 'RecRem': <SystemTimingCheckKind.RecRem: 6>, 'Skew': <SystemTimingCheckKind.Skew: 7>, 'TimeSkew': <SystemTimingCheckKind.TimeSkew: 8>, 'FullSkew': <SystemTimingCheckKind.FullSkew: 9>, 'Period': <SystemTimingCheckKind.Period: 10>, 'Width': <SystemTimingCheckKind.Width: 11>, 'NoChange': <SystemTimingCheckKind.NoChange: 12>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -13422,9 +11352,6 @@ class SystemTimingCheckKind:
         ...
 class SystemTimingCheckSymbol(Symbol):
     class Arg:
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         @property
         def condition(self) -> Expression:
             ...
@@ -13437,9 +11364,6 @@ class SystemTimingCheckSymbol(Symbol):
         @property
         def expr(self) -> Expression:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def arguments(self) -> span[...]:
         ...
@@ -13452,13 +11376,7 @@ class SystemTimingCheckSyntax(MemberSyntax):
     name: Token
     openParen: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TaggedPattern(Pattern):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def member(self) -> ...:
         ...
@@ -13469,13 +11387,7 @@ class TaggedPatternSyntax(PatternSyntax):
     memberName: Token
     pattern: PatternSyntax
     tagged: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TaggedUnionExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def member(self) -> ...:
         ...
@@ -13486,17 +11398,9 @@ class TaggedUnionExpressionSyntax(ExpressionSyntax):
     expr: ExpressionSyntax
     member: Token
     tagged: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TempVarSymbol(VariableSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class TextDiagnosticClient(DiagnosticClient):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def clear(self) -> None:
@@ -13522,9 +11426,6 @@ class TextDiagnosticClient(DiagnosticClient):
     def showSourceLine(self, show: bool) -> None:
         ...
 class TimeLiteral(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def value(self) -> float:
         ...
@@ -13532,9 +11433,6 @@ class TimeScale:
     __hash__: typing.ClassVar[None] = None
     base: TimeScaleValue
     precision: TimeScaleValue
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def fromString(str: str) -> TimeScale | None:
         ...
@@ -13556,9 +11454,6 @@ class TimeScaleDirectiveSyntax(DirectiveSyntax):
     slash: Token
     timePrecision: Token
     timeUnit: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TimeScaleMagnitude:
     """
     Members:
@@ -13573,9 +11468,6 @@ class TimeScaleMagnitude:
     One: typing.ClassVar[TimeScaleMagnitude]  # value = <TimeScaleMagnitude.One: 1>
     Ten: typing.ClassVar[TimeScaleMagnitude]  # value = <TimeScaleMagnitude.Ten: 10>
     __members__: typing.ClassVar[dict[str, TimeScaleMagnitude]]  # value = {'One': <TimeScaleMagnitude.One: 1>, 'Ten': <TimeScaleMagnitude.Ten: 10>, 'Hundred': <TimeScaleMagnitude.Hundred: 100>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -13606,9 +11498,6 @@ class TimeScaleValue:
     __hash__: typing.ClassVar[None] = None
     magnitude: TimeScaleMagnitude
     unit: TimeUnit
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def fromLiteral(value: float, unit: TimeUnit) -> TimeScaleValue | None:
         ...
@@ -13650,9 +11539,6 @@ class TimeUnit:
     Picoseconds: typing.ClassVar[TimeUnit]  # value = <TimeUnit.Picoseconds: 4>
     Seconds: typing.ClassVar[TimeUnit]  # value = <TimeUnit.Seconds: 0>
     __members__: typing.ClassVar[dict[str, TimeUnit]]  # value = {'Seconds': <TimeUnit.Seconds: 0>, 'Milliseconds': <TimeUnit.Milliseconds: 1>, 'Microseconds': <TimeUnit.Microseconds: 2>, 'Nanoseconds': <TimeUnit.Nanoseconds: 3>, 'Picoseconds': <TimeUnit.Picoseconds: 4>, 'Femtoseconds': <TimeUnit.Femtoseconds: 5>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -13684,13 +11570,7 @@ class TimeUnitsDeclarationSyntax(MemberSyntax):
     keyword: Token
     semi: Token
     time: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TimedStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def stmt(self) -> Statement:
         ...
@@ -13698,27 +11578,16 @@ class TimedStatement(Statement):
     def timing(self) -> TimingControl:
         ...
 class TimingCheckArgSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class TimingCheckEventArgSyntax(TimingCheckArgSyntax):
     condition: TimingCheckEventConditionSyntax
     controlSpecifier: EdgeControlSpecifierSyntax
     edge: Token
     terminal: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TimingCheckEventConditionSyntax(SyntaxNode):
     expr: ExpressionSyntax
     tripleAnd: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TimingControl:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __repr__(self) -> str:
         ...
     def visit(self, f: typing.Any) -> None:
@@ -13742,9 +11611,6 @@ class TimingControl:
 class TimingControlExpressionSyntax(ExpressionSyntax):
     expr: ExpressionSyntax
     timing: TimingControlSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TimingControlKind:
     """
     Members:
@@ -13780,9 +11646,6 @@ class TimingControlKind:
     RepeatedEvent: typing.ClassVar[TimingControlKind]  # value = <TimingControlKind.RepeatedEvent: 5>
     SignalEvent: typing.ClassVar[TimingControlKind]  # value = <TimingControlKind.SignalEvent: 2>
     __members__: typing.ClassVar[dict[str, TimingControlKind]]  # value = {'Invalid': <TimingControlKind.Invalid: 0>, 'Delay': <TimingControlKind.Delay: 1>, 'SignalEvent': <TimingControlKind.SignalEvent: 2>, 'EventList': <TimingControlKind.EventList: 3>, 'ImplicitEvent': <TimingControlKind.ImplicitEvent: 4>, 'RepeatedEvent': <TimingControlKind.RepeatedEvent: 5>, 'Delay3': <TimingControlKind.Delay3: 6>, 'OneStepDelay': <TimingControlKind.OneStepDelay: 7>, 'CycleDelay': <TimingControlKind.CycleDelay: 8>, 'BlockEventList': <TimingControlKind.BlockEventList: 9>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -13812,13 +11675,8 @@ class TimingControlKind:
 class TimingControlStatementSyntax(StatementSyntax):
     statement: StatementSyntax
     timingControl: TimingControlSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TimingControlSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class TimingPathSymbol(Symbol):
     class ConnectionKind:
         """
@@ -13831,9 +11689,6 @@ class TimingPathSymbol(Symbol):
         Full: typing.ClassVar[TimingPathSymbol.ConnectionKind]  # value = <ConnectionKind.Full: 0>
         Parallel: typing.ClassVar[TimingPathSymbol.ConnectionKind]  # value = <ConnectionKind.Parallel: 1>
         __members__: typing.ClassVar[dict[str, TimingPathSymbol.ConnectionKind]]  # value = {'Full': <ConnectionKind.Full: 0>, 'Parallel': <ConnectionKind.Parallel: 1>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -13874,9 +11729,6 @@ class TimingPathSymbol(Symbol):
         Positive: typing.ClassVar[TimingPathSymbol.Polarity]  # value = <Polarity.Positive: 1>
         Unknown: typing.ClassVar[TimingPathSymbol.Polarity]  # value = <Polarity.Unknown: 0>
         __members__: typing.ClassVar[dict[str, TimingPathSymbol.Polarity]]  # value = {'Unknown': <Polarity.Unknown: 0>, 'Positive': <Polarity.Positive: 1>, 'Negative': <Polarity.Negative: 2>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -13903,9 +11755,6 @@ class TimingPathSymbol(Symbol):
         @property
         def value(self) -> int:
             ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def conditionExpr(self) -> Expression:
         ...
@@ -13938,9 +11787,6 @@ class TimingPathSymbol(Symbol):
         ...
 class Token:
     __hash__: typing.ClassVar[None] = None
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __bool__(self) -> bool:
         ...
     def __eq__(self, arg0: Token) -> bool:
@@ -15063,9 +12909,6 @@ class TokenKind:
     XorKeyword: typing.ClassVar[TokenKind]  # value = <TokenKind.XorKeyword: 340>
     XorTilde: typing.ClassVar[TokenKind]  # value = <TokenKind.XorTilde: 51>
     __members__: typing.ClassVar[dict[str, TokenKind]]  # value = {'Unknown': <TokenKind.Unknown: 0>, 'EndOfFile': <TokenKind.EndOfFile: 1>, 'Identifier': <TokenKind.Identifier: 2>, 'SystemIdentifier': <TokenKind.SystemIdentifier: 3>, 'StringLiteral': <TokenKind.StringLiteral: 4>, 'IntegerLiteral': <TokenKind.IntegerLiteral: 5>, 'IntegerBase': <TokenKind.IntegerBase: 6>, 'UnbasedUnsizedLiteral': <TokenKind.UnbasedUnsizedLiteral: 7>, 'RealLiteral': <TokenKind.RealLiteral: 8>, 'TimeLiteral': <TokenKind.TimeLiteral: 9>, 'Placeholder': <TokenKind.Placeholder: 10>, 'Apostrophe': <TokenKind.Apostrophe: 11>, 'ApostropheOpenBrace': <TokenKind.ApostropheOpenBrace: 12>, 'OpenBrace': <TokenKind.OpenBrace: 13>, 'CloseBrace': <TokenKind.CloseBrace: 14>, 'OpenBracket': <TokenKind.OpenBracket: 15>, 'CloseBracket': <TokenKind.CloseBracket: 16>, 'OpenParenthesis': <TokenKind.OpenParenthesis: 17>, 'CloseParenthesis': <TokenKind.CloseParenthesis: 18>, 'Semicolon': <TokenKind.Semicolon: 19>, 'Colon': <TokenKind.Colon: 20>, 'ColonEquals': <TokenKind.ColonEquals: 21>, 'ColonSlash': <TokenKind.ColonSlash: 22>, 'DoubleColon': <TokenKind.DoubleColon: 23>, 'Comma': <TokenKind.Comma: 24>, 'Dot': <TokenKind.Dot: 25>, 'Slash': <TokenKind.Slash: 26>, 'Star': <TokenKind.Star: 27>, 'DoubleStar': <TokenKind.DoubleStar: 28>, 'StarArrow': <TokenKind.StarArrow: 29>, 'Plus': <TokenKind.Plus: 30>, 'DoublePlus': <TokenKind.DoublePlus: 31>, 'PlusColon': <TokenKind.PlusColon: 32>, 'PlusDivMinus': <TokenKind.PlusDivMinus: 33>, 'PlusModMinus': <TokenKind.PlusModMinus: 34>, 'Minus': <TokenKind.Minus: 35>, 'DoubleMinus': <TokenKind.DoubleMinus: 36>, 'MinusColon': <TokenKind.MinusColon: 37>, 'MinusArrow': <TokenKind.MinusArrow: 38>, 'MinusDoubleArrow': <TokenKind.MinusDoubleArrow: 39>, 'Tilde': <TokenKind.Tilde: 40>, 'TildeAnd': <TokenKind.TildeAnd: 41>, 'TildeOr': <TokenKind.TildeOr: 42>, 'TildeXor': <TokenKind.TildeXor: 43>, 'Dollar': <TokenKind.Dollar: 44>, 'Question': <TokenKind.Question: 45>, 'Hash': <TokenKind.Hash: 46>, 'DoubleHash': <TokenKind.DoubleHash: 47>, 'HashMinusHash': <TokenKind.HashMinusHash: 48>, 'HashEqualsHash': <TokenKind.HashEqualsHash: 49>, 'Xor': <TokenKind.Xor: 50>, 'XorTilde': <TokenKind.XorTilde: 51>, 'Equals': <TokenKind.Equals: 52>, 'DoubleEquals': <TokenKind.DoubleEquals: 53>, 'DoubleEqualsQuestion': <TokenKind.DoubleEqualsQuestion: 54>, 'TripleEquals': <TokenKind.TripleEquals: 55>, 'EqualsArrow': <TokenKind.EqualsArrow: 56>, 'PlusEqual': <TokenKind.PlusEqual: 57>, 'MinusEqual': <TokenKind.MinusEqual: 58>, 'SlashEqual': <TokenKind.SlashEqual: 59>, 'StarEqual': <TokenKind.StarEqual: 60>, 'AndEqual': <TokenKind.AndEqual: 61>, 'OrEqual': <TokenKind.OrEqual: 62>, 'PercentEqual': <TokenKind.PercentEqual: 63>, 'XorEqual': <TokenKind.XorEqual: 64>, 'LeftShiftEqual': <TokenKind.LeftShiftEqual: 65>, 'TripleLeftShiftEqual': <TokenKind.TripleLeftShiftEqual: 66>, 'RightShiftEqual': <TokenKind.RightShiftEqual: 67>, 'TripleRightShiftEqual': <TokenKind.TripleRightShiftEqual: 68>, 'LeftShift': <TokenKind.LeftShift: 69>, 'RightShift': <TokenKind.RightShift: 70>, 'TripleLeftShift': <TokenKind.TripleLeftShift: 71>, 'TripleRightShift': <TokenKind.TripleRightShift: 72>, 'Exclamation': <TokenKind.Exclamation: 73>, 'ExclamationEquals': <TokenKind.ExclamationEquals: 74>, 'ExclamationEqualsQuestion': <TokenKind.ExclamationEqualsQuestion: 75>, 'ExclamationDoubleEquals': <TokenKind.ExclamationDoubleEquals: 76>, 'Percent': <TokenKind.Percent: 77>, 'LessThan': <TokenKind.LessThan: 78>, 'LessThanEquals': <TokenKind.LessThanEquals: 79>, 'LessThanMinusArrow': <TokenKind.LessThanMinusArrow: 80>, 'GreaterThan': <TokenKind.GreaterThan: 81>, 'GreaterThanEquals': <TokenKind.GreaterThanEquals: 82>, 'Or': <TokenKind.Or: 83>, 'DoubleOr': <TokenKind.DoubleOr: 84>, 'OrMinusArrow': <TokenKind.OrMinusArrow: 85>, 'OrEqualsArrow': <TokenKind.OrEqualsArrow: 86>, 'At': <TokenKind.At: 87>, 'DoubleAt': <TokenKind.DoubleAt: 88>, 'And': <TokenKind.And: 89>, 'DoubleAnd': <TokenKind.DoubleAnd: 90>, 'TripleAnd': <TokenKind.TripleAnd: 91>, 'OneStep': <TokenKind.OneStep: 92>, 'AcceptOnKeyword': <TokenKind.AcceptOnKeyword: 93>, 'AliasKeyword': <TokenKind.AliasKeyword: 94>, 'AlwaysKeyword': <TokenKind.AlwaysKeyword: 95>, 'AlwaysCombKeyword': <TokenKind.AlwaysCombKeyword: 96>, 'AlwaysFFKeyword': <TokenKind.AlwaysFFKeyword: 97>, 'AlwaysLatchKeyword': <TokenKind.AlwaysLatchKeyword: 98>, 'AndKeyword': <TokenKind.AndKeyword: 99>, 'AssertKeyword': <TokenKind.AssertKeyword: 100>, 'AssignKeyword': <TokenKind.AssignKeyword: 101>, 'AssumeKeyword': <TokenKind.AssumeKeyword: 102>, 'AutomaticKeyword': <TokenKind.AutomaticKeyword: 103>, 'BeforeKeyword': <TokenKind.BeforeKeyword: 104>, 'BeginKeyword': <TokenKind.BeginKeyword: 105>, 'BindKeyword': <TokenKind.BindKeyword: 106>, 'BinsKeyword': <TokenKind.BinsKeyword: 107>, 'BinsOfKeyword': <TokenKind.BinsOfKeyword: 108>, 'BitKeyword': <TokenKind.BitKeyword: 109>, 'BreakKeyword': <TokenKind.BreakKeyword: 110>, 'BufKeyword': <TokenKind.BufKeyword: 111>, 'BufIf0Keyword': <TokenKind.BufIf0Keyword: 112>, 'BufIf1Keyword': <TokenKind.BufIf1Keyword: 113>, 'ByteKeyword': <TokenKind.ByteKeyword: 114>, 'CaseKeyword': <TokenKind.CaseKeyword: 115>, 'CaseXKeyword': <TokenKind.CaseXKeyword: 116>, 'CaseZKeyword': <TokenKind.CaseZKeyword: 117>, 'CellKeyword': <TokenKind.CellKeyword: 118>, 'CHandleKeyword': <TokenKind.CHandleKeyword: 119>, 'CheckerKeyword': <TokenKind.CheckerKeyword: 120>, 'ClassKeyword': <TokenKind.ClassKeyword: 121>, 'ClockingKeyword': <TokenKind.ClockingKeyword: 122>, 'CmosKeyword': <TokenKind.CmosKeyword: 123>, 'ConfigKeyword': <TokenKind.ConfigKeyword: 124>, 'ConstKeyword': <TokenKind.ConstKeyword: 125>, 'ConstraintKeyword': <TokenKind.ConstraintKeyword: 126>, 'ContextKeyword': <TokenKind.ContextKeyword: 127>, 'ContinueKeyword': <TokenKind.ContinueKeyword: 128>, 'CoverKeyword': <TokenKind.CoverKeyword: 129>, 'CoverGroupKeyword': <TokenKind.CoverGroupKeyword: 130>, 'CoverPointKeyword': <TokenKind.CoverPointKeyword: 131>, 'CrossKeyword': <TokenKind.CrossKeyword: 132>, 'DeassignKeyword': <TokenKind.DeassignKeyword: 133>, 'DefaultKeyword': <TokenKind.DefaultKeyword: 134>, 'DefParamKeyword': <TokenKind.DefParamKeyword: 135>, 'DesignKeyword': <TokenKind.DesignKeyword: 136>, 'DisableKeyword': <TokenKind.DisableKeyword: 137>, 'DistKeyword': <TokenKind.DistKeyword: 138>, 'DoKeyword': <TokenKind.DoKeyword: 139>, 'EdgeKeyword': <TokenKind.EdgeKeyword: 140>, 'ElseKeyword': <TokenKind.ElseKeyword: 141>, 'EndKeyword': <TokenKind.EndKeyword: 142>, 'EndCaseKeyword': <TokenKind.EndCaseKeyword: 143>, 'EndCheckerKeyword': <TokenKind.EndCheckerKeyword: 144>, 'EndClassKeyword': <TokenKind.EndClassKeyword: 145>, 'EndClockingKeyword': <TokenKind.EndClockingKeyword: 146>, 'EndConfigKeyword': <TokenKind.EndConfigKeyword: 147>, 'EndFunctionKeyword': <TokenKind.EndFunctionKeyword: 148>, 'EndGenerateKeyword': <TokenKind.EndGenerateKeyword: 149>, 'EndGroupKeyword': <TokenKind.EndGroupKeyword: 150>, 'EndInterfaceKeyword': <TokenKind.EndInterfaceKeyword: 151>, 'EndModuleKeyword': <TokenKind.EndModuleKeyword: 152>, 'EndPackageKeyword': <TokenKind.EndPackageKeyword: 153>, 'EndPrimitiveKeyword': <TokenKind.EndPrimitiveKeyword: 154>, 'EndProgramKeyword': <TokenKind.EndProgramKeyword: 155>, 'EndPropertyKeyword': <TokenKind.EndPropertyKeyword: 156>, 'EndSpecifyKeyword': <TokenKind.EndSpecifyKeyword: 157>, 'EndSequenceKeyword': <TokenKind.EndSequenceKeyword: 158>, 'EndTableKeyword': <TokenKind.EndTableKeyword: 159>, 'EndTaskKeyword': <TokenKind.EndTaskKeyword: 160>, 'EnumKeyword': <TokenKind.EnumKeyword: 161>, 'EventKeyword': <TokenKind.EventKeyword: 162>, 'EventuallyKeyword': <TokenKind.EventuallyKeyword: 163>, 'ExpectKeyword': <TokenKind.ExpectKeyword: 164>, 'ExportKeyword': <TokenKind.ExportKeyword: 165>, 'ExtendsKeyword': <TokenKind.ExtendsKeyword: 166>, 'ExternKeyword': <TokenKind.ExternKeyword: 167>, 'FinalKeyword': <TokenKind.FinalKeyword: 168>, 'FirstMatchKeyword': <TokenKind.FirstMatchKeyword: 169>, 'ForKeyword': <TokenKind.ForKeyword: 170>, 'ForceKeyword': <TokenKind.ForceKeyword: 171>, 'ForeachKeyword': <TokenKind.ForeachKeyword: 172>, 'ForeverKeyword': <TokenKind.ForeverKeyword: 173>, 'ForkKeyword': <TokenKind.ForkKeyword: 174>, 'ForkJoinKeyword': <TokenKind.ForkJoinKeyword: 175>, 'FunctionKeyword': <TokenKind.FunctionKeyword: 176>, 'GenerateKeyword': <TokenKind.GenerateKeyword: 177>, 'GenVarKeyword': <TokenKind.GenVarKeyword: 178>, 'GlobalKeyword': <TokenKind.GlobalKeyword: 179>, 'HighZ0Keyword': <TokenKind.HighZ0Keyword: 180>, 'HighZ1Keyword': <TokenKind.HighZ1Keyword: 181>, 'IfKeyword': <TokenKind.IfKeyword: 182>, 'IffKeyword': <TokenKind.IffKeyword: 183>, 'IfNoneKeyword': <TokenKind.IfNoneKeyword: 184>, 'IgnoreBinsKeyword': <TokenKind.IgnoreBinsKeyword: 185>, 'IllegalBinsKeyword': <TokenKind.IllegalBinsKeyword: 186>, 'ImplementsKeyword': <TokenKind.ImplementsKeyword: 187>, 'ImpliesKeyword': <TokenKind.ImpliesKeyword: 188>, 'ImportKeyword': <TokenKind.ImportKeyword: 189>, 'IncDirKeyword': <TokenKind.IncDirKeyword: 190>, 'IncludeKeyword': <TokenKind.IncludeKeyword: 191>, 'InitialKeyword': <TokenKind.InitialKeyword: 192>, 'InOutKeyword': <TokenKind.InOutKeyword: 193>, 'InputKeyword': <TokenKind.InputKeyword: 194>, 'InsideKeyword': <TokenKind.InsideKeyword: 195>, 'InstanceKeyword': <TokenKind.InstanceKeyword: 196>, 'IntKeyword': <TokenKind.IntKeyword: 197>, 'IntegerKeyword': <TokenKind.IntegerKeyword: 198>, 'InterconnectKeyword': <TokenKind.InterconnectKeyword: 199>, 'InterfaceKeyword': <TokenKind.InterfaceKeyword: 200>, 'IntersectKeyword': <TokenKind.IntersectKeyword: 201>, 'JoinKeyword': <TokenKind.JoinKeyword: 202>, 'JoinAnyKeyword': <TokenKind.JoinAnyKeyword: 203>, 'JoinNoneKeyword': <TokenKind.JoinNoneKeyword: 204>, 'LargeKeyword': <TokenKind.LargeKeyword: 205>, 'LetKeyword': <TokenKind.LetKeyword: 206>, 'LibListKeyword': <TokenKind.LibListKeyword: 207>, 'LibraryKeyword': <TokenKind.LibraryKeyword: 208>, 'LocalKeyword': <TokenKind.LocalKeyword: 209>, 'LocalParamKeyword': <TokenKind.LocalParamKeyword: 210>, 'LogicKeyword': <TokenKind.LogicKeyword: 211>, 'LongIntKeyword': <TokenKind.LongIntKeyword: 212>, 'MacromoduleKeyword': <TokenKind.MacromoduleKeyword: 213>, 'MatchesKeyword': <TokenKind.MatchesKeyword: 214>, 'MediumKeyword': <TokenKind.MediumKeyword: 215>, 'ModPortKeyword': <TokenKind.ModPortKeyword: 216>, 'ModuleKeyword': <TokenKind.ModuleKeyword: 217>, 'NandKeyword': <TokenKind.NandKeyword: 218>, 'NegEdgeKeyword': <TokenKind.NegEdgeKeyword: 219>, 'NetTypeKeyword': <TokenKind.NetTypeKeyword: 220>, 'NewKeyword': <TokenKind.NewKeyword: 221>, 'NextTimeKeyword': <TokenKind.NextTimeKeyword: 222>, 'NmosKeyword': <TokenKind.NmosKeyword: 223>, 'NorKeyword': <TokenKind.NorKeyword: 224>, 'NoShowCancelledKeyword': <TokenKind.NoShowCancelledKeyword: 225>, 'NotKeyword': <TokenKind.NotKeyword: 226>, 'NotIf0Keyword': <TokenKind.NotIf0Keyword: 227>, 'NotIf1Keyword': <TokenKind.NotIf1Keyword: 228>, 'NullKeyword': <TokenKind.NullKeyword: 229>, 'OrKeyword': <TokenKind.OrKeyword: 230>, 'OutputKeyword': <TokenKind.OutputKeyword: 231>, 'PackageKeyword': <TokenKind.PackageKeyword: 232>, 'PackedKeyword': <TokenKind.PackedKeyword: 233>, 'ParameterKeyword': <TokenKind.ParameterKeyword: 234>, 'PmosKeyword': <TokenKind.PmosKeyword: 235>, 'PosEdgeKeyword': <TokenKind.PosEdgeKeyword: 236>, 'PrimitiveKeyword': <TokenKind.PrimitiveKeyword: 237>, 'PriorityKeyword': <TokenKind.PriorityKeyword: 238>, 'ProgramKeyword': <TokenKind.ProgramKeyword: 239>, 'PropertyKeyword': <TokenKind.PropertyKeyword: 240>, 'ProtectedKeyword': <TokenKind.ProtectedKeyword: 241>, 'Pull0Keyword': <TokenKind.Pull0Keyword: 242>, 'Pull1Keyword': <TokenKind.Pull1Keyword: 243>, 'PullDownKeyword': <TokenKind.PullDownKeyword: 244>, 'PullUpKeyword': <TokenKind.PullUpKeyword: 245>, 'PulseStyleOnDetectKeyword': <TokenKind.PulseStyleOnDetectKeyword: 246>, 'PulseStyleOnEventKeyword': <TokenKind.PulseStyleOnEventKeyword: 247>, 'PureKeyword': <TokenKind.PureKeyword: 248>, 'RandKeyword': <TokenKind.RandKeyword: 249>, 'RandCKeyword': <TokenKind.RandCKeyword: 250>, 'RandCaseKeyword': <TokenKind.RandCaseKeyword: 251>, 'RandSequenceKeyword': <TokenKind.RandSequenceKeyword: 252>, 'RcmosKeyword': <TokenKind.RcmosKeyword: 253>, 'RealKeyword': <TokenKind.RealKeyword: 254>, 'RealTimeKeyword': <TokenKind.RealTimeKeyword: 255>, 'RefKeyword': <TokenKind.RefKeyword: 256>, 'RegKeyword': <TokenKind.RegKeyword: 257>, 'RejectOnKeyword': <TokenKind.RejectOnKeyword: 258>, 'ReleaseKeyword': <TokenKind.ReleaseKeyword: 259>, 'RepeatKeyword': <TokenKind.RepeatKeyword: 260>, 'RestrictKeyword': <TokenKind.RestrictKeyword: 261>, 'ReturnKeyword': <TokenKind.ReturnKeyword: 262>, 'RnmosKeyword': <TokenKind.RnmosKeyword: 263>, 'RpmosKeyword': <TokenKind.RpmosKeyword: 264>, 'RtranKeyword': <TokenKind.RtranKeyword: 265>, 'RtranIf0Keyword': <TokenKind.RtranIf0Keyword: 266>, 'RtranIf1Keyword': <TokenKind.RtranIf1Keyword: 267>, 'SAlwaysKeyword': <TokenKind.SAlwaysKeyword: 268>, 'SEventuallyKeyword': <TokenKind.SEventuallyKeyword: 269>, 'SNextTimeKeyword': <TokenKind.SNextTimeKeyword: 270>, 'SUntilKeyword': <TokenKind.SUntilKeyword: 271>, 'SUntilWithKeyword': <TokenKind.SUntilWithKeyword: 272>, 'ScalaredKeyword': <TokenKind.ScalaredKeyword: 273>, 'SequenceKeyword': <TokenKind.SequenceKeyword: 274>, 'ShortIntKeyword': <TokenKind.ShortIntKeyword: 275>, 'ShortRealKeyword': <TokenKind.ShortRealKeyword: 276>, 'ShowCancelledKeyword': <TokenKind.ShowCancelledKeyword: 277>, 'SignedKeyword': <TokenKind.SignedKeyword: 278>, 'SmallKeyword': <TokenKind.SmallKeyword: 279>, 'SoftKeyword': <TokenKind.SoftKeyword: 280>, 'SolveKeyword': <TokenKind.SolveKeyword: 281>, 'SpecifyKeyword': <TokenKind.SpecifyKeyword: 282>, 'SpecParamKeyword': <TokenKind.SpecParamKeyword: 283>, 'StaticKeyword': <TokenKind.StaticKeyword: 284>, 'StringKeyword': <TokenKind.StringKeyword: 285>, 'StrongKeyword': <TokenKind.StrongKeyword: 286>, 'Strong0Keyword': <TokenKind.Strong0Keyword: 287>, 'Strong1Keyword': <TokenKind.Strong1Keyword: 288>, 'StructKeyword': <TokenKind.StructKeyword: 289>, 'SuperKeyword': <TokenKind.SuperKeyword: 290>, 'Supply0Keyword': <TokenKind.Supply0Keyword: 291>, 'Supply1Keyword': <TokenKind.Supply1Keyword: 292>, 'SyncAcceptOnKeyword': <TokenKind.SyncAcceptOnKeyword: 293>, 'SyncRejectOnKeyword': <TokenKind.SyncRejectOnKeyword: 294>, 'TableKeyword': <TokenKind.TableKeyword: 295>, 'TaggedKeyword': <TokenKind.TaggedKeyword: 296>, 'TaskKeyword': <TokenKind.TaskKeyword: 297>, 'ThisKeyword': <TokenKind.ThisKeyword: 298>, 'ThroughoutKeyword': <TokenKind.ThroughoutKeyword: 299>, 'TimeKeyword': <TokenKind.TimeKeyword: 300>, 'TimePrecisionKeyword': <TokenKind.TimePrecisionKeyword: 301>, 'TimeUnitKeyword': <TokenKind.TimeUnitKeyword: 302>, 'TranKeyword': <TokenKind.TranKeyword: 303>, 'TranIf0Keyword': <TokenKind.TranIf0Keyword: 304>, 'TranIf1Keyword': <TokenKind.TranIf1Keyword: 305>, 'TriKeyword': <TokenKind.TriKeyword: 306>, 'Tri0Keyword': <TokenKind.Tri0Keyword: 307>, 'Tri1Keyword': <TokenKind.Tri1Keyword: 308>, 'TriAndKeyword': <TokenKind.TriAndKeyword: 309>, 'TriOrKeyword': <TokenKind.TriOrKeyword: 310>, 'TriRegKeyword': <TokenKind.TriRegKeyword: 311>, 'TypeKeyword': <TokenKind.TypeKeyword: 312>, 'TypedefKeyword': <TokenKind.TypedefKeyword: 313>, 'UnionKeyword': <TokenKind.UnionKeyword: 314>, 'UniqueKeyword': <TokenKind.UniqueKeyword: 315>, 'Unique0Keyword': <TokenKind.Unique0Keyword: 316>, 'UnsignedKeyword': <TokenKind.UnsignedKeyword: 317>, 'UntilKeyword': <TokenKind.UntilKeyword: 318>, 'UntilWithKeyword': <TokenKind.UntilWithKeyword: 319>, 'UntypedKeyword': <TokenKind.UntypedKeyword: 320>, 'UseKeyword': <TokenKind.UseKeyword: 321>, 'UWireKeyword': <TokenKind.UWireKeyword: 322>, 'VarKeyword': <TokenKind.VarKeyword: 323>, 'VectoredKeyword': <TokenKind.VectoredKeyword: 324>, 'VirtualKeyword': <TokenKind.VirtualKeyword: 325>, 'VoidKeyword': <TokenKind.VoidKeyword: 326>, 'WaitKeyword': <TokenKind.WaitKeyword: 327>, 'WaitOrderKeyword': <TokenKind.WaitOrderKeyword: 328>, 'WAndKeyword': <TokenKind.WAndKeyword: 329>, 'WeakKeyword': <TokenKind.WeakKeyword: 330>, 'Weak0Keyword': <TokenKind.Weak0Keyword: 331>, 'Weak1Keyword': <TokenKind.Weak1Keyword: 332>, 'WhileKeyword': <TokenKind.WhileKeyword: 333>, 'WildcardKeyword': <TokenKind.WildcardKeyword: 334>, 'WireKeyword': <TokenKind.WireKeyword: 335>, 'WithKeyword': <TokenKind.WithKeyword: 336>, 'WithinKeyword': <TokenKind.WithinKeyword: 337>, 'WOrKeyword': <TokenKind.WOrKeyword: 338>, 'XnorKeyword': <TokenKind.XnorKeyword: 339>, 'XorKeyword': <TokenKind.XorKeyword: 340>, 'UnitSystemName': <TokenKind.UnitSystemName: 341>, 'RootSystemName': <TokenKind.RootSystemName: 342>, 'Directive': <TokenKind.Directive: 343>, 'IncludeFileName': <TokenKind.IncludeFileName: 344>, 'MacroUsage': <TokenKind.MacroUsage: 345>, 'MacroQuote': <TokenKind.MacroQuote: 346>, 'MacroTripleQuote': <TokenKind.MacroTripleQuote: 347>, 'MacroEscapedQuote': <TokenKind.MacroEscapedQuote: 348>, 'MacroPaste': <TokenKind.MacroPaste: 349>, 'EmptyMacroArgument': <TokenKind.EmptyMacroArgument: 350>, 'LineContinuation': <TokenKind.LineContinuation: 351>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -15094,41 +12937,23 @@ class TokenKind:
         ...
 class TransListCoverageBinInitializerSyntax(CoverageBinInitializerSyntax):
     sets: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TransRangeSyntax(SyntaxNode):
     items: ...
     repeat: TransRepeatRangeSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TransRepeatRangeSyntax(SyntaxNode):
     closeBracket: Token
     openBracket: Token
     selector: SelectorSyntax
     specifier: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TransSetSyntax(SyntaxNode):
     closeParen: Token
     openParen: Token
     ranges: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TransparentMemberSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def wrapped(self) -> Symbol:
         ...
 class Trivia:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @typing.overload
     def __init__(self) -> None:
         ...
@@ -15180,9 +13005,6 @@ class TriviaKind:
     Unknown: typing.ClassVar[TriviaKind]  # value = <TriviaKind.Unknown: 0>
     Whitespace: typing.ClassVar[TriviaKind]  # value = <TriviaKind.Whitespace: 1>
     __members__: typing.ClassVar[dict[str, TriviaKind]]  # value = {'Unknown': <TriviaKind.Unknown: 0>, 'Whitespace': <TriviaKind.Whitespace: 1>, 'EndOfLine': <TriviaKind.EndOfLine: 2>, 'LineComment': <TriviaKind.LineComment: 3>, 'BlockComment': <TriviaKind.BlockComment: 4>, 'DisabledText': <TriviaKind.DisabledText: 5>, 'SkippedTokens': <TriviaKind.SkippedTokens: 6>, 'SkippedSyntax': <TriviaKind.SkippedSyntax: 7>, 'Directive': <TriviaKind.Directive: 8>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -15210,9 +13032,6 @@ class TriviaKind:
     def value(self) -> int:
         ...
 class Type(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def getCommonBase(left: Type, right: Type) -> Type:
         ...
@@ -15414,9 +13233,6 @@ class Type(Symbol):
     def selectableWidth(self) -> int:
         ...
 class TypeAliasType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def firstForwardDecl(self) -> ForwardingTypedefSymbol:
         ...
@@ -15429,20 +13245,11 @@ class TypeAliasType(Type):
 class TypeAssignmentSyntax(SyntaxNode):
     assignment: EqualsTypeClauseSyntax
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TypeParameterDeclarationSyntax(ParameterDeclarationBaseSyntax):
     declarators: ...
     typeKeyword: Token
     typeRestriction: ForwardTypeRestrictionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TypeParameterSymbol(Symbol, ParameterSymbolBase):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isOverridden(self) -> bool:
         ...
@@ -15454,9 +13261,6 @@ class TypeParameterSymbol(Symbol, ParameterSymbolBase):
         ...
 class TypePrinter:
     options: TypePrintingOptions
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def append(self, type: Type) -> None:
@@ -15477,9 +13281,6 @@ class TypePrintingOptions:
         FriendlyName: typing.ClassVar[TypePrintingOptions.AnonymousTypeStyle]  # value = <AnonymousTypeStyle.FriendlyName: 1>
         SystemName: typing.ClassVar[TypePrintingOptions.AnonymousTypeStyle]  # value = <AnonymousTypeStyle.SystemName: 0>
         __members__: typing.ClassVar[dict[str, TypePrintingOptions.AnonymousTypeStyle]]  # value = {'SystemName': <AnonymousTypeStyle.SystemName: 0>, 'FriendlyName': <AnonymousTypeStyle.FriendlyName: 1>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -15515,17 +13316,9 @@ class TypePrintingOptions:
     printAKA: bool
     skipScopedTypeNames: bool
     skipTypeDefs: bool
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TypeRefType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class TypeReferenceExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def targetType(self) -> ...:
         ...
@@ -15534,27 +13327,18 @@ class TypeReferenceSyntax(DataTypeSyntax):
     expr: ExpressionSyntax
     openParen: Token
     typeKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class TypedefDeclarationSyntax(MemberSyntax):
     dimensions: ...
     name: Token
     semi: Token
     type: DataTypeSyntax
     typedefKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpBodySyntax(SyntaxNode):
     endtable: Token
     entries: ...
     initialStmt: UdpInitialStmtSyntax
     portDecls: ...
     table: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpDeclarationSyntax(MemberSyntax):
     body: UdpBodySyntax
     endBlockName: NamedBlockClauseSyntax
@@ -15562,17 +13346,11 @@ class UdpDeclarationSyntax(MemberSyntax):
     name: Token
     portList: UdpPortListSyntax
     primitive: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpEdgeFieldSyntax(UdpFieldBaseSyntax):
     closeParen: Token
     first: Token
     openParen: Token
     second: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpEntrySyntax(SyntaxNode):
     colon1: Token
     colon2: Token
@@ -15580,54 +13358,29 @@ class UdpEntrySyntax(SyntaxNode):
     inputs: ...
     next: UdpFieldBaseSyntax
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpFieldBaseSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class UdpInitialStmtSyntax(SyntaxNode):
     equals: Token
     initial: Token
     name: Token
     semi: Token
     value: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpInputPortDeclSyntax(UdpPortDeclSyntax):
     keyword: Token
     names: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpOutputPortDeclSyntax(UdpPortDeclSyntax):
     initializer: EqualsValueClauseSyntax
     keyword: Token
     name: Token
     reg: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpPortDeclSyntax(SyntaxNode):
     attributes: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UdpPortListSyntax(SyntaxNode):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class UdpSimpleFieldSyntax(UdpFieldBaseSyntax):
     field: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UnaryAssertionExpr(AssertionExpr):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> AssertionExpr:
         ...
@@ -15663,9 +13416,6 @@ class UnaryAssertionOperator:
     SEventually: typing.ClassVar[UnaryAssertionOperator]  # value = <UnaryAssertionOperator.SEventually: 6>
     SNextTime: typing.ClassVar[UnaryAssertionOperator]  # value = <UnaryAssertionOperator.SNextTime: 2>
     __members__: typing.ClassVar[dict[str, UnaryAssertionOperator]]  # value = {'Not': <UnaryAssertionOperator.Not: 0>, 'NextTime': <UnaryAssertionOperator.NextTime: 1>, 'SNextTime': <UnaryAssertionOperator.SNextTime: 2>, 'Always': <UnaryAssertionOperator.Always: 3>, 'SAlways': <UnaryAssertionOperator.SAlways: 4>, 'Eventually': <UnaryAssertionOperator.Eventually: 5>, 'SEventually': <UnaryAssertionOperator.SEventually: 6>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -15701,9 +13451,6 @@ class UnaryBinsSelectExpr(BinsSelectExpr):
         """
         Negation: typing.ClassVar[UnaryBinsSelectExpr.Op]  # value = <Op.Negation: 0>
         __members__: typing.ClassVar[dict[str, UnaryBinsSelectExpr.Op]]  # value = {'Negation': <Op.Negation: 0>}
-        @staticmethod
-        def _pybind11_conduit_v1_(*args, **kwargs):
-            ...
         def __eq__(self, other: typing.Any) -> bool:
             ...
         def __getstate__(self) -> int:
@@ -15731,9 +13478,6 @@ class UnaryBinsSelectExpr(BinsSelectExpr):
         def value(self) -> int:
             ...
     Negation: typing.ClassVar[UnaryBinsSelectExpr.Op]  # value = <Op.Negation: 0>
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def expr(self) -> BinsSelectExpr:
         ...
@@ -15743,19 +13487,10 @@ class UnaryBinsSelectExpr(BinsSelectExpr):
 class UnaryBinsSelectExprSyntax(BinsSelectExpressionSyntax):
     expr: BinsSelectConditionExprSyntax
     op: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UnaryConditionalDirectiveExpressionSyntax(ConditionalDirectiveExpressionSyntax):
     op: Token
     operand: ConditionalDirectiveExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UnaryExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def op(self) -> UnaryOperator:
         ...
@@ -15809,9 +13544,6 @@ class UnaryOperator:
     Predecrement: typing.ClassVar[UnaryOperator]  # value = <UnaryOperator.Predecrement: 11>
     Preincrement: typing.ClassVar[UnaryOperator]  # value = <UnaryOperator.Preincrement: 10>
     __members__: typing.ClassVar[dict[str, UnaryOperator]]  # value = {'Plus': <UnaryOperator.Plus: 0>, 'Minus': <UnaryOperator.Minus: 1>, 'BitwiseNot': <UnaryOperator.BitwiseNot: 2>, 'BitwiseAnd': <UnaryOperator.BitwiseAnd: 3>, 'BitwiseOr': <UnaryOperator.BitwiseOr: 4>, 'BitwiseXor': <UnaryOperator.BitwiseXor: 5>, 'BitwiseNand': <UnaryOperator.BitwiseNand: 6>, 'BitwiseNor': <UnaryOperator.BitwiseNor: 7>, 'BitwiseXnor': <UnaryOperator.BitwiseXnor: 8>, 'LogicalNot': <UnaryOperator.LogicalNot: 9>, 'Preincrement': <UnaryOperator.Preincrement: 10>, 'Predecrement': <UnaryOperator.Predecrement: 11>, 'Postincrement': <UnaryOperator.Postincrement: 12>, 'Postdecrement': <UnaryOperator.Postdecrement: 13>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -15841,22 +13573,13 @@ class UnaryOperator:
 class UnaryPropertyExprSyntax(PropertyExprSyntax):
     expr: PropertyExprSyntax
     op: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UnarySelectPropertyExprSyntax(PropertyExprSyntax):
     closeBracket: Token
     expr: PropertyExprSyntax
     op: Token
     openBracket: Token
     selector: SelectorSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UnbasedUnsizedIntegerLiteral(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def literalValue(self) -> ...:
         ...
@@ -15864,26 +13587,16 @@ class UnbasedUnsizedIntegerLiteral(Expression):
     def value(self) -> ...:
         ...
 class Unbounded:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __init__(self) -> None:
         ...
     def __repr__(self) -> str:
         ...
 class UnboundedLiteral(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class UnboundedType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class UnconditionalBranchDirectiveSyntax(DirectiveSyntax):
     disabledTokens: ...
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UnconnectedDrive:
     """
     Members:
@@ -15898,9 +13611,6 @@ class UnconnectedDrive:
     Pull0: typing.ClassVar[UnconnectedDrive]  # value = <UnconnectedDrive.Pull0: 1>
     Pull1: typing.ClassVar[UnconnectedDrive]  # value = <UnconnectedDrive.Pull1: 2>
     __members__: typing.ClassVar[dict[str, UnconnectedDrive]]  # value = {'None': <UnconnectedDrive.None: 0>, 'Pull0': <UnconnectedDrive.Pull0: 1>, 'Pull1': <UnconnectedDrive.Pull1: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -15929,18 +13639,9 @@ class UnconnectedDrive:
         ...
 class UnconnectedDriveDirectiveSyntax(DirectiveSyntax):
     strength: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UndefDirectiveSyntax(DirectiveSyntax):
     name: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UninstantiatedDefSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def definitionName(self) -> str:
         ...
@@ -15973,9 +13674,6 @@ class UniquePriorityCheck:
     Unique: typing.ClassVar[UniquePriorityCheck]  # value = <UniquePriorityCheck.Unique: 1>
     Unique0: typing.ClassVar[UniquePriorityCheck]  # value = <UniquePriorityCheck.Unique0: 2>
     __members__: typing.ClassVar[dict[str, UniquePriorityCheck]]  # value = {'None': <UniquePriorityCheck.None: 0>, 'Unique': <UniquePriorityCheck.Unique: 1>, 'Unique0': <UniquePriorityCheck.Unique0: 2>, 'Priority': <UniquePriorityCheck.Priority: 3>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -16003,9 +13701,6 @@ class UniquePriorityCheck:
     def value(self) -> int:
         ...
 class UniquenessConstraint(Constraint):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def items(self) -> span[...]:
         ...
@@ -16013,20 +13708,11 @@ class UniquenessConstraintSyntax(ConstraintItemSyntax):
     ranges: RangeListSyntax
     semi: Token
     unique: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class UnpackedStructType(Type, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def systemId(self) -> int:
         ...
 class UnpackedUnionType(Type, Scope):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isTagged(self) -> bool:
         ...
@@ -16034,21 +13720,13 @@ class UnpackedUnionType(Type, Scope):
     def systemId(self) -> int:
         ...
 class UntypedType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class UserDefinedNetDeclarationSyntax(MemberSyntax):
     declarators: ...
     delay: TimingControlSyntax
     netType: Token
     semi: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ValueDriver:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def containingSymbol(self) -> Symbol:
         ...
@@ -16089,16 +13767,10 @@ class ValueDriver:
     def sourceRange(self) -> SourceRange:
         ...
 class ValueExpressionBase(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def symbol(self) -> ...:
         ...
 class ValueRangeExpression(Expression):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def left(self) -> Expression:
         ...
@@ -16111,9 +13783,6 @@ class ValueRangeExpressionSyntax(ExpressionSyntax):
     op: Token
     openBracket: Token
     right: ExpressionSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class ValueRangeKind:
     """
     Members:
@@ -16128,9 +13797,6 @@ class ValueRangeKind:
     RelativeTolerance: typing.ClassVar[ValueRangeKind]  # value = <ValueRangeKind.RelativeTolerance: 2>
     Simple: typing.ClassVar[ValueRangeKind]  # value = <ValueRangeKind.Simple: 0>
     __members__: typing.ClassVar[dict[str, ValueRangeKind]]  # value = {'Simple': <ValueRangeKind.Simple: 0>, 'AbsoluteTolerance': <ValueRangeKind.AbsoluteTolerance: 1>, 'RelativeTolerance': <ValueRangeKind.RelativeTolerance: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -16158,9 +13824,6 @@ class ValueRangeKind:
     def value(self) -> int:
         ...
 class ValueSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __iter__(self) -> typing.Iterator[...]:
         ...
     @property
@@ -16170,9 +13833,6 @@ class ValueSymbol(Symbol):
     def type(self) -> ...:
         ...
 class VariableDeclStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def symbol(self) -> ...:
         ...
@@ -16180,9 +13840,6 @@ class VariableDimensionSyntax(SyntaxNode):
     closeBracket: Token
     openBracket: Token
     specifier: DimensionSpecifierSyntax
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class VariableFlags:
     """
     Members:
@@ -16209,9 +13866,6 @@ class VariableFlags:
     None_: typing.ClassVar[VariableFlags]  # value = <VariableFlags.None_: 0>
     RefStatic: typing.ClassVar[VariableFlags]  # value = <VariableFlags.RefStatic: 32>
     __members__: typing.ClassVar[dict[str, VariableFlags]]  # value = {'None_': <VariableFlags.None_: 0>, 'Const': <VariableFlags.Const: 1>, 'CompilerGenerated': <VariableFlags.CompilerGenerated: 2>, 'ImmutableCoverageOption': <VariableFlags.ImmutableCoverageOption: 4>, 'CoverageSampleFormal': <VariableFlags.CoverageSampleFormal: 8>, 'CheckerFreeVariable': <VariableFlags.CheckerFreeVariable: 16>, 'RefStatic': <VariableFlags.RefStatic: 32>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -16249,9 +13903,6 @@ class VariableLifetime:
     Automatic: typing.ClassVar[VariableLifetime]  # value = <VariableLifetime.Automatic: 0>
     Static: typing.ClassVar[VariableLifetime]  # value = <VariableLifetime.Static: 1>
     __members__: typing.ClassVar[dict[str, VariableLifetime]]  # value = {'Automatic': <VariableLifetime.Automatic: 0>, 'Static': <VariableLifetime.Static: 1>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -16279,30 +13930,18 @@ class VariableLifetime:
     def value(self) -> int:
         ...
 class VariablePattern(Pattern):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def variable(self) -> ...:
         ...
 class VariablePatternSyntax(PatternSyntax):
     dot: Token
     variableName: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class VariablePortHeaderSyntax(PortHeaderSyntax):
     constKeyword: Token
     dataType: DataTypeSyntax
     direction: Token
     varKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class VariableSymbol(ValueSymbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def flags(self) -> VariableFlags:
         ...
@@ -16310,9 +13949,6 @@ class VariableSymbol(ValueSymbol):
     def lifetime(self) -> VariableLifetime:
         ...
 class VersionInfo:
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @staticmethod
     def getHash() -> str:
         ...
@@ -16326,9 +13962,6 @@ class VersionInfo:
     def getPatch() -> int:
         ...
 class VirtualInterfaceType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def iface(self) -> InstanceSymbol:
         ...
@@ -16341,9 +13974,6 @@ class VirtualInterfaceTypeSyntax(DataTypeSyntax):
     name: Token
     parameters: ParameterValueAssignmentSyntax
     virtualKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class Visibility:
     """
     Members:
@@ -16358,9 +13988,6 @@ class Visibility:
     Protected: typing.ClassVar[Visibility]  # value = <Visibility.Protected: 1>
     Public: typing.ClassVar[Visibility]  # value = <Visibility.Public: 0>
     __members__: typing.ClassVar[dict[str, Visibility]]  # value = {'Public': <Visibility.Public: 0>, 'Protected': <Visibility.Protected: 1>, 'Local': <Visibility.Local: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -16401,9 +14028,6 @@ class VisitAction:
     Interrupt: typing.ClassVar[VisitAction]  # value = <VisitAction.Interrupt: 2>
     Skip: typing.ClassVar[VisitAction]  # value = <VisitAction.Skip: 1>
     __members__: typing.ClassVar[dict[str, VisitAction]]  # value = {'Advance': <VisitAction.Advance: 0>, 'Skip': <VisitAction.Skip: 1>, 'Interrupt': <VisitAction.Interrupt: 2>}
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -16437,28 +14061,15 @@ class VoidCastedCallStatementSyntax(StatementSyntax):
     openParen: Token
     semi: Token
     voidKeyword: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class VoidType(Type):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class WaitForkStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class WaitForkStatementSyntax(StatementSyntax):
     fork: Token
     semi: Token
     wait: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WaitOrderStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def events(self) -> span[Expression]:
         ...
@@ -16474,13 +14085,7 @@ class WaitOrderStatementSyntax(StatementSyntax):
     names: ...
     openParen: Token
     wait_order: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WaitStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def cond(self) -> Expression:
         ...
@@ -16493,13 +14098,7 @@ class WaitStatementSyntax(StatementSyntax):
     openParen: Token
     statement: StatementSyntax
     wait: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WhileLoopStatement(Statement):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def body(self) -> Statement:
         ...
@@ -16508,13 +14107,7 @@ class WhileLoopStatement(Statement):
         ...
 class WildcardDimensionSpecifierSyntax(DimensionSpecifierSyntax):
     star: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WildcardImportSymbol(Symbol):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     @property
     def isFromExport(self) -> bool:
         ...
@@ -16525,68 +14118,42 @@ class WildcardImportSymbol(Symbol):
     def packageName(self) -> str:
         ...
 class WildcardPattern(Pattern):
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
+    pass
 class WildcardPatternSyntax(PatternSyntax):
     dot: Token
     star: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WildcardPortConnectionSyntax(PortConnectionSyntax):
     dot: Token
     star: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WildcardPortListSyntax(PortListSyntax):
     closeParen: Token
     dot: Token
     openParen: Token
     star: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WildcardUdpPortListSyntax(UdpPortListSyntax):
     closeParen: Token
     dot: Token
     openParen: Token
     semi: Token
     star: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WithClauseSyntax(SyntaxNode):
     closeParen: Token
     expr: ExpressionSyntax
     openParen: Token
     with: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WithFunctionClauseSyntax(SyntaxNode):
     name: NameSyntax
     with: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class WithFunctionSampleSyntax(SyntaxNode):
     function: Token
     portList: FunctionPortListSyntax
     sample: Token
     with: Token
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
 class logic_t:
     __hash__: typing.ClassVar[None] = None
     x: typing.ClassVar[logic_t]  # value = x
     z: typing.ClassVar[logic_t]  # value = z
     value: int
-    @staticmethod
-    def _pybind11_conduit_v1_(*args, **kwargs):
-        ...
     def __and__(self, arg0: logic_t) -> logic_t:
         ...
     def __bool__(self) -> bool:
@@ -16618,4 +14185,4 @@ def clog2(value: ...) -> int:
     ...
 def literalBaseFromChar(base: str, result: LiteralBase) -> bool:
     ...
-__version__: str = '8.0.2'
+__version__: str = '8.1.0'

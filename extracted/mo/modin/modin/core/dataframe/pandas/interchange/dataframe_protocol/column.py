@@ -169,7 +169,6 @@ class PandasProtocolColumn(ProtocolColumn):
             "u": DTypeKind.UINT,
             "f": DTypeKind.FLOAT,
             "b": DTypeKind.BOOL,
-            "M": DTypeKind.DATETIME,
         }
         kind = _np_kinds.get(dtype.kind, None)
         if kind is None:
@@ -338,13 +337,7 @@ class PandasProtocolColumn(ProtocolColumn):
             return self._data_buffer_cache
 
         dtype = self.dtype
-        if dtype[0] in (
-            DTypeKind.INT,
-            DTypeKind.UINT,
-            DTypeKind.FLOAT,
-            DTypeKind.BOOL,
-            DTypeKind.DATETIME,
-        ):
+        if dtype[0] in (DTypeKind.INT, DTypeKind.UINT, DTypeKind.FLOAT, DTypeKind.BOOL):
             buffer = PandasProtocolBuffer(
                 self._col.to_numpy().flatten(), allow_copy=self._allow_copy
             )

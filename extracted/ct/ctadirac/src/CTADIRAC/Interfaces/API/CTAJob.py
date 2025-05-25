@@ -51,6 +51,7 @@ class MetadataDict(OrderedDict):
         "thetaP",
         "type",
         "version",
+        "systematics",
     ]
 
     def __setitem__(self, key, value) -> None:
@@ -118,6 +119,11 @@ class CTAJob(Job):
         self.output_metadata["outputType"] = self.output_type
         self.output_metadata["configuration_id"] = self.configuration_id
         self.output_metadata["MCCampaign"] = self.MCCampaign
+        if metadata.get("systematic_uncertainty_to_test"):
+            metadata_systematics = self.systematic_uncertainty_to_test.rstrip(
+                "/"
+            ).split("/")
+            self.output_metadata["systematics"] = "_".join(metadata_systematics[1:])
 
     def init_debug_step(self) -> None:
         step = self.setExecutable(
@@ -147,7 +153,8 @@ class CTAJob(Job):
         step = self.setExecutable(
             "cta-prod-managedata",
             arguments=f"'{meta_data_json}' '{file_meta_data_json}' {self.base_path} "
-            f"'{self.data_output_pattern}' {self.package}_dl{self.data_level} {self.program_category} '{self.catalogs}' {output_data_type} update_ts",
+            f"'{self.data_output_pattern}' {self.package}_dl{self.data_level} {self.program_category}  \
+             '{self.catalogs}' {output_data_type} update_ts",
             logFile="DataManagement_Log.txt",
             modulesList=["cta_script"],
         )

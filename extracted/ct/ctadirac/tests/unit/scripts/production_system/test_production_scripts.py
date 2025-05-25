@@ -1,14 +1,15 @@
+from subprocess import PIPE, Popen
 from unittest.mock import patch
+
 import pytest
-from typer.testing import CliRunner
-from subprocess import Popen, PIPE
 from CTADIRAC.Core.Utilities.typer_callbacks import PRODUCTION_FIELDS
 from CTADIRAC.ProductionSystem.scripts.cta_prod_get_all import (
+    app,
     extract_user_name_from_dn,
     fill_columns,
-    app,
 )
 from tests.unit.production import PRODUCTION_RESULTS
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
@@ -70,7 +71,7 @@ PRODUCTION_CONFIG = """ProdSteps:
 Common:
   MCCampaign: Prod5bTest
   configuration_id: 15
-  base_path: /vo.cta.in2p3.fr/tests/prodsys/MC"""
+  base_path: /ctao/tests/prodsys/MC"""
 
 
 def run_cli(cmd):

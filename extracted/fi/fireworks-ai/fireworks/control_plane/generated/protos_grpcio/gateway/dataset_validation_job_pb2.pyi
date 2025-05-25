@@ -1,7 +1,9 @@
+from . import deployment_pb2 as _deployment_pb2
 from . import options_pb2 as _options_pb2
 from . import status_pb2 as _status_pb2
 from ..google.api import field_behavior_pb2 as _field_behavior_pb2
 from ..google.api import resource_pb2 as _resource_pb2
+from ..google.api import visibility_pb2 as _visibility_pb2
 from google.protobuf import field_mask_pb2 as _field_mask_pb2
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import containers as _containers
@@ -37,7 +39,7 @@ DATASET_VALIDATION_JOB_RESULT_SUCCESS: DatasetValidationJobResult
 DATASET_VALIDATION_JOB_RESULT_FAILURE: DatasetValidationJobResult
 
 class DatasetValidationJob(_message.Message):
-    __slots__ = ("name", "display_name", "create_time", "created_by", "state", "status", "dataset_name", "format", "result", "validation_error", "dataset_names", "update_time", "rewards")
+    __slots__ = ("name", "display_name", "create_time", "created_by", "state", "status", "dataset_name", "format", "result", "validation_error", "dataset_names", "update_time", "rewards", "region")
     NAME_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
     CREATE_TIME_FIELD_NUMBER: _ClassVar[int]
@@ -51,6 +53,7 @@ class DatasetValidationJob(_message.Message):
     DATASET_NAMES_FIELD_NUMBER: _ClassVar[int]
     UPDATE_TIME_FIELD_NUMBER: _ClassVar[int]
     REWARDS_FIELD_NUMBER: _ClassVar[int]
+    REGION_FIELD_NUMBER: _ClassVar[int]
     name: str
     display_name: str
     create_time: _timestamp_pb2.Timestamp
@@ -64,7 +67,8 @@ class DatasetValidationJob(_message.Message):
     dataset_names: _containers.RepeatedScalarFieldContainer[str]
     update_time: _timestamp_pb2.Timestamp
     rewards: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, name: _Optional[str] = ..., display_name: _Optional[str] = ..., create_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_by: _Optional[str] = ..., state: _Optional[_Union[_status_pb2.JobState, str]] = ..., status: _Optional[_Union[_status_pb2.Status, _Mapping]] = ..., dataset_name: _Optional[str] = ..., format: _Optional[_Union[DatasetValidationFormat, str]] = ..., result: _Optional[_Union[DatasetValidationJobResult, str]] = ..., validation_error: _Optional[str] = ..., dataset_names: _Optional[_Iterable[str]] = ..., update_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., rewards: _Optional[_Iterable[str]] = ...) -> None: ...
+    region: _deployment_pb2.Region
+    def __init__(self, name: _Optional[str] = ..., display_name: _Optional[str] = ..., create_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., created_by: _Optional[str] = ..., state: _Optional[_Union[_status_pb2.JobState, str]] = ..., status: _Optional[_Union[_status_pb2.Status, _Mapping]] = ..., dataset_name: _Optional[str] = ..., format: _Optional[_Union[DatasetValidationFormat, str]] = ..., result: _Optional[_Union[DatasetValidationJobResult, str]] = ..., validation_error: _Optional[str] = ..., dataset_names: _Optional[_Iterable[str]] = ..., update_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., rewards: _Optional[_Iterable[str]] = ..., region: _Optional[_Union[_deployment_pb2.Region, str]] = ...) -> None: ...
 
 class GetDatasetValidationJobRequest(_message.Message):
     __slots__ = ("name", "read_mask")

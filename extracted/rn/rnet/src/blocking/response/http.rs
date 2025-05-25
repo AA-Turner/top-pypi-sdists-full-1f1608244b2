@@ -18,14 +18,6 @@ impl From<async_impl::Response> for BlockingResponse {
     }
 }
 
-impl Deref for BlockingResponse {
-    type Target = async_impl::Response;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
 #[pymethods]
 impl BlockingResponse {
     /// Returns the URL of the response.
@@ -66,7 +58,7 @@ impl BlockingResponse {
 
     /// Returns the cookies of the response.
     #[getter]
-    pub fn cookies<'py>(&'py self, py: Python<'py>) -> Vec<Cookie> {
+    pub fn cookies(&self, py: Python) -> Vec<Cookie> {
         self.0.cookies(py)
     }
 
@@ -89,17 +81,17 @@ impl BlockingResponse {
     }
 
     /// Returns the TLS peer certificate of the response.
-    pub fn peer_certificate<'rt>(
-        &'rt self,
-        py: Python<'rt>,
-    ) -> PyResult<Option<Bound<'rt, PyAny>>> {
+    pub fn peer_certificate<'py>(
+        &'py self,
+        py: Python<'py>,
+    ) -> PyResult<Option<Bound<'py, PyAny>>> {
         self.0.peer_certificate(py)
     }
 
     /// Returns the text content of the response.
     pub fn text(&self, py: Python) -> PyResult<String> {
         py.allow_threads(|| {
-            let resp = self.inner()?;
+            let resp = self.0.inner()?;
             pyo3_async_runtimes::tokio::get_runtime()
                 .block_on(resp.text())
                 .map_err(Error::Request)
@@ -110,7 +102,7 @@ impl BlockingResponse {
     /// Returns the text content of the response with a specific charset.
     pub fn text_with_charset(&self, py: Python, encoding: String) -> PyResult<String> {
         py.allow_threads(|| {
-            let resp = self.inner()?;
+            let resp = self.0.inner()?;
             pyo3_async_runtimes::tokio::get_runtime()
                 .block_on(resp.text_with_charset(&encoding))
                 .map_err(Error::Request)
@@ -121,7 +113,7 @@ impl BlockingResponse {
     /// Returns the JSON content of the response.
     pub fn json(&self, py: Python) -> PyResult<Json> {
         py.allow_threads(|| {
-            let resp = self.inner()?;
+            let resp = self.0.inner()?;
             pyo3_async_runtimes::tokio::get_runtime()
                 .block_on(resp.json::<Json>())
                 .map_err(Error::Request)
@@ -132,7 +124,7 @@ impl BlockingResponse {
     /// Returns the bytes content of the response.
     pub fn bytes(&self, py: Python) -> PyResult<Py<PyAny>> {
         py.allow_threads(|| {
-            let resp = self.inner()?;
+            let resp = self.0.inner()?;
             let buffer = pyo3_async_runtimes::tokio::get_runtime()
                 .block_on(resp.bytes())
                 .map(BytesBuffer::new)
@@ -149,7 +141,10 @@ impl BlockingResponse {
 
     /// Closes the response connection.
     pub fn close(&self, py: Python) -> PyResult<()> {
-        self.0.close(py)
+        py.allow_threads(|| {
+            let _ = self.0.inner().map(drop);
+            Ok(())
+        })
     }
 }
 
@@ -159,12 +154,12 @@ impl BlockingResponse {
         slf
     }
 
-    fn __exit__<'a>(
+    fn __exit__<'py>(
         &self,
-        py: Python<'a>,
-        _exc_type: &Bound<'a, PyAny>,
-        _exc_value: &Bound<'a, PyAny>,
-        _traceback: &Bound<'a, PyAny>,
+        py: Python<'py>,
+        _exc_type: &Bound<'py, PyAny>,
+        _exc_value: &Bound<'py, PyAny>,
+        _traceback: &Bound<'py, PyAny>,
     ) -> PyResult<()> {
         self.close(py)
     }
@@ -197,12 +192,12 @@ impl BlockingStreamer {
         slf
     }
 
-    fn __exit__<'a>(
+    fn __exit__<'py>(
         &self,
-        py: Python<'a>,
-        _exc_type: &Bound<'a, PyAny>,
-        _exc_value: &Bound<'a, PyAny>,
-        _traceback: &Bound<'a, PyAny>,
+        py: Python<'py>,
+        _exc_type: &Bound<'py, PyAny>,
+        _exc_value: &Bound<'py, PyAny>,
+        _traceback: &Bound<'py, PyAny>,
     ) -> PyResult<()> {
         py.allow_threads(|| {
             let streamer = self.0.clone();
