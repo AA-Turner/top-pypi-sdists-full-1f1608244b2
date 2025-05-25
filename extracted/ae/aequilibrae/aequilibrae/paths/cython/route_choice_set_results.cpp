@@ -18,7 +18,7 @@
             "-fopenmp"
         ],
         "include_dirs": [
-            "/tmp/build-env-8vs2qbpg/lib/python3.12/site-packages/numpy/core/include"
+            "/tmp/build-env-8kfrmba0/lib/python3.12/site-packages/numpy/core/include"
         ],
         "language": "c++",
         "name": "aequilibrae.paths.cython.route_choice_set_results",
@@ -21549,6 +21549,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
   int __pyx_v_have_assignment_results;
   PyObject *__pyx_v_columns = NULL;
   PyObject *__pyx_v_route_set_col = NULL;
+  PyObject *__pyx_v_types = NULL;
   std::vector<std::pair<PY_LONG_LONG,PY_LONG_LONG> > ::size_type __pyx_v_i;
   std::shared_ptr<__pyx_t_11aequilibrae_5paths_6cython_18route_choice_types_RouteVec_t>  __pyx_v_route_set;
   std::vector<std::unique_ptr<std::vector<PY_LONG_LONG> > > ::size_type __pyx_v_j;
@@ -21716,7 +21717,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
  *         }
  *         route_set_col = []  # We treat this one differently when constructing it             # <<<<<<<<<<<<<<
  * 
- *         if have_assignment_results:
+ *         types = {"cost":"float64", "mask":"bool", "path overlap":"float64", "probability":"float64",
 */
   __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 490, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -21726,62 +21727,80 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
   /* "aequilibrae/paths/cython/route_choice_set_results.pyx":492
  *         route_set_col = []  # We treat this one differently when constructing it
  * 
+ *         types = {"cost":"float64", "mask":"bool", "path overlap":"float64", "probability":"float64",             # <<<<<<<<<<<<<<
+ *                  "origin id":"uint32", "destination id":"uint32"}
+ * 
+*/
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 492, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_cost, __pyx_mstate_global->__pyx_n_u_float64) < 0) __PYX_ERR(0, 492, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_mask, __pyx_mstate_global->__pyx_n_u_bool) < 0) __PYX_ERR(0, 492, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_path_overlap, __pyx_mstate_global->__pyx_n_u_float64) < 0) __PYX_ERR(0, 492, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_probability, __pyx_mstate_global->__pyx_n_u_float64) < 0) __PYX_ERR(0, 492, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_origin_id, __pyx_mstate_global->__pyx_n_u_uint32) < 0) __PYX_ERR(0, 492, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_destination_id, __pyx_mstate_global->__pyx_n_u_uint32) < 0) __PYX_ERR(0, 492, __pyx_L1_error)
+  __pyx_v_types = ((PyObject*)__pyx_t_2);
+  __pyx_t_2 = 0;
+
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":495
+ *                  "origin id":"uint32", "destination id":"uint32"}
+ * 
  *         if have_assignment_results:             # <<<<<<<<<<<<<<
  *             columns["cost"] = []
  *             columns["mask"] = []
 */
   if (__pyx_v_have_assignment_results) {
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":493
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":496
  * 
  *         if have_assignment_results:
  *             columns["cost"] = []             # <<<<<<<<<<<<<<
  *             columns["mask"] = []
  *             columns["path overlap"] = []
 */
-    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 493, __pyx_L1_error)
+    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_cost, __pyx_t_2) < 0))) __PYX_ERR(0, 493, __pyx_L1_error)
+    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_cost, __pyx_t_2) < 0))) __PYX_ERR(0, 496, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":494
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":497
  *         if have_assignment_results:
  *             columns["cost"] = []
  *             columns["mask"] = []             # <<<<<<<<<<<<<<
  *             columns["path overlap"] = []
  *             columns["probability"] = []
 */
-    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 494, __pyx_L1_error)
+    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 497, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_mask, __pyx_t_2) < 0))) __PYX_ERR(0, 494, __pyx_L1_error)
+    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_mask, __pyx_t_2) < 0))) __PYX_ERR(0, 497, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":495
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":498
  *             columns["cost"] = []
  *             columns["mask"] = []
  *             columns["path overlap"] = []             # <<<<<<<<<<<<<<
  *             columns["probability"] = []
  * 
 */
-    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 495, __pyx_L1_error)
+    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 498, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_path_overlap, __pyx_t_2) < 0))) __PYX_ERR(0, 495, __pyx_L1_error)
+    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_path_overlap, __pyx_t_2) < 0))) __PYX_ERR(0, 498, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":496
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":499
  *             columns["mask"] = []
  *             columns["path overlap"] = []
  *             columns["probability"] = []             # <<<<<<<<<<<<<<
  * 
  *         if have_assignment_results:
 */
-    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 496, __pyx_L1_error)
+    __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 499, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_probability, __pyx_t_2) < 0))) __PYX_ERR(0, 496, __pyx_L1_error)
+    if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_probability, __pyx_t_2) < 0))) __PYX_ERR(0, 499, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":492
- *         route_set_col = []  # We treat this one differently when constructing it
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":495
+ *                  "origin id":"uint32", "destination id":"uint32"}
  * 
  *         if have_assignment_results:             # <<<<<<<<<<<<<<
  *             columns["cost"] = []
@@ -21789,7 +21808,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
   }
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":498
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":501
  *             columns["probability"] = []
  * 
  *         if have_assignment_results:             # <<<<<<<<<<<<<<
@@ -21798,7 +21817,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
   if (__pyx_v_have_assignment_results) {
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":499
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":502
  * 
  *         if have_assignment_results:
  *             for i in range(self.demand.ods.size()):             # <<<<<<<<<<<<<<
@@ -21810,7 +21829,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
     for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
       __pyx_v_i = __pyx_t_8;
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":500
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":503
  *         if have_assignment_results:
  *             for i in range(self.demand.ods.size()):
  *                 n_routes = d(self.__route_vecs[i]).size()             # <<<<<<<<<<<<<<
@@ -21819,7 +21838,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
       __pyx_v_n_routes = (*(__pyx_v_self->_RouteChoiceSetResults__route_vecs[__pyx_v_i])).size();
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":501
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":504
  *             for i in range(self.demand.ods.size()):
  *                 n_routes = d(self.__route_vecs[i]).size()
  *                 if not d(self.__route_vecs[i]).size():  # If there's no routes to add just skip these.             # <<<<<<<<<<<<<<
@@ -21829,7 +21848,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
       __pyx_t_1 = (!((*(__pyx_v_self->_RouteChoiceSetResults__route_vecs[__pyx_v_i])).size() != 0));
       if (__pyx_t_1) {
 
-        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":502
+        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":505
  *                 n_routes = d(self.__route_vecs[i]).size()
  *                 if not d(self.__route_vecs[i]).size():  # If there's no routes to add just skip these.
  *                     continue             # <<<<<<<<<<<<<<
@@ -21838,7 +21857,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
         goto __pyx_L8_continue;
 
-        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":501
+        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":504
  *             for i in range(self.demand.ods.size()):
  *                 n_routes = d(self.__route_vecs[i]).size()
  *                 if not d(self.__route_vecs[i]).size():  # If there's no routes to add just skip these.             # <<<<<<<<<<<<<<
@@ -21847,7 +21866,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
       }
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":505
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":508
  * 
  *                 # When assigning from df, the cost, mask, and path overlap vectors may be empty
  *                 tmp = d(self.__cost_set[i]).size()             # <<<<<<<<<<<<<<
@@ -21856,17 +21875,17 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
       __pyx_v_tmp = (*(__pyx_v_self->_RouteChoiceSetResults__cost_set[__pyx_v_i])).size();
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":506
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":509
  *                 # When assigning from df, the cost, mask, and path overlap vectors may be empty
  *                 tmp = d(self.__cost_set[i]).size()
  *                 columns["cost"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<double[:tmp]>d(self.__cost_set[i]).data()) if tmp else np.zeros(n_routes, dtype="float64")
  *                 )
 */
-      __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_cost); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 506, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_cost); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 509, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":507
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":510
  *                 tmp = d(self.__cost_set[i]).size()
  *                 columns["cost"].append(
  *                     np.asarray(<double[:tmp]>d(self.__cost_set[i]).data()) if tmp else np.zeros(n_routes, dtype="float64")             # <<<<<<<<<<<<<<
@@ -21876,26 +21895,26 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
       __pyx_t_1 = (__pyx_v_tmp != 0);
       if (__pyx_t_1) {
         __pyx_t_9 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_t_12 = (*(__pyx_v_self->_RouteChoiceSetResults__cost_set[__pyx_v_i])).data();
         if (!__pyx_t_12) {
           PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-          __PYX_ERR(0, 507, __pyx_L1_error)
+          __PYX_ERR(0, 510, __pyx_L1_error)
         }
-        __pyx_t_14 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_double); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_14 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_double); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_14);
-        __pyx_t_10 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_10 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         #if CYTHON_COMPILING_IN_LIMITED_API
-        __pyx_t_15 = PyBytes_AsString(__pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_15 = PyBytes_AsString(__pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 510, __pyx_L1_error)
         #else
         __pyx_t_15 = PyBytes_AS_STRING(__pyx_t_14);
         #endif
-        __pyx_t_13 = __pyx_array_new(__pyx_t_10, sizeof(double), __pyx_t_15, "c", (char *) __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_13 = __pyx_array_new(__pyx_t_10, sizeof(double), __pyx_t_15, "c", (char *) __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF((PyObject *)__pyx_t_13);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
@@ -21917,19 +21936,19 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
           __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF((PyObject *)__pyx_t_13); __pyx_t_13 = 0;
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 507, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 510, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
         }
         __pyx_t_4 = __pyx_t_3;
         __pyx_t_3 = 0;
       } else {
         __pyx_t_11 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
-        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_zeros); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_zeros); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_14);
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __pyx_t_9 = __Pyx_PyLong_FromSize_t(__pyx_v_n_routes); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 507, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyLong_FromSize_t(__pyx_v_n_routes); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 510, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __pyx_t_5 = 1;
         #if CYTHON_UNPACK_METHODS
@@ -21945,33 +21964,33 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
         #endif
         {
           PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_11, __pyx_t_9};
-          __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 507, __pyx_L1_error)
+          __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 510, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_mstate_global->__pyx_n_u_float64, __pyx_t_10, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 507, __pyx_L1_error)
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_mstate_global->__pyx_n_u_float64, __pyx_t_10, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 510, __pyx_L1_error)
           __pyx_t_3 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_14, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_10);
           __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 507, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 510, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
         }
         __pyx_t_4 = __pyx_t_3;
         __pyx_t_3 = 0;
       }
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":506
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":509
  *                 # When assigning from df, the cost, mask, and path overlap vectors may be empty
  *                 tmp = d(self.__cost_set[i]).size()
  *                 columns["cost"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<double[:tmp]>d(self.__cost_set[i]).data()) if tmp else np.zeros(n_routes, dtype="float64")
  *                 )
 */
-      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_4); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 506, __pyx_L1_error)
+      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_4); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 509, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":510
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":513
  *                 )
  * 
  *                 tmp = d(self.__mask_set[i]).size()             # <<<<<<<<<<<<<<
@@ -21980,17 +21999,17 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
       __pyx_v_tmp = (*(__pyx_v_self->_RouteChoiceSetResults__mask_set[__pyx_v_i])).size();
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":511
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":514
  * 
  *                 tmp = d(self.__mask_set[i]).size()
  *                 columns["mask"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<bint[:tmp]>d(self.__mask_set[i]).data()) if tmp else np.ones(n_routes, dtype="bool")
  *                 )
 */
-      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_mask); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 511, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_mask); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 514, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":512
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":515
  *                 tmp = d(self.__mask_set[i]).size()
  *                 columns["mask"].append(
  *                     np.asarray(<bint[:tmp]>d(self.__mask_set[i]).data()) if tmp else np.ones(n_routes, dtype="bool")             # <<<<<<<<<<<<<<
@@ -22000,26 +22019,26 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
       __pyx_t_1 = (__pyx_v_tmp != 0);
       if (__pyx_t_1) {
         __pyx_t_14 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_t_17 = (*(__pyx_v_self->_RouteChoiceSetResults__mask_set[__pyx_v_i])).data();
         if (!__pyx_t_17) {
           PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-          __PYX_ERR(0, 512, __pyx_L1_error)
+          __PYX_ERR(0, 515, __pyx_L1_error)
         }
-        __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_bint); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_bint); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_10 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __pyx_t_10 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         #if CYTHON_COMPILING_IN_LIMITED_API
-        __pyx_t_15 = PyBytes_AsString(__pyx_t_11); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __pyx_t_15 = PyBytes_AsString(__pyx_t_11); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 515, __pyx_L1_error)
         #else
         __pyx_t_15 = PyBytes_AS_STRING(__pyx_t_11);
         #endif
-        __pyx_t_13 = __pyx_array_new(__pyx_t_10, sizeof(int), __pyx_t_15, "c", (char *) __pyx_t_17); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __pyx_t_13 = __pyx_array_new(__pyx_t_10, sizeof(int), __pyx_t_15, "c", (char *) __pyx_t_17); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF((PyObject *)__pyx_t_13);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -22041,19 +22060,19 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
           __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
           __Pyx_DECREF((PyObject *)__pyx_t_13); __pyx_t_13 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 512, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 515, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
         }
         __pyx_t_2 = __pyx_t_3;
         __pyx_t_3 = 0;
       } else {
         __pyx_t_9 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_14);
-        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_mstate_global->__pyx_n_u_ones); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_mstate_global->__pyx_n_u_ones); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-        __pyx_t_14 = __Pyx_PyLong_FromSize_t(__pyx_v_n_routes); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 512, __pyx_L1_error)
+        __pyx_t_14 = __Pyx_PyLong_FromSize_t(__pyx_v_n_routes); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 515, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_14);
         __pyx_t_5 = 1;
         #if CYTHON_UNPACK_METHODS
@@ -22069,33 +22088,33 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
         #endif
         {
           PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_9, __pyx_t_14};
-          __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 512, __pyx_L1_error)
+          __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 515, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_mstate_global->__pyx_n_u_bool, __pyx_t_10, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 512, __pyx_L1_error)
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_mstate_global->__pyx_n_u_bool, __pyx_t_10, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 515, __pyx_L1_error)
           __pyx_t_3 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_11, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_10);
           __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 512, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 515, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
         }
         __pyx_t_2 = __pyx_t_3;
         __pyx_t_3 = 0;
       }
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":511
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":514
  * 
  *                 tmp = d(self.__mask_set[i]).size()
  *                 columns["mask"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<bint[:tmp]>d(self.__mask_set[i]).data()) if tmp else np.ones(n_routes, dtype="bool")
  *                 )
 */
-      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 511, __pyx_L1_error)
+      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 514, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":515
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":518
  *                 )
  * 
  *                 tmp = d(self.__path_overlap_set[i]).size()             # <<<<<<<<<<<<<<
@@ -22104,17 +22123,17 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
       __pyx_v_tmp = (*(__pyx_v_self->_RouteChoiceSetResults__path_overlap_set[__pyx_v_i])).size();
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":516
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":519
  * 
  *                 tmp = d(self.__path_overlap_set[i]).size()
  *                 columns["path overlap"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<double[:tmp]>d(self.__path_overlap_set[i]).data()) if tmp else np.zeros(n_routes, dtype="float64")
  *                 )
 */
-      __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_path_overlap); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 516, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_path_overlap); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 519, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":517
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":520
  *                 tmp = d(self.__path_overlap_set[i]).size()
  *                 columns["path overlap"].append(
  *                     np.asarray(<double[:tmp]>d(self.__path_overlap_set[i]).data()) if tmp else np.zeros(n_routes, dtype="float64")             # <<<<<<<<<<<<<<
@@ -22124,26 +22143,26 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
       __pyx_t_1 = (__pyx_v_tmp != 0);
       if (__pyx_t_1) {
         __pyx_t_11 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_14);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_t_12 = (*(__pyx_v_self->_RouteChoiceSetResults__path_overlap_set[__pyx_v_i])).data();
         if (!__pyx_t_12) {
           PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-          __PYX_ERR(0, 517, __pyx_L1_error)
+          __PYX_ERR(0, 520, __pyx_L1_error)
         }
-        __pyx_t_9 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_double); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __pyx_t_9 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_double); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
-        __pyx_t_10 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __pyx_t_10 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         #if CYTHON_COMPILING_IN_LIMITED_API
-        __pyx_t_15 = PyBytes_AsString(__pyx_t_9); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __pyx_t_15 = PyBytes_AsString(__pyx_t_9); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 520, __pyx_L1_error)
         #else
         __pyx_t_15 = PyBytes_AS_STRING(__pyx_t_9);
         #endif
-        __pyx_t_13 = __pyx_array_new(__pyx_t_10, sizeof(double), __pyx_t_15, "c", (char *) __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __pyx_t_13 = __pyx_array_new(__pyx_t_10, sizeof(double), __pyx_t_15, "c", (char *) __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF((PyObject *)__pyx_t_13);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -22165,19 +22184,19 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
           __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
           __Pyx_DECREF((PyObject *)__pyx_t_13); __pyx_t_13 = 0;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 517, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 520, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
         }
         __pyx_t_4 = __pyx_t_3;
         __pyx_t_3 = 0;
       } else {
         __pyx_t_14 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_zeros); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_zeros); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_t_11 = __Pyx_PyLong_FromSize_t(__pyx_v_n_routes); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 517, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_PyLong_FromSize_t(__pyx_v_n_routes); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 520, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __pyx_t_5 = 1;
         #if CYTHON_UNPACK_METHODS
@@ -22193,33 +22212,33 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
         #endif
         {
           PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_14, __pyx_t_11};
-          __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 517, __pyx_L1_error)
+          __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 520, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_mstate_global->__pyx_n_u_float64, __pyx_t_10, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 517, __pyx_L1_error)
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_mstate_global->__pyx_n_u_float64, __pyx_t_10, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 520, __pyx_L1_error)
           __pyx_t_3 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_9, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_10);
           __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 517, __pyx_L1_error)
+          if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 520, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
         }
         __pyx_t_4 = __pyx_t_3;
         __pyx_t_3 = 0;
       }
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":516
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":519
  * 
  *                 tmp = d(self.__path_overlap_set[i]).size()
  *                 columns["path overlap"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<double[:tmp]>d(self.__path_overlap_set[i]).data()) if tmp else np.zeros(n_routes, dtype="float64")
  *                 )
 */
-      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_4); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 516, __pyx_L1_error)
+      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_4); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 519, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":520
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":523
  *                 )
  * 
  *                 tmp = d(self.__prob_set[i]).size()             # <<<<<<<<<<<<<<
@@ -22228,17 +22247,17 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
       __pyx_v_tmp = (*(__pyx_v_self->_RouteChoiceSetResults__prob_set[__pyx_v_i])).size();
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":521
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":524
  * 
  *                 tmp = d(self.__prob_set[i]).size()
  *                 columns["probability"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<double[:tmp]>d(self.__prob_set[i]).data())
  *                 )
 */
-      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_probability); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 521, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_n_u_probability); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 524, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":522
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":525
  *                 tmp = d(self.__prob_set[i]).size()
  *                 columns["probability"].append(
  *                     np.asarray(<double[:tmp]>d(self.__prob_set[i]).data())             # <<<<<<<<<<<<<<
@@ -22246,26 +22265,26 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
  * 
 */
       __pyx_t_3 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 522, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 525, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 522, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 525, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_t_12 = (*(__pyx_v_self->_RouteChoiceSetResults__prob_set[__pyx_v_i])).data();
       if (!__pyx_t_12) {
         PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-        __PYX_ERR(0, 522, __pyx_L1_error)
+        __PYX_ERR(0, 525, __pyx_L1_error)
       }
-      __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_double); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 522, __pyx_L1_error)
+      __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_double); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 525, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_9 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 522, __pyx_L1_error)
+      __pyx_t_9 = Py_BuildValue("("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_tmp)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 525, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       #if CYTHON_COMPILING_IN_LIMITED_API
-      __pyx_t_15 = PyBytes_AsString(__pyx_t_11); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 522, __pyx_L1_error)
+      __pyx_t_15 = PyBytes_AsString(__pyx_t_11); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 525, __pyx_L1_error)
       #else
       __pyx_t_15 = PyBytes_AS_STRING(__pyx_t_11);
       #endif
-      __pyx_t_13 = __pyx_array_new(__pyx_t_9, sizeof(double), __pyx_t_15, "c", (char *) __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 522, __pyx_L1_error)
+      __pyx_t_13 = __pyx_array_new(__pyx_t_9, sizeof(double), __pyx_t_15, "c", (char *) __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 525, __pyx_L1_error)
       __Pyx_GOTREF((PyObject *)__pyx_t_13);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -22287,24 +22306,24 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF((PyObject *)__pyx_t_13); __pyx_t_13 = 0;
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 522, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 525, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       }
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":521
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":524
  * 
  *                 tmp = d(self.__prob_set[i]).size()
  *                 columns["probability"].append(             # <<<<<<<<<<<<<<
  *                     np.asarray(<double[:tmp]>d(self.__prob_set[i]).data())
  *                 )
 */
-      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 521, __pyx_L1_error)
+      __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 524, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_L8_continue:;
     }
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":498
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":501
  *             columns["probability"] = []
  * 
  *         if have_assignment_results:             # <<<<<<<<<<<<<<
@@ -22313,7 +22332,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
   }
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":525
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":528
  *                 )
  * 
  *         for i in range(self.demand.ods.size()):             # <<<<<<<<<<<<<<
@@ -22325,7 +22344,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
   for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":526
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":529
  * 
  *         for i in range(self.demand.ods.size()):
  *             route_set = self.__route_vecs[i]             # <<<<<<<<<<<<<<
@@ -22334,24 +22353,24 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
 */
     __pyx_v_route_set = (__pyx_v_self->_RouteChoiceSetResults__route_vecs[__pyx_v_i]);
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":528
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":531
  *             route_set = self.__route_vecs[i]
  * 
  *             columns["origin id"].append(np.full(d(route_set).size(), self.demand.ods[i].first, "uint32"))             # <<<<<<<<<<<<<<
  *             columns["destination id"].append(np.full(d(route_set).size(), self.demand.ods[i].second, "uint32"))
  * 
 */
-    __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_origin_id); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 528, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_origin_id); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 531, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_10 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 528, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 531, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_full); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 528, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_full); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 531, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyLong_FromSize_t((*__pyx_v_route_set).size()); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 528, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyLong_FromSize_t((*__pyx_v_route_set).size()); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 531, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_9 = __Pyx_PyLong_From_PY_LONG_LONG((__pyx_v_self->demand->ods[__pyx_v_i]).first); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 528, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyLong_From_PY_LONG_LONG((__pyx_v_self->demand->ods[__pyx_v_i]).first); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 531, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
@@ -22372,31 +22391,31 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 528, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 531, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
     }
-    __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_4); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 528, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_4); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 531, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":529
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":532
  * 
  *             columns["origin id"].append(np.full(d(route_set).size(), self.demand.ods[i].first, "uint32"))
  *             columns["destination id"].append(np.full(d(route_set).size(), self.demand.ods[i].second, "uint32"))             # <<<<<<<<<<<<<<
  * 
  *             # Instead of constructing a "list of lists" style object for storing the route sets we instead will
 */
-    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_destination_id); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 529, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_destination_id); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 532, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_11 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 529, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 532, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_full); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 529, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_full); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 532, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_PyLong_FromSize_t((*__pyx_v_route_set).size()); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 529, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyLong_FromSize_t((*__pyx_v_route_set).size()); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 532, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_10 = __Pyx_PyLong_From_PY_LONG_LONG((__pyx_v_self->demand->ods[__pyx_v_i]).second); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 529, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyLong_From_PY_LONG_LONG((__pyx_v_self->demand->ods[__pyx_v_i]).second); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 532, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
@@ -22417,14 +22436,14 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 529, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 532, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
     }
-    __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 529, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_PyObject_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 532, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":534
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":537
  *             # construct one big array of link IDs with a corresponding offsets array that indicates where each new row
  *             # (path) starts.
  *             for j in range(d(route_set).size()):             # <<<<<<<<<<<<<<
@@ -22436,19 +22455,19 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
     for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
       __pyx_v_j = __pyx_t_20;
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":536
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":539
  *             for j in range(d(route_set).size()):
  * 
  *                 links = []             # <<<<<<<<<<<<<<
  *                 for link in d(d(route_set)[j]):
  *                     # Translate the compressed link IDs in route to network link IDs, this is a 1:n mapping
 */
-      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 536, __pyx_L1_error)
+      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 539, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_XDECREF_SET(__pyx_v_links, ((PyObject*)__pyx_t_2));
       __pyx_t_2 = 0;
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":537
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":540
  * 
  *                 links = []
  *                 for link in d(d(route_set)[j]):             # <<<<<<<<<<<<<<
@@ -22461,7 +22480,7 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
         __pyx_t_23 = *__pyx_t_21;
         __pyx_v_link = __pyx_t_23;
 
-        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":539
+        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":542
  *                 for link in d(d(route_set)[j]):
  *                     # Translate the compressed link IDs in route to network link IDs, this is a 1:n mapping
  *                     links.append(np.asarray(self.mapping_data[self.mapping_idx[link]:self.mapping_idx[link + 1]]))             # <<<<<<<<<<<<<<
@@ -22469,9 +22488,9 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
  *                 route_set_col.append(np.hstack(links))
 */
         __pyx_t_4 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 539, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 542, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 539, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_asarray); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 542, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_t_5 = __pyx_v_link;
@@ -22494,10 +22513,10 @@ static PyObject *__pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 539, __pyx_L1_error)
+    __PYX_ERR(0, 542, __pyx_L1_error)
 }
 
-__pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int64_t, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 539, __pyx_L1_error)
+__pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_int64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_int64_t, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 542, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __PYX_XCLEAR_MEMVIEW(&__pyx_t_25, 1);
         __pyx_t_25.memview = NULL; __pyx_t_25.data = NULL;
@@ -22519,13 +22538,13 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 539, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 542, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_links, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 539, __pyx_L1_error)
+        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_links, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 542, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":537
+        /* "aequilibrae/paths/cython/route_choice_set_results.pyx":540
  * 
  *                 links = []
  *                 for link in d(d(route_set)[j]):             # <<<<<<<<<<<<<<
@@ -22534,17 +22553,17 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
 */
       }
 
-      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":541
+      /* "aequilibrae/paths/cython/route_choice_set_results.pyx":544
  *                     links.append(np.asarray(self.mapping_data[self.mapping_idx[link]:self.mapping_idx[link + 1]]))
  * 
  *                 route_set_col.append(np.hstack(links))             # <<<<<<<<<<<<<<
  * 
- *         columns = {k: np.hstack(v, casting="no") if len(v) else np.array([], dtype=v.dtype) for k, v in columns.items()}
+ *         columns = {k: np.hstack(v, casting="no") if len(v) else np.array([], dtype=types[k]) for k, v in columns.items()}
 */
       __pyx_t_10 = NULL;
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 541, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 544, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_hstack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 541, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_hstack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 544, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_24 = 1;
@@ -22564,26 +22583,26 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
         __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_24, (2-__pyx_t_24) | (__pyx_t_24*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
         __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 541, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 544, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
       }
-      __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_route_set_col, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 541, __pyx_L1_error)
+      __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_route_set_col, __pyx_t_2); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 544, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
   }
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":543
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":546
  *                 route_set_col.append(np.hstack(links))
  * 
- *         columns = {k: np.hstack(v, casting="no") if len(v) else np.array([], dtype=v.dtype) for k, v in columns.items()}             # <<<<<<<<<<<<<<
+ *         columns = {k: np.hstack(v, casting="no") if len(v) else np.array([], dtype=types[k]) for k, v in columns.items()}             # <<<<<<<<<<<<<<
  *         columns["route set"] = route_set_col
  * 
 */
   { /* enter inner scope */
-    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 543, __pyx_L20_error)
+    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 546, __pyx_L20_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_27 = 0;
-    __pyx_t_10 = __Pyx_dict_iterator(__pyx_v_columns, 1, __pyx_mstate_global->__pyx_n_u_items, (&__pyx_t_28), (&__pyx_t_26)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 543, __pyx_L20_error)
+    __pyx_t_10 = __Pyx_dict_iterator(__pyx_v_columns, 1, __pyx_mstate_global->__pyx_n_u_items, (&__pyx_t_28), (&__pyx_t_26)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 546, __pyx_L20_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_XDECREF(__pyx_t_4);
     __pyx_t_4 = __pyx_t_10;
@@ -22591,20 +22610,20 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
     while (1) {
       __pyx_t_29 = __Pyx_dict_iter_next(__pyx_t_4, __pyx_t_28, &__pyx_t_27, &__pyx_t_10, &__pyx_t_3, NULL, __pyx_t_26);
       if (unlikely(__pyx_t_29 == 0)) break;
-      if (unlikely(__pyx_t_29 == -1)) __PYX_ERR(0, 543, __pyx_L20_error)
+      if (unlikely(__pyx_t_29 == -1)) __PYX_ERR(0, 546, __pyx_L20_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_k, __pyx_t_10);
       __pyx_t_10 = 0;
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_v, __pyx_t_3);
       __pyx_t_3 = 0;
-      __pyx_t_30 = PyObject_Length(__pyx_7genexpr__pyx_v_v); if (unlikely(__pyx_t_30 == ((Py_ssize_t)-1))) __PYX_ERR(0, 543, __pyx_L20_error)
+      __pyx_t_30 = PyObject_Length(__pyx_7genexpr__pyx_v_v); if (unlikely(__pyx_t_30 == ((Py_ssize_t)-1))) __PYX_ERR(0, 546, __pyx_L20_error)
       __pyx_t_1 = (__pyx_t_30 != 0);
       if (__pyx_t_1) {
         __pyx_t_9 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 543, __pyx_L20_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 546, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_hstack); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 543, __pyx_L20_error)
+        __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_hstack); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 546, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_14);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __pyx_t_24 = 1;
@@ -22621,28 +22640,28 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
         #endif
         {
           PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_9, __pyx_7genexpr__pyx_v_v};
-          __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 543, __pyx_L20_error)
+          __pyx_t_11 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 546, __pyx_L20_error)
           __Pyx_GOTREF(__pyx_t_11);
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_casting, __pyx_mstate_global->__pyx_n_u_no, __pyx_t_11, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 543, __pyx_L20_error)
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_casting, __pyx_mstate_global->__pyx_n_u_no, __pyx_t_11, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 546, __pyx_L20_error)
           __pyx_t_10 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_14, __pyx_callargs+__pyx_t_24, (2-__pyx_t_24) | (__pyx_t_24*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
           __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 543, __pyx_L20_error)
+          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 546, __pyx_L20_error)
           __Pyx_GOTREF(__pyx_t_10);
         }
         __pyx_t_3 = __pyx_t_10;
         __pyx_t_10 = 0;
       } else {
         __pyx_t_14 = NULL;
-        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 543, __pyx_L20_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 546, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_array); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 543, __pyx_L20_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_mstate_global->__pyx_n_u_array); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 546, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 543, __pyx_L20_error)
+        __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 546, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_31 = __Pyx_PyObject_GetAttrStr(__pyx_7genexpr__pyx_v_v, __pyx_mstate_global->__pyx_n_u_dtype); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 543, __pyx_L20_error)
+        __pyx_t_31 = __Pyx_PyDict_GetItem(__pyx_v_types, __pyx_7genexpr__pyx_v_k); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 546, __pyx_L20_error)
         __Pyx_GOTREF(__pyx_t_31);
         __pyx_t_24 = 1;
         #if CYTHON_UNPACK_METHODS
@@ -22658,22 +22677,22 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
         #endif
         {
           PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_14, __pyx_t_11};
-          __pyx_t_32 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 543, __pyx_L20_error)
+          __pyx_t_32 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 546, __pyx_L20_error)
           __Pyx_GOTREF(__pyx_t_32);
-          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_31, __pyx_t_32, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 543, __pyx_L20_error)
+          if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_31, __pyx_t_32, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 546, __pyx_L20_error)
           __pyx_t_10 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_9, __pyx_callargs+__pyx_t_24, (2-__pyx_t_24) | (__pyx_t_24*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_32);
           __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           __Pyx_DECREF(__pyx_t_31); __pyx_t_31 = 0;
           __Pyx_DECREF(__pyx_t_32); __pyx_t_32 = 0;
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 543, __pyx_L20_error)
+          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 546, __pyx_L20_error)
           __Pyx_GOTREF(__pyx_t_10);
         }
         __pyx_t_3 = __pyx_t_10;
         __pyx_t_10 = 0;
       }
-      if (unlikely(PyDict_SetItem(__pyx_t_2, (PyObject*)__pyx_7genexpr__pyx_v_k, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 543, __pyx_L20_error)
+      if (unlikely(PyDict_SetItem(__pyx_t_2, (PyObject*)__pyx_7genexpr__pyx_v_k, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 546, __pyx_L20_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -22689,16 +22708,16 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
   __Pyx_DECREF_SET(__pyx_v_columns, ((PyObject*)__pyx_t_2));
   __pyx_t_2 = 0;
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":544
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":547
  * 
- *         columns = {k: np.hstack(v, casting="no") if len(v) else np.array([], dtype=v.dtype) for k, v in columns.items()}
+ *         columns = {k: np.hstack(v, casting="no") if len(v) else np.array([], dtype=types[k]) for k, v in columns.items()}
  *         columns["route set"] = route_set_col             # <<<<<<<<<<<<<<
  * 
  *         self.table = pd.DataFrame(columns)
 */
-  if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_route_set, __pyx_v_route_set_col) < 0))) __PYX_ERR(0, 544, __pyx_L1_error)
+  if (unlikely((PyDict_SetItem(__pyx_v_columns, __pyx_mstate_global->__pyx_kp_u_route_set, __pyx_v_route_set_col) < 0))) __PYX_ERR(0, 547, __pyx_L1_error)
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":546
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":549
  *         columns["route set"] = route_set_col
  * 
  *         self.table = pd.DataFrame(columns)             # <<<<<<<<<<<<<<
@@ -22706,9 +22725,9 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
  * 
 */
   __pyx_t_4 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_pd); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_pd); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 549, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_DataFrame); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_DataFrame); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 549, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_24 = 1;
@@ -22728,7 +22747,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_10, __pyx_callargs+__pyx_t_24, (2-__pyx_t_24) | (__pyx_t_24*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 546, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 549, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
   }
   __Pyx_GIVEREF(__pyx_t_2);
@@ -22737,7 +22756,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
   __pyx_v_self->table = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":547
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":550
  * 
  *         self.table = pd.DataFrame(columns)
  *         return self.table             # <<<<<<<<<<<<<<
@@ -22775,6 +22794,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_25, 1, (PyObject *(*)(char *)) __
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_columns);
   __Pyx_XDECREF(__pyx_v_route_set_col);
+  __Pyx_XDECREF(__pyx_v_types);
   __Pyx_XDECREF(__pyx_v_links);
   __Pyx_XDECREF(__pyx_7genexpr__pyx_v_k);
   __Pyx_XDECREF(__pyx_7genexpr__pyx_v_v);
@@ -23028,7 +23048,7 @@ static PyObject *__pyx_pf_11aequilibrae_5paths_6cython_24route_choice_set_result
   return __pyx_r;
 }
 
-/* "aequilibrae/paths/cython/route_choice_set_results.pyx":550
+/* "aequilibrae/paths/cython/route_choice_set_results.pyx":553
  * 
  * 
  * @cython.wraparound(False)             # <<<<<<<<<<<<<<
@@ -23040,7 +23060,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
   double __pyx_r;
   int __pyx_t_1;
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":556
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":559
  * @cython.cdivision(True)
  * cdef double inverse_binary_logit(double prob, double beta0, double beta1) noexcept nogil:
  *     if prob == 1.0:             # <<<<<<<<<<<<<<
@@ -23050,7 +23070,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
   __pyx_t_1 = (__pyx_v_prob == 1.0);
   if (__pyx_t_1) {
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":557
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":560
  * cdef double inverse_binary_logit(double prob, double beta0, double beta1) noexcept nogil:
  *     if prob == 1.0:
  *         return INFINITY             # <<<<<<<<<<<<<<
@@ -23060,7 +23080,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
     __pyx_r = INFINITY;
     goto __pyx_L0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":556
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":559
  * @cython.cdivision(True)
  * cdef double inverse_binary_logit(double prob, double beta0, double beta1) noexcept nogil:
  *     if prob == 1.0:             # <<<<<<<<<<<<<<
@@ -23069,7 +23089,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
 */
   }
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":558
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":561
  *     if prob == 1.0:
  *         return INFINITY
  *     elif prob == 0.0:             # <<<<<<<<<<<<<<
@@ -23079,7 +23099,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
   __pyx_t_1 = (__pyx_v_prob == 0.0);
   if (__pyx_t_1) {
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":559
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":562
  *         return INFINITY
  *     elif prob == 0.0:
  *         return -INFINITY             # <<<<<<<<<<<<<<
@@ -23089,7 +23109,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
     __pyx_r = (-INFINITY);
     goto __pyx_L0;
 
-    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":558
+    /* "aequilibrae/paths/cython/route_choice_set_results.pyx":561
  *     if prob == 1.0:
  *         return INFINITY
  *     elif prob == 0.0:             # <<<<<<<<<<<<<<
@@ -23098,7 +23118,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
 */
   }
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":561
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":564
  *         return -INFINITY
  *     else:
  *         return (log(prob / (1.0 - prob)) - beta0) / beta1             # <<<<<<<<<<<<<<
@@ -23108,7 +23128,7 @@ static double __pyx_f_11aequilibrae_5paths_6cython_24route_choice_set_results_in
     goto __pyx_L0;
   }
 
-  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":550
+  /* "aequilibrae/paths/cython/route_choice_set_results.pyx":553
  * 
  * 
  * @cython.wraparound(False)             # <<<<<<<<<<<<<<

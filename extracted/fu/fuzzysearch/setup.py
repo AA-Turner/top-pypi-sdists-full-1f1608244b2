@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import with_statement
-
 import os
+import re
 import sys
+from pathlib import Path
 
 from setuptools import setup, Extension
-from distutils.command.build_ext import build_ext
-from distutils.errors import CCompilerError, DistutilsExecError, \
-     DistutilsPlatformError
+from setuptools.command.build_ext import build_ext
+from setuptools.errors import CCompilerError, ExecError, PlatformError
 
 # --noexts: don't try building the C extensions
 if '--noexts' in sys.argv[1:]:
@@ -27,13 +26,22 @@ readme = readfile('README.rst')
 history = readfile('HISTORY.rst').replace('.. :changelog:', '')
 
 
-# Fail safe compilation based on markupsafe's, which in turn was shamelessly
+def get_version():
+    file_path = Path(__file__).parent / 'src' / 'fuzzysearch' / '__init__.py'
+    src = file_path.read_text()
+    pattern = r'^__version__\s*=\s*([\'"])(.{1,}?)\1\s*$'
+    return re.search(pattern, src, re.M).group(2)
+
+version = get_version()
+
+
+# Fail-safe compilation based on markupsafe's, which in turn was shamelessly
 # stolen from the simplejson setup.py file.  Original author: Bob Ippolito
 
 is_jython = 'java' in sys.platform
 is_pypy = hasattr(sys, 'pypy_version_info')
 
-ext_errors = (CCompilerError, DistutilsExecError, DistutilsPlatformError)
+ext_errors = (CCompilerError, ExecError, PlatformError)
 if sys.platform == 'win32' and sys.version_info > (2, 6):
     # 2.6's distutils.msvc9compiler can raise an IOError when failing to
     # find the compiler
@@ -51,7 +59,7 @@ class ve_build_ext(build_ext):
     def run(self):
         try:
             build_ext.run(self)
-        except DistutilsPlatformError:
+        except PlatformError:
             raise BuildFailed()
 
     def build_extension(self, ext):
@@ -102,8 +110,8 @@ def run_setup(with_binary=True):
     ext_modules = [
         _substitutions_only_module,
         _common_module,
-        _generic_search_module,
-        _levenshtein_ngrams_module,
+        # _generic_search_module,
+        # _levenshtein_ngrams_module,
         # pymemmem_module,
     ]
     if not with_binary:
@@ -111,7 +119,7 @@ def run_setup(with_binary=True):
 
     setup(
         name='fuzzysearch',
-        version='0.7.3',
+        version=version,
         description='fuzzysearch is useful for finding approximate subsequence matches',
         long_description=readme + '\n\n' + history,
         author='Tal Einat',
@@ -128,13 +136,12 @@ def run_setup(with_binary=True):
             'Intended Audience :: Developers',
             'License :: OSI Approved :: MIT License',
             'Natural Language :: English',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.5',
-            'Programming Language :: Python :: 3.6',
-            'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
+            'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3.10',
+            'Programming Language :: Python :: 3.11',
+            'Programming Language :: Python :: 3.12',
             'Programming Language :: Python :: Implementation :: CPython',
             'Programming Language :: Python :: Implementation :: PyPy',
             'Topic :: Software Development :: Libraries :: Python Modules',

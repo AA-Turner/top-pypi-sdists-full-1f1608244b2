@@ -12,6 +12,7 @@ class BaseTypes:
     LiteralFalse = Literal[False]
     LiteralTrue = Literal[True]
     ListOfBools = List[bool]
+    OptionalBoolean = Optional[bool]
 
     #* Float-related types
     ListOfFloats = List[float]

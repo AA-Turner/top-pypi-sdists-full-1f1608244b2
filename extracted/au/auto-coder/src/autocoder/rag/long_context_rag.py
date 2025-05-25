@@ -868,16 +868,7 @@ class LongContextRAG:
             new_conversations = qa_strategy.create_conversation(
                 documents=[doc.source_code for doc in relevant_docs],
                 conversations=conversations, local_image_host=self.args.local_image_host
-            )
-
-            # 保存对话日志
-            try:                    
-                logger.info(f"Saving new_conversations log to {self.args.source_dir}/.cache/logs")
-                project_root = self.args.source_dir
-                json_text = json.dumps(new_conversations, ensure_ascii=False)
-                save_formatted_log(project_root, json_text, "rag_conversation")
-            except Exception as e:
-                logger.warning(f"Failed to save new_conversations log: {e}")
+            )            
 
             # 流式生成回答
             chunks = target_llm.stream_chat_oai(
@@ -888,8 +879,9 @@ class LongContextRAG:
                 delta_mode=True,
                 extra_request_params=extra_request_params
             )
-
+             
             # 返回结果并更新统计信息
+            last_content = ""
             for chunk in chunks:
                 if chunk[1] is not None:
                     rag_stat.answer_stat.total_input_tokens += chunk[1].input_tokens_count
@@ -900,7 +892,18 @@ class LongContextRAG:
                     chunk[1].generated_tokens_count = rag_stat.recall_stat.total_generated_tokens + \
                         rag_stat.chunk_stat.total_generated_tokens + \
                         rag_stat.answer_stat.total_generated_tokens
+                last_content += chunk[0]
                 yield chunk
+
+            # 保存对话日志
+            try:                    
+                logger.info(f"Saving new_conversations log to {self.args.source_dir}/.cache/logs")
+                project_root = self.args.source_dir
+                json_text = json.dumps(new_conversations + [{"role": "assistant", "content": last_content}], ensure_ascii=False)
+                save_formatted_log(project_root, json_text, "rag_conversation")
+            except Exception as e:
+                logger.warning(f"Failed to save new_conversations log: {e}")
+
             rag_stat.answer_stat.duration = time.time() - answer_start_time  # 记录答案生成阶段耗时
 
     def _print_rag_stats(self, rag_stat: RAGStat, conversations: Optional[List[Dict[str, str]]] = None) -> None:

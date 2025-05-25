@@ -16,7 +16,7 @@ import sys
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.append(os.path.abspath("../"))
+sys.path.append(os.path.abspath("../../"))
 from caldav import __version__ as version
 
 # -- General configuration -----------------------------------------------------
@@ -39,7 +39,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "caldav"
-copyright = "2010-2021, Cyril Robert, Tobias Brox and other contributors"
+copyright = "2010-2024, Cyril Robert, Tobias Brox and other contributors"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

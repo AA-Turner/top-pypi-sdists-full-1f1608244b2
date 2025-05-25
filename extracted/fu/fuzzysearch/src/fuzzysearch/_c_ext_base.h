@@ -1,9 +1,8 @@
+#ifndef _FUZZYSEARCH_C_EXT_BASE_H
+#define _FUZZYSEARCH_C_EXT_BASE_H
+
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-
-#if PY_MAJOR_VERSION >= 3
-#define IS_PY3K
-#endif
 
 #ifndef unlikely
     #ifdef __GNUC__
@@ -21,6 +20,9 @@
     #endif /* __GNUC__ */
 #endif
 
+#if defined(_MSC_VER)
+#define inline __inline
+#endif
 
 inline static int is_simple_buffer(Py_buffer pybuf) {
     return (
@@ -30,3 +32,5 @@ inline static int is_simple_buffer(Py_buffer pybuf) {
         pybuf.suboffsets == NULL
     );
 }
+
+#endif

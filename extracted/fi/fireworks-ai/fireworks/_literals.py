@@ -42,4 +42,4 @@ ReasoningEffort = Literal["low", "medium", "high"]
 DeploymentTypeLiteral = Literal["serverless", "on-demand", "auto"]
 
 
-DeploymentStrategyLiteral = Literal["serverless", "on-demand"]
+DeploymentStrategyLiteral = Literal["serverless", "on-demand", "serverless-lora", "on-demand-lora"]

@@ -27,98 +27,84 @@ if (
         + f" Modin ({__pandas_version__}.X). This may cause undesired side effects!"
     )
 
+# The extensions assigned to this module
+_PD_EXTENSIONS_ = {}
 
 # to not pollute namespace
 del version
 
-
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    import inspect
-
-    from modin.core.storage_formats.pandas.query_compiler_caster import (
-        wrap_free_function_in_argument_caster,
+    from pandas import (
+        eval,
+        factorize,
+        test,
+        date_range,
+        period_range,
+        Index,
+        MultiIndex,
+        CategoricalIndex,
+        bdate_range,
+        DatetimeIndex,
+        Timedelta,
+        Timestamp,
+        set_eng_float_format,
+        options,
+        describe_option,
+        set_option,
+        get_option,
+        reset_option,
+        option_context,
+        NaT,
+        PeriodIndex,
+        Categorical,
+        Interval,
+        UInt8Dtype,
+        UInt16Dtype,
+        UInt32Dtype,
+        UInt64Dtype,
+        SparseDtype,
+        Int8Dtype,
+        Int16Dtype,
+        Int32Dtype,
+        Int64Dtype,
+        StringDtype,
+        BooleanDtype,
+        CategoricalDtype,
+        DatetimeTZDtype,
+        IntervalDtype,
+        PeriodDtype,
+        RangeIndex,
+        TimedeltaIndex,
+        IntervalIndex,
+        IndexSlice,
+        Grouper,
+        array,
+        Period,
+        DateOffset,
+        timedelta_range,
+        infer_freq,
+        interval_range,
+        ExcelWriter,
+        NamedAgg,
+        NA,
+        api,
+        ArrowDtype,
+        Flags,
+        Float32Dtype,
+        Float64Dtype,
+        from_dummies,
+        testing,
     )
-
-    # To allow the extensions system to override these methods, we must wrap all objects re-exported
-    # from pandas in a backend dispatcher.
-    _reexport_list = (
-        "eval",
-        "factorize",
-        "test",
-        "date_range",
-        "period_range",
-        "Index",
-        "MultiIndex",
-        "CategoricalIndex",
-        "bdate_range",
-        "DatetimeIndex",
-        "Timedelta",
-        "Timestamp",
-        "set_eng_float_format",
-        "options",
-        "describe_option",
-        "set_option",
-        "get_option",
-        "reset_option",
-        "option_context",
-        "NaT",
-        "PeriodIndex",
-        "Categorical",
-        "Interval",
-        "UInt8Dtype",
-        "UInt16Dtype",
-        "UInt32Dtype",
-        "UInt64Dtype",
-        "SparseDtype",
-        "Int8Dtype",
-        "Int16Dtype",
-        "Int32Dtype",
-        "Int64Dtype",
-        "StringDtype",
-        "BooleanDtype",
-        "CategoricalDtype",
-        "DatetimeTZDtype",
-        "IntervalDtype",
-        "PeriodDtype",
-        "RangeIndex",
-        "TimedeltaIndex",
-        "IntervalIndex",
-        "IndexSlice",
-        "Grouper",
-        "array",
-        "Period",
-        "DateOffset",
-        "timedelta_range",
-        "infer_freq",
-        "interval_range",
-        "ExcelWriter",
-        "NamedAgg",
-        "NA",
-        "api",
-        "ArrowDtype",
-        "Flags",
-        "Float32Dtype",
-        "Float64Dtype",
-        "from_dummies",
-        "testing",
-    )
-    for name in _reexport_list:
-        item = getattr(pandas, name)
-        if inspect.isfunction(item):
-            # Note that this is applied to only functions, not classes.
-            item = wrap_free_function_in_argument_caster(name)(item)
-        globals()[name] = item
-    del inspect, item, _reexport_list, name, wrap_free_function_in_argument_caster
 
 import os
 
 from modin.config import Parameter
 
-_engine_initialized = {}
+_is_first_update = {}
 
 
-def _initialize_engine(engine_string: str):
+def _update_engine(publisher: Parameter):
     from modin.config import (
         CpuCount,
         Engine,
@@ -130,29 +116,28 @@ def _initialize_engine(engine_string: str):
     # Set this so that Pandas doesn't try to multithread by itself
     os.environ["OMP_NUM_THREADS"] = "1"
 
-    if engine_string == "Ray":
-        if not _engine_initialized.get("Ray", False):
+    if publisher.get() == "Ray":
+        if _is_first_update.get("Ray", True):
             from modin.core.execution.ray.common import initialize_ray
 
             initialize_ray()
-    elif engine_string == "Dask":
-        if not _engine_initialized.get("Dask", False):
+    elif publisher.get() == "Dask":
+        if _is_first_update.get("Dask", True):
             from modin.core.execution.dask.common import initialize_dask
 
             initialize_dask()
-    elif engine_string == "Unidist":
-        if not _engine_initialized.get("Unidist", False):
+    elif publisher.get() == "Unidist":
+        if _is_first_update.get("Unidist", True):
             from modin.core.execution.unidist.common import initialize_unidist
 
             initialize_unidist()
-    elif engine_string not in Engine.NOINIT_ENGINES:
-        raise ImportError("Unrecognized execution engine: {}.".format(engine_string))
+    elif publisher.get() not in Engine.NOINIT_ENGINES:
+        raise ImportError("Unrecognized execution engine: {}.".format(publisher.get()))
 
-    _engine_initialized[engine_string] = True
+    _is_first_update[publisher.get()] = False
 
 
 from modin.pandas import arrays, errors
-from modin.pandas.api.extensions.extensions import __getattr___impl
 from modin.utils import show_versions
 
 from .. import __version__
@@ -210,10 +195,30 @@ from .io import (
 from .plotting import Plotting as plotting
 from .series import Series
 
-__getattr__ = __getattr___impl
+
+def __getattr__(name: str):
+    """
+    Overrides getattr on the module to enable extensions.
+
+    Parameters
+    ----------
+    name : str
+        The name of the attribute being retrieved.
+
+    Returns
+    -------
+    Attribute
+        Returns the extension attribute, if it exists, otherwise returns the attribute
+        imported in this file.
+    """
+    try:
+        return _PD_EXTENSIONS_.get(name, globals()[name])
+    except KeyError:
+        raise AttributeError(f"module 'modin.pandas' has no attribute '{name}'")
 
 
 __all__ = [  # noqa: F405
+    "_PD_EXTENSIONS_",
     "DataFrame",
     "Series",
     "read_csv",
@@ -327,5 +332,4 @@ __all__ = [  # noqa: F405
     "errors",
 ]
 
-# Remove these attributes from this module's namespace.
-del pandas, Parameter, __getattr___impl
+del pandas, Parameter

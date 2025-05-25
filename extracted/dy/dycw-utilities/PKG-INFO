@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
 Name: dycw-utilities
-Version: 0.124.1
+Version: 0.125.1
 Author-email: Derek Wan <d.wan@icloud.com>
 License-File: LICENSE
 Requires-Python: >=3.12
 Requires-Dist: typing-extensions<4.14,>=4.13.1
 Provides-Extra: test
-Requires-Dist: hypothesis<6.132,>=6.131.24; extra == 'test'
+Requires-Dist: hypothesis<6.132,>=6.131.27; extra == 'test'
 Requires-Dist: pytest-asyncio<0.27,>=0.26.0; extra == 'test'
 Requires-Dist: pytest-cov<6.2,>=6.1.1; extra == 'test'
 Requires-Dist: pytest-instafail<0.6,>=0.5.0; extra == 'test'
@@ -27,8 +27,6 @@ Requires-Dist: img2pdf<0.7,>=0.6.0; extra == 'zzz-test-altair'
 Requires-Dist: polars-lts-cpu<1.31,>=1.30.0; extra == 'zzz-test-altair'
 Requires-Dist: vl-convert-python<1.8,>=1.7.0; extra == 'zzz-test-altair'
 Requires-Dist: whenever<0.9,>=0.8.2; extra == 'zzz-test-altair'
-Provides-Extra: zzz-test-astor
-Requires-Dist: astor<0.9,>=0.8.1; extra == 'zzz-test-astor'
 Provides-Extra: zzz-test-asyncio
 Provides-Extra: zzz-test-atomicwrites
 Requires-Dist: atomicwrites<1.5,>=1.4.1; extra == 'zzz-test-atomicwrites'
@@ -80,7 +78,7 @@ Provides-Extra: zzz-test-hypothesis
 Requires-Dist: aiosqlite<0.22,>=0.21.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: asyncpg<0.31,>=0.30.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: greenlet<3.3,>=3.2.0; extra == 'zzz-test-hypothesis'
-Requires-Dist: hypothesis<6.132,>=6.131.24; extra == 'zzz-test-hypothesis'
+Requires-Dist: hypothesis<6.132,>=6.131.27; extra == 'zzz-test-hypothesis'
 Requires-Dist: luigi<3.7,>=3.6.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: numpy<2.3,>=2.2.6; extra == 'zzz-test-hypothesis'
 Requires-Dist: pathvalidate<3.3,>=3.2.3; extra == 'zzz-test-hypothesis'
@@ -146,7 +144,7 @@ Requires-Dist: atomicwrites<1.5,>=1.4.1; extra == 'zzz-test-pydantic'
 Requires-Dist: pydantic<2.12,>=2.11.4; extra == 'zzz-test-pydantic'
 Provides-Extra: zzz-test-pyinstrument
 Requires-Dist: atomicwrites<1.5,>=1.4.1; extra == 'zzz-test-pyinstrument'
-Requires-Dist: pyinstrument<5.1,>=5.0.0; extra == 'zzz-test-pyinstrument'
+Requires-Dist: pyinstrument<5.1,>=5.0.2; extra == 'zzz-test-pyinstrument'
 Requires-Dist: tzlocal<5.4,>=5.3.1; extra == 'zzz-test-pyinstrument'
 Provides-Extra: zzz-test-pyrsistent
 Requires-Dist: pyrsistent<0.21,>=0.20.0; extra == 'zzz-test-pyrsistent'

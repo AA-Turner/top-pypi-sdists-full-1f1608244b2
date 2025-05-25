@@ -4688,6 +4688,9 @@ class ListDatasetsRequest(betterproto.Message):
     The fields to be returned in the response. If empty or "*", all fields will be returned.
     """
 
+    show_internal: bool = betterproto.bool_field(7)
+    """If true, the internal datasets will be included in the response."""
+
 
 @dataclass(eq=False, repr=False)
 class ListDatasetsResponse(betterproto.Message):
@@ -4718,7 +4721,7 @@ class DeleteDatasetRequest(betterproto.Message):
 
 @dataclass(eq=False, repr=False)
 class DatasetValidationJob(betterproto.Message):
-    """Next ID: 13"""
+    """Next ID: 14"""
 
     name: str = betterproto.string_field(1)
     """
@@ -4776,6 +4779,9 @@ class DatasetValidationJob(betterproto.Message):
 
     rewards: List[str] = betterproto.string_field(24)
     """A list of reward metrics to validate."""
+
+    region: "Region" = betterproto.enum_field(13)
+    """The region where the job is located."""
 
 
 @dataclass(eq=False, repr=False)
@@ -5386,7 +5392,7 @@ class BaseTrainingConfig(betterproto.Message):
     """
     BaseTrainingConfig contains common configuration fields shared across
     different training job types.
-    Next ID: 14
+    Next ID: 15
     """
 
     output_model: str = betterproto.string_field(1)
@@ -5447,10 +5453,13 @@ class BaseTrainingConfig(betterproto.Message):
     The maximum packed number of tokens per batch for training in sequence packing.
     """
 
+    is_intermediate: bool = betterproto.bool_field(14)
+    """If this training job is a intermediate step"""
+
 
 @dataclass(eq=False, repr=False)
 class EagleTrainingJob(betterproto.Message):
-    """Next ID: 23"""
+    """Next ID: 24"""
 
     name: str = betterproto.string_field(1)
     """
@@ -5547,6 +5556,9 @@ class EagleTrainingJob(betterproto.Message):
 
     update_time: datetime = betterproto.message_field(22)
     """The update time for the eagle training job."""
+
+    region: "Region" = betterproto.enum_field(23)
+    """The region where the job is located."""
 
 
 @dataclass(eq=False, repr=False)
@@ -6358,7 +6370,7 @@ class PreviewEvaluationResponse(betterproto.Message):
 
 @dataclass(eq=False, repr=False)
 class EvaluationJob(betterproto.Message):
-    """Next ID: 16"""
+    """Next ID: 17"""
 
     name: str = betterproto.string_field(1)
     """
@@ -6432,6 +6444,9 @@ class EvaluationJob(betterproto.Message):
 
     job_progress: "JobProgress" = betterproto.message_field(15)
     """Job progress."""
+
+    region: "Region" = betterproto.enum_field(16)
+    """The region where the job is located."""
 
 
 @dataclass(eq=False, repr=False)
@@ -6831,6 +6846,9 @@ class PreviewEvaluatorSampleResult(betterproto.Message):
         betterproto.map_field(3, betterproto.TYPE_STRING, betterproto.TYPE_MESSAGE)
     )
     """Per metric eval results"""
+
+    reason: str = betterproto.string_field(4)
+    """reason for the eval result"""
 
 
 @dataclass(eq=False, repr=False)
@@ -8005,6 +8023,9 @@ class ListModelsRequest(betterproto.Message):
     """
     The fields to be returned in the response. If empty or "*", all fields will be returned.
     """
+
+    show_internal: bool = betterproto.bool_field(8)
+    """If true, will return internal models."""
 
 
 @dataclass(eq=False, repr=False)

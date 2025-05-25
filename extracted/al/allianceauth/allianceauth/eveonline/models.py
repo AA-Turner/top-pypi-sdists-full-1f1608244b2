@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import ClassVar, Union
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -75,8 +75,8 @@ class EveAllianceInfo(models.Model):
     alliance_ticker = models.CharField(max_length=254)
     executor_corp_id = models.PositiveIntegerField()
 
-    objects = EveAllianceManager()
-    provider = EveAllianceProviderManager()
+    objects: ClassVar[EveAllianceManager] = EveAllianceManager()
+    provider: ClassVar[EveAllianceProviderManager] = EveAllianceProviderManager()
 
     class Meta:
         indexes = [models.Index(fields=['executor_corp_id',])]
@@ -147,7 +147,7 @@ class EveCorporationInfo(models.Model):
         EveAllianceInfo, blank=True, null=True, on_delete=models.SET_NULL
     )
 
-    objects = EveCorporationManager()
+    objects: ClassVar[EveCorporationManager] = EveCorporationManager()
     provider = EveCorporationProviderManager()
 
     class Meta:
@@ -214,7 +214,7 @@ class EveCharacter(models.Model):
     faction_id = models.PositiveIntegerField(blank=True, null=True, default=None)
     faction_name = models.CharField(max_length=254, blank=True, null=True, default='')
 
-    objects = EveCharacterManager()
+    objects: ClassVar[EveCharacterManager] = EveCharacterManager()
     provider = EveCharacterProviderManager()
 
     class Meta:

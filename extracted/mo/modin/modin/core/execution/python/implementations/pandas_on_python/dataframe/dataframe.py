@@ -18,7 +18,6 @@ Module contains class ``PandasOnPythonDataframe``.
 """
 
 from modin.core.dataframe.pandas.dataframe.dataframe import PandasDataframe
-from modin.utils import _inherit_docstrings
 
 from ..partitioning.partition_manager import PandasOnPythonDataframePartitionManager
 
@@ -51,8 +50,3 @@ class PandasOnPythonDataframe(PandasDataframe):
     """
 
     _partition_mgr_cls = PandasOnPythonDataframePartitionManager
-
-    @property
-    @_inherit_docstrings(PandasDataframe.engine)
-    def engine(self) -> str:
-        return "Python"

@@ -23,7 +23,7 @@ from setuptools.command.install import install
 
 THIS_DIRECTORY = Path(__file__).parent
 
-VERSION = "1.45.2.dev20250522"  # PEP-440
+VERSION = "1.45.2.dev20250523"  # PEP-440
 
 # IMPORTANT: We should try very hard *not* to add dependencies to Streamlit.
 # And if you do add one, make the required version as general as possible:
@@ -66,7 +66,9 @@ SNOWPARK_CONDA_EXCLUDED_DEPENDENCIES = [
     "gitpython>=3.0.7, <4, !=3.1.19",
     "pydeck>=0.8.0b4, <1",
     # Tornado 6.0.3 was the current version when Python 3.8 was released (Oct 14, 2019).
-    "tornado>=6.0.3, <7",
+    # Tornado 6.5.0 is skipped due to a bug with Unicode characters in the filename.
+    # See https://github.com/tornadoweb/tornado/commit/62c276434dc5b13e10336666348408bf8c062391
+    "tornado>=6.0.3, <7, !=6.5.0",
 ]
 
 if not os.getenv("SNOWPARK_CONDA_BUILD"):

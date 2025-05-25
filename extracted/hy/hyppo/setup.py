@@ -31,6 +31,10 @@ REQUIRED_PACKAGES = [
     "numba>=0.46",
     "scikit-learn>=0.19.1",
     "autograd>=1.3",
+    "statsmodels>=0.14.1",
+    "patsy>=0.5.1",
+    "pandas>=2.2.3",
+    "future>=1.0.0",
 ]
 
 # Find mgc version.
@@ -75,7 +79,7 @@ setup(
     author_email=AUTHOR_EMAIL,
     install_requires=REQUIRED_PACKAGES,
     url=URL,
-    license="PolyForm Noncommercial License 1.0.0",
+    license="MIT License",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Science/Research",
@@ -87,6 +91,8 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
     ],
     packages=find_packages(),
     include_package_data=True,

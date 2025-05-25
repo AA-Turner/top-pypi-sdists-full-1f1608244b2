@@ -160,7 +160,7 @@ class PreviewEvaluatorRequest(_message.Message):
     def __init__(self, evaluator: _Optional[_Union[Evaluator, _Mapping]] = ..., sample_data: _Optional[_Iterable[str]] = ..., max_samples: _Optional[int] = ..., parent: _Optional[str] = ...) -> None: ...
 
 class PreviewEvaluatorSampleResult(_message.Message):
-    __slots__ = ("success", "score", "per_metric_evals")
+    __slots__ = ("success", "score", "per_metric_evals", "reason")
     class PerMetricEvalsEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -171,10 +171,12 @@ class PreviewEvaluatorSampleResult(_message.Message):
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     SCORE_FIELD_NUMBER: _ClassVar[int]
     PER_METRIC_EVALS_FIELD_NUMBER: _ClassVar[int]
+    REASON_FIELD_NUMBER: _ClassVar[int]
     success: str
     score: float
     per_metric_evals: _containers.MessageMap[str, _struct_pb2.Struct]
-    def __init__(self, success: _Optional[str] = ..., score: _Optional[float] = ..., per_metric_evals: _Optional[_Mapping[str, _struct_pb2.Struct]] = ...) -> None: ...
+    reason: str
+    def __init__(self, success: _Optional[str] = ..., score: _Optional[float] = ..., per_metric_evals: _Optional[_Mapping[str, _struct_pb2.Struct]] = ..., reason: _Optional[str] = ...) -> None: ...
 
 class PreviewEvaluatorResponse(_message.Message):
     __slots__ = ("results", "total_samples", "total_runtime_ms", "stdout", "stderr")

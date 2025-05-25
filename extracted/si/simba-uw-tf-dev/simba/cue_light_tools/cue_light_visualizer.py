@@ -2,17 +2,93 @@ __author__ = "Simon Nilsson"
 
 import itertools
 import os
-from typing import List, Union
+from typing import List, Union, Optional
 
 import cv2
 import pandas as pd
-
+import numpy as np
+from simba.utils.data import detect_bouts
+from simba.mixins.plotting_mixin import PlottingMixin
 from simba.mixins.config_reader import ConfigReader
-from simba.utils.checks import check_file_exist_and_readable
+from simba.utils.checks import check_file_exist_and_readable, check_valid_boolean, check_valid_lst, check_int, check_valid_dataframe
 from simba.utils.errors import NoROIDataError, NoSpecifiedOutputError
 from simba.utils.printing import stdout_success
-from simba.utils.read_write import get_fn_ext, get_video_meta_data, read_df
+from simba.utils.read_write import get_fn_ext, get_video_meta_data, read_df, find_core_cnt, remove_a_folder, create_directory, read_frm_of_video, concatenate_videos_in_folder
+from simba.utils.data import slice_roi_dict_from_attribute, create_color_palettes
+from simba.utils.enums import Formats, Defaults, Keys, TextOptions
 
+import multiprocessing
+import functools
+
+def _plot_cue_light_data(frm_idxs: list,
+                         video_setting: bool,
+                         frame_setting: bool,
+                         show_pose: bool,
+                         data_df: pd.DataFrame,
+                         bp_names: list,
+                         font_size: int,
+                         x_shift: int,
+                         y_shift: int,
+                         frames_save_dir: str,
+                         video_save_dir: str,
+                         circle_size: int,
+                         roi_dict: dict,
+                         video_path: str):
+
+    batch_id, frame_rng = frm_idxs[0], frm_idxs[1]
+    start_frm, end_frm, current_frm = frame_rng[0], frame_rng[-1], frame_rng[0]
+    video_writer = None
+    video_meta_data = get_video_meta_data(video_path=video_path)
+
+    clrs = create_color_palettes(no_animals=1, map_size=len(bp_names)+1, cmaps=['Set3'])[0]
+    if video_setting:
+        fourcc = cv2.VideoWriter_fourcc(*Formats.MP4_CODEC.value)
+        video_save_path = os.path.join(video_save_dir, f"{batch_id}.mp4")
+        video_writer = cv2.VideoWriter(video_save_path, fourcc, video_meta_data['fps'], (int(video_meta_data['width']*2), video_meta_data['height']))
+
+
+    while current_frm <= end_frm:
+        img = read_frm_of_video(video_path, frame_index=current_frm)
+        img = cv2.copyMakeBorder(img, 0, 0, 0, int(video_meta_data["width"]), borderType=cv2.BORDER_CONSTANT, value=[0, 0, 0])
+        if show_pose:
+            for bp_cnt, bp_name in enumerate(bp_names):
+                col_names = [f'{bp_name}_x', f'{bp_name}_y']
+                bp_data = data_df.loc[current_frm, col_names].values.astype(np.int32)
+                img = cv2.circle(img, tuple(bp_data), circle_size, clrs[bp_cnt], -1)
+        img = PlottingMixin().roi_dict_onto_img(img=img, roi_dict=roi_dict)
+
+        y_shift_counts = 1
+        for cue_light_type, cue_light_type_data in roi_dict.items():
+            for _, cue_light_data in cue_light_type_data.iterrows():
+                color, name = cue_light_data['Color BGR'], cue_light_data['Name']
+                light_status = 'ON' if data_df.loc[current_frm, name] == 1 else 'OFF'
+                light_color = (0, 255, 255) if light_status == 'ON' else color
+                que_light_bouts = detect_bouts(data_df=data_df.loc[0:current_frm], target_lst=[name], fps=video_meta_data['fps'])
+                que_light_bouts_cnt = len(que_light_bouts)
+                que_light_bouts_duration = round(que_light_bouts['Bout_time'].sum(), 2)
+                off_duration = round((((current_frm + 1)/ video_meta_data['fps'])) - que_light_bouts_duration, 2)
+                img = PlottingMixin().put_text(img=img, text=f"{name} STATUS:", pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=color)
+                img = PlottingMixin().put_text(img=img, text=light_status, pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value + x_shift), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=light_color)
+                y_shift_counts += 1
+                img = PlottingMixin().put_text(img=img, text=f"{name} ONSET COUNTS:", pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=color)
+                img = PlottingMixin().put_text(img=img, text=str(que_light_bouts_cnt), pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value + x_shift), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=color)
+                y_shift_counts += 1
+                img = PlottingMixin().put_text(img=img, text=f"{name} TIME ON (S):", pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=color)
+                img = PlottingMixin().put_text(img=img, text=str(que_light_bouts_duration), pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value + x_shift), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=color)
+                y_shift_counts += 1
+                img = PlottingMixin().put_text(img=img, text=f"{name} TIME OFF (S):", pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=color)
+                img = PlottingMixin().put_text(img=img, text=str(off_duration), pos=(int(video_meta_data["width"] + TextOptions.BORDER_BUFFER_X.value + x_shift), int(y_shift*y_shift_counts)), font_size=font_size, font_thickness=2, text_color_bg=(0, 0, 0), text_color=color)
+
+        if video_setting:
+            video_writer.write(np.uint8(img))
+        if frame_setting:
+            frame_save_path = os.path.join(frames_save_dir,f"{current_frm}.png")
+            cv2.imwrite(frame_save_path, current_frm)
+        print(f"Cue light frame complete: {current_frm} / {video_meta_data['frame_count']}. Video: {video_meta_data['video_name']} ")
+        current_frm += 1
+    if video_setting:
+        video_writer.release()
+    return batch_id
 
 class CueLightVisualizer(ConfigReader):
     """
@@ -20,443 +96,106 @@ class CueLightVisualizer(ConfigReader):
     Visualize SimBA computed cue-light ON and OFF states and the aggregate statistics of ON and OFF
     states.
 
-    :parameter str config_path: path to SimBA project config file in Configparser format.
-    :parameter List[str] cue_light_names: Names of cue lights, as defined in the SimBA ROI interface.
-    :parameter str video_path: Path to video which user wants to create visualizations of cue light states and aggregate statistics for.
-    :parameter bool frame_setting: If True, creates individual frames in png format.
-    :parameter bool video_setting: If True, creates compressed videos in mp4 format.
+    :param str config_path: path to SimBA project config file in Configparser format.
+    :param List[str] cue_light_names: Names of cue lights, as defined in the SimBA ROI interface.
+    :param str video_path: Path to video which user wants to create visualizations of cue light states and aggregate statistics for.
+    :param bool frame_setting: If True, creates individual frames in png format. Defaults to False.
+    :param bool video_setting: If True, creates compressed videos in mp4 format. Defaults to True.
 
     .. notes:
        `Cue light tutorials <https://github.com/sgoldenlab/simba/blob/master/docs/cue_light_tutorial.md>`__.
 
-    Examples
-    ----------
+    :examples:
     >>> cue_light_visualizer = CueLightVisualizer(config_path='SimBAConfig', cue_light_names=['Cue_light'], video_path='VideoPath', video_setting=True, frame_setting=False)
     >>> cue_light_visualizer.run()
     """
 
-    def __init__(
-        self,
-        config_path: Union[str, os.PathLike],
-        cue_light_names: List[str],
-        video_path: str,
-        frame_setting: bool,
-        video_setting: bool,
-    ):
+    def __init__(self,
+                 config_path: Union[str, os.PathLike],
+                 cue_light_names: List[str],
+                 video_path: Union[str, os.PathLike],
+                 data_path: Union[str, os.PathLike],
+                 frame_setting: bool = False,
+                 video_setting: bool = True,
+                 core_cnt: int = -1,
+                 show_pose: bool = True):
+
         ConfigReader.__init__(self, config_path=config_path)
-
+        check_valid_boolean(value=[frame_setting], source=f'{self.__class__.__name__} frame_setting', raise_error=True)
+        check_valid_boolean(value=[video_setting], source=f'{self.__class__.__name__} video_setting', raise_error=True)
+        check_valid_boolean(value=[show_pose], source=f'{self.__class__.__name__} show_pose', raise_error=True)
+        check_valid_lst(data=cue_light_names, source=self.__class__.__name__, valid_dtypes=(str,), min_len=1, raise_error=True)
+        check_file_exist_and_readable(file_path=video_path)
+        check_file_exist_and_readable(file_path=data_path)
+        check_int(name=f'{self.__class__.__name__} core_cnt', value=core_cnt, min_value=-1, unaccepted_vals=[0])
+        self.video_meta_data = get_video_meta_data(video_path)
+        _, self.video_name, _ = get_fn_ext(filepath=data_path)
         if (not frame_setting) and (not video_setting):
-            raise NoSpecifiedOutputError(
-                msg="SIMBA ERROR: Please choose to select either videos, frames, or both frames and videos."
-            )
-        self.video_setting, self.frame_setting = video_setting, frame_setting
-        self.in_dir = os.path.join(self.project_path, "csv", "cue_lights")
-        self.cue_light_names, self.video_path = cue_light_names, video_path
-        _, self.video_name, _ = get_fn_ext(video_path)
-        self.video_meta_data = get_video_meta_data(self.video_path)
-        self.logs_path, self.video_dir = os.path.join(
-            self.project_path, "logs"
-        ), os.path.join(self.project_path, "videos")
-        self.data_file_path = os.path.join(
-            self.in_dir, self.video_name + "." + self.file_type
-        )
-        check_file_exist_and_readable(self.data_file_path)
-        self.data_df = read_df(self.data_file_path, self.file_type)
-        self.output_folder = os.path.join(
-            self.project_path, "frames", "output", "cue_lights"
-        )
-        if not os.path.exists(self.output_folder):
-            os.makedirs(self.output_folder)
-        self.video_settings, pix_per_mm, self.fps = self.read_video_info(
-            video_name=self.video_name
-        )
-        self.space_scale, radius_scale, res_scale, font_scale = 25, 10, 1500, 0.8
-        max_dim = max(self.video_meta_data["width"], self.video_meta_data["height"])
-        self.draw_scale, self.font_size = int(
-            radius_scale / (res_scale / max_dim)
-        ), float(font_scale / (res_scale / max_dim))
-        self.spacing_scaler = int(self.space_scale / (res_scale / max_dim))
-        self.font = cv2.FONT_HERSHEY_TRIPLEX
-        self.__read_roi_dfs()
+            raise NoSpecifiedOutputError(msg="SIMBA ERROR: Please choose to select either videos, frames, or both frames and videos.")
+        self.cue_light_names, self.video_path, self.data_path = cue_light_names, video_path, data_path
+        self.data_df = read_df(self.data_path, self.file_type)
+        self.core_cnt = find_core_cnt()[0] if core_cnt == -1 or core_cnt > find_core_cnt()[0] else core_cnt
+        self.font_size, self.x_shift, self.y_shift = PlottingMixin().get_optimal_font_scales(text='ONE LONG ARSE STRING FOR YA', accepted_px_height=int(self.video_meta_data['height']/2), accepted_px_width=int(self.video_meta_data['width']/2))
+        self.circle_size = PlottingMixin().get_optimal_circle_size(frame_size=(self.video_meta_data['width'], self.video_meta_data['height']), circle_frame_ratio=60)
+        self.read_roi_data()
+        self.video_setting, self.frame_setting, self.data_path, self.show_pose = video_setting, frame_setting, data_path, show_pose
+        self.video_save_dir = os.path.join(self.frames_output_dir, 'cue_lights')
+        self.frames_save_dir = os.path.join(self.frames_output_dir, 'cue_lights')
+        self.video_roi_dict, roi_names, video_roi_cnt = slice_roi_dict_from_attribute(data=self.roi_dict, shape_names=self.cue_light_names, video_names=[self.video_name])
+        missing_rois = [x for x in self.cue_light_names if x not in roi_names]
+        if len(missing_rois) > 0:
+            raise NoROIDataError(msg=f'The video {self.video_name} does not have cue light ROI(s) named {missing_rois}.', source=self.__class__.__name__)
+        if show_pose:
+            check_valid_dataframe(df=self.data_df, source=f'{self.__class__.__name__} {data_path}', valid_dtypes=Formats.NUMERIC_DTYPES.value, required_fields=self.bp_col_names)
 
-    def __update_video_meta_data(self):
-        new_cap = cv2.VideoCapture(self.video_path)
-        new_cap.set(1, 1)
-        _, img = self.cap.read()
-        bordered_img = cv2.copyMakeBorder(
-            img,
-            0,
-            0,
-            0,
-            int(self.video_meta_data["width"]),
-            borderType=cv2.BORDER_CONSTANT,
-            value=[0, 0, 0],
-        )
-        self.border_img_h, self.border_img_w = (
-            bordered_img.shape[0],
-            bordered_img.shape[1],
-        )
-        new_cap.release()
-
-    def __read_roi_dfs(self):
-        if not os.path.isfile(
-            os.path.join(self.logs_path, "measures", "ROI_definitions.h5")
-        ):
-            raise NoROIDataError(
-                msg="No ROI definitions were found in your SimBA project. Please draw some ROIs before analyzing your ROI data"
-            )
-        else:
-            self.roi_h5_path = os.path.join(
-                self.logs_path, "measures", "ROI_definitions.h5"
-            )
-            self.rectangles_df = pd.read_hdf(self.roi_h5_path, key="rectangles")
-            self.circles_df = pd.read_hdf(self.roi_h5_path, key="circleDf")
-            self.polygon_df = pd.read_hdf(self.roi_h5_path, key="polygons")
-            self.shape_names = list(
-                itertools.chain(
-                    self.rectangles_df["Name"].unique(),
-                    self.circles_df["Name"].unique(),
-                    self.polygon_df["Name"].unique(),
-                )
-            )
-            self.video_recs = self.rectangles_df.loc[
-                (self.rectangles_df["Video"] == self.video_name)
-                & (self.rectangles_df["Name"].isin(self.cue_light_names))
-            ]
-            self.video_circs = self.circles_df.loc[
-                (self.circles_df["Video"] == self.video_name)
-                & (self.circles_df["Name"].isin(self.cue_light_names))
-            ]
-            self.video_polys = self.polygon_df.loc[
-                (self.polygon_df["Video"] == self.video_name)
-                & (self.polygon_df["Name"].isin(self.cue_light_names))
-            ]
-            self.shape_names = list(
-                itertools.chain(
-                    self.rectangles_df["Name"].unique(),
-                    self.circles_df["Name"].unique(),
-                    self.polygon_df["Name"].unique(),
-                )
-            )
-
-    def __calc_text_locs(self):
-        add_spacer = 2
-        self.loc_dict = {}
-        for light_cnt, light_name in enumerate(self.cue_light_names):
-            self.loc_dict[light_name] = {}
-            self.loc_dict[light_name]["status_text"] = "{} {}".format(
-                light_name, "status:"
-            )
-            self.loc_dict[light_name]["onset_cnt_text"] = "{} {}".format(
-                light_name, "onset counts:"
-            )
-            self.loc_dict[light_name]["seconds_on_text"] = "{} {}".format(
-                light_name, "time ON (s):"
-            )
-            self.loc_dict[light_name]["seconds_off_text"] = "{} {}".format(
-                light_name, "time OFF (s):"
-            )
-            self.loc_dict[light_name]["status_text_loc"] = (
-                (self.video_meta_data["width"] + 5),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            self.loc_dict[light_name]["status_data_loc"] = (
-                int(self.border_img_w - (self.border_img_w / 8)),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            add_spacer += 1
-            self.loc_dict[light_name]["onset_cnt_text_loc"] = (
-                (self.video_meta_data["width"] + 5),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            self.loc_dict[light_name]["onset_cnt_data_loc"] = (
-                int(self.border_img_w - (self.border_img_w / 8)),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            add_spacer += 1
-            self.loc_dict[light_name]["seconds_on_text_loc"] = (
-                (self.video_meta_data["width"] + 5),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            self.loc_dict[light_name]["seconds_on_data_loc"] = (
-                int(self.border_img_w - (self.border_img_w / 8)),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            add_spacer += 1
-            self.loc_dict[light_name]["seconds_off_text_loc"] = (
-                (self.video_meta_data["width"] + 5),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            self.loc_dict[light_name]["seconds_off_data_loc"] = (
-                int(self.border_img_w - (self.border_img_w / 8)),
-                (
-                    self.video_meta_data["height"]
-                    - (self.video_meta_data["height"] + 10)
-                    + self.spacing_scaler * add_spacer
-                ),
-            )
-            add_spacer += 1
-
-    def __create_text_dict(self):
-        self.light_dict = {}
-        for light_cnt, light_name in enumerate(self.cue_light_names):
-            self.light_dict[light_name] = {}
-            self.light_dict[light_name]["status"] = False
-            self.light_dict[light_name]["onsets"] = 0
-            self.light_dict[light_name]["time_on"] = 0
-            self.light_dict[light_name]["time_off"] = 0
-            self.light_dict[light_name]["prior_frame_status"] = 0
-            self.light_dict[light_name]["color"] = (0, 0, 0)
-
-    def __draw_shapes_and_text(self, shape_data):
-        shape_name = shape_data["Name"]
-        cv2.putText(
-            self.border_img,
-            self.loc_dict[shape_name]["status_text"],
-            self.loc_dict[shape_name]["status_text_loc"],
-            self.font,
-            self.font_size,
-            shape_data["Color BGR"],
-            1,
-        )
-        cv2.putText(
-            self.border_img,
-            self.loc_dict[shape_name]["onset_cnt_text"],
-            self.loc_dict[shape_name]["onset_cnt_text_loc"],
-            self.font,
-            self.font_size,
-            shape_data["Color BGR"],
-            1,
-        )
-        cv2.putText(
-            self.border_img,
-            self.loc_dict[shape_name]["seconds_on_text"],
-            self.loc_dict[shape_name]["seconds_on_text_loc"],
-            self.font,
-            self.font_size,
-            shape_data["Color BGR"],
-            1,
-        )
-        cv2.putText(
-            self.border_img,
-            self.loc_dict[shape_name]["seconds_off_text"],
-            self.loc_dict[shape_name]["seconds_off_text_loc"],
-            self.font,
-            self.font_size,
-            shape_data["Color BGR"],
-            1,
-        )
-        if shape_data["Shape_type"] == "Rectangle":
-            cv2.rectangle(
-                self.border_img,
-                (shape_data["topLeftX"], shape_data["topLeftY"]),
-                (shape_data["Bottom_right_X"], shape_data["Bottom_right_Y"]),
-                shape_data["Color BGR"],
-                shape_data["Thickness"],
-            )
-        if shape_data["Shape_type"] == "Circle":
-            cv2.circle(
-                self.border_img,
-                (shape_data["centerX"], shape_data["centerY"]),
-                shape_data["radius"],
-                shape_data["Color BGR"],
-                shape_data["Thickness"],
-            )
-        if shape_data["Shape_type"] == "Polygon":
-            cv2.polylines(
-                self.border_img,
-                shape_data["vertices"],
-                True,
-                shape_data["Color BGR"],
-                thickness=shape_data["Thickness"],
-            )
-
-    def __insert_texts_and_shapes(self):
-        for light_cnt, light_name in enumerate(self.cue_light_names):
-            for i, r in self.video_recs.iterrows():
-                if light_name == r["Name"]:
-                    self.__draw_shapes_and_text(shape_data=r)
-            for i, r in self.video_circs.iterrows():
-                if light_name == r["Name"]:
-                    self.__draw_shapes_and_text(shape_data=r)
-            for i, r in self.video_polys.iterrows():
-                if light_name == r["Name"]:
-                    self.__draw_shapes_and_text(shape_data=r)
-
-    def __insert_body_parts(self):
-        for animal_name, animal_data in self.animal_bp_dict.items():
-            for cnt, (x_bp, y_bp) in enumerate(
-                zip(animal_data["X_bps"], animal_data["Y_bps"])
-            ):
-                cord = tuple(
-                    self.data_df.loc[self.frame_cnt, [x_bp, y_bp]].astype(int).values
-                )
-                cv2.circle(
-                    self.border_img,
-                    cord,
-                    0,
-                    animal_data["colors"][cnt],
-                    self.draw_scale,
-                )
 
     def run(self):
-        """
-        Method to create cue light visualizations. Results are stored in the ``project_folder/frames/output/cue_lights``
-        directory of the SimBA project.
-        """
-        self.cap = cv2.VideoCapture(self.video_path)
-        self.frame_cnt = 0
-        self.__update_video_meta_data()
-        if self.video_setting:
-            self.fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-            self.save_video_path = os.path.join(
-                self.output_folder, self.video_name + ".mp4"
-            )
-            self.writer = cv2.VideoWriter(
-                self.save_video_path,
-                self.fourcc,
-                self.fps,
-                (self.border_img_w, self.border_img_h),
-            )
+        print(f"Creating video for {len(self.cue_light_names)} cue light(s) in in {self.video_name}...")
+        frames_dir, video_temp_dir = None, None
         if self.frame_setting:
-            self.save_frame_folder_dir = os.path.join(
-                self.output_folder, self.video_name
-            )
-            if not os.path.exists(self.save_frame_folder_dir):
-                os.makedirs(self.save_frame_folder_dir)
-        self.__calc_text_locs()
-        self.__create_text_dict()
-        while self.cap.isOpened():
-            try:
-                _, img = self.cap.read()
-                self.border_img = cv2.copyMakeBorder(
-                    img,
-                    0,
-                    0,
-                    0,
-                    int(self.video_meta_data["width"]),
-                    borderType=cv2.BORDER_CONSTANT,
-                    value=[0, 0, 0],
-                )
-                self.border_img_h, self.border_img_w = (
-                    self.border_img.shape[0],
-                    self.border_img.shape[1],
-                )
-                self.__insert_texts_and_shapes()
-                self.__insert_body_parts()
-                for light_name in self.cue_light_names:
-                    if (self.light_dict[light_name]["prior_frame_status"] == 0) & (
-                        self.data_df.loc[self.frame_cnt, light_name] == 1
-                    ):
-                        self.light_dict[light_name]["onsets"] += 1
-                    if self.data_df.loc[self.frame_cnt, light_name] == 1:
-                        self.light_dict[light_name]["color"] = (0, 255, 255)
-                        self.light_dict[light_name]["status"] = "ON"
-                        self.light_dict[light_name]["time_on"] += 1 / self.fps
-                    else:
-                        self.light_dict[light_name]["color"] = (90, 10, 10)
-                        self.light_dict[light_name]["status"] = "OFF"
-                        self.light_dict[light_name]["time_off"] += 1 / self.fps
-                    self.light_dict[light_name]["prior_frame_status"] = (
-                        self.data_df.loc[self.frame_cnt, light_name]
-                    )
-                    cv2.putText(
-                        self.border_img,
-                        str(self.light_dict[light_name]["status"]),
-                        self.loc_dict[light_name]["status_data_loc"],
-                        self.font,
-                        self.font_size,
-                        self.light_dict[light_name]["color"],
-                        1,
-                    )
-                    cv2.putText(
-                        self.border_img,
-                        str(self.light_dict[light_name]["onsets"]),
-                        self.loc_dict[light_name]["onset_cnt_data_loc"],
-                        self.font,
-                        self.font_size,
-                        (255, 255, 255),
-                        1,
-                    )
-                    cv2.putText(
-                        self.border_img,
-                        str(round(self.light_dict[light_name]["time_on"], 2)),
-                        self.loc_dict[light_name]["seconds_on_data_loc"],
-                        self.font,
-                        self.font_size,
-                        (255, 255, 255),
-                        1,
-                    )
-                    cv2.putText(
-                        self.border_img,
-                        str(round(self.light_dict[light_name]["time_off"], 2)),
-                        self.loc_dict[light_name]["seconds_off_data_loc"],
-                        self.font,
-                        self.font_size,
-                        (255, 255, 255),
-                        1,
-                    )
-                if self.video_setting:
-                    self.writer.write(self.border_img)
-                if self.frame_setting:
-                    frame_save_path = os.path.join(
-                        self.save_frame_folder_dir, str(self.frame_cnt) + ".png"
-                    )
-                    cv2.imwrite(frame_save_path, self.border_img)
-                print(
-                    "Cue light frame: {} / {}. Video: {} ".format(
-                        str(self.frame_cnt + 1), str(len(self.data_df)), self.video_name
-                    )
-                )
-                self.frame_cnt += 1
-
-            except Exception as e:
-                if self.video_setting:
-                    self.writer.release()
-                print(e.args)
-                print(
-                    "NOTE: index error / keyerror. Some frames of the video may be missing. Make sure you are running latest version of SimBA with pip install simba-uw-tf-dev"
-                )
-                break
-
+            frames_dir = os.path.join(self.frames_save_dir, self.video_name)
+            create_directory(path=frames_dir, overwrite=True)
         if self.video_setting:
-            self.writer.release()
-        stdout_success(
-            msg=f"Cue light visualization for video {self.video_name} saved..."
-        )
+            self.save_video_path = os.path.join(self.video_save_dir, f"{self.video_name}.mp4")
+            video_temp_dir = os.path.join(self.video_save_dir, 'temp')
+            create_directory(path=video_temp_dir, overwrite=True)
+        self.frm_lst = list(range(0, self.video_meta_data["frame_count"], 1))
+        self.frame_chunks = np.array_split(self.frm_lst, self.core_cnt)
+        self.frame_chunks = [(x, j) for x, j in enumerate(self.frame_chunks)]
+        with multiprocessing.Pool(self.core_cnt, maxtasksperchild=Defaults.MAXIMUM_MAX_TASK_PER_CHILD.value) as pool:
+            constants = functools.partial(_plot_cue_light_data,
+                                          frame_setting=self.frame_setting,
+                                          video_setting=self.video_setting,
+                                          show_pose=self.show_pose,
+                                          data_df=self.data_df,
+                                          frames_save_dir=frames_dir,
+                                          video_save_dir=video_temp_dir,
+                                          circle_size=self.circle_size,
+                                          font_size=self.font_size,
+                                          x_shift=self.x_shift,
+                                          y_shift=self.y_shift,
+                                          roi_dict=self.video_roi_dict,
+                                          video_path=self.video_path,
+                                          bp_names=self.body_parts_lst)
+            for cnt, result in enumerate(pool.imap(constants, self.frame_chunks, chunksize=self.multiprocess_chunksize)):
+                print(f'Batch {result+1/self.core_cnt} complete...')
+            pool.terminate()
+            pool.join()
+        self.timer.stop_timer()
+        if self.video_setting:
+            print(f"Joining {self.video_name} multiprocessed video...")
+            concatenate_videos_in_folder(in_folder=video_temp_dir, save_path=self.save_video_path)
+            stdout_success(msg=f"Cue light video visualization for video {self.video_name} saved at {self.save_video_path}", elapsed_time=self.timer.elapsed_time_str)
+        if self.frame_setting:
+            stdout_success(msg=f"Cue light frame visualization for video {self.video_name} saved at {frames_dir}", elapsed_time=self.timer.elapsed_time_str)
 
-
-# test = CueLightVisualizer(config_path='/Users/simon/Desktop/troubleshooting/light_analyzer/project_folder/project_config.ini',
-#                           cue_light_names=['Cue_light'],
-#                           video_path='/Users/simon/Desktop/troubleshooting/light_analyzer/project_folder/videos/20220422_ALMEAG02_B0.avi',
-#                           video_setting=True,
-#                           frame_setting=False)
-# test.visualize_cue_light_data()
+# if __name__ == "__main__":
+#     test = CueLightVisualizer(config_path=r"C:\troubleshooting\cue_light\t1\project_folder\project_config.ini",
+#                               cue_light_names=['cl'],
+#                               video_path=r"C:\troubleshooting\cue_light\t1\project_folder\videos\2025-05-21 16-10-06_cropped.mp4",
+#                               data_path=r"C:\troubleshooting\cue_light\t1\project_folder\csv\cue_lights\2025-05-21 16-10-06_cropped.csv",
+#                               video_setting=True,
+#                               frame_setting=False,
+#                               core_cnt=23)
+#
+#     test.run()

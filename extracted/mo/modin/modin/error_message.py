@@ -55,9 +55,6 @@ class ErrorMessage(object):
 
     @classmethod
     def default_to_pandas(cls, message: str = "", reason: str = "") -> None:
-        # TODO(https://github.com/modin-project/modin/issues/7429): Use
-        # frame-level engine config.
-
         if message != "":
             execution_str = get_current_execution()
             message = (

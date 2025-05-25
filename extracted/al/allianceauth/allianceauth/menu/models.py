@@ -1,3 +1,4 @@
+from typing import ClassVar
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -68,7 +69,7 @@ class MenuItem(models.Model):
         help_text=_("External URL this menu items will link to"),
     )
 
-    objects = MenuItemManager()
+    objects: ClassVar[MenuItemManager] = MenuItemManager()
 
     def __str__(self) -> str:
         return self.text

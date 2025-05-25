@@ -1,10 +1,10 @@
 #include "src/fuzzysearch/_c_ext_base.h"
 
 
-#define DECLARE_VARS
+#define DECLARE_VARS int found = 0
 #define PREPARE
-#define OUTPUT_VALUE(x) DO_FREES; Py_RETURN_TRUE
-#define RETURN_AT_END DO_FREES; Py_RETURN_FALSE
+#define OUTPUT_VALUE(x) found = 1; break
+#define RETURN_AT_END if (found) { Py_RETURN_TRUE; } else { Py_RETURN_FALSE; }
 #define FUNCTION_NAME substitutions_only_has_near_matches_lp_byteslike
 #include "src/fuzzysearch/_substitutions_only_lp_template.h"
 #undef FUNCTION_NAME
@@ -17,9 +17,6 @@
 #undef DECLARE_VARS
 
 
-#ifdef IS_PY3K
-#define PyInt_FromSsize_t(x) PyLong_FromSsize_t(x)
-#endif
 #define DECLARE_VARS       \
     PyObject *results;     \
     PyObject *next_result
@@ -28,7 +25,7 @@
     if (unlikely(!results))  \
         goto error;
 #define OUTPUT_VALUE(x) do {                                           \
-    next_result = PyInt_FromSsize_t((x));                              \
+    next_result = PyLong_FromSsize_t((x));                             \
     if (unlikely(next_result == NULL)) {                               \
         Py_DECREF(results);                                            \
         goto error;                                                    \
@@ -40,7 +37,7 @@
     }                                                                  \
     Py_DECREF(next_result);                                            \
 } while(0)
-#define RETURN_AT_END DO_FREES; return results
+#define RETURN_AT_END return results
 #define FUNCTION_NAME substitutions_only_find_near_matches_lp_byteslike
 #include "src/fuzzysearch/_substitutions_only_lp_template.h"
 #undef FUNCTION_NAME
@@ -74,8 +71,6 @@ static PyMethodDef substitutions_only_methods[] = {
 };
 
 
-#ifdef IS_PY3K
-
 static struct PyModuleDef substitutions_only_module = {
    PyModuleDef_HEAD_INIT,
    "_substitutions_only",   /* name of module */
@@ -90,13 +85,3 @@ PyInit__substitutions_only(void)
 {
     return PyModule_Create(&substitutions_only_module);
 }
-
-#else
-
-PyMODINIT_FUNC
-init_substitutions_only(void)
-{
-    (void) Py_InitModule("_substitutions_only", substitutions_only_methods);
-}
-
-#endif

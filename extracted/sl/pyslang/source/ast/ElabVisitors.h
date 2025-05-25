@@ -73,9 +73,6 @@ struct DiagnosticVisitor : public ASTVisitor<DiagnosticVisitor, false, false> {
                           std::is_same_v<SpecparamSymbol, T>) {
                 symbol.getValue();
             }
-
-            for (auto attr : compilation.getAttributes(symbol))
-                attr->getValue();
         }
 
         if constexpr (requires { symbol.getBody().bad(); }) {
@@ -288,9 +285,6 @@ struct DiagnosticVisitor : public ASTVisitor<DiagnosticVisitor, false, false> {
         if (finishedEarly())
             return;
 
-        for (auto attr : compilation.getAttributes(symbol))
-            attr->getValue();
-
         visit(symbol.body);
 
         if (!finishedEarly()) {
@@ -326,20 +320,25 @@ struct DiagnosticVisitor : public ASTVisitor<DiagnosticVisitor, false, false> {
         if (finishedEarly())
             return;
 
+        // If we're not visiting instances and this instance came from a bind directive
+        // we don't even want to look at its port connections right now. This is because
+        // we are probably doing a force elaborate due to a wildcard package import and
+        // bind directive connections don't contribute to the set of imported symbols
+        // from wildcard imports, and if we visit connections anyway we can get into a
+        // recursive loop when trying to resolve bind port connections. We will come back
+        // and visit this instance later during the normal elaboration process.
+        if (!visitInstances && symbol.body.flags.has(InstanceFlags::FromBind))
+            return;
+
         TimeTraceScope timeScope("AST Instance", [&] {
             std::string buffer;
             symbol.getHierarchicalPath(buffer);
             return buffer;
         });
 
-        for (auto attr : compilation.getAttributes(symbol))
-            attr->getValue();
-
         for (auto conn : symbol.getPortConnections()) {
             conn->getExpression();
             conn->checkSimulatedNetTypes();
-            for (auto attr : compilation.getAttributes(*conn))
-                attr->getValue();
         }
 
         // Detect infinite recursion, which happens if we see this exact
@@ -512,6 +511,12 @@ struct DiagnosticVisitor : public ASTVisitor<DiagnosticVisitor, false, false> {
         for (auto symbol : genericClasses) {
             if (symbol->numSpecializations() == 0)
                 symbol->getInvalidSpecialization().visit(*this);
+        }
+
+        // Visit all attributes and force their values to resolve.
+        for (auto& [_, attrList] : compilation.attributeMap) {
+            for (auto attr : attrList)
+                attr->getValue();
         }
     }
 

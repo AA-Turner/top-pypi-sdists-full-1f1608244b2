@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import ClassVar, Optional
 
 from requests.exceptions import HTTPError
 
@@ -59,7 +59,7 @@ class DiscordUser(models.Model):
         help_text='Date & time this service account was activated'
     )
 
-    objects = DiscordUserManager()
+    objects: ClassVar[DiscordUserManager] = DiscordUserManager()
 
     class Meta:
         permissions = (
