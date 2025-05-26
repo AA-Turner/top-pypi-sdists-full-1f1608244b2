@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: Unified-python-sdk
-Version: 0.46.0
+Version: 0.46.1
 Summary: Python Client SDK for Unified.to
 Author: Unified API Inc.
 Requires-Python: >=3.9.2
@@ -648,6 +648,7 @@ asyncio.run(main())
 * [create_hris_employee](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#create_hris_employee) - Create an employee
 * [create_hris_group](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#create_hris_group) - Create a group
 * [create_hris_location](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#create_hris_location) - Create a location
+* [create_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#create_hris_timeshift) - Create a timeshift
 * [get_hris_company](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#get_hris_company) - Retrieve a company
 * [get_hris_device](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#get_hris_device) - Retrieve a device
 * [get_hris_employee](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#get_hris_employee) - Retrieve an employee
@@ -655,6 +656,7 @@ asyncio.run(main())
 * [get_hris_location](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#get_hris_location) - Retrieve a location
 * [get_hris_payslip](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#get_hris_payslip) - Retrieve a payslip
 * [get_hris_timeoff](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#get_hris_timeoff) - Retrieve a timeoff
+* [get_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#get_hris_timeshift) - Retrieve a timeshift
 * [list_hris_companies](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#list_hris_companies) - List all companies
 * [list_hris_devices](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#list_hris_devices) - List all devices
 * [list_hris_employees](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#list_hris_employees) - List all employees
@@ -662,21 +664,25 @@ asyncio.run(main())
 * [list_hris_locations](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#list_hris_locations) - List all locations
 * [list_hris_payslips](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#list_hris_payslips) - List all payslips
 * [list_hris_timeoffs](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#list_hris_timeoffs) - List all timeoffs
+* [list_hris_timeshifts](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#list_hris_timeshifts) - List all timeshifts
 * [patch_hris_company](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#patch_hris_company) - Update a company
 * [patch_hris_device](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#patch_hris_device) - Update a device
 * [patch_hris_employee](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#patch_hris_employee) - Update an employee
 * [patch_hris_group](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#patch_hris_group) - Update a group
 * [patch_hris_location](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#patch_hris_location) - Update a location
+* [patch_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#patch_hris_timeshift) - Update a timeshift
 * [remove_hris_company](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#remove_hris_company) - Remove a company
 * [remove_hris_device](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#remove_hris_device) - Remove a device
 * [remove_hris_employee](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#remove_hris_employee) - Remove an employee
 * [remove_hris_group](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#remove_hris_group) - Remove a group
 * [remove_hris_location](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#remove_hris_location) - Remove a location
+* [remove_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#remove_hris_timeshift) - Remove a timeshift
 * [update_hris_company](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#update_hris_company) - Update a company
 * [update_hris_device](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#update_hris_device) - Update a device
 * [update_hris_employee](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#update_hris_employee) - Update an employee
 * [update_hris_group](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#update_hris_group) - Update a group
 * [update_hris_location](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#update_hris_location) - Update a location
+* [update_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/hris/README.md#update_hris_timeshift) - Update a timeshift
 
 ### [instructor](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/instructor/README.md)
 
@@ -1223,6 +1229,15 @@ asyncio.run(main())
 
 * [get_hris_timeoff](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeoff/README.md#get_hris_timeoff) - Retrieve a timeoff
 * [list_hris_timeoffs](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeoff/README.md#list_hris_timeoffs) - List all timeoffs
+
+### [timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeshift/README.md)
+
+* [create_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeshift/README.md#create_hris_timeshift) - Create a timeshift
+* [get_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeshift/README.md#get_hris_timeshift) - Retrieve a timeshift
+* [list_hris_timeshifts](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeshift/README.md#list_hris_timeshifts) - List all timeshifts
+* [patch_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeshift/README.md#patch_hris_timeshift) - Update a timeshift
+* [remove_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeshift/README.md#remove_hris_timeshift) - Remove a timeshift
+* [update_hris_timeshift](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/timeshift/README.md#update_hris_timeshift) - Update a timeshift
 
 ### [transaction](https://github.com/unified-to/unified-python-sdk/blob/master/docs/sdks/transaction/README.md)
 

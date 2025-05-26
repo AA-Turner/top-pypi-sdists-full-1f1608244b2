@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: cucumber-tag-expressions
-Version: 6.1.2
+Version: 6.2.0
 Summary: Provides a tag-expression parser and evaluation logic for cucumber/behave
 Author-email: Jens Engel <jenisys@noreply.github.com>
 License: MIT
@@ -43,7 +43,7 @@ Requires-Dist: coverage; extra == "develop"
 Requires-Dist: pytest<5.0; python_version < "3.0" and extra == "develop"
 Requires-Dist: pytest>=5.0; python_version >= "3.0" and extra == "develop"
 Requires-Dist: pytest-html>=1.19.0; extra == "develop"
-Requires-Dist: tox<4.25,>=4.24; extra == "develop"
+Requires-Dist: tox<4.27,>=4.26; extra == "develop"
 Requires-Dist: pylint; extra == "develop"
 Requires-Dist: ruff; extra == "develop"
 Requires-Dist: invoke>=1.7.3; extra == "develop"

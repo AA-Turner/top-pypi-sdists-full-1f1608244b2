@@ -65,6 +65,8 @@ class Series(BaseModel):
 class SeriesSource(BaseModel):
     snapshot_id: SnapshotID
     timestamp: datetime.datetime
+    tags: List[str]
+    metadata: Dict[str, str]
 
 
 class SeriesResponse(BaseModel):
@@ -78,6 +80,8 @@ class BlobMetadata(BaseModel):
 
 
 class EntityType(Enum):
+    Prompt = "prompt"
+    PromptVersion = "prompt_version"
     Dataset = "dataset"
     Project = "project"
     Team = "team"

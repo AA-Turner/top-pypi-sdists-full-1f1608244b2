@@ -44,13 +44,13 @@ class EmailThreadProjection(object):
         'cc': 'list[str]',
         'bcc': 'list[str]',
         'has_attachments': 'bool',
-        'unread': 'bool',
-        'message_count': 'int',
         'last_body_excerpt': 'str',
         'last_text_excerpt': 'str',
         'last_created_at': 'datetime',
         'last_from': 'str',
         'last_sender': 'SenderProjection',
+        'message_count': 'int',
+        'unread': 'bool',
         'subject': 'str',
         'id': 'str',
         '_from': 'str'
@@ -67,19 +67,19 @@ class EmailThreadProjection(object):
         'cc': 'cc',
         'bcc': 'bcc',
         'has_attachments': 'hasAttachments',
-        'unread': 'unread',
-        'message_count': 'messageCount',
         'last_body_excerpt': 'lastBodyExcerpt',
         'last_text_excerpt': 'lastTextExcerpt',
         'last_created_at': 'lastCreatedAt',
         'last_from': 'lastFrom',
         'last_sender': 'lastSender',
+        'message_count': 'messageCount',
+        'unread': 'unread',
         'subject': 'subject',
         'id': 'id',
         '_from': 'from'
     }
 
-    def __init__(self, sender=None, recipients=None, user_id=None, inbox_id=None, updated_at=None, created_at=None, to=None, cc=None, bcc=None, has_attachments=None, unread=None, message_count=None, last_body_excerpt=None, last_text_excerpt=None, last_created_at=None, last_from=None, last_sender=None, subject=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, sender=None, recipients=None, user_id=None, inbox_id=None, updated_at=None, created_at=None, to=None, cc=None, bcc=None, has_attachments=None, last_body_excerpt=None, last_text_excerpt=None, last_created_at=None, last_from=None, last_sender=None, message_count=None, unread=None, subject=None, id=None, _from=None, local_vars_configuration=None):  # noqa: E501
         """EmailThreadProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -95,13 +95,13 @@ class EmailThreadProjection(object):
         self._cc = None
         self._bcc = None
         self._has_attachments = None
-        self._unread = None
-        self._message_count = None
         self._last_body_excerpt = None
         self._last_text_excerpt = None
         self._last_created_at = None
         self._last_from = None
         self._last_sender = None
+        self._message_count = None
+        self._unread = None
         self._subject = None
         self._id = None
         self.__from = None
@@ -122,8 +122,6 @@ class EmailThreadProjection(object):
         if bcc is not None:
             self.bcc = bcc
         self.has_attachments = has_attachments
-        self.unread = unread
-        self.message_count = message_count
         if last_body_excerpt is not None:
             self.last_body_excerpt = last_body_excerpt
         if last_text_excerpt is not None:
@@ -134,6 +132,8 @@ class EmailThreadProjection(object):
             self.last_from = last_from
         if last_sender is not None:
             self.last_sender = last_sender
+        self.message_count = message_count
+        self.unread = unread
         if subject is not None:
             self.subject = subject
         self.id = id
@@ -377,56 +377,6 @@ class EmailThreadProjection(object):
         self._has_attachments = has_attachments
 
     @property
-    def unread(self):
-        """Gets the unread of this EmailThreadProjection.  # noqa: E501
-
-        Has unread  # noqa: E501
-
-        :return: The unread of this EmailThreadProjection.  # noqa: E501
-        :rtype: bool
-        """
-        return self._unread
-
-    @unread.setter
-    def unread(self, unread):
-        """Sets the unread of this EmailThreadProjection.
-
-        Has unread  # noqa: E501
-
-        :param unread: The unread of this EmailThreadProjection.  # noqa: E501
-        :type: bool
-        """
-        if self.local_vars_configuration.client_side_validation and unread is None:  # noqa: E501
-            raise ValueError("Invalid value for `unread`, must not be `None`")  # noqa: E501
-
-        self._unread = unread
-
-    @property
-    def message_count(self):
-        """Gets the message_count of this EmailThreadProjection.  # noqa: E501
-
-        Number of messages in the thread  # noqa: E501
-
-        :return: The message_count of this EmailThreadProjection.  # noqa: E501
-        :rtype: int
-        """
-        return self._message_count
-
-    @message_count.setter
-    def message_count(self, message_count):
-        """Sets the message_count of this EmailThreadProjection.
-
-        Number of messages in the thread  # noqa: E501
-
-        :param message_count: The message_count of this EmailThreadProjection.  # noqa: E501
-        :type: int
-        """
-        if self.local_vars_configuration.client_side_validation and message_count is None:  # noqa: E501
-            raise ValueError("Invalid value for `message_count`, must not be `None`")  # noqa: E501
-
-        self._message_count = message_count
-
-    @property
     def last_body_excerpt(self):
         """Gets the last_body_excerpt of this EmailThreadProjection.  # noqa: E501
 
@@ -538,6 +488,56 @@ class EmailThreadProjection(object):
         """
 
         self._last_sender = last_sender
+
+    @property
+    def message_count(self):
+        """Gets the message_count of this EmailThreadProjection.  # noqa: E501
+
+        Number of messages in the thread  # noqa: E501
+
+        :return: The message_count of this EmailThreadProjection.  # noqa: E501
+        :rtype: int
+        """
+        return self._message_count
+
+    @message_count.setter
+    def message_count(self, message_count):
+        """Sets the message_count of this EmailThreadProjection.
+
+        Number of messages in the thread  # noqa: E501
+
+        :param message_count: The message_count of this EmailThreadProjection.  # noqa: E501
+        :type: int
+        """
+        if self.local_vars_configuration.client_side_validation and message_count is None:  # noqa: E501
+            raise ValueError("Invalid value for `message_count`, must not be `None`")  # noqa: E501
+
+        self._message_count = message_count
+
+    @property
+    def unread(self):
+        """Gets the unread of this EmailThreadProjection.  # noqa: E501
+
+        Has unread  # noqa: E501
+
+        :return: The unread of this EmailThreadProjection.  # noqa: E501
+        :rtype: bool
+        """
+        return self._unread
+
+    @unread.setter
+    def unread(self, unread):
+        """Sets the unread of this EmailThreadProjection.
+
+        Has unread  # noqa: E501
+
+        :param unread: The unread of this EmailThreadProjection.  # noqa: E501
+        :type: bool
+        """
+        if self.local_vars_configuration.client_side_validation and unread is None:  # noqa: E501
+            raise ValueError("Invalid value for `unread`, must not be `None`")  # noqa: E501
+
+        self._unread = unread
 
     @property
     def subject(self):

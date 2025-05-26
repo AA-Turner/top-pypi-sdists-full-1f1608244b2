@@ -21,7 +21,7 @@ authors = [
     {name = "Jens Engel", email = "jenisys@noreply.github.com"},
 ]
 description = "Provides a tag-expression parser and evaluation logic for cucumber/behave"
-version = "6.1.2"
+version = "6.2.0"
 # PREPARED: dynamic = ["version"]
 keywords= ["BDD", "testing", "cucumber", "tag-expressions", "behave"]
 license = {text = "MIT"}
@@ -72,7 +72,7 @@ develop = [
     "pytest <  5.0; python_version <  '3.0'",
     "pytest >= 5.0; python_version >= '3.0'",
     "pytest-html >= 1.19.0",
-    "tox >=4.24,<4.25",
+    "tox >=4.26,<4.27",
     "pylint",
     "ruff",
 

@@ -281,12 +281,12 @@ class Map(MapWidget):
             **kwargs,
         )
 
-    def creater_container(
+    def create_container(
         self,
-        sidebar_visible: bool = False,
-        min_width: int = 360,
-        max_width: int = 360,
-        expanded: bool = True,
+        sidebar_visible: bool = None,
+        min_width: int = None,
+        max_width: int = None,
+        expanded: bool = None,
         **kwargs: Any,
     ):
         """
@@ -305,7 +305,17 @@ class Map(MapWidget):
         Returns:
             Container: The created container widget with the map and sidebar.
         """
+
+        if sidebar_visible is None:
+            sidebar_visible = self.sidebar_args.get("sidebar_visible", False)
+        if min_width is None:
+            min_width = self.sidebar_args.get("min_width", 360)
+        if max_width is None:
+            max_width = self.sidebar_args.get("max_width", 360)
+        if expanded is None:
+            expanded = self.sidebar_args.get("expanded", True)
         self.layer_manager = LayerManagerWidget(self, expanded=expanded)
+
         container = Container(
             host_map=self,
             sidebar_visible=sidebar_visible,
@@ -408,7 +418,7 @@ class Map(MapWidget):
             **kwargs (Any): Additional keyword arguments for the parent class.
         """
         if self.container is None:
-            self.creater_container(**self.sidebar_args)
+            self.create_container(**self.sidebar_args)
         self.container.add_to_sidebar(
             widget,
             add_header=add_header,
@@ -444,7 +454,7 @@ class Map(MapWidget):
             max_width (int, optional): New maximum width in pixels. If None, keep current.
         """
         if self.container is None:
-            self.creater_container()
+            self.create_container()
         self.container.set_sidebar_width(min_width, max_width)
 
     @property
@@ -5446,6 +5456,29 @@ class Map(MapWidget):
             **kwargs,
         )
 
+    def to_solara(self, map_only: bool = False, **kwargs):
+        """
+        Converts the widget to a Solara widget.
+
+        Args:
+            map_only (bool, optional): Whether to only return the map widget. Defaults to False.
+        """
+
+        try:
+            import reacton.ipyvuetify as rv
+        except ImportError:
+            print(
+                "solara is not installed. Please install it with `pip install solara`."
+            )
+            return None
+
+        if map_only:
+            return rv.Row(children=[self], **kwargs)
+        else:
+            if self.container is None:
+                self.create_container()
+            return rv.Row(children=[self.container], **kwargs)
+
 
 class Container(v.Container):
     """
@@ -5755,7 +5788,6 @@ def construct_amazon_style(
             return None
 
     url = f"https://maps.geo.{region}.amazonaws.com/v2/styles/{map_style.title()}/descriptor?key={api_key}"
-    print(url)
     return url
 
 
@@ -7592,7 +7624,7 @@ class LayerManagerWidget(v.ExpansionPanels):
         """Calls the on_close callback if provided."""
 
         self.m.remove_from_sidebar(self)
-        self.on_close()
+        self.close()
 
     def build_layer_controls(self) -> None:
         """
@@ -7827,7 +7859,7 @@ class CustomWidget(v.ExpansionPanels):
 
         if self.host_map is not None:
             self.host_map.remove_from_sidebar(self)
-        self.on_close()
+        self.close()
 
     def add_widget(self, widget: widgets.Widget) -> None:
         """

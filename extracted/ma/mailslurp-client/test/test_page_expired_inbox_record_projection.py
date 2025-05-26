@@ -51,26 +51,26 @@ class TestPageExpiredInboxRecordProjection(unittest.TestCase):
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(
-                        sorted = True, 
                         unsorted = True, 
+                        sorted = True, 
                         empty = True, ), ), 
-                total_elements = 56, 
                 total_pages = 56, 
+                total_elements = 56, 
                 last = True, 
                 number_of_elements = 56, 
                 first = True, 
                 size = 56, 
                 number = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    sorted = True, 
                     unsorted = True, 
+                    sorted = True, 
                     empty = True, ), 
                 empty = True
             )
         else :
             return PageExpiredInboxRecordProjection(
-                total_elements = 56,
                 total_pages = 56,
+                total_elements = 56,
         )
 
     def testPageExpiredInboxRecordProjection(self):

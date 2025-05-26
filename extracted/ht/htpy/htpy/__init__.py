@@ -17,7 +17,7 @@ except ImportError:
 if t.TYPE_CHECKING:
     from types import UnionType
 
-__version__ = "25.4.2"
+__version__ = "25.5.0"
 __all__: list[str] = []
 
 BaseElementSelf = t.TypeVar("BaseElementSelf", bound="BaseElement")
@@ -129,7 +129,7 @@ T = t.TypeVar("T")
 P = t.ParamSpec("P")
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, slots=True)
 class ContextProvider(t.Generic[T]):
     context: Context[T]
     value: T
@@ -154,7 +154,7 @@ class ContextProvider(t.Generic[T]):
         return str(self).encode(encoding, errors)
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, slots=True)
 class ContextConsumer(t.Generic[T]):
     context: Context[T]
     debug_name: str
@@ -183,7 +183,7 @@ class _NO_DEFAULT:
     pass
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, slots=True)
 class Context(t.Generic[T]):
     name: str
     _: dataclasses.KW_ONLY
@@ -265,34 +265,28 @@ class BaseElement:
 
     @t.overload
     def __call__(
-        self: BaseElementSelf, id_class: str, attrs: Mapping[str, Attribute], **kwargs: Attribute
+        self: BaseElementSelf,
+        id_class: str,
+        /,
+        *attrs: Mapping[str, Attribute],
+        **kwargs: Attribute,
     ) -> BaseElementSelf: ...
     @t.overload
     def __call__(
-        self: BaseElementSelf, id_class: str = "", **kwargs: Attribute
+        self: BaseElementSelf, /, *attrs: Mapping[str, Attribute], **kwargs: Attribute
     ) -> BaseElementSelf: ...
-    @t.overload
-    def __call__(
-        self: BaseElementSelf, attrs: Mapping[str, Attribute], **kwargs: Attribute
-    ) -> BaseElementSelf: ...
-    @t.overload
-    def __call__(self: BaseElementSelf, **kwargs: Attribute) -> BaseElementSelf: ...
-    def __call__(self: BaseElementSelf, *args: t.Any, **kwargs: t.Any) -> BaseElementSelf:
-        id_class = ""
-        attrs: Mapping[str, Attribute] = {}
+    def __call__(self: BaseElementSelf, /, *args: t.Any, **kwargs: t.Any) -> BaseElementSelf:
+        id_class: str = ""
+        attr_dicts: t.Sequence[Mapping[str, Attribute]]
+        attrs: dict[str, Attribute] = {}
 
-        if len(args) == 1:
-            if isinstance(args[0], str):
-                # element(".foo")
-                id_class = args[0]
-                attrs = {}
-            else:
-                # element({"foo": "bar"})
-                id_class = ""
-                attrs = args[0]
-        elif len(args) == 2:
-            # element(".foo", {"bar": "baz"})
-            id_class, attrs = args
+        if args and not isinstance(args[0], Mapping):
+            id_class, *attr_dicts = args
+        else:
+            attr_dicts = args
+
+        for attr_dict in attr_dicts:
+            attrs.update(attr_dict)
 
         return self.__class__(
             self._name,

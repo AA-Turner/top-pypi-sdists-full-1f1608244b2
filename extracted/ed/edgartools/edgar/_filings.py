@@ -64,7 +64,7 @@ from edgar.httprequests import get_with_retry
 from edgar.reference import describe_form
 from edgar.reference.tickers import Exchange
 from edgar.reference.tickers import find_ticker
-from edgar.richtools import repr_rich, print_rich, rich_to_text
+from edgar.richtools import repr_rich, print_rich, rich_to_text, Docs
 from edgar.search import BM25Search, RegexSearch
 from edgar.sgml import FilingSGML, Reports, Statements, FilingHeader
 from edgar.storage import local_filing_path, is_using_local_storage
@@ -448,6 +448,10 @@ class Filings:
         # This keeps track of where the index should start in case this is just a page in the Filings
         self._original_state = original_state or PagingState(0, len(self.data))
         self._hash = None
+
+    @property
+    def docs(self):
+        return Docs(self)
 
     def to_pandas(self, *columns) -> pd.DataFrame:
         """Return the filing index as a python dataframe"""
@@ -1322,6 +1326,10 @@ class Filing:
         self._sgml = None
 
     @property
+    def docs(self):
+        return Docs(self)
+
+    @property
     def accession_number(self):
         return self.accession_no
 
@@ -1787,7 +1795,7 @@ class Filing:
             title=title,
             subtitle=subtitle,
             box=box.ROUNDED,
-            height=10,
+            height=8,
             expand=False
         )
 

@@ -29,6 +29,13 @@ class TestAIControllerApi(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_generate_structured_content_from_attachment(self):
+        """Test case for generate_structured_content_from_attachment
+
+        Generate structured content for an attachment  # noqa: E501
+        """
+        pass
+
     def test_generate_structured_content_from_email(self):
         """Test case for generate_structured_content_from_email
 

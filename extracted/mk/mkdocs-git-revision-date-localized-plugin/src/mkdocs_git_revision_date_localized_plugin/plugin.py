@@ -84,9 +84,16 @@ class GitRevisionDateLocalizedPlugin(BasePlugin):
         )
 
         # Save last commit timestamp for entire site
-        self.last_site_revision_hash, self.last_site_revision_timestamp = self.util.get_git_commit_timestamp(
-            config.get("docs_dir")
-        )
+        # Support monorepo/techdocs, which copies the docs_dir to a temporary directory
+        mono_repo_plugin = config.get("plugins", {}).get("monorepo", None)
+        if mono_repo_plugin is not None and hasattr(mono_repo_plugin, "originalDocsDir") and mono_repo_plugin.originalDocsDir is not None:
+            self.last_site_revision_hash, self.last_site_revision_timestamp = self.util.get_git_commit_timestamp(
+                mono_repo_plugin.originalDocsDir
+            )
+        else:
+            self.last_site_revision_hash, self.last_site_revision_timestamp = self.util.get_git_commit_timestamp(
+                config.get("docs_dir")
+            )
 
         # Get locale from plugin configuration
         plugin_locale = self.config.get("locale", None)
@@ -342,7 +349,7 @@ class GitRevisionDateLocalizedPlugin(BasePlugin):
         if first_revision_timestamp > last_revision_timestamp:
             # See also https://github.com/timvink/mkdocs-git-revision-date-localized-plugin/issues/111
             msg = "First revision timestamp is older than last revision timestamp for page %s. " % page.file.src_path
-            msg += "This can be due to a quick in `git` follow behaviour. You can try to set `enable_git_follow: false` in the plugin configuration."
+            msg += "This can be due to a quirk in `git` follow behaviour. You can try to set `enable_git_follow: false` in the plugin configuration."
             logging.warning(msg)
             first_revision_hash, first_revision_timestamp = last_revision_hash, last_revision_timestamp
 

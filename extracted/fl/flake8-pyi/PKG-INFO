@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: flake8-pyi
-Version: 24.9.0
+Version: 25.5.0
 Summary: A plugin for flake8 to enable linting .pyi stub files.
 Project-URL: Homepage, https://github.com/PyCQA/flake8-pyi
 Project-URL: Source, https://github.com/PyCQA/flake8-pyi
@@ -9,14 +9,13 @@ Project-URL: Changelog, https://github.com/PyCQA/flake8-pyi/blob/main/CHANGELOG.
 Author-email: Łukasz Langa <=lukasz@langa.pl>
 Maintainer: Akuli, Shantanu
 Maintainer-email: Jelle Zijlstra <jelle.zijlstra@gmail.com>, Alex Waygood <alex.waygood@gmail.com>, Sebastian Rittau <sebastian@rittau.biz>
-License: MIT
+License-Expression: MIT
 License-File: LICENSE
 Keywords: bugs,flake8,linter,pyflakes,pyi,qa,stubs,typing
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: Framework :: Flake8
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3 :: Only
@@ -25,21 +24,12 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Software Development :: Quality Assurance
 Requires-Python: >=3.9
 Requires-Dist: flake8<8.0.0,>=6.0.0
 Requires-Dist: pyflakes>=2.1.1
-Provides-Extra: dev
-Requires-Dist: black==24.8.0; extra == 'dev'
-Requires-Dist: flake8-bugbear==24.8.19; extra == 'dev'
-Requires-Dist: flake8-noqa==1.4.0; extra == 'dev'
-Requires-Dist: isort==5.13.2; extra == 'dev'
-Requires-Dist: mypy==1.11.2; extra == 'dev'
-Requires-Dist: pre-commit-hooks==4.6.0; extra == 'dev'
-Requires-Dist: pytest-xdist==3.6.1; extra == 'dev'
-Requires-Dist: pytest==8.3.3; extra == 'dev'
-Requires-Dist: types-pyflakes<4; extra == 'dev'
 Description-Content-Type: text/markdown
 
 # flake8-pyi

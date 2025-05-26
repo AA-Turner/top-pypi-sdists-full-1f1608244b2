@@ -4,20 +4,19 @@ import json
 import logging
 import re
 from collections import defaultdict
-from collections.abc import Generator
+from collections.abc import Generator, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from ..architecture import Architecture
 from ..elfutils import filter_undefined_symbols
+from ..error import InvalidLibc
 from ..lddtree import DynamicExecutable
-from ..libc import Libc, get_libc
-from ..musllinux import find_musl_libc, get_musl_version
+from ..libc import Libc
 from ..tools import is_subdir
 
 _HERE = Path(__file__).parent
-LIBPYTHON_RE = re.compile(r"^libpython\d+\.\d+m?.so(.\d)*$")
 _MUSL_POLICY_RE = re.compile(r"^musllinux_\d+_\d+$")
 
 logger = logging.getLogger(__name__)
@@ -54,24 +53,25 @@ class WheelPolicies:
     def __init__(
         self,
         *,
-        libc: Libc | None = None,
+        libc: Libc,
+        arch: Architecture,
         musl_policy: str | None = None,
-        arch: Architecture | None = None,
     ) -> None:
-        if libc is None:
-            libc = get_libc() if musl_policy is None else Libc.MUSL
         if libc != Libc.MUSL and musl_policy is not None:
             msg = f"'musl_policy' shall be None for libc {libc.name}"
             raise ValueError(msg)
         if libc == Libc.MUSL:
             if musl_policy is None:
-                musl_version = get_musl_version(find_musl_libc())
-                musl_policy = f"musllinux_{musl_version.major}_{musl_version.minor}"
+                try:
+                    musl_version = libc.get_current_version()
+                    musl_policy = f"musllinux_{musl_version.major}_{musl_version.minor}"
+                except InvalidLibc:
+                    logger.warning(
+                        "can't determine musl libc version, latest known version will be used."
+                    )
             elif _MUSL_POLICY_RE.match(musl_policy) is None:
                 msg = f"Invalid 'musl_policy': '{musl_policy}'"
                 raise ValueError(msg)
-        if arch is None:
-            arch = Architecture.get_native_architecture()
         policies = json.loads(_POLICY_JSON_MAP[libc].read_text())
         self._policies: list[Policy] = []
         self._architecture = arch
@@ -111,15 +111,21 @@ class WheelPolicies:
         self._policies.sort()
 
         if self._libc_variant == Libc.MUSL:
+            if musl_policy is None:
+                self._musl_policy = "_".join(self._policies[1].name.split("_")[0:3])
+                self._policies = [self._policies[0], self._policies[1]]
             assert len(self._policies) == 2, self._policies
+
+    def __iter__(self) -> Generator[Policy]:
+        yield from self._policies
+
+    @property
+    def libc(self) -> Libc:
+        return self._libc_variant
 
     @property
     def architecture(self) -> Architecture:
         return self._architecture
-
-    @property
-    def policies(self) -> list[Policy]:
-        return self._policies
 
     @property
     def highest(self) -> Policy:
@@ -127,6 +133,11 @@ class WheelPolicies:
 
     @property
     def lowest(self) -> Policy:
+        """lowest policy that's not linux"""
+        return self._policies[1]
+
+    @property
+    def linux(self) -> Policy:
         return self._policies[0]
 
     def get_policy_by_name(self, name: str) -> Policy:
@@ -180,7 +191,7 @@ class WheelPolicies:
         self, lddtree: DynamicExecutable, wheel_path: Path
     ) -> dict[str, ExternalReference]:
         def filter_libs(
-            libs: frozenset[str], whitelist: frozenset[str]
+            libs: Iterable[str], whitelist: frozenset[str]
         ) -> Generator[str]:
             for lib in libs:
                 if "ld-linux" in lib or lib in ["ld64.so.2", "ld64.so.1"]:
@@ -188,9 +199,6 @@ class WheelPolicies:
                     # 'ld64.so.2' on s390x
                     # 'ld64.so.1' on ppc64le
                     # 'ld-linux*' on other platforms
-                    continue
-                if LIBPYTHON_RE.match(lib):
-                    # always exclude libpythonXY
                     continue
                 if lib in whitelist:
                     # exclude any libs in the whitelist
@@ -210,17 +218,17 @@ class WheelPolicies:
             return reqs
 
         ret: dict[str, ExternalReference] = {}
-        for p in self.policies:
+        for p in self._policies:
             needed_external_libs: set[str] = set()
             blacklist = {}
 
-            if not (p.name == "linux" and p.priority == 0):
+            if p != self.linux:
                 # special-case the generic linux platform here, because it
                 # doesn't have a whitelist. or, you could say its
                 # whitelist is the complete set of all libraries. so nothing
                 # is considered "external" that needs to be copied in.
                 whitelist = p.whitelist
-                blacklist_libs = set(p.blacklist.keys()) & lddtree.needed
+                blacklist_libs = set(p.blacklist.keys()) & set(lddtree.needed)
                 blacklist_reduced = {k: p.blacklist[k] for k in blacklist_libs}
                 blacklist = filter_undefined_symbols(
                     lddtree.realpath, blacklist_reduced

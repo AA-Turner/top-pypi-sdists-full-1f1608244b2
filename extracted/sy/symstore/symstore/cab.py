@@ -1,10 +1,8 @@
-from __future__ import absolute_import
-
 import os
 from symstore import errs
 
 # 'points' to suitable cab compression function,
-# as initilized on module import
+# as initialized on module import
 # None if compression is not supported
 compress = None
 

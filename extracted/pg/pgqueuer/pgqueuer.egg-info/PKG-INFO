@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pgqueuer
-Version: 0.22.0
+Version: 0.23.0
 Summary: Pgqueuer is a Python library leveraging PostgreSQL for efficient job queuing.
 Author: JeyBee
 License: MIT License
@@ -15,7 +15,6 @@ Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
 Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
@@ -24,7 +23,7 @@ Classifier: Topic :: Database
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Utilities
 Classifier: Topic :: System :: Distributed Computing
-Requires-Python: >=3.10
+Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: anyio>=4.0
@@ -193,6 +192,13 @@ Example output:
 ...
 +---------------------------+-------+------------+--------------------------+------------+----------+
 ```
+
+## Supported Python Versions
+
+We follow the [Scientific Python SPEC 0](https://scientific-python.org/specs/spec-0000/) policy of dropping a Python minor version three years after its initial releas.
+
+- **Current minimum**: Python 3.11
+
 
 ## Why Choose PGQueuer?
 

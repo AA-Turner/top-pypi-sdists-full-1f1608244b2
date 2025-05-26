@@ -1610,8 +1610,8 @@ def test_hash(get_session_and_func):
     session, hash = get_session_and_func("hash")
     df = session.createDataFrame([("ABC", "DEF")], ["c1", "c2"])
     if isinstance(session, DuckDBSession):
-        assert df.select(hash("c1").alias("hash")).first()[0] == 1241521928161919141
-        assert df.select(hash("c1", "c2").alias("hash")).first()[0] == 7524280102280623017
+        assert df.select(hash("c1").alias("hash")).first()[0] == 14760980515311954005
+        assert df.select(hash("c1", "c2").alias("hash")).first()[0] == 3670181680252885023
     # Bigquery only supports hashing a single column
     elif isinstance(session, BigQuerySession):
         assert df.select(hash("c1").alias("hash")).first()[0] == 228873345217803866
@@ -3112,10 +3112,11 @@ def test_try_divide(get_session_and_func, get_func):
     session, try_divide = get_session_and_func("try_divide")
     make_interval = get_func("make_interval", session)
     lit = get_func("lit", session)
-    df = session.createDataFrame([(6000, 15), (1990, 2)], ["a", "b"])
+    df = session.createDataFrame([(6000, 15), (1990, 2), (100, 0)], ["a", "b"])
     assert df.select(try_divide(df.a, df.b).alias("r")).collect() == [
         Row(r=400.0),
         Row(r=995.0),
+        Row(r=None),
     ]
     df = session.createDataFrame([(1, 2)], ["year", "month"])
     assert (
@@ -4217,10 +4218,12 @@ def test_median(get_session_and_func, get_func):
         ],
         schema=("course", "year", "earnings"),
     )
-    assert df.groupby("course").agg(median("earnings")).collect() == [
-        Row(value1="Java", value2=22000.0),
-        Row(value1="dotNET", value2=10000.0),
-    ]
+    assert sorted(df.groupby("course").agg(median("earnings")).collect()) == sorted(
+        [
+            Row(value1="Java", value2=22000.0),
+            Row(value1="dotNET", value2=10000.0),
+        ]
+    )
 
 
 def test_mode(get_session_and_func, get_func):

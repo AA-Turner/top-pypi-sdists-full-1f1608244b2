@@ -18,6 +18,7 @@ import functools
 import glob
 import logging
 import os
+import re
 from dataclasses import dataclass
 from fnmatch import fnmatch
 from pathlib import Path
@@ -27,10 +28,14 @@ from elftools.elf.elffile import ELFFile
 from elftools.elf.sections import NoteSection
 
 from .architecture import Architecture
-from .libc import Libc, get_libc
+from .error import InvalidLibc
+from .libc import Libc
 
 log = logging.getLogger(__name__)
-__all__ = ["DynamicExecutable", "DynamicLibrary", "ldd"]
+__all__ = ["LIBPYTHON_RE", "DynamicExecutable", "DynamicLibrary", "ldd"]
+
+# Regex to match libpython shared library names
+LIBPYTHON_RE = re.compile(r"^libpython\d+\.\d+m?.so(\.\d)*$")
 
 
 @dataclass(frozen=True)
@@ -74,16 +79,17 @@ class DynamicLibrary:
     path: str | None
     realpath: Path | None
     platform: Platform | None = None
-    needed: frozenset[str] = frozenset()
+    needed: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
 class DynamicExecutable:
     interpreter: str | None
+    libc: Libc | None
     path: str
     realpath: Path
     platform: Platform
-    needed: frozenset[str]
+    needed: tuple[str, ...]
     rpath: tuple[str, ...]
     runpath: tuple[str, ...]
     libraries: dict[str, DynamicLibrary]
@@ -295,7 +301,9 @@ def parse_ld_so_conf(ldso_conf: str, root: str = "/", _first: bool = True) -> li
 
 
 @functools.lru_cache
-def load_ld_paths(root: str = "/", prefix: str = "") -> dict[str, list[str]]:
+def load_ld_paths(
+    libc: Libc | None, root: str = "/", prefix: str = ""
+) -> dict[str, list[str]]:
     """Load linker paths from common locations
 
     This parses the ld.so.conf and LD_LIBRARY_PATH env var.
@@ -323,7 +331,6 @@ def load_ld_paths(root: str = "/", prefix: str = "") -> dict[str, list[str]]:
             # on a per-ELF basis so it can get turned into the right thing.
             ldpaths["env"] = parse_ld_paths(env_ldpath, path="")
 
-    libc = get_libc()
     if libc == Libc.MUSL:
         # from https://git.musl-libc.org/cgit/musl/tree/ldso
         # /dynlink.c?id=3f701faace7addc75d16dea8a6cd769fa5b3f260#n1063
@@ -436,9 +443,6 @@ def ldd(
       },
     }
     """
-    if not ldpaths:
-        ldpaths = load_ld_paths().copy()
-
     _first = _all_libs is None
     if _all_libs is None:
         _all_libs = {}
@@ -446,21 +450,36 @@ def ldd(
     log.debug("ldd(%s)", path)
 
     interpreter: str | None = None
-    needed: set[str] = set()
+    libc: Libc | None = None
+    needed: list[str] = []
     rpaths: list[str] = []
     runpaths: list[str] = []
 
     with open(path, "rb") as f:
         elf = ELFFile(f)
+
+        # get the platform
+        platform = _get_platform(elf)
+
         # If this is the first ELF, extract the interpreter.
         if _first:
             for segment in elf.iter_segments():
                 if segment.header.p_type != "PT_INTERP":
                     continue
-
                 interp = segment.get_interp_name()
                 log.debug("  interp           = %s", interp)
                 interpreter = normpath(root + interp)
+                soname = os.path.basename(interpreter)
+                _all_libs[soname] = DynamicLibrary(
+                    soname,
+                    interpreter,
+                    Path(readlink(interpreter, root, prefixed=True)),
+                    platform,
+                )
+                # if we have an interpreter and it's not MUSL, assume GLIBC
+                libc = Libc.MUSL if soname.startswith("ld-musl-") else Libc.GLIBC
+                if ldpaths is None:
+                    ldpaths = load_ld_paths(libc).copy()
                 # XXX: Should read it and scan for /lib paths.
                 ldpaths["interp"] = [
                     normpath(root + os.path.dirname(interp)),
@@ -471,21 +490,17 @@ def ldd(
                 log.debug("  ldpaths[interp]  = %s", ldpaths["interp"])
                 break
 
-        # get the platform
-        platform = _get_platform(elf)
-
         # Parse the ELF's dynamic tags.
         for segment in elf.iter_segments():
             if segment.header.p_type != "PT_DYNAMIC":
                 continue
-
             for t in segment.iter_tags():
                 if t.entry.d_tag == "DT_RPATH":
                     rpaths = parse_ld_paths(t.rpath, path=str(path), root=root)
                 elif t.entry.d_tag == "DT_RUNPATH":
                     runpaths = parse_ld_paths(t.runpath, path=str(path), root=root)
                 elif t.entry.d_tag == "DT_NEEDED":
-                    needed.add(t.needed)
+                    needed.append(t.needed)
             if runpaths:
                 # If both RPATH and RUNPATH are set, only the latter is used.
                 rpaths = []
@@ -497,6 +512,33 @@ def ldd(
         del elf
 
     if _first:
+        # get the libc based on dependencies
+        for soname in needed:
+            if soname.startswith(("libc.musl-", "ld-musl-")):
+                if libc is None:
+                    libc = Libc.MUSL
+                if libc != Libc.MUSL:
+                    msg = f"found a dependency on MUSL but the libc is already set to {libc}"
+                    raise InvalidLibc(msg)
+            elif soname == "libc.so.6" or soname.startswith(("ld-linux-", "ld64.so.")):
+                if libc is None:
+                    libc = Libc.GLIBC
+                if libc != Libc.GLIBC:
+                    msg = f"found a dependency on GLIBC but the libc is already set to {libc}"
+                    raise InvalidLibc(msg)
+        if libc is None:
+            # try the filename as a last resort
+            if path.name.endswith(("-arm-linux-musleabihf.so", "-linux-musl.so")):
+                libc = Libc.MUSL
+            elif path.name.endswith(("-arm-linux-gnueabihf.so", "-linux-gnu.so")):
+                # before python 3.11, musl was also using gnu
+                soabi = path.stem.split(".")[-1].split("-")
+                valid_python = tuple(f"3{minor}" for minor in range(11, 100))
+                if soabi[0] == "cpython" and soabi[1].startswith(valid_python):
+                    libc = Libc.GLIBC
+
+        if ldpaths is None:
+            ldpaths = load_ld_paths(libc).copy()
         # Propagate the rpaths used by the main ELF since those will be
         # used at runtime to locate things.
         ldpaths["rpath"] = rpaths
@@ -504,7 +546,8 @@ def ldd(
         log.debug("  ldpaths[rpath]   = %s", rpaths)
         log.debug("  ldpaths[runpath] = %s", runpaths)
 
-    # Search for the libs this ELF uses.
+    assert ldpaths is not None
+
     all_ldpaths = (
         ldpaths["rpath"]
         + rpaths
@@ -524,6 +567,16 @@ def ldd(
             log.info("Excluding %s", soname)
             _excluded_libs.add(soname)
             continue
+
+        # special case for libpython, see https://github.com/pypa/auditwheel/issues/589
+        # we want to return the dependency to be able to remove it later on but
+        # we don't want to analyze it for symbol versions nor do we want to analyze its
+        # dependencies as it will be removed.
+        if LIBPYTHON_RE.match(soname):
+            log.info("Skip %s resolution", soname)
+            _all_libs[soname] = DynamicLibrary(soname, None, None)
+            continue
+
         realpath, fullpath = find_lib(platform, soname, all_ldpaths, root)
         if realpath is not None and any(fnmatch(str(realpath), e) for e in exclude):
             log.info("Excluding %s", realpath)
@@ -541,21 +594,13 @@ def ldd(
             dependency.needed,
         )
 
-    if interpreter is not None:
-        soname = os.path.basename(interpreter)
-        _all_libs[soname] = DynamicLibrary(
-            soname,
-            interpreter,
-            Path(readlink(interpreter, root, prefixed=True)),
-            platform,
-        )
-
     return DynamicExecutable(
         interpreter,
+        libc,
         str(path) if display is None else display,
         path,
         platform,
-        frozenset(needed - _excluded_libs),
+        tuple(soname for soname in needed if soname not in _excluded_libs),
         tuple(rpaths),
         tuple(runpaths),
         _all_libs,

@@ -40,7 +40,6 @@ class TestPageSentEmailProjection(unittest.TestCase):
                 content = [
                     mailslurp_client.models.sent_email_projection.SentEmailProjection(
                         id = '0', 
-                        subject = '0', 
                         from = '0', 
                         sender = mailslurp_client.models.sender.Sender(
                             raw_value = '0', 
@@ -65,6 +64,7 @@ class TestPageSentEmailProjection(unittest.TestCase):
                                     email_address = '0', 
                                     name = '0', )
                                 ], ), 
+                        subject = '0', 
                         user_id = '0', 
                         attachments = [
                             '0'
@@ -95,26 +95,26 @@ class TestPageSentEmailProjection(unittest.TestCase):
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(
-                        sorted = True, 
                         unsorted = True, 
+                        sorted = True, 
                         empty = True, ), ), 
-                total_elements = 56, 
                 total_pages = 56, 
+                total_elements = 56, 
                 last = True, 
                 number_of_elements = 56, 
                 first = True, 
                 size = 56, 
                 number = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    sorted = True, 
                     unsorted = True, 
+                    sorted = True, 
                     empty = True, ), 
                 empty = True
             )
         else :
             return PageSentEmailProjection(
-                total_elements = 56,
                 total_pages = 56,
+                total_elements = 56,
         )
 
     def testPageSentEmailProjection(self):

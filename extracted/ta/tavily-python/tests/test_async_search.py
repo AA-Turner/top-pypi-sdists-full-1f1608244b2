@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 import asyncio
 
 from unit_tests import cases
-
 class SearchTest(unittest.TestCase):
     
     def setUp(self) -> None:

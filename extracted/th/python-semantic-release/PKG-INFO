@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: python-semantic-release
-Version: 9.21.1
+Version: 10.0.2
 Summary: Automatic Semantic Versioning for Python projects
 Author-email: Rolf Erik Lekang <me@rolflekang.com>
 License: MIT
@@ -20,8 +20,7 @@ Classifier: Programming Language :: Python :: 3.13
 Requires-Python: >=3.8
 Description-Content-Type: text/x-rst
 License-File: LICENSE
-License-File: AUTHORS.rst
-Requires-Dist: click~=8.0
+Requires-Dist: click~=8.1.0
 Requires-Dist: click-option-group~=0.5
 Requires-Dist: gitpython~=3.0
 Requires-Dist: requests~=2.25

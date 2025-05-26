@@ -1,7 +1,6 @@
 """
 publish PDB and PE files to symbols store
 """
-from __future__ import absolute_import
 from symstore.symstore import Store
 from symstore.symstore import Transactions
 from symstore.symstore import History
@@ -13,7 +12,7 @@ from symstore.errs import FileNotFound
 from symstore.errs import TransactionNotFound
 from symstore.errs import CabCompressionError
 
-__version__ = "0.3.4"
+__version__ = "0.3.5"
 
 __all__ = [
     "Store",

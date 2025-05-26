@@ -38,8 +38,9 @@ class QrackAceBackend:
         col_length(int): Qubits per column.
     """
 
-    def __init__(self, qubit_count=-1, alternating_codes=True, toClone=None):
-        self.sim = toClone.sim.clone() if toClone else QrackSimulator(3 * qubit_count)
+    def __init__(self, qubit_count=-1, alternating_codes=True, isTensorNetwork=False, toClone=None):
+        self.sim = toClone.sim.clone() if toClone else QrackSimulator(3 * qubit_count + 1, isTensorNetwork=isTensorNetwork)
+        self._ancilla = 3 * qubit_count
         self._factor_width(qubit_count)
         self.alternating_codes = alternating_codes
 
@@ -118,6 +119,70 @@ class QrackAceBackend:
             self._cx_shadow(hq[1], hq[2])
             self.sim.mcx([hq[0]], hq[1])
 
+    def _correct(self, lq):
+        # We can't use true syndrome-based error correction,
+        # because one of the qubits in the code is separated.
+        # However, we can get pretty close!
+        hq = self._unpack(lq)
+        shots = 1024
+        samples = self.sim.measure_shots(hq, shots)
+        syndrome = [0, 0, 0]
+        for sample in samples:
+            match sample:
+                case 1:
+                    syndrome[0] += 1
+                case 2:
+                    syndrome[1] += 1
+                case 4:
+                    syndrome[2] += 1
+                case 6:
+                    syndrome[0] += 1
+                case 5:
+                    syndrome[1] += 1
+                case 3:
+                    syndrome[2] += 1
+
+        row = (hq[0] // 3) // self.row_length
+        even_row = not (row & 1)
+        single_bit = 0
+        other_bits = []
+        if (not self.alternating_codes or even_row):
+            single_bit = 2
+            other_bits = [0, 1]
+        else:
+            single_bit = 0
+            other_bits = [1, 2]
+
+        max_syndrome = max(syndrome)
+        error_bit = syndrome.index(max_syndrome)
+        force_syndrome = True
+        if (2 * max_syndrome) >= shots:
+            # There is an error.
+            if error_bit == single_bit:
+                # The stand-alone bit carries the error.
+                self.sim.x(hq[error_bit])
+            else:
+                # The coherent bits carry the error.
+                force_syndrome = False
+                # Form their syndrome.
+                self.sim.mcx([hq[other_bits[0]]], self._ancilla)
+                self.sim.mcx([hq[other_bits[1]]], self._ancilla)
+                # Force the syndrome pathological
+                self.sim.force_m(self._ancilla, True)
+                # Reset the ancilla.
+                self.sim.x(self._ancilla)
+                # Correct the bit flip.
+                self.sim.x(hq[error_bit])
+
+        # There is no error.
+        if force_syndrome:
+            # Form the syndrome of the coherent bits.
+            self.sim.mcx([hq[other_bits[0]]], self._ancilla)
+            self.sim.mcx([hq[other_bits[1]]], self._ancilla)
+            # Force the syndrome non-pathological.
+            self.sim.force_m(self._ancilla, False)
+
+
     def u(self, th, ph, lm, lq):
         hq = self._unpack(lq)
         self._decode(hq)
@@ -179,6 +244,8 @@ class QrackAceBackend:
         self._encode(hq)
 
     def _cpauli(self, lq1, lq2, anti, pauli):
+        self._correct(lq1)
+
         gate = None
         shadow = None
         if pauli == Pauli.PauliX:
@@ -198,6 +265,8 @@ class QrackAceBackend:
         lq2_col = lq2 // self.row_length
         lq2_row = lq2 % self.row_length
 
+        hq1 = None
+        hq2 = None
         if (lq2_col == lq1_col) and (((lq1_row + 1) % self.row_length) == lq2_row):
             hq1 = self._unpack(lq1, True)
             hq2 = self._unpack(lq2, False)
@@ -223,6 +292,7 @@ class QrackAceBackend:
             else:
                 gate([hq1[1]], hq2[1])
             gate([hq1[2]], hq2[2])
+
 
     def cx(self, lq1, lq2):
         self._cpauli(lq1, lq2, False, Pauli.PauliX)

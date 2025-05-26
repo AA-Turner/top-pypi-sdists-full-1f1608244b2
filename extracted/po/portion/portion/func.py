@@ -1,8 +1,8 @@
 import operator
-
 from functools import partial
-from .interval import Interval
+
 from .const import Bound, inf
+from .interval import Interval
 
 
 def open(lower, upper, *, klass=Interval):
@@ -114,7 +114,6 @@ def iterate(interval, step, *, base=None, reverse=False):
 
         def include(v, i):
             return v < i.upper or (i.right is Bound.CLOSED and v <= i.upper)
-
     else:
 
         def exclude(v, i):

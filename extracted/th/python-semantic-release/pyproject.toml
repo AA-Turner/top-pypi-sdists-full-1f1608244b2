@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "python-semantic-release"
-version = "9.21.1"
+version = "10.0.2"
 description = "Automatic Semantic Versioning for Python projects"
 requires-python = ">=3.8"
 license = { text = "MIT" }
@@ -23,7 +23,7 @@ classifiers = [
 readme = "README.rst"
 authors = [{ name = "Rolf Erik Lekang", email = "me@rolflekang.com" }]
 dependencies = [
-  "click ~= 8.0",
+  "click ~= 8.1.0",
   "click-option-group ~= 0.5",
   "gitpython ~= 3.0",
   "requests ~= 2.25",
@@ -412,6 +412,9 @@ build_command = """
     python -m build .
 """
 major_on_zero = true
+version_variables = [
+  "src/gh_action/requirements.txt:python-semantic-release:nf",
+]
 version_toml = ["pyproject.toml:project.version"]
 
 [tool.semantic_release.changelog]
@@ -433,7 +436,7 @@ mode = "update"
 template_dir = "config/release-templates"
 
 [tool.semantic_release.branches.main]
-match = "(main|master)"
+match = "^(main|master)$"
 prerelease = false
 prerelease_token = "rc"
 
