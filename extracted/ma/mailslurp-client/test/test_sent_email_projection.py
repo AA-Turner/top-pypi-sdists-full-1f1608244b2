@@ -38,7 +38,6 @@ class TestSentEmailProjection(unittest.TestCase):
         if include_optional :
             return SentEmailProjection(
                 id = '0', 
-                subject = '0', 
                 _from = '0', 
                 sender = mailslurp_client.models.sender.Sender(
                     raw_value = '0', 
@@ -63,6 +62,7 @@ class TestSentEmailProjection(unittest.TestCase):
                             email_address = '0', 
                             name = '0', )
                         ], ), 
+                subject = '0', 
                 user_id = '0', 
                 attachments = [
                     '0'

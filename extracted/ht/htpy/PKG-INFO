@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: htpy
-Version: 25.4.2
+Version: 25.5.0
 Summary: htpy - HTML in Python
 Author-email: Andreas Pelme <andreas@pelme.se>
 Requires-Python: >=3.10
@@ -12,6 +12,7 @@ Classifier: Development Status :: 4 - Beta
 Classifier: Topic :: Text Processing :: Markup :: HTML
 Classifier: Operating System :: OS Independent
 Classifier: Typing :: Typed
+License-File: LICENSE
 Requires-Dist: markupsafe>=2.0.0
 Requires-Dist: typing_extensions>=4.13.2 ; python_version<'3.13'
 Requires-Dist: pre-commit ; extra == "dev"

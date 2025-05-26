@@ -162,30 +162,43 @@ class FrogMLAuthClient(BaseAuthClient):
 
         # Remove '/artifactory/' from the URL
         if "/artifactory" in artifactory_url:
-            base_url = artifactory_url.replace("/artifactory", "/ui")
+            base_url = artifactory_url.replace("/artifactory", "")
         else:
-            # Remove trailing slash if it exists and append /ui
-            base_url = artifactory_url.rstrip("/") + "/ui"
+            # Remove trailing slash if exists
+            base_url = artifactory_url.rstrip("/")
         try:
             response = requests.get(
-                f"{base_url}/api/v1/system/auth/screen/footer",
+                f"{base_url}/ui/api/v1/system/auth/screen/footer",
                 headers={"Authorization": f"Bearer {self._token}"},
                 timeout=60,
             )
             response.raise_for_status()  # Raises an HTTPError for bad responses
             response_data = response.json()
             if "serverId" not in response_data:
-                raise QwakLoginException(
-                    "Failed to authenticate with JFrog. Please check your credentials"
+                response = requests.get(
+                    f"{base_url}/jfconnect/api/v1/system/jpd_id",
+                    headers={"Authorization": f"Bearer {self._token}"},
+                    timeout=60,
                 )
-            self._tenant_id = response_data["serverId"]
+                if response.status_code == 200:
+                    self._tenant_id = response.text
+                elif response.status_code == 401:
+                    raise QwakLoginException(
+                        "Failed to authenticate with JFrog. Please check your credentials"
+                    )
+                else:
+                    raise QwakLoginException(
+                        "Failed to authenticate with JFrog. Please check your artifactory configuration"
+                    )
+            else:
+                self._tenant_id = response_data["serverId"]
         except requests.exceptions.RequestException:
             raise QwakLoginException(
-                "Failed to authenticate with JFrog. Please check your credentials"
+                "Failed to authenticate with JFrog. Please check your artifactory configuration"
             )
         except ValueError:  # This catches JSON decode errors
             raise QwakLoginException(
-                "Failed to authenticate with JFrog. Please check your credentials"
+                "Failed to authenticate with JFrog. Please check your artifactory configuration"
             )
 
     def __validate_token(self: Self):

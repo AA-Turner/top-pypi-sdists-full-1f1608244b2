@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
-Name: pydantic_yaml
-Version: 1.4.0
-Summary: Adds some YAML functionality to the excellent `pydantic` library.
+Name: pydantic-yaml
+Version: 1.5.1
+Summary: YAML reading/writing for Pydantic models.
 Author-email: NowanIlfideme <git@nowan.dev>
 License: MIT License
         
@@ -35,26 +35,11 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Topic :: Software Development
 Classifier: Typing :: Typed
 Classifier: Operating System :: OS Independent
-Requires-Python: >=3.8
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
-License-File: LICENSE
-Requires-Dist: pydantic>=1.8
-Requires-Dist: ruamel.yaml<0.19.0,>=0.16.0
-Requires-Dist: typing_extensions>=4.5.0
 Provides-Extra: dev
-Requires-Dist: setuptools>=61.0.0; extra == "dev"
-Requires-Dist: setuptools-scm[toml]>=6.2; extra == "dev"
-Requires-Dist: pre-commit==3.5.0; extra == "dev"
-Requires-Dist: ruff==0.7.3; extra == "dev"
-Requires-Dist: black==24.8.0; extra == "dev"
-Requires-Dist: mypy==1.13.0; extra == "dev"
-Requires-Dist: pytest==8.3.3; extra == "dev"
 Provides-Extra: docs
-Requires-Dist: mkdocs; extra == "docs"
-Requires-Dist: mkdocs-material; extra == "docs"
-Requires-Dist: mkdocstrings[python]; extra == "docs"
-Requires-Dist: pymdown-extensions; extra == "docs"
-Requires-Dist: pygments; extra == "docs"
+License-File: LICENSE
 
 # Pydantic-YAML
 

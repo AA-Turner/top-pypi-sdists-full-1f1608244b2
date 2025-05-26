@@ -1,14 +1,14 @@
 use std::{ops::Deref, sync::Arc};
 
+use crate::{
+    json::CatalogUrl, DocumentSchema, SchemaAccessor, SchemaAccessors, SchemaUrl, SourceSchema,
+};
 use ahash::AHashMap;
 use itertools::Either;
 use tokio::sync::RwLock;
 use tombi_config::{Schema, SchemaOptions};
 use tombi_future::{BoxFuture, Boxable};
-
-use crate::{
-    json::CatalogUrl, DocumentSchema, SchemaAccessor, SchemaAccessors, SchemaUrl, SourceSchema,
-};
+use tombi_url::url_to_file_path;
 
 #[derive(Debug, Clone)]
 pub struct SchemaStore {
@@ -151,11 +151,9 @@ impl SchemaStore {
             }
         } else if catalog_url.scheme() == "file" {
             let catalog_path =
-                catalog_url
-                    .to_file_path()
-                    .map_err(|_| crate::Error::InvalidCatalogFileUrl {
-                        catalog_url: catalog_url.clone(),
-                    })?;
+                url_to_file_path(catalog_url).map_err(|_| crate::Error::InvalidCatalogFileUrl {
+                    catalog_url: catalog_url.clone(),
+                })?;
 
             let content = std::fs::read_to_string(&catalog_path).map_err(|_| {
                 crate::Error::CatalogFileReadFailed {
@@ -201,7 +199,7 @@ impl SchemaStore {
         if has_key {
             self.document_schemas.write().await.insert(
                 schema_url.clone(),
-                self.try_fetch_document_schema_from_url(schema_url).await,
+                self.fetch_document_schema(schema_url).await,
             );
 
             tracing::debug!("update schema: {}", schema_url);
@@ -212,18 +210,16 @@ impl SchemaStore {
         }
     }
 
-    async fn try_fetch_document_schema_from_url(
+    async fn fetch_document_schema(
         &self,
         schema_url: &SchemaUrl,
     ) -> Result<DocumentSchema, crate::Error> {
         let tombi_json::ValueNode::Object(schema) = match schema_url.scheme() {
             "file" => {
                 let schema_path =
-                    schema_url
-                        .to_file_path()
-                        .map_err(|_| crate::Error::InvalidSchemaUrl {
-                            schema_url: schema_url.to_string(),
-                        })?;
+                    url_to_file_path(schema_url).map_err(|_| crate::Error::InvalidSchemaUrl {
+                        schema_url: schema_url.to_string(),
+                    })?;
                 if !schema_path.exists() {
                     return Err(crate::Error::SchemaFileNotFound {
                         schema_path: schema_path.clone(),
@@ -251,6 +247,13 @@ impl SchemaStore {
                         schema_url: schema_url.clone(),
                         reason: err.to_string(),
                     })?;
+
+                if !response.status().is_success() {
+                    return Err(crate::Error::SchemaFetchFailed {
+                        schema_url: schema_url.clone(),
+                        reason: response.status().to_string(),
+                    });
+                }
 
                 let bytes =
                     response
@@ -298,24 +301,37 @@ impl SchemaStore {
                 };
             }
 
-            self.document_schemas.write().await.insert(
-                schema_url.clone(),
-                self.try_fetch_document_schema_from_url(schema_url).await,
-            );
+            let document_schema = self.fetch_document_schema(schema_url).await;
 
-            self.try_get_document_schema(schema_url).await
+            self.document_schemas
+                .write()
+                .await
+                .insert(schema_url.clone(), document_schema.clone());
+
+            document_schema.map(|document_schema| Some(document_schema))
         }
         .boxed()
     }
 
-    pub async fn try_get_source_schema_from_ast(
+    #[inline]
+    async fn try_get_source_schema_from_remote_url(
+        &self,
+        schema_url: &SchemaUrl,
+    ) -> Result<Option<SourceSchema>, crate::Error> {
+        Ok(Some(SourceSchema {
+            root_schema: self.try_get_document_schema(schema_url).await?,
+            sub_schema_url_map: Default::default(),
+        }))
+    }
+
+    pub async fn resolve_source_schema_from_ast(
         &self,
         root: &tombi_ast::Root,
         source_url_or_path: Option<Either<&url::Url, &std::path::Path>>,
     ) -> Result<Option<SourceSchema>, (crate::Error, tombi_text::Range)> {
         let source_path = match source_url_or_path {
             Some(Either::Left(url)) => match url.scheme() {
-                "file" => url.to_file_path().ok(),
+                "file" => url_to_file_path(url).ok(),
                 _ => None,
             },
             Some(Either::Right(path)) => Some(path.to_path_buf()),
@@ -335,14 +351,14 @@ impl SchemaStore {
                 }
             };
             return self
-                .try_get_source_schema_from_schema_url(&SchemaUrl::new(schema_url))
+                .try_get_source_schema_from_remote_url(&SchemaUrl::new(schema_url))
                 .await
                 .map_err(|err| (err, url_range));
         }
 
         if let Some(source_url_or_path) = source_url_or_path {
             Ok(self
-                .try_get_source_schema(source_url_or_path)
+                .resolve_source_schema(source_url_or_path)
                 .await
                 .ok()
                 .flatten())
@@ -351,52 +367,7 @@ impl SchemaStore {
         }
     }
 
-    #[inline]
-    async fn try_get_source_schema_from_schema_url(
-        &self,
-        schema_url: &SchemaUrl,
-    ) -> Result<Option<SourceSchema>, crate::Error> {
-        if self.offline() && matches!(schema_url.scheme(), "http" | "https") {
-            tracing::debug!("offline mode, skip fetch schema: {}", schema_url);
-            return Ok(None);
-        }
-
-        Ok(Some(SourceSchema {
-            root_schema: self.try_get_document_schema(schema_url).await?,
-            sub_schema_url_map: Default::default(),
-        }))
-    }
-
-    async fn try_get_source_schema_from_url(
-        &self,
-        source_url: &url::Url,
-    ) -> Result<Option<SourceSchema>, crate::Error> {
-        match source_url.scheme() {
-            "file" => {
-                let source_path =
-                    source_url
-                        .to_file_path()
-                        .map_err(|_| crate::Error::SourceUrlParseFailed {
-                            source_url: source_url.to_owned(),
-                        })?;
-                self.try_get_source_schema_from_path(&source_path).await
-            }
-            "http" | "https" => {
-                if self.offline() {
-                    tracing::debug!("offline mode, skip fetch source from url: {}", source_url);
-                    return Ok(None);
-                }
-                self.try_get_source_schema_from_schema_url(&SchemaUrl::new(source_url.clone()))
-                    .await
-            }
-            "untitled" => Ok(None),
-            _ => Err(crate::Error::SourceUrlUnsupported {
-                source_url: source_url.to_owned(),
-            }),
-        }
-    }
-
-    async fn try_get_source_schema_from_path(
+    async fn resolve_source_schema_from_path(
         &self,
         source_path: &std::path::Path,
     ) -> Result<Option<SourceSchema>, crate::Error> {
@@ -467,13 +438,38 @@ impl SchemaStore {
         Ok(source_schema)
     }
 
-    async fn try_get_source_schema(
+    async fn resolve_source_schema_from_url(
+        &self,
+        source_url: &url::Url,
+    ) -> Result<Option<SourceSchema>, crate::Error> {
+        match source_url.scheme() {
+            "file" => {
+                let source_path =
+                    source_url
+                        .to_file_path()
+                        .map_err(|_| crate::Error::SourceUrlParseFailed {
+                            source_url: source_url.to_owned(),
+                        })?;
+                self.resolve_source_schema_from_path(&source_path).await
+            }
+            "http" | "https" => {
+                self.try_get_source_schema_from_remote_url(&SchemaUrl::new(source_url.clone()))
+                    .await
+            }
+            "untitled" => Ok(None),
+            _ => Err(crate::Error::SourceUrlUnsupported {
+                source_url: source_url.to_owned(),
+            }),
+        }
+    }
+
+    async fn resolve_source_schema(
         &self,
         source_url_or_path: Either<&url::Url, &std::path::Path>,
     ) -> Result<Option<SourceSchema>, crate::Error> {
         match source_url_or_path {
-            Either::Left(source_url) => self.try_get_source_schema_from_url(source_url).await,
-            Either::Right(source_path) => self.try_get_source_schema_from_path(source_path).await,
+            Either::Left(source_url) => self.resolve_source_schema_from_url(source_url).await,
+            Either::Right(source_path) => self.resolve_source_schema_from_path(source_path).await,
         }
         .inspect(|source_schema| {
             if let Some(source_schema) = source_schema {

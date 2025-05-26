@@ -1,5 +1,7 @@
 from __future__ import annotations
+from datetime import datetime
 from pydantic import BaseModel, Field
+from uuid import UUID
 from maleo_foundation.enums import BaseEnums
 from maleo_foundation.types import BaseTypes
 
@@ -17,6 +19,53 @@ class BaseGeneralSchemas:
         page:int = Field(1, ge=1, description="Page number, must be >= 1.")
         limit:int = Field(10, ge=1, le=100, description="Page size, must be 1 <= limit <= 100.")
 
+    #* ----- ----- ----- Data ----- ----- ----- *#
+    class Identifiers(BaseModel):
+        id:int = Field(..., ge=1, description="Data's ID, must be >= 1.")
+        uuid:UUID = Field(..., description="Data's UUID.")
+
+    class Timestamps(BaseModel):
+        created_at:datetime = Field(..., description="Data's created_at timestamp")
+        updated_at:datetime = Field(..., description="Data's updated_at timestamp")
+        deleted_at:BaseTypes.OptionalDatetime = Field(..., description="Data's deleted_at timestamp")
+        restored_at:BaseTypes.OptionalDatetime = Field(..., description="Data's restored_at timestamp")
+        deactivated_at:BaseTypes.OptionalDatetime = Field(..., description="Data's deactivated_at timestamp")
+        activated_at:datetime = Field(..., description="Data's activated_at timestamp")
+
+    class Status(BaseModel):
+        status:BaseEnums.StatusType = Field(..., description="Data's status")
+
+    class IsDefault(BaseModel):
+        is_default:BaseTypes.OptionalBoolean = Field(None, description="Whether data is default")
+
+    class IsRoot(BaseModel):
+        is_root:BaseTypes.OptionalBoolean = Field(None, description="Whether data is root")
+
+    class IsParent(BaseModel):
+        is_parent:BaseTypes.OptionalBoolean = Field(None, description="Whether data is parent")
+
+    class IsChild(BaseModel):
+        is_child:BaseTypes.OptionalBoolean = Field(None, description="Whether data is child")
+
+    class IsLeaf(BaseModel):
+        is_leaf:BaseTypes.OptionalBoolean = Field(None, description="Whether data is leaf")
+
+    class Order(BaseModel):
+        order:BaseTypes.OptionalInteger = Field(..., description="Data's order")
+
+    class Code(BaseModel):
+        code:str = Field(..., description="Data's code")
+
+    class Key(BaseModel):
+        key:str = Field(..., description="Data's key")
+
+    class Name(BaseModel):
+        name:str = Field(..., description="Data's name")
+
+    class Secret(BaseModel):
+        secret:UUID = Field(..., description="Data's secret")
+
+    #* ----- ----- ----- RSA Key ----- ----- ----- *#
     class PrivateKey(BaseModel):
         private_key:str = Field(..., description="Private key in str format.")
 
@@ -24,9 +73,6 @@ class BaseGeneralSchemas:
         public_key:str = Field(..., description="Public key in str format.")
 
     class KeyPair(PublicKey, PrivateKey): pass
-
-    class Status(BaseModel):
-        status:BaseEnums.StatusType = Field(..., description="Data's status")
 
     class RSAKeys(BaseModel):
         password:str = Field(..., description="Key's password")

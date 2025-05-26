@@ -46,6 +46,7 @@ def jax_funcify_Cholesky(op, **kwargs):
 def jax_funcify_Solve(op, **kwargs):
     assume_a = op.assume_a
     lower = op.lower
+    b_is_vec = op.b_ndim == 1
 
     if assume_a == "tridiagonal":
         # jax.scipy.solve does not yet support tridiagonal matrices
@@ -54,7 +55,20 @@ def jax_funcify_Solve(op, **kwargs):
             dl = jax.numpy.diagonal(a, offset=-1, axis1=-2, axis2=-1)
             d = jax.numpy.diagonal(a, offset=0, axis1=-2, axis2=-1)
             du = jax.numpy.diagonal(a, offset=1, axis1=-2, axis2=-1)
-            return jax.lax.linalg.tridiagonal_solve(dl, d, du, b, lower=lower)
+
+            # jax requires dl and du to have the same shape as d
+            dl = jax.numpy.pad(dl, (1, 0))
+            du = jax.numpy.pad(du, (0, 1))
+
+            if b_is_vec:
+                b = jax.numpy.expand_dims(b, -1)
+
+            res = jax.lax.linalg.tridiagonal_solve(dl, d, du, b)
+
+            if b_is_vec:
+                return jax.numpy.squeeze(res, -1)
+
+            return res
 
     else:
         if assume_a not in ("gen", "sym", "her", "pos"):

@@ -1,11 +1,10 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: auditwheel
-Version: 6.3.0
+Version: 6.4.0
 Summary: Cross-distribution Linux wheels
-Home-page: https://github.com/pypa/auditwheel
-Author: Robert T. McGibbon
-Author-email: rmcgibbo@gmail.com
+Author-email: "Robert T. McGibbon" <rmcgibbo@gmail.com>
 License: MIT
+Project-URL: Homepage, https://github.com/pypa/auditwheel
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
@@ -26,27 +25,7 @@ Description-Content-Type: text/x-rst
 License-File: LICENSE
 Requires-Dist: packaging>=20.9
 Requires-Dist: pyelftools>=0.24
-Provides-Extra: test
-Requires-Dist: pytest>=3.4; extra == "test"
-Requires-Dist: jsonschema; extra == "test"
-Requires-Dist: patchelf; extra == "test"
-Requires-Dist: pretend; extra == "test"
-Requires-Dist: docker; extra == "test"
-Provides-Extra: coverage
-Requires-Dist: pytest-cov; extra == "coverage"
-Requires-Dist: pytest>=3.4; extra == "coverage"
-Requires-Dist: jsonschema; extra == "coverage"
-Requires-Dist: patchelf; extra == "coverage"
-Requires-Dist: pretend; extra == "coverage"
-Requires-Dist: docker; extra == "coverage"
-Provides-Extra: develop
-Requires-Dist: patchelf; extra == "develop"
-Requires-Dist: docker; extra == "develop"
-Requires-Dist: pytest>=3.4; extra == "develop"
-Requires-Dist: pretend; extra == "develop"
-Requires-Dist: jsonschema; extra == "develop"
-Requires-Dist: pytest-cov; extra == "develop"
-Dynamic: provides-extra
+Dynamic: license-file
 
 auditwheel
 ==========

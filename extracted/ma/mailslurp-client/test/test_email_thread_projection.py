@@ -74,8 +74,6 @@ class TestEmailThreadProjection(unittest.TestCase):
                     '0'
                     ], 
                 has_attachments = True, 
-                unread = True, 
-                message_count = 56, 
                 last_body_excerpt = '0', 
                 last_text_excerpt = '0', 
                 last_created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
@@ -84,6 +82,8 @@ class TestEmailThreadProjection(unittest.TestCase):
                     email_address = '0', 
                     raw_value = '0', 
                     name = '0', ), 
+                message_count = 56, 
+                unread = True, 
                 subject = '0', 
                 id = '0', 
                 _from = '0'
@@ -97,8 +97,8 @@ class TestEmailThreadProjection(unittest.TestCase):
                     '0'
                     ],
                 has_attachments = True,
-                unread = True,
                 message_count = 56,
+                unread = True,
                 id = '0',
         )
 

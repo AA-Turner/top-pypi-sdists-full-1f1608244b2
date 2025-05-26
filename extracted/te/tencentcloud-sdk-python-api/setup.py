@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-api',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1386"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1387"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Api SDK for Python',
     long_description=open('README.rst').read(),

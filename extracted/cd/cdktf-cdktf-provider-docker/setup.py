@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-docker",
-    "version": "11.5.0",
+    "version": "11.6.0",
     "description": "Prebuilt docker Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-docker.git",
@@ -23,6 +23,7 @@ kwargs = json.loads(
     "packages": [
         "cdktf_cdktf_provider_docker",
         "cdktf_cdktf_provider_docker._jsii",
+        "cdktf_cdktf_provider_docker.buildx_builder",
         "cdktf_cdktf_provider_docker.config",
         "cdktf_cdktf_provider_docker.container",
         "cdktf_cdktf_provider_docker.data_docker_image",
@@ -43,7 +44,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_docker._jsii": [
-            "provider-docker@11.5.0.jsii.tgz"
+            "provider-docker@11.6.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_docker": [
             "py.typed"
