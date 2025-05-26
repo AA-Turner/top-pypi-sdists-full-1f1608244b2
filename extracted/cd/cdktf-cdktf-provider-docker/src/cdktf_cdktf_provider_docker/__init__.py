@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for kreuzwerker/docker provider version 3.5.0
+# CDKTF prebuilt bindings for kreuzwerker/docker provider version 3.6.0
 
-This repo builds and publishes the [Terraform docker provider](https://registry.terraform.io/providers/kreuzwerker/docker/3.5.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform docker provider](https://registry.terraform.io/providers/kreuzwerker/docker/3.6.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform docker provider version 1:
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform docker provider](https://registry.terraform.io/providers/kreuzwerker/docker/3.5.0)
+* [Terraform docker provider](https://registry.terraform.io/providers/kreuzwerker/docker/3.6.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -126,6 +126,7 @@ def check_type(argname: str, value: object, expected_type: typing.Any) -> typing
 from ._jsii import *
 
 __all__ = [
+    "buildx_builder",
     "config",
     "container",
     "data_docker_image",
@@ -148,6 +149,7 @@ __all__ = [
 publication.publish()
 
 # Loading modules to ensure their types are registered with the jsii runtime library
+from . import buildx_builder
 from . import config
 from . import container
 from . import data_docker_image

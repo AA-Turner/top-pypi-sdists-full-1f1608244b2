@@ -8,7 +8,6 @@ import re
 import shutil
 import stat
 from collections.abc import Iterable
-from fnmatch import fnmatch
 from os.path import isabs
 from pathlib import Path
 from subprocess import check_call
@@ -17,13 +16,13 @@ from auditwheel.patcher import ElfPatcher
 
 from .elfutils import elf_read_dt_needed, elf_read_rpaths
 from .hashfile import hashfile
-from .policy import WheelPolicies, get_replace_platforms
-from .tools import is_subdir
-from .wheel_abi import get_wheel_elfdata
+from .lddtree import LIBPYTHON_RE
+from .policy import get_replace_platforms
+from .tools import is_subdir, unique_by_index
+from .wheel_abi import WheelAbIInfo
 from .wheeltools import InWheelCtx, add_platforms
 
 logger = logging.getLogger(__name__)
-
 
 # Copied from wheel 0.31.1
 WHEEL_INFO_RE = re.compile(
@@ -34,20 +33,17 @@ WHEEL_INFO_RE = re.compile(
 
 
 def repair_wheel(
-    wheel_policy: WheelPolicies,
+    wheel_abi: WheelAbIInfo,
     wheel_path: Path,
     abis: list[str],
     lib_sdir: str,
     out_dir: Path,
     update_tags: bool,
     patcher: ElfPatcher,
-    exclude: frozenset[str],
     strip: bool,
     zip_compression_level: int,
 ) -> Path | None:
-    elf_data = get_wheel_elfdata(wheel_policy, wheel_path, exclude)
-    external_refs_by_fn = elf_data.full_external_refs
-
+    external_refs_by_fn = wheel_abi.full_external_refs
     # Do not repair a pure wheel, i.e. has no external refs
     if not external_refs_by_fn:
         return None
@@ -74,7 +70,15 @@ def repair_wheel(
             ext_libs = v[abis[0]].libs
             replacements: list[tuple[str, str]] = []
             for soname, src_path in ext_libs.items():
-                assert not any(fnmatch(soname, e) for e in exclude)
+                # Handle libpython dependencies by removing them
+                if LIBPYTHON_RE.match(soname):
+                    logger.warning(
+                        "Removing %s dependency from %s. Linking with libpython is forbidden for manylinux/musllinux wheels.",
+                        soname,
+                        str(fn),
+                    )
+                    patcher.remove_needed(fn, soname)
+                    continue
 
                 if src_path is None:
                     msg = (
@@ -193,13 +197,9 @@ def append_rpath_within_wheel(
         return _is_valid_rpath(rpath, lib_dir, wheel_base_dir)
 
     old_rpaths = patcher.get_rpath(lib_name)
-    rpaths = filter(is_valid_rpath, old_rpaths.split(":"))
-    # Remove duplicates while preserving ordering
-    # Fake an OrderedSet using a dict (ordered in python 3.7+)
-    rpath_set = {old_rpath: "" for old_rpath in rpaths}
-    rpath_set[rpath] = ""
-
-    patcher.set_rpath(lib_name, ":".join(rpath_set))
+    rpaths = list(filter(is_valid_rpath, old_rpaths.split(":")))
+    rpaths = unique_by_index([*rpaths, rpath])
+    patcher.set_rpath(lib_name, ":".join(rpaths))
 
 
 def _is_valid_rpath(rpath: str, lib_dir: Path, wheel_base_dir: Path) -> bool:

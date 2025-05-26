@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: msldap
-Version: 0.5.14
+Version: 0.5.15
 Summary: Python library to play with MS LDAP
 Home-page: https://github.com/skelsec/msldap
 Author: Tamas Jos

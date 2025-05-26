@@ -43,18 +43,6 @@ class BaseParameterSchemas:
     class OptionalListOfStatuses(BaseModel):
         statuses:BaseTypes.OptionalListOfStatuses = Field(None, description="Data's status")
 
-    class IsRoot(BaseModel):
-        is_root:BaseTypes.OptionalBoolean = Field(None, description="Whether data is root")
-
-    class IsParent(BaseModel):
-        is_parent:BaseTypes.OptionalBoolean = Field(None, description="Whether data is parent")
-
-    class IsChild(BaseModel):
-        is_child:BaseTypes.OptionalBoolean = Field(None, description="Whether data is child")
-
-    class IsLeaf(BaseModel):
-        is_leaf:BaseTypes.OptionalBoolean = Field(None, description="Whether data is leaf")
-
     class OptionalListOfCodes(BaseModel):
         codes:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Codes")
 

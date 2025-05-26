@@ -16,7 +16,7 @@ maintainers = [
   { name="Shantanu" },
 ]
 description = "A plugin for flake8 to enable linting .pyi stub files."
-license = { text = "MIT" }
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = [
@@ -34,7 +34,6 @@ classifiers = [
     "Environment :: Console",
     "Framework :: Flake8",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
@@ -43,6 +42,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Quality Assurance",
 ]
@@ -51,30 +51,27 @@ dependencies = [
     "pyflakes >= 2.1.1",
 ]
 
+[dependency-groups]
+dev = [
+    "black==25.1.0",            # Must match .pre-commit-config.yaml
+    "flake8-bugbear==24.12.12",
+    "flake8-noqa==1.4.0",
+    "isort==6.0.1",             # Must match .pre-commit-config.yaml
+    "mypy==1.15.0",
+    "pre-commit-hooks==5.0.0",  # Must match .pre-commit-config.yaml
+    "pytest==8.3.5",
+    "pytest-xdist==3.6.1",
+    "types-pyflakes<4",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/PyCQA/flake8-pyi"
 "Source" = "https://github.com/PyCQA/flake8-pyi"
 "Bug Tracker" = "https://github.com/PyCQA/flake8-pyi/issues"
 "Changelog" = "https://github.com/PyCQA/flake8-pyi/blob/main/CHANGELOG.md"
 
-[project.optional-dependencies]
-dev = [
-    "black==24.8.0",            # Must match .pre-commit-config.yaml
-    "flake8-bugbear==24.8.19",
-    "flake8-noqa==1.4.0",
-    "isort==5.13.2",            # Must match .pre-commit-config.yaml
-    "mypy==1.11.2",
-    "pre-commit-hooks==4.6.0",  # Must match .pre-commit-config.yaml
-    "pytest==8.3.3",
-    "pytest-xdist==3.6.1",
-    "types-pyflakes<4",
-]
-
 [project.entry-points]
-"flake8.extension" = {Y0 = "pyi:PyiTreeChecker"}
-
-[tool.hatch.build.targets.wheel]
-include = ["pyi.py"]
+"flake8.extension" = {Y0 = "flake8_pyi:PyiTreeChecker"}
 
 [tool.hatch.version]
 source = "vcs"
@@ -94,7 +91,7 @@ skip-magic-trailing-comma = true
 force-exclude = ".*\\.pyi"
 
 [tool.mypy]
-files = ["pyi.py", "tests/test_pyi_files.py"]
+files = ["flake8_pyi", "tests/test_pyi_files.py"]
 show_traceback = true
 pretty = true
 strict = true

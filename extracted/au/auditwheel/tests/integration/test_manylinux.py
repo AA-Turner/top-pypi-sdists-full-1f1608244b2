@@ -24,8 +24,7 @@ from auditwheel.policy import WheelPolicies
 
 logger = logging.getLogger(__name__)
 
-NATIVE_PLATFORM = Architecture.get_native_architecture().value
-PLATFORM = os.environ.get("AUDITWHEEL_ARCH", NATIVE_PLATFORM)
+PLATFORM = os.environ.get("AUDITWHEEL_ARCH", Architecture.detect().value)
 MANYLINUX1_IMAGE_ID = f"quay.io/pypa/manylinux1_{PLATFORM}:latest"
 MANYLINUX2010_IMAGE_ID = f"quay.io/pypa/manylinux2010_{PLATFORM}:latest"
 MANYLINUX2014_IMAGE_ID = f"quay.io/pypa/manylinux2014_{PLATFORM}:latest"
@@ -255,7 +254,7 @@ class PythonContainer:
 def find_src_folder() -> Path | None:
     candidate = HERE.parent.parent.resolve(strict=True)
     contents = os.listdir(candidate)
-    if "setup.py" in contents and "src" in contents:
+    if "pyproject.toml" in contents and "src" in contents:
         return candidate
     return None
 
@@ -455,10 +454,19 @@ class Anylinux:
         for key in os.environ:
             if key.startswith("COV_CORE_"):
                 env[key] = os.environ[key]
+        # cython 3.1.0+ requires a C99 compiler,
+        # where manylinux_2_5 uses gcc 4.8 which is not C99 compliant by default.
+        if policy == "manylinux_2_5":
+            env["CFLAGS"] = "-std=c99"
 
         with docker_container_ctx(manylinux_img, io_folder, env) as container:
             platform_tag = ".".join(
-                [f"{p}_{PLATFORM}" for p in [policy, *POLICY_ALIASES.get(policy, [])]]
+                sorted(
+                    [
+                        f"{p}_{PLATFORM}"
+                        for p in [policy, *POLICY_ALIASES.get(policy, [])]
+                    ]
+                )
             )
             yield AnyLinuxContainer(
                 f"{policy}_{PLATFORM}", platform_tag, container, io_folder
@@ -787,6 +795,45 @@ class Anylinux:
         # with ISA check, we shall not report a manylinux/musllinux policy
         assert_show_output(anylinux, repaired_wheel, f"linux_{PLATFORM}", True)
 
+    @pytest.mark.parametrize(
+        "arch",
+        [
+            Architecture.aarch64,
+            Architecture.armv7l,
+            Architecture.i686,
+            Architecture.ppc64le,
+            Architecture.riscv64,
+            Architecture.s390x,
+            Architecture.x86_64,
+        ],
+    )
+    @pytest.mark.parametrize("libc", [Libc.GLIBC, Libc.MUSL])
+    def test_cross_repair(
+        self, anylinux: AnyLinuxContainer, libc: Libc, arch: Architecture
+    ) -> None:
+        if libc == Libc.MUSL:
+            source = "musllinux_1_2"
+            platform_tag = f"musllinux_1_2_{arch.value}"
+            python_abi = "cp312-cp312"
+        else:
+            assert libc == Libc.GLIBC
+            source = "glibc"
+            platform_tag = f"manylinux2014_{arch.value}.manylinux_2_17_{arch.value}"
+            if arch in {Architecture.x86_64, Architecture.i686}:
+                platform_tag = f"manylinux1_{arch.value}.manylinux_2_5_{arch.value}"
+            elif arch == Architecture.riscv64:
+                platform_tag = f"manylinux_2_31_{arch.value}"
+            python_abi = "cp313-cp313"
+        test_path = f"/auditwheel_src/tests/integration/arch-wheels/{source}"
+        orig_wheel = f"testsimple-0.0.1-{python_abi}-linux_{arch.value}.whl"
+        anylinux.exec(["cp", "-f", f"{test_path}/{orig_wheel}", f"/io/{orig_wheel}"])
+        anylinux.repair(orig_wheel, plat="auto", only_plat=False)
+        anylinux.check_wheel(
+            "testsimple",
+            python_abi=python_abi,
+            platform_tag=platform_tag,
+        )
+
 
 class TestManylinux(Anylinux):
     @pytest.fixture(scope="session")
@@ -845,12 +892,12 @@ class TestManylinux(Anylinux):
             test_path, env={"WITH_DEPENDENCY": with_dependency}
         )
 
-        wheel_policy = WheelPolicies(libc=Libc.GLIBC, arch=Architecture(PLATFORM))
-        policy = wheel_policy.get_policy_by_name(policy_name)
+        policies = WheelPolicies(libc=Libc.GLIBC, arch=Architecture(PLATFORM))
+        policy = policies.get_policy_by_name(policy_name)
         older_policies = [
             f"{p}_{PLATFORM}"
             for p in MANYLINUX_IMAGES
-            if policy < wheel_policy.get_policy_by_name(f"{p}_{PLATFORM}")
+            if policy < policies.get_policy_by_name(f"{p}_{PLATFORM}")
         ]
         for target_policy in older_policies:
             # we shall fail to repair the wheel when targeting an older policy than
@@ -861,8 +908,12 @@ class TestManylinux(Anylinux):
                 )
 
         # check all works properly when targeting the policy matching the image
-        anylinux.repair(orig_wheel, only_plat=False, library_paths=[test_path])
+        # use "auto" platform
+        anylinux.repair(
+            orig_wheel, only_plat=False, plat="auto", library_paths=[test_path]
+        )
         repaired_wheel = anylinux.check_wheel("testdependencies")
+        # we shall only get the current policy tag with "auto" platform
         assert_show_output(anylinux, repaired_wheel, policy_name, True)
 
         # check the original wheel with a dependency was not compliant
@@ -893,24 +944,26 @@ class TestManylinux(Anylinux):
 
         if PLATFORM in {"x86_64", "i686"}:
             expect = f"manylinux_2_5_{PLATFORM}"
-            expect_tag = f"manylinux_2_5_{PLATFORM}.manylinux1_{PLATFORM}"
+            expect_tag = f"manylinux1_{PLATFORM}.manylinux_2_5_{PLATFORM}"
         else:
             expect = f"manylinux_2_17_{PLATFORM}"
-            expect_tag = f"manylinux_2_17_{PLATFORM}.manylinux2014_{PLATFORM}"
+            expect_tag = f"manylinux2014_{PLATFORM}.manylinux_2_17_{PLATFORM}"
 
         target_tag = target_policy
         for pep600_policy, aliases in POLICY_ALIASES.items():
             policy_ = f"{pep600_policy}_{PLATFORM}"
             aliases_ = [f"{p}_{PLATFORM}" for p in aliases]
             if target_policy == policy_ or target_policy in aliases_:
-                target_tag = f"{policy_}.{'.'.join(aliases_)}"
+                target_tag = ".".join(sorted([policy_, *aliases_]))
 
         # we shall ba able to repair the wheel for all targets
         anylinux.repair(orig_wheel, plat=target_policy, only_plat=only_plat)
         if only_plat or target_tag == expect_tag:
             repaired_tag = target_tag
         else:
-            repaired_tag = f"{expect_tag}.{target_tag}"
+            repaired_tag = ".".join(
+                sorted(expect_tag.split(".") + target_tag.split("."))
+            )
         repaired_wheel = anylinux.check_wheel("testsimple", platform_tag=repaired_tag)
 
         assert_show_output(anylinux, repaired_wheel, expect, True)

@@ -11,14 +11,14 @@ from .js_style_language_states import JavaScriptStyleLanguageStates
 
 class JSXTypeScriptStates(TypeScriptStates):
     """State machine for JSX/TSX files extending TypeScriptStates"""
-    
+
     def __init__(self, context):
         super().__init__(context)
         # Initialize attributes that might be accessed later
         self._parent_function_name = None
         self.in_variable_declaration = False
         self.last_variable_name = None
-    
+
     def statemachine_before_return(self):
         # Ensure the main function is closed at the end
         if self.started_function:
@@ -33,7 +33,7 @@ class JSXTypeScriptStates(TypeScriptStates):
             self.in_variable_declaration = True
             super()._state_global(token)
             return
-            
+
         if self.in_variable_declaration:
             if token == '=':
                 # Save the variable name when we see the assignment
@@ -51,23 +51,23 @@ class JSXTypeScriptStates(TypeScriptStates):
                     return
             elif token == ';' or self.context.newline:
                 self.in_variable_declaration = False
-                
+
         # Handle arrow function in JSX/TSX prop context
         if token == '=>' and not self.in_variable_declaration:
             if not self.started_function:
                 self.function_name = '(anonymous)'
                 self._push_function_to_stack()
                 return
-                
+
         if not self.as_object:
             if token == ':':
                 self._consume_type_annotation()
                 return
-                
+
         # Pop anonymous function after closing '}' in TSX/JSX prop
         if token == '}' and self.started_function and self.function_name == '(anonymous)':
             self._pop_function_from_stack()
-                    
+
         # Continue with regular TypeScript state handling
         super()._state_global(token)
 
@@ -84,12 +84,12 @@ class TSXTokenizer(JSTokenizer):
             from .jsx import XMLTagWithAttrTokenizer  # Import only when needed
             self.sub_tokenizer = XMLTagWithAttrTokenizer()
             return
-        
+
         if token == "=>":
             # Special handling for arrow functions
             yield token
             return
-    
+
         for tok in super().process_token(token):
             yield tok
 
@@ -123,18 +123,18 @@ class JSXMixin:
     def _handle_arrow_function(self):
         # Process arrow function in JSX context
         self.context.add_to_long_function_name(" => ")
-        
+
         # Store the current function
         current_function = self.context.current_function
-        
+
         # Create a new anonymous function
         self.context.restart_new_function('(anonymous)')
-        
+
         # Set up for the arrow function body
         def callback():
             # Return to the original function when done
             self.context.current_function = current_function
-            
+
         self.sub_state(self.__class__(self.context), callback)
 
     def _expecting_arrow_function_body(self, token):
@@ -144,7 +144,7 @@ class JSXMixin:
         else:
             # Arrow function with expression body
             self.next(self._expecting_func_opening_bracket)
-            
+
     def _function_body(self, token):
         if token == '}':
             # End of arrow function body
@@ -159,7 +159,7 @@ class JSXMixin:
 class JSXJavaScriptStyleLanguageStates(JavaScriptStyleLanguageStates):
     def __init__(self, context):
         super(JSXJavaScriptStyleLanguageStates, self).__init__(context)
-        
+
     def _state_global(self, token):
         # Handle variable declarations
         if token in ('const', 'let', 'var'):
@@ -167,7 +167,7 @@ class JSXJavaScriptStyleLanguageStates(JavaScriptStyleLanguageStates):
             self.in_variable_declaration = True
             super()._state_global(token)
             return
-            
+
         if hasattr(self, 'in_variable_declaration') and self.in_variable_declaration:
             if token == '=':
                 # We're in a variable assignment
@@ -183,16 +183,16 @@ class JSXJavaScriptStyleLanguageStates(JavaScriptStyleLanguageStates):
             elif token == ';' or self.context.newline:
                 # End of variable declaration
                 self.in_variable_declaration = False
-                
+
         super()._state_global(token)
-        
+
     def _expecting_func_opening_bracket(self, token):
         if token == ':':
             # Handle type annotations like TypeScript does
             self._consume_type_annotation()
             return
         super()._expecting_func_opening_bracket(token)
-        
+
     def _consume_type_annotation(self):
         # Skip over type annotations (simplified version of TypeScript's behavior)
         def skip_until_terminator(token):
@@ -200,7 +200,7 @@ class JSXJavaScriptStyleLanguageStates(JavaScriptStyleLanguageStates):
                 self.next(self._state_global, token)
                 return True
             return False
-            
+
         self.next(skip_until_terminator)
 
 
@@ -291,7 +291,7 @@ class XMLTagWithAttrTokenizer(Tokenizer):
             # Don't add the closing brace automatically
             # self.cache.append("}")
             self.sub_tokenizer = TSXTokenizer()
-            
+
     def _jsx_expression(self, token):
         # Handle nested braces in expressions
         if token == "{":
@@ -302,13 +302,13 @@ class XMLTagWithAttrTokenizer(Tokenizer):
                 # We've found the matching closing brace
                 self.state = self._after_tag
                 return
-        
+
         # Handle arrow functions in JSX attributes
         if token == "=>":
             self.arrow_function_detected = True
             # Explicitly yield the arrow token to ensure it's processed
             return ["=>"]
-        
+
         # Handle type annotations in JSX attributes
         if token == "<":
             # This might be a TypeScript generic type annotation
