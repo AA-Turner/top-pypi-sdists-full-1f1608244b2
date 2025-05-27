@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: libtmux
-Version: 0.46.1
+Version: 0.46.2
 Summary: Typed library that provides an ORM wrapper for tmux, a terminal multiplexer.
 Project-URL: Bug Tracker, https://github.com/tmux-python/libtmux/issues
 Project-URL: Documentation, https://libtmux.git-pull.com
@@ -293,7 +293,7 @@ Your money will go directly to maintenance and development of the
 project. If you are an individual, feel free to give whatever feels
 right for the value you get out of the project.
 
-See donation options at <https://git-pull.com/support.html>.
+See donation options at <https://tony.sh/support.html>.
 
 # Project details
 

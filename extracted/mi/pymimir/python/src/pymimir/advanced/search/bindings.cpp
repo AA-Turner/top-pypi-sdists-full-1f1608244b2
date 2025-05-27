@@ -39,7 +39,7 @@ public:
     NB_TRAMPOLINE(IHeuristic, 1);
 
     /* Trampoline (need one for each virtual function) */
-    double compute_heuristic(State state, bool is_goal_state) override
+    ContinuousCost compute_heuristic(State state, bool is_goal_state) override
     {
         NB_OVERRIDE_PURE(compute_heuristic, /* Name of function in C++ (must match Python name) */
                          state,             /* Argument(s) */
@@ -525,6 +525,8 @@ void bind_module_definitions(nb::module_& m)
 
     nb::class_<DeleteRelaxedProblemExplorator>(m, "DeleteRelaxedProblemExplorator")
         .def(nb::init<Problem>(), "problem"_a)
+        .def("create_ground_actions", &DeleteRelaxedProblemExplorator::create_ground_actions)
+        .def("create_ground_axioms", &DeleteRelaxedProblemExplorator::create_ground_axioms)
         .def("create_grounded_axiom_evaluator",
              &DeleteRelaxedProblemExplorator::create_grounded_axiom_evaluator,
              "match_tree_options"_a,
@@ -734,6 +736,27 @@ void bind_module_definitions(nb::module_& m)
         .def("get_factors", &iw::TupleIndexMapper::get_factors, nb::rv_policy::reference_internal)
         .def("get_max_tuple_index", &iw::TupleIndexMapper::get_max_tuple_index)
         .def("get_empty_tuple_index", &iw::TupleIndexMapper::get_empty_tuple_index);
+
+    nb::class_<iw::DynamicNoveltyTable>(m, "DynamicNoveltyTable")
+        .def(nb::init<size_t>(), "arity"_a)
+        .def(nb::init<size_t, size_t>(), "arity"_a, "num_atoms"_a)
+        .def(
+            "compute_novel_tuples",
+            [](iw::DynamicNoveltyTable& self, State state)
+            {
+                std::vector<iw::AtomIndexList> out;
+                self.compute_novel_tuples(state, out);
+                return out;
+            },
+            "state"_a)
+        .def("insert_tuples", &iw::DynamicNoveltyTable::insert_tuples, "tuples"_a)
+        .def("test_novelty_and_update_table", nb::overload_cast<State>(&iw::DynamicNoveltyTable::test_novelty_and_update_table), "state"_a)
+        .def("test_novelty_and_update_table",
+             nb::overload_cast<State, State>(&iw::DynamicNoveltyTable::test_novelty_and_update_table),
+             "state"_a,
+             "succ_state"_a)
+        .def("reset", &iw::DynamicNoveltyTable::reset)
+        .def("get_tuple_index_mapper", &iw::DynamicNoveltyTable::get_tuple_index_mapper, nb::rv_policy::reference_internal);
 
     nb::class_<iw::StateTupleIndexGenerator>(m, "StateTupleIndexGenerator")  //
         .def(nb::init<const iw::TupleIndexMapper*>(), "tuple_index_mapper"_a)

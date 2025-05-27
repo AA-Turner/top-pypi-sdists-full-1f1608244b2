@@ -312,6 +312,8 @@ class _V5WebSocketManager(_WebSocketManager):
             "order",
             "wallet",
             "greeks",
+            "spread.order",
+            "spread.execution",
         ]
 
         self.other_private_topics = [

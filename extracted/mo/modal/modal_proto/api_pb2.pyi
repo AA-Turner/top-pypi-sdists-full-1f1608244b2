@@ -6938,15 +6938,20 @@ class PortSpec(google.protobuf.message.Message):
 
     PORT_FIELD_NUMBER: builtins.int
     UNENCRYPTED_FIELD_NUMBER: builtins.int
+    TUNNEL_TYPE_FIELD_NUMBER: builtins.int
     port: builtins.int
     unencrypted: builtins.bool
+    tunnel_type: builtins.str
     def __init__(
         self,
         *,
         port: builtins.int = ...,
         unencrypted: builtins.bool = ...,
+        tunnel_type: builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["port", b"port", "unencrypted", b"unencrypted"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "tunnel_type", b"tunnel_type"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "port", b"port", "tunnel_type", b"tunnel_type", "unencrypted", b"unencrypted"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_tunnel_type", b"_tunnel_type"]) -> typing_extensions.Literal["tunnel_type"] | None: ...
 
 global___PortSpec = PortSpec
 
@@ -8364,13 +8369,16 @@ class Schedule(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
         CRON_STRING_FIELD_NUMBER: builtins.int
+        TIMEZONE_FIELD_NUMBER: builtins.int
         cron_string: builtins.str
+        timezone: builtins.str
         def __init__(
             self,
             *,
             cron_string: builtins.str = ...,
+            timezone: builtins.str = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing_extensions.Literal["cron_string", b"cron_string"]) -> None: ...
+        def ClearField(self, field_name: typing_extensions.Literal["cron_string", b"cron_string", "timezone", b"timezone"]) -> None: ...
 
     class Period(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -9368,15 +9376,20 @@ class TunnelStartRequest(google.protobuf.message.Message):
 
     PORT_FIELD_NUMBER: builtins.int
     UNENCRYPTED_FIELD_NUMBER: builtins.int
+    TUNNEL_TYPE_FIELD_NUMBER: builtins.int
     port: builtins.int
     unencrypted: builtins.bool
+    tunnel_type: builtins.str
     def __init__(
         self,
         *,
         port: builtins.int = ...,
         unencrypted: builtins.bool = ...,
+        tunnel_type: builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["port", b"port", "unencrypted", b"unencrypted"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "tunnel_type", b"tunnel_type"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["_tunnel_type", b"_tunnel_type", "port", b"port", "tunnel_type", b"tunnel_type", "unencrypted", b"unencrypted"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_tunnel_type", b"_tunnel_type"]) -> typing_extensions.Literal["tunnel_type"] | None: ...
 
 global___TunnelStartRequest = TunnelStartRequest
 

@@ -1,5 +1,5 @@
 import sys
-import json
+import re
 from math import inf
 
 import pyarrow as pa
@@ -7,37 +7,34 @@ import numpy as np
 import pytest
 
 import geoarrow.c.lib as lib
+from geoarrow import types
 import geoarrow.pyarrow as ga
 import geoarrow.pyarrow._type as _type
 import geoarrow.pyarrow._array as _array
 
 
-def test_geometry_type_basic():
-    ctype = lib.CVectorType.Make(
-        ga.GeometryType.POINT, ga.Dimensions.XY, ga.CoordType.SEPARATE
-    )
+def test_version():
+    assert re.match(r"^[0-9]+\.[0-9]+", ga.__version__)
 
-    pa_type = _type.PointType(ctype)
+
+def test_geometry_type_basic():
+    pa_type = _type.point()
 
     assert pa_type.geometry_type == ga.GeometryType.POINT
     assert pa_type.dimensions == ga.Dimensions.XY
-    assert pa_type.coord_type == ga.CoordType.SEPARATE
+    assert pa_type.coord_type == ga.CoordType.SEPARATED
 
     expected_storage = pa.struct(
-        [pa.field("x", pa.float64()), pa.field("y", pa.float64())]
+        [
+            pa.field("x", pa.float64(), nullable=False),
+            pa.field("y", pa.float64(), nullable=False),
+        ]
     )
     assert pa_type.storage_type == expected_storage
 
-    with pytest.raises(ValueError):
-        _type.LinestringType(ctype)
-
 
 def test_geometry_type_with():
-    ctype = lib.CVectorType.Make(
-        ga.GeometryType.POINT, ga.Dimensions.XY, ga.CoordType.SEPARATE
-    )
-
-    type_obj = _type.PointType(ctype)
+    type_obj = _type.point()
 
     type_linestring = type_obj.with_geometry_type(ga.GeometryType.LINESTRING)
     assert type_linestring.geometry_type == ga.GeometryType.LINESTRING
@@ -51,62 +48,30 @@ def test_geometry_type_with():
     type_spherical = type_obj.with_edge_type(ga.EdgeType.SPHERICAL)
     assert type_spherical.edge_type == ga.EdgeType.SPHERICAL
 
-    # Explicit type
-    type_crs = type_obj.with_crs("EPSG:1234", ga.CrsType.UNKNOWN)
-    assert type_crs.crs_type == ga.CrsType.UNKNOWN
-    assert type_crs.crs == "EPSG:1234"
+    type_crs = type_obj.with_crs(types.OGC_CRS84)
+    assert type_crs.crs == types.OGC_CRS84
 
-    type_crs = type_obj.with_crs(b"EPSG:1234", ga.CrsType.UNKNOWN)
-    assert type_crs.crs_type == ga.CrsType.UNKNOWN
-    assert type_crs.crs == "EPSG:1234"
-
-    type_crs = type_obj.with_crs({}, ga.CrsType.UNKNOWN)
-    assert type_crs.crs_type == ga.CrsType.UNKNOWN
-    assert type_crs.crs == "{}"
-
-    type_crs = type_obj.with_crs("{}", ga.CrsType.PROJJSON)
-    assert type_crs.crs_type == ga.CrsType.PROJJSON
-    assert type_crs.crs == "{}"
-
-    with pytest.raises(TypeError, match="Unknown type for crs object"):
-        type_obj.with_crs(pa.array([]), ga.CrsType.UNKNOWN)
-
-    # Implicit type
-    type_crs = type_obj.with_crs("EPSG:1234")
-    assert type_crs.crs_type == ga.CrsType.UNKNOWN
-    assert type_crs.crs == "EPSG:1234"
-
-    type_crs = type_obj.with_crs(b"EPSG:1234")
-    assert type_crs.crs_type == ga.CrsType.UNKNOWN
-    assert type_crs.crs == "EPSG:1234"
-
-    type_crs = type_obj.with_crs({})
-    assert type_crs.crs_type == ga.CrsType.PROJJSON
-    assert type_crs.crs == "{}"
+    type_crs = type_obj.with_crs("OGC:CRS84")
+    assert repr(type_crs.crs) == "StringCrs(OGC:CRS84)"
 
 
 def test_type_with_crs_pyproj():
     pyproj = pytest.importorskip("pyproj")
     type_obj = ga.wkb()
 
-    # Implicit type
     type_crs = type_obj.with_crs(pyproj.CRS("EPSG:32620"))
-    assert type_crs.crs_type == ga.CrsType.PROJJSON
-    crs_dict = json.loads(type_crs.crs)
-    assert crs_dict["id"]["code"] == 32620
-
-    # Explicit type
-    type_crs = type_obj.with_crs(pyproj.CRS("EPSG:32620"), ga.CrsType.PROJJSON)
-    assert type_crs.crs_type == ga.CrsType.PROJJSON
-    crs_dict = json.loads(type_crs.crs)
+    assert isinstance(type_crs.crs, pyproj.CRS)
+    crs_dict = type_crs.crs.to_json_dict()
     assert crs_dict["id"]["code"] == 32620
 
 
 def test_constructors():
     assert ga.wkb().extension_name == "geoarrow.wkb"
     assert ga.large_wkb().extension_name == "geoarrow.wkb"
+    assert ga.wkb_view().extension_name == "geoarrow.wkb"
     assert ga.wkt().extension_name == "geoarrow.wkt"
     assert ga.large_wkt().extension_name == "geoarrow.wkt"
+    assert ga.wkt_view().extension_name == "geoarrow.wkt"
     assert ga.point().extension_name == "geoarrow.point"
     assert ga.linestring().extension_name == "geoarrow.linestring"
     assert ga.polygon().extension_name == "geoarrow.polygon"
@@ -115,18 +80,20 @@ def test_constructors():
     assert ga.multipolygon().extension_name == "geoarrow.multipolygon"
 
     generic = ga.extension_type(
-        ga.GeometryType.POINT,
-        ga.Dimensions.XYZ,
-        ga.CoordType.INTERLEAVED,
-        ga.EdgeType.SPHERICAL,
-        "EPSG:1234",
+        types.type_spec(
+            ga.Encoding.GEOARROW,
+            ga.GeometryType.POINT,
+            ga.Dimensions.XYZ,
+            ga.CoordType.INTERLEAVED,
+            ga.EdgeType.SPHERICAL,
+            crs=types.OGC_CRS84,
+        )
     )
     assert generic.geometry_type == ga.GeometryType.POINT
     assert generic.dimensions == ga.Dimensions.XYZ
     assert generic.coord_type == ga.CoordType.INTERLEAVED
     assert generic.edge_type == ga.EdgeType.SPHERICAL
-    assert generic.crs == "EPSG:1234"
-    assert generic.crs_type == ga.CrsType.UNKNOWN
+    assert generic.crs == types.OGC_CRS84
 
 
 def test_type_common():
@@ -134,29 +101,6 @@ def test_type_common():
     assert ga.geometry_type_common([ga.wkt()]) == ga.wkt()
     assert ga.geometry_type_common([ga.point(), ga.point()]) == ga.point()
     assert ga.geometry_type_common([ga.point(), ga.linestring()]) == ga.wkb()
-
-
-def test_register_extension_types():
-    # Unregistering once is ok
-    ga.unregister_extension_types(lazy=False)
-
-    # Unregistering twice with lazy=True is ok
-    ga.unregister_extension_types(lazy=True)
-
-    # Unregistering twice with lazy=False is not
-    with pytest.raises(RuntimeError):
-        ga.unregister_extension_types(lazy=False)
-
-    # Same concept with registration
-    ga.register_extension_types(lazy=False)
-    ga.register_extension_types(lazy=True)
-    with pytest.raises(RuntimeError):
-        ga.register_extension_types(lazy=False)
-
-    # Reset state
-    ga.unregister_extension_types()
-    ga.register_extension_types()
-    assert _type._extension_types_registered is True
 
 
 def test_array():
@@ -187,6 +131,24 @@ def test_array():
     array = ga.array([wkb_item], ga.large_wkb())
     assert array.type == ga.large_wkb()
     assert array.type.storage_type == pa.large_binary()
+
+
+def test_array_view_types():
+    # This one requires pyarrow >= 18, because that's when the necessary
+    # cast() was added.
+    try:
+        pa.array(["foofy"]).cast(pa.string_view())
+    except pa.lib.ArrowNotImplementedError:
+        pytest.skip("ga.array() with view types requires pyarrow >= 18.0.0")
+
+    array = ga.array(["POINT (30 10)"], ga.wkt_view())
+    assert array.type == ga.wkt_view()
+    assert array.type.storage_type == pa.string_view()
+
+    wkb_item = b"\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3e\x40\x00\x00\x00\x00\x00\x00\x24\x40"
+    array = ga.array([wkb_item], ga.wkb_view())
+    assert array.type == ga.wkb_view()
+    assert array.type.storage_type == pa.binary_view()
 
 
 def test_array_repr():
@@ -229,7 +191,21 @@ def test_scalar_geoarrow():
     array = ga.as_geoarrow(["POINT (0 1)"])
     assert array[0].wkt == "POINT (0 1)"
     assert array[0].wkb == ga.as_wkb(array).storage[0].as_py()
-    assert repr(array[0]).startswith("PointScalar")
+    assert repr(array[0]).startswith("GeometryExtensionScalar")
+
+
+def test_scalar_box():
+    # The box kernel doesn't yet implement non XY boxes
+    array = ga.box(["LINESTRING ZM (0 1 2 3, 4 5 6 7)"])
+    assert array[0].xmin == 0
+    assert array[0].ymin == 1
+    assert array[0].zmin is None
+    assert array[0].mmin is None
+    assert array[0].xmax == 4
+    assert array[0].ymax == 5
+    assert array[0].zmax is None
+    assert array[0].mmax is None
+    assert repr(array[0]).startswith("BoxScalar")
 
 
 def test_scalar_repr():
@@ -262,30 +238,30 @@ def test_kernel_void():
 
 
 def test_kernel_as():
-    array = ga.array(["POINT (30 10)"], ga.wkt().with_crs("EPSG:1234"))
+    array = ga.array(["POINT (30 10)"], ga.wkt().with_crs(types.OGC_CRS84))
     kernel = ga.Kernel.as_wkt(array.type)
     out = kernel.push(array)
     assert out.type.extension_name == "geoarrow.wkt"
-    assert out.type.crs == "EPSG:1234"
+    assert out.type.crs.to_json_dict() == types.OGC_CRS84.to_json_dict()
     assert isinstance(out, _array.GeometryExtensionArray)
 
-    array = ga.array(["POINT (30 10)"], ga.wkt().with_crs("EPSG:1234"))
+    array = ga.array(["POINT (30 10)"], ga.wkt().with_crs(types.OGC_CRS84))
     kernel = ga.Kernel.as_wkb(array.type)
     out = kernel.push(array)
     assert out.type.extension_name == "geoarrow.wkb"
-    assert out.type.crs == "EPSG:1234"
+    assert out.type.crs.to_json_dict() == types.OGC_CRS84.to_json_dict()
     assert isinstance(out, _array.GeometryExtensionArray)
 
     if sys.byteorder == "little":
         wkb_item = b"\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3e\x40\x00\x00\x00\x00\x00\x00\x24\x40"
         assert out[0].as_py() == wkb_item
 
-    array = ga.array(["POINT (30 10)"], ga.wkt().with_crs("EPSG:1234"))
-    kernel = ga.Kernel.as_geoarrow(array.type, ga.point().geoarrow_id)
+    array = ga.array(["POINT (30 10)"], ga.wkt().with_crs(types.OGC_CRS84))
+    kernel = ga.Kernel.as_geoarrow(array.type, 1)
     out = kernel.push(array)
     assert out.type.extension_name == "geoarrow.point"
-    assert out.type.crs == "EPSG:1234"
-    assert isinstance(out, _array.PointArray)
+    assert out.type.crs.to_json_dict() == types.OGC_CRS84.to_json_dict()
+    assert isinstance(out, _array.GeometryExtensionArray)
 
 
 def test_kernel_format():
@@ -429,6 +405,24 @@ def test_multipolygon_array_from_geobuffers():
     )
     assert len(arr) == 1
     assert ga.as_wkt(arr)[0].as_py() == "MULTIPOLYGON (((1 4, 2 5, 3 6, 1 4)))"
+
+
+def test_box_array_from_geobuffers():
+    arr = (
+        types.box()
+        .to_pyarrow()
+        .from_geobuffers(
+            b"\xff",
+            np.array([1.0, 2.0, 3.0]),
+            np.array([4.0, 5.0, 6.0]),
+            np.array([7.0, 8.0, 9.0]),
+            np.array([10.0, 11.0, 12.0]),
+        )
+    )
+    assert len(arr) == 3
+    assert arr[2].bounds == {"xmin": 3.0, "ymin": 6.0, "xmax": 9.0, "ymax": 12.0}
+    assert "BoxArray" in repr(arr)
+    assert "'xmin': 3.0" in repr(arr)
 
 
 # Easier to test here because we have actual geoarrow arrays to parse

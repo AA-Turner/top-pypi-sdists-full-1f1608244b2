@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pepperize.cdk-github
-Version: 0.0.992
+Version: 0.0.994
 Summary: Manage GitHub resources like repositories, teams, members, integrations and workflows with the AWS CDK as Custom Resources in CloudFormation with [cdk-github](https://github.com/pepperize/cdk-github).
 Home-page: https://github.com/pepperize/cdk-github.git
 Author: Patrick Florek<patrick.florek@gmail.com>

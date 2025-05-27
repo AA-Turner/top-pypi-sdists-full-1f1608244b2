@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: upgini
-Version: 1.2.90
+Version: 1.2.91
 Summary: Intelligent data search & enrichment for Machine Learning
 Project-URL: Bug Reports, https://github.com/upgini/upgini/issues
 Project-URL: Homepage, https://upgini.com/
@@ -807,6 +807,15 @@ enricher = FeaturesEnricher(
 
 enricher.fit(X, y, remove_outliers_calc_metrics=False)
 ```
+
+## Turn off generating features on search keys
+Upgini tries to generate features on email, date and datetime search keys. By default this generation is enabled. To disable it use parameter `generate_search_key_features` of FeaturesEnricher constructor:
+
+```python
+enricher = FeaturesEnricher(
+  search_keys={"date": SearchKey.DATE},
+  generate_search_key_features=False,
+)
 
 ## 🔑 Open up all capabilities of Upgini
 

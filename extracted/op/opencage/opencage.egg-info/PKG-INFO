@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: opencage
-Version: 3.1.0
+Version: 3.2.0
 Summary: Wrapper module for the OpenCage Geocoder API
 Home-page: https://github.com/OpenCageData/python-opencage-geocoder/
-Download-URL: https://github.com/OpenCageData/python-opencage-geocoder/tarball/3.1.0
+Download-URL: https://github.com/OpenCageData/python-opencage-geocoder/tarball/3.2.0
 Author: OpenCage GmbH
 Author-email: info@opencagedata.com
 License: BSD

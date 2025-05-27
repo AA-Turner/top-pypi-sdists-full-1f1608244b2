@@ -194,7 +194,8 @@ class AbstractMOC(serializer.IO, metaclass=abc.ABCMeta):
         """
         return mocpy.is_empty(self.store_index)
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def max_order(self):
         """Depth of the MOC instance."""
 
@@ -225,7 +226,8 @@ class AbstractMOC(serializer.IO, metaclass=abc.ABCMeta):
         """
         return mocpy.to_uniq_gen(self.store_index)
 
-    @abc.abstractclassmethod
+    @classmethod
+    @abc.abstractmethod
     def n_cells(cls, depth, dimension=None):
         """Give the number of cells for the given depth. This is defined in children classes."""
 
@@ -495,7 +497,8 @@ class AbstractMOC(serializer.IO, metaclass=abc.ABCMeta):
         self.store_index = mocpy.contract(prevstore_index)
         return self
 
-    @abc.abstractclassmethod
+    @classmethod
+    @abc.abstractmethod
     def load(cls):
         """Load a MOC, has to be defined in children classes."""
 
@@ -618,6 +621,24 @@ class AbstractMOC(serializer.IO, metaclass=abc.ABCMeta):
             The degraded MOC.
         """
         raise NotImplementedError("Method degrade_to_order not implemented")
+
+    def refine_to_order(self, new_order):
+        """Refine the MOC instance to a more precise order.
+
+        This is an in-place operation.
+
+        Parameters
+        ----------
+        new_order : int
+            New maximum order for the MOC.
+
+        Returns
+        -------
+        `mocpy.MOC`, `mocpy.TimeMOC`, `mocpy.FrequencyMOC`
+            Returns itself, after in-place modification.
+        """
+        # error needed because it does not exist for 2D MOCs
+        raise NotImplementedError("Method refine_to_order not implemented")
 
     def to_string(self, format="ascii", fold=0):  # noqa: A002
         """Write the MOC into a string.

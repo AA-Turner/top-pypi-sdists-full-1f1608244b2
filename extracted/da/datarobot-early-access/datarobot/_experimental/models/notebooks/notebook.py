@@ -26,6 +26,7 @@ from datarobot._experimental.models.notebooks.enums import (
     NotebookPermissions,
     NotebookStatus,
     NotebookType,
+    SessionType,
 )
 from datarobot._experimental.models.notebooks.execution_environment import ExecutionEnvironment
 from datarobot._experimental.models.notebooks.kernel import NotebookKernel
@@ -36,7 +37,6 @@ from datarobot._experimental.models.notebooks.revision import (
 from datarobot._experimental.models.notebooks.scheduled_job import NotebookScheduledJob
 from datarobot._experimental.models.notebooks.session import (
     CloneRepositorySchema,
-    notebook_session_trafaret,
     NotebookExecutionStatus,
     NotebookSession,
     StartSessionParameters,
@@ -114,6 +114,16 @@ class Notebook(APIObject, BrowserMixin):
     _scheduling_path = "api-gw/nbx/scheduling/"
     _revisions_path = "api-gw/nbx/notebookRevisions/"
 
+    _session_subset_trafaret = t.Dict(
+        {
+            t.Key("status"): t.Enum(*list(NotebookStatus)),
+            t.Key("notebook_id"): t.String,
+            t.Key("user_id"): t.String,
+            t.Key("started_at", optional=True): t.String,
+            t.Key("session_type", optional=True): t.Enum(*list(SessionType)),
+        }
+    ).ignore_extra("*")
+
     _converter = t.Dict(
         {
             t.Key("id"): t.String,
@@ -130,7 +140,7 @@ class Notebook(APIObject, BrowserMixin):
             t.Key("settings"): notebook_settings_trafaret,
             t.Key("org_id", optional=True): t.Or(t.String, t.Null),
             t.Key("tenant_id", optional=True): t.Or(t.String, t.Null),
-            t.Key("session", optional=True): t.Or(notebook_session_trafaret, t.Null),
+            t.Key("session", optional=True): t.Or(_session_subset_trafaret, t.Null),
             t.Key("use_case_id", optional=True): t.Or(t.String, t.Null),
             t.Key("use_case_name", optional=True): t.Or(t.String, t.Null),
             t.Key("has_schedule"): t.Bool,
@@ -172,7 +182,7 @@ class Notebook(APIObject, BrowserMixin):
         self.settings = NotebookSettings.from_server_data(settings)
         self.org_id = org_id
         self.tenant_id = tenant_id
-        self.session = NotebookSession.from_server_data(session) if session else session
+        self.session = session
         self.use_case_id = use_case_id
         self.use_case_name = use_case_name
         self.has_schedule = has_schedule
@@ -285,7 +295,7 @@ class Notebook(APIObject, BrowserMixin):
             from datarobot._experimental.models.notebooks.notebook import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
-            manual_run = notebook.run()
+            manual_run = notebook.run_as_job()
             revision_id = manual_run.wait_for_completion()
             notebook.download_revision(revision_id=revision_id, file_path="./results.ipynb")
         """
@@ -525,7 +535,7 @@ class Notebook(APIObject, BrowserMixin):
         """
         return self.get_execution_status().status == KernelExecutionStatus.IDLE
 
-    def run(
+    def run_as_job(
         self,
         title: Optional[str] = None,
         notebook_path: Optional[str] = None,
@@ -572,10 +582,10 @@ class Notebook(APIObject, BrowserMixin):
             from datarobot._experimental.models.notebooks.notebook import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
-            manual_run = notebook.run()
+            manual_run = notebook.run_as_job()
 
             # Alternatively, with title and parameters:
-            # manual_run = notebook.run(title="My Run", parameters=[{"FOO": "bar"}])
+            # manual_run = notebook.run_as_job(title="My Run", parameters=[{"FOO": "bar"}])
 
             revision_id = manual_run.wait_for_completion()
         """

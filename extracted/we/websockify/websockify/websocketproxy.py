@@ -60,6 +60,12 @@ Traffic Legend:
         if not self.server.auth_plugin:
             return
 
+        # clear out any existing SSL_ headers that the client might
+        # have maliciously set
+        ssl_headers = [ h for h in self.headers if h.startswith('SSL_') ]
+        for h in ssl_headers:
+            del self.headers[h]
+
         try:
             # get client certificate data
             client_cert_data = self.request.getpeercert()
@@ -198,7 +204,7 @@ Traffic Legend:
             if cqueue or c_pend: wlist.append(self.request)
             try:
                 ins, outs, excepts = select.select(rlist, wlist, [], 1)
-            except (select.error, OSError):
+            except OSError:
                 exc = sys.exc_info()[1]
                 if hasattr(exc, 'errno'):
                     err = exc.errno

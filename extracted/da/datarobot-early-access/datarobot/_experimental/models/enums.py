@@ -76,25 +76,6 @@ class ChunkStorageType(StrEnum):
     AI_CATALOG = StorageType.AI_CATALOG
 
 
-class ChunkServiceDialect(StrEnum):
-    SNOWFLAKE = "snowflake"
-    BIGQUERY = "bigquery"
-    DATABRICKS = "databricks"
-    SPARK = "spark"
-    POSTGRES = "postgres"
-
-
-class ChunkingStrategy(StrEnum):
-    FEATURES = "features"
-    ROWS = "rows"
-
-
-class ChunkingPartitionMethod(StrEnum):
-    RANDOM = "random"
-    STRATIFIED = "stratified"
-    DATE = "date"
-
-
 class FeedbackSentiment(StrEnum):
     POSITIVE = "1"
     NEGATIVE = "0"

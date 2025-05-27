@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: mocpy
-Version: 0.17.1
+Version: 0.18.0
 Classifier: Development Status :: 4 - Beta
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Rust
@@ -14,14 +14,14 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
-Requires-Dist: astropy <5.3 ; python_version == '3.8'
-Requires-Dist: astropy ; python_version > '3.8'
+Requires-Dist: astropy<5.3 ; python_full_version == '3.8.*'
+Requires-Dist: astropy ; python_full_version >= '3.9'
 Requires-Dist: numpy
 Requires-Dist: matplotlib
-Requires-Dist: cdshealpix >=0.6.4
-Requires-Dist: networkx >=2.5
-Requires-Dist: requests ; extra == 'query_fits'
-Requires-Dist: regions ; extra == 'astropy_regions'
+Requires-Dist: cdshealpix>=0.6.4
+Requires-Dist: networkx>=2.5
+Requires-Dist: requests ; extra == 'query-fits'
+Requires-Dist: regions ; extra == 'astropy-regions'
 Requires-Dist: astropy-sphinx-theme ; extra == 'docs'
 Requires-Dist: nbsphinx ; extra == 'docs'
 Requires-Dist: numpydoc ; extra == 'docs'
@@ -31,14 +31,15 @@ Requires-Dist: sphinx-copybutton ; extra == 'docs'
 Requires-Dist: sphinx-gallery ; extra == 'docs'
 Requires-Dist: sphinxcontrib-bibtex ; extra == 'docs'
 Requires-Dist: ipython ; extra == 'docs'
-Requires-Dist: pre-commit >=2.20 ; extra == 'dev'
-Requires-Dist: pytest >6.0 ; extra == 'dev'
+Requires-Dist: pre-commit>=2.20 ; extra == 'dev'
+Requires-Dist: pytest>6.0 ; extra == 'dev'
 Requires-Dist: pytest-mock ; extra == 'dev'
 Requires-Dist: pytest-cov ; extra == 'dev'
 Requires-Dist: requests ; extra == 'dev'
 Requires-Dist: regions ; extra == 'dev'
-Requires-Dist: ruff >=0.5.0 ; extra == 'dev'
-Requires-Dist: astroquery ; extra == 'notebooks'
+Requires-Dist: ruff>=0.5.0 ; extra == 'dev'
+Requires-Dist: astroquery>=0.4.9 ; extra == 'notebooks'
+Requires-Dist: astropy-healpix ; extra == 'notebooks'
 Requires-Dist: ipyaladin ; extra == 'notebooks'
 Requires-Dist: regions ; extra == 'notebooks'
 Requires-Dist: nbmake ; extra == 'notebooks'
@@ -54,95 +55,115 @@ Author: Matthieu Baumann <matthieu.baumann@astro.unistra.fr>, Thomas Boch <thoma
 Author-email: Matthieu Baumann <matthieu.baumann@astro.unistra.fr>, Thomas Boch <thomas.boch@astro.unistra.fr>, Manon Marchand <manon.marchand@astro.unistra.fr>, F.-X. Pineau <francois-xavier.pineau@astro.unistra.fr>
 License: BSD-3-Clause
 Requires-Python: >=3.8
-Description-Content-Type: text/x-rst; charset=UTF-8
+Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
 Project-URL: Documentation, https://cds-astro.github.io/mocpy/
 Project-URL: Repository, https://github.com/cds-astro/mocpy
 Project-URL: Issues, https://github.com/cds-astro/mocpy/issues
 Project-URL: Changelog, https://github.com/cds-astro/mocpy/blob/master/CHANGELOG.md
 
-*****
-MOCPy
-*****
-|PyPI version| |Build/Test status| |Notebook Binder| |Doc|
+# MOCPy
 
+[![PyPI version](https://badge.fury.io/py/mocpy.svg)](https://badge.fury.io/py/MOCPy)
+[![Build/Test status](https://github.com/cds-astro/mocpy/actions/workflows/test.yml/badge.svg)](https://github.com/cds-astro/mocpy/actions/workflows/test.yml)
+[![Doc](https://img.shields.io/badge/Documentation-link-green.svg)](https://cds-astro.github.io/mocpy/)
 
-.. figure:: ./docs/_static/MOCpy-light.svg
-   :width: 200 px
-   :alt: mocpy's logo
+<img align="right" width="200px" alt="mocpy's logo" src="./docs/_static/MOCpy-light.svg">
 
 MOCPy is a Python library allowing easy creation and manipulation of MOCs (Multi-Order Coverage maps).
 
-MOC is an IVOA standard  enabling description of arbitrary sky regions.
-Based on the HEALPix sky tessellation, it maps regions on the sky
-into hierarchically grouped predefined cells.
+MOC is an [IVOA standard](https://ivoa.net/documents/MOC/20220727/index.html) enabling
+description of arbitrary sky, time, (or frequency) coverages.
 
-A support for TMOC (temporal MOC) has been added since version 0.4.0.
-It allows creation, parsing and comparison of TMOCs.
-The support for Frequency MOCs has been added since version 0.13.0
+## What's in MOCpy?
 
-Space & Time coverages (STMOC) are an extension of MOC to add time information.
-It is possible to get a TMOC by querying a STMOC with a MOC and/or get a MOC
-by querying a STMOC with a TMOC.
+|           | Space              | Time               | Frequency          |
+|-----------|--------------------|--------------------|--------------------|
+| Space     | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Time      | :white_check_mark: | :white_check_mark: | :x:                |
+| Frequency | :white_check_mark: | :x:                | :white_check_mark: |
 
-Please check the mocpy's `documentation <https://cds-astro.github.io/mocpy/>`__
-for more details about installing MOCPy and using it.
+There is support for one dimensional MOCs:
 
-For a command line tool, see the `moc-cli <https://github.com/cds-astro/cds-moc-rust/tree/main/crates/cli>`__.
+- **Space MOCs**. The sky tesselation is based on the HEALPix sky tessellation, it maps
+  regions of the sky into hierarchically grouped cells.
+- **Time MOCs**. The segmentation of the time axis is linear. This is described in the
+  MOC standard since its version 2.0.
+- **Frequency MOCs**. :warning: this is not standard yet! The segmentation of the frequency
+  axis is logarithmic. See [this IVOA presentation][https://wiki.ivoa.net/internal/IVOA/InterOpMay2023Apps/FMOC_IVOA_Bologne_Fernique.pdf] for a description.
 
-For more information about the MOCPy Rust core, see the `moc crate <https://crates.io/crates/moc>`__.
+But also these combinations:
 
-.. figure:: ./resources/readme.png
-   :width: 500 px
-   :align: center
-   :alt: a moc plotted with mocpy
+- **Space-Time MOCs**
+- **Space-Frequency MOCs**
 
-   *Rendered with MOCpy!*
+![a MOC plotted with MOCPy](./resources/readme.png)
 
-.. |PyPI version| image:: https://badge.fury.io/py/mocpy.svg
-    :target: https://badge.fury.io/py/MOCPy
+*Rendered with MOCpy!*
 
-.. |Build/Test status| image:: https://github.com/cds-astro/mocpy/actions/workflows/test.yml/badge.svg
-    :target: https://github.com/cds-astro/mocpy/actions/workflows/test.yml
+## Other resources
 
-.. |Notebook Binder| image:: http://mybinder.org/badge.svg
-    :target: https://mybinder.org/v2/gh/cds-astro/mocpy/master
+For a command line tool, see the [moc-cli](https://github.com/cds-astro/cds-moc-rust/tree/main/crates/cli).
 
-.. |Doc| image:: https://img.shields.io/badge/Documentation-link-green.svg
-    :target: https://cds-astro.github.io/mocpy/
+For more information about MOCPy's Rust core, see the [moc crate](https://crates.io/crates/moc)
 
-Installation
-------------
+## Installation
 
 We strongly recommend to work in an environnement
 
-Latest stable version
-*********************
+### Latest stable version
 
-- from pip ``pip install mocpy``
-- from conda ``conda install -c conda-forge mocpy``
-- from this repository
+- from pip `pip install mocpy`
+- from conda `conda install -c conda-forge mocpy`
 
-Unreleased latest version
-*************************
+### Unreleased latest version
 
-To install ``mocpy`` from this repository, make sure you have Python (https://www.python.org/downloads/)
+To install `MOCPy` from this repository, make sure you have Python (https://www.python.org/downloads/)
 and Rust (https://www.rust-lang.org/tools/install) on your machine. Then, run
 
-.. code::
+```
+pip install git+https://github.com/cds-astro/mocpy.git
+```
 
-   pip install git+https://github.com/cds-astro/mocpy.git
-
-To run the notebooks
-********************
+## To run the notebooks
 
 The example notebooks require additional dependencies. They can be installed with
 
-.. code::
+```sh
+pip install mocpy[notebooks]
+```
 
-    pip install mocpy[notebooks]
+## Development installation
 
-For use in pyodide
-******************
+Contributions are very welcome. To build and test the library, clone this repository,
+make sure that you've got Rust on your machine (https://www.rust-lang.org/tools/install)
+and do:
 
-Wheels that run in pyodide can be downloaded from `this repository assets <https://github.com/cds-astro/mocpy/releases/download/v0.12.3/mocpy-0.12.3-cp310-cp310-emscripten_3_1_27_wasm32.whl>`__. This is not fully tested.
+```sh
+pip install pre-commit
+pre-commit install
+pip install maturin
+maturin develop --release
+```
 
+And the library is ready to be edited. After a change on the Rust side, you'll have to
+do `maturin develop --release` again. If you only edit the python side, then a
+`pip install .` at the root of the repository will suffice.
+
+We use pre-commit to keep consistent style conventions between all of us. This means
+that your commits will not pass if they require modifications. If this happens, do the
+required changes, `git add` the files again and attempt to commit as usual.
+
+To run the tests, do:
+
+```sh
+pip install .[dev]
+python -m pytest
+```
+
+## For use in pyodide
+
+Wheels that run in pyodide can be downloaded from each github's release for the module.
+
+## Other python packages for MOCs
+
+- https://github.com/grahambell/pymoc/

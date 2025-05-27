@@ -39,7 +39,28 @@ RegionLiteral = Literal[
 
 ReasoningEffort = Literal["low", "medium", "high"]
 
-DeploymentTypeLiteral = Literal["serverless", "on-demand", "auto"]
+"""
+serverless: always use serverless, if not available, raise an error
+on-demand: always use on-demand. For LoRA addons, this will create a new on-demand deployment for the LoRA model without addons enabled (for performance reasons).
+auto: use serverless if available, otherwise use on-demand. For LoRA addons, this will create a new on-demand deployment for the LoRA model with addons enabled.
+on-demand-lora: always use on-demand (even if serverless is available). For LoRA addons, this will create a new on-demand deployment for the LoRA model with addons enabled.
+"""
+DeploymentTypeLiteral = Literal["serverless", "on-demand", "auto", "on-demand-lora"]
 
 
 DeploymentStrategyLiteral = Literal["serverless", "on-demand", "serverless-lora", "on-demand-lora"]
+
+PrecisionLiteral = Literal[
+    "FP16",
+    "FP8",
+    "FP8_MM",
+    "FP8_AR",
+    "FP8_MM_KV_ATTN",
+    "FP8_KV",
+    "FP8_MM_V2",
+    "FP8_V2",
+    "FP8_MM_KV_ATTN_V2",
+    "NF4",
+]
+
+DirectRouteTypeLiteral = Literal["INTERNET", "GCP_PRIVATE_SERVICE_CONNECT", "AWS_PRIVATELINK"]

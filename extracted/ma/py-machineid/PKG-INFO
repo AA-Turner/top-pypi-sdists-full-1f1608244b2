@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: py-machineid
-Version: 0.7.0
+Version: 0.8.0
 Summary: Get the unique machine ID of any host (without admin privileges)
 Home-page: https://github.com/keygen-sh/py-machineid
 Author: Zeke Gabrielse

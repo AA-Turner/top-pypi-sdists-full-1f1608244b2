@@ -5,14 +5,18 @@ from venv import logger
 
 from pydantic import BaseModel
 
+from hud.env.environment import create_remote_config
 from hud.server import make_request
 from hud.settings import settings
 from hud.task import Task
+from hud.utils.config import REMOTE_EVALUATE, REMOTE_SETUP
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from inspect_ai.dataset import Dataset
+
+    from hud.agent import Agent
 
 
 class TaskSet(BaseModel):
@@ -21,11 +25,13 @@ class TaskSet(BaseModel):
 
     Attributes:
         id: Unique identifier for the taskset
+        name: Name of the taskset
         description: Description of the taskset
         tasks: List of Task objects in the taskset
     """
 
     id: str | None = None
+    name: str | None = None
     description: str | None = None
     tasks: list[Task] = []
 
@@ -61,15 +67,37 @@ class TaskSet(BaseModel):
 
     async def upload(
         self,
-        name: str,
+        name: str | None = None,
         description: str | None = None,
         api_key: str | None = None,
     ) -> None:
         """
         Uploads the taskset to the server.
         """
+        if name is None:
+            name = self.name
+
+        if name is None:
+            raise ValueError("Taskset name is required")
+
         if api_key is None:
             api_key = settings.api_key
+
+        # Convert all tasks to expanded configs
+        processed_tasks = []
+        for task in self.tasks:
+            setup_config = create_remote_config(None, task.setup, REMOTE_SETUP)[0].args[0]
+            evaluate_config = create_remote_config(None, task.evaluate, REMOTE_EVALUATE)[0].args[0]
+
+            processed_tasks.append(
+                {
+                    "prompt": task.prompt,
+                    "gym": task.gym,
+                    "setup": setup_config.model_dump(),
+                    "evaluate": evaluate_config.model_dump(),
+                    "config": task.config,
+                }
+            )
 
         await make_request(
             method="POST",
@@ -78,12 +106,24 @@ class TaskSet(BaseModel):
             json={
                 "name": name,
                 "description": description,
-                "tasks": [task.model_dump() for task in self.tasks],
+                "tasks": processed_tasks,
             },
         )
         logger.info(
-            "[HUD] Taskset %s uploaded successfully, see it on app.hud.so/tasksets/%s", name, name
+            "Taskset %s uploaded successfully, see it on app.hud.so/evalsets/%s", name, name
         )
+
+    async def fit(self, agent: Agent | type[Agent]) -> None:
+        """
+        Automatically adapts the taskset to the agent's transfer_gyms.
+        """
+        if isinstance(agent, type):
+            agent = agent()
+
+        for task in self.tasks:
+            if task.gym is None:
+                continue
+            task.gym = agent.transfer_gyms.get(task.gym, task.gym)
 
 
 async def load_taskset(taskset_id: str, api_key: str | None = None) -> TaskSet:
@@ -107,7 +147,7 @@ async def load_taskset(taskset_id: str, api_key: str | None = None) -> TaskSet:
         api_key=api_key,
     )
 
-    logger.info(f"[HUD] Taskset {taskset_id} loaded successfully")
+    logger.info(f"Taskset {taskset_id} loaded successfully")
 
     return TaskSet.model_validate(
         {

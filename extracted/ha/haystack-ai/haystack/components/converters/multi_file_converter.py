@@ -3,8 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from enum import Enum
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Optional, Union
 
-from haystack import Pipeline, super_component
+from haystack import Document, Pipeline, super_component
 from haystack.components.converters import (
     CSVToDocument,
     DOCXToDocument,
@@ -17,6 +19,7 @@ from haystack.components.converters import (
 )
 from haystack.components.joiners import DocumentJoiner
 from haystack.components.routers import FileTypeRouter
+from haystack.dataclasses import ByteStream
 
 
 class ConverterMimeType(str, Enum):
@@ -80,24 +83,22 @@ class MultiFileConverter:
         # Create pipeline and add components
         pp = Pipeline()
 
-        # We use type ignore here to avoid type checking errors
-        # This is due to how the run method within the Component protocol is defined
-        pp.add_component("router", router)  # type: ignore[arg-type]
-        pp.add_component("docx", DOCXToDocument(link_format="markdown"))  # type: ignore[arg-type]
+        pp.add_component("router", router)
+        pp.add_component("docx", DOCXToDocument(link_format="markdown"))
         pp.add_component(
             "html",
-            HTMLToDocument(  # type: ignore[arg-type]
+            HTMLToDocument(
                 extraction_kwargs={"output_format": "markdown", "include_tables": True, "include_links": True}
             ),
         )
-        pp.add_component("json", JSONConverter(content_key=self.json_content_key))  # type: ignore[arg-type]
-        pp.add_component("md", TextFileToDocument(encoding=self.encoding))  # type: ignore[arg-type]
-        pp.add_component("text", TextFileToDocument(encoding=self.encoding))  # type: ignore[arg-type]
-        pp.add_component("pdf", PyPDFToDocument())  # type: ignore[arg-type]
-        pp.add_component("pptx", PPTXToDocument())  # type: ignore[arg-type]
-        pp.add_component("xlsx", XLSXToDocument())  # type: ignore[arg-type]
-        pp.add_component("joiner", DocumentJoiner())  # type: ignore[arg-type]
-        pp.add_component("csv", CSVToDocument(encoding=self.encoding))  # type: ignore[arg-type]
+        pp.add_component("json", JSONConverter(content_key=self.json_content_key))
+        pp.add_component("md", TextFileToDocument(encoding=self.encoding))
+        pp.add_component("text", TextFileToDocument(encoding=self.encoding))
+        pp.add_component("pdf", PyPDFToDocument())
+        pp.add_component("pptx", PPTXToDocument())
+        pp.add_component("xlsx", XLSXToDocument())
+        pp.add_component("joiner", DocumentJoiner())
+        pp.add_component("csv", CSVToDocument(encoding=self.encoding))
 
         for mime_type in ConverterMimeType:
             pp.connect(f"router.{mime_type.value}", str(mime_type).lower().rsplit(".", maxsplit=1)[-1])
@@ -116,3 +117,15 @@ class MultiFileConverter:
         self.pipeline = pp
         self.output_mapping = {"joiner.documents": "documents", "router.unclassified": "unclassified"}
         self.input_mapping = {"sources": ["router.sources"], "meta": ["router.meta"]}
+
+    if TYPE_CHECKING:
+        # fake method, never executed, but static analyzers will not complain about missing method
+        def run(  # noqa: D102
+            self,
+            *,
+            sources: list[Union[str, Path, ByteStream]],
+            meta: Optional[Union[dict[str, Any], list[dict[str, Any]]]] = None,
+        ) -> dict[str, list[Document]]:  # noqa: D102
+            ...
+        def warm_up(self) -> None:  # noqa: D102
+            ...

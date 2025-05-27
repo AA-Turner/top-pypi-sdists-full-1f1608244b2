@@ -1,11 +1,10 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: darkgraylib
-Version: 2.2.0
+Version: 2.3.0
 Summary: Common supporting code for Darker and Graylint
-Home-page: https://github.com/akaihola/darkgraylib
-Author: Antti Kaihola
-Author-email: 13725+akaihola@users.noreply.github.com
-License: BSD
+Author-email: Antti Kaihola <13725+akaihola@users.noreply.github.com>
+License: BSD-3-Clause
+Project-URL: Homepage, https://github.com/akaihola/darkgraylib
 Project-URL: Source Code, https://github.com/akaihola/darkgraylib
 Project-URL: Change Log, https://github.com/akaihola/darkgraylib/blob/main/CHANGES.rst
 Project-URL: News, https://github.com/akaihola/darkgraylib/discussions/categories/announcements
@@ -21,27 +20,9 @@ License-File: LICENSE
 Requires-Dist: toml>=0.10.0
 Provides-Extra: color
 Requires-Dist: Pygments>=2.4.0; extra == "color"
-Provides-Extra: test
-Requires-Dist: click>=8.0.0; extra == "test"
-Requires-Dist: cryptography>=3.3.2; extra == "test"
-Requires-Dist: defusedxml>=0.7.1; extra == "test"
-Requires-Dist: flake8; extra == "test"
-Requires-Dist: mypy; extra == "test"
-Requires-Dist: Pygments>=2.4.0; extra == "test"
-Requires-Dist: pydocstyle; extra == "test"
-Requires-Dist: pylint>=3.3.0; extra == "test"
-Requires-Dist: pytest>=6.2.0; extra == "test"
-Requires-Dist: pytest-kwparametrize>=0.0.3; extra == "test"
-Requires-Dist: requests_cache>=0.7; extra == "test"
-Requires-Dist: ruamel.yaml>=0.17.21; extra == "test"
-Requires-Dist: ruff>=0.0.292; extra == "test"
-Requires-Dist: twine>=2.0.0; extra == "test"
-Requires-Dist: types-requests>=2.27.9; extra == "test"
-Requires-Dist: types-toml>=0.10.4; extra == "test"
-Requires-Dist: urllib3>=1.25.9; extra == "test"
-Requires-Dist: wheel>=0.21.0; extra == "test"
-Provides-Extra: release
-Requires-Dist: darkgray-dev-tools~=0.1.1; extra == "release"
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: license-file
 
 =============
  darkgraylib
@@ -67,7 +48,7 @@ Requires-Dist: darkgray-dev-tools~=0.1.1; extra == "release"
 .. |changelog-badge| image:: https://img.shields.io/badge/-change%20log-purple
    :alt: Change log
    :target: https://github.com/akaihola/darkgraylib/blob/main/CHANGES.rst
-.. |next-milestone| image:: https://img.shields.io/github/milestones/progress/akaihola/darkgraylib/16?color=red&label=release%202.2.1
+.. |next-milestone| image:: https://img.shields.io/github/milestones/progress/akaihola/darkgraylib/17?color=red&label=release%202.3.1
    :alt: Next milestone
    :target: https://github.com/akaihola/darkgraylib/milestone/4
 

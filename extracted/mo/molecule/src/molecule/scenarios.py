@@ -18,6 +18,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 """Scenarios Module."""
+
 from __future__ import annotations
 
 import logging
@@ -25,6 +26,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from molecule import util
+from molecule.exceptions import MoleculeError
 
 
 if TYPE_CHECKING:
@@ -123,7 +125,11 @@ class Scenarios:
         )
 
     def _verify(self) -> None:
-        """Verify the specified scenario was found."""
+        """Verify the specified scenario was found.
+
+        Raises:
+            MoleculeError: when scenario is not found.
+        """
         scenario_names = [c.scenario.name for c in self._configs]
         if missing_names := sorted(set(self._scenario_names).difference(scenario_names)):
             scenario = "Scenario"
@@ -131,7 +137,7 @@ class Scenarios:
                 scenario += "s"
             missing = ", ".join(missing_names)
             msg = f"{scenario} '{missing}' not found.  Exiting."
-            util.sysexit_with_message(msg)
+            raise MoleculeError(msg)
 
     def _filter_for_scenario(self) -> list[Scenario]:
         """Find the scenario matching the provided scenario name and returns a list.

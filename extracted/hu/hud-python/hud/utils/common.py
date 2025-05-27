@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import logging
 import tarfile
+import zipfile
 from typing import TYPE_CHECKING, Any, TypedDict
 
 from pydantic import BaseModel
@@ -22,6 +23,7 @@ class FunctionConfig(BaseModel):
     args: list[Any]  # Must be json serializable
 
     id: str | None = None  # Optional id for remote execution
+    metadata: dict[str, Any] | None = None  # Optional metadata for telemetry
 
     def __len__(self) -> int:
         return len(self.args)
@@ -33,11 +35,12 @@ class FunctionConfig(BaseModel):
         return iter(self.args)
 
     def __str__(self) -> str:
-        return f"{self.function}: {', '.join(str(arg) for arg in self.args)}"
+        return f"FC: {self.function}: {', '.join(str(arg) for arg in self.args)} ({self.metadata})"
 
 
 # Type alias for the shorthand config, which just converts to function name and args
-ShorthandConfig = tuple[str | dict[str, Any] | list[str] | list[dict[str, Any]], ...]
+BasicType = str | int | float | bool | None
+ShorthandConfig = tuple[BasicType | dict[str, Any] | list[BasicType] | list[dict[str, Any]], ...]
 
 # Type alias for multiple config formats
 FunctionConfigs = (
@@ -61,6 +64,11 @@ class Observation(BaseModel):
 
     screenshot: str | None = None  # base64 string png
     text: str | None = None
+
+    def __str__(self) -> str:
+        return f"""Observation(screenshot={
+            self.screenshot[:100] if self.screenshot else "None"
+        }..., text={self.text}...)"""
 
 
 class ExecuteResult(TypedDict):
@@ -104,6 +112,18 @@ def directory_to_tar_bytes(directory_path: Path) -> bytes:
 
     # Get the bytes from the BytesIO object
     output.seek(0)
+    return output.getvalue()
+
+
+def directory_to_zip_bytes(context_dir: Path) -> bytes:
+    """Zip a directory and return the zip archive as bytes."""
+    output = io.BytesIO()
+    with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for file_path in context_dir.rglob("*"):
+            if file_path.is_file():
+                rel_path = file_path.relative_to(context_dir)
+                logger.debug("Adding %s to zip archive", rel_path)
+                zipf.write(str(file_path), arcname=str(rel_path))
     return output.getvalue()
 
 

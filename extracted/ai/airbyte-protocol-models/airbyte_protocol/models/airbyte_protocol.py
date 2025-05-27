@@ -18,6 +18,7 @@ class Type(Enum):
     CATALOG = 'CATALOG'
     TRACE = 'TRACE'
     CONTROL = 'CONTROL'
+    DESTINATION_CATALOG = 'DESTINATION_CATALOG'
 
 
 class Change(Enum):
@@ -263,6 +264,25 @@ class DestinationSyncMode(Enum):
     append = 'append'
     overwrite = 'overwrite'
     append_dedup = 'append_dedup'
+    update = 'update'
+    soft_delete = 'soft_delete'
+
+
+class DestinationOperation(BaseModel):
+    class Config:
+        extra = Extra.allow
+
+    object_name: str = Field(..., description='The name of the destination object.')
+    sync_mode: DestinationSyncMode = Field(
+        ..., description='The sync mode to be performed on the destination object.'
+    )
+    json_schema: Dict[str, Any] = Field(
+        ..., description='Stream schema using Json Schema specs.'
+    )
+    matching_keys: Optional[List[List[str]]] = Field(
+        None,
+        description='A list of keys that can be used to match a record in the destination object. The inner array of strings represents a nested object path.',
+    )
 
 
 class OAuth2Specification(BaseModel):
@@ -374,17 +394,17 @@ class OAuthConfigSpecification(BaseModel):
     class Config:
         extra = Extra.allow
 
-    oauth_user_input_from_connector_config_specification: Optional[Dict[str, Any]] = (
-        Field(
-            None,
-            description="OAuth specific blob. This is a Json Schema used to validate Json configurations used as input to OAuth.\nMust be a valid non-nested JSON that refers to properties from ConnectorSpecification.connectionSpecification\nusing special annotation 'path_in_connector_config'.\nThese are input values the user is entering through the UI to authenticate to the connector, that might also shared\nas inputs for syncing data via the connector.\n\nExamples:\n\nif no connector values is shared during oauth flow, oauth_user_input_from_connector_config_specification=[]\nif connector values such as 'app_id' inside the top level are used to generate the API url for the oauth flow,\n  oauth_user_input_from_connector_config_specification={\n    app_id: {\n      type: string\n      path_in_connector_config: ['app_id']\n    }\n  }\nif connector values such as 'info.app_id' nested inside another object are used to generate the API url for the oauth flow,\n  oauth_user_input_from_connector_config_specification={\n    app_id: {\n      type: string\n      path_in_connector_config: ['info', 'app_id']\n    }\n  }",
-        )
+    oauth_user_input_from_connector_config_specification: Optional[
+        Dict[str, Any]
+    ] = Field(
+        None,
+        description="OAuth specific blob. This is a Json Schema used to validate Json configurations used as input to OAuth.\nMust be a valid non-nested JSON that refers to properties from ConnectorSpecification.connectionSpecification\nusing special annotation 'path_in_connector_config'.\nThese are input values the user is entering through the UI to authenticate to the connector, that might also shared\nas inputs for syncing data via the connector.\n\nExamples:\n\nif no connector values is shared during oauth flow, oauth_user_input_from_connector_config_specification=[]\nif connector values such as 'app_id' inside the top level are used to generate the API url for the oauth flow,\n  oauth_user_input_from_connector_config_specification={\n    app_id: {\n      type: string\n      path_in_connector_config: ['app_id']\n    }\n  }\nif connector values such as 'info.app_id' nested inside another object are used to generate the API url for the oauth flow,\n  oauth_user_input_from_connector_config_specification={\n    app_id: {\n      type: string\n      path_in_connector_config: ['info', 'app_id']\n    }\n  }",
     )
-    oauth_connector_input_specification: Optional[OauthConnectorInputSpecification] = (
-        Field(
-            None,
-            description='OAuth specific blob. Pertains to the fields defined by the connector relating to the OAuth flow.',
-        )
+    oauth_connector_input_specification: Optional[
+        OauthConnectorInputSpecification
+    ] = Field(
+        None,
+        description='OAuth specific blob. Pertains to the fields defined by the connector relating to the OAuth flow.',
     )
     complete_oauth_output_specification: Optional[Dict[str, Any]] = Field(
         None,
@@ -513,6 +533,7 @@ class ConfiguredAirbyteStream(BaseModel):
         description='Path to the field that will be used to determine if a record is new or modified since the last sync. This field is REQUIRED if `sync_mode` is `incremental`. Otherwise it is ignored.',
     )
     destination_sync_mode: DestinationSyncMode
+    destination_object_name: Optional[str] = None
     primary_key: Optional[List[List[str]]] = Field(
         None,
         description='Paths to the fields that will be used as primary key. This field is REQUIRED if `destination_sync_mode` is `*_dedup`. Otherwise it is ignored.',
@@ -532,6 +553,16 @@ class ConfiguredAirbyteStream(BaseModel):
     include_files: Optional[bool] = Field(
         None,
         description='If the stream is_file_based, determines whether to include the associated files in the sync. Otherwise, this property will be ignored.',
+    )
+
+
+class DestinationCatalog(BaseModel):
+    class Config:
+        extra = Extra.allow
+
+    operations: List[DestinationOperation] = Field(
+        ...,
+        description='An array of operations that can be performed on destination objects.',
     )
 
 
@@ -662,6 +693,9 @@ class AirbyteMessage(BaseModel):
     control: Optional[AirbyteControlMessage] = Field(
         None,
         description='connector config message: a message to communicate an updated configuration from a connector that should be persisted',
+    )
+    destination_catalog: Optional[DestinationCatalog] = Field(
+        None, description='destination catalog message: the catalog'
     )
 
 

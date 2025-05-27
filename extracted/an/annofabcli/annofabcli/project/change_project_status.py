@@ -112,7 +112,7 @@ class ChanegProjectStatusMain:
             return False
 
         if not self.facade.contains_any_project_member_role(project_id, [ProjectMemberRole.OWNER]):
-            logger.warning(f"project_id={project_id}: オーナロールでないため、アノテーションzipを更新できません。project_title={project['title']}")
+            logger.warning(f"project_id={project_id}: オーナロールでないため、プロジェクトのステータスを変更できません。project_title={project['title']}")
             return False
 
         logger.debug(f"{project['title']} のステータスを{status.value} に変更します。project_id={project_id}")
@@ -187,7 +187,7 @@ def parse_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--force",
         action="store_true",
-        help=f"`--status {ProjectStatus.SUSPENDED.value}`を指定している状態で、 ``--force`` を指定した場合、作業中タスクが残っていても停止状態に変更します。",  # noqa: E501
+        help=f"`--status {ProjectStatus.SUSPENDED.value}`を指定している状態で、 ``--force`` を指定した場合、作業中タスクが残っていても停止状態に変更します。",
     )
 
     parser.set_defaults(subcommand_func=main)

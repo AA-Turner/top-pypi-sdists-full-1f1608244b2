@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: fugashi
-Version: 1.4.0
+Version: 1.4.3
 Summary: A Cython MeCab wrapper for fast, pythonic Japanese tokenization.
 Home-page: https://github.com/polm/fugashi
 Author: Paul O'Leary McCann
@@ -16,6 +16,16 @@ Provides-Extra: unidic
 Requires-Dist: unidic; extra == "unidic"
 Provides-Extra: unidic-lite
 Requires-Dist: unidic-lite; extra == "unidic-lite"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-python
+Dynamic: summary
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fugashi.streamlit.app)
 [![Current PyPI packages](https://badge.fury.io/py/fugashi.svg)](https://pypi.org/project/fugashi/)
@@ -25,7 +35,7 @@ Requires-Dist: unidic-lite; extra == "unidic-lite"
 
 # fugashi
 
-<img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="fugashi by Irasutoya" />
+<img src="https://github.com/polm/fugashi/raw/main/fugashi.png" width=125 height=125 alt="fugashi by Irasutoya" />
 
 fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
 Japanese tokenizer and morphological analysis tool.  Wheels are provided for

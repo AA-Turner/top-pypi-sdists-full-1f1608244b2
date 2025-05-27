@@ -28,7 +28,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-Documentation = "https://muon.readthedocs.io/en/latest/"
+Documentation = "https://mudata.readthedocs.io/en/latest/"
 Source = "https://github.com/scverse/mudata"
 Home-page = "https://muon.scverse.org/"
 
@@ -46,7 +46,8 @@ docs = [
     "recommonmark"
 ]
 test = [
-    "zarr"
+    "zarr<3",
+    "pytest"
 ]
 
 [tool.pytest.ini_options]

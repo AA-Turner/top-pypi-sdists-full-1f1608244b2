@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: edsnlp
-Version: 0.17.0
+Version: 0.17.1
 Summary: Modular, fast NLP framework, compatible with Pytorch and spaCy, offering tailored support for French clinical notes.
 Author-email: Data Science - DSN APHP <perceval.wajsburt@aphp.fr>
 License: Copyright 2021 Assistance Publique - Hôpitaux de Paris
@@ -27,7 +27,7 @@ Requires-Dist: pytz
 Requires-Dist: pysimstring>=1.2.1
 Requires-Dist: regex
 Requires-Dist: spacy<3.8.2,>=3.2; python_version < "3.9"
-Requires-Dist: spacy<4.0.0,>=3.8.5; python_version >= "3.9"
+Requires-Dist: spacy<3.8.7,>=3.8.5; python_version >= "3.9"
 Requires-Dist: thinc<8.2.5; python_version < "3.9"
 Requires-Dist: thinc>=8.2.5; python_version >= "3.9"
 Requires-Dist: blis<1.0.0; python_version < "3.9"
@@ -56,7 +56,7 @@ Requires-Dist: pytest>=7.1.0; extra == "dev-no-ml"
 Requires-Dist: pytest-cov>=3.0.0; extra == "dev-no-ml"
 Requires-Dist: pytest-timeout; extra == "dev-no-ml"
 Requires-Dist: koalas>=1.8.1; python_version < "3.8" and extra == "dev-no-ml"
-Requires-Dist: pyspark; extra == "dev-no-ml"
+Requires-Dist: pyspark<4.0.0; extra == "dev-no-ml"
 Requires-Dist: polars; extra == "dev-no-ml"
 Requires-Dist: scikit-learn; extra == "dev-no-ml"
 Requires-Dist: poetry; extra == "dev-no-ml"
@@ -140,13 +140,13 @@ Check out our interactive [demo](https://aphp.github.io/edsnlp/demo/) !
 You can install EDS-NLP via `pip`. We recommend pinning the library version in your projects, or use a strict package manager like [Poetry](https://python-poetry.org/).
 
 ```shell
-pip install edsnlp==0.17.0
+pip install edsnlp==0.17.1
 ```
 
 or if you want to use the trainable components (using pytorch)
 
 ```shell
-pip install "edsnlp[ml]==0.17.0"
+pip install "edsnlp[ml]==0.17.1"
 ```
 
 ### A first pipeline

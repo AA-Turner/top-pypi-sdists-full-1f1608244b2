@@ -90,7 +90,7 @@ class Dataset:
         return cls(data=data, _internal=True)
 
     @classmethod
-    def from_dict(cls, data: list):
+    def from_list(cls, data: list):
         return cls(data=data, _internal=True)
 
     @classmethod
@@ -270,6 +270,28 @@ class Dataset:
             return open(self._path, "rb")
         else:
             raise ValueError("No data or path provided")
+
+    def __iter__(self):
+        """
+        Make the dataset iterable, yielding parsed JSON objects from each line.
+
+        Yields:
+            dict: Parsed JSON object from each line in the dataset
+
+        Example:
+            for record in dataset:
+                print(record)  # Each record is a parsed JSON dict
+        """
+        stream = self.stream  # Use the cached stream property
+        stream.seek(0)  # Ensure we start from the beginning
+        for line in stream:
+            line_str = line.decode("utf-8").strip()
+            if line_str:  # Skip empty lines
+                try:
+                    yield json.loads(line_str)
+                except json.JSONDecodeError as e:
+                    logger.warning(f"Failed to parse JSON line: {line_str[:100]}... Error: {e}")
+                    continue
 
     def file_size(self) -> int:
         """

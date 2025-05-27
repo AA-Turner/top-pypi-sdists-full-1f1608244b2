@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: x-transformers
-Version: 2.3.5
+Version: 2.3.6
 Summary: X-Transformers
 Project-URL: Homepage, https://pypi.org/project/x-transformers/
 Project-URL: Repository, https://github.com/lucidrains/x-transformers
@@ -2472,6 +2472,17 @@ ids_out, num_out, is_number_mask = model.generate(start_ids, start_nums, 17)
     year    = {2024},
     volume  = {abs/2412.09871},
     url     = {https://api.semanticscholar.org/CorpusID:274762821}
+}
+```
+
+```bibtex
+@misc{Jordan2024,
+    author       = {Keller Jordan and Braden Koszarsky},
+    title        = {modded-nanogpt (value embeddings from nanogpt speedrun)},
+    year         = {2024},
+    publisher    = {GitHub},
+    journal      = {GitHub repository},
+    howpublished = {https://github.com/KellerJordan/modded-nanogpt},
 }
 ```
 

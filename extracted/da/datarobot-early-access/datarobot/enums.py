@@ -129,7 +129,7 @@ ASYNC_PROCESS_STATUS = enum(
 LEADERBOARD_SORT_KEY = enum(PROJECT_METRIC="metric", SAMPLE_PCT="samplePct")
 
 
-class TARGET_TYPE:
+class TARGET_TYPE:  # pylint: disable=missing-class-docstring
     BINARY = "Binary"
     MULTICLASS = "Multiclass"
     MULTILABEL = "Multilabel"
@@ -137,7 +137,18 @@ class TARGET_TYPE:
     UNSTRUCTURED = "Unstructured"
     ANOMALY = "Anomaly"
     TEXT_GENERATION = "TextGeneration"
-    ALL = [BINARY, MULTICLASS, MULTILABEL, REGRESSION, UNSTRUCTURED, ANOMALY, TEXT_GENERATION]
+    AGENTIC_WORKFLOW = "AgenticWorkflow"
+
+    ALL = [
+        BINARY,
+        MULTICLASS,
+        MULTILABEL,
+        REGRESSION,
+        UNSTRUCTURED,
+        ANOMALY,
+        TEXT_GENERATION,
+        AGENTIC_WORKFLOW,
+    ]
 
 
 JOB_TYPE = enum(
@@ -570,9 +581,16 @@ class CUSTOM_MODEL_TARGET_TYPE(_SHARED_TARGET_TYPE):
     """Enum of valid custom model target types"""
 
     UNSTRUCTURED = "Unstructured"
-    REQUIRES_TARGET_NAME = ("Binary", "Multiclass", "Regression", "TextGeneration")
+    AGENTIC_WORKFLOW = "AgenticWorkflow"
+    REQUIRES_TARGET_NAME = (
+        "Binary",
+        "Multiclass",
+        "Regression",
+        "TextGeneration",
+        "AgenticWorkflow",
+    )
 
-    ALL = _SHARED_TARGET_TYPE.ALL + [UNSTRUCTURED]
+    ALL = _SHARED_TARGET_TYPE.ALL + [UNSTRUCTURED, AGENTIC_WORKFLOW]
 
 
 class CUSTOM_TASK_TARGET_TYPE(_SHARED_TARGET_TYPE):
@@ -1811,3 +1829,22 @@ class ListCustomTemplatesSortQueryParams(StrEnum):
     TEMPLATE_TYPE_DESCENDING = "-template_type"
     TEMPLATE_SUB_TYPE_ASCENDING = "template_sub_type"
     TEMPLATE_SUB_TYPE_DESCENDING = "-template_sub_type"
+
+
+class ChunkServiceDialect(StrEnum):
+    SNOWFLAKE = "snowflake"
+    BIGQUERY = "bigquery"
+    DATABRICKS = "databricks"
+    SPARK = "spark"
+    POSTGRES = "postgres"
+
+
+class ChunkingStrategy(StrEnum):
+    FEATURES = "features"
+    ROWS = "rows"
+
+
+class ChunkingPartitionMethod(StrEnum):
+    RANDOM = "random"
+    STRATIFIED = "stratified"
+    DATE = "date"

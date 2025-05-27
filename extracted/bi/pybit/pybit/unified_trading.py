@@ -21,6 +21,10 @@ from ._v5_crypto_loan import CryptoLoanHTTP
 from ._v5_earn import EarnHTTP
 from ._websocket_stream import _V5WebSocketManager
 from ._websocket_trading import _V5TradeWebSocketManager
+from ._v5_spread import (
+    SpreadHTTP,
+    _V5WebSocketSpreadTrading,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -178,6 +182,30 @@ class WebSocket(_V5WebSocketManager):
         topic = "greeks"
         self.subscribe(topic, callback)
 
+    def spread_order_stream(self, callback):
+        """Subscribe to the spread trading order stream to see changes to your orders in real-time.
+
+        Push frequency: real-time
+
+        Additional information:
+            https://bybit-exchange.github.io/docs/v5/spread/websocket/private/order
+        """
+        self._validate_private_topic()
+        topic = "spread.order"
+        self.subscribe(topic, callback)
+
+    def spread_execution_stream(self, callback):
+        """Subscribe to the spread trading execution stream to see your executions in real-time.
+
+        Push frequency: real-time
+
+        Additional information:
+            https://bybit-exchange.github.io/docs/v5/spread/websocket/private/execution
+        """
+        self._validate_private_topic()
+        topic = "spread.execution"
+        self.subscribe(topic, callback)
+
     # Public topics
 
     def orderbook_stream(self, depth: int, symbol: (str, list), callback):
@@ -200,7 +228,6 @@ class WebSocket(_V5WebSocketManager):
         Required args:
             symbol (string/list): Symbol name(s)
             depth (int): Orderbook depth
-            callback:
 
         Additional information:
             https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook
@@ -366,3 +393,53 @@ class WebSocketTrading(_V5TradeWebSocketManager):
     def cancel_batch_order(self, callback, **kwargs):
         operation = "order.cancel-batch"
         self._send_order_operation(operation, callback, kwargs)
+
+
+class WebsocketSpreadTrading(_V5WebSocketSpreadTrading):
+    def __init__(self,  **kwargs):
+        super().__init__(**kwargs)
+
+    def orderbook_stream(self, depth: int, symbol: (str, list), callback):
+        """Subscribe to the orderbook stream. Supports different depths.
+
+        Level 25 data, push frequency: 20ms
+
+        Required args:
+            symbol (string/list): Symbol name(s)
+            depth (int): Orderbook depth
+
+        Additional information:
+            https://bybit-exchange.github.io/docs/v5/spread/websocket/public/orderbook
+        """
+        topic = f"orderbook.{depth}." + "{symbol}"
+        self.subscribe(topic, callback, symbol)
+
+    def trade_stream(self, symbol: (str, list), callback):
+        """
+        Subscribe to the recent trades stream.
+        After subscription, you will be pushed trade messages in real-time.
+
+        Push frequency: real-time
+
+        Required args:
+            symbol (string/list): Symbol name(s)
+
+         Additional information:
+            https://bybit-exchange.github.io/docs/v5/spread/websocket/public/trade
+        """
+        topic = f"publicTrade." + "{symbol}"
+        self.subscribe(topic, callback, symbol)
+
+    def ticker_stream(self, symbol: (str, list), callback):
+        """Subscribe to the ticker stream.
+
+        Push frequency: 100ms
+
+        Required args:
+            symbol (string/list): Symbol name(s)
+
+         Additional information:
+            https://bybit-exchange.github.io/docs/v5/spread/websocket/public/ticker
+        """
+        topic = "tickers.{symbol}"
+        self.subscribe(topic, callback, symbol)

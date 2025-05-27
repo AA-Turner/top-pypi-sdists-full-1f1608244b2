@@ -73,7 +73,7 @@ class Encoding(TypeSpecEnum):
 
     >>> from geoarrow import types
     >>> types.Encoding.GEOARROW
-    <Encoding.GEOARROW: 5>
+    <Encoding.GEOARROW: 7>
     """
 
     UNSPECIFIED = 0
@@ -91,7 +91,13 @@ class Encoding(TypeSpecEnum):
     LARGE_WKT = 4
     """Well-known text encoding with 64-bit offsets"""
 
-    GEOARROW = 5
+    WKB_VIEW = 5
+    """Well-known binary encoding using binary views as a storage type"""
+
+    WKT_VIEW = 6
+    """Well-known binary encoding using string views as a storage type"""
+
+    GEOARROW = 7
     """GeoArrow native nested list encoding"""
 
     def is_serialized(self):
@@ -100,6 +106,8 @@ class Encoding(TypeSpecEnum):
             Encoding.LARGE_WKB,
             Encoding.WKT,
             Encoding.LARGE_WKT,
+            Encoding.WKB_VIEW,
+            Encoding.WKT_VIEW,
         )
 
 
@@ -141,6 +149,9 @@ class GeometryType(TypeSpecEnum):
 
     GEOMETRYCOLLECTION = 7
     """Geometry collection geometry type"""
+
+    BOX = 990
+    """Box geometry type"""
 
     @classmethod
     def _common2(cls, lhs, rhs):
@@ -240,15 +251,31 @@ class EdgeType(TypeSpecEnum):
     SPHERICAL = 2
     """Edges are geodesic on a sphere"""
 
+    VINCENTY = 3
+    """Edges are geodesic on a spheroid according to the Vincenty algorithm"""
+
+    THOMAS = 4
+    """Edges are geodesic on a spheroid according to the Thomas algorithm"""
+
+    ANDOYER = 5
+    """Edges are geodesic on a spheroid according to the Andoyer algorithm"""
+
+    KARNEY = 6
+    """Edges are geodesic on a spheroid according to the Karney algorithm"""
+
 
 _VALUE_COMMON_HELPER = {
     (Encoding.WKB, Encoding.LARGE_WKB): Encoding.LARGE_WKB,
     (Encoding.WKB, Encoding.WKT): Encoding.WKB,
     (Encoding.WKB, Encoding.LARGE_WKT): Encoding.LARGE_WKB,
+    (Encoding.WKB, Encoding.WKB_VIEW): Encoding.WKB_VIEW,
     (Encoding.WKB, Encoding.GEOARROW): Encoding.WKB,
+    (Encoding.WKB_VIEW, Encoding.LARGE_WKB): Encoding.WKB_VIEW,
     (Encoding.WKT, Encoding.LARGE_WKT): Encoding.LARGE_WKT,
     (Encoding.WKT, Encoding.LARGE_WKB): Encoding.LARGE_WKB,
+    (Encoding.WKT, Encoding.WKT_VIEW): Encoding.WKT_VIEW,
     (Encoding.WKT, Encoding.GEOARROW): Encoding.WKB,
+    (Encoding.WKT_VIEW, Encoding.LARGE_WKT): Encoding.WKT_VIEW,
     (GeometryType.POINT, GeometryType.MULTIPOINT): GeometryType.MULTIPOINT,
     (
         GeometryType.LINESTRING,

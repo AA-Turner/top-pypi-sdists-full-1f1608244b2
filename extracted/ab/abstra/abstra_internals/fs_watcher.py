@@ -33,13 +33,17 @@ class FileChangeEventHandler(FileSystemEventHandler):
         if filepath.resolve() == self.dot_env_path.resolve():
             AbstraLogger.info("Reloading .env and all modules")
             load_dotenv(self.dot_env_path, override=True)
-            for dep in self.project_repository.load().get_local_dependencies():
+            for dep in self.project_repository.load(
+                include_disabled_stages=True
+            ).get_local_dependencies():
                 self.reload_module(dep)
             return
 
         resolved_deps = [
             dep.resolve()
-            for dep in self.project_repository.load().get_local_dependencies()
+            for dep in self.project_repository.load(
+                include_disabled_stages=True
+            ).get_local_dependencies()
         ]
 
         if filepath.resolve() in resolved_deps:
@@ -48,16 +52,24 @@ class FileChangeEventHandler(FileSystemEventHandler):
             return
 
     def reload_module(self, file: Path):
-        module_name = file.stem
-        module = sys.modules.get(module_name)
-
         try:
+            relative_path = file.resolve().relative_to(Settings.root_path.resolve())
+            if relative_path.suffix != ".py":
+                return
+
+            module_name = ".".join(relative_path.with_suffix("").parts)
+
+            AbstraLogger.debug(f"Reloading module: {module_name}")
+
+            module = sys.modules.get(module_name)
+
             if module is None:
                 importlib.import_module(module_name)
             else:
                 if module.__spec__ is not None and module.__spec__.cached is not None:
                     Path(module.__spec__.cached).unlink(missing_ok=True)
                 importlib.reload(module)
+
         except Exception as e:
             AbstraLogger.error(
                 f"Could not reload module from {file} with the following error: {e}"

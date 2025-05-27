@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: spacy-transformers
-Version: 1.3.8
+Version: 1.3.9
 Summary: spaCy pipelines for pre-trained BERT and other transformers
 Home-page: https://spacy.io
 Author: Explosion
@@ -22,7 +22,7 @@ Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
-Requires-Python: <3.13,>=3.9
+Requires-Python: <3.14,>=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: spacy<4.1.0,>=3.5.0
@@ -55,6 +55,7 @@ Provides-Extra: cuda111
 Requires-Dist: cupy-cuda111>=5.0.0b4; extra == "cuda111"
 Provides-Extra: cuda112
 Requires-Dist: cupy-cuda112>=5.0.0b4; extra == "cuda112"
+Dynamic: license-file
 
 <a href="https://explosion.ai"><img src="https://explosion.ai/assets/img/logo.svg" width="125" height="125" align="right" /></a>
 

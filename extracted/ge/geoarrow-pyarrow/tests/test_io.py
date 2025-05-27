@@ -1,9 +1,11 @@
 import pytest
 import tempfile
 import os
+import json
 
 import pyarrow as pa
 from pyarrow import parquet
+from geoarrow import types
 import geoarrow.pyarrow as ga
 from geoarrow.pyarrow import io
 
@@ -34,23 +36,57 @@ def test_readpyogrio_table_gpkg():
         assert ga.format_wkt(table.column("geometry")).to_pylist() == ["POINT (0 1)"]
 
 
-def test_write_geoparquet_table():
+def test_write_geoparquet_table_default():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_pq = os.path.join(tmpdir, "test.parquet")
+        tab = pa.table([ga.as_geoarrow(["POINT (0 1)"])], names=["geometry"])
+
+        # When geometry_encoding=None, geoarrow types stay geoarrow types
+        # (probably need to workshop this based on geoparquet_version or something)
+        io.write_geoparquet_table(tab, temp_pq, geometry_encoding=None)
+        tab2 = parquet.read_table(temp_pq)
+        assert b"geo" in tab2.schema.metadata
+        ga.as_wkt(ga.point().wrap_array(tab2["geometry"])).to_pylist() == [
+            "POINT (0 1)"
+        ]
+
+
+def test_write_geoparquet_table_wkb():
     with tempfile.TemporaryDirectory() as tmpdir:
         temp_pq = os.path.join(tmpdir, "test.parquet")
         tab = pa.table([ga.array(["POINT (0 1)"])], names=["geometry"])
-        io.write_geoparquet_table(tab, temp_pq)
+        io.write_geoparquet_table(tab, temp_pq, geometry_encoding="WKB")
         tab2 = parquet.read_table(temp_pq)
         assert b"geo" in tab2.schema.metadata
+        meta = json.loads(tab2.schema.metadata[b"geo"])
+        assert meta["version"] == "1.0.0"
         assert tab2.schema.types[0] == pa.binary()
 
 
-def test_read_geoparquet_table():
+def test_write_geoparquet_table_geoarrow():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_pq = os.path.join(tmpdir, "test.parquet")
+        tab = pa.table([ga.array(["POINT (0 1)"])], names=["geometry"])
+        io.write_geoparquet_table(
+            tab, temp_pq, geometry_encoding=io.geoparquet_encoding_geoarrow()
+        )
+        tab2 = parquet.read_table(temp_pq)
+        assert b"geo" in tab2.schema.metadata
+        meta = json.loads(tab2.schema.metadata[b"geo"])
+        assert meta["version"] == "1.1.0"
+        assert meta["columns"]["geometry"]["encoding"] == "point"
+        ga.as_wkt(ga.point().wrap_array(tab2["geometry"])).to_pylist() == [
+            "POINT (0 1)"
+        ]
+
+
+def test_read_geoparquet_table_wkb():
     with tempfile.TemporaryDirectory() as tmpdir:
         temp_pq = os.path.join(tmpdir, "test.parquet")
 
         # With "geo" metadata key
         tab = pa.table([ga.array(["POINT (0 1)"])], names=["geometry"])
-        io.write_geoparquet_table(tab, temp_pq)
+        io.write_geoparquet_table(tab, temp_pq, geometry_encoding="WKB")
         tab2 = io.read_geoparquet_table(temp_pq)
         assert isinstance(tab2["geometry"].type, ga.GeometryExtensionType)
         assert b"geo" not in tab2.schema.metadata
@@ -60,6 +96,18 @@ def test_read_geoparquet_table():
         parquet.write_table(tab, temp_pq)
         tab2 = io.read_geoparquet_table(temp_pq)
         assert isinstance(tab2["geometry"].type, ga.GeometryExtensionType)
+
+
+def test_read_geoparquet_table_geoarrow():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        temp_pq = os.path.join(tmpdir, "test.parquet")
+
+        tab = pa.table([ga.array(["POINT (0 1)"])], names=["geometry"])
+        io.write_geoparquet_table(
+            tab, temp_pq, geometry_encoding=io.geoparquet_encoding_geoarrow()
+        )
+        tab2 = io.read_geoparquet_table(temp_pq)
+        tab2["geometry"].type == ga.point()
 
 
 def test_geoparquet_column_spec_from_type_geom_type():
@@ -93,15 +141,9 @@ def test_geoparquet_column_spec_from_type_crs():
     assert spec_none["crs"] is None
 
     spec_projjson = io._geoparquet_column_spec_from_type(
-        ga.wkb().with_crs("{}", ga.CrsType.PROJJSON)
+        ga.wkb().with_crs(types.OGC_CRS84)
     )
-    assert spec_projjson["crs"] == {}
-
-    pytest.importorskip("pyproj")
-    spec_not_projjson = io._geoparquet_column_spec_from_type(
-        ga.wkb().with_crs("OGC:CRS84")
-    )
-    assert spec_not_projjson["crs"]["id"]["code"] == "CRS84"
+    assert spec_projjson["crs"]["id"]["code"] == "CRS84"
 
 
 def test_geoparquet_column_spec_from_type_edges():
@@ -228,10 +270,35 @@ def test_guess_geography_columns():
 
 
 def test_encode_chunked_array():
-    with pytest.raises(ValueError, match="Expected column encoding 'WKB'"):
+    with pytest.raises(ValueError, match="Expected column encoding to be one of"):
         io._geoparquet_encode_chunked_array(
-            ga.array("POINT (0 1)"), {"encoding": "NotAnEncoding"}
+            ga.array(["POINT (0 1)"]), {"encoding": "NotAnEncoding"}
         )
+
+    with pytest.raises(ValueError, match="Can't encode column with"):
+        io._geoparquet_encode_chunked_array(
+            ga.array(["POINT (0 1)", "LINESTRING (0 0, 1 1)"]),
+            {"encoding": io.geoparquet_encoding_geoarrow()},
+        )
+
+    with pytest.raises(ValueError, match="Can't encode column with encoding"):
+        io._geoparquet_encode_chunked_array(
+            ga.as_geoarrow(["POINT (0 1)"]),
+            {"encoding": "linestring"},
+        )
+
+    # Check geoarrow encoding when nothing is to be done
+    already_point = ga.as_geoarrow(["POINT (0 1)"])
+    encoded = io._geoparquet_encode_chunked_array(
+        already_point, spec={"encoding": "point"}
+    )
+    assert encoded == already_point.storage
+
+    # Check geoarrow encoding when some inference and encoding has to happen
+    spec = {"encoding": io.geoparquet_encoding_geoarrow()}
+    encoded = io._geoparquet_encode_chunked_array(ga.as_wkb(["POINT (0 1)"]), spec=spec)
+    assert encoded == already_point.storage
+    assert spec["encoding"] == "point"
 
     spec = {"encoding": "WKB"}
     encoded = io._geoparquet_encode_chunked_array(ga.as_wkb(["POINT (0 1)"]), spec)
@@ -284,13 +351,12 @@ def test_chunked_array_to_geoarrow_crs():
     item_missing_crs = io._geoparquet_chunked_array_to_geoarrow(
         item_binary, {"encoding": "WKB"}
     )
-    assert item_missing_crs.type.crs_type == ga.CrsType.PROJJSON
+    assert item_missing_crs.type.crs.to_json_dict() == types.OGC_CRS84.to_json_dict()
 
     item_explicit_crs = io._geoparquet_chunked_array_to_geoarrow(
         item_binary, {"encoding": "WKB", "crs": {}}
     )
-    assert item_explicit_crs.type.crs_type == ga.CrsType.PROJJSON
-    assert item_explicit_crs.type.crs == "{}"
+    assert item_explicit_crs.type.crs.to_json_dict() == {}
 
 
 def test_chunked_array_to_geoarrow_edges():
@@ -322,7 +388,7 @@ def test_table_to_geoarrow():
     tab_geo = io._geoparquet_table_to_geoarrow(tab, {"col_name": {"encoding": "WKB"}})
     assert "col_name" in tab_geo.schema.names
     assert isinstance(tab_geo["col_name"].type, ga.GeometryExtensionType)
-    assert tab_geo["col_name"].type.crs_type == ga.CrsType.PROJJSON
+    assert tab_geo["col_name"].type.crs.to_json_dict() == types.OGC_CRS84.to_json_dict()
 
     # Check with no columns selected
     tab_no_cols = tab.drop_columns(["col_name"])

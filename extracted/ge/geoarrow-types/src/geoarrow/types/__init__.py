@@ -1,3 +1,5 @@
+from geoarrow.types._version import __version__, __version_tuple__  # NOQA: F401
+
 from geoarrow.types.constants import (
     Encoding,
     GeometryType,
@@ -15,6 +17,9 @@ from geoarrow.types.type_spec import (
     large_wkb,
     wkt,
     large_wkt,
+    wkb_view,
+    wkt_view,
+    box,
     point,
     linestring,
     polygon,
@@ -39,7 +44,10 @@ __all__ = [
     "large_wkb",
     "wkt",
     "large_wkt",
+    "wkb_view",
+    "wkt_view",
     "geoarrow",
+    "box",
     "point",
     "linestring",
     "polygon",

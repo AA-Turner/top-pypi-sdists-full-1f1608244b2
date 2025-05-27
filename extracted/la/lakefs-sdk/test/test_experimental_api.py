@@ -83,6 +83,12 @@ class TestExperimentalApi(unittest.TestCase):
         """
         pass
 
+    def test_get_license(self) -> None:
+        """Test case for get_license
+
+        """
+        pass
+
     def test_get_pull_request(self) -> None:
         """Test case for get_pull_request
 
@@ -136,6 +142,18 @@ class TestExperimentalApi(unittest.TestCase):
         """Test case for update_pull_request
 
         update pull request  # noqa: E501
+        """
+        pass
+
+    def test_upload_part(self) -> None:
+        """Test case for upload_part
+
+        """
+        pass
+
+    def test_upload_part_copy(self) -> None:
+        """Test case for upload_part_copy
+
         """
         pass
 

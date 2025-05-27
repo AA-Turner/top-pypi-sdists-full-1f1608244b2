@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.cdk-route53-health-check",
-    "version": "0.0.737",
+    "version": "0.0.738",
     "description": "Create Route53 HealthChecks to monitor TCP, HTTP, HTTPS endpoints, CloudWatch Alarms and other Route53 HealthChecks.",
     "license": "MIT",
     "url": "https://github.com/pepperize/cdk-route53-health-check.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_cdk_route53_health_check._jsii": [
-            "cdk-route53-health-check@0.0.737.jsii.tgz"
+            "cdk-route53-health-check@0.0.738.jsii.tgz"
         ],
         "pepperize_cdk_route53_health_check": [
             "py.typed"

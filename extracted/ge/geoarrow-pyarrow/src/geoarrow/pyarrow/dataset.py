@@ -11,7 +11,6 @@ import pyarrow.compute as _compute
 import pyarrow.dataset as _ds
 import pyarrow.parquet as _pq
 import pyarrow.types as _types
-import pyarrow_hotfix as _  # noqa: F401
 from geoarrow.c.lib import CoordType
 from geoarrow.pyarrow._kernel import Kernel
 from geoarrow.pyarrow._type import GeometryExtensionType, wkb, wkt
@@ -160,7 +159,7 @@ class GeoDataset:
         >>> table = pa.table([ga.array(["POINT (0.5 1.5)"])], ["geometry"])
         >>> dataset = gads.dataset(table)
         >>> dataset.index_fragments().to_pylist()
-        [{'_fragment_index': 0, 'geometry': {'xmin': 0.5, 'xmax': 0.5, 'ymin': 1.5, 'ymax': 1.5}}]
+        [{'_fragment_index': 0, 'geometry': {'xmin': 0.5, 'ymin': 1.5, 'xmax': 0.5, 'ymax': 1.5}}]
         """
         if self._index is None:
             self._index = self._build_index(
@@ -213,7 +212,7 @@ class GeoDataset:
 
         if isinstance(target, str):
             target = [target]
-        target_box = box_agg(target)
+        target_box = box_agg(target).as_py()
         maybe_intersects = GeoDataset._index_box_intersects(
             self.index_fragments(), target_box, self.geometry_columns
         )
@@ -255,7 +254,7 @@ class GeoDataset:
         kernel = Kernel.box_agg(type)
         for batch in reader:
             kernel.push(batch.column(0))
-        return kernel.finish()
+        return kernel.finish().storage
 
     @staticmethod
     def _index_fragments(fragments, columns, types, num_threads=None):
@@ -295,7 +294,7 @@ class GeoDataset:
 
     @staticmethod
     def _index_box_intersects(index, box, columns):
-        xmin, xmax, ymin, ymax = box.as_py().values()
+        xmin, ymin, xmax, ymax = box.values()
         expressions = []
         for col in columns:
             expr = (

@@ -77,11 +77,23 @@ class TypeSpec(NamedTuple):
                 "edge_type or crs is unspecified"
             )
 
-        if self.edge_type == EdgeType.SPHERICAL:
-            metadata["edges"] = "spherical"
+        if self.edge_type != EdgeType.PLANAR:
+            metadata["edges"] = self.edge_type.name.lower()
 
-        if self.crs is not None:
+        if self.crs is None:
+            pass
+        elif hasattr(self.crs, "__geoarrow_crs_json_values__"):
+            metadata.update(self.crs.__geoarrow_crs_json_values__())
+        elif hasattr(self.crs, "to_json_dict"):
             metadata["crs"] = self.crs.to_json_dict()
+            metadata["crs_type"] = "projjson"
+        elif isinstance(self.crs, (str, bytes)):
+            string_crs = crs.StringCrs(self.crs)
+            metadata.update(string_crs.__geoarrow_crs_json_values__())
+        else:
+            raise ValueError(
+                f"Can't serialize crs object {self.crs} to extension metadata"
+            )
 
         return json.dumps(metadata)
 
@@ -116,13 +128,14 @@ class TypeSpec(NamedTuple):
         return TypeSpec.coalesce(self, defaults)
 
     def canonicalize(self):
-        """Canonicalize the representation of serialized types
+        """Canonicalize the representation of a spec
 
         If this type specification represents a serialized type, ensure
         that the dimensions are UNKNOWN, the geometry type is GEOMETRY,
-        and the coord type is UNSPECIFIED. These ensure that when a type
-        implementation needs to construct a concrete type that its
-        components are represented consistently for serialized types.
+        and the coord type is UNSPECIFIED.
+
+        These ensure that when a type implementation needs to construct a
+        concrete type that its components are represented consistently.
         """
         if self.encoding.is_serialized():
             return self.override(
@@ -256,7 +269,10 @@ class TypeSpec(NamedTuple):
             out_edges = EdgeType.create(metadata["edges"])
 
         if "crs" in metadata and metadata["crs"] is not None:
-            out_crs = crs.ProjJsonCrs(metadata["crs"])
+            if "crs_type" in metadata and metadata["crs_type"] == "projjson":
+                out_crs = crs.ProjJsonCrs(metadata["crs"])
+            else:
+                out_crs = crs.create(metadata["crs"])
 
         return TypeSpec(edge_type=out_edges, crs=out_crs)
 
@@ -341,10 +357,20 @@ def wkb(*, edge_type=None, crs=crs.UNSPECIFIED) -> TypeSpec:
 def large_wkb(*, edge_type=None, crs=crs.UNSPECIFIED) -> TypeSpec:
     """Large well-known binary encoding
 
-    Create a :class:`TypeSpec` denoting a well-known binary type  with
+    Create a :class:`TypeSpec` denoting a well-known binary type with
     64-bit data offsets. See :func:`type_spec` for parameter definitions.
     """
     return type_spec(encoding=Encoding.LARGE_WKB, edge_type=edge_type, crs=crs)
+
+
+def wkb_view(*, edge_type=None, crs=crs.UNSPECIFIED) -> TypeSpec:
+    """Well-known binary view encoding
+
+    Create a :class:`TypeSpec` denoting a well-known binary type using
+    binary views as the underlying storage type. See :func:`type_spec`
+    for parameter definitions.
+    """
+    return type_spec(encoding=Encoding.WKB_VIEW, edge_type=edge_type, crs=crs)
 
 
 def wkt(*, edge_type=None, crs=crs.UNSPECIFIED) -> TypeSpec:
@@ -363,6 +389,16 @@ def large_wkt(*, edge_type=None, crs=crs.UNSPECIFIED) -> TypeSpec:
     64-bit data offsets. See :func:`type_spec` for parameter definitions.
     """
     return type_spec(encoding=Encoding.LARGE_WKT, edge_type=edge_type, crs=crs)
+
+
+def wkt_view(*, edge_type=None, crs=crs.UNSPECIFIED) -> TypeSpec:
+    """Well-known text encoding
+
+    Create a :class:`TypeSpec` denoting a well-known text type using
+    string views as the underlying storage type. See :func:`type_spec`
+    for parameter definitions.
+    """
+    return type_spec(encoding=Encoding.WKT_VIEW, edge_type=edge_type, crs=crs)
 
 
 def geoarrow(
@@ -405,6 +441,29 @@ def point(
     return type_spec(
         encoding=Encoding.GEOARROW,
         geometry_type=GeometryType.POINT,
+        dimensions=dimensions,
+        coord_type=coord_type,
+        edge_type=edge_type,
+        crs=crs,
+    )
+
+
+def box(
+    *,
+    dimensions=None,
+    coord_type=None,
+    edge_type=None,
+    crs=crs.UNSPECIFIED,
+) -> TypeSpec:
+    """GeoArrow box
+
+    Create a :class:`TypeSpec` denoting a preference for GeoArrow Box
+    type without an explicit request for dimensions or coordinate type.
+    See :func:`type_spec` for parameter definitions.
+    """
+    return type_spec(
+        encoding=Encoding.GEOARROW,
+        geometry_type=GeometryType.BOX,
         dimensions=dimensions,
         coord_type=coord_type,
         edge_type=edge_type,
@@ -580,15 +639,20 @@ _SERIALIZED_EXT_NAMES = {
     Encoding.LARGE_WKB: "geoarrow.wkb",
     Encoding.WKT: "geoarrow.wkt",
     Encoding.LARGE_WKT: "geoarrow.wkt",
+    Encoding.WKB_VIEW: "geoarrow.wkb",
+    Encoding.WKT_VIEW: "geoarrow.wkt",
 }
 
 _GEOARROW_EXT_NAMES = {
+    GeometryType.BOX: "geoarrow.box",
+    GeometryType.GEOMETRY: "geoarrow.geometry",
     GeometryType.POINT: "geoarrow.point",
     GeometryType.LINESTRING: "geoarrow.linestring",
     GeometryType.POLYGON: "geoarrow.polygon",
     GeometryType.MULTIPOINT: "geoarrow.multipoint",
     GeometryType.MULTILINESTRING: "geoarrow.multilinestring",
     GeometryType.MULTIPOLYGON: "geoarrow.multipolygon",
+    GeometryType.GEOMETRYCOLLECTION: "geoarrow.geometrycollection",
 }
 
 _GEOMETRY_TYPE_FROM_EXT = {v: k for k, v in _GEOARROW_EXT_NAMES.items()}

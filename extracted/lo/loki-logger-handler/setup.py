@@ -1,12 +1,13 @@
 from setuptools import setup, find_packages
+import io
 
 # Read the contents of your README file
-with open("README.md", "r", encoding="utf-8") as f:
+with io.open("README.md", "r", encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
     name="loki-logger-handler",
-    version='1.1.1',
+    version='1.1.2',
     author="Xente",
     description="Handler designed for transmitting logs to Grafana Loki in JSON format.",
     long_description=long_description,

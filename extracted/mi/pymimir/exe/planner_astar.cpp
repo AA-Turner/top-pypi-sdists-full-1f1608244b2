@@ -73,6 +73,12 @@ int main(int argc, char** argv)
     auto axiom_evaluator = AxiomEvaluator(nullptr);
     auto state_repository = StateRepository(nullptr);
 
+    auto heuristic = Heuristic(nullptr);
+    if (heuristic_type == 0)
+    {
+        heuristic = BlindHeuristicImpl::create(problem);
+    }
+
     if (grounded)
     {
         auto delete_relaxed_problem_explorator = DeleteRelaxedProblemExplorator(problem);
@@ -82,6 +88,15 @@ int main(int argc, char** argv)
         axiom_evaluator = delete_relaxed_problem_explorator.create_grounded_axiom_evaluator(match_tree::Options(),
                                                                                             GroundedAxiomEvaluatorImpl::DefaultEventHandlerImpl::create(false));
         state_repository = StateRepositoryImpl::create(axiom_evaluator);
+
+        if (heuristic_type == 1)
+        {
+            heuristic = MaxHeuristicImpl::create(delete_relaxed_problem_explorator);
+        }
+        else if (heuristic_type == 2)
+        {
+            heuristic = AddHeuristicImpl::create(delete_relaxed_problem_explorator);
+        }
     }
     else
     {
@@ -89,16 +104,20 @@ int main(int argc, char** argv)
             LiftedApplicableActionGeneratorImpl::create(problem, LiftedApplicableActionGeneratorImpl::DefaultEventHandlerImpl::create(false));
         axiom_evaluator = LiftedAxiomEvaluatorImpl::create(problem, LiftedAxiomEvaluatorImpl::DefaultEventHandlerImpl::create(false));
         state_repository = StateRepositoryImpl::create(axiom_evaluator);
+
+        if (heuristic_type == 1)
+        {
+            throw std::runtime_error("Lifted hmax is not supported");
+        }
+        else if (heuristic_type == 2)
+        {
+            throw std::runtime_error("Lifted hadd is not supported");
+        }
     }
 
     auto event_handler = (debug) ? astar::EventHandler { astar::DebugEventHandlerImpl::create(problem, false) } :
                                    astar::EventHandler { astar::DefaultEventHandlerImpl::create(problem, false) };
 
-    auto heuristic = Heuristic(nullptr);
-    if (heuristic_type == 0)
-    {
-        heuristic = BlindHeuristicImpl::create(problem);
-    }
     assert(heuristic);
 
     auto search_context = SearchContextImpl::create(problem, applicable_action_generator, state_repository);
@@ -119,11 +138,11 @@ int main(int argc, char** argv)
             std::cerr << "Error opening file!" << std::endl;
             return 1;
         }
-        plan_file << std::make_tuple(std::cref(result.plan.value()), std::cref(*problem));
+        plan_file << result.plan.value();
         plan_file.close();
 
-        auto po_plan = PartiallyOrderedPlan(result.plan.value());
-        auto to_plan_with_maximal_makespan = po_plan.compute_t_o_plan_with_maximal_makespan();
+        // auto po_plan = PartiallyOrderedPlan(result.plan.value());
+        // auto to_plan_with_maximal_makespan = po_plan.compute_t_o_plan_with_maximal_makespan();
 
         // std::cout << po_plan << std::endl;
         // std::cout << result.plan.value() << std::endl;

@@ -103,7 +103,7 @@ async def test_mcp(exporter: TestExporter):
                         'method': 'initialize',
                         'params': {
                             'meta': None,
-                            'protocolVersion': '2024-11-05',
+                            'protocolVersion': IsStr(),
                             'capabilities': {'experimental': None, 'sampling': {}, 'roots': {'listChanged': True}},
                             'clientInfo': {'name': 'mcp', 'version': '0.1.0'},
                         },
@@ -116,7 +116,7 @@ async def test_mcp(exporter: TestExporter):
                     'logfire.span_type': 'span',
                     'response': {
                         'meta': None,
-                        'protocolVersion': '2024-11-05',
+                        'protocolVersion': IsStr(),
                         'capabilities': {
                             'experimental': {},
                             'logging': None,
@@ -224,7 +224,7 @@ async def test_mcp(exporter: TestExporter):
                     'code.filepath': 'test_openai_agents_mcp.py',
                     'code.function': 'test_mcp',
                     'code.lineno': 123,
-                    'request': {'method': 'tools/list', 'params': None, 'cursor': None},
+                    'request': {'method': 'tools/list', 'params': None},
                     'rpc.system': 'jsonrpc',
                     'rpc.jsonrpc.version': '2.0',
                     'rpc.method': 'tools/list',
@@ -364,6 +364,7 @@ async def test_mcp(exporter: TestExporter):
                             }
                         ],
                         'top_p': 1.0,
+                        'background': None,
                         'max_output_tokens': None,
                         'previous_response_id': None,
                         'reasoning': {'effort': None, 'generate_summary': None, 'summary': None},
@@ -674,6 +675,7 @@ async def test_mcp(exporter: TestExporter):
                             }
                         ],
                         'top_p': 1.0,
+                        'background': None,
                         'max_output_tokens': None,
                         'previous_response_id': None,
                         'reasoning': {'effort': None, 'generate_summary': None, 'summary': None},

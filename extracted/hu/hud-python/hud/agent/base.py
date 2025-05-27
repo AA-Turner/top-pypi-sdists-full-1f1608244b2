@@ -2,7 +2,11 @@ from abc import ABC, abstractmethod
 from typing import Sequence, TypeVar, Generic
 
 from hud.adapters import Adapter, CLA
+from hud.types import Gym
 from hud.utils.common import Observation
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Generic type for different client types (Anthropic, OpenAI, etc.)
 ClientT = TypeVar("ClientT")
@@ -21,7 +25,13 @@ class Agent(Generic[ClientT, ActionT], ABC):
     Subclasses only need to implement the fetch_response method.
     """
 
-    def __init__(self, client: ClientT | None = None, adapter: Adapter | None = None):
+    transfer_gyms: dict[Gym, Gym] = {}
+
+    def __init__(
+        self,
+        client: ClientT | None = None,
+        adapter: Adapter | None = None,
+    ):
         """
         Initialize the agent.
 
@@ -81,7 +91,9 @@ class Agent(Generic[ClientT, ActionT], ABC):
 
         return self.adapter.adapt_list(actions)
 
-    async def predict(self, observation: Observation) -> tuple[list[CLA] | list[ActionT], bool]:
+    async def predict(
+        self, observation: Observation, verbose: bool = False
+    ) -> tuple[list[CLA] | list[ActionT], bool]:
         """
         Predict the next action based on the observation.
 
@@ -94,11 +106,15 @@ class Agent(Generic[ClientT, ActionT], ABC):
             tuple[list[CLA] | list[ActionT], bool]: A tuple containing the list of actions and a boolean
                                                        indicating if the agent believes it has completed the task
         """
+        if verbose:
+            logger.info("Predicting action...")
         # Stage 1: Preprocess the observation
         processed_obs = self.preprocess(observation)
 
         # Stage 2: Fetch response from the model
         actions, done = await self.fetch_response(processed_obs)
+        if verbose:
+            logger.info("Raw action: %s", actions)
 
         # Stage 3: Postprocess the actions if we have an adapter
         if self.adapter and actions:

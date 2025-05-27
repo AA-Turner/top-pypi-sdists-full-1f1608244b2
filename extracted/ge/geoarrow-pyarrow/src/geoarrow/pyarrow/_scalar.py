@@ -1,7 +1,8 @@
+from typing import Optional
+
 import pyarrow as pa
-import pyarrow_hotfix as _  # noqa: F401
 from geoarrow.pyarrow._kernel import Kernel
-from geoarrow.pyarrow._type import GeometryExtensionType
+from geoarrow.types.type_pyarrow import GeometryExtensionType
 
 
 class GeometryExtensionScalar(pa.ExtensionScalar):
@@ -11,6 +12,16 @@ class GeometryExtensionScalar(pa.ExtensionScalar):
         pa_version = [int(component) for component in pa.__version__.split(".")]
         if pa_version[0] < 13:
             return super().__repr__()
+
+        # Pretty WKT printing needs geoarrow-c
+        try:
+            from geoarrow import c  # noqa: F401
+        except ImportError:
+            return (
+                super().__repr__()
+                + "\n"
+                + "* pip install geoarrow-c for prettier printing of geometry scalars"
+            )
 
         max_width = 70
 
@@ -24,7 +35,7 @@ class GeometryExtensionScalar(pa.ExtensionScalar):
         if len(string_formatted) >= max_width:
             string_formatted = string_formatted[: (max_width - 3)] + "..."
 
-        return f"{type(self).__name__}\n<{string_formatted}>"
+        return f"{type(self).__name__}:{repr(self.type)}\n<{string_formatted}>"
 
     def _array1(self):
         return self.type.wrap_array(pa.array([self.value]))
@@ -72,28 +83,45 @@ class WkbScalar(GeometryExtensionScalar):
         return self.value.as_py()
 
 
-class PointScalar(GeometryExtensionScalar):
-    pass
+class BoxScalar(GeometryExtensionScalar):
+    @property
+    def bounds(self) -> dict:
+        return self.as_py()
 
+    @property
+    def xmin(self) -> float:
+        return self.bounds["xmin"]
 
-class LinestringScalar(GeometryExtensionScalar):
-    pass
+    @property
+    def ymin(self) -> float:
+        return self.bounds["ymin"]
 
+    @property
+    def xmax(self) -> float:
+        return self.bounds["xmax"]
 
-class PolygonScalar(GeometryExtensionScalar):
-    pass
+    @property
+    def ymax(self) -> float:
+        return self.bounds["ymax"]
 
+    @property
+    def zmin(self) -> Optional[float]:
+        return self.bounds["zmin"] if "zmin" in self.bounds else None
 
-class MultiPointScalar(GeometryExtensionScalar):
-    pass
+    @property
+    def zmax(self) -> Optional[float]:
+        return self.bounds["zmax"] if "zmax" in self.bounds else None
 
+    @property
+    def mmin(self) -> Optional[float]:
+        return self.bounds["mmin"] if "mmin" in self.bounds else None
 
-class MultiLinestringScalar(GeometryExtensionScalar):
-    pass
+    @property
+    def mmax(self) -> Optional[float]:
+        return self.bounds["mmax"] if "mmax" in self.bounds else None
 
-
-class MultiPolygonScalar(GeometryExtensionScalar):
-    pass
+    def __repr__(self) -> str:
+        return f"BoxScalar({self.bounds})"
 
 
 def scalar_cls_from_name(name):
@@ -101,20 +129,10 @@ def scalar_cls_from_name(name):
         return WkbScalar
     elif name == "geoarrow.wkt":
         return WktScalar
-    elif name == "geoarrow.point":
-        return PointScalar
-    elif name == "geoarrow.linestring":
-        return LinestringScalar
-    elif name == "geoarrow.polygon":
-        return PolygonScalar
-    elif name == "geoarrow.multipoint":
-        return MultiPointScalar
-    elif name == "geoarrow.multilinestring":
-        return MultiLinestringScalar
-    elif name == "geoarrow.multipolygon":
-        return MultiPolygonScalar
+    elif name == "geoarrow.box":
+        return BoxScalar
     else:
-        raise ValueError(f'Expected valid extension name but got "{name}"')
+        return GeometryExtensionScalar
 
 
 # Inject array_cls_from_name exactly once to avoid circular import

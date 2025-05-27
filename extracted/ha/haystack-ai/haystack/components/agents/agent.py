@@ -13,12 +13,13 @@ from haystack.core.pipeline.pipeline import Pipeline
 from haystack.core.pipeline.utils import _deepcopy_with_exceptions
 from haystack.core.serialization import component_to_dict
 from haystack.dataclasses import ChatMessage
-from haystack.dataclasses.state import State, _schema_from_dict, _schema_to_dict, _validate_schema
-from haystack.dataclasses.state_utils import merge_lists
-from haystack.dataclasses.streaming_chunk import StreamingCallbackT
+from haystack.dataclasses.streaming_chunk import StreamingCallbackT, select_streaming_callback
 from haystack.tools import Tool, Toolset, deserialize_tools_or_toolset_inplace, serialize_tools_or_toolset
 from haystack.utils.callable_serialization import deserialize_callable, serialize_callable
 from haystack.utils.deserialization import deserialize_chatgenerator_inplace
+
+from .state.state import State, _schema_from_dict, _schema_to_dict, _validate_schema
+from .state.state_utils import merge_lists
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +85,9 @@ class Agent:
         :param raise_on_tool_invocation_failure: Should the agent raise an exception when a tool invocation fails?
             If set to False, the exception will be turned into a chat message and passed to the LLM.
         :param streaming_callback: A callback that will be invoked when a response is streamed from the LLM.
+            The same callback can be configured to emit tool results when a tool is called.
         :raises TypeError: If the chat_generator does not support tools parameter in its run method.
+        :raises ValueError: If the exit_conditions are not valid.
         """
         # Check if chat_generator supports tools parameter
         chat_generator_run_method = inspect.signature(chat_generator.run)
@@ -123,7 +126,7 @@ class Agent:
         self.raise_on_tool_invocation_failure = raise_on_tool_invocation_failure
         self.streaming_callback = streaming_callback
 
-        output_types = {}
+        output_types = {"last_message": ChatMessage}
         for param, config in self.state_schema.items():
             output_types[param] = config["type"]
             # Skip setting input types for parameters that are already in the run method
@@ -201,9 +204,8 @@ class Agent:
     def _prepare_generator_inputs(self, streaming_callback: Optional[StreamingCallbackT] = None) -> Dict[str, Any]:
         """Prepare inputs for the chat generator."""
         generator_inputs: Dict[str, Any] = {"tools": self.tools}
-        selected_callback = streaming_callback or self.streaming_callback
-        if selected_callback is not None:
-            generator_inputs["streaming_callback"] = selected_callback
+        if streaming_callback is not None:
+            generator_inputs["streaming_callback"] = streaming_callback
         return generator_inputs
 
     def _create_agent_span(self) -> Any:
@@ -225,13 +227,19 @@ class Agent:
         **kwargs: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
-        Process messages and execute tools until the exit condition is met.
+        Process messages and execute tools until an exit condition is met.
 
-        :param messages: List of chat messages to process
+        :param messages: List of Haystack ChatMessage objects to process.
+            If a list of dictionaries is provided, each dictionary will be converted to a ChatMessage object.
         :param streaming_callback: A callback that will be invoked when a response is streamed from the LLM.
+            The same callback can be configured to emit tool results when a tool is called.
         :param kwargs: Additional data to pass to the State schema used by the Agent.
             The keys must match the schema defined in the Agent's `state_schema`.
-        :return: Dictionary containing messages and outputs matching the defined output types
+        :returns:
+            A dictionary with the following keys:
+            - "messages": List of all messages exchanged during the agent's run.
+            - "last_message": The last message exchanged during the agent's run.
+            - Any additional keys defined in the `state_schema`.
         """
         if not self._is_warmed_up and hasattr(self.chat_generator, "warm_up"):
             raise RuntimeError("The component Agent wasn't warmed up. Run 'warm_up()' before calling 'run()'.")
@@ -241,10 +249,12 @@ class Agent:
 
         state = State(schema=self.state_schema, data=kwargs)
         state.set("messages", messages)
-
-        generator_inputs = self._prepare_generator_inputs(streaming_callback=streaming_callback)
-
         component_visits = dict.fromkeys(["chat_generator", "tool_invoker"], 0)
+
+        streaming_callback = select_streaming_callback(
+            init_callback=self.streaming_callback, runtime_callback=streaming_callback, requires_async=False
+        )
+        generator_inputs = self._prepare_generator_inputs(streaming_callback=streaming_callback)
         with self._create_agent_span() as span:
             span.set_content_tag(
                 "haystack.agent.input",
@@ -253,13 +263,14 @@ class Agent:
             counter = 0
             while counter < self.max_agent_steps:
                 # 1. Call the ChatGenerator
-                llm_messages = Pipeline._run_component(
+                result = Pipeline._run_component(
                     component_name="chat_generator",
                     component={"instance": self.chat_generator},
                     inputs={"messages": messages, **generator_inputs},
                     component_visits=component_visits,
                     parent_span=span,
-                )["replies"]
+                )
+                llm_messages = result["replies"]
                 state.set("messages", llm_messages)
 
                 # 2. Check if any of the LLM responses contain a tool call or if the LLM is not using tools
@@ -272,7 +283,7 @@ class Agent:
                 tool_invoker_result = Pipeline._run_component(
                     component_name="tool_invoker",
                     component={"instance": self._tool_invoker},
-                    inputs={"messages": llm_messages, "state": state},
+                    inputs={"messages": llm_messages, "state": state, "streaming_callback": streaming_callback},
                     component_visits=component_visits,
                     parent_span=span,
                 )
@@ -296,7 +307,12 @@ class Agent:
                 )
             span.set_content_tag("haystack.agent.output", state.data)
             span.set_tag("haystack.agent.steps_taken", counter)
-        return state.data
+
+        result = {**state.data}
+        all_messages = state.get("messages")
+        if all_messages:
+            result.update({"last_message": all_messages[-1]})
+        return result
 
     async def run_async(
         self,
@@ -312,10 +328,16 @@ class Agent:
         if available.
 
         :param messages: List of chat messages to process
-        :param streaming_callback: A callback that will be invoked when a response is streamed from the LLM.
+        :param streaming_callback: An asynchronous callback that will be invoked when a response
+        is streamed from the LLM. The same callback can be configured to emit tool results
+        when a tool is called.
         :param kwargs: Additional data to pass to the State schema used by the Agent.
             The keys must match the schema defined in the Agent's `state_schema`.
-        :return: Dictionary containing messages and outputs matching the defined output types
+        :returns:
+            A dictionary with the following keys:
+            - "messages": List of all messages exchanged during the agent's run.
+            - "last_message": The last message exchanged during the agent's run.
+            - Any additional keys defined in the `state_schema`.
         """
         if not self._is_warmed_up and hasattr(self.chat_generator, "warm_up"):
             raise RuntimeError("The component Agent wasn't warmed up. Run 'warm_up()' before calling 'run_async()'.")
@@ -325,10 +347,12 @@ class Agent:
 
         state = State(schema=self.state_schema, data=kwargs)
         state.set("messages", messages)
-
-        generator_inputs = self._prepare_generator_inputs(streaming_callback=streaming_callback)
-
         component_visits = dict.fromkeys(["chat_generator", "tool_invoker"], 0)
+
+        streaming_callback = select_streaming_callback(
+            init_callback=self.streaming_callback, runtime_callback=streaming_callback, requires_async=True
+        )
+        generator_inputs = self._prepare_generator_inputs(streaming_callback=streaming_callback)
         with self._create_agent_span() as span:
             span.set_content_tag(
                 "haystack.agent.input",
@@ -359,7 +383,11 @@ class Agent:
                 tool_invoker_result = await AsyncPipeline._run_component_async(
                     component_name="tool_invoker",
                     component={"instance": self._tool_invoker},
-                    component_inputs={"messages": llm_messages, "state": state},
+                    component_inputs={
+                        "messages": llm_messages,
+                        "state": state,
+                        "streaming_callback": streaming_callback,
+                    },
                     component_visits=component_visits,
                     max_runs_per_component=self.max_agent_steps,
                     parent_span=span,
@@ -384,7 +412,12 @@ class Agent:
                 )
             span.set_content_tag("haystack.agent.output", state.data)
             span.set_tag("haystack.agent.steps_taken", counter)
-        return state.data
+
+        result = {**state.data}
+        all_messages = state.get("messages")
+        if all_messages:
+            result.update({"last_message": all_messages[-1]})
+        return result
 
     def _check_exit_conditions(self, llm_messages: List[ChatMessage], tool_messages: List[ChatMessage]) -> bool:
         """

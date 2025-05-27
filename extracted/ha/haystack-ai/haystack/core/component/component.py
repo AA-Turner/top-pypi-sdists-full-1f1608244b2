@@ -76,7 +76,7 @@ from contextvars import ContextVar
 from copy import deepcopy
 from dataclasses import dataclass
 from types import new_class
-from typing import Any, Dict, Optional, Protocol, Type, TypeVar, Union, runtime_checkable
+from typing import Any, Dict, Mapping, Optional, Protocol, Type, TypeVar, Union, overload, runtime_checkable
 
 from typing_extensions import ParamSpec
 
@@ -89,9 +89,7 @@ from .types import InputSocket, OutputSocket, _empty
 logger = logging.getLogger(__name__)
 
 RunParamsT = ParamSpec("RunParamsT")
-SyncRunReturnT = TypeVar("SyncRunReturnT", bound=Dict[str, Any])
-AsyncRunReturnT = TypeVar("AsyncRunReturnT", bound=Coroutine[Any, Any, Dict[str, Any]])
-RunReturnT = Union[SyncRunReturnT, AsyncRunReturnT]
+RunReturnT = TypeVar("RunReturnT", bound=Union[Mapping[str, Any], Coroutine[Any, Any, Mapping[str, Any]]])
 
 
 @dataclass
@@ -158,12 +156,29 @@ class Component(Protocol):
         isinstance(MyComponent, Component)
     """
 
-    # This is the most reliable way to define the protocol for the `run` method.
-    # Defining a method doesn't work as different Components will have different
-    # arguments. Even defining here a method with `**kwargs` doesn't work as the
-    # expected signature must be identical.
-    # This makes most Language Servers and type checkers happy and shows less errors.
-    run: Callable[..., Dict[str, Any]]
+    # The following expression defines a run method compatible with any input signature.
+    # Its type is equivalent to Callable[..., Dict[str, Any]].
+    # See https://typing.python.org/en/latest/spec/callables.html#meaning-of-in-callable.
+    #
+    # Using `run: Callable[..., Dict[str, Any]]` directly leads to type errors: the protocol would expect a settable
+    # attribute `run`, while the actual implementation is a read-only method.
+    # For example:
+    # from haystack import Pipeline, component
+    # @component
+    # class MyComponent:
+    #     @component.output_types(out=str)
+    #     def run(self):
+    #         return {"out": "Hello, world!"}
+    # pipeline = Pipeline()
+    # pipeline.add_component("my_component", MyComponent())
+    #
+    # mypy raises:
+    # error: Argument 2 to "add_component" of "PipelineBase" has incompatible type "MyComponent"; expected "Component"
+    # [arg-type]
+    # note: Protocol member Component.run expected settable variable, got read-only attribute
+
+    def run(self, *args: Any, **kwargs: Any) -> Mapping[str, Any]:  # pylint: disable=missing-function-docstring # noqa: D102
+        ...
 
 
 class ComponentMeta(type):
@@ -256,7 +271,10 @@ class ComponentMeta(type):
             async_run_sig = inner(async_run, async_run_sockets)
 
             if async_run_sockets != run_sockets or run_sig != async_run_sig:
-                raise ComponentError("Parameters of 'run' and 'run_async' methods must be the same")
+                sig_diff = _compare_run_methods_signatures(run_sig, async_run_sig)
+                raise ComponentError(
+                    f"Parameters of 'run' and 'run_async' methods must be the same.\nDifferences found:\n{sig_diff}"
+                )
 
     def __call__(cls, *args, **kwargs):
         """
@@ -324,6 +342,51 @@ def _component_run_has_kwargs(component_cls: Type) -> bool:
         return any(
             param.kind == inspect.Parameter.VAR_KEYWORD for param in inspect.signature(run_method).parameters.values()
         )
+
+
+def _compare_run_methods_signatures(run_sig: inspect.Signature, async_run_sig: inspect.Signature) -> str:
+    """
+    Builds a detailed error message with the differences between the signatures of the run and run_async methods.
+
+    :param run_sig: The signature of the run method
+    :param async_run_sig: The signature of the run_async method
+
+    :returns:
+        A detailed error message if signatures don't match, empty string if they do
+    """
+    differences = []
+    run_params = list(run_sig.parameters.items())
+    async_params = list(async_run_sig.parameters.items())
+
+    if len(run_params) != len(async_params):
+        differences.append(
+            f"Different number of parameters: run has {len(run_params)}, run_async has {len(async_params)}"
+        )
+
+    for (run_name, run_param), (async_name, async_param) in zip(run_params, async_params):
+        if run_name != async_name:
+            differences.append(f"Parameter name mismatch: {run_name} vs {async_name}")
+
+        if run_param.annotation != async_param.annotation:
+            differences.append(
+                f"Parameter '{run_name}' type mismatch: {run_param.annotation} vs {async_param.annotation}"
+            )
+
+        if run_param.default != async_param.default:
+            differences.append(
+                f"Parameter '{run_name}' default value mismatch: {run_param.default} vs {async_param.default}"
+            )
+
+        if run_param.kind != async_param.kind:
+            differences.append(
+                f"Parameter '{run_name}' kind (POSITIONAL, KEYWORD, etc.) mismatch: "
+                f"{run_param.kind} vs {async_param.kind}"
+            )
+
+    return "\n".join(differences)
+
+
+T = TypeVar("T", bound=Component)
 
 
 class _Component:
@@ -487,7 +550,7 @@ class _Component:
 
         return output_types_decorator
 
-    def _component(self, cls: Any):
+    def _component(self, cls: Type[T]) -> Type[T]:
         """
         Decorator validating the structure of the component and registering it in the components registry.
         """
@@ -512,10 +575,7 @@ class _Component:
         # Recreate the decorated component class so it uses our metaclass.
         # We must explicitly redefine the type of the class to make sure language servers
         # and type checkers understand that the class is of the correct type.
-        # mypy doesn't like that we do this though so we explicitly ignore the type check.
-        new_cls: cls.__name__ = new_class(
-            cls.__name__, cls.__bases__, {"metaclass": ComponentMeta}, copy_class_namespace
-        )  # type: ignore[no-redef]
+        new_cls: Type[T] = new_class(cls.__name__, cls.__bases__, {"metaclass": ComponentMeta}, copy_class_namespace)
 
         # Save the component in the class registry (for deserialization)
         class_path = f"{new_cls.__module__}.{new_cls.__name__}"
@@ -532,14 +592,26 @@ class _Component:
         logger.debug("Registered Component {component}", component=new_cls)
 
         # Override the __repr__ method with a default one
-        new_cls.__repr__ = _component_repr
+        # mypy is not happy that:
+        # 1) we are assigning a method to a class
+        # 2) _component_repr has a different type (Callable[[Component], str]) than the expected
+        # __repr__ method (Callable[[object], str])
+        new_cls.__repr__ = _component_repr  # type: ignore[assignment]
 
         return new_cls
 
-    def __call__(self, cls: Optional[type] = None):
+    # Call signature when the the decorator is usead without parens (@component).
+    @overload
+    def __call__(self, cls: Type[T]) -> Type[T]: ...
+
+    # Overload allowing the decorator to be used with parens (@component()).
+    @overload
+    def __call__(self) -> Callable[[Type[T]], Type[T]]: ...
+
+    def __call__(self, cls: Optional[type[T]] = None) -> Union[T, Callable[[Type[T]], Type[T]]]:
         # We must wrap the call to the decorator in a function for it to work
         # correctly with or without parens
-        def wrap(cls):
+        def wrap(cls: type[T]):
             return self._component(cls)
 
         if cls:

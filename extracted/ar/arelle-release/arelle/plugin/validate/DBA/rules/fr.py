@@ -1266,29 +1266,26 @@ def rule_fr89(
     Regnskabsklasse D // Reporting class D
     Then TypeOfAuditorAssistance should be: Revisionspåtegning // Auditor's report on audited financial statements
     """
-    modelXbrl = val.modelXbrl
-    auditorFacts = modelXbrl.factsByQname.get(pluginData.typeOfAuditorAssistanceQn)
-    if auditorFacts is not None:
+    if pluginData.isAnnualReport(val.modelXbrl):
+        auditorFacts = val.modelXbrl.factsByQname.get(pluginData.typeOfAuditorAssistanceQn, set())
         for auditorFact in auditorFacts:
             if auditorFact.xValid >= VALID and auditorFact.xValue in [
                 pluginData.auditedFinancialStatementsDanish,
                 pluginData.auditedFinancialStatementsEnglish
             ]:
                 return
-    classFacts = []
-    facts = modelXbrl.factsByQname.get(pluginData.classOfReportingEntityQn)
-    if facts is not None:
+        classFacts = []
+        facts = val.modelXbrl.factsByQname.get(pluginData.classOfReportingEntityQn, set())
         for fact in facts:
-            if fact.xValid >= VALID:
-                if fact.xValue in [
-                    pluginData.reportingClassCLargeDanish,
-                    pluginData.reportingClassCLargeEnglish,
-                    pluginData.reportingClassCMediumDanish,
-                    pluginData.reportingClassCMediumEnglish,
-                    pluginData.reportingClassDDanish,
-                    pluginData.reportingClassDEnglish,
-                ]:
-                    classFacts.append(fact)
+            if fact.xValid >= VALID and fact.xValue in [
+                pluginData.reportingClassCLargeDanish,
+                pluginData.reportingClassCLargeEnglish,
+                pluginData.reportingClassCMediumDanish,
+                pluginData.reportingClassCMediumEnglish,
+                pluginData.reportingClassDDanish,
+                pluginData.reportingClassDEnglish
+            ]:
+                classFacts.append(fact)
         if len(classFacts) > 0:
             yield Validation.error(
                 codes='DBA.FR89',
@@ -1313,22 +1310,23 @@ def rule_fr91(
 ) -> Iterable[Validation]:
     """
     DBA.FR91: If the annual report contains information about both the general meeting date
-    (gsd:DateOfGeneralMeeting) and the annual accounts meeting date (gsd:DateOfApprovalOfReport), the values must be the same.
+    (gsd:DateOfGeneralMeeting) and the annual accounts meeting date (gsd:DateOfApprovalOfAnnualReport), the values must be the same.
     """
-    approvalOfReportFact = None
-    generalMeetingFact = None
-    approvalFacts = (val.modelXbrl.factsByQname.get(pluginData.dateOfApprovalOfReportQn, set()))
-    if len(approvalFacts) > 0:
-        approvalOfReportFact = next(iter(approvalFacts), None)
-    meetingFacts = val.modelXbrl.factsByQname.get(pluginData.dateOfGeneralMeetingQn, set())
-    if len(meetingFacts) > 0:
-        generalMeetingFact = next(iter(meetingFacts), None)
-    if generalMeetingFact is not None and generalMeetingFact.xValid >= VALID and approvalOfReportFact is not None and approvalOfReportFact.xValid >= VALID and generalMeetingFact.xValue != approvalOfReportFact.xValue:
-        yield Validation.error(
-            codes='DBA.FR91',
-            msg=_("The annual report contains information about both the general meeting date (gsd:DateOfGeneralMeeting) and the annual accounts meeting date (gsd:DateOfApprovalOfReport), the values must be the same."),
-            modelObject=[generalMeetingFact, approvalOfReportFact]
-        )
+    if pluginData.isAnnualReport(val.modelXbrl):
+        approvalOfReportFact = None
+        generalMeetingFact = None
+        approvalFacts = (val.modelXbrl.factsByQname.get(pluginData.dateOfApprovalOfAnnualReportQn, set()))
+        if len(approvalFacts) > 0:
+            approvalOfReportFact = next(iter(approvalFacts), None)
+        meetingFacts = val.modelXbrl.factsByQname.get(pluginData.dateOfGeneralMeetingQn, set())
+        if len(meetingFacts) > 0:
+            generalMeetingFact = next(iter(meetingFacts), None)
+        if generalMeetingFact is not None and generalMeetingFact.xValid >= VALID and approvalOfReportFact is not None and approvalOfReportFact.xValid >= VALID and generalMeetingFact.xValue != approvalOfReportFact.xValue:
+            yield Validation.error(
+                codes='DBA.FR91',
+                msg=_("The annual report contains information about both the general meeting date (gsd:DateOfGeneralMeeting) and the annual accounts meeting date (gsd:DateOfApprovalOfAnnualReport), the values must be the same."),
+                modelObject=[generalMeetingFact, approvalOfReportFact]
+            )
 
 
 @validation(

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: openeo-processes-dask
-Version: 2025.4.2
+Version: 2025.5.1
 Summary: Python implementations of many OpenEO processes, dask-friendly by default.
 Home-page: https://github.com/Open-EO/openeo-processes-dask
 License: Apache 2.0

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# SPDX-FileCopyrightText: 2024 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2024-2025 Espressif Systems (Shanghai) CO LTD
 # SPDX-FileCopyrightText: 2018-2019, Nordic Semiconductor ASA and Ulf Magnusson
 # SPDX-License-Identifier: ISC
 # This file is copied from kconfiglib project:
@@ -184,33 +184,38 @@ Doesn't work out of the box on Windows, but can be made to work with
 
 See the https://github.com/zephyrproject-rtos/windows-curses repository.
 """
+
 import errno
 import locale
 import os
 import re
 import sys
 import textwrap
+from typing import TYPE_CHECKING
 from typing import Union
 
 from kconfiglib.core import AND
 from kconfiglib.core import BOOL
 from kconfiglib.core import BOOL_TO_STR
-from kconfiglib.core import Choice
 from kconfiglib.core import COMMENT
-from kconfiglib.core import expr_str
-from kconfiglib.core import expr_value
 from kconfiglib.core import HEX
 from kconfiglib.core import INT
 from kconfiglib.core import MENU
-from kconfiglib.core import MenuNode
 from kconfiglib.core import OR
+from kconfiglib.core import STRING
+from kconfiglib.core import TYPE_TO_STR
+from kconfiglib.core import Choice
+from kconfiglib.core import MenuNode
+from kconfiglib.core import Symbol
+from kconfiglib.core import expr_str
+from kconfiglib.core import expr_value
 from kconfiglib.core import split_expr
 from kconfiglib.core import standard_config_filename
 from kconfiglib.core import standard_kconfig
 from kconfiglib.core import standard_sc_expr_str
-from kconfiglib.core import STRING
-from kconfiglib.core import Symbol
-from kconfiglib.core import TYPE_TO_STR
+
+if TYPE_CHECKING:
+    from kconfiglib import Kconfig
 
 _IS_WINDOWS = os.name == "nt"  # Are we running on Windows?
 
@@ -271,10 +276,10 @@ _N_SCROLL_ARROWS = 14
 
 # Lines of help text shown at the bottom of the "main" display
 _MAIN_HELP_LINES = """
-[Space/Enter] Toggle/enter  [ESC] Leave menu           [S] Save
-[O] Load                    [?] Symbol info            [/] Jump to symbol
-[F] Toggle show-help mode   [C] Toggle show-name mode  [A] Toggle show-all mode
-[Q] Quit (prompts for save) [D] Save minimal config (advanced)
+[Space/Enter] Toggle/enter  [ESC] Leave menu                   [S] Save
+[O] Load                    [?] Symbol info                    [/] Jump to symbol
+[F] Toggle show-help mode   [C] Toggle show-name mode          [A] Toggle show-all mode
+[Q] Quit (prompts for save) [D] Save minimal config (advanced) [R] Reset to default value
 """[1:-1].split("\n")
 
 # Lines of help text shown at the bottom of the information dialog
@@ -586,8 +591,7 @@ def _style_to_curses(style_def):
 
         if not -1 <= color_num < curses.COLORS:
             _warn(
-                f"Ignoring color {color_def}, which is outside the range "
-                f"-1..curses.COLORS-1 (-1..{curses.COLORS - 1})"
+                f"Ignoring color {color_def}, which is outside the range -1..curses.COLORS-1 (-1..{curses.COLORS - 1})"
             )
             return -1
 
@@ -670,18 +674,27 @@ def _style_attr(fg_color, bg_color, attribs, color_attribs={}):
 #
 # Main application
 #
+_kconf = None
+_conf_filename = None
+_conf_changed = False
+_minconf_filename = None
+_show_all = None
 
 
 def _main():
     menuconfig(standard_kconfig(__doc__))
 
 
-def menuconfig(kconf):
+def menuconfig(kconf: "Kconfig", headless: bool = False) -> None:
     """
     Launches the configuration interface, returning after the user exits.
 
     kconf:
       Kconfig instance to be configured
+
+    headless:
+        If True, run in headless mode, without a terminal interface. This is
+        useful for testing purposes.
     """
     global _kconf
     global _conf_filename
@@ -741,7 +754,8 @@ def menuconfig(kconf):
 
     # Enter curses mode. _menuconfig() returns a string to print on exit, after
     # curses has been de-initialized.
-    print(_wrapper(_menuconfig))  # instead of print(curses.wrapper(_menuconfig))
+    if not headless:
+        print(_wrapper(_menuconfig))  # instead of print(curses.wrapper(_menuconfig))
 
 
 def _wrapper(func):
@@ -804,17 +818,23 @@ def _needs_save():
         return True
 
     for sym in _kconf.unique_defined_syms:
-        if sym._user_value is None:
+        # symbol not loaded from sdkconfig
+        if sym._sdkconfig_value is None:
             if sym.config_string:
                 # Unwritten symbol
                 return True
-        elif sym.orig_type == BOOL:
-            if sym.bool_value != sym._user_value:
-                # Written bool symbol, new value
-                return True
-        elif sym.str_value != sym._user_value:
-            # Written string/int/hex symbol, new value
+        # symbol changed value during menuconfig session for whatever reason
+        elif sym.str_value != sym._sdkconfig_value:
             return True
+        # symbol loaded from sdkconfig having the same value
+        # May still need to save changed (non-)default state
+        else:
+            # symbol set back to default value
+            if not sym._loaded_as_default and sym._user_value is None:
+                return True
+            # symbol was user-set during menuconfig session
+            elif sym._loaded_as_default and sym._user_value is not None:
+                return True
 
     # No need to prompt for save
     return False
@@ -932,11 +952,11 @@ def _menuconfig(stdscr):
             curses.KEY_LEFT,
             curses.KEY_BACKSPACE,
             _ERASE_CHAR,
-            "\x1B",
+            "\x1b",
             "h",
             "H",
         ):  # \x1B = ESC
-            if c == "\x1B" and _cur_menu is _kconf.top_node:
+            if c == "\x1b" and _cur_menu is _kconf.top_node:
                 res = _quit_dialog()
                 if res:
                     return res
@@ -985,9 +1005,14 @@ def _menuconfig(stdscr):
             if res:
                 return res
 
+        elif c in ("r", "R"):
+            sel_node = _shown[_sel_node_i]
+            _restore_default(sel_node)
+            _update_menu()
+
 
 def _quit_dialog():
-    if not _conf_changed:
+    if not (_needs_save() or _conf_changed):
         return f"No changes to save (for '{_conf_filename}')"
 
     while True:
@@ -1610,6 +1635,25 @@ def _visible(node):
     return node.prompt and expr_value(node.prompt[1]) and not (node.item == MENU and not expr_value(node.visibility))
 
 
+def _restore_default(node):
+    # Restores the default value of the Symbol/Choice item of the menu node 'node`.
+
+    if not isinstance(node.item, (Symbol, Choice)):
+        return False
+
+    sc = node.item
+    sc._rec_invalidate()
+    sc._user_value = None
+
+    if isinstance(sc, Choice):
+        sc._user_selection = None
+        for sym in sc.syms:
+            sym._rec_invalidate()
+            sym._user_value = None
+
+    return True
+
+
 def _change_node(node):
     # Changes the value of the menu node 'node' if it is a symbol. Bools are toggled,
     # while other symbol types pop up a text entry dialog.
@@ -1795,7 +1839,7 @@ def _input_dialog(title, initial_text, info_text=None):
             _safe_curs_set(0)
             return s
 
-        elif c == "\x1B":  # \x1B = ESC
+        elif c == "\x1b":  # \x1B = ESC
             _safe_curs_set(0)
             return None
 
@@ -1982,7 +2026,7 @@ def _key_dialog(title, text, keys):
             _resize_main()
             _resize_key_dialog(win, text)
 
-        elif c == "\x1B":  # \x1B = ESC
+        elif c == "\x1b":  # \x1B = ESC
             return None
 
         elif isinstance(c, str):
@@ -2183,7 +2227,7 @@ def _jump_to_dialog():
                 _safe_curs_set(0)
                 return True
 
-        elif c == "\x1B":  # \x1B = ESC
+        elif c == "\x1b":  # \x1B = ESC
             _safe_curs_set(0)
             return False
 
@@ -2479,7 +2523,7 @@ def _info_dialog(node, from_jump_to_dialog):
             curses.KEY_LEFT,
             curses.KEY_BACKSPACE,
             _ERASE_CHAR,
-            "\x1B",  # \x1B = ESC
+            "\x1b",  # \x1B = ESC
             "q",
             "Q",
             "h",
@@ -2799,7 +2843,8 @@ def _kconfig_def_info(item):
     s += (len(s) - 1) * "="
 
     for node in nodes:
-        s += f"\n\nAt {node.filename}:{node.linenr}\n{_include_path_info(node)}Menu path: {_menu_path_info(node)}\n\n{_indent(node.custom_str(_name_and_val_str), 2)}"
+        s += f"\n\nAt {node.filename}:{node.linenr}\n{_include_path_info(node)}\
+            Menu path: {_menu_path_info(node)}\n\n{_indent(node.custom_str(_name_and_val_str), 2)}"
 
     return s
 
@@ -2931,7 +2976,7 @@ def _edit_text(c, s, i, hscroll, width):
         s = s[:new_i] + s[i:]
         i = new_i
 
-    elif c == "\x0B":  # \x0B = CTRL-K
+    elif c == "\x0b":  # \x0B = CTRL-K
         s = s[:i]
 
     elif c == "\x15":  # \x15 = CTRL-U
@@ -3011,7 +3056,7 @@ def _node_str(node):
             # .config), but skip it for choice symbols in choices in y mode,
             # and for symbols of UNKNOWN type (which generate a warning though)
             if sym._user_value is None and sym.orig_type and not (sym.choice and sym.choice.bool_value == 2):
-                s += " (NEW)"
+                s += " (default value)"
 
     if isinstance(node.item, Choice) and node.item.bool_value == 2:
         # Print the prompt of the selected symbol after the choice for

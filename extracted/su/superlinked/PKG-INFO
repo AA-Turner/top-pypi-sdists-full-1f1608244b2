@@ -1,11 +1,11 @@
 Metadata-Version: 2.1
 Name: superlinked
-Version: 25.1.0
+Version: 27.0.0
 Summary: The Superlinked vector computing library
 License: Apache-2.0
 Author: Superlinked Release
 Author-email: release@superlinked.com
-Requires-Python: >=3.10,<=3.12.3
+Requires-Python: >=3.10,<=3.12.10
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.10

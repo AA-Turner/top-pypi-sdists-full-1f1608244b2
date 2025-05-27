@@ -134,7 +134,7 @@ class MuData:
 
     def __init__(
         self,
-        data: Union[AnnData, Mapping[str, AnnData], "MuData"] = None,
+        data: Union[AnnData, Mapping[str, AnnData], "MuData"] | None = None,
         feature_types_names: dict | None = {
             "Gene Expression": "rna",
             "Peaks": "atac",
@@ -150,6 +150,7 @@ class MuData:
         data
             AnnData object or dictionary with AnnData objects as values.
             If a dictionary is passed, the keys will be used as modality names.
+            If None, creates an empty MuData object.
         feature_types_names
             Dictionary to map feature types encoded in data.var["feature_types"] to modality names.
             Only relevant when data is an AnnData object.
@@ -168,7 +169,10 @@ class MuData:
 
         # Add all modalities to a MuData object
         self.mod = ModDict()
-        if isinstance(data, abc.Mapping):
+        if data is None:
+            # Initialize an empty MuData object
+            pass
+        elif isinstance(data, abc.Mapping):
             for k, v in data.items():
                 self.mod[k] = v
         elif isinstance(data, AnnData):
@@ -204,16 +208,23 @@ class MuData:
             if isinstance(self._var, abc.Mapping) or self._var is None:
                 self._var = pd.DataFrame(self._var)
 
-            # Get global obsm
-            self._obsm = MuAxisArrays(self, axis=0, store=kwargs.get("obsm", {}))
-            # Get global varm
-            self._varm = MuAxisArrays(self, axis=1, store=kwargs.get("varm", {}))
+            # Ensure no keys are missing
+            for key in ("obsm", "varm", "obsp", "varp", "obsmap", "varmap"):
+                kwargs[key] = kwargs.get(key) or {}
 
-            self._obsp = PairwiseArrays(self, axis=0, store=kwargs.get("obsp", {}))
-            self._varp = PairwiseArrays(self, axis=1, store=kwargs.get("varp", {}))
+            # Map each attribute to its class and axis value
+            attr_to_axis_arrays = {
+                "obsm": (MuAxisArrays, 0),
+                "varm": (MuAxisArrays, 1),
+                "obsp": (PairwiseArrays, 0),
+                "varp": (PairwiseArrays, 1),
+                "obsmap": (MuAxisArrays, 0),
+                "varmap": (MuAxisArrays, 1),
+            }
 
-            self._obsmap = MuAxisArrays(self, axis=0, store=kwargs.get("obsmap", {}))
-            self._varmap = MuAxisArrays(self, axis=1, store=kwargs.get("varmap", {}))
+            # Initialise each attribute
+            for attr, (cls, axis) in attr_to_axis_arrays.items():
+                setattr(self, f"_{attr}", cls(self, axis=axis, store=kwargs[attr]))
 
             self._axis = kwargs.get("axis") or 0
 
@@ -224,10 +235,10 @@ class MuData:
 
             return
 
-        # Initialise global observations
+        # Initialize global observations
         self._obs = pd.DataFrame()
 
-        # Initialise global variables
+        # Initialize global variables
         self._var = pd.DataFrame()
 
         # Make obs map for each modality
@@ -242,6 +253,7 @@ class MuData:
 
         self._axis = 0
 
+        # Only call update() if there are modalities
         self.update()
 
     def _init_common(self):
@@ -261,6 +273,7 @@ class MuData:
 
     def _init_as_view(self, mudata_ref: "MuData", index):
         from anndata._core.index import _normalize_indices
+        from anndata._core.views import _resolve_idxs
 
         obsidx, varidx = _normalize_indices(index, mudata_ref.obs.index, mudata_ref.var.index)
 
@@ -300,29 +313,39 @@ class MuData:
                         cvaridx = slice(None)
             if a.is_view:
                 if isinstance(a, MuData):
-                    self.mod[m] = a._mudata_ref[cobsidx, cvaridx]
+                    self.mod[m] = a._mudata_ref[
+                        _resolve_idxs((a._oidx, a._vidx), (cobsidx, cvaridx), a._mudata_ref)
+                    ]
                 else:
-                    self.mod[m] = a._adata_ref[cobsidx, cvaridx]
+                    self.mod[m] = a._adata_ref[
+                        _resolve_idxs((a._oidx, a._vidx), (cobsidx, cvaridx), a._adata_ref)
+                    ]
             else:
                 self.mod[m] = a[cobsidx, cvaridx]
 
         self._obs = DataFrameView(mudata_ref.obs.iloc[obsidx, :], view_args=(self, "obs"))
         self._obsm = mudata_ref.obsm._view(self, (obsidx,))
-        self._obsp = mudata_ref.obsp._view(self, obsidx)
+        self._obsp = mudata_ref.obsp._view(self, (obsidx, obsidx))
         self._var = DataFrameView(mudata_ref.var.iloc[varidx, :], view_args=(self, "var"))
         self._varm = mudata_ref.varm._view(self, (varidx,))
-        self._varp = mudata_ref.varp._view(self, varidx)
+        self._varp = mudata_ref.varp._view(self, (varidx, varidx))
 
         for attr, idx in (("obs", obsidx), ("var", varidx)):
             posmap = {}
+            size = getattr(self, attr).shape[0]
             for mod, mapping in getattr(mudata_ref, attr + "map").items():
-                posmap[mod] = mapping[idx].copy()
+                cposmap = np.zeros((size,), dtype=mapping.dtype)
+                cidx = (mapping[idx] > 0).ravel()
+                cposmap[cidx > 0] = np.arange(cidx.sum()) + 1
+                posmap[mod] = cposmap
             setattr(self, "_" + attr + "map", posmap)
 
         self.is_view = True
         self.file = mudata_ref.file
         self._axis = mudata_ref._axis
         self._uns = mudata_ref._uns
+        self._oidx = obsidx
+        self._vidx = varidx
 
         if mudata_ref.is_view:
             self._mudata_ref = mudata_ref._mudata_ref
@@ -674,8 +697,14 @@ class MuData:
 
                     data_global = data_global.rename_axis(col_index, axis=0).reset_index()
                     for mod in self.mod.keys():
-                        data_global[mod + ":" + rowcol] = getattr(self, attr + "map")[mod]
-                    attrmap_columns = (mod + ":" + rowcol for mod in self.mod.keys())
+                        # Only add mapping for modalities that exist in attrmap
+                        if mod in getattr(self, attr + "map"):
+                            data_global[mod + ":" + rowcol] = getattr(self, attr + "map")[mod]
+                    attrmap_columns = [
+                        mod + ":" + rowcol
+                        for mod in self.mod.keys()
+                        if mod in getattr(self, attr + "map")
+                    ]
 
                     data_mod = data_mod.merge(
                         data_global, on=[col_index, *attrmap_columns], how="left", sort=False
@@ -780,8 +809,11 @@ class MuData:
             data_global[col_range] = np.arange(len(data_global))
 
             for mod in self.mod.keys():
-                data_global[mod + ":" + rowcol] = getattr(self, attr + "map")[mod]
-            attrmap_columns = [mod + ":" + rowcol for mod in self.mod.keys()]
+                if mod in getattr(self, attr + "map"):
+                    data_global[mod + ":" + rowcol] = getattr(self, attr + "map")[mod]
+            attrmap_columns = [
+                mod + ":" + rowcol for mod in self.mod.keys() if mod in getattr(self, attr + "map")
+            ]
 
             data_mod = data_mod.merge(data_global, on=attrmap_columns, how="left", sort=False)
 
@@ -1279,7 +1311,7 @@ class MuData:
 
                 # Update .obsp/.varp (size might have changed)
                 for mx_key, mx in attrp.items():
-                    attrp[mx_key] = attrp[mx_key][index_order, index_order]
+                    attrp[mx_key] = attrp[mx_key][index_order, :][:, index_order]
                     attrp[mx_key][index_order == -1, :] = -1
                     attrp[mx_key][:, index_order == -1] = -1
 
@@ -1440,7 +1472,11 @@ class MuData:
             self.update_obs()
 
         for k in self.mod:
-            self.mod[k].obs_names_make_unique()
+            if isinstance(self.mod[k], AnnData):
+                self.mod[k].obs_names_make_unique()
+            # Only propagate to individual modalities with shared vars
+            elif isinstance(self.mod[k], MuData) and getattr(self.mod[k], "axis", 1) == 1:
+                self.mod[k].obs_names_make_unique()
 
         # Check if there are observations with the same name in different modalities
         common_obs = []
@@ -1467,12 +1503,43 @@ class MuData:
     def obs_names(self) -> pd.Index:
         """
         Names of variables (alias for `.obs.index`)
-
-        This property is read-only.
-        To be modified, obs_names of individual modalities
-        should be changed, and .update_obs() should be called then.
         """
         return self.obs.index
+
+    @obs_names.setter
+    def obs_names(self, names: Sequence[str]):
+        """
+        Set the observation names for all the nested AnnData/MuData objects.
+        """
+        if isinstance(names, pd.Index):
+            if not isinstance(names.name, str | type(None)):
+                raise ValueError(
+                    f"MuData expects .obs.index.name to be a string or None, "
+                    f"but you passed a name of type {type(names.name).__name__!r}"
+                )
+        else:
+            names = pd.Index(names)
+            if not isinstance(names.name, str | type(None)):
+                names.name = None
+
+        mod_obs_sum = np.sum([a.n_obs for a in self.mod.values()])
+        if mod_obs_sum != self.n_obs:
+            self.update_obs()
+
+        if len(names) != self.n_obs:
+            raise ValueError(
+                f"The length of provided observation names {len(names)} does not match the length {self.shape[0]} of MuData.obs."
+            )
+
+        if self.is_view:
+            self._init_as_actual(self.copy())
+
+        self._obs.index = names
+        for mod, a in self.mod.items():
+            indices = self.obsmap[mod]
+            self.mod[mod].obs_names = names[indices[indices != 0] - 1]
+
+        self.update_obs()
 
     @property
     def var(self) -> pd.DataFrame:
@@ -1542,7 +1609,11 @@ class MuData:
             self.update_var()
 
         for k in self.mod:
-            self.mod[k].var_names_make_unique()
+            if isinstance(self.mod[k], AnnData):
+                self.mod[k].var_names_make_unique()
+            # Only propagate to individual modalities with shared obs
+            elif isinstance(self.mod[k], MuData) and getattr(self.mod[k], "axis", 0) == 0:
+                self.mod[k].var_names_make_unique()
 
         # Check if there are variables with the same name in different modalities
         common_vars = []
@@ -1569,12 +1640,43 @@ class MuData:
     def var_names(self) -> pd.Index:
         """
         Names of variables (alias for `.var.index`)
-
-        This property is read-only.
-        To be modified, var_names of individual modalities
-        should be changed, and .update_var() should be called then.
         """
         return self.var.index
+
+    @var_names.setter
+    def var_names(self, names: Sequence[str]):
+        """
+        Set the variable names for all the nested AnnData/MuData objects.
+        """
+        if isinstance(names, pd.Index):
+            if not isinstance(names.name, str | type(None)):
+                raise ValueError(
+                    f"MuData expects .var.index.name to be a string or None, "
+                    f"but you passed a name of type {type(names.name).__name__!r}"
+                )
+        else:
+            names = pd.Index(names)
+            if not isinstance(names.name, str | type(None)):
+                names.name = None
+
+        mod_var_sum = np.sum([a.n_vars for a in self.mod.values()])
+        if mod_var_sum != self.n_vars:
+            self.update_var()
+
+        if len(names) != self.n_vars:
+            raise ValueError(
+                f"The length of provided variable names {len(names)} does not match the length {self.shape[0]} of MuData.var."
+            )
+
+        if self.is_view:
+            self._init_as_actual(self.copy())
+
+        self._var.index = names
+        for mod, a in self.mod.items():
+            indices = self.varmap[mod]
+            self.mod[mod].var_names = names[indices[indices != 0] - 1]
+
+        self.update_var()
 
     # Multi-dimensional annotations (.obsm and .varm)
 
@@ -1722,8 +1824,9 @@ class MuData:
 
         NOTE: From v0.4, it will not pull columns from modalities by default.
         """
-        self.update_var()
-        self.update_obs()
+        if len(self.mod) > 0:
+            self.update_var()
+            self.update_obs()
 
     @property
     def axis(self) -> int:
@@ -1895,7 +1998,7 @@ class MuData:
         for m, mod in self.mod.items():
             if mods is not None and m not in mods:
                 continue
-            mod_map = attrmap[m]
+            mod_map = attrmap[m].ravel()
             mod_n_attr = mod.n_vars if attr == "var" else mod.n_obs
             mask = mod_map != 0
 

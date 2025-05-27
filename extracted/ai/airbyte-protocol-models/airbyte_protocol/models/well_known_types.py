@@ -42,18 +42,18 @@ class TimestampWithTimezone(BaseModel):
 
 
 class TimestampWithoutTimezone(BaseModel):
-    __root__: constr(regex=r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?( BC)?$') = (
-        Field(
-            ...,
-            description='Also known as a localdatetime, or just datetime. Under RFC 3339§5.6, this would be represented as `full-date "T" partial-time`, extended with BC era support.\n',
-        )
+    __root__: constr(
+        regex=r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?( BC)?$'
+    ) = Field(
+        ...,
+        description='Also known as a localdatetime, or just datetime. Under RFC 3339§5.6, this would be represented as `full-date "T" partial-time`, extended with BC era support.\n',
     )
 
 
 class TimeWithTimezone(BaseModel):
-    __root__: constr(regex=r'^\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+\-]\d{1,2}:\d{2})$') = (
-        Field(..., description='An RFC 3339§5.6 full-time')
-    )
+    __root__: constr(
+        regex=r'^\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+\-]\d{1,2}:\d{2})$'
+    ) = Field(..., description='An RFC 3339§5.6 full-time')
 
 
 class TimeWithoutTimezone(BaseModel):

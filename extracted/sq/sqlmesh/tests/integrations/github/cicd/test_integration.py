@@ -1695,8 +1695,8 @@ def test_overlapping_changes_models(
 +  d.zip,
 +  1 AS new_col
  FROM sushi.orders AS o
- LEFT JOIN current_marketing AS m
-   ON o.customer_id = m.customer_id
+ LEFT JOIN (
+   WITH current_marketing AS (
 ```
 - `sushi.waiter_names`
 ```diff
@@ -1705,6 +1705,8 @@ def test_overlapping_changes_models(
 
 **Indirectly Modified:**
 - `sushi.active_customers`
+- `sushi.count_customers_active`
+- `sushi.count_customers_inactive`
 - `sushi.waiter_as_customer_by_day`
 
 """
@@ -1744,7 +1746,7 @@ def test_overlapping_changes_models(
 """
     )
 
-    assert len(get_environment_objects(controller, "hello_world_2")) == 4
+    assert len(get_environment_objects(controller, "hello_world_2")) == 6
     assert "new_col" in get_columns(controller, "hello_world_2", "customers")
 
     assert mock_pull_request.merge.called

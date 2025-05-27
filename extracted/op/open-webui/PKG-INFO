@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: open-webui
-Version: 0.6.10
+Version: 0.6.11
 Summary: Open WebUI
 Author-email: Timothy Jaeryang Baek <tim@openwebui.com>
 License: Copyright (c) 2023-2025 Timothy Jaeryang Baek (Open WebUI)
@@ -100,7 +100,7 @@ Requires-Dist: opensearch-py==2.8.0
 Requires-Dist: pandas==2.2.3
 Requires-Dist: passlib[bcrypt]==1.7.4
 Requires-Dist: peewee-migrate==1.12.2
-Requires-Dist: peewee==3.17.9
+Requires-Dist: peewee==3.18.1
 Requires-Dist: pgvector==0.4.0
 Requires-Dist: pillow==11.1.0
 Requires-Dist: pinecone==6.0.2
@@ -134,6 +134,7 @@ Requires-Dist: sentence-transformers==4.1.0
 Requires-Dist: sentencepiece
 Requires-Dist: soundfile==0.13.1
 Requires-Dist: sqlalchemy==2.0.38
+Requires-Dist: starlette-compress==1.6.0
 Requires-Dist: tencentcloud-sdk-python==3.0.1336
 Requires-Dist: tiktoken
 Requires-Dist: transformers

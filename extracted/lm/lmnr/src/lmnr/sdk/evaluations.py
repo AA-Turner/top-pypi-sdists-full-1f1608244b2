@@ -11,7 +11,7 @@ from lmnr.opentelemetry_lib.tracing.attributes import SPAN_TYPE
 from lmnr.sdk.client.asynchronous.async_client import AsyncLaminarClient
 from lmnr.sdk.client.synchronous.sync_client import LaminarClient
 from lmnr.sdk.datasets import EvaluationDataset, LaminarDataset
-from lmnr.sdk.eval_control import EVALUATION_INSTANCE, PREPARE_ONLY
+from lmnr.sdk.eval_control import EVALUATION_INSTANCES, PREPARE_ONLY
 from lmnr.sdk.laminar import Laminar as L
 from lmnr.sdk.log import get_default_logger
 from lmnr.sdk.types import (
@@ -204,6 +204,18 @@ class Evaluation:
             )
         self.project_api_key = api_key
 
+        if L.is_initialized():
+            self.client = AsyncLaminarClient(
+                base_url=L.get_base_http_url(),
+                project_api_key=L.get_project_api_key(),
+            )
+            if project_api_key and project_api_key != L.get_project_api_key():
+                self._logger.warning(
+                    "Project API key is different from the one used to initialize"
+                    " Laminar. Ignoring the project API key passed to the evaluation."
+                )
+            return
+
         self.client = AsyncLaminarClient(
             base_url=self.base_http_url,
             project_api_key=self.project_api_key,
@@ -312,6 +324,7 @@ class Evaluation:
                     index=index,
                     trace_id=trace_id,
                     executor_span_id=executor_span_id,
+                    metadata=datapoint.metadata,
                 )
                 # First, create datapoint with trace_id so that we can show the dp in the UI
                 await self.client._evals.save_datapoints(
@@ -367,6 +380,7 @@ class Evaluation:
             human_evaluators=self.human_evaluators,
             executor_span_id=executor_span_id,
             index=index,
+            metadata=datapoint.metadata,
         )
 
         # Create background upload task without awaiting it
@@ -470,10 +484,16 @@ def evaluate(
     )
 
     if PREPARE_ONLY.get():
-        EVALUATION_INSTANCE.set(evaluation)
+        existing_evaluations = EVALUATION_INSTANCES.get([])
+        new_evaluations = (existing_evaluations or []) + [evaluation]
+        EVALUATION_INSTANCES.set(new_evaluations)
+        return None
     else:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            return evaluation.run()
-        else:
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                return evaluation.run()
+            else:
+                return asyncio.run(evaluation.run())
+        except RuntimeError:
             return asyncio.run(evaluation.run())

@@ -219,7 +219,7 @@ class NotebookScheduledJob(APIObject):
             from datarobot._experimental.models.notebooks.notebook import Notebook
 
             notebook = Notebook.get(notebook_id='6556b00dcc4ea0bb7ea48121')
-            manual_run = notebook.run()
+            manual_run = notebook.run_as_job()
             revision_id = manual_run.wait_for_completion()
         """
         status = None

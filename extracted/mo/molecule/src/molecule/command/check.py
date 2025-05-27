@@ -18,10 +18,10 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 """Check Command Module."""
+
 from __future__ import annotations
 
 import logging
-import os
 
 from typing import TYPE_CHECKING
 
@@ -29,6 +29,7 @@ import click
 
 from molecule import util
 from molecule.command import base
+from molecule.config import MOLECULE_PARALLEL
 
 
 if TYPE_CHECKING:
@@ -36,7 +37,6 @@ if TYPE_CHECKING:
 
 
 LOG = logging.getLogger(__name__)
-MOLECULE_PARALLEL = os.environ.get("MOLECULE_PARALLEL", False)
 
 
 class Check(base.Base):
@@ -82,7 +82,11 @@ def check(  # pragma: no cover
     """
     args: MoleculeArgs = ctx.obj.get("args")
     subcommand = base._get_subcommand(__name__)  # noqa: SLF001
-    command_args: CommandArgs = {"parallel": parallel, "subcommand": subcommand, "report": report}
+    command_args: CommandArgs = {
+        "parallel": parallel,
+        "subcommand": subcommand,
+        "report": report,
+    }
 
     if __all:
         scenario_name = None

@@ -1,6 +1,7 @@
 import asyncio
-from unittest import TestCase
+from typing import Optional
 
+import aioice.ice
 import aioice.stun
 from aioice import ConnectionClosed
 from aiortc.exceptions import InvalidStateError
@@ -14,14 +15,14 @@ from aiortc.rtcicetransport import (
     parse_stun_turn_uri,
 )
 
-from .utils import asynctest
+from .utils import TestCase, asynctest
 
 
-async def mock_connect():
+async def mock_connect() -> None:
     pass
 
 
-async def mock_get_event():
+async def mock_get_event() -> Optional[aioice.ice.ConnectionEvent]:
     await asyncio.sleep(0.5)
     return ConnectionClosed()
 
@@ -36,12 +37,11 @@ class ConnectionKwargsTest(TestCase):
             {"stun_server": ("stun.l.google.com", 19302)},
         )
 
-    def test_stun_with_suffix(self) -> None:
+    def test_stun_with_transport(self) -> None:
+        with self.assertRaises(ValueError) as cm:
+            parse_stun_turn_uri("stun:global.stun.twilio.com:3478?transport=udp")
         self.assertEqual(
-            connection_kwargs(
-                [RTCIceServer("stun:global.stun.twilio.com:3478?transport=udp")]
-            ),
-            {"stun_server": ("global.stun.twilio.com", 3478)},
+            str(cm.exception), "malformed uri: stun must not contain transport"
         )
 
     def test_stun_multiple_servers(self) -> None:

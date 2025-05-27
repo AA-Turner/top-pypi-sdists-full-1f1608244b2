@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: pytransform3d
-Version: 3.14.0
+Version: 3.14.1
 Summary: 3D transformations for Python
 Home-page: https://github.com/dfki-ric/pytransform3d
 Author: Alexander Fabisch
@@ -32,6 +32,16 @@ Requires-Dist: sphinxcontrib.video; extra == "doc"
 Provides-Extra: test
 Requires-Dist: pytest; extra == "test"
 Requires-Dist: pytest-cov; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: summary
 
 <img src="https://raw.githubusercontent.com/dfki-ric/pytransform3d/main/doc/source/_static/logo.png" />
 
@@ -73,6 +83,10 @@ The API documentation can be found
 
 I gave a talk at EuroSciPy 2023 about pytransform3d. Slides are available
 [here](https://github.com/AlexanderFabisch/pytransform3d_euroscipy2023/).
+
+If you need similar features in JAX (on GPU, vectorized, differentiable),
+have a look at the experimental library
+[jaxtransform3d](https://github.com/AlexanderFabisch/jaxtransform3d/).
 
 ## Installation
 

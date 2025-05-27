@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: loki-logger-handler
-Version: 1.1.1
+Version: 1.1.2
 Summary: Handler designed for transmitting logs to Grafana Loki in JSON format.
 Home-page: https://github.com/xente/loki-logger-handler
 Author: Xente
@@ -28,6 +28,7 @@ Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: keywords
 Dynamic: license
+Dynamic: license-file
 Dynamic: requires-python
 Dynamic: summary
 
