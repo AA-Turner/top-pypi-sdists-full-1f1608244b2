@@ -9,7 +9,7 @@ from arelle.ModelInstanceObject import ModelInlineFact
 from arelle.ValidateDuplicateFacts import getDuplicateFactSets
 from arelle.XmlValidateConst import VALID
 from collections.abc import Iterable
-from typing import Any, TYPE_CHECKING
+from typing import Any, cast, TYPE_CHECKING
 
 from arelle import XmlUtil
 from arelle.ValidateXbrl import ValidateXbrl
@@ -17,8 +17,11 @@ from arelle.typing import TypeGetText
 from arelle.utils.PluginHooks import ValidationHook
 from arelle.utils.validate.Decorator import validation
 from arelle.utils.validate.Validation import Validation
+from arelle.ValidateDuplicateFacts import getHashEquivalentFactGroups, getAspectEqualFacts
+from arelle.utils.validate.ValidationUtil import etreeIterWithDepth
 from ..DisclosureSystems import DISCLOSURE_SYSTEM_NL_INLINE_2024
-from ..PluginValidationDataExtension import PluginValidationDataExtension, XBRLI_IDENTIFIER_PATTERN, XBRLI_IDENTIFIER_SCHEMA, DISALLOWED_IXT_NAMESPACES
+from ..PluginValidationDataExtension import (PluginValidationDataExtension, XBRLI_IDENTIFIER_PATTERN,
+                                             XBRLI_IDENTIFIER_SCHEMA, DISALLOWED_IXT_NAMESPACES, ALLOWABLE_LANGUAGES)
 
 if TYPE_CHECKING:
     from arelle.ModelXbrl import ModelXbrl
@@ -464,6 +467,128 @@ def rule_nl_kvk_3_3_1_3 (
         DISCLOSURE_SYSTEM_NL_INLINE_2024
     ],
 )
+def rule_nl_kvk_3_4_1_1 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.4.1.1: ix:tuple element should not be used in the Inline XBRL document.
+    """
+    tuples = pluginData.getTupleElements(val.modelXbrl)
+    if len(tuples) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.4.1.1.tupleElementUsed',
+            msg=_('ix:tuple element should not be used in the Inline XBRL document.'),
+            modelObject=tuples
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_4_1_2 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.4.1.2: ix:fraction element should not be used in the Inline XBRL document.
+    """
+    fractions = pluginData.getFractionElements(val.modelXbrl)
+    if len(fractions) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.4.1.2.fractionElementUsed',
+            msg=_('ix:fraction element should not be used in the Inline XBRL document.'),
+            modelObject=fractions
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_4_1_3 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.4.1.3: The ix:hidden section should not include elements that are eligible for transformation
+    according to the latest recommended Transformation Rules Registry.
+    """
+    facts = pluginData.getEligibleForTransformHiddenFacts(val.modelXbrl)
+    if len(facts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.4.1.3.transformableElementIncludedInHiddenSection',
+            msg=_('The ix:hidden section should not include elements that are eligible for transformation'
+                  'according to the latest recommended Transformation Rules Registry.'),
+            modelObject=facts
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_4_1_4 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.4.1.4: ix:hidden section should not contain a fact whose @id attribute is not applied on any ix-hidden style.
+    """
+    facts = pluginData.getRequiredToDisplayFacts(val.modelXbrl)
+    if len(facts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.4.1.4.factInHiddenSectionNotInReport',
+            msg=_('ix:hidden section should not contain a fact whose @id attribute is not applied on any -ix-hidden style.'),
+            modelObject=facts
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_4_1_5 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.4.1.5: ix:hidden section should not contain a fact whose @id attribute is not applied on any ix-hidden style.
+    """
+    facts = pluginData.getHiddenFactsOutsideHiddenSection(val.modelXbrl)
+    if len(facts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.4.1.5.kvkIxHiddenStyleNotLinkingFactInHiddenSection',
+            msg=_('Review for -ix-hidden style identifies @id attribute of a fact that is not in ix:hidden section'),
+            modelObject=facts
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
 def rule_nl_kvk_3_5_2_1(
         pluginData: PluginValidationDataExtension,
         val: ValidateXbrl,
@@ -505,17 +630,142 @@ def rule_nl_kvk_3_5_2_2(
     NL-KVK.3.5.2.2: All tagged text facts MUST be provided in at least the language of the report.
     """
     reportXmlLang = pluginData.getReportXmlLang(val.modelXbrl)
-    factsWithWrongLang = set()
-    for fact in val.modelXbrl.facts:
-        if (fact is not None and
-                fact.concept is not None and
-                fact.concept.type is not None and
-                fact.concept.type.isOimTextFactType and
-                fact.xmlLang != reportXmlLang):
-            factsWithWrongLang.add(fact)
-    if len(factsWithWrongLang) > 0:
-        yield Validation.error(
-            codes='NL.NL-KVK.3.5.2.2.taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport',
-            msg=_('Tagged text facts MUST be provided in the language of the report.'),
-            modelObject=factsWithWrongLang
+    filtered_facts = [f for f in val.modelXbrl.facts if f.concept is not None and
+                      f.concept.type is not None and
+                      f.concept.type.isOimTextFactType and
+                      f.context is not None]
+    factGroups = getHashEquivalentFactGroups(filtered_facts)
+    for fgroup in factGroups:
+        for flist in getAspectEqualFacts(fgroup, includeSingles=True, useLang=False):
+            if not any(f.xmlLang == reportXmlLang for f in flist):
+                yield Validation.error(
+                    codes='NL.NL-KVK.3.5.2.2.taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport',
+                    msg=_('Tagged text facts MUST be provided in the language of the report.'),
+                    modelObject=fgroup
+                )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_5_2_3(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.5.2.3: The value of the @xml:lang attribute SHOULD be 'nl' or 'en' or 'de' or 'fr'.
+    """
+    badLangsUsed = set()
+    for ixdsHtmlRootElt in val.modelXbrl.ixdsHtmlElements:
+        for uncast_elt, depth in etreeIterWithDepth(ixdsHtmlRootElt):
+            elt = cast(Any, uncast_elt)
+            xmlLang = elt.get("{http://www.w3.org/XML/1998/namespace}lang")
+            if xmlLang and xmlLang not in ALLOWABLE_LANGUAGES:
+                badLangsUsed.add(xmlLang)
+    if len(badLangsUsed) > 0:
+        yield Validation.warning(
+            codes='NL.NL-KVK.3.5.2.3.invalidLanguageAttribute',
+            badLangsUsed=', '.join(badLangsUsed),
+            msg=_('The lang attribute should use one of the following: \'nl\' or \'en\' or \'de\' or \'fr\'. '
+                  'The following languages are used incorrectly: %(badLangsUsed)s'),
         )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_6_3_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.6.3.1: The report filename will have the form `{base}-{date}-{lang}.{extension}`.
+    The `{base}` component of the filename SHOULD not exceed twenty characters.
+    """
+    invalidBasenames = []
+    for basename in pluginData.getIxdsDocBasenames(val.modelXbrl):
+        filenameParts = pluginData.getFilenameParts(basename)
+        if not filenameParts:
+            continue  # Filename is not formatted correctly enough to determine {base}
+        if len(filenameParts.get('base', '')) > 20:
+            invalidBasenames.append(basename)
+    if len(invalidBasenames) > 0:
+        yield Validation.warning(
+            codes='NL.NL-KVK.3.6.3.1.baseComponentInDocumentNameExceedsTwentyCharacters',
+            invalidBasenames=', '.join(invalidBasenames),
+            msg=_('The {base} component of the filename is greater than twenty characters. '
+                  'The {base} component can either be the KVK number or the legal entity\'s name. '
+                  'If the legal entity\'s name has been utilized, review to shorten the name to twenty characters or less. '
+                  'Invalid filenames: %(invalidBasenames)s'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_6_3_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.6.3.2: Report filename SHOULD match the {base}-{date}-{lang}.{extension} pattern.
+    {extension} MUST be one of the following: html, htm, xhtml.
+    """
+    invalidBasenames = []
+    for basename in pluginData.getIxdsDocBasenames(val.modelXbrl):
+        filenameParts = pluginData.getFilenameParts(basename)
+        if not filenameParts:
+            invalidBasenames.append(basename)
+    if len(invalidBasenames) > 0:
+        yield Validation.warning(
+            codes='NL.NL-KVK.3.6.3.2.documentNameDoesNotFollowNamingConvention',
+            invalidBasenames=', '.join(invalidBasenames),
+            msg=_('The filename does not match the naming convention outlined by the KVK. '
+                  'It is recommended to be in the {base}-{date}-{lang}.{extension} format. '
+                  '{extension} must be one of the following: html, htm, xhtml. '
+                  'Review formatting and update as appropriate. '
+                  'Invalid filenames: %(invalidBasenames)s'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_6_3_3(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.6.3.3: Report filename MUST only contain allowed characters.
+    Filenames can include the following characters: A-Z, a-z, 0-9, underscore ( _ ), period ( . ), hyphen ( - ).
+    """
+    invalidBasenames = []
+    for basename in pluginData.getIxdsDocBasenames(val.modelXbrl):
+        if not pluginData.isFilenameValidCharacters(basename):
+            invalidBasenames.append(basename)
+    if len(invalidBasenames) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.6.3.3.documentFileNameIncludesCharactersNotAllowed',
+            invalidBasenames=', '.join(invalidBasenames),
+            msg=_('The file name includes characters that are now allowed. '
+                  'Allowed characters include: A-Z, a-z, 0-9, underscore ( _ ), period ( . ), and hyphen ( - ). '
+                  'Update filing naming to review unallowed characters. '
+                  'Invalid filenames: %(invalidBasenames)s'))

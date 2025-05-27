@@ -18,6 +18,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 """Molecule Scenario Module."""
+
 from __future__ import annotations
 
 import fcntl
@@ -33,6 +34,7 @@ from typing import TYPE_CHECKING
 
 from molecule import scenarios, util
 from molecule.constants import RC_TIMEOUT
+from molecule.exceptions import MoleculeError
 from molecule.text import checksum
 
 
@@ -131,7 +133,7 @@ class Scenario:
             The ephemeral directory for this scenario.
 
         Raises:
-            SystemExit: If lock cannot be acquired before timeout.
+            MoleculeError: If lock cannot be acquired before timeout.
         """
         path: Path
         if "MOLECULE_EPHEMERAL_DIRECTORY" not in os.environ:
@@ -145,7 +147,7 @@ class Scenario:
         else:
             path = Path(os.getenv("MOLECULE_EPHEMERAL_DIRECTORY", ""))
 
-        if os.environ.get("MOLECULE_PARALLEL", False) and not self._lock:
+        if self.config.is_parallel and not self._lock:
             lock_file = path / ".lock"
             with lock_file.open("w") as self._lock:  # type: ignore[assignment]
                 for i in range(1, 5):
@@ -162,7 +164,7 @@ class Scenario:
                         sleep(delay)
                 else:
                     LOG.warning("Timedout trying to acquire lock on %s", path)
-                    raise SystemExit(RC_TIMEOUT)
+                    raise MoleculeError(code=RC_TIMEOUT)
 
         return path.absolute().as_posix()
 

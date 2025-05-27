@@ -34,6 +34,7 @@ if t.TYPE_CHECKING:
     import sys
     import types
 
+    from libtmux._internal.types import StrPath
     from libtmux.common import tmux_cmd
 
     if sys.version_info >= (3, 11):
@@ -587,7 +588,7 @@ class Session(Obj, EnvironmentMixin):
         self,
         window_name: str | None = None,
         *,
-        start_directory: None = None,
+        start_directory: StrPath | None = None,
         attach: bool = False,
         window_index: str = "",
         window_shell: str | None = None,
@@ -677,6 +678,7 @@ class Session(Obj, EnvironmentMixin):
 
         window_args += ("-P",)
 
+        # Catch empty string and default (`None`)
         if start_directory:
             # as of 2014-02-08 tmux 1.9-dev doesn't expand ~ in new-window -c.
             start_directory = pathlib.Path(start_directory).expanduser()

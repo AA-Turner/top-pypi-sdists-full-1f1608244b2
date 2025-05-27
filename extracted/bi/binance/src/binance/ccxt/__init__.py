@@ -88,8 +88,9 @@ from ccxt.base.errors import UnsubscribeError                         # noqa: F4
 from ccxt.base.errors import error_hierarchy                          # noqa: F401
 
 from ccxt.binance import binance                                      # noqa: F401
+from ccxt.kuna import kuna                                            # noqa: F401
 
-exchanges = [    'binance',]
+exchanges = [    'binance',    'kuna',]
 
 base = [
     'Exchange',

@@ -1,23 +1,26 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: sphinxcontrib-googleanalytics
-Version: 0.4
+Version: 0.5
 Summary: Sphinx extension googleanalytics
-Home-page: https://github.com/sphinx-contrib/googleanalytics
-Download-URL: http://pypi.python.org/pypi/sphinxcontrib-googleanalytics
-Author: Domen Kozar
-Author-email: domen@dev.si
-License: BSD
+Author-email: Domen Kozar <domen@dev.si>
+Maintainer-email: Jelmer Vernooĳ <jelmer@jelmer.uk>
+License-Expression: BSD-3-Clause
+Project-URL: Homepage, https://github.com/sphinx-contrib/googleanalytics
+Project-URL: Download, http://pypi.python.org/pypi/sphinxcontrib-googleanalytics
 Project-URL: Repository, https://github.com/sphinx-contrib/googleanalytics
 Platform: any
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console
 Classifier: Environment :: Web Environment
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: BSD License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Topic :: Documentation
 Classifier: Topic :: Utilities
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: Sphinx>=0.6
+Dynamic: license-file
 
 .. -*- restructuredtext -*-
 

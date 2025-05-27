@@ -142,7 +142,7 @@ class QrackAceBackend:
                 case 3:
                     syndrome[2] += 1
 
-        row = (hq[0] // 3) // self.row_length
+        row = lq // self.row_length
         even_row = not (row & 1)
         single_bit = 0
         other_bits = []
@@ -154,10 +154,10 @@ class QrackAceBackend:
             other_bits = [1, 2]
 
         max_syndrome = max(syndrome)
-        error_bit = syndrome.index(max_syndrome)
         force_syndrome = True
-        if (2 * max_syndrome) >= shots:
+        if (2 * max_syndrome) > shots:
             # There is an error.
+            error_bit = syndrome.index(max_syndrome)
             if error_bit == single_bit:
                 # The stand-alone bit carries the error.
                 self.sim.x(hq[error_bit])
@@ -182,66 +182,92 @@ class QrackAceBackend:
             # Force the syndrome non-pathological.
             self.sim.force_m(self._ancilla, False)
 
+    def _correct_if_like_h(self, th, lq):
+        while th > math.pi:
+            th -= 2 * math.pi
+        while th <= -math.pi:
+            th += 2 * math.pi
+        th = abs(th)
+        if not math.isclose(th, 0):
+            self._correct(lq)
+
 
     def u(self, th, ph, lm, lq):
+        while ph > math.pi:
+            ph -= 2 * math.pi
+        while ph <= -math.pi:
+            ph += 2 * math.pi
+        while lm > math.pi:
+            lm -= 2 * math.pi
+        while lm <= -math.pi:
+            lm += 2 * math.pi
         hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.u(hq[0], th, ph, lm)
-        self._encode(hq)
+        if not math.isclose(ph, -lm) and not math.isclose(abs(ph), math.pi / 2):
+            self._correct_if_like_h(th, lq)
+            self._decode(hq)
+            self.sim.u(hq[0], th, ph, lm)
+            self._encode(hq)
+        else:
+            for b in hq:
+                self.sim.u(b, th, ph, lm)
 
     def r(self, p, th, lq):
+        while th > math.pi:
+            th -= 2 * math.pi
+        while th <= -math.pi:
+            th += 2 * math.pi
+        if p == Pauli.PauliY:
+            self._correct_if_like_h(th, lq)
         hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.r(p, th, hq[0])
-        self._encode(hq)
-
-    def s(self, lq):
-        hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.s(hq[0])
-        self._encode(hq)
-
-    def adjs(self, lq):
-        hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.adjs(hq[0])
-        self._encode(hq)
-
-    def x(self, lq):
-        hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.x(hq[0])
-        self._encode(hq)
-
-    def y(self, lq):
-        hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.y(hq[0])
-        self._encode(hq)
-
-    def z(self, lq):
-        hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.z(hq[0])
-        self._encode(hq)
+        if (p == Pauli.PauliZ) or math.isclose(abs(th), math.pi):
+            for b in hq:
+                self.sim.r(p, th, b)
+        else:
+            self._decode(hq)
+            self.sim.r(p, th, hq[0])
+            self._encode(hq)
 
     def h(self, lq):
+        self._correct(lq)
         hq = self._unpack(lq)
         self._decode(hq)
         self.sim.h(hq[0])
         self._encode(hq)
 
+    def s(self, lq):
+        hq = self._unpack(lq)
+        for b in hq:
+            self.sim.s(b)
+
+    def adjs(self, lq):
+        hq = self._unpack(lq)
+        for b in hq:
+            self.sim.adjs(b)
+
+    def x(self, lq):
+        hq = self._unpack(lq)
+        for b in hq:
+            self.sim.x(b)
+
+    def y(self, lq):
+        hq = self._unpack(lq)
+        for b in hq:
+            self.sim.y(b)
+
+    def z(self, lq):
+        hq = self._unpack(lq)
+        for b in hq:
+            self.sim.z(b)
+
     def t(self, lq):
         hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.t(hq[0])
-        self._encode(hq)
+        for b in hq:
+            self.sim.t(b)
 
     def adjt(self, lq):
         hq = self._unpack(lq)
-        self._decode(hq)
-        self.sim.adjt(hq[0])
-        self._encode(hq)
+        for b in hq:
+            self.sim.adjt(b)
 
     def _cpauli(self, lq1, lq2, anti, pauli):
         self._correct(lq1)
@@ -268,6 +294,7 @@ class QrackAceBackend:
         hq1 = None
         hq2 = None
         if (lq2_col == lq1_col) and (((lq1_row + 1) % self.row_length) == lq2_row):
+            self._correct(lq2)
             hq1 = self._unpack(lq1, True)
             hq2 = self._unpack(lq2, False)
             self._decode(hq1, True)
@@ -276,6 +303,7 @@ class QrackAceBackend:
             self._encode(hq2, False)
             self._encode(hq1, True)
         elif (lq1_col == lq2_col) and (((lq2_row + 1) % self.row_length) == lq1_row):
+            self._correct(lq2)
             hq2 = self._unpack(lq2, True)
             hq1 = self._unpack(lq1, False)
             self._decode(hq2, True)

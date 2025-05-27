@@ -1,8 +1,29 @@
+import numpy as np
 import pyarrow as pa
 import pytest
 
 import geoarrow.types as gt
 from geoarrow.types import type_pyarrow
+
+
+def test_wrap_array_non_exact():
+    pa_version_tuple = tuple(int(component) for component in pa.__version__.split("."))
+    if pa_version_tuple < (14,):
+        pytest.skip("wrap_array with non-exact type requires pyarrow >= 14")
+
+    from pyarrow import compute as pc
+
+    storage = pc.make_struct(
+        pa.array([1.0, 2.0, 3.0]), pa.array([3.0, 4.0, 5.0]), field_names=["x", "y"]
+    )
+    point = gt.point().to_pyarrow()
+    point_ext = point.wrap_array(storage)
+    assert point_ext.type.storage_type.field(0).nullable is False
+
+    storage_chunked = pa.chunked_array([storage, storage])
+    point_chunked_ext = point.wrap_array(storage_chunked)
+    assert point_chunked_ext.type.storage_type.field(0).nullable is False
+    assert point_chunked_ext.num_chunks == 2
 
 
 def test_classes_serialized():
@@ -268,6 +289,150 @@ def test_deserialize_infer_dimensions_interleaved():
         )
 
 
+def test_geometry_union_type():
+    geometry = gt.type_spec(gt.Encoding.GEOARROW, gt.GeometryType.GEOMETRY).to_pyarrow()
+    assert isinstance(geometry, type_pyarrow.GeometryUnionType)
+    assert geometry.encoding == gt.Encoding.GEOARROW
+    assert geometry.geometry_type == gt.GeometryType.GEOMETRY
+
+
+def test_geometry_collection_union_type():
+    geometry = gt.type_spec(
+        gt.Encoding.GEOARROW, gt.GeometryType.GEOMETRYCOLLECTION
+    ).to_pyarrow()
+    assert isinstance(geometry, type_pyarrow.GeometryCollectionUnionType)
+    assert geometry.encoding == gt.Encoding.GEOARROW
+    assert geometry.geometry_type == gt.GeometryType.GEOMETRYCOLLECTION
+
+
+def test_box_array_from_geobuffers():
+    pa_type = gt.box(dimensions=gt.Dimensions.XY).to_pyarrow()
+    arr = pa_type.from_geobuffers(
+        b"\xff",
+        np.array([1.0, 2.0, 3.0]),
+        np.array([4.0, 5.0, 6.0]),
+        np.array([7.0, 8.0, 9.0]),
+        np.array([10.0, 11.0, 12.0]),
+    )
+    assert len(arr) == 3
+    assert arr.type == pa_type
+    assert arr.storage == pa.array(
+        [
+            {"xmin": 1.0, "ymin": 4.0, "xmax": 7.0, "ymax": 10.0},
+            {"xmin": 2.0, "ymin": 5.0, "xmax": 8.0, "ymax": 11.0},
+            {"xmin": 3.0, "ymin": 6.0, "xmax": 9.0, "ymax": 12.0},
+        ],
+        pa_type.storage_type,
+    )
+
+
+def test_point_array_from_geobuffers():
+    pa_type = gt.point(dimensions=gt.Dimensions.XYZM).to_pyarrow()
+    arr = pa_type.from_geobuffers(
+        b"\xff",
+        np.array([1.0, 2.0, 3.0]),
+        np.array([4.0, 5.0, 6.0]),
+        np.array([7.0, 8.0, 9.0]),
+        np.array([10.0, 11.0, 12.0]),
+    )
+    assert len(arr) == 3
+    assert arr.type == pa_type
+    assert arr.storage == pa.array(
+        [
+            {"x": 1.0, "y": 4.0, "z": 7.0, "m": 10.0},
+            {"x": 2.0, "y": 5.0, "z": 8.0, "m": 11.0},
+            {"x": 3.0, "y": 6.0, "z": 9.0, "m": 12.0},
+        ],
+        pa_type.storage_type,
+    )
+
+    pa_type = gt.point(coord_type=gt.CoordType.INTERLEAVED).to_pyarrow()
+    arr = pa_type.from_geobuffers(None, np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]))
+    assert len(arr) == 3
+    assert arr.storage == pa.array(
+        [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], pa_type.storage_type
+    )
+
+
+@pytest.mark.parametrize(
+    "pa_type", [gt.linestring().to_pyarrow(), gt.multipoint().to_pyarrow()]
+)
+def test_linestringish_array_from_geobuffers(pa_type):
+    arr = pa_type.from_geobuffers(
+        b"\xff",
+        np.array([0, 4], np.int32),
+        np.array([0.0, 1.0, 0.0, 0.0]),
+        np.array([0.0, 0.0, 1.0, 0.0]),
+    )
+    assert len(arr) == 1
+    assert arr.storage == pa.array(
+        [
+            [
+                {"x": 0.0, "y": 0.0},
+                {"x": 1.0, "y": 0.0},
+                {"x": 0.0, "y": 1.0},
+                {"x": 0.0, "y": 0.0},
+            ]
+        ],
+        pa_type.storage_type,
+    )
+
+
+@pytest.mark.parametrize(
+    "pa_type", [gt.polygon().to_pyarrow(), gt.multilinestring().to_pyarrow()]
+)
+def test_polygonish_array_from_geobuffers(pa_type):
+    arr = pa_type.from_geobuffers(
+        b"\xff",
+        np.array([0, 1], np.int32),
+        np.array([0, 4], np.int32),
+        np.array([0.0, 1.0, 0.0, 0.0]),
+        np.array([0.0, 0.0, 1.0, 0.0]),
+    )
+    assert len(arr) == 1
+    assert arr.storage == pa.array(
+        [
+            [
+                [
+                    {"x": 0.0, "y": 0.0},
+                    {"x": 1.0, "y": 0.0},
+                    {"x": 0.0, "y": 1.0},
+                    {"x": 0.0, "y": 0.0},
+                ]
+            ]
+        ],
+        pa_type.storage_type,
+    )
+
+
+def test_multipolygon_array_from_geobuffers():
+    pa_type = gt.multipolygon().to_pyarrow()
+    arr = pa_type.from_geobuffers(
+        b"\xff",
+        np.array([0, 1], np.int32),
+        np.array([0, 1], np.int32),
+        np.array([0, 4], np.int32),
+        np.array([0.0, 1.0, 0.0, 0.0]),
+        np.array([0.0, 0.0, 1.0, 0.0]),
+    )
+    assert len(arr) == 1
+    assert arr.storage == pa.array(
+        [
+            [
+                [
+                    [
+                        {"x": 0.0, "y": 0.0},
+                        {"x": 1.0, "y": 0.0},
+                        {"x": 0.0, "y": 1.0},
+                        {"x": 0.0, "y": 0.0},
+                    ]
+                ]
+            ]
+        ],
+        pa_type.storage_type,
+    )
+
+
 @pytest.mark.parametrize(
     "spec",
     [
@@ -276,7 +441,10 @@ def test_deserialize_infer_dimensions_interleaved():
         gt.large_wkt(),
         gt.wkb(),
         gt.large_wkb(),
+        gt.wkt_view(),
+        gt.wkb_view(),
         # Geometry types
+        gt.box(),
         gt.point(),
         gt.linestring(),
         gt.polygon(),
@@ -293,9 +461,23 @@ def test_deserialize_infer_dimensions_interleaved():
         gt.point(dimensions="xyz", coord_type="interleaved"),
         gt.point(dimensions="xym", coord_type="interleaved"),
         gt.point(dimensions="xyzm", coord_type="interleaved"),
+        # Box with all dimensions
+        gt.box(dimensions="xy"),
+        gt.box(dimensions="xyz"),
+        gt.box(dimensions="xym"),
+        gt.box(dimensions="xyzm"),
+        # Union types
+        gt.type_spec(gt.Encoding.GEOARROW, gt.GeometryType.GEOMETRY),
+        gt.type_spec(gt.Encoding.GEOARROW, gt.GeometryType.GEOMETRYCOLLECTION),
     ],
 )
 def test_roundtrip_extension_type(spec):
+    if not hasattr(pa, "binary_view") and spec.encoding in (
+        gt.Encoding.WKB_VIEW,
+        gt.Encoding.WKT_VIEW,
+    ):
+        pytest.skip("binary_view/string_view requires pyarrow >= 14")
+
     extension_type = type_pyarrow.extension_type(spec)
     serialized = extension_type.__arrow_ext_serialize__()
     extension_type2 = type_pyarrow._deserialize_storage(
@@ -305,6 +487,10 @@ def test_roundtrip_extension_type(spec):
 
 
 def test_register_extension_type():
+    pa_version_tuple = tuple(int(component) for component in pa.__version__.split("."))
+    if pa_version_tuple < (14,):
+        pytest.skip("Can't test extension type registration pyarrow < 14")
+
     with type_pyarrow.registered_extension_types():
         schema_capsule = gt.point().to_pyarrow().__arrow_c_schema__()
         pa_type = pa.DataType._import_from_c_capsule(schema_capsule)

@@ -8,6 +8,7 @@ from typing import List, Optional, TypeVar, Union
 from fireworks._const import FIREWORKS_API_BASE_URL, FIREWORKS_GATEWAY_ADDR
 import grpclib
 import grpc
+from grpc._channel import _InactiveRpcError
 from grpclib.client import Channel
 import httpx
 from functools import cache as sync_cache
@@ -38,6 +39,8 @@ from fireworks.control_plane.generated.protos_grpcio.gateway.dataset_pb2 import 
 from fireworks.control_plane.generated.protos_grpcio.gateway.supervised_fine_tuning_job_pb2 import (
     ListSupervisedFineTuningJobsRequest as SyncListSupervisedFineTuningJobsRequest,
     ListSupervisedFineTuningJobsResponse as SyncListSupervisedFineTuningJobsResponse,
+    DeleteSupervisedFineTuningJobRequest as SyncDeleteSupervisedFineTuningJobRequest,
+    GetSupervisedFineTuningJobRequest as SyncGetSupervisedFineTuningJobRequest,
 )
 from fireworks.control_plane.generated.protos_grpcio.gateway.deployment_pb2 import (
     ListDeploymentsRequest as SyncListDeploymentsRequest,
@@ -55,6 +58,8 @@ from fireworks.control_plane.generated.protos_grpcio.gateway.model_pb2 import (
     ListServerlessLoraModelsResponse as SyncListServerlessLoraModelsResponse,
     Model as SyncModel,
     GetModelRequest as SyncGetModelRequest,
+    ListModelsRequest as SyncListModelsRequest,
+    ListModelsResponse as SyncListModelsResponse,
 )
 from fireworks.control_plane.generated.protos.gateway import (
     AcceleratorType,
@@ -188,6 +193,17 @@ class Gateway:
                 return
             raise e
 
+    def delete_supervised_fine_tuning_job_sync(self, name: str) -> None:
+        account_id = self.account_id()
+        try:
+            self._sync_stub.DeleteSupervisedFineTuningJob(
+                SyncDeleteSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
+            )
+        except _InactiveRpcError as e:
+            if e.code() == grpc.StatusCode.NOT_FOUND:
+                return
+            raise e
+
     async def list_supervised_fine_tuning_jobs(
         self, request: ListSupervisedFineTuningJobsRequest
     ) -> ListSupervisedFineTuningJobsResponse:
@@ -215,6 +231,18 @@ class Gateway:
             return response
         except grpclib.exceptions.GRPCError as e:
             if e.status == grpclib.Status.NOT_FOUND:
+                return None
+            raise e
+
+    def get_supervised_fine_tuning_job_sync(self, name: str) -> Optional[SyncSupervisedFineTuningJob]:
+        account_id = self.account_id()
+        try:
+            response = self._sync_stub.GetSupervisedFineTuningJob(
+                SyncGetSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
+            )
+            return response
+        except _InactiveRpcError as e:
+            if e.code() == grpc.StatusCode.NOT_FOUND:
                 return None
             raise e
 
@@ -350,6 +378,27 @@ class Gateway:
                 return result
             page_token = response.next_page_token
 
+    def list_models_sync(
+        self,
+        *,
+        page_size: int = 0,
+        page_token: str = "",
+        filter: str = "",
+        order_by: str = "",
+        include_deployed_model_refs: bool = False,
+    ) -> ListModelsResponse:
+        account_id = self.account_id()
+        request = SyncListModelsRequest(
+            parent=f"accounts/{account_id}",
+            page_size=page_size,
+            page_token=page_token,
+            filter=filter,
+            order_by=order_by,
+            include_deployed_model_refs=include_deployed_model_refs,
+        )
+        response = self._sync_stub.ListModels(request)
+        return response
+
     async def list_deployments(self, filter: str = ""):
         account_id = self.account_id()
         deployments = await self._stub.list_deployments(
@@ -376,8 +425,8 @@ class Gateway:
     def get_deployed_model_sync(self, name: str) -> Optional[SyncDeployedModel]:
         try:
             return self._sync_stub.GetDeployedModel(SyncGetDeployedModelRequest(name=name))
-        except grpclib.exceptions.GRPCError as e:
-            if e.status == grpclib.Status.NOT_FOUND:
+        except _InactiveRpcError as e:
+            if e.code() == grpc.StatusCode.NOT_FOUND:
                 return None
             raise e
 
@@ -389,8 +438,8 @@ class Gateway:
     def delete_deployed_model_sync(self, name: str) -> None:
         try:
             self._sync_stub.DeleteDeployedModel(SyncDeleteDeployedModelRequest(name=name))
-        except grpclib.exceptions.GRPCError as e:
-            if e.status == grpclib.Status.NOT_FOUND:
+        except _InactiveRpcError as e:
+            if e.code() == grpc.StatusCode.NOT_FOUND:
                 return
             raise e
 

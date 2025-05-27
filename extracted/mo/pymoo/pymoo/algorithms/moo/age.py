@@ -167,7 +167,13 @@ class AGEMOEASurvival(Survival):
         p = self.compute_geometry(front, extreme, n)
 
         nn = np.linalg.norm(front, p, axis=1)
-        distances = self.pairwise_distances(front, p) / (nn[:, None])
+        # Replace very small norms with 1 to prevent division by zero
+        nn[nn < 1e-8] = 1
+
+        distances = self.pairwise_distances(front, p)
+        distances[distances < 1e-8] = 1e-8  # Replace very small entries to prevent division by zero
+
+        distances = distances / (nn[:, None])
 
         neighbors = 2
         remaining = np.arange(m)
@@ -209,7 +215,7 @@ class AGEMOEASurvival(Survival):
         return p
 
     @staticmethod
-    @jit(fastmath=True)
+    #@jit(nopython=True, fastmath=True)
     def pairwise_distances(front, p):
         m = np.shape(front)[0]
         distances = np.zeros((m, m))
@@ -219,14 +225,14 @@ class AGEMOEASurvival(Survival):
         return distances
 
     @staticmethod
-    @jit(fastmath=True)
+    @jit(nopython=True, fastmath=True)
     def minkowski_distances(A, B, p):
         m1 = np.shape(A)[0]
         m2 = np.shape(B)[0]
         distances = np.zeros((m1, m2))
         for i in range(m1):
             for j in range(m2):
-                distances[i][j] = sum(np.abs(A[i] - B[j]) ** p) ** (1 / p)
+                distances[i][j] = np.sum(np.abs(A[i] - B[j]) ** p) ** (1 / p)
 
         return distances
 
@@ -254,15 +260,15 @@ def find_corner_solutions(front):
     return indexes
 
 
-@jit(fastmath=True)
+@jit(nopython=True, fastmath=True)
 def point_2_line_distance(P, A, B):
-    d = np.zeros(P.shape[0])
+    d = np.zeros(P.shape[0], dtype=numba.float64)
 
     for i in range(P.shape[0]):
         pa = P[i] - A
         ba = B - A
         t = np.dot(pa, ba) / np.dot(ba, ba)
-        d[i] = sum((pa - t * ba) ** 2)
+        d[i] = np.sum((pa - t * ba) ** 2)
 
     return d
 

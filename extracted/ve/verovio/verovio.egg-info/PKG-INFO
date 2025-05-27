@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: verovio
-Version: 5.3.0
+Version: 5.3.1
 Summary: A library and toolkit for engraving MEI music notation into SVG
 Home-page: https://www.verovio.org
 License: LGPLv3

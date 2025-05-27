@@ -49,6 +49,9 @@ class DeprecatedOptions(object):
 
         # r_dic maps deprecated options to new options; rev_r_dic maps in the opposite direction
         # inversion is a list of deprecated options which will be inverted (n/not set -> y, y -> n)
+        self.r_dic: Dict[str, str]
+        self.rev_r_dic: DefaultDict[str, List]
+        self.inversions: List
         self.r_dic, self.rev_r_dic, self.inversions = self._parse_replacements(path_rename_files)
 
         # note the '=' at the end of regex for not getting partial match of configs.
@@ -102,11 +105,13 @@ class DeprecatedOptions(object):
                     for opt in (dep_opt, new_opt):
                         if not opt:
                             raise RuntimeError(
-                                f"Error in {rename_path} (line {line_number}): Config {opt} is not prefixed with {self.config_prefix}"
+                                f"Error in {rename_path} (line {line_number}): "
+                                f"Config {opt} is not prefixed with {self.config_prefix}"
                             )
                     if dep_opt == new_opt:
                         raise RuntimeError(
-                            f"Error in {rename_path} (line {line_number}): Replacement name is the same as original name ({dep_opt})."
+                            f"Error in {rename_path} (line {line_number}): "
+                            f"Replacement name is the same as original name ({dep_opt})."
                         )
                     rep_dic[dep_opt] = new_opt
                     rev_rep_dic[new_opt].append(dep_opt)
@@ -292,7 +297,8 @@ def min_config_with_labels(config: kconfiglib.Kconfig, header: str) -> str:
     end_regex = re.compile(r"^# end of (.*)$").match
     # `label_path` marks the current path from the root; labels represent tree nodes.
     # The path is represented as an ordered Dict; the last element in the Dict is closest to the leaves.
-    # The label name is the key, and a boolean value indicates whether the label was added to the output (i.e., the label is used in the output).
+    # The label name is the key, and a boolean value indicates whether the label was added to the output
+    # (i.e., the label is used in the output).
     # We need to track used labels to ensure correct timing when printing the label ending.
     # Note that label names are not necessarily unique, so the order is significant.
     label_path: OrderedDict[str, bool] = OrderedDict()
@@ -300,6 +306,7 @@ def min_config_with_labels(config: kconfiglib.Kconfig, header: str) -> str:
     possibly_label = False
     current = None  # None stands for tree root
     comments = []
+    config_has_default_value = False
 
     # Using depth search first, we go down the tree and save the path from the root.
     # If we find an option from min config, we update the whole path to used (True) and print all menu labels.
@@ -335,14 +342,22 @@ def min_config_with_labels(config: kconfiglib.Kconfig, header: str) -> str:
                     output.append(f"\n#\n# {label}\n#\n")
                 # mark the whole path from root as 'used'
                 label_path[label] = True
-            output.append(line + "\n")
+
+            if line.strip() == config.comment_default_value:  # indicator that the next config has a default value
+                config_has_default_value = True
+            else:
+                comment_value_is_default = f"{config.comment_default_value}\n" if config_has_default_value else ""
+                output.append(f"{comment_value_is_default}{line}\n")
+                config_has_default_value = False
+        else:
+            config_has_default_value = False
     # Remove comments from minimal config, while keeping menu labels
     for comment in comments:
         output.remove(f"\n#\n# {comment}\n#\n")
     return "".join(output)
 
 
-def write_min_config(_, config: kconfiglib.Kconfig, filename: str) -> None:
+def write_min_config(_: DeprecatedOptions, config: kconfiglib.Kconfig, filename: str) -> None:
     idf_version = os.environ.get("IDF_VERSION", "")
     target_symbol = config.syms["IDF_TARGET"]
     # 'esp32` is hardcoded here because the default value of IDF_TARGET is set on the first run from the environment
@@ -402,7 +417,7 @@ def write_cmake(deprecated_options: DeprecatedOptions, config: kconfiglib.Kconfi
 
         configs_list = list()
 
-        def write_node(node: kconfiglib.MenuNode):
+        def write_node(node: kconfiglib.MenuNode) -> None:
             sym = node.item
             if not isinstance(sym, kconfiglib.Symbol):
                 return
@@ -466,7 +481,7 @@ def get_json_values(config: kconfiglib.Kconfig) -> dict:
     return config_dict
 
 
-def write_json(_, config: kconfiglib.Kconfig, filename: str) -> None:
+def write_json(_: DeprecatedOptions, config: kconfiglib.Kconfig, filename: str) -> None:
     config_dict = get_json_values(config)
     with open(filename, "w") as f:
         json.dump(config_dict, f, indent=4, sort_keys=True)
@@ -495,7 +510,7 @@ def get_menu_node_id(node: kconfiglib.MenuNode) -> str:
     return "-".join(reversed(result))
 
 
-def write_json_menus(_, config: kconfiglib.Kconfig, filename: str) -> None:
+def write_json_menus(_: DeprecatedOptions, config: kconfiglib.Kconfig, filename: str) -> None:
     existing_ids: Set[str] = set()
     result: List = []  # root level items
     node_lookup: Dict = {}  # lookup from MenuNode to an item in result
@@ -582,7 +597,8 @@ def write_json_menus(_, config: kconfiglib.Kconfig, filename: str) -> None:
             node_id = get_menu_node_id(node)
             if node_id in existing_ids:
                 raise RuntimeError(
-                    f"Config file contains two items with the same id: {node_id} ({node.prompt[0] if node.prompt else ''}). "
+                    "Config file contains two items with the same id: "
+                    f" {node_id} ({node.prompt[0] if node.prompt else ''}). "
                     "Please rename one of these items to avoid ambiguity."
                 )
             new_json["id"] = node_id
@@ -608,6 +624,10 @@ def write_docs(deprecated_options: DeprecatedOptions, config: kconfiglib.Kconfig
     deprecated_options.append_doc(config, visibility, filename)
 
 
+def write_report(_: DeprecatedOptions, config: kconfiglib.Kconfig, filename: str) -> None:
+    config.report.output_json(filename)
+
+
 def update_if_changed(source: str, destination: str) -> None:
     with open(source, "r") as f:
         source_contents = f.read()
@@ -630,6 +650,7 @@ OUTPUT_FORMATS = {
     "json": write_json,
     "json_menus": write_json_menus,
     "savedefconfig": write_min_config,
+    "report": write_report,
 }
 
 
@@ -714,7 +735,10 @@ def main():
         env = json.load(args.env_file)
         os.environ.update(env)
     parser_version = int(os.environ.get("KCONFIG_PARSER_VERSION", "1"))
-    config = kconfiglib.Kconfig(args.kconfig, parser_version=parser_version)
+    # TODO Once ESP-IDF will fully support kconfig report, we should switch to "quiet" as default
+    #      to avoid printing the report several times during the build.
+    print_report = os.environ.get("KCONFIG_REPORT_VERBOSITY", "default") != "quiet"
+    config = kconfiglib.Kconfig(args.kconfig, parser_version=parser_version, print_report=print_report)
     config.warn_assign_redun = False
     config.warn_assign_override = False
 

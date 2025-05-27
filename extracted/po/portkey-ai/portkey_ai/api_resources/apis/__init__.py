@@ -16,6 +16,9 @@ from .generation import Generations, AsyncGenerations, Prompts, AsyncPrompts
 from .feedback import Feedback, AsyncFeedback
 from .create_headers import createHeaders
 from .post import Post, AsyncPost
+from .getMethod import GetMethod, AsyncGetMethod
+from .deleteMethod import DeleteMethod, AsyncDeleteMethod
+from .putMethod import PutMethod, AsyncPutMethod
 from .embeddings import Embeddings, AsyncEmbeddings
 from .images import Images, AsyncImages
 from .assistants import Assistants, AsyncAssistants
@@ -47,9 +50,17 @@ from .fine_tuning import (
     FineTuning,
     Jobs,
     Checkpoints,
+    Alpha,
+    Graders,
     AsyncFineTuning,
     AsyncJobs,
     AsyncCheckpoints,
+    FineTuningCheckpoints,
+    Permissions,
+    AsyncFineTuningCheckpoints,
+    AsyncPermissions,
+    AsyncAlpha,
+    AsyncGraders,
 )
 from .vector_stores import (
     VectorStores,
@@ -100,6 +111,15 @@ from .uploads import (
     AsyncParts,
 )
 
+from .evals import (
+    Evals,
+    AsyncEvals,
+    EvalsRuns,
+    AsyncEvalsRuns,
+    OutputItems,
+    AsyncOutputItems,
+)
+
 from .configs import Configs, AsyncConfigs
 
 from .api_keys import ApiKeys, AsyncApiKeys
@@ -128,6 +148,12 @@ __all__ = [
     "createHeaders",
     "Post",
     "AsyncPost",
+    "GetMethod",
+    "AsyncGetMethod",
+    "DeleteMethod",
+    "AsyncDeleteMethod",
+    "PutMethod",
+    "AsyncPutMethod",
     "Embeddings",
     "AsyncEmbeddings",
     "Images",
@@ -208,4 +234,18 @@ __all__ = [
     "AsyncLabels",
     "Collections",
     "AsyncCollections",
+    "FineTuningCheckpoints",
+    "AsyncFineTuningCheckpoints",
+    "Permissions",
+    "AsyncPermissions",
+    "Evals",
+    "AsyncEvals",
+    "EvalsRuns",
+    "AsyncEvalsRuns",
+    "OutputItems",
+    "AsyncOutputItems",
+    "Alpha",
+    "AsyncAlpha",
+    "Graders",
+    "AsyncGraders",
 ]

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "superlinked"
-version = "25.1.0"  # The version will be dynamically updated
+version = "27.0.0"  # The version will be dynamically updated
 description = "The Superlinked vector computing library"
 authors = ["Superlinked Release <release@superlinked.com>"]
 readme = "PYPI_README.md"
@@ -10,7 +10,7 @@ include = ["NOTICE"]
 [tool.poetry.dependencies]
 Deprecated = "^1.2.18"
 types-Deprecated = ">=1.2.15"
-python = ">=3.10,<=3.12.3"
+python = ">=3.10,<=3.12.10"
 numpy = "^1.25.2"
 sentence-transformers = "4.1.0"
 transformers = "^4.51.0"

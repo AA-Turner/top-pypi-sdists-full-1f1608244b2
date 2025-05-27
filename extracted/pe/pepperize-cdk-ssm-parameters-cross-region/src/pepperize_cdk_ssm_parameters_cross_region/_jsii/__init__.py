@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/cdk-ssm-parameters-cross-region",
-    "0.0.525",
+    "0.0.527",
     __name__[0:-6],
-    "cdk-ssm-parameters-cross-region@0.0.525.jsii.tgz",
+    "cdk-ssm-parameters-cross-region@0.0.527.jsii.tgz",
 )
 
 __all__ = [

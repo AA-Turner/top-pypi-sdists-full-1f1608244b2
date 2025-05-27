@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import logging
 from base64 import b64decode, b64encode
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+import httpx
 
 from hud.env.docker_client import DockerClient
 from hud.exceptions import HudResponseError
@@ -10,9 +12,25 @@ from hud.server import make_request
 from hud.settings import settings
 from hud.types import EnvironmentStatus
 from hud.utils import ExecuteResult
-from hud.utils.common import get_gym_id
+from hud.utils.common import directory_to_zip_bytes, get_gym_id
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = logging.getLogger("hud.env.remote_env_client")
+
+
+async def upload_bytes_to_presigned_url(presigned_url: str, data_bytes: bytes) -> None:
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.put(presigned_url, content=data_bytes)
+            response.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        logger.exception("Failed to upload to presigned URL")
+        raise HudResponseError(message=f"Failed to upload to presigned URL: {e}") from e
+    except httpx.RequestError as e:
+        logger.exception("Network error uploading to presigned URL")
+        raise HudResponseError(message=f"Network error uploading to presigned URL: {e}") from e
 
 
 class RemoteDockerClient(DockerClient):
@@ -23,20 +41,63 @@ class RemoteDockerClient(DockerClient):
     """
 
     @classmethod
+    async def build_image(cls, build_context: Path) -> tuple[str, dict[str, Any]]:
+        """
+        Build an image from a build context.
+        """
+        # create the presigned url by making a POST request to /v2/builds
+        logger.info("Creating build")
+        response = await make_request(
+            method="POST",
+            url=f"{settings.base_url}/v2/builds",
+            api_key=settings.api_key,
+        )
+        logger.info("Build created")
+        presigned_url = response["presigned_url"]
+
+        # List files in the build context
+        files = list(build_context.glob("**/*"))
+        logger.info("Found %d files in build context %s", len(files), build_context)
+
+        if len(files) == 0:
+            raise HudResponseError(message="Build context is empty")
+
+        # zip the build context
+        logger.info("Zipping build context")
+        zip_bytes = directory_to_zip_bytes(build_context)
+        logger.info("Created zip archive of size %d kb", len(zip_bytes) // 1024)
+        # upload the zip bytes to the presigned url
+        logger.info("Uploading build context")
+        await upload_bytes_to_presigned_url(presigned_url, zip_bytes)
+        logger.info("Build context uploaded")
+
+        # start the build and return uri and logs
+        logger.info("Starting build")
+        response = await make_request(
+            method="POST",
+            url=f"{settings.base_url}/v2/builds/{response['id']}/start",
+            api_key=settings.api_key,
+        )
+        logger.info("Build completed")
+
+        return response["uri"], {"logs": response["logs"]}
+
+    @classmethod
     async def create(
         cls,
-        dockerfile: str,
+        image_uri: str,
         *,
         job_id: str | None = None,
         task_id: str | None = None,
         metadata: dict[str, Any] | None = None,
-    ) -> tuple[RemoteDockerClient, dict[str, Any]]:
+    ) -> RemoteDockerClient:
         """
-        Creates a remote environment client from a dockerfile or gym_id.
+        Creates a remote environment client from an image.
 
         Args:
-            dockerfile: The dockerfile content to build the environment
-            gym_id: The gym_id of the environment to create
+            image_uri: The image uri to create the environment from
+            job_id: The job_id of the environment to create
+            task_id: The task_id of the environment to create
             metadata: Metadata to associate with the environment
 
         Returns:
@@ -52,13 +113,14 @@ class RemoteDockerClient(DockerClient):
 
         logger.info("Creating remote environment")
 
-        true_gym_id = await get_gym_id("docker")
+        true_gym_id = await get_gym_id("local-docker")
+        # true_gym_id = await get_gym_id("docker")
 
         # augment metadata with dockerfile
         if "environment_config" not in metadata:
             metadata["environment_config"] = {}
 
-        metadata["environment_config"]["dockerfile"] = dockerfile
+        metadata["environment_config"]["image_uri"] = image_uri
 
         # Create a new environment via the HUD API
         response = await make_request(
@@ -85,12 +147,7 @@ class RemoteDockerClient(DockerClient):
                 response_json=response,
             )
 
-        # Create the controller instance
-        controller = cls(env_id)
-
-        build_metadata = response.get("metadata", {})
-
-        return controller, build_metadata
+        return cls(env_id)
 
     def __init__(self, env_id: str) -> None:
         """

@@ -2,6 +2,7 @@ import asyncio
 from datetime import datetime
 import time
 from typing import Literal, Optional, Union, TYPE_CHECKING
+from fireworks._const import FIREWORKS_API_BASE_URL
 from fireworks.gateway import Gateway
 from fireworks.dataset import Dataset
 from fireworks.control_plane.generated.protos.gateway import (
@@ -137,56 +138,6 @@ def precision_proto_to_literal(
     raise ValueError(f"Unknown precision: {precision}")
 
 
-JobStateLiteral = Literal[
-    "UNSPECIFIED",
-    "CREATING",
-    "RUNNING",
-    "COMPLETED",
-    "FAILED",
-    "CANCELLED",
-    "DELETING",
-    "WRITING_RESULTS",
-    "VALIDATING",
-    "ROLLOUT",
-    "EVALUATION",
-    "FAILED_CLEANING_UP",
-    "DELETING_CLEANING_UP",
-    "POLICY_UPDATE",
-]
-
-
-def job_state_proto_to_literal(state: SyncJobState) -> JobStateLiteral:
-    if state == SyncJobState.JOB_STATE_UNSPECIFIED:
-        return "UNSPECIFIED"
-    elif state == SyncJobState.JOB_STATE_CREATING:
-        return "CREATING"
-    elif state == SyncJobState.JOB_STATE_RUNNING:
-        return "RUNNING"
-    elif state == SyncJobState.JOB_STATE_COMPLETED:
-        return "COMPLETED"
-    elif state == SyncJobState.JOB_STATE_FAILED:
-        return "FAILED"
-    elif state == SyncJobState.JOB_STATE_CANCELLED:
-        return "CANCELLED"
-    elif state == SyncJobState.JOB_STATE_DELETING:
-        return "DELETING"
-    elif state == SyncJobState.JOB_STATE_WRITING_RESULTS:
-        return "WRITING_RESULTS"
-    elif state == SyncJobState.JOB_STATE_VALIDATING:
-        return "VALIDATING"
-    elif state == SyncJobState.JOB_STATE_ROLLOUT:
-        return "ROLLOUT"
-    elif state == SyncJobState.JOB_STATE_EVALUATION:
-        return "EVALUATION"
-    elif state == SyncJobState.JOB_STATE_FAILED_CLEANING_UP:
-        return "FAILED_CLEANING_UP"
-    elif state == SyncJobState.JOB_STATE_DELETING_CLEANING_UP:
-        return "DELETING_CLEANING_UP"
-    elif state == SyncJobState.JOB_STATE_POLICY_UPDATE:
-        return "POLICY_UPDATE"
-    raise ValueError(f"Unknown job state: {state}")
-
-
 class SupervisedFineTuningJob:
     """
     Wrapper around proto for a supervised fine-tuning job in Fireworks. Can be
@@ -217,7 +168,9 @@ class SupervisedFineTuningJob:
         region: Optional[RegionLiteral] = None,
         nodes: Optional[int] = None,
         batch_size: Optional[int] = None,
-        state: Optional[JobStateLiteral] = None,
+        # its okay that JobState is not a literal since its only populated by
+        # the API, not a developer writing code
+        state: Optional[JobState] = None,
         create_time: Optional[datetime] = None,
         update_time: Optional[datetime] = None,
         created_by: Optional[str] = None,
@@ -251,13 +204,11 @@ class SupervisedFineTuningJob:
             self.region = getattr(SyncRegion, region)
         self.nodes = nodes
         self.batch_size = batch_size
-        self.state = None
-        if state is not None:
-            self.state = JobState.from_string(state)
+        self.state = state
         self.create_time = create_time
         self.update_time = update_time
         self.created_by = created_by
-        self.output_model = output_model
+        self._output_model = output_model
         self._api_key = api_key
         self._gateway = Gateway(api_key=api_key)
         account = self._gateway.account_id()
@@ -265,32 +216,61 @@ class SupervisedFineTuningJob:
             dataset_or_id if isinstance(dataset_or_id, Dataset) else Dataset.construct_id(account, dataset_or_id)
         )
 
+    @property
+    def output_model(self) -> Optional[str]:
+        if self._output_model is None:
+            return None
+        if self._output_model.startswith("accounts/"):
+            return self._output_model
+        return f"accounts/{self._gateway.account_id()}/models/{self._output_model}"
+
     @classmethod
-    async def delete_by_name(cls, name: str, api_key: Optional[str] = None):
+    async def adelete_by_name(cls, name: str, api_key: Optional[str] = None):
         gateway = Gateway(api_key=api_key)
         await gateway.delete_supervised_fine_tuning_job(name)
         job = await gateway.get_supervised_fine_tuning_job(name)
         while job is not None:
             await asyncio.sleep(1)
 
-    async def delete(self):
-        await self.delete_by_name(self.name, self._api_key)
+    @classmethod
+    def delete_by_name(cls, name: str, api_key: Optional[str] = None):
+        gateway = Gateway(api_key=api_key)
+        gateway.delete_supervised_fine_tuning_job_sync(name)
+        job = gateway.get_supervised_fine_tuning_job_sync(name)
+        while job is not None:
+            time.sleep(1)
+
+    def delete(self):
+        self.delete_by_name(self.name, self._api_key)
+
+    async def adelete(self):
+        await self.adelete_by_name(self.name, self._api_key)
 
     def sync(self) -> "SupervisedFineTuningJob":
         """
         Creates the job if it doesn't exist, otherwise returns the existing job.
+        If previous job failed, deletes it and creates a new one.
         """
         if isinstance(self.dataset_or_id, Dataset):
             self.dataset_or_id.sync()
         existing_job = self.get()
         if existing_job is not None:
-            return existing_job
+            if existing_job.state == JobState.FAILED:
+                self.delete()
+            else:
+                return existing_job
         request = self._create_request()
         self._gateway.create_supervised_fine_tuning_job_sync(request)
         new_job = self.get()
         if new_job is None:
             raise ValueError(f"Failed to create supervised fine-tuning job {self.name}")
         return new_job
+
+    def url(self) -> str:
+        if self.id is None:
+            return f"https://{FIREWORKS_API_BASE_URL}/dashboard/fine-tuning"
+        base_url = "dev.fireworks.ai" if "dev." in FIREWORKS_API_BASE_URL else "fireworks.ai"
+        return f"https://{base_url}/dashboard/fine-tuning/supervised/{self.id}"
 
     def _create_request(self) -> SyncCreateSupervisedFineTuningJobRequest:
         dataset_id = self.dataset_or_id.id() if isinstance(self.dataset_or_id, Dataset) else self.dataset_or_id
@@ -344,6 +324,7 @@ class SupervisedFineTuningJob:
         )
         return request
 
+    @property
     def output_llm(self) -> "LLM":
         # Import here to avoid circular import
         from fireworks.llm.llm import LLM
@@ -351,6 +332,8 @@ class SupervisedFineTuningJob:
         logger.info(f'Fine-tuning job "{self.name}" completed')
         if self.output_model is None:
             raise ValueError(f'Fine-tuning job "{self.name}" did not create an output model')
+        if self.llm.addons_enabled:
+            return LLM(model=self.output_model, deployment_type="on-demand-lora")
         return LLM(model=self.output_model, deployment_type=self.llm.deployment_type)
 
     def wait_for_completion(self) -> "SupervisedFineTuningJob":
@@ -418,7 +401,7 @@ class SupervisedFineTuningJob:
                         id=id,
                         dataset_or_id=self.dataset_or_id,
                         api_key=self._api_key,
-                        state=job_state_proto_to_literal(job_proto.state),
+                        state=JobState.try_value(job_proto.state),
                         epochs=job_proto.epochs,
                         learning_rate=job_proto.learning_rate,
                         lora_rank=job_proto.lora_rank,

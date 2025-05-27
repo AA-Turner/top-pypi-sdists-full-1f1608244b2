@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-teo',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1387"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1388"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Teo SDK for Python',
     long_description=open('README.rst').read(),

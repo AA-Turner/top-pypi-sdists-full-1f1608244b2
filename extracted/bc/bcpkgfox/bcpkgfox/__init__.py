@@ -336,7 +336,6 @@ def cpf_or_cnpj(numero: str) -> str:
 janela = None
 @staticmethod
 def mostrar_mensagem(mensagem, tamanho_fonte=12, negrito=False, button: Optional[bool] = True):
-
     global janela
 
     try: fechar_janela(janela)
@@ -362,15 +361,38 @@ def mostrar_mensagem(mensagem, tamanho_fonte=12, negrito=False, button: Optional
                      font=estilo_fonte, wraplength=380, justify="center")
     label.pack(expand=True, padx=20, pady=20)
 
-    if button:
-        tk.Button(janela, text="OK", command=lambda: (janela.destroy(), root.destroy()),
-                  width=10, font=("Helvetica", 10)).pack(pady=10)
+    if isinstance(button, dict):
+        resultado = tk.IntVar()
 
-    janela.grab_set()
-    janela.focus_set()
-    if button: janela.wait_window()
-    else: root.mainloop()
-    return janela
+        def make_cmd(value):
+            return lambda: resultado.set(value)
+
+        frame_botoes = tk.Frame(janela, bg="white")  # CRIAR O FRAME
+        frame_botoes.pack(pady=10)                   # EMPACOTAR O FRAME
+
+        for i, texto in enumerate(button.keys(), start=1):
+            tk.Button(frame_botoes, text=texto, command=make_cmd(i), width=10,
+                      font=("Helvetica", 10)).pack(side="left", padx=5)
+
+        janela.grab_set()
+        janela.focus_set()
+        janela.wait_variable(resultado)
+        root.destroy()
+        return resultado.get()
+
+    else:
+        if button:
+            tk.Button(janela, text="OK", command=lambda: (janela.destroy(), root.destroy()),
+                      width=10, font=("Helvetica", 10)).pack(pady=10)
+
+        janela.grab_set()
+        janela.focus_set()
+        if button:
+            janela.wait_window()
+        else:
+            root.mainloop()
+        return janela
+
 
 def fechar_janela(janela_=None):
     global janela

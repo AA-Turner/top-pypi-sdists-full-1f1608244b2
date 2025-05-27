@@ -16,6 +16,7 @@ from pyparsing import Literal
 from pyparsing import OneOrMore
 from pyparsing import Opt
 from pyparsing import ParseException
+from pyparsing import ParseResults
 from pyparsing import PrecededBy
 from pyparsing import QuotedString
 from pyparsing import Regex
@@ -31,10 +32,12 @@ from pyparsing import opAssoc
 if TYPE_CHECKING:
     from kconfiglib.kconfig_parser import Parser
 
+from kconfiglib.report import PRAGMA_PREFIX
+
 
 class KconfigBlock(Token):
     """
-    Abstract class for custom Kconfig related pyparsiong blocks.
+    Abstract class for custom Kconfig related pyparsing blocks.
     """
 
     def __init__(self):
@@ -74,8 +77,10 @@ class KconfigBlock(Token):
 
 class KconfigHelpBlock(KconfigBlock):
     """
-    This ParserElement is used to parse help blocks in Kconfig files. It turned out it is easier to do that directly than to use pyparsing's IndentedBlock or other approach.
-    It is little strange to cast it into one token, but help block is just a plain text without any structure or meaning for the parser. Parsing it as a one token helps
+    This ParserElement is used to parse help blocks in Kconfig files.
+    It turned out it is easier to do that directly than to use pyparsing's IndentedBlock or other approach.
+    It is little strange to cast it into one token, but help block is just a plain text without any structure
+    or meaning for the parser. Parsing it as a one token helps
     the parser not to search for possible matches in it.
     """
 
@@ -90,10 +95,12 @@ class KconfigHelpBlock(KconfigBlock):
         lines = instring[loc:].split("\n")
 
         # This is the indentation of the first line of the help block.
-        # Every line with the same or bigger indentation (plus empty lines after which the same indentation level continues) is considered to be part of the help block.
+        # Every line with the same or bigger indentation (plus empty lines after which the same
+        # indentation level continues) is considered to be part of the help block.
         help_keyword_indent = self.leading_whitespace_len(lines[1])
 
-        # Preserve whitespaces cause that loc originally point to the \n char on line preceding the help keyword, effectively creating ["", "<indent>help", <help body>] list.
+        # Preserve whitespaces cause that loc originally point to the \n char on line preceding the help keyword,
+        # effectively creating ["", "<indent>help", <help body>] list.
         # We ignore the first two lines, as the first one is empty and the second one contains the help keyword.
         loc += len(lines[1]) + 1  # +1 for \n
         lines = lines[2:]
@@ -124,7 +131,7 @@ class KconfigHelpBlock(KconfigBlock):
             else:
                 break
             # end of help block
-        # if some lines are overindented in the help, the overindentation is preserved in the help text itself
+        # if some lines are over-indented in the help, the over-indentation is preserved in the help text itself
         return loc, result
 
 
@@ -132,12 +139,13 @@ class KconfigHelpBlock(KconfigBlock):
 symbol_regex = r"""(?<!\S)
                     (y|n|\"y\"|\"n\")(?!\S)  # y, n, "y", "n" symbols
                     |0[x|X][\da-fA-F]+  # hexnums: 0x1234, 0X1234ABCD
-                    |-?[\d]+   # numbers: 1234, -1234
+                    |\d+(\.\d+){1,2} # versions: 4.4, 5.3.1 (versions without dots are handled by the "numbers" below)
+                    |-?\d+   # numbers: 1234, -1234
                     |[A-Z\d_]+  # variables: FOO, BAR_BAR, ENABLE_ESP64
                     |'[^']*'  # strings: 'here is a đĐđĐ[]tring'
                     |\"[^\"]*\" # strings: "hello world", ""
-                    |\"\$\([A-Z_\d]+\)\" # "$(ENVVAR)"
-                    |\"\$[A-Z_\d]+\""""  # "$ENVVAR"
+                    |\"?\$[({]?[A-Z\d_]+[)}]?\"?"""  # $ENV, ENV can be in () or {} and the whole thing can be in ""
+
 symbol = Regex(symbol_regex, re.X)
 operator_with_precedence = [
     (Literal("!"), 1, opAssoc.RIGHT),
@@ -187,7 +195,8 @@ class KconfigOptionBlock(KconfigBlock):
         1) Go to first non-empty line after the loc
         2) Parse the option block line-by-line until the first token of the line is not recognized
            (i.e. it is not an option keyword)
-           NOTE: Indentation is not controlled, because many third party components have very inconsistent indentation, eg. lvgl
+           NOTE: Indentation is not controlled, because many third party components have very inconsistent indentation,
+                 eg. lvgl
            NOTE: Help block is handled separately in KconfigHelpBlock
         3) Return the parsed dictionary with the options parsed
            NOTE: Semantic checks are not performed here, they are done in the Parser class
@@ -207,8 +216,11 @@ class KconfigOptionBlock(KconfigBlock):
         }
 
         def is_line_with_option(tokens: List[str]) -> bool:
-            if tokens[0].startswith(self.entry_keywords):
+            if tokens[0].startswith(self.entry_keywords) or re.match(
+                r"^\s*([A-Z0-9_]+)\s*[:]?=\s*(.*?)\s*$", " ".join(tokens)
+            ):  # macro
                 return False
+
             return True
 
         def prompt_from_token_list(tokens: List[str]) -> Tuple[str, int]:
@@ -230,10 +242,12 @@ class KconfigOptionBlock(KconfigBlock):
                 )
             return " ".join(prompt_tokens)[1:-1], current_token_idx
 
-        # Unfortunately, pyparsing sometimes points KconfigOptionBlock to the end of the previous line, sometimes directly to the start of current line,
+        # Unfortunately, pyparsing sometimes points KconfigOptionBlock to the end of the previous line,
+        # sometimes directly to the start of current line,
         # sometimes to the start of the actual text on the current line, depending on what is parsed before this block.
         # This is caused by pyparsing's whitespace handling and cannot be mitigated in it.
-        # The parsing algorithm here supposes loc point to the end of previous line. This helps to handle the loc in a unified manner.
+        # The parsing algorithm here supposes loc point to the end of previous line.
+        # This helps to handle the loc in a unified manner.
         while instring[loc] != "\n":
             loc -= 1
 
@@ -404,7 +418,8 @@ class KconfigOptionBlock(KconfigBlock):
 class KconfigGrammar:
     """
     Grammar of the Kconfig language.
-    Parse actions are defined in the Parser class -> if another format will be used, it is enough to change the Parser class.
+    Parse actions are defined in the Parser class -> if another format will be used,
+    it is enough to change the Parser class.
     """
 
     def __init__(self, parser: "Parser") -> None:
@@ -415,14 +430,16 @@ class KconfigGrammar:
         Initializes the grammar for the Kconfig language.
 
         The pyparsing package embraces "bottom-up" approach both in the parsing and grammar definition.
-        Thus, the logic behind the definitions is that first, nested elements are defined (e.g. config options) and only then the wrapping element (e.g. config itself) is defined.
+        Thus, the logic behind the definitions is that first, nested elements are defined (e.g. config options)
+        and only then the wrapping element (e.g. config itself) is defined.
 
         More info is directly in the code below.
         """
         self.parser = parser
 
         condition = Suppress(Keyword("if")) + Group(expression)
-        # By default, pyparsing removes all the leading and trailing whitespaces and thus these two constructs appear the same:
+        # By default, pyparsing removes all the leading and trailing whitespaces
+        # and thus these two constructs appear the same:
         #    ...
         #    default y
         #
@@ -444,8 +461,10 @@ class KconfigGrammar:
         # - "visible if" can be used for menus
         ##########################
 
-        # Prompt is a string (with optional condition) defined either with "prompt" keyword or implicitly (without a keyword) after a type definition
-        # Every config/choice can have max. one prompt which is used to show to the user. Optionally, it can be conditioned.
+        # Prompt is a string (with optional condition) defined either with "prompt" keyword or implicitly
+        # (without a keyword) after a type definition
+        # Every config/choice can have max. one prompt which is used to show to the user.
+        # Optionally, it can be conditioned.
         # Explicit inline prompt parsing occurs because in some cases, inline prompt is not part of an option block.
         inline_prompt = (QuotedString('"') | QuotedString("'")) + Opt(inline_condition)
 
@@ -454,9 +473,9 @@ class KconfigGrammar:
         ###########################
         # List of all possible options for the config/choice.
 
-        config_name = Word(alphanums.upper() + "_").set_results_name("config_name", list_all_matches=True)
+        symbol_name = Word(alphanums.upper() + "_").set_results_name("config_name", list_all_matches=True)
         config_opts = KconfigOptionBlock().leave_whitespace().set_results_name("config_opts")
-        config = Keyword("config") + config_name + config_opts
+        config = Keyword("config") + symbol_name + config_opts
         config = config.set_parse_action(parser.parse_config)
 
         ###########################
@@ -467,6 +486,17 @@ class KconfigGrammar:
 
         comment = Keyword("comment") + inline_prompt + Opt(comment_opts)
         comment = comment.set_parse_action(parser.parse_comment)
+
+        ###########################
+        # Macro
+        ###########################
+        # Although not a basic Kconfig syntax, some Kconfig files are using basic macros in the form of NAME := value.
+        # This part adds support for this.
+        macro = (
+            symbol_name.set_results_name("name")
+            + one_of([":=", "="]).set_results_name("operation")
+            + symbol.set_results_name("value")
+        ).set_parse_action(parser.parse_macro)
 
         ###########################
         # Source
@@ -482,18 +512,14 @@ class KconfigGrammar:
         ########################
         # Choice
         ########################
-        choice_if_entry = Forward()
-        choice_if_entry << Keyword("if") + (expression + IndentedBlock(choice_if_entry | config)).set_parse_action(
-            parser.parse_if_entry
-        ) + Keyword("endif")
-
+        entries = Forward()
         # Choice is a group of configs that can have only one active at a time.
         choice = (
             Keyword("choice")
             + (
-                Opt(symbol).set_results_name("name")
+                Opt(symbol_name).set_results_name("name")
                 + Opt(KconfigOptionBlock().set_results_name("config_opts"))
-                + IndentedBlock(config | choice_if_entry).set_results_name("configs")
+                + IndentedBlock(entries).set_results_name("entries")
             ).set_parse_action(parser.parse_choice)
             + Keyword("endchoice")
         )
@@ -501,7 +527,7 @@ class KconfigGrammar:
         ########################
         # Menuconfig
         ########################
-        menuconfig = (Keyword("menuconfig") + config_name + config_opts).set_parse_action(parser.parse_config)
+        menuconfig = (Keyword("menuconfig") + symbol_name + config_opts).set_parse_action(parser.parse_config)
 
         ########################
         # Menu
@@ -513,10 +539,11 @@ class KconfigGrammar:
 
         # List of all possible entries in the menu/if block.
         # Every entry should have the same indentation and optionally, an empty line in between two entries.
-        # But e.g. lvgl does not follow any rules in their Kconfig files and thus, formal specifications needs to be loosen.
-        entries = ZeroOrMore(config | menu | choice | source | menuconfig | if_entry | comment).set_results_name(
-            "entries"
-        )
+        # But e.g. lvgl does not follow any rules in their Kconfig files and thus,
+        # formal specifications needs to be loosen.
+        entries << ZeroOrMore(
+            config | menu | choice | source | menuconfig | if_entry | comment | macro
+        ).set_results_name("entries")
 
         menu << (
             Keyword("menu")
@@ -542,7 +569,8 @@ class KconfigGrammar:
         ############################
         # Entry points
         ############################
-        # The root of the grammar. It is used to parse the main Kconfig file, which needs to contain mainmenu as a top element.
+        # The root of the grammar. It is used to parse the main Kconfig file,
+        # which needs to contain mainmenu as a top element.
         self.root = mainmenu
 
         # sourced file can have different structure than the main Kconfig file, thus using a separate root.
@@ -552,7 +580,8 @@ class KconfigGrammar:
     def preprocess_file(self, file: str, ensure_end_newline: bool = True) -> str:
         """
         Helper method for preprocessing the Kconfig files.
-        Unfortunately, some Kconfig syntax would be so difficult to support in pyparsing that it is easier to preprocess the files.
+        Unfortunately, some Kconfig syntax would be so difficult to support in pyparsing
+        that it is easier to preprocess the files.
         Specifically, it:
             * merges lines split with '\'
             * removes inline comments
@@ -562,7 +591,8 @@ class KconfigGrammar:
             """
             Removes inline comments from the string, preserving # inside quotes.
             """
-            self.parser.kconfig.check_pragmas(line)
+            if PRAGMA_PREFIX in line:
+                self.parser.kconfig.report.add_ignore_line(line)
 
             quote = None  # Tracks if we're inside a quote
             result = []
@@ -624,7 +654,7 @@ class KconfigGrammar:
 
         return return_file if not ensure_end_newline else return_file + "\n"
 
-    def __call__(self, file: str, sourced: bool = False):
+    def __call__(self, file: str, sourced: bool = False) -> ParseResults:
         """
         Here, pyparsing parsing takes place.
         Parameters:

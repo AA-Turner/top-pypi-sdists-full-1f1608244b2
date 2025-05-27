@@ -471,6 +471,7 @@ class TextFieldSlot(RadixThemesComponent):
             ]
         ]
         | None = None,
+        side: Literal["left", "right"] | Var[Literal["left", "right"]] | None = None,
         style: Sequence[Mapping[str, Any]]
         | Mapping[str, Any]
         | Var[Mapping[str, Any]]
@@ -507,6 +508,7 @@ class TextFieldSlot(RadixThemesComponent):
         Args:
             *children: Child components.
             color_scheme: Override theme color for text field slot
+            side: Which side of the input the slot should be placed on
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.

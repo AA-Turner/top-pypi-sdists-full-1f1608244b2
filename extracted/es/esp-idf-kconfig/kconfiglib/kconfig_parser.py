@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2024-2025 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
 import os
 from dataclasses import dataclass
@@ -7,37 +7,39 @@ from os.path import dirname
 from os.path import expandvars
 from os.path import join
 from typing import List
-from typing import no_type_check
 from typing import Optional
 from typing import Tuple
 from typing import Union
+from typing import no_type_check
 
-from pyparsing import line as pyparsing_line
-from pyparsing import lineno
 from pyparsing import ParserElement
 from pyparsing import ParseResults
+from pyparsing import line as pyparsing_line
+from pyparsing import lineno
+
+from kconfiglib.kconfig_grammar import KconfigGrammar
 
 from .core import AND
 from .core import BOOL
-from .core import Choice
 from .core import COMMENT
 from .core import EQUAL
 from .core import GREATER
 from .core import GREATER_EQUAL
 from .core import HEX
 from .core import INT
-from .core import Kconfig
-from .core import KconfigError
 from .core import LESS
 from .core import LESS_EQUAL
 from .core import MENU
-from .core import MenuNode
 from .core import NOT
 from .core import OR
 from .core import STRING
-from .core import Symbol
 from .core import UNEQUAL
-from kconfiglib.kconfig_grammar import KconfigGrammar
+from .core import Choice
+from .core import Kconfig
+from .core import KconfigError
+from .core import MenuNode
+from .core import Symbol
+from .core import Variable
 
 ParserElement.enablePackrat(cache_size_limit=None)  # Speeds up parsing by caching intermediate results
 
@@ -60,7 +62,8 @@ class Parser:
     """
     The Parser class is responsible for parsing the Kconfig file and building the menu tree.
 
-    Parsing logic: pyparsing is used to parse the input Kconfig file(s) and provide tokens. It is supposed that new formats (beside Kconfig) will be supported in the future, so the grammar describing Kconfig
+    Parsing logic: pyparsing is used to parse the input Kconfig file(s) and provide tokens.
+    It is supposed that new formats (beside Kconfig) will be supported in the future, so the grammar describing Kconfig
     is in its separate class KconfigGrammar.
 
     In contrast to the previous (C-like) parsing char-by-char, the new approach utilizes pyparsing
@@ -100,7 +103,6 @@ class Parser:
             if not adopted:
                 break
 
-        # NOTE: this situation with linear list is inherited from the original implementation of kconfiglib and should be refactored
         orphans_for_adoption.reverse()
         # MenuNode.list = first child element
         for orphan in orphans_for_adoption:
@@ -135,6 +137,11 @@ class Parser:
 
         sym.nodes.append(node)
         self.parse_options(node, parsed_config)
+        if parsed_config["config_opts"]["visible_if"]:
+            self.kconfig._warn(
+                f'config {sym.name} (defined at {self.file_stack[-1]}:{node.linenr}) has a "visible if" option, '
+                "which is not supported for configs"
+            )
 
         orphan = Orphan(
             node=node,
@@ -173,7 +180,7 @@ class Parser:
 
         self.orphans.append(orphan)
 
-    def parse_sourced(self, s: str, loc: int, parsed_source) -> None:
+    def parse_sourced(self, s: str, loc: int, parsed_source: ParseResults) -> None:
         self.kconfig.linenr = lineno(loc, s)
         path = expandvars(parsed_source.path)
         if parsed_source[0] in ["rsource", "orsource"]:
@@ -229,6 +236,11 @@ class Parser:
             self.kconfig._warn(
                 f"<choice {choice.name}> (defined at {self.file_stack[-1]}:{node.linenr}) defined without a prompt"
             )
+        if parsed_choice["config_opts"]["visible_if"]:
+            self.kconfig._warn(
+                f'choice {choice.name} (defined at {self.file_stack[-1]}:{node.linenr}) has a "visible if" option, '
+                "which is not supported for choices"
+            )
 
         self.get_children(node, (self.file_stack[-1], line_number))
         child = node.list
@@ -242,7 +254,10 @@ class Parser:
 
         for child in children_with_default:
             self.kconfig._warn(
-                f"default on the choice symbol {child.item.name if isinstance(child.item, (Symbol, Choice)) else child.item} (defined at {self.file_stack[-1]}:{child.linenr}) will have no effect, as defaults do not affect choice symbols"
+                "default on the choice symbol "
+                f"{child.item.name if isinstance(child.item, (Symbol, Choice)) else child.item} "
+                f"(defined at {self.file_stack[-1]}:{child.linenr}) will have no effect, as defaults "
+                "do not affect choice symbols"
             )
 
         orphan = Orphan(
@@ -272,6 +287,35 @@ class Parser:
                 node.dep = self.kconfig._make_and(node.dep, expr)
         else:
             node.dep = self.kconfig.y
+
+    def parse_macro(self, s: str, loc: int, parsed_macro: ParseResults) -> None:
+        name = parsed_macro["name"]
+        op = parsed_macro["operation"]
+        val = parsed_macro["value"]
+        if name in self.kconfig.variables:  # Already seen variable
+            var = self.kconfig.variables[name]
+        else:
+            # New variable
+            var = Variable()
+            var.kconfig = self.kconfig
+            var.name = name
+            var._n_expansions = 0
+
+            self.kconfig.variables[name] = var
+
+        # legacy; in order to make everything work, we need to set the value to the is_recursive flag
+        # Difference between "=" and ":=" is that in original kconfiglib, ":=" is expanded immediately,
+        # while "=" is expanded when used. However, we currently support only simple NAME = VALUE macros,
+        # where there is no difference between the two (literal is always expanded to itself).
+        if op == "=":
+            var.is_recursive = True
+        elif op == ":=":
+            var.is_recursive = False
+
+        if isinstance(val, Symbol):
+            val = val.name
+
+        var.value = self.kconfig._expand_whole(val, ())
 
     def parse_prompt(self, node: MenuNode, prompts: List[Tuple]) -> None:
         for prompt in prompts:
@@ -401,7 +445,7 @@ class Parser:
                     node.linenr,
                 )
 
-    # mypy cannot recognize "if parsed_expr.__class__" as handling certatin types and then complains in the rest of the function
+    # mypy cannot recognize "if parsed_expr.__class__" as handling certain types complains in the rest of the function
     @no_type_check
     def infix_to_prefix(self, parsed_expr: Union[str, list, Symbol]) -> Union[str, tuple, Symbol]:
         """
@@ -432,7 +476,9 @@ class Parser:
             value = os.environ.get(name) or ""
             env_var_sym = self.kconfig._lookup_const_sym(value)
         else:
-            env_var_sym = self.kconfig._lookup_const_sym("")
+            # If the given name is not in the environment variables, we set the value
+            # to the name itself (e.g. "${ENVAR_NAME}")
+            env_var_sym = self.kconfig._lookup_const_sym(f"${{{name}}}")  # will expand to ${ENVAR_NAME}
         return env_var_sym
 
     def kconfigize_expr(self, expr: Union[str, tuple, list]) -> Union[str, tuple, "Symbol", int]:
@@ -464,11 +510,38 @@ class Parser:
         if isinstance(expr, str):
             if expr in operators:
                 return self.kconfigize_operator[expr]
-            elif expr.startswith(('"$(', "'$(", '"$', "'$")):  # environment variable
-                if expr.startswith(('"$(', "'$(")):
-                    return self.create_envvar(expr[3:-2])  # remove "$( and )"
+            # $(NAME) first tries to expand as a macro, then as an environment variable,
+            # ${NAME} only as environment variable.
+            # Also their quoted versions, e.g. "$(NAME)", "${NAME}" are allowed.
+            # This really matters only with "$(NAME)" because macro can be an int. Others are strings by default.
+            elif expr.startswith(('"$', "'$", "$")):  # environment variable or macro to expand
+                quoted = False
+                # remove quotes and $, then decide what to do based on brackets
+                if expr.startswith(('"$', "'$")):
+                    expr = expr[2:-1]  # remove "$ and trailing "
+                    quoted = True
                 else:
-                    return self.create_envvar(expr[2:-1])  # remove "$ and trailing "
+                    expr = expr[1:]  # remove only $
+                if expr.startswith("(") and expr.endswith(
+                    ")"
+                ):  # first try to expand as a macro, then as an environment variable, then cause error
+                    expr = expr[1:-1]
+                    if self.kconfig.variables.get(expr):
+                        return self.kconfigize_expr(
+                            f'"{self.kconfig.variables[expr].value}"' if quoted else self.kconfig.variables[expr].value
+                        )
+                    elif expr in os.environ:
+                        return self.create_envvar(expr)
+                    elif quoted:
+                        return self.kconfigize_expr(
+                            ""
+                        )  # macros failed to expand even as environment variable are substituted with empty string
+                    else:
+                        raise KconfigError(f"{expr}: macro expanded to blank string")
+                else:  # name in {} or without brackets at all (only for environment variables)
+                    expr = expr[1:-1] if expr.startswith("{") and expr.endswith("}") else expr
+                    return self.create_envvar(expr)
+
             else:  # symbol
                 if expr in ("n", "'n'", '"n"'):
                     return self.kconfig.n

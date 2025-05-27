@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sqlmesh
-Version: 0.186.1
+Version: 0.187.2
 Summary: Next-generation data transformation framework
 Author-email: "TobikoData Inc." <engineering@tobikodata.com>
 License:                                  Apache License
@@ -233,7 +233,7 @@ Requires-Dist: pydantic>=2.0.0
 Requires-Dist: requests
 Requires-Dist: rich[jupyter]
 Requires-Dist: ruamel.yaml
-Requires-Dist: sqlglot[rs]~=26.19.0
+Requires-Dist: sqlglot[rs]~=26.21.0
 Requires-Dist: tenacity
 Requires-Dist: time-machine
 Requires-Dist: json-stream
@@ -244,7 +244,8 @@ Requires-Dist: pymssql; extra == "azuresql"
 Provides-Extra: bigquery
 Requires-Dist: google-cloud-bigquery[pandas]; extra == "bigquery"
 Requires-Dist: google-cloud-bigquery-storage; extra == "bigquery"
-Requires-Dist: bigframes>=1.32.0; extra == "bigquery"
+Provides-Extra: bigframes
+Requires-Dist: bigframes>=1.32.0; extra == "bigframes"
 Provides-Extra: clickhouse
 Requires-Dist: clickhouse-connect; extra == "clickhouse"
 Provides-Extra: databricks

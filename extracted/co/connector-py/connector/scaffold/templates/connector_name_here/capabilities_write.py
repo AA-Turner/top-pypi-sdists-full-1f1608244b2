@@ -7,8 +7,14 @@ from connector.generated import (
     CreateAccountResponse,
     DeactivateAccountRequest,
     DeactivateAccountResponse,
+    DowngradeLicenseRequest,
+    DowngradeLicenseResponse,
     DeleteAccountRequest,
     DeleteAccountResponse,
+    ReleaseResourcesRequest,
+    ReleaseResourcesResponse,
+    TransferDataRequest,
+    TransferDataResponse,
     UnassignEntitlementRequest,
     UnassignEntitlementResponse,
 )
@@ -47,4 +53,19 @@ async def activate_account(
 async def deactivate_account(
     args: DeactivateAccountRequest,
 ) -> DeactivateAccountResponse:
+    raise NotImplementedError
+
+async def transfer_data(
+    args: TransferDataRequest,
+) -> TransferDataResponse:
+    raise NotImplementedError
+
+async def downgrade_license(
+    args: DowngradeLicenseRequest,
+) -> DowngradeLicenseResponse:
+    raise NotImplementedError
+
+async def release_resources(
+    args: ReleaseResourcesRequest,
+) -> ReleaseResourcesResponse:
     raise NotImplementedError

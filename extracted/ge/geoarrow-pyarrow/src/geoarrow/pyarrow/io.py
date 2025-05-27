@@ -9,10 +9,11 @@ testing and documenting the GeoArrow format and encodings.
 import json
 
 import geoarrow.pyarrow as _ga
+import pyarrow as _pa
 import pyarrow.parquet as _pq
 import pyarrow.types as _types
-import pyarrow_hotfix as _  # noqa: F401
-from geoarrow.pyarrow._compute import ensure_storage
+from geoarrow.pyarrow import _type
+from geoarrow.pyarrow import _compute
 
 
 def read_pyogrio_table(*args, **kwargs):
@@ -34,7 +35,7 @@ def read_pyogrio_table(*args, **kwargs):
     ...     ).to_file(temp_gpkg)
     ...     table = io.read_pyogrio_table(temp_gpkg)
     ...     table.column("geom").chunk(0)
-    GeometryExtensionArray:WkbType(geoarrow.wkb <{"$schema":"https://proj.org/schem...>)[1]
+    GeometryExtensionArray:WkbType(geoarrow.wkb <...>)[1]
     <POINT (0 1)>
     """
     import pyproj
@@ -44,40 +45,45 @@ def read_pyogrio_table(*args, **kwargs):
 
     # When meta["geometry_name"] is `""`, the geometry column name is wkb_geometry
     # in GDAL's Arrow output. This occurs for sources like shapefile whose geometry
-    # has no source-provided name. When GDAL >=3.8 is available, we should pass
-    # GEOMETRY_METADATA_ENCODING=GEOARROW, which will ensure that columns are already
-    # GeoArrow-encoded.
+    # has no source-provided name.
     geometry_name = meta["geometry_name"] if meta["geometry_name"] else "wkb_geometry"
     geometry_index = table.schema.get_field_index(geometry_name)
 
-    # Check that we actually have a geometry column
+    # Extract geometry information
     geometry_field = table.schema.field(geometry_index)
+    geometry = table.column(geometry_index)
+
+    # Always output the geometry column as "geometry"
+    if geometry_name == "wkb_geometry":
+        geometry_name_out = "geometry"
+    else:
+        geometry_name_out = geometry_name
+
+    # If extension types are registered and the version of pyogrio + GDAL is
+    # sufficient, the geometry field may already be a GeoArrow type. If that
+    # is the case, we are done.
+    if isinstance(geometry_field.type, _pa.ExtensionType):
+        return table.set_column(geometry_index, geometry_name_out, geometry)
+
     geometry_metadata = geometry_field.metadata
     field_is_geometry = (
         geometry_metadata
         and b"ARROW:extension:name" in geometry_metadata
         and geometry_metadata[b"ARROW:extension:name"] == b"ogc.wkb"
     )
+
     if not field_is_geometry:
         raise ValueError(
             f"Expected field {geometry_index} ({geometry_name})' to have extension "
             f"name 'ogc.wkb' but got {geometry_field}"
         )
 
-    # Rename wkb_geometry to geometry for consistency with GeoParquet and GeoPandas
-    if geometry_name == "wkb_geometry":
-        geometry_name_out = "geometry"
-    else:
-        geometry_name_out = geometry_name
-
-    # Get the JSON representation of the CRS
-    prj_as_json = pyproj.CRS(meta["crs"]).to_json()
-
     # Apply geoarrow type to geometry column. This doesn't scale to multiple geometry
-    # columns, but it's unclear if other columns would share the same CRS.
-    geometry = table.column(geometry_index)
+    # columns; however, this case is handled by newer GDAL and pyogrio.
+    prj_as_json = pyproj.CRS(meta["crs"]).to_json()
     geometry = _ga.wkb().wrap_array(geometry)
     geometry = _ga.with_crs(geometry, prj_as_json)
+
     return table.set_column(geometry_index, geometry_name_out, geometry)
 
 
@@ -144,6 +150,7 @@ def write_geoparquet_table(
     write_bbox=False,
     write_geometry_types=None,
     check_wkb=True,
+    geometry_encoding="WKB",
     **kwargs,
 ):
     """Write GeoParquet using PyArrow
@@ -166,6 +173,7 @@ def write_geoparquet_table(
         primary_geometry_column=primary_geometry_column,
         geometry_columns=geometry_columns,
         add_geometry_types=write_geometry_types,
+        encoding=geometry_encoding,
     )
 
     # Note: this will also update geo_meta with geometry_types and bbox if requested
@@ -230,6 +238,9 @@ def _geoparquet_chunked_array_to_geoarrow(item, spec):
     encoding = spec["encoding"]
     if encoding in ("WKB", "WKT"):
         item = _ga.array(item)
+    elif encoding in _GEOARROW_ENCODINGS:
+        type = _GEOARROW_ENCODINGS[encoding].__arrow_ext_deserialize__(item.type, b"")
+        item = type.wrap_array(item)
     else:
         raise ValueError(f"Invalid GeoParquet encoding value: '{encoding}'")
 
@@ -288,23 +299,23 @@ def _geoparquet_guess_primary_geometry_column(schema, primary_geometry_column=No
     )
 
 
-def _geoparquet_column_spec_from_type(type, add_geometry_types=None):
-    # We always encode to WKB since it's the only supported value
-    spec = {"encoding": "WKB", "geometry_types": []}
+def _geoparquet_column_spec_from_type(type, add_geometry_types=None, encoding=None):
+    spec = {"encoding": encoding, "geometry_types": []}
 
     # Pass along extra information from GeoArrow extension type metadata
     if isinstance(type, _ga.GeometryExtensionType):
-        if type.crs_type == _ga.CrsType.PROJJSON:
-            spec["crs"] = json.loads(type.crs)
-        elif type.crs_type == _ga.CrsType.NONE:
+        # If encoding is unspecified and data is already geoarrow, don't serialize to WKB
+        if encoding is None and type.coord_type != _ga.CoordType.UNSPECIFIED:
+            spec["encoding"] = geoparquet_encoding_geoarrow()
+
+        crs = type.crs
+        if crs is None:
             spec["crs"] = None
         else:
-            import pyproj
+            spec["crs"] = type.crs.to_json_dict()
 
-            spec["crs"] = pyproj.CRS(type.crs).to_json_dict()
-
-        if type.edge_type == _ga.EdgeType.SPHERICAL:
-            spec["edges"] = "spherical"
+        if type.edge_type != _ga.EdgeType.PLANAR:
+            spec["edges"] = type.edge_type.name.lower()
 
         # GeoArrow-encoded types can confidently declare a single geometry type
         maybe_known_geometry_type = type.geometry_type
@@ -314,15 +325,24 @@ def _geoparquet_column_spec_from_type(type, add_geometry_types=None):
             and maybe_known_geometry_type != _ga.GeometryType.GEOMETRY
             and maybe_known_dimensions != _ga.Dimensions.UNKNOWN
         ):
-            geometry_type = _GEOPARQUET_GEOMETRY_TYPE_LABELS[maybe_known_geometry_type]
-            dimensions = _GEOPARQUET_DIMENSION_LABELS[maybe_known_dimensions]
+            geometry_type = _GEOPARQUET_GEOMETRY_TYPE_LABELS[
+                maybe_known_geometry_type.value
+            ]
+            dimensions = _GEOPARQUET_DIMENSION_LABELS[maybe_known_dimensions.value]
             spec["geometry_types"] = [f"{geometry_type}{dimensions}"]
+
+    if spec["encoding"] is None:
+        spec["encoding"] = "WKB"
 
     return spec
 
 
 def _geoparquet_columns_from_schema(
-    schema, geometry_columns=None, primary_geometry_column=None, add_geometry_types=None
+    schema,
+    geometry_columns=None,
+    primary_geometry_column=None,
+    add_geometry_types=None,
+    encoding=None,
 ):
     schema_names = schema.names
     schema_types = schema.types
@@ -342,31 +362,51 @@ def _geoparquet_columns_from_schema(
     for name, type in zip(schema_names, schema_types):
         if name in geometry_columns:
             specs[name] = _geoparquet_column_spec_from_type(
-                type, add_geometry_types=add_geometry_types
+                type, add_geometry_types=add_geometry_types, encoding=encoding
             )
 
     return specs
 
 
 def _geoparquet_metadata_from_schema(
-    schema, geometry_columns=None, primary_geometry_column=None, add_geometry_types=None
+    schema,
+    geometry_columns=None,
+    primary_geometry_column=None,
+    add_geometry_types=None,
+    encoding=None,
 ):
     primary_geometry_column = _geoparquet_guess_primary_geometry_column(
         schema, primary_geometry_column
     )
     columns = _geoparquet_columns_from_schema(
-        schema, geometry_columns, add_geometry_types=add_geometry_types
+        schema,
+        geometry_columns,
+        add_geometry_types=add_geometry_types,
+        encoding=encoding,
     )
+
     return {
-        "version": "1.0.0",
+        "version": _geoparquet_get_version_from_columns(columns),
         "primary_column": primary_geometry_column,
         "columns": columns,
     }
 
 
-def _geoparquet_update_spec_geometry_types(item, spec):
+def _geoparquet_get_version_from_columns(columns):
+    for column in columns.values():
+        if column["encoding"] != "WKB":
+            return "1.1.0"
+
+    return "1.0.0"
+
+
+def _geoparquet_update_spec_geometry_types(item, spec, unique_geometry_types=None):
+    # Reuse a previous computation if possible
+    if unique_geometry_types is None:
+        unique_geometry_types = _ga.unique_geometry_types(item)
+
     geometry_type_labels = []
-    for element in _ga.unique_geometry_types(item).to_pylist():
+    for element in unique_geometry_types.to_pylist():
         geometry_type = _GEOPARQUET_GEOMETRY_TYPE_LABELS[element["geometry_type"]]
         dimensions = _GEOPARQUET_DIMENSION_LABELS[element["dimensions"]]
         geometry_type_labels.append(f"{geometry_type}{dimensions}")
@@ -382,31 +422,81 @@ def _geoparquet_update_spec_bbox(item, spec):
 def _geoparquet_encode_chunked_array(
     item, spec, add_geometry_types=None, add_bbox=False, check_wkb=True
 ):
-    # ...because we're currently only ever encoding using WKB
+    # For geoarrow encodings we still need to collect the geometry types
+    # and infer what we think the encoding might be to ensure it is appropriate
+    unique_geometry_types = None
+    geoarrow_type = None
+    inferred_geoarrow_encoding = None
+    if spec["encoding"] in (
+        tuple(_GEOARROW_ENCODINGS.keys()) + (geoparquet_encoding_geoarrow(),)
+    ):
+        unique_geometry_types = _ga.unique_geometry_types(item)
+        geoarrow_type = _ga.infer_type_common(
+            item,
+            coord_type=_ga.CoordType.SEPARATED,
+            _geometry_types=unique_geometry_types,
+        )
+
+        if geoarrow_type.coord_type == _ga.CoordType.UNSPECIFIED:
+            raise ValueError(
+                "Can't encode column with incompatable geometry types as geoarrow"
+            )
+
+        inferred_geoarrow_encoding = geoarrow_type._extension_name[len("geoarrow.") :]
+
+    # If the encoding was the "give me any geoarrow" sentinel, we need to
+    # update it to be an actual valid encoding value
+    if spec["encoding"] == geoparquet_encoding_geoarrow():
+        spec["encoding"] = inferred_geoarrow_encoding
+
     if spec["encoding"] == "WKB":
         item_out = _ga.as_wkb(item, strict_iso_wkb=check_wkb)
+
+        # If input was WKT, use the WKB-encoded value to perform calculations
+        if (
+            _pa.types.is_string(item.type)
+            or _pa.types.is_large_string(item.type)
+            or isinstance(item.type, _ga.WktType)
+        ):
+            item_calc = item_out
+        else:
+            item_calc = item
+
+    elif spec["encoding"] in _GEOARROW_ENCODINGS:
+        # Check that this encoding is appropriate for item
+        if inferred_geoarrow_encoding != spec["encoding"]:
+            raise ValueError(
+                f"Can't encode column with encoding='{spec['encoding']}'. "
+                f"Inferred encoding: '{inferred_geoarrow_encoding}'"
+            )
+
+        item_out = _ga.as_geoarrow(item, geoarrow_type)
+        # Use geoarrow-encoded value to perform further calculations
+        item_calc = item_out
+
     else:
         encoding = spec["encoding"]
-        raise ValueError(f"Expected column encoding 'WKB' but got '{encoding}'")
-
-    # For everything except a well-known text-encoded column, we want to do
-    # calculations on the pre-WKB-encoded value.
-    if spec["encoding"] == "WKT":
-        item_calc = item_out
-    else:
-        item_calc = item
+        geoarrow_list = ", ".join("'" + item + "'" for item in _GEOARROW_ENCODINGS)
+        raise ValueError(
+            f"Expected column encoding to be one of 'WKB', {geoarrow_list} but got '{encoding}'"
+        )
 
     # geometry_types that are fixed at the data type level have already been
     # added to the spec in an earlier step. The unique_geometry_types()
     # function is sufficiently optimized such that this potential
-    # re-computation is not expensive.
+    # re-computation is not expensive. We also might have calculated them
+    # already to infer the encoding value.
     if add_geometry_types is True:
-        _geoparquet_update_spec_geometry_types(item_calc, spec)
+        _geoparquet_update_spec_geometry_types(item_calc, spec, unique_geometry_types)
 
     if add_bbox:
         _geoparquet_update_spec_bbox(item_calc, spec)
 
-    return ensure_storage(item_out)
+    return _compute.ensure_storage(item_out)
+
+
+def geoparquet_encoding_geoarrow():
+    return "GEOARROW_ENCODING_SENTINEL"
 
 
 _GEOPARQUET_GEOMETRY_TYPE_LABELS = [
@@ -417,9 +507,19 @@ _GEOPARQUET_GEOMETRY_TYPE_LABELS = [
     "MultiPoint",
     "MultiLineString",
     "MultiPolygon",
+    "GeometryCollection",
 ]
 
 _GEOPARQUET_DIMENSION_LABELS = [None, "", " Z", " M", " ZM"]
+
+_GEOARROW_ENCODINGS = {
+    "point": _type.point(),
+    "linestring": _type.linestring(),
+    "polygon": _type.polygon(),
+    "multipoint": _type.multipoint(),
+    "multilinestring": _type.multilinestring(),
+    "multipolygon": _type.multipolygon(),
+}
 
 _CRS_LONLAT = {
     "$schema": "https://proj.org/schemas/v0.7/projjson.schema.json",

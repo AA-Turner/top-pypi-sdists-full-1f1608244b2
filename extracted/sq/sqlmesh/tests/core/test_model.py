@@ -2941,7 +2941,7 @@ def test_model_cache(tmp_path: Path, mocker: MockerFixture):
     expressions = d.parse(
         """
         MODEL (
-            name db.seed,
+            name db.model_sql,
         );
         SELECT 1, ds;
     """
@@ -2949,18 +2949,25 @@ def test_model_cache(tmp_path: Path, mocker: MockerFixture):
 
     model = load_sql_based_model([e for e in expressions if e])
 
-    loader = mocker.Mock(return_value=[model])
+    assert cache.put([model], "test_model", "test_entry_a")
+    assert cache.get("test_model", "test_entry_a")[0].dict() == model.dict()
 
-    assert cache.get_or_load("test_model", "test_entry_a", loader=loader)[0].dict() == model.dict()
-    assert cache.get_or_load("test_model", "test_entry_a", loader=loader)[0].dict() == model.dict()
+    expressions = d.parse(
+        """
+        MODEL (
+            name db.model_seed,
+            kind SEED (
+              path '../seeds/waiter_names.csv',
+            ),
+        );
+    """
+    )
 
-    assert cache.get_or_load("test_model", "test_entry_b", loader=loader)[0].dict() == model.dict()
-    assert cache.get_or_load("test_model", "test_entry_b", loader=loader)[0].dict() == model.dict()
+    seed_model = load_sql_based_model(
+        expressions, path=Path("./examples/sushi/models/test_model.sql")
+    )
 
-    assert cache.get_or_load("test_model", "test_entry_a", loader=loader)[0].dict() == model.dict()
-    assert cache.get_or_load("test_model", "test_entry_a", loader=loader)[0].dict() == model.dict()
-
-    assert loader.call_count == 2
+    assert not cache.put([seed_model], "test_model", "test_entry_b")
 
 
 @pytest.mark.slow
@@ -2983,7 +2990,7 @@ def test_model_cache_gateway(tmp_path: Path, mocker: MockerFixture):
     assert patched_cache_put.call_count == 0
 
     Context(paths=tmp_path, config=config, gateway="secondary")
-    assert patched_cache_put.call_count == 4
+    assert patched_cache_put.call_count == 2
 
 
 @pytest.mark.slow
@@ -3001,7 +3008,7 @@ def test_model_cache_default_catalog(tmp_path: Path, mocker: MockerFixture):
         PropertyMock(return_value=None),
     ):
         Context(paths=tmp_path)
-        assert patched_cache_put.call_count == 4
+        assert patched_cache_put.call_count == 2
 
 
 def test_model_ctas_query():
@@ -3757,7 +3764,10 @@ def test_model_physical_properties() -> None:
         """('key_a' = 'value_a', 'key_b' = 1, 'key_c' = TRUE, 'key_d' = 2.0)"""
     )
 
-    with pytest.raises(ConfigError, match=r"Invalid property 'invalid'.*"):
+    with pytest.raises(
+        ConfigError,
+        match=r"Invalid property 'invalid'. Properties must be specified as key-value pairs <key> = <value>. ",
+    ):
         load_sql_based_model(
             d.parse(
                 """
@@ -4417,6 +4427,108 @@ def test_model_session_properties(sushi_context):
     assert model.session_properties == {
         "warehouse": "test_warehouse",
     }
+
+    model = load_sql_based_model(
+        d.parse(
+            """
+        MODEL (
+            name test_schema.test_model,
+            session_properties (
+                'query_label' = [
+                    ('key1', 'value1'),
+                    ('key2', 'value2')
+                ]
+            )
+        );
+        SELECT a FROM tbl;
+        """,
+            default_dialect="bigquery",
+        )
+    )
+    assert model.session_properties == {
+        "query_label": parse_one("[('key1', 'value1'), ('key2', 'value2')]")
+    }
+
+    model = load_sql_based_model(
+        d.parse(
+            """
+        MODEL (
+            name test_schema.test_model,
+            session_properties (
+                'query_label' = (
+                    ('key1', 'value1')
+                )
+            )
+        );
+        SELECT a FROM tbl;
+        """,
+            default_dialect="bigquery",
+        )
+    )
+    assert model.session_properties == {"query_label": parse_one("(('key1', 'value1'))")}
+
+    with pytest.raises(
+        ConfigError,
+        match=r"Invalid value for `session_properties.query_label`. Must be an array or tuple.",
+    ):
+        load_sql_based_model(
+            d.parse(
+                """
+            MODEL (
+                name test_schema.test_model,
+                session_properties (
+                    'query_label' = 'invalid value'
+                )
+            );
+            SELECT a FROM tbl;
+            """,
+                default_dialect="bigquery",
+            )
+        )
+
+    with pytest.raises(
+        ConfigError,
+        match=r"Invalid entry in `session_properties.query_label`. Must be tuples of string literals with length 2.",
+    ):
+        load_sql_based_model(
+            d.parse(
+                """
+            MODEL (
+                name test_schema.test_model,
+                session_properties (
+                    'query_label' = (
+                        ('key1', 'value1', 'another_value')
+                    )
+                )
+            );
+            SELECT a FROM tbl;
+            """,
+                default_dialect="bigquery",
+            )
+        )
+
+    with pytest.raises(
+        ConfigError,
+        match=r"Invalid entry in `session_properties.query_label`. Must be tuples of string literals with length 2.",
+    ):
+        load_sql_based_model(
+            d.parse(
+                """
+            MODEL (
+                name test_schema.test_model,
+                session_properties (
+                    'query_label' = (
+                        'some value', 
+                        'another value',
+                        'yet another value',
+                    )
+                )
+            );
+            SELECT a FROM tbl;
+            """,
+                default_dialect="bigquery",
+            )
+        )
 
 
 def test_model_jinja_macro_rendering():
@@ -10017,3 +10129,24 @@ def check_self_schema(evaluator):
 
     context = Context(paths=tmp_path, config=config)
     context.plan(no_prompts=True, auto_apply=True)
+
+
+def test_model_relies_on_os_getenv(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    init_example_project(tmp_path, dialect="duckdb", template=ProjectTemplate.EMPTY)
+
+    (tmp_path / "macros" / "getenv_macro.py").write_text(
+        """
+from os import getenv
+from sqlmesh import macro
+
+@macro()
+def getenv_macro(evaluator):
+    getenv("foo", None)
+    return 1"""
+    )
+    (tmp_path / "models" / "model.sql").write_text(
+        "MODEL (name test); SELECT @getenv_macro() AS foo"
+    )
+
+    monkeypatch.chdir(tmp_path)
+    ctx = Context(paths=tmp_path)

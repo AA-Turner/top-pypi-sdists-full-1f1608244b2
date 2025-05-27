@@ -17,6 +17,7 @@ class Type(Enum):
     CATALOG = 'CATALOG'
     TRACE = 'TRACE'
     CONTROL = 'CONTROL'
+    DESTINATION_CATALOG = 'DESTINATION_CATALOG'
 
 
 class Change(Enum):
@@ -190,6 +191,16 @@ class DestinationSyncMode(Enum):
     append = 'append'
     overwrite = 'overwrite'
     append_dedup = 'append_dedup'
+    update = 'update'
+    soft_delete = 'soft_delete'
+
+
+@dataclass
+class DestinationOperation:
+    object_name: str
+    sync_mode: DestinationSyncMode
+    json_schema: Dict[str, Any]
+    matching_keys: Optional[List[List[str]]] = None
 
 
 @dataclass
@@ -240,12 +251,12 @@ class OauthConnectorInputSpecification:
 
 @dataclass
 class OAuthConfigSpecification:
-    oauth_user_input_from_connector_config_specification: Optional[Dict[str, Any]] = (
-        None
-    )
-    oauth_connector_input_specification: Optional[OauthConnectorInputSpecification] = (
-        None
-    )
+    oauth_user_input_from_connector_config_specification: Optional[
+        Dict[str, Any]
+    ] = None
+    oauth_connector_input_specification: Optional[
+        OauthConnectorInputSpecification
+    ] = None
     complete_oauth_output_specification: Optional[Dict[str, Any]] = None
     complete_oauth_server_input_specification: Optional[Dict[str, Any]] = None
     complete_oauth_server_output_specification: Optional[Dict[str, Any]] = None
@@ -304,11 +315,17 @@ class ConfiguredAirbyteStream:
     sync_mode: SyncMode
     destination_sync_mode: DestinationSyncMode
     cursor_field: Optional[List[str]] = None
+    destination_object_name: Optional[str] = None
     primary_key: Optional[List[List[str]]] = None
     generation_id: Optional[int] = None
     minimum_generation_id: Optional[int] = None
     sync_id: Optional[int] = None
     include_files: Optional[bool] = None
+
+
+@dataclass
+class DestinationCatalog:
+    operations: List[DestinationOperation]
 
 
 @dataclass
@@ -374,6 +391,7 @@ class AirbyteMessage:
     state: Optional[AirbyteStateMessage] = None
     trace: Optional[AirbyteTraceMessage] = None
     control: Optional[AirbyteControlMessage] = None
+    destination_catalog: Optional[DestinationCatalog] = None
 
 
 @dataclass
