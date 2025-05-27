@@ -36,7 +36,7 @@ class WebSocketWantReadError(ssl.SSLWantReadError):
 class WebSocketWantWriteError(ssl.SSLWantWriteError):
     pass
 
-class WebSocket(object):
+class WebSocket:
     """WebSocket protocol socket like class.
 
     This provides access to the WebSocket protocol by behaving much
@@ -139,7 +139,9 @@ class WebSocket(object):
             self.socket = socket.create_connection((uri.hostname, port))
 
             if uri.scheme in ("wss", "https"):
-                self.socket = ssl.wrap_socket(self.socket)
+                context = ssl.create_default_context()
+                self.socket = context.wrap_socket(self.socket,
+                                                  server_hostname=uri.hostname)
                 self._state = "ssl_handshake"
             else:
                 self._state = "headers"

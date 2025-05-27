@@ -25,6 +25,7 @@ class LLMNode(BaseTool):
     client: Any = None
     return_type: str = "str"
     response_key: str = "messages"
+    structured_output_dict: Optional[dict[str, str]] = None
     output_variables: Optional[List[str]] = None
     input_variables: Optional[List[str]] = None
     structured_output: Optional[bool] = False
@@ -35,11 +36,19 @@ class LLMNode(BaseTool):
         llm_input = create_llm_input(self.prompt, params, kwargs)
         try:
             if self.structured_output and len(self.output_variables) > 0:
-                struct_params = {var: {"type": "str", "description": ""} for var in self.output_variables}
+                struct_params = {
+                    key: {
+                        "type": 'list[str]' if 'list' in value else value,
+                        "description": ""
+                    }
+                    for key, value in (self.structured_output_dict or {}).items()
+                }
                 stuct_model = create_pydantic_model(f"LLMOutput", struct_params)
                 llm = self.client.with_structured_output(stuct_model)
                 completion = llm.invoke(llm_input)
                 result = completion.model_dump()
+                if result.get('messages') and isinstance(result['messages'], list):
+                    result['messages'] = [{'role': 'assistant', 'content': '\n'.join(result['messages'])}]
                 return result
             else:
                 completion = self.client.invoke(llm_input)

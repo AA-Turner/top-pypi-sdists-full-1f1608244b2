@@ -18,6 +18,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 """Ansible Verifier Module."""
+
 from __future__ import annotations
 
 import logging
@@ -93,7 +94,7 @@ class Ansible(Verifier):
         Returns:
             The default verifier environment variables.
         """
-        env = cast(dict[str, str], os.environ)
+        env = cast("dict[str, str]", os.environ)
         env = util.merge_dicts(env, self._config.env)
         if self._config.provisioner:
             env = util.merge_dicts(env, self._config.provisioner.env)

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: google-cloud-dns
-Version: 0.35.0
+Version: 0.35.1
 Summary: Google Cloud DNS API client library
 Home-page: https://github.com/googleapis/python-dns
 Author: Google LLC
@@ -22,7 +22,7 @@ Classifier: Operating System :: OS Independent
 Classifier: Topic :: Internet
 Requires-Python: >=3.7
 License-File: LICENSE
-Requires-Dist: google-cloud-core<3.0dev,>=1.4.4
+Requires-Dist: google-cloud-core<3.0.0,>=1.4.4
 
 Python Client for Cloud DNS API
 ===============================

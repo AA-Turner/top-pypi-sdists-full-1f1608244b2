@@ -4,7 +4,7 @@ requires = ["hatchling"]
 
 [project]
 name = "finml-utils"
-version = "4.0.14"
+version = "4.0.15"
 authors = [
   { name="Mark Aron Szulyovszky", email="mark@dreamfaster.ai" },
   { name="Daniel Szemerey", email="daniel@dreamfaster.ai" },
@@ -60,7 +60,7 @@ tests = [
 
 # bumpver command: ``bumpver update --patch``
 [tool.bumpver]
-current_version = "4.0.14"
+current_version = "4.0.15"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "chore(Release): Bump version from {old_version} -> {new_version}"
 commit = true

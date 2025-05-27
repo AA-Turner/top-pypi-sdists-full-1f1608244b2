@@ -1,6 +1,13 @@
 from copy import deepcopy
 import json
-from typing import Union, Mapping, Protocol, Optional
+from typing import Union, Mapping, Optional
+
+try:
+    from typing import Protocol
+except ImportError:
+
+    class Protocol:
+        pass
 
 
 class Crs(Protocol):
@@ -80,6 +87,16 @@ class ProjJsonCrs(Crs):
                 "ProjJsonCrs can only be created from Crs, dict, str, or bytes"
             )
 
+    def __eq__(self, value):
+        # Some duplication with _crs_equal(), but using that here
+        # involves some recursion that's difficult to avoid
+        if isinstance(value, UnspecifiedCrs):
+            return False
+        elif hasattr(value, "to_json_dict"):
+            return self.to_json_dict() == value.to_json_dict()
+        else:
+            return False
+
     def to_json(self) -> str:
         if self._str is None:
             self._str = json.dumps(self._obj)
@@ -92,18 +109,92 @@ class ProjJsonCrs(Crs):
 
         return deepcopy(self._obj)
 
+    def to_wkt(self) -> str:
+        # This could in theory be written to not use pyproj; however, the
+        # main purpose of this method is to enable pyproj.CRS(self) so it
+        # may not matter.
+        import pyproj
+
+        return pyproj.CRS(self.to_json_dict()).to_wkt()
+
     def __repr__(self) -> str:
         try:
             crs_dict = self.to_json_dict()
             if "id" in crs_dict:
                 crs_id = crs_dict["id"]
                 if "authority" in crs_id and "code" in crs_id:
-                    return f'ProjJsonCrs({crs_id["authority"]}:{crs_id["code"]})'
+                    return f"ProjJsonCrs({crs_id['authority']}:{crs_id['code']})"
 
         except ValueError:
             pass
 
         return f"ProjJsonCrs({self.to_json()[:80]})"
+
+
+class StringCrs(Crs):
+    def __init__(self, crs: Union[str, bytes]):
+        if isinstance(crs, str):
+            self._crs = crs
+        elif isinstance(crs, bytes):
+            self._crs = crs.decode()
+        else:
+            self._crs = str(crs)
+
+    def __geoarrow_crs_json_values__(self):
+        # Try to avoid escaping valid JSON into a JSON string
+        try:
+            return {"crs": json.loads(self._crs)}
+        except ValueError:
+            return {"crs": self._crs}
+
+    def __eq__(self, value):
+        if isinstance(value, UnspecifiedCrs):
+            return False
+        elif isinstance(value, StringCrs) and self._crs == value._crs:
+            return True
+        elif hasattr(value, "to_json_dict"):
+            return self.to_json_dict() == value.to_json_dict()
+        else:
+            return False
+
+    @classmethod
+    def from_json(cls, crs_json: str) -> "StringCrs":
+        return StringCrs(crs_json)
+
+    @classmethod
+    def from_json_dict(cls, crs_dict: Mapping) -> "Crs":
+        return StringCrs(json.dumps(crs_dict))
+
+    def to_json(self) -> str:
+        out = self._try_parse_json_object()
+        if out:
+            return self._crs
+
+        # Fall back on pyproj
+        import pyproj
+
+        return pyproj.CRS(self._crs).to_json()
+
+    def to_json_dict(self) -> Mapping:
+        return json.loads(self.to_json())
+
+    def to_wkt(self) -> str:
+        import pyproj
+
+        crs_repr = self.__geoarrow_crs_json_values__()["crs"]
+        return pyproj.CRS(crs_repr).to_wkt()
+
+    def __repr__(self) -> str:
+        crs_repr = self.__geoarrow_crs_json_values__()["crs"]
+        return f"StringCrs({crs_repr})"
+
+    def _try_parse_json_object(self) -> Optional[dict]:
+        try:
+            obj = json.loads(self._crs)
+            if isinstance(obj, dict):
+                return obj
+        except ValueError:
+            return None
 
 
 _CRS_LONLAT_DICT = {
@@ -223,8 +314,12 @@ def create(obj) -> Optional[Crs]:
         return None
     elif hasattr(obj, "to_json_dict"):
         return obj
-    else:
+    elif isinstance(obj, dict):
         return ProjJsonCrs(obj)
+    elif isinstance(obj, (str, bytes)):
+        return StringCrs(obj)
+    else:
+        raise ValueError(f"Can't create geoarrow.types.Crs from {obj}")
 
 
 def _coalesce2(value, default):

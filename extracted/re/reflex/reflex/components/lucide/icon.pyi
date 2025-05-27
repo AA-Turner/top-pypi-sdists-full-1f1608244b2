@@ -1540,6 +1540,7 @@ LUCIDE_ICON_LIST = [
     "square_dashed_bottom_code",
     "square_dashed_kanban",
     "square_dashed_mouse_pointer",
+    "square_dashed_top_solid",
     "square_divide",
     "square_dot",
     "square_equal",

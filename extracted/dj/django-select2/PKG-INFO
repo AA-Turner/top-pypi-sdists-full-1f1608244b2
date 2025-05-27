@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-select2
-Version: 8.4.0
+Version: 8.4.1
 Summary: This is a Django_ integration of Select2_.
 Keywords: Django,select2,autocomplete,typeahead
 Author-email: Johannes Maron <johannes@maron.family>

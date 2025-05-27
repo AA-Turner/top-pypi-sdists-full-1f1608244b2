@@ -1,9 +1,9 @@
 import asyncio
 import re
-from typing import Callable, Optional
+from collections.abc import Callable
+from typing import Optional, Union
 from unittest import TestCase
 
-import aioice.ice
 import aioice.stun
 from aiortc import (
     RTCBundlePolicy,
@@ -95,29 +95,29 @@ def track_states(pc: RTCPeerConnection) -> dict[str, list[str]]:
     }
 
     @pc.on("connectionstatechange")
-    def connectionstatechange():
+    def connectionstatechange() -> None:
         states["connectionState"].append(pc.connectionState)
 
     @pc.on("iceconnectionstatechange")
-    def iceconnectionstatechange():
+    def iceconnectionstatechange() -> None:
         states["iceConnectionState"].append(pc.iceConnectionState)
 
     @pc.on("icegatheringstatechange")
-    def icegatheringstatechange():
+    def icegatheringstatechange() -> None:
         states["iceGatheringState"].append(pc.iceGatheringState)
 
     @pc.on("signalingstatechange")
-    def signalingstatechange():
+    def signalingstatechange() -> None:
         states["signalingState"].append(pc.signalingState)
 
     return states
 
 
 def track_remote_tracks(pc: RTCPeerConnection) -> list[MediaStreamTrack]:
-    tracks = []
+    tracks: list[MediaStreamTrack] = []
 
     @pc.on("track")
-    def track(track):
+    def track(track: MediaStreamTrack) -> None:
         tracks.append(track)
 
     return tracks
@@ -554,7 +554,7 @@ class RTCPeerConnectionTest(TestCase):
         await self.sleepWhile(lambda: dc.readyState == "closing")
         self.assertEqual(dc.readyState, "closed")
 
-    async def sleepWhile(self, f: Callable[[], bool], max_sleep=1.0) -> None:
+    async def sleepWhile(self, f: Callable[[], bool], max_sleep: float = 1.0) -> None:
         sleep = 0.1
         total = 0.0
         while f() and total < max_sleep:
@@ -576,6 +576,39 @@ class RTCPeerConnectionTest(TestCase):
         aioice.stun.RETRY_RTO = self.retry_rto
 
     @asynctest
+    async def test_addIceCandidate(self) -> None:
+        pc = RTCPeerConnection()
+        pc.createDataChannel("test")
+        offer = await pc.createOffer()
+        await pc.setRemoteDescription(offer)
+        self.assertFalse("a=candidate:" in pc.remoteDescription.sdp)
+        candidate_with_index = RTCIceCandidate(
+            component=1,
+            foundation="0",
+            ip="192.168.99.7",
+            port=33543,
+            priority=2122252543,
+            protocol="UDP",
+            type="host",
+            sdpMLineIndex=0,
+        )
+        await pc.addIceCandidate(candidate_with_index)
+        self.assertTrue("a=candidate:" in pc.remoteDescription.sdp)
+
+        candidate_with_mid = RTCIceCandidate(
+            component=1,
+            foundation="0",
+            ip="192.168.99.7",
+            port=33544,
+            priority=2122252543,
+            protocol="UDP",
+            type="host",
+            sdpMid=pc.sctp.mid,
+        )
+        await pc.addIceCandidate(candidate_with_mid)
+        self.assertEqual(pc.remoteDescription.sdp.count("a=candidate:"), 2)
+
+    @asynctest
     async def test_addIceCandidate_no_sdpMid_or_sdpMLineIndex(self) -> None:
         pc = RTCPeerConnection()
         with self.assertRaises(ValueError) as cm:
@@ -593,6 +626,18 @@ class RTCPeerConnectionTest(TestCase):
         self.assertEqual(
             str(cm.exception), "Candidate must have either sdpMid or sdpMLineIndex"
         )
+
+    @asynctest
+    async def test_addIceCandidate_null(self) -> None:
+        pc = RTCPeerConnection()
+        pc.createDataChannel("test")
+        pc.addTransceiver("audio")
+        pc.addTransceiver("video")
+        offer = await pc.createOffer()
+        await pc.setRemoteDescription(offer)
+        self.assertFalse("a=end-of-candidates" in pc.remoteDescription.sdp)
+        await pc.addIceCandidate(None)
+        self.assertTrue("a=end-of-candidates" in pc.remoteDescription.sdp)
 
     @asynctest
     async def test_addTrack_audio(self) -> None:
@@ -825,6 +870,7 @@ class RTCPeerConnectionTest(TestCase):
         self.assertTrue(
             lf2crlf(
                 """a=rtpmap:96 opus/48000/2
+a=rtpmap:9 G722/8000
 a=rtpmap:0 PCMU/8000
 a=rtpmap:8 PCMA/8000
 """
@@ -863,6 +909,7 @@ a=rtpmap:8 PCMA/8000
         self.assertTrue(
             lf2crlf(
                 """a=rtpmap:96 opus/48000/2
+a=rtpmap:9 G722/8000
 a=rtpmap:0 PCMU/8000
 a=rtpmap:8 PCMA/8000
 """
@@ -2023,7 +2070,9 @@ a=rtpmap:0 PCMU/8000
             ["stable", "have-remote-offer", "stable", "closed"],
         )
 
-    async def _test_connect_audio_and_video(self, pc1, pc2) -> None:
+    async def _test_connect_audio_and_video(
+        self, pc1: RTCPeerConnection, pc2: RTCPeerConnection
+    ) -> None:
         pc1 = RTCPeerConnection()
         pc1_states = track_states(pc1)
 
@@ -2123,13 +2172,13 @@ a=rtpmap:0 PCMU/8000
         )
 
     @asynctest
-    async def test_connect_audio_and_video(self):
+    async def test_connect_audio_and_video(self) -> None:
         pc1 = RTCPeerConnection()
         pc2 = RTCPeerConnection()
         await self._test_connect_audio_and_video(pc1, pc2)
 
     @asynctest
-    async def test_connect_audio_and_video_bundlepolicy_max_compat(self):
+    async def test_connect_audio_and_video_bundlepolicy_max_compat(self) -> None:
         pc1 = RTCPeerConnection(
             RTCConfiguration(bundlePolicy=RTCBundlePolicy.MAX_COMPAT)
         )
@@ -2137,7 +2186,7 @@ a=rtpmap:0 PCMU/8000
         await self._test_connect_audio_and_video(pc1, pc2)
 
     @asynctest
-    async def test_connect_audio_and_video_bundlepolicy_max_bundle(self):
+    async def test_connect_audio_and_video_bundlepolicy_max_bundle(self) -> None:
         pc1 = RTCPeerConnection(
             RTCConfiguration(bundlePolicy=RTCBundlePolicy.MAX_BUNDLE)
         )
@@ -2270,7 +2319,9 @@ a=rtpmap:0 PCMU/8000
     async def test_connect_audio_and_video_mediaplayer_stop_tracks(self) -> None:
         await self._test_connect_audio_and_video_mediaplayer(stop_tracks=True)
 
-    async def _test_connect_audio_and_video_and_data_channel(self, pc1, pc2) -> None:
+    async def _test_connect_audio_and_video_and_data_channel(
+        self, pc1: RTCPeerConnection, pc2: RTCPeerConnection
+    ) -> None:
         pc1_states = track_states(pc1)
         pc2_states = track_states(pc2)
 
@@ -2375,7 +2426,7 @@ a=rtpmap:0 PCMU/8000
         await self._test_connect_audio_and_video_and_data_channel(pc1, pc2)
 
     @asynctest
-    async def test_connect_audio_and_video_and_data_channel_max_bundle(self):
+    async def test_connect_audio_and_video_and_data_channel_max_bundle(self) -> None:
         pc1 = RTCPeerConnection(
             RTCConfiguration(bundlePolicy=RTCBundlePolicy.MAX_BUNDLE)
         )
@@ -2383,7 +2434,7 @@ a=rtpmap:0 PCMU/8000
         await self._test_connect_audio_and_video_and_data_channel(pc1, pc2)
 
     @asynctest
-    async def test_connect_audio_and_video_and_data_channel_ice_fail(self):
+    async def test_connect_audio_and_video_and_data_channel_ice_fail(self) -> None:
         pc1 = RTCPeerConnection()
         pc1_states = track_states(pc1)
 
@@ -2446,7 +2497,7 @@ a=rtpmap:0 PCMU/8000
         done = asyncio.Event()
 
         @pc2.on("iceconnectionstatechange")
-        def iceconnectionstatechange():
+        def iceconnectionstatechange() -> None:
             done.set()
 
         await done.wait()
@@ -3283,12 +3334,12 @@ a=rtpmap:0 PCMU/8000
         pc2_states = track_states(pc2)
 
         @pc2.on("datachannel")
-        def on_datachannel(channel):
+        def on_datachannel(channel: RTCDataChannel) -> None:
             self.assertEqual(channel.readyState, "open")
             pc2_data_channels.append(channel)
 
             @channel.on("message")
-            def on_message(message):
+            def on_message(message: Union[bytes, str]) -> None:
                 pc2_data_messages.append(message)
                 if isinstance(message, str):
                     channel.send("string-echo: " + message)
@@ -3306,21 +3357,21 @@ a=rtpmap:0 PCMU/8000
 
         # send messages
         @dc.on("open")
-        def on_open():
+        def on_open() -> None:
             dc.send("hello")
             dc.send("")
             dc.send(b"\x00\x01\x02\x03")
             dc.send(b"")
             dc.send(LONG_DATA)
             with self.assertRaises(ValueError) as cm:
-                dc.send(1234)
+                dc.send(1234)  # type: ignore
             self.assertEqual(
                 str(cm.exception), "Cannot send unsupported data type: <class 'int'>"
             )
             self.assertEqual(dc.bufferedAmount, 2011)
 
         @dc.on("message")
-        def on_message(message):
+        def on_message(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         # create offer
@@ -3451,12 +3502,12 @@ a=rtpmap:0 PCMU/8000
         pc2_states = track_states(pc2)
 
         @pc2.on("datachannel")
-        def on_datachannel(channel):
+        def on_datachannel(channel: RTCDataChannel) -> None:
             self.assertEqual(channel.readyState, "open")
             pc2_data_channels.append(channel)
 
             @channel.on("message")
-            def on_message(message):
+            def on_message(message: Union[bytes, str]) -> None:
                 pc2_data_messages.append(message)
                 if isinstance(message, str):
                     channel.send("string-echo: " + message)
@@ -3474,20 +3525,20 @@ a=rtpmap:0 PCMU/8000
 
         # send messages
         @dc.on("open")
-        def on_open():
+        def on_open() -> None:
             dc.send("hello")
             dc.send("")
             dc.send(b"\x00\x01\x02\x03")
             dc.send(b"")
             dc.send(LONG_DATA)
             with self.assertRaises(ValueError) as cm:
-                dc.send(1234)
+                dc.send(1234)  # type: ignore
             self.assertEqual(
                 str(cm.exception), "Cannot send unsupported data type: <class 'int'>"
             )
 
         @dc.on("message")
-        def on_message(message):
+        def on_message(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         # create offer
@@ -3631,11 +3682,11 @@ a=rtpmap:0 PCMU/8000
         self.assertEqual(dc2.readyState, "connecting")
 
         @dc1.on("message")
-        def on_message1(message):
+        def on_message1(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         @dc2.on("message")
-        def on_message2(message):
+        def on_message2(message: Union[bytes, str]) -> None:
             pc2_data_messages.append(message)
             if isinstance(message, str):
                 dc2.send("string-echo: " + message)
@@ -3850,12 +3901,12 @@ a=rtpmap:0 PCMU/8000
         pc2_states = track_states(pc2)
 
         @pc2.on("datachannel")
-        def on_datachannel(channel):
+        def on_datachannel(channel: RTCDataChannel) -> None:
             self.assertEqual(channel.readyState, "open")
             pc2_data_channels.append(channel)
 
             @channel.on("message")
-            def on_message(message):
+            def on_message(message: Union[bytes, str]) -> None:
                 pc2_data_messages.append(message)
                 if isinstance(message, str):
                     channel.send("string-echo: " + message)
@@ -3873,20 +3924,20 @@ a=rtpmap:0 PCMU/8000
 
         # send messages
         @dc.on("open")
-        def on_open():
+        def on_open() -> None:
             dc.send("hello")
             dc.send("")
             dc.send(b"\x00\x01\x02\x03")
             dc.send(b"")
             dc.send(LONG_DATA)
             with self.assertRaises(ValueError) as cm:
-                dc.send(1234)
+                dc.send(1234)  # type: ignore
             self.assertEqual(
                 str(cm.exception), "Cannot send unsupported data type: <class 'int'>"
             )
 
         @dc.on("message")
-        def on_message(message):
+        def on_message(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         # 1. DATA CHANNEL ONLY
@@ -4079,12 +4130,12 @@ a=rtpmap:0 PCMU/8000
         pc2_states = track_states(pc2)
 
         @pc2.on("datachannel")
-        def on_datachannel(channel):
+        def on_datachannel(channel: RTCDataChannel) -> None:
             self.assertEqual(channel.readyState, "open")
             pc2_data_channels.append(channel)
 
             @channel.on("message")
-            def on_message(message):
+            def on_message(message: Union[bytes, str]) -> None:
                 pc2_data_messages.append(message)
                 if isinstance(message, str):
                     channel.send("string-echo: " + message)
@@ -4102,20 +4153,20 @@ a=rtpmap:0 PCMU/8000
 
         # send messages
         @dc.on("open")
-        def on_open():
+        def on_open() -> None:
             dc.send("hello")
             dc.send("")
             dc.send(b"\x00\x01\x02\x03")
             dc.send(b"")
             dc.send(LONG_DATA)
             with self.assertRaises(ValueError) as cm:
-                dc.send(1234)
+                dc.send(1234)  # type: ignore
             self.assertEqual(
                 str(cm.exception), "Cannot send unsupported data type: <class 'int'>"
             )
 
         @dc.on("message")
-        def on_message(message):
+        def on_message(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         # create offer
@@ -4266,12 +4317,13 @@ a=rtpmap:0 PCMU/8000
         pc2_states = track_states(pc2)
 
         @pc2.on("datachannel")
-        def on_datachannel(channel):
+        def on_datachannel(channel: RTCDataChannel) -> None:
             self.assertEqual(channel.readyState, "open")
             pc2_data_channels.append(channel)
 
             @channel.on("message")
-            def on_message(message):
+            def on_message(message: Union[bytes, str]) -> None:
+                assert isinstance(message, str)
                 pc2_data_messages.append(message)
                 channel.send("string-echo: " + message)
 
@@ -4286,11 +4338,11 @@ a=rtpmap:0 PCMU/8000
 
         # send message
         @dc.on("open")
-        def on_open():
+        def on_open() -> None:
             dc.send("hello")
 
         @dc.on("message")
-        def on_message(message):
+        def on_message(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         # create offer
@@ -4372,12 +4424,13 @@ a=rtpmap:0 PCMU/8000
         pc2_states = track_states(pc2)
 
         @pc2.on("datachannel")
-        def on_datachannel(channel):
+        def on_datachannel(channel: RTCDataChannel) -> None:
             self.assertEqual(channel.readyState, "open")
             pc2_data_channels.append(channel)
 
             @channel.on("message")
-            def on_message(message):
+            def on_message(message: Union[bytes, str]) -> None:
+                assert isinstance(message, str)
                 pc2_data_messages.append(message)
                 channel.send("string-echo: " + message)
 
@@ -4392,11 +4445,11 @@ a=rtpmap:0 PCMU/8000
 
         # send message
         @dc.on("open")
-        def on_open():
+        def on_open() -> None:
             dc.send("hello")
 
         @dc.on("message")
-        def on_message(message):
+        def on_message(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         # create offer
@@ -4478,12 +4531,13 @@ a=rtpmap:0 PCMU/8000
         pc2_states = track_states(pc2)
 
         @pc2.on("datachannel")
-        def on_datachannel(channel):
+        def on_datachannel(channel: RTCDataChannel) -> None:
             self.assertEqual(channel.readyState, "open")
             pc2_data_channels.append(channel)
 
             @channel.on("message")
-            def on_message(message):
+            def on_message(message: Union[bytes, str]) -> None:
+                assert isinstance(message, str)
                 pc2_data_messages.append(message)
                 channel.send("string-echo: " + message)
 
@@ -4498,11 +4552,11 @@ a=rtpmap:0 PCMU/8000
 
         # send message
         @dc.on("open")
-        def on_open():
+        def on_open() -> None:
             dc.send("hello")
 
         @dc.on("message")
-        def on_message(message):
+        def on_message(message: Union[bytes, str]) -> None:
             pc1_data_messages.append(message)
 
         # create offer
@@ -4629,16 +4683,37 @@ a=rtpmap:0 PCMU/8000
 
     @asynctest
     async def test_createOffer_without_media(self) -> None:
-        pc = RTCPeerConnection()
-        with self.assertRaises(InternalError) as cm:
-            await pc.createOffer()
-        self.assertEqual(
-            str(cm.exception),
-            "Cannot create an offer with no media and no data channels",
-        )
+        pc1 = RTCPeerConnection()
+        pc2 = RTCPeerConnection()
 
-        # close
+        offer = await pc1.createOffer()
+        await pc1.setLocalDescription(offer)
+        await pc2.setRemoteDescription(offer)
+
+        answer = await pc2.createAnswer()
+        await pc2.setLocalDescription(answer)
+        await pc1.setRemoteDescription(answer)
+
+        await pc1.close()
+        await pc2.close()
+
+    @asynctest
+    async def test_setLocalDescription_implicit(self) -> None:
+        pc = RTCPeerConnection()
+        pc.addTrack(AudioStreamTrack())
+        offer = await pc.createOffer()
+        await pc.setRemoteDescription(offer)
+
+        await pc.setLocalDescription()
+        self.assertEqual(pc.localDescription.type, "answer")
+
+        await pc.setLocalDescription()
+        self.assertEqual(pc.localDescription.type, "offer")
+
         await pc.close()
+        with self.assertRaises(InvalidStateError) as cm:
+            await pc.setLocalDescription()
+        self.assertEqual(str(cm.exception), "RTCPeerConnection is closed")
 
     @asynctest
     async def test_setLocalDescription_unexpected_answer(self) -> None:
@@ -5239,7 +5314,7 @@ a=rtpmap:0 PCMU/8000
         self.assertClosed(pc2)
 
     @asynctest
-    async def test_bundlepolicy_max_bundle_ufrag_and_pwd(self):
+    async def test_bundlepolicy_max_bundle_ufrag_and_pwd(self) -> None:
         pc = RTCPeerConnection(
             RTCConfiguration(bundlePolicy=RTCBundlePolicy.MAX_BUNDLE)
         )
@@ -5247,14 +5322,20 @@ a=rtpmap:0 PCMU/8000
         transceiver2 = pc.addTransceiver("video")
 
         await pc.createOffer()
-        param1 = transceiver1.transport.transport.iceGatherer.getLocalParameters()
-        param2 = transceiver2.transport.transport.iceGatherer.getLocalParameters()
+        param1 = (
+            transceiver1.receiver.transport.transport.iceGatherer.getLocalParameters()
+        )
+        param2 = (
+            transceiver2.receiver.transport.transport.iceGatherer.getLocalParameters()
+        )
         self.assertEqual(param1.usernameFragment, param2.usernameFragment)
         self.assertEqual(param1.password, param2.password)
-        self.assertEqual(transceiver1.transport, transceiver2.transport)
+        self.assertEqual(
+            transceiver1.receiver.transport, transceiver2.receiver.transport
+        )
 
     @asynctest
-    async def test_bundlepolicy_max_bundle_ufrag_and_pwd_datachannel(self):
+    async def test_bundlepolicy_max_bundle_ufrag_and_pwd_datachannel(self) -> None:
         pc = RTCPeerConnection(
             RTCConfiguration(bundlePolicy=RTCBundlePolicy.MAX_BUNDLE)
         )
@@ -5262,26 +5343,32 @@ a=rtpmap:0 PCMU/8000
         transceiver = pc.addTransceiver("audio")
 
         await pc.createOffer()
-        param1 = transceiver.transport.transport.iceGatherer.getLocalParameters()
+        param1 = (
+            transceiver.receiver.transport.transport.iceGatherer.getLocalParameters()
+        )
         param2 = pc.sctp.transport.transport.iceGatherer.getLocalParameters()
         self.assertEqual(param1.usernameFragment, param2.usernameFragment)
         self.assertEqual(param1.password, param2.password)
-        self.assertEqual(transceiver.transport, pc.sctp.transport)
+        self.assertEqual(transceiver.receiver.transport, pc.sctp.transport)
 
     @asynctest
-    async def test_bundlepolicy_transports_balanced(self):
+    async def test_bundlepolicy_transports_balanced(self) -> None:
         pc = RTCPeerConnection(RTCConfiguration(bundlePolicy=RTCBundlePolicy.BALANCED))
         transceiver1 = pc.addTransceiver("audio")
         transceiver2 = pc.addTransceiver("video")
         transceiver3 = pc.addTransceiver("audio")
         pc.createDataChannel("somechannel")
-        self.assertNotEqual(transceiver1.transport, transceiver2.transport)
-        self.assertEqual(transceiver1.transport, transceiver3.transport)
-        self.assertNotEqual(transceiver1.transport, pc.sctp.transport)
-        self.assertNotEqual(transceiver2.transport, pc.sctp.transport)
+        self.assertNotEqual(
+            transceiver1.receiver.transport, transceiver2.receiver.transport
+        )
+        self.assertEqual(
+            transceiver1.receiver.transport, transceiver3.receiver.transport
+        )
+        self.assertNotEqual(transceiver1.receiver.transport, pc.sctp.transport)
+        self.assertNotEqual(transceiver2.receiver.transport, pc.sctp.transport)
 
     @asynctest
-    async def test_bundlepolicy_transports_max_compat(self):
+    async def test_bundlepolicy_transports_max_compat(self) -> None:
         pc = RTCPeerConnection(
             RTCConfiguration(bundlePolicy=RTCBundlePolicy.MAX_COMPAT)
         )
@@ -5289,13 +5376,17 @@ a=rtpmap:0 PCMU/8000
         transceiver2 = pc.addTransceiver("video")
         transceiver3 = pc.addTransceiver("audio")
         pc.createDataChannel("somechannel")
-        self.assertNotEqual(transceiver1.transport, transceiver2.transport)
-        self.assertNotEqual(transceiver1.transport, transceiver3.transport)
-        self.assertNotEqual(transceiver1.transport, pc.sctp.transport)
-        self.assertNotEqual(transceiver2.transport, pc.sctp.transport)
+        self.assertNotEqual(
+            transceiver1.receiver.transport, transceiver2.receiver.transport
+        )
+        self.assertNotEqual(
+            transceiver1.receiver.transport, transceiver3.receiver.transport
+        )
+        self.assertNotEqual(transceiver1.receiver.transport, pc.sctp.transport)
+        self.assertNotEqual(transceiver2.receiver.transport, pc.sctp.transport)
 
     @asynctest
-    async def test_bundlepolicy_transports_max_bundle(self):
+    async def test_bundlepolicy_transports_max_bundle(self) -> None:
         pc = RTCPeerConnection(
             RTCConfiguration(bundlePolicy=RTCBundlePolicy.MAX_BUNDLE)
         )
@@ -5303,6 +5394,10 @@ a=rtpmap:0 PCMU/8000
         transceiver2 = pc.addTransceiver("video")
         transceiver3 = pc.addTransceiver("audio")
         pc.createDataChannel("somechannel")
-        self.assertEqual(transceiver1.transport, transceiver2.transport)
-        self.assertEqual(transceiver1.transport, transceiver3.transport)
-        self.assertEqual(transceiver1.transport, pc.sctp.transport)
+        self.assertEqual(
+            transceiver1.receiver.transport, transceiver2.receiver.transport
+        )
+        self.assertEqual(
+            transceiver1.receiver.transport, transceiver3.receiver.transport
+        )
+        self.assertEqual(transceiver1.receiver.transport, pc.sctp.transport)

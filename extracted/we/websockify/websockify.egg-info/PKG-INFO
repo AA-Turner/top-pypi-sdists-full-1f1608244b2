@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: websockify
-Version: 0.12.0
+Version: 0.13.0
 Summary: Websockify.
 Home-page: https://github.com/novnc/websockify
 Author: Joel Martin
@@ -10,18 +10,30 @@ Keywords: noVNC websockify
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.4
-Classifier: Programming Language :: Python :: 3.5
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
 Description-Content-Type: text/markdown
 License-File: COPYING
 Requires-Dist: numpy
 Requires-Dist: requests
 Requires-Dist: jwcrypto
 Requires-Dist: redis
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
 
 ## websockify: WebSockets support for any application/server
 
@@ -234,6 +246,14 @@ docker run -it --rm -p 443:443 -v websockify-data:/data novnc/websockify --cert 
 
 Changes
 =======
+
+0.13.0
+------
+
+* Support for Python < 3.6 has been dropped.
+* SNI is enabled when connecting to an SSL target as an SSL client.
+* The TokenRedis plugin handles namespaces.
+* Headers are sanitized before being passed to authentication plugins.
 
 0.12.0
 ------

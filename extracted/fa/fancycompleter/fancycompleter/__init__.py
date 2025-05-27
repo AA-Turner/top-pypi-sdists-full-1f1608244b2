@@ -78,6 +78,10 @@ class DefaultConfig:
             import _pyrepl.completing_reader
             import _pyrepl.readline
 
+            # readline is not available on windows by default
+            if sys.platform == "win32":
+                sys.modules["readline"] = _pyrepl.readline
+
             self.using_pyrepl = True
             return _pyrepl.readline, True
 

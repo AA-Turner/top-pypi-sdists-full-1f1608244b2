@@ -19,6 +19,8 @@ class GeometryExtensionType(pa.ExtensionType):
     """Extension type base class for vector geometry types."""
 
     _extension_name = None
+    _array_cls_from_name = None
+    _scalar_cls_from_name = None
 
     def __init__(
         self, spec: TypeSpec, *, storage_type=None, validate_storage_type=True
@@ -35,18 +37,22 @@ class GeometryExtensionType(pa.ExtensionType):
             )
 
         if storage_type is None:
-            if spec.encoding == Encoding.GEOARROW:
-                key = spec.geometry_type, spec.coord_type, spec.dimensions
+            if self._spec.encoding == Encoding.GEOARROW:
+                key = (
+                    self._spec.geometry_type,
+                    self._spec.coord_type,
+                    self._spec.dimensions,
+                )
                 storage_type = _NATIVE_STORAGE_TYPES[key]
             else:
-                storage_type = _SERIALIZED_STORAGE_TYPES[spec.encoding]
+                storage_type = _SERIALIZED_STORAGE_TYPES[self._spec.encoding]
         elif validate_storage_type:
-            _validate_storage_type(storage_type, spec)
+            _validate_storage_type(storage_type, self._spec)
 
         pa.ExtensionType.__init__(self, storage_type, self._spec.extension_name())
 
     def __repr__(self):
-        return f"{type(self).__name__}({repr(self._spec)})"
+        return f"{type(self).__name__}({_spec_short_repr(self.spec, self._extension_name)})"
 
     def __arrow_ext_serialize__(self):
         return self._spec.extension_metadata().encode()
@@ -58,9 +64,51 @@ class GeometryExtensionType(pa.ExtensionType):
         )
 
     def to_pandas_dtype(self):
+        # Note that returning geopandas.array.GeometryDtype() here
+        # doesn't result in a GeoSeries or GeoDataFrame.
         from pandas import ArrowDtype
 
         return ArrowDtype(self)
+
+    def __arrow_ext_class__(self):
+        if GeometryExtensionType._array_cls_from_name:
+            return GeometryExtensionType._array_cls_from_name(self.extension_name)
+        else:
+            return super().__arrow_ext_class__()
+
+    def __arrow_ext_scalar_class__(self):
+        if GeometryExtensionType._scalar_cls_from_name:
+            return GeometryExtensionType._scalar_cls_from_name(self.extension_name)
+        else:
+            return super().__arrow_ext_scalar_class__()
+
+    def from_geobuffers(self, *args, **kwargs):
+        """Create an array from the appropriate number of buffers
+        for this type.
+        """
+        raise NotImplementedError()
+
+    def wrap_array(self, storage):
+        # Often this storage has the correct type except for nullable/
+        # non/nullable-ness of children. First check for the easy case
+        # (exactly correct storage type).
+        if storage.type == self.storage_type:
+            return super().wrap_array(storage)
+
+        # A cast won't work because pyarrow won't cast nullable to
+        # non-nullable; however, we can attempt to export to C and
+        # reimport against this after making sure that the storage parses
+        # to the appropriate geometry type.
+
+        # Handle ChunkedArray
+        if isinstance(storage, pa.ChunkedArray):
+            chunks = [self.wrap_array(chunk) for chunk in storage.chunks]
+            return pa.chunked_array(chunks, self)
+
+        _, c_array = storage.__arrow_c_array__()
+        c_schema = self.storage_type.__arrow_c_schema__()
+        storage = pa.Array._import_from_c_capsule(c_schema, c_array)
+        return super().wrap_array(storage)
 
     @property
     def spec(self) -> TypeSpec:
@@ -101,10 +149,10 @@ class GeometryExtensionType(pa.ExtensionType):
         """The :class:`CoordType` of this type.
 
         >>> import geoarrow.pyarrow as ga
-        >>> ga.linestring().coord_type == ga.CoordType.SEPARATE
+        >>> ga.linestring().coord_type == ga.CoordType.SEPARATED
         True
         >>> ga.linestring().with_coord_type(ga.CoordType.INTERLEAVED).coord_type
-        <GeoArrowCoordType.GEOARROW_COORD_TYPE_INTERLEAVED: 2>
+        <CoordType.INTERLEAVED: 2>
         """
         return self._spec.coord_type
 
@@ -116,7 +164,7 @@ class GeometryExtensionType(pa.ExtensionType):
         >>> ga.linestring().edge_type == ga.EdgeType.PLANAR
         True
         >>> ga.linestring().with_edge_type(ga.EdgeType.SPHERICAL).edge_type
-        <GeoArrowEdgeType.GEOARROW_EDGE_TYPE_SPHERICAL: 1>
+        <EdgeType.SPHERICAL: 2>
         """
         return self._spec.edge_type
 
@@ -125,10 +173,71 @@ class GeometryExtensionType(pa.ExtensionType):
         """The coordinate reference system of this type.
 
         >>> import geoarrow.pyarrow as ga
-        >>> ga.point().with_crs("EPSG:1234").crs
-        'EPSG:1234'
+        >>> ga.point().with_crs(ga.OGC_CRS84).crs
+        ProjJsonCrs(OGC:CRS84)
         """
         return self._spec.crs
+
+    def with_metadata(self, metadata):
+        """This type with the extension metadata (e.g., copied from some other type)
+        >>> import geoarrow.pyarrow as ga
+        >>> ga.linestring().with_metadata('{"edges": "spherical"}').edge_type
+        <EdgeType.SPHERICAL: 2>
+        """
+        if isinstance(metadata, str):
+            metadata = metadata.encode("UTF-8")
+        return type(self).__arrow_ext_deserialize__(self.storage_type, metadata)
+
+    def with_geometry_type(self, geometry_type):
+        """Returns a new type with the specified :class:`geoarrow.GeometryType`.
+        >>> import geoarrow.pyarrow as ga
+        >>> ga.point().with_geometry_type(ga.GeometryType.LINESTRING)
+        LinestringType(geoarrow.linestring)
+        """
+        spec = type_spec(Encoding.GEOARROW, geometry_type=geometry_type)
+        spec = TypeSpec.coalesce(spec, self.spec).canonicalize()
+        return extension_type(spec)
+
+    def with_dimensions(self, dimensions):
+        """Returns a new type with the specified :class:`geoarrow.Dimensions`.
+        >>> import geoarrow.pyarrow as ga
+        >>> ga.point().with_dimensions(ga.Dimensions.XYZ)
+        PointType(geoarrow.point_z)
+        """
+        spec = type_spec(dimensions=dimensions)
+        spec = TypeSpec.coalesce(spec, self.spec).canonicalize()
+        return extension_type(spec)
+
+    def with_coord_type(self, coord_type):
+        """Returns a new type with the specified :class:`geoarrow.CoordType`.
+        >>> import geoarrow.pyarrow as ga
+        >>> ga.point().with_coord_type(ga.CoordType.INTERLEAVED)
+        PointType(interleaved geoarrow.point)
+        """
+        spec = type_spec(coord_type=coord_type)
+        spec = TypeSpec.coalesce(spec, self.spec).canonicalize()
+        return extension_type(spec)
+
+    def with_edge_type(self, edge_type):
+        """Returns a new type with the specified :class:`geoarrow.EdgeType`.
+        >>> import geoarrow.pyarrow as ga
+        >>> ga.linestring().with_edge_type(ga.EdgeType.SPHERICAL)
+        LinestringType(spherical geoarrow.linestring)
+        """
+        spec = type_spec(edge_type=edge_type)
+        spec = TypeSpec.coalesce(spec, self.spec).canonicalize()
+        return extension_type(spec)
+
+    def with_crs(self, crs):
+        """Returns a new type with the specified coordinate reference system
+        :class:`geoarrow.CrsType` combination.
+        >>> import geoarrow.pyarrow as ga
+        >>> ga.linestring().with_crs(ga.OGC_CRS84)
+        LinestringType(geoarrow.linestring <ProjJsonCrs(OGC:CRS84)>)
+        """
+        spec = type_spec(crs=crs)
+        spec = TypeSpec.coalesce(spec, self.spec).canonicalize()
+        return extension_type(spec)
 
 
 class WkbType(GeometryExtensionType):
@@ -148,6 +257,26 @@ class WktType(GeometryExtensionType):
     _extension_name = "geoarrow.wkt"
 
 
+class GeometryUnionType(GeometryExtensionType):
+    _extension_name = "geoarrow.geometry"
+
+
+class GeometryCollectionUnionType(GeometryExtensionType):
+    _extension_name = "geoarrow.geometrycollection"
+
+
+class BoxType(GeometryExtensionType):
+    """Extension type whose storage is an array of boxes stored
+    as a struct with two children per dimension.
+    """
+
+    _extension_name = "geoarrow.box"
+
+    def from_geobuffers(self, validity, xmin, ymin, *bounds):
+        storage = _from_buffers_box(self.storage_type, validity, xmin, ymin, *bounds)
+        return self.wrap_array(storage)
+
+
 class PointType(GeometryExtensionType):
     """Extension type whose storage is an array of points stored
     as either a struct with one child per dimension or a fixed-size
@@ -155,6 +284,10 @@ class PointType(GeometryExtensionType):
     """
 
     _extension_name = "geoarrow.point"
+
+    def from_geobuffers(self, validity, x, y=None, z_or_m=None, m=None):
+        storage = _from_buffers_point(self.storage_type, validity, x, y, z_or_m, m)
+        return self.wrap_array(storage)
 
 
 class LinestringType(GeometryExtensionType):
@@ -164,6 +297,12 @@ class LinestringType(GeometryExtensionType):
 
     _extension_name = "geoarrow.linestring"
 
+    def from_geobuffers(self, validity, coord_offsets, x, y=None, z_or_m=None, m=None):
+        storage = _from_buffers_linestring(
+            self.storage_type, validity, coord_offsets, x, y, z_or_m, m
+        )
+        return self.wrap_array(storage)
+
 
 class PolygonType(GeometryExtensionType):
     """Extension type whose storage is an array of polygons stored
@@ -171,6 +310,14 @@ class PolygonType(GeometryExtensionType):
     """
 
     _extension_name = "geoarrow.polygon"
+
+    def from_geobuffers(
+        self, validity, ring_offsets, coord_offsets, x, y=None, z_or_m=None, m=None
+    ):
+        storage = _from_buffers_polygon(
+            self.storage_type, validity, ring_offsets, coord_offsets, x, y, z_or_m, m
+        )
+        return self.wrap_array(storage)
 
 
 class MultiPointType(GeometryExtensionType):
@@ -180,6 +327,12 @@ class MultiPointType(GeometryExtensionType):
 
     _extension_name = "geoarrow.multipoint"
 
+    def from_geobuffers(self, validity, coord_offsets, x, y=None, z_or_m=None, m=None):
+        storage = _from_buffers_linestring(
+            self.storage_type, validity, coord_offsets, x, y, z_or_m, m
+        )
+        return self.wrap_array(storage)
+
 
 class MultiLinestringType(GeometryExtensionType):
     """Extension type whose storage is an array of multilinestrings stored
@@ -187,6 +340,28 @@ class MultiLinestringType(GeometryExtensionType):
     """
 
     _extension_name = "geoarrow.multilinestring"
+
+    def from_geobuffers(
+        self,
+        validity,
+        linestring_offsets,
+        coord_offsets,
+        x,
+        y=None,
+        z_or_m=None,
+        m=None,
+    ):
+        storage = _from_buffers_polygon(
+            self.storage_type,
+            validity,
+            linestring_offsets,
+            coord_offsets,
+            x,
+            y,
+            z_or_m,
+            m,
+        )
+        return self.wrap_array(storage)
 
 
 class MultiPolygonType(GeometryExtensionType):
@@ -196,11 +371,35 @@ class MultiPolygonType(GeometryExtensionType):
 
     _extension_name = "geoarrow.multipolygon"
 
+    def from_geobuffers(
+        self,
+        validity,
+        polygon_offsets,
+        ring_offsets,
+        coord_offsets,
+        x,
+        y=None,
+        z_or_m=None,
+        m=None,
+    ):
+        storage = _from_buffers_multipolygon(
+            self.storage_type,
+            validity,
+            polygon_offsets,
+            ring_offsets,
+            coord_offsets,
+            x,
+            y,
+            z_or_m,
+            m,
+        )
+        return self.wrap_array(storage)
+
 
 def extension_type(
     spec: TypeSpec, storage_type=None, validate_storage_type=True
 ) -> GeometryExtensionType:
-    spec = spec.with_defaults()
+    spec = type_spec(spec).with_defaults()
     extension_cls = _EXTENSION_CLASSES[spec.extension_name()]
     return extension_cls(
         spec, storage_type=storage_type, validate_storage_type=validate_storage_type
@@ -281,12 +480,15 @@ def register_extension_types(lazy: bool = True) -> None:
     all_types = [
         type_spec(Encoding.WKT).to_pyarrow(),
         type_spec(Encoding.WKB).to_pyarrow(),
+        type_spec(Encoding.GEOARROW, GeometryType.BOX).to_pyarrow(),
+        type_spec(Encoding.GEOARROW, GeometryType.GEOMETRY).to_pyarrow(),
         type_spec(Encoding.GEOARROW, GeometryType.POINT).to_pyarrow(),
         type_spec(Encoding.GEOARROW, GeometryType.LINESTRING).to_pyarrow(),
         type_spec(Encoding.GEOARROW, GeometryType.POLYGON).to_pyarrow(),
         type_spec(Encoding.GEOARROW, GeometryType.MULTIPOINT).to_pyarrow(),
         type_spec(Encoding.GEOARROW, GeometryType.MULTILINESTRING).to_pyarrow(),
         type_spec(Encoding.GEOARROW, GeometryType.MULTIPOLYGON).to_pyarrow(),
+        type_spec(Encoding.GEOARROW, GeometryType.GEOMETRYCOLLECTION).to_pyarrow(),
     ]
 
     n_registered = 0
@@ -315,12 +517,15 @@ def unregister_extension_types(lazy=True):
     all_type_names = [
         "geoarrow.wkb",
         "geoarrow.wkt",
+        "geoarrow.box",
+        "geoarrow.geometry",
         "geoarrow.point",
         "geoarrow.linestring",
         "geoarrow.polygon",
         "geoarrow.multipoint",
         "geoarrow.multilinestring",
         "geoarrow.multipolygon",
+        "geoarrow.geometrycollection",
     ]
 
     n_unregistered = 0
@@ -353,11 +558,22 @@ def _parse_storage(storage_type):
         return [("string", ())]
     elif pa_types.is_large_string(storage_type):
         return [("large_string", ())]
+    elif hasattr(pa_types, "is_binary_view") and pa_types.is_binary_view(storage_type):
+        return [("binary_view", ())]
+    elif hasattr(pa_types, "is_string_view") and pa_types.is_string_view(storage_type):
+        return [("string_view", ())]
     elif pa_types.is_float64(storage_type):
         return [("double", ())]
     elif isinstance(storage_type, pa.ListType):
         f = storage_type.field(0)
         return [("list", (f.name,))] + _parse_storage(f.type)
+    elif isinstance(storage_type, pa.DenseUnionType):
+        n_fields = storage_type.num_fields
+        names = tuple(str(code) for code in storage_type.type_codes)
+        parsed_children = tuple(
+            _parse_storage(storage_type.field(i).type)[0] for i in range(n_fields)
+        )
+        return [("dense_union", (names, parsed_children))]
     elif isinstance(storage_type, pa.StructType):
         n_fields = storage_type.num_fields
         names = tuple(storage_type.field(i).name for i in range(n_fields))
@@ -402,9 +618,12 @@ def _deserialize_storage(storage_type, extension_name=None, extension_metadata=N
     spec = _SPEC_FROM_TYPE_NESTING[parsed_type_names]
     spec = TypeSpec.from_extension_metadata(extension_metadata).with_defaults(spec)
 
-    # If this is a serialized type, we don't need to infer any more information
-    # from the storage type.
-    if spec.encoding.is_serialized():
+    # If this is a serialized type or a union, we don't need to infer any more information
+    # from the storage type (because we don't currently validate union types).
+    if spec.encoding.is_serialized() or spec.geometry_type in (
+        GeometryType.GEOMETRY,
+        GeometryType.GEOMETRYCOLLECTION,
+    ):
         if extension_name is not None and spec.extension_name() != extension_name:
             raise ValueError(f"Can't interpret {storage_type} as {extension_name}")
 
@@ -425,7 +644,15 @@ def _deserialize_storage(storage_type, extension_name=None, extension_metadata=N
         names, n_dims, parsed_children = params
         n_dims_infer = n_dims
 
-    if names in _DIMS_FROM_NAMES:
+    # Make sure we catch box field names (e.g., xmin, ymin, ...)
+    if names in _BOX_DIMS_FROM_NAMES:
+        if spec.geometry_type != GeometryType.POINT:
+            raise ValueError(
+                f"Expected box names {names} in root type but got nested list"
+            )
+        spec = spec.override(geometry_type=GeometryType.BOX)
+        dims = _BOX_DIMS_FROM_NAMES[names]
+    elif names in _DIMS_FROM_NAMES:
         dims = _DIMS_FROM_NAMES[names]
         if n_dims != dims.count():
             raise ValueError(f"Expected {n_dims} dimensions but got Dimensions.{dims}")
@@ -479,6 +706,129 @@ def _nested_type(coord, names):
         return coord
 
 
+def _from_buffer_ordinate(x):
+    mv = memoryview(x)
+    if mv.format != "d":
+        mv = mv.cast("d")
+
+    return pa.array(mv, pa.float64())
+
+
+def _pybuffer_offset(x):
+    mv = memoryview(x)
+    if mv.format != "i":
+        mv = mv.cast("i")
+
+    return len(mv), pa.py_buffer(mv)
+
+
+def _from_buffers_box(type_, validity, *bounds):
+    length = len(bounds[0])
+    validity = pa.py_buffer(validity) if validity is not None else None
+    children = [_from_buffer_ordinate(bound) for bound in bounds]
+    return pa.Array.from_buffers(type_, length, buffers=[validity], children=children)
+
+
+def _from_buffers_point(type_, validity, x, y=None, z_or_m=None, m=None):
+    validity = pa.py_buffer(validity) if validity is not None else None
+    children = [_from_buffer_ordinate(x)]
+    if y is not None:
+        children.append(_from_buffer_ordinate(y))
+    if z_or_m is not None:
+        children.append(_from_buffer_ordinate(z_or_m))
+    if m is not None:
+        children.append(_from_buffer_ordinate(m))
+
+    if pa_types.is_fixed_size_list(type_):
+        length = len(x) // type_.list_size
+    else:
+        length = len(x)
+
+    return pa.Array.from_buffers(type_, length, buffers=[validity], children=children)
+
+
+def _from_buffers_linestring(
+    type_, validity, coord_offsets, x, y=None, z_or_m=None, m=None
+):
+    validity = pa.py_buffer(validity) if validity is not None else None
+    n_offsets, coord_offsets = _pybuffer_offset(coord_offsets)
+    coords = _from_buffers_point(type_.field(0).type, None, x, y, z_or_m, m)
+    return pa.Array.from_buffers(
+        type_,
+        n_offsets - 1,
+        buffers=[validity, pa.py_buffer(coord_offsets)],
+        children=[coords],
+    )
+
+
+def _from_buffers_polygon(
+    type_, validity, ring_offsets, coord_offsets, x, y=None, z_or_m=None, m=None
+):
+    validity = pa.py_buffer(validity) if validity is not None else None
+    rings = _from_buffers_linestring(
+        type_.field(0).type, None, coord_offsets, x, y, z_or_m, m
+    )
+    n_offsets, ring_offsets = _pybuffer_offset(ring_offsets)
+    return pa.Array.from_buffers(
+        type_,
+        n_offsets - 1,
+        buffers=[validity, pa.py_buffer(ring_offsets)],
+        children=[rings],
+    )
+
+
+def _from_buffers_multipolygon(
+    type_,
+    validity,
+    polygon_offsets,
+    ring_offsets,
+    coord_offsets,
+    x,
+    y=None,
+    z_or_m=None,
+    m=None,
+):
+    validity = pa.py_buffer(validity) if validity is not None else None
+    polygons = _from_buffers_polygon(
+        type_.field(0).type, None, ring_offsets, coord_offsets, x, y, z_or_m, m
+    )
+    n_offsets, polygon_offsets = _pybuffer_offset(polygon_offsets)
+    return pa.Array.from_buffers(
+        type_,
+        n_offsets - 1,
+        buffers=[validity, pa.py_buffer(ring_offsets)],
+        children=[polygons],
+    )
+
+
+ALL_DIMENSIONS = [Dimensions.XY, Dimensions.XYZ, Dimensions.XYM, Dimensions.XYZM]
+ALL_COORD_TYPES = [CoordType.INTERLEAVED, CoordType.SEPARATED]
+ALL_GEOMETRY_TYPES = [
+    GeometryType.POINT,
+    GeometryType.LINESTRING,
+    GeometryType.POLYGON,
+    GeometryType.MULTIPOINT,
+    GeometryType.MULTILINESTRING,
+    GeometryType.MULTIPOLYGON,
+    GeometryType.GEOMETRYCOLLECTION,
+]
+ALL_GEOMETRY_TYPES_EXCEPT_GEOMETRYCOLLECTION = [
+    GeometryType.POINT,
+    GeometryType.LINESTRING,
+    GeometryType.POLYGON,
+    GeometryType.MULTIPOINT,
+    GeometryType.MULTILINESTRING,
+    GeometryType.MULTIPOLYGON,
+]
+_BOX_DIMS_FROM_NAMES = {
+    ("xmin", "ymin", "xmax", "ymax"): Dimensions.XY,
+    ("xmin", "ymin", "zmin", "xmax", "ymax", "zmax"): Dimensions.XYZ,
+    ("xmin", "ymin", "mmin", "xmax", "ymax", "mmax"): Dimensions.XYM,
+    ("xmin", "ymin", "zmin", "mmin", "xmax", "ymax", "zmax", "mmax"): Dimensions.XYZM,
+}
+_BOX_NAMES_FROM_DIMS = {v: k for k, v in _BOX_DIMS_FROM_NAMES.items()}
+
+
 def _generate_storage_types():
     coord_storage = {
         (CoordType.SEPARATED, Dimensions.XY): _struct_fields("xy"),
@@ -500,33 +850,166 @@ def _generate_storage_types():
         GeometryType.MULTIPOLYGON: ["polygons", "rings", "vertices"],
     }
 
-    all_geoemetry_types = list(field_names.keys())
-    all_coord_types = [CoordType.INTERLEAVED, CoordType.SEPARATED]
-    all_dimensions = [Dimensions.XY, Dimensions.XYZ, Dimensions.XYM, Dimensions.XYZM]
-
     all_storage_types = {}
-    for geometry_type in all_geoemetry_types:
-        for coord_type in all_coord_types:
-            for dimensions in all_dimensions:
+    for geometry_type in ALL_GEOMETRY_TYPES_EXCEPT_GEOMETRYCOLLECTION:
+        for coord_type in ALL_COORD_TYPES:
+            for dimensions in ALL_DIMENSIONS:
                 names = field_names[geometry_type]
                 coord = coord_storage[(coord_type, dimensions)]
                 key = geometry_type, coord_type, dimensions
                 storage_type = _nested_type(coord, names)
                 all_storage_types[key] = storage_type
 
+    for dimensions in ALL_DIMENSIONS:
+        storage_type = _nested_type(
+            _struct_fields(_BOX_NAMES_FROM_DIMS[dimensions]), []
+        )
+        key = GeometryType.BOX, CoordType.SEPARATED, dimensions
+        all_storage_types[key] = storage_type
+
     return all_storage_types
+
+
+def _generate_union_storage(
+    geometry_types=ALL_GEOMETRY_TYPES,
+    dimensions=ALL_DIMENSIONS,
+    coord_type=CoordType.SEPARATED,
+):
+    child_fields = []
+    type_codes = []
+    for dimension in dimensions:
+        for geometry_type in geometry_types:
+            spec = type_spec(
+                encoding=Encoding.GEOARROW,
+                geometry_type=geometry_type,
+                dimensions=dimension,
+                coord_type=coord_type,
+            )
+
+            if spec.geometry_type == GeometryType.GEOMETRYCOLLECTION:
+                storage_type = _generate_union_collection_storage(
+                    spec.dimensions, coord_type
+                )
+            else:
+                storage_type = extension_type(spec).storage_type
+
+            type_id = _UNION_TYPE_ID_FROM_SPEC[(spec.geometry_type, spec.dimensions)]
+            geometry_type_lab = _UNION_GEOMETRY_TYPE_LABELS[spec.geometry_type.value]
+            dimension_lab = _UNION_DIMENSION_LABELS[spec.dimensions.value]
+
+            child_fields.append(
+                pa.field(f"{geometry_type_lab}{dimension_lab}", storage_type)
+            )
+            type_codes.append(type_id)
+
+    return pa.dense_union(child_fields, type_codes)
+
+
+def _generate_union_collection_storage(dimensions, coord_type):
+    storage_union = _generate_union_storage(
+        geometry_types=ALL_GEOMETRY_TYPES_EXCEPT_GEOMETRYCOLLECTION,
+        dimensions=[dimensions],
+        coord_type=coord_type,
+    )
+    storage_union_field = pa.field("geometries", storage_union, nullable=False)
+    return pa.list_(storage_union_field)
+
+
+def _generate_union_type_id_mapping():
+    out = {}
+    for dimension in ALL_DIMENSIONS:
+        for geometry_type in ALL_GEOMETRY_TYPES:
+            type_id = (dimension.value - 1) * 10 + geometry_type.value
+            out[type_id] = (geometry_type, dimension)
+    return out
+
+
+def _add_union_types_to_native_storage_types():
+    global _NATIVE_STORAGE_TYPES
+
+    for coord_type in ALL_COORD_TYPES:
+        for dimension in ALL_DIMENSIONS:
+            _NATIVE_STORAGE_TYPES[
+                (GeometryType.GEOMETRY, coord_type, dimension)
+            ] = _generate_union_storage(coord_type=coord_type, dimensions=[dimension])
+
+        # With unknown dimensions, we reigster the massive catch-all union
+        _NATIVE_STORAGE_TYPES[
+            (GeometryType.GEOMETRY, coord_type, Dimensions.UNKNOWN)
+        ] = _generate_union_storage(coord_type=coord_type)
+
+    for coord_type in ALL_COORD_TYPES:
+        for dimension in ALL_DIMENSIONS:
+            _NATIVE_STORAGE_TYPES[
+                (GeometryType.GEOMETRYCOLLECTION, coord_type, dimension)
+            ] = _generate_union_collection_storage(dimension, coord_type)
+
+
+# A shorter version of repr(spec) that matches what geoarrow-c used to do
+# (to reduce mayhem on docstring updates).
+def _spec_short_repr(spec, ext_name):
+    non_planar = spec.edge_type != EdgeType.PLANAR
+    interleaved = spec.coord_type == CoordType.INTERLEAVED
+
+    if spec.dimensions == Dimensions.XYZM:
+        dims = "_zm"
+    elif spec.dimensions == Dimensions.XYZ:
+        dims = "_z"
+    elif spec.dimensions == Dimensions.XYM:
+        dims = "_m"
+    else:
+        dims = ""
+
+    if non_planar and interleaved:
+        type_prefix = f"{spec.edge_type.name.lower()} interleaved "
+    elif non_planar:
+        type_prefix = f"{spec.edge_type.name.lower()} "
+    elif interleaved:
+        type_prefix = "interleaved "
+    else:
+        type_prefix = ""
+
+    if spec.crs is not None:
+        crs = f" <{repr(spec.crs)}>"
+    else:
+        crs = ""
+
+    if len(crs) > 40:
+        crs = crs[:36] + "...>"
+
+    return f"{type_prefix}{ext_name}{dims}{crs}"
 
 
 _EXTENSION_CLASSES = {
     "geoarrow.wkb": WkbType,
     "geoarrow.wkt": WktType,
+    "geoarrow.box": BoxType,
+    "geoarrow.geometry": GeometryUnionType,
     "geoarrow.point": PointType,
     "geoarrow.linestring": LinestringType,
     "geoarrow.polygon": PolygonType,
     "geoarrow.multipoint": MultiPointType,
     "geoarrow.multilinestring": MultiLinestringType,
     "geoarrow.multipolygon": MultiPolygonType,
+    "geoarrow.geometrycollection": GeometryCollectionUnionType,
 }
+
+
+_SPEC_FROM_UNION_TYPE_ID = _generate_union_type_id_mapping()
+_UNION_TYPE_ID_FROM_SPEC = {v: k for k, v in _SPEC_FROM_UNION_TYPE_ID.items()}
+
+_UNION_GEOMETRY_TYPE_LABELS = [
+    "Geometry",
+    "Point",
+    "LineString",
+    "Polygon",
+    "MultiPoint",
+    "MultiLineString",
+    "MultiPolygon",
+    "GeometryCollection",
+]
+
+_UNION_DIMENSION_LABELS = [None, "", " Z", " M", " ZM"]
 
 _SERIALIZED_STORAGE_TYPES = {
     Encoding.WKT: pa.utf8(),
@@ -535,17 +1018,28 @@ _SERIALIZED_STORAGE_TYPES = {
     Encoding.LARGE_WKB: pa.large_binary(),
 }
 
+if hasattr(pa, "binary_view"):
+    _SERIALIZED_STORAGE_TYPES[Encoding.WKT_VIEW] = pa.string_view()
+    _SERIALIZED_STORAGE_TYPES[Encoding.WKB_VIEW] = pa.binary_view()
+
 _NATIVE_STORAGE_TYPES = _generate_storage_types()
+_add_union_types_to_native_storage_types()
 
 _SPEC_FROM_TYPE_NESTING = {
     ("binary",): Encoding.WKB,
     ("large_binary",): Encoding.LARGE_WKB,
     ("string",): Encoding.WKT,
     ("large_string",): Encoding.LARGE_WKT,
+    ("binary_view",): Encoding.WKB_VIEW,
+    ("string_view",): Encoding.WKT_VIEW,
     ("struct",): TypeSpec(
         encoding=Encoding.GEOARROW,
         geometry_type=GeometryType.POINT,
         coord_type=CoordType.SEPARATED,
+    ),
+    ("dense_union",): TypeSpec(
+        encoding=Encoding.GEOARROW,
+        geometry_type=GeometryType.GEOMETRY,
     ),
     ("list", "struct"): TypeSpec(
         encoding=Encoding.GEOARROW, coord_type=CoordType.SEPARATED
@@ -573,6 +1067,10 @@ _SPEC_FROM_TYPE_NESTING = {
         encoding=Encoding.GEOARROW,
         coord_type=CoordType.INTERLEAVED,
         geometry_type=GeometryType.MULTIPOLYGON,
+    ),
+    ("list", "dense_union"): TypeSpec(
+        encoding=Encoding.GEOARROW,
+        geometry_type=GeometryType.GEOMETRYCOLLECTION,
     ),
 }
 

@@ -18,7 +18,7 @@ integration = Integration(
         (httpx.HTTPStatusError, HTTPHandler, None),
     ],
     description_data=DescriptionData(
-        logo_url="", user_friendly_name="{pascal}", description="", categories=[]
+        logo_url="", app_vendor_domain="", user_friendly_name="{pascal}", description="", categories=[]
     ),
     settings_model={pascal}Settings,
     resource_types=resource_types,
@@ -41,5 +41,8 @@ integration.register_capabilities(
         # StandardCapabilityName.ACTIVATE_ACCOUNT: capabilities_write.activate_account,
         # StandardCapabilityName.DEACTIVATE_ACCOUNT: capabilities_write.deactivate_account,
         # StandardCapabilityName.DELETE_ACCOUNT: capabilities_write.delete_account,
+        # StandardCapabilityName.TRANSFER_DATA: capabilities_write.transfer_data,
+        # StandardCapabilityName.DOWNGRADE_LICENSE: capabilities_write.downgrade_license,
+        # StandardCapabilityName.RELEASE_RESOURCES: capabilities_write.release_resources,
     }}
 )

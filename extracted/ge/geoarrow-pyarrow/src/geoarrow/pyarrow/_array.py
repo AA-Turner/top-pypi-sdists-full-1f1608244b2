@@ -1,9 +1,6 @@
 import pyarrow as pa
-import pyarrow_hotfix as _  # noqa: F401
 
-from geoarrow.c import lib
-
-from geoarrow.pyarrow._kernel import Kernel
+from geoarrow.pyarrow._kernel import Kernel, _geoarrow_c
 from geoarrow.pyarrow._type import (
     GeometryExtensionType,
     wkb,
@@ -17,6 +14,8 @@ class GeometryExtensionArray(pa.ExtensionArray):
     def geobuffers(self):
         import numpy as np
 
+        lib = _geoarrow_c()
+
         cschema = lib.SchemaHolder()
         self.type._export_to_c(cschema._addr())
         carray = lib.ArrayHolder()
@@ -27,6 +26,16 @@ class GeometryExtensionArray(pa.ExtensionArray):
         return [np.array(b) if b is not None else None for b in buffers]
 
     def __repr__(self):
+        # Pretty WKT printing needs geoarrow-c
+        try:
+            from geoarrow import c  # noqa: F401
+        except ImportError:
+            return (
+                super().__repr__()
+                + "\n"
+                + "* pip install geoarrow-c for prettier printing of geometry arrays"
+            )
+
         n_values_to_show = 10
         max_width = 70
 
@@ -55,10 +64,10 @@ class GeometryExtensionArray(pa.ExtensionArray):
         tail_str = [f"<{item.as_py()}>" for item in tail]
         for i in range(len(head)):
             if len(head_str[i]) > max_width:
-                head_str[i] = f"{head_str[i][:(max_width - 4)]}...>"
+                head_str[i] = f"{head_str[i][: (max_width - 4)]}...>"
         for i in range(len(tail)):
             if len(tail_str[i]) > max_width:
-                tail_str[i] = f"{tail_str[i][:(max_width - 4)]}...>"
+                tail_str[i] = f"{tail_str[i][: (max_width - 4)]}...>"
 
         type_name = type(self).__name__
         head_str = "\n".join(head_str)
@@ -68,49 +77,18 @@ class GeometryExtensionArray(pa.ExtensionArray):
         return f"{type_name}:{repr(self.type)}[{len(self)}]\n{items_str}".strip()
 
 
-class PointArray(GeometryExtensionArray):
-    pass
-
-
-class LinestringArray(GeometryExtensionArray):
-    pass
-
-
-class PolygonArray(GeometryExtensionArray):
-    pass
-
-
-class MultiPointArray(GeometryExtensionArray):
-    pass
-
-
-class MultiLinestringArray(GeometryExtensionArray):
-    pass
-
-
-class MultiPolygonArray(GeometryExtensionArray):
-    pass
+class BoxArray(GeometryExtensionArray):
+    def __repr__(self):
+        type_name = type(self).__name__
+        items_str = "\n".join(repr(item.bounds) for item in self)
+        return f"{type_name}:{repr(self.type)}[{len(self)}]\n{items_str}".strip()
 
 
 def array_cls_from_name(name):
-    if name == "geoarrow.wkb":
-        return GeometryExtensionArray
-    elif name == "geoarrow.wkt":
-        return GeometryExtensionArray
-    elif name == "geoarrow.point":
-        return PointArray
-    elif name == "geoarrow.linestring":
-        return LinestringArray
-    elif name == "geoarrow.polygon":
-        return PolygonArray
-    elif name == "geoarrow.multipoint":
-        return MultiPointArray
-    elif name == "geoarrow.multilinestring":
-        return MultiLinestringArray
-    elif name == "geoarrow.multipolygon":
-        return MultiPolygonArray
+    if name == "geoarrow.box":
+        return BoxArray
     else:
-        raise ValueError(f'Expected valid extension name but got "{name}"')
+        return GeometryExtensionArray
 
 
 # Inject array_cls_from_name exactly once to avoid circular import
@@ -132,13 +110,13 @@ def array(obj, type_=None, *args, **kwargs) -> GeometryExtensionArray:
     GeometryExtensionArray:WktType(geoarrow.wkt)[1]
     <POINT (0 1)>
     >>> ga.as_geoarrow(["POINT (0 1)"])
-    PointArray:PointType(geoarrow.point)[1]
+    GeometryExtensionArray:PointType(geoarrow.point)[1]
     <POINT (0 1)>
     """
     # Convert GeoPandas to WKB
     if type(obj).__name__ == "GeoSeries":
         if obj.crs:
-            type_ = wkb().with_crs(obj.crs.to_json(), lib.CrsType.PROJJSON)
+            type_ = wkb().with_crs(obj.crs)
         else:
             type_ = wkb()
 

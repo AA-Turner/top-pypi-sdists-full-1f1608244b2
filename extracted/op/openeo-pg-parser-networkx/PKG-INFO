@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: openeo-pg-parser-networkx
-Version: 2024.10.1
+Version: 2025.5.1
 Summary: Parse OpenEO process graphs from JSON to traversible Python objects.
 Home-page: https://github.com/Open-EO/openeo-pg-parser-networkx
 License: Apache 2.0
@@ -17,6 +17,7 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3 :: Only
 Provides-Extra: plot
+Requires-Dist: dask (>=2023.4.0,<2025.2.0)
 Requires-Dist: geojson-pydantic (>=1.0.0,<2.0.0)
 Requires-Dist: matplotlib (>=3.7.1,<4.0.0) ; extra == "plot"
 Requires-Dist: networkx (>=2.8.6,<3.0.0)
@@ -26,6 +27,8 @@ Requires-Dist: pydantic (>=2.4.0,<3.0.0)
 Requires-Dist: pyproj (>=3.4.0,<4.0.0)
 Requires-Dist: shapely (>=1.8)
 Requires-Dist: traitlets (<=5.9.0)
+Requires-Dist: xarray (>=2022.11.0,<=2024.3.0)
+Requires-Dist: yprov4wfs (>=0.0.8)
 Project-URL: Repository, https://github.com/Open-EO/openeo-pg-parser-networkx
 Description-Content-Type: text/markdown
 

@@ -7,6 +7,7 @@ config = ConformanceSuiteConfig(
     args=[
         '--disclosureSystem', 'NL-INLINE-2024',
         '--baseTaxonomyValidation', 'none',
+        '--testcaseResultsCaptureWarnings',
     ],
     assets=[
         ConformanceSuiteAssetConfig.conformance_suite(
@@ -18,20 +19,18 @@ config = ConformanceSuiteConfig(
         *NL_PACKAGES['NL-INLINE-2024'],
     ],
     expected_additional_testcase_errors={f"conformance-suite-2024-sbr-domein-handelsregister/tests/{s}": val for s, val in {
-        'G3-2-4_2/index.xml:TC3_valid': {
-            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
+        'G3-6-3_3/index.xml:TC2_invalid': {
+            # Testcase expects only 3.6.3.3, but has a filename that has invalid characters (3.6.3.3)
+            # AND {base} with > 20 characters (3.6.3.1)
+            'baseComponentInDocumentNameExceedsTwentyCharacters': 1,
         },
         'G4-1-2_1/index.xml:TC2_valid': {
             'undefinedLanguageForTextFact': 1,
-            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
+            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 5,
         },
         'RTS_Annex_II_Par_1_RTS_Annex_IV_par_7/index.xml:TC2_valid': {
             'undefinedLanguageForTextFact': 1,
-            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
-        },
-        'RTS_Annex_II_Par_1_RTS_Annex_IV_par_7/index.xml:TC4_invalid': {
-            'undefinedLanguageForTextFact': 1,
-            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
+            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 5,
         },
         'RTS_Annex_IV_Par_1_G3-1-4_1/index.xml:TC2_invalid': {
             'message:valueKvKIdentifier': 13,
@@ -46,21 +45,18 @@ config = ConformanceSuiteConfig(
         },
         'RTS_Annex_IV_Par_6/index.xml:TC2_valid': {
             'undefinedLanguageForTextFact': 1,
-            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
+            'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 5,
         },
     }.items()},
     expected_failure_ids=frozenset([
         # Conformance Suite Errors
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-3-1_2/index.xml:TC3_invalid',  # Expects an error code with a preceding double quote. G3-3-1_3 expects the same code without the typo.
+        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_1/index.xml:TC2_invalid',  # Produces: [err:XPTY0004] Variable set Het entity identifier scheme dat bij dit feit hoort MOET het standaard KVK identifier scheme zijn
+        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_2/index.xml:TC2_invalid',  # Expects fractionElementUsed”.  Note the double quote at the end.
         'conformance-suite-2024-sbr-domein-handelsregister/tests/RTS_Annex_IV_Par_2_G3-1-1_1/index.xml:TC2_invalid',  # Expects NonIdenticalIdentifier instead of nonIdenticalIdentifier (note the cap N)
 
 
         # Not Implemented
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_1/index.xml:TC2_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_2/index.xml:TC2_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_3/index.xml:TC2_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_4/index.xml:TC2_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_5/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-2_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-2_1/index.xml:TC3_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-1_1/index.xml:TC3_invalid',
@@ -73,7 +69,6 @@ config = ConformanceSuiteConfig(
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-3_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-4_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-6-2_1/index.xml:TC2_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-6-3_3/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-7-1_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G4-1-1_1/index.xml:TC3_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G4-1-1_1/index.xml:TC4_invalid',
@@ -108,6 +103,7 @@ config = ConformanceSuiteConfig(
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G5-1-3_2/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G6-1-1_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/RTS_Annex_II_Par_1/index.xml:TC3_invalid',
+        'conformance-suite-2024-sbr-domein-handelsregister/tests/RTS_Annex_II_Par_1_RTS_Annex_IV_par_7/index.xml:TC4_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/RTS_Annex_III_Par_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/RTS_Annex_III_Par_1/index.xml:TC3_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/RTS_Annex_IV_Par_11_G4-2-2_1/index.xml:TC2_invalid',

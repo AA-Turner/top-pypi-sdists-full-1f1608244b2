@@ -469,7 +469,7 @@ class ConfigLoader:
     mem_gb: int
     flame_graph: bool
     continue_previous_job: Optional[str]
-    calculate_pareto_front_of_job: Optional[str]
+    calculate_pareto_front_of_job: Optional[List[str]]
     revert_to_random_when_seemingly_exhausted: bool
     minkowski_p: float
     decimalrounding: int
@@ -553,7 +553,6 @@ class ConfigLoader:
         optional.add_argument('--root_venv_dir', help=f'Where to install your modules to ($root_venv_dir/.omniax_..., default: {Path.home()})', default=Path.home(), type=str)
         optional.add_argument('--exclude', help='A comma separated list of values of excluded nodes (taurusi8009,taurusi8010)', default=None, type=str)
         optional.add_argument('--main_process_gb', help='Amount of RAM for the main process in GB (default: 8GB)', type=int, default=8)
-        optional.add_argument('--pareto_front_confidence', help='Confidence for pareto-front-plotting (between 0 and 1, default: 1)', type=float, default=1)
         optional.add_argument('--max_nr_of_zero_results', help='Max. nr of successive zero results by the generator before the search space is seen as exhausted', type=int, default=10)
         optional.add_argument('--abbreviate_job_names', help='Abbreviate pending job names (r = running, p = pending, u = unknown, c = cancelling)', action='store_true', default=False)
         optional.add_argument('--orchestrator_file', help='An orchestrator file', default=None, type=str)
@@ -576,7 +575,7 @@ class ConfigLoader:
         optional.add_argument('--username', help='A username for live share', default=None, type=str)
         optional.add_argument('--max_failed_jobs', help='Maximum number of failed jobs before the search is cancelled. Is defaulted to the value of --max_eval', default=None, type=int)
         optional.add_argument('--num_cpus_main_job', help='Number of CPUs for the main job', default=None, type=int)
-        optional.add_argument('--calculate_pareto_front_of_job', help='This can be used to calculate a pareto-front for a multi-objective job that previously has results, but has been cancelled, and has no pareto-front (yet)', default=None, type=str)
+        optional.add_argument('--calculate_pareto_front_of_job', help='This can be used to calculate a pareto-front for a multi-objective job that previously has results, but has been cancelled, and has no pareto-front (yet)', type=str, nargs='+', default=[])
         optional.add_argument('--show_generate_time_table', help='Generate a table at the end, showing how much time was spent trying to generate new points', action='store_true', default=False)
         optional.add_argument('--force_choice_for_ranges', help='Force float ranges to be converted to choice', action='store_true', default=False)
 
@@ -710,16 +709,14 @@ class ConfigLoader:
 loader = ConfigLoader()
 args = loader.parse_arguments()
 
+original_result_names = args.result_names
+
 if args.seed is not None:
     set_rng_seed(args.seed)
 
-if args.max_eval is None and args.generation_strategy is None and args.continue_previous_job is None and not args.calculate_pareto_front_of_job:
+if args.max_eval is None and args.generation_strategy is None and args.continue_previous_job is None and (not args.calculate_pareto_front_of_job or len(args.calculate_pareto_front_of_job) == 0):
     print_red("Either --max_eval or --generation_strategy must be set.")
     my_exit(104)
-
-if not 0 <= args.pareto_front_confidence <= 1:
-    print_yellow("--pareto_front_confidence must be between 0 and 1, will be set to 1")
-    args.pareto_front_confidence = 1
 
 arg_result_names = []
 arg_result_min_or_max = []
@@ -1306,7 +1303,7 @@ def append_and_read(file: str, nr: int = 0, recursion: int = 0) -> int:
     return 0
 
 @beartype
-def run_live_share_command() -> Tuple[str, str]:
+def run_live_share_command(force: bool = False) -> Tuple[str, str]:
     global shown_run_live_share_command
 
     if get_current_run_folder():
@@ -1314,6 +1311,9 @@ def run_live_share_command() -> Tuple[str, str]:
             _user = get_username()
 
             _command = f"bash {script_dir}/omniopt_share {get_current_run_folder()} --update --username={_user} --no_color"
+
+            if force:
+                _command = f"{_command} --force"
 
             if not shown_run_live_share_command:
                 print_debug(f"run_live_share_command: {_command}")
@@ -1346,7 +1346,7 @@ def extract_and_print_qr(text: str) -> None:
         qr.print_ascii(out=sys.stdout)
 
 @beartype
-def live_share() -> bool:
+def live_share(force: bool = False) -> bool:
     global SHOWN_LIVE_SHARE_COUNTER
 
     try:
@@ -1356,7 +1356,7 @@ def live_share() -> bool:
         if not get_current_run_folder():
             return False
 
-        stdout, stderr = run_live_share_command()
+        stdout, stderr = run_live_share_command(force)
 
         if SHOWN_LIVE_SHARE_COUNTER == 0 and stderr:
             print_green(stderr)
@@ -1912,7 +1912,7 @@ def get_file_content_or_exit(filepath: str, error_msg: str, exit_code: int) -> s
     return get_file_as_string(filepath).strip()
 
 @beartype
-def check_param_or_exit(param: Optional[Union[list, str]], error_msg: str, exit_code: int) -> None:
+def check_param_or_exit(param: Any, error_msg: str, exit_code: int) -> None:
     if param is None:
         print_red(error_msg)
         my_exit(exit_code)
@@ -1934,17 +1934,17 @@ def check_continue_previous_job(continue_previous_job: Optional[str]) -> dict:
 @beartype
 def check_required_parameters(_args: Any) -> None:
     check_param_or_exit(
-        _args.parameter or _args.continue_previous_job or args.calculate_pareto_front_of_job,
+        _args.parameter or _args.continue_previous_job or args.calculate_pareto_front_of_job is None or len(args.calculate_pareto_front_of_job) == 0,
         "Either --parameter, --calculate_pareto_front_of_job or --continue_previous_job is required. Both were not found.",
         19
     )
     check_param_or_exit(
-        _args.run_program or _args.continue_previous_job or args.calculate_pareto_front_of_job,
+        _args.run_program or _args.continue_previous_job or args.calculate_pareto_front_of_job is None or len(args.calculate_pareto_front_of_job) == 0,
         "--run_program or --calculate_pareto_front_of_job needs to be defined when --continue_previous_job is not set",
         19
     )
     check_param_or_exit(
-        global_vars.get("experiment_name") or _args.continue_previous_job or args.calculate_pareto_front_of_job,
+        global_vars.get("experiment_name") or _args.continue_previous_job or args.calculate_pareto_front_of_job is None or len(args.calculate_pareto_front_of_job) == 0,
         "--experiment_name or --calculate_pareto_front_of_job needs to be defined when --continue_previous_job is not set",
         19
     )
@@ -1964,7 +1964,7 @@ def load_time_or_exit(_args: Any) -> None:
         else:
             print_yellow(f"Time-setting: The contents of {time_file} do not contain a single number")
     else:
-        if not args.calculate_pareto_front_of_job:
+        if len(args.calculate_pareto_front_of_job) == 0:
             print_red("Missing --time parameter. Cannot continue.")
             my_exit(19)
 
@@ -2018,7 +2018,7 @@ def load_max_eval_or_exit(_args: Any) -> None:
         else:
             print_yellow(f"max_eval-setting: The contents of {max_eval_file} do not contain a single number")
     else:
-        if not args.calculate_pareto_front_of_job:
+        if len(args.calculate_pareto_front_of_job) == 0:
             print_yellow("--max_eval needs to be set")
 
 try:
@@ -2322,7 +2322,7 @@ def generate_values(name: str, value_type: str, lower_bound: Union[int, float], 
     raise ValueError("Unsupported value_type")
 
 @beartype
-def create_range_param(name: Union[list, str], lower_bound: Union[float, int], upper_bound: Union[float, int], value_type: str, log_scale: bool, force_classic: bool = False) -> dict:
+def create_range_param(name: str, lower_bound: Union[float, int], upper_bound: Union[float, int], value_type: str, log_scale: bool, force_classic: bool = False) -> dict:
     if args.force_choice_for_ranges and not force_classic:
         return {
             'is_ordered': False,
@@ -3244,7 +3244,7 @@ def print_stdout_and_stderr(stdout: Optional[str], stderr: Optional[str]) -> Non
             original_print("stderr was empty")
 
 @beartype
-def evaluate_print_stuff(parameters: dict, program_string_with_params: str, stdout: Optional[str], stderr: Optional[str], exit_code: Optional[int], _signal: Optional[int], result: Optional[Union[Dict[str, Optional[float]], List[float], int, float]], start_time: Union[float, int], end_time: Union[float, int], run_time: Union[float, int], final_result: dict) -> None:
+def _evaluate_print_stuff(parameters: dict, program_string_with_params: str, stdout: Optional[str], stderr: Optional[str], exit_code: Optional[int], _signal: Optional[int], result: Optional[Union[Dict[str, Optional[float]], List[float], int, float]], start_time: Union[float, int], end_time: Union[float, int], run_time: Union[float, int], final_result: dict) -> None:
     if not args.tests:
         original_print(f"Parameters: {json.dumps(parameters)}")
 
@@ -3390,7 +3390,7 @@ def evaluate(parameters: dict) -> Optional[Union[int, float, Dict[str, Optional[
             else:
                 write_failed_logs(parameters, "No Result")
 
-            evaluate_print_stuff(
+            _evaluate_print_stuff(
                 parameters,
                 program_string_with_params,
                 stdout,
@@ -3952,27 +3952,31 @@ def write_to_file(file_path: str, content: str) -> None:
 
 @beartype
 def create_result_table(res_name: str, best_params: Optional[Dict[str, Any]], total_str: str, failed_error_str: str) -> Optional[Table]:
-    min_or_max = arg_result_min_or_max[arg_result_names.index(res_name)]
-    bracket_string = f"{total_str}{failed_error_str}"
+    arg_result_min_or_max_index = arg_result_names.index(res_name)
 
-    table = Table(
-        show_header=True,
-        header_style="bold",
-        title=f"Best {res_name}, {min_or_max} ({bracket_string})"
-    )
+    try:
+        min_or_max = arg_result_min_or_max[arg_result_min_or_max_index]
+        bracket_string = f"{total_str}{failed_error_str}"
 
-    if best_params and "parameters" in best_params:
-        row_data = {**best_params['parameters']}
-        result_name = arg_result_names[0]
-        row_data[result_name] = best_params.get(result_name, '?')
+        table = Table(
+            show_header=True,
+            header_style="bold",
+            title=f"Best {res_name}, {min_or_max} ({bracket_string})"
+        )
 
-        for col in row_data.keys():
-            table.add_column(col, style="bold")
+        if best_params and "parameters" in best_params:
+            row_data = {**best_params['parameters']}
+            result_name = arg_result_names[0]
+            row_data[result_name] = best_params.get(result_name, '?')
 
-        table.add_row(*[str(v) for v in row_data.values()])
+            for col in row_data.keys():
+                table.add_column(col, style="bold")
 
-        return table
+            table.add_row(*[str(v) for v in row_data.values()])
 
+            return table
+    except IndexError as e:
+        print_red(f"create_result_table: Error {e}")
     return None
 
 @beartype
@@ -4099,10 +4103,10 @@ def abandon_all_jobs() -> None:
             print_debug(f"Job {job} could not be abandoned.")
 
 @beartype
-def show_pareto_or_error_msg(res_names: list = arg_result_names, force: bool = False) -> None:
+def show_pareto_or_error_msg(path_to_calculate: str, res_names: list = arg_result_names, force: bool = False) -> None:
     if len(res_names) > 1:
         try:
-            show_pareto_frontier_data(res_names, force)
+            show_pareto_frontier_data(path_to_calculate, res_names, force)
         except Exception as e:
             print_red(f"show_pareto_frontier_data() failed with exception '{e}'")
     else:
@@ -4114,7 +4118,7 @@ def end_program(_force: Optional[bool] = False, exit_code: Optional[int] = None)
 
     wait_for_jobs_to_complete()
 
-    show_pareto_or_error_msg(arg_result_names, True)
+    show_pareto_or_error_msg(get_current_run_folder(), arg_result_names, True)
 
     if os.getpid() != main_pid:
         print_debug("returning from end_program, because it can only run in the main thread, not any forks")
@@ -4647,7 +4651,9 @@ def replace_parameters_for_continued_jobs(parameter: Optional[list], cli_params_
     return experiment_parameters
 
 @beartype
-def load_experiment_parameters_from_checkpoint_file(checkpoint_file: str) -> dict:
+def load_experiment_parameters_from_checkpoint_file(checkpoint_file: str, _die: bool = True) -> Optional[dict]:
+    experiment_parameters = None
+
     try:
         f = open(checkpoint_file, encoding="utf-8")
         experiment_parameters = json.load(f)
@@ -4657,7 +4663,8 @@ def load_experiment_parameters_from_checkpoint_file(checkpoint_file: str) -> dic
             experiment_parameters = json.load(f)
     except json.decoder.JSONDecodeError:
         print_red(f"Error parsing checkpoint_file {checkpoint_file}")
-        my_exit(47)
+        if _die:
+            my_exit(47)
 
     return experiment_parameters
 
@@ -4811,24 +4818,6 @@ def get_type_short(typename: str) -> str:
     return typename
 
 @beartype
-def get_converted_to_choice(param: dict, experiment_parameters: Union[list, dict], k: int) -> str:
-    exp_params = experiment_parameters
-
-    converted_to_choice = ""
-
-    if "experiment" in exp_params:
-        exp_params = exp_params["experiment"]
-
-    if "__type" in param:
-        if param["__type"] == "RangeParameter" and exp_params["__type"] == "choice":
-            converted_to_choice = "Y"
-    else:
-        if param["type"] == "range" and exp_params[k]["type"] == "choice":
-            converted_to_choice = "Y"
-
-    return converted_to_choice
-
-@beartype
 def parse_single_experiment_parameter_table(classic_params: Union[list, dict]) -> list:
     rows: list = []
 
@@ -4836,9 +4825,6 @@ def parse_single_experiment_parameter_table(classic_params: Union[list, dict]) -
 
     for param in classic_params:
         _type = ""
-        #converted_to_choice = get_converted_to_choice(param, experiment_parameters, k)
-
-        converted_to_choice = ""
 
         if "__type" in param:
             _type = param["__type"]
@@ -4872,14 +4858,14 @@ def parse_single_experiment_parameter_table(classic_params: Union[list, dict]) -
             else:
                 _upper = param["bounds"][1]
 
-            rows.append([str(param["name"]), get_type_short(_type), str(helpers.to_int_when_possible(_lower)), str(helpers.to_int_when_possible(_upper)), "", value_type, log_scale, converted_to_choice])
+            rows.append([str(param["name"]), get_type_short(_type), str(helpers.to_int_when_possible(_lower)), str(helpers.to_int_when_possible(_upper)), "", value_type, log_scale])
         elif "fixed" in _type.lower():
-            rows.append([str(param["name"]), get_type_short(_type), "", "", str(helpers.to_int_when_possible(param["value"])), "", "", converted_to_choice])
+            rows.append([str(param["name"]), get_type_short(_type), "", "", str(helpers.to_int_when_possible(param["value"])), "", ""])
         elif "choice" in _type.lower():
             values = param["values"]
             values = [str(helpers.to_int_when_possible(item)) for item in values]
 
-            rows.append([str(param["name"]), get_type_short(_type), "", "", ", ".join(values), "", "", converted_to_choice])
+            rows.append([str(param["name"]), get_type_short(_type), "", "", ", ".join(values), "", ""])
         else:
             print_red(f"Type {_type} is not yet implemented in the overview table.")
             my_exit(15)
@@ -4957,7 +4943,7 @@ def print_result_names_overview_table() -> None:
 
         return None
 
-    if args.continue_previous_job is not None and args.result_names is not None:
+    if args.continue_previous_job is not None and args.result_names is not None and len(args.result_names) != 0 and original_result_names is not None and len(original_result_names) != 0:
         print_yellow("--result_names will be ignored in continued jobs. The result names from the previous job will be used.")
 
     if ax_client.experiment.optimization_config.is_moo_problem:
@@ -5036,9 +5022,6 @@ def print_experiment_parameters_table(classic_param: Union[list, dict]) -> None:
     rows = parse_single_experiment_parameter_table(classic_param)
 
     columns = ["Name", "Type", "Lower bound", "Upper bound", "Values", "Type", "Log Scale?"]
-
-    if args.force_choice_for_ranges is not None:
-        columns.append("Converted to Choice?")
 
     data = []
     for row in rows:
@@ -5595,33 +5578,27 @@ def insert_job_into_ax_client(arm_params: dict, result: dict, new_job_type: str 
 
     while not done_converting:
         try:
-            if ax_client:
-                new_trial = ax_client.attach_trial(arm_params)
-                if not isinstance(new_trial, tuple) or len(new_trial) < 2:
-                    raise RuntimeError("attach_trial didn't return the expected tuple")
+            new_trial = ax_client.attach_trial(arm_params)
+            if not isinstance(new_trial, tuple) or len(new_trial) < 2:
+                raise RuntimeError("attach_trial didn't return the expected tuple")
 
-                new_trial_idx = new_trial[1]
+            new_trial_idx = new_trial[1]
 
-                trial = ax_client.experiment.trials.get(new_trial_idx)
-                if trial is None:
-                    raise RuntimeError(f"Trial with index {new_trial_idx} not found")
+            trial = ax_client.experiment.trials.get(new_trial_idx)
+            if trial is None:
+                raise RuntimeError(f"Trial with index {new_trial_idx} not found")
 
-                arm = Arm(parameters=arm_params, name=f'{new_trial_idx}_0')
-                manual_generator_run = GeneratorRun(arms=[arm], generation_node_name=new_job_type)
+            arm = Arm(parameters=arm_params, name=f'{new_trial_idx}_0')
+            manual_generator_run = GeneratorRun(arms=[arm], generation_node_name=new_job_type)
 
-                trial._generator_run = manual_generator_run
+            trial._generator_run = manual_generator_run
 
-                ax_client.complete_trial(trial_index=new_trial_idx, raw_data=result)
+            ax_client.complete_trial(trial_index=new_trial_idx, raw_data=result)
 
-                done_converting = True
-                save_results_csv()
+            done_converting = True
+            save_results_csv()
 
-                return True
-
-            print_red("Error getting ax_client")
-            my_exit(9)
-
-            return False
+            return True
         except ax.exceptions.core.UnsupportedError as e:
             parsed_error = parse_parameter_type_error(e)
 
@@ -6348,19 +6325,7 @@ def handle_restart_on_different_node(stdout_path: str, hostname_from_out_file: U
         print_red(f"Cannot do RestartOnDifferentNode because the host could not be determined from {stdout_path}")
 
 @beartype
-def handle_exclude_node_and_restart_all(stdout_path: str, hostname_from_out_file: Union[None, str]) -> None:
-    if hostname_from_out_file:
-        if not is_already_in_defective_nodes(hostname_from_out_file):
-            print_yellow(f"ExcludeNodeAndRestartAll not yet fully implemented. Adding {hostname_from_out_file} to unavailable hosts.")
-            count_defective_nodes(None, hostname_from_out_file)
-        else:
-            print_yellow(f"ExcludeNodeAndRestartAll was triggered for node {hostname_from_out_file}, but it was already in defective nodes and won't be added again.")
-    else:
-        print_red(f"Cannot do ExcludeNodeAndRestartAll because the host could not be determined from {stdout_path}")
-
-@beartype
 def _orchestrate(stdout_path: str, trial_index: int) -> None:
-    # TODO: Implement ExcludeNodeAndRestartAll fully
     behavs = check_orchestrator(stdout_path, trial_index)
 
     if not behavs or behavs is None:
@@ -6372,7 +6337,6 @@ def _orchestrate(stdout_path: str, trial_index: int) -> None:
         "ExcludeNode": lambda: handle_exclude_node(stdout_path, hostname_from_out_file),
         "Restart": lambda: handle_restart(stdout_path, trial_index),
         "RestartOnDifferentNode": lambda: handle_restart_on_different_node(stdout_path, hostname_from_out_file, trial_index),
-        "ExcludeNodeAndRestartAll": lambda: handle_exclude_node_and_restart_all(stdout_path, hostname_from_out_file)
     }
 
     for behav in behavs:
@@ -6703,6 +6667,12 @@ def get_batched_arms(nr_of_jobs_to_get: int) -> list:
     batched_arms: list = []
     attempts = 0
 
+    if global_gs is None:
+        print_red("Global generation strategy is not set. This is a bug in OmniOpt2.")
+        my_exit(107)
+
+        return []
+
     while len(batched_arms) != nr_of_jobs_to_get:
         if attempts > args.max_attempts_for_generation:
             print_debug(f"_fetch_next_trials: Stopped after {attempts} attempts: could not generate enough arms "
@@ -6739,6 +6709,12 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
     if not ax_client:
         print_red("ax_client was not defined")
         my_exit(9)
+
+    if global_gs is None:
+        print_red("Global generation strategy is not set. This is a bug in OmniOpt2.")
+        my_exit(107)
+
+        return None
 
     trials_dict: dict = {}
 
@@ -7037,9 +7013,9 @@ def plot_times_for_creation_and_submission() -> None:
 def plot_times_vs_jobs_sixel(
     times: List[float],
     job_counts: List[int],
-    xlabel: Optional[str] = "Iteration",
-    ylabel: Optional[str] = "Duration (seconds)",
-    title: Optional[str] = "Times vs Jobs"
+    xlabel: str = "Iteration",
+    ylabel: str = "Duration (seconds)",
+    title: str = "Times vs Jobs"
 ) -> None:
     if not times or not job_counts or len(times) != len(job_counts):
         print("[italic yellow]No valid data or mismatched lengths to plot.[/]")
@@ -8184,26 +8160,39 @@ def pareto_front_general(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     return np.where(~is_dominated)[0]
 
 @beartype
-def _pareto_front_aggregate_data(
-    data: ax.core.data.Data
-) -> Dict[Tuple[int, str], Dict[str, Dict[str, float]]]:
-    records: dict = defaultdict(lambda: {'means': {}, 'sems': {}})
+def _pareto_front_aggregate_data(path_to_calculate: str) -> Optional[Dict[Tuple[int, str], Dict[str, Dict[str, float]]]]:
+    results_csv_file = f"{path_to_calculate}/results.csv"
+    result_names_file = f"{path_to_calculate}/result_names.txt"
 
-    for row in data.df.itertuples(index=False):
-        trial_index = row.trial_index
-        arm_name = row.arm_name
-        metric = row.metric_name
-        _mean = row.mean
-        sem = row.sem
+    if not os.path.exists(results_csv_file) or not os.path.exists(result_names_file):
+        return None
 
-        key = (trial_index, arm_name)
-        records[key]['means'][metric] = _mean
-        records[key]['sems'][metric] = sem
+    # Lade die Ergebnisnamen
+    with open(result_names_file, mode="r", encoding="utf-8") as f:
+        result_names = [line.strip() for line in f if line.strip()]
+
+    records: dict = defaultdict(lambda: {'means': {}})
+
+    # Lese die CSV-Datei
+    with open(results_csv_file, encoding="utf-8", mode="r", newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            trial_index = int(row['trial_index'])
+            arm_name = row['arm_name']
+            key = (trial_index, arm_name)
+
+            for metric in result_names:
+                if metric in row:
+                    try:
+                        records[key]['means'][metric] = float(row[metric])
+                    except ValueError:
+                        continue  # Wenn der Wert nicht konvertierbar ist
 
     return records
 
 @beartype
 def _pareto_front_filter_complete_points(
+    path_to_calculate: str,
     records: Dict[Tuple[int, str], Dict[str, Dict[str, float]]],
     primary_name: str,
     secondary_name: str
@@ -8216,7 +8205,7 @@ def _pareto_front_filter_complete_points(
             y_val = means[secondary_name]
             points.append((key, x_val, y_val))
     if len(points) == 0:
-        raise ValueError("No full data points with both objectives found.")
+        raise ValueError(f"No full data points with both objectives found in {path_to_calculate}.")
     return points
 
 @beartype
@@ -8256,54 +8245,88 @@ def _pareto_front_select_pareto_points(
     selected_points = [points[i] for i in sorted_indices]
     return selected_points
 
-@beartype
 def _pareto_front_build_return_structure(
+    path_to_calculate: str,
     selected_points: List[Tuple[Any, float, float]],
     records: Dict[Tuple[int, str], Dict[str, Dict[str, float]]],
-    experiment: ax.core.experiment.Experiment,
     absolute_metrics: List[str],
     primary_name: str,
     secondary_name: str
 ) -> dict:
+    results_csv_file = f"{path_to_calculate}/results.csv"
+    result_names_file = f"{path_to_calculate}/result_names.txt"
+
+    # Lade die Ergebnisnamen
+    with open(result_names_file, mode="r", encoding="utf-8") as f:
+        result_names = [line.strip() for line in f if line.strip()]
+
+    # CSV komplett in dict laden (trial_index als int -> row dict)
+    csv_rows = {}
+    with open(results_csv_file, mode="r", encoding="utf-8", newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            trial_index = int(row['trial_index'])
+            csv_rows[trial_index] = row
+
+    # Statische Spalten, die keine Parameter sind
+    ignored_columns = {'trial_index', 'arm_name', 'trial_status', 'generation_node'}
+    ignored_columns.update(result_names)
+
     param_dicts = []
     means_dict = defaultdict(list)
-    sems_dict = defaultdict(list)
 
     for (trial_index, arm_name), _, _ in selected_points:
-        trial = experiment.trials[trial_index]
-        arm = trial.arms_by_name[arm_name]
-        param_dicts.append(arm.parameters)
+        row = csv_rows.get(trial_index)
+        if row is None or row['arm_name'] != arm_name:
+            continue  # Sicherheitshalber prüfen
 
+        # Parameter extrahieren
+        param_dict = {}
+        for key, value in row.items():
+            if key not in ignored_columns:
+                try:
+                    param_dict[key] = int(value)
+                except ValueError:
+                    try:
+                        param_dict[key] = float(value)
+                    except ValueError:
+                        param_dict[key] = value  # z.B. choice_param als String
+
+        param_dicts.append(param_dict)
+
+        # Mittelwerte aus records übernehmen
         for metric in absolute_metrics:
             means_dict[metric].append(records[(trial_index, arm_name)]['means'].get(metric, float("nan")))
-            sems_dict[metric].append(records[(trial_index, arm_name)]['sems'].get(metric, float("nan")))
 
-    return {
+    ret = {
         primary_name: {
             secondary_name: {
                 "absolute_metrics": absolute_metrics,
                 "param_dicts": param_dicts,
-                "means": dict(means_dict),
-                "sems": dict(sems_dict),
+                "means": dict(means_dict)
             },
             "absolute_metrics": absolute_metrics
         }
     }
 
+    return ret
+
 @beartype
 def custom_pareto_frontier(
-    experiment: ax.core.experiment.Experiment,
-    data: ax.core.data.Data,
-    primary_objective: ax.core.metric.Metric,
-    secondary_objective: ax.core.metric.Metric,
+    path_to_calculate: str,
+    primary_objective: str,
+    secondary_objective: str,
     absolute_metrics: List[str],
     num_points: int
-) -> dict:
-    records = _pareto_front_aggregate_data(data)
-    points = _pareto_front_filter_complete_points(records, primary_objective.name, secondary_objective.name)
-    x, y = _pareto_front_transform_objectives(points, primary_objective.name, secondary_objective.name)
+) -> Optional[dict]:
+    records = _pareto_front_aggregate_data(path_to_calculate)
+    if records is None:
+        return None
+
+    points = _pareto_front_filter_complete_points(path_to_calculate, records, primary_objective, secondary_objective)
+    x, y = _pareto_front_transform_objectives(points, primary_objective, secondary_objective)
     selected_points = _pareto_front_select_pareto_points(x, y, points, num_points)
-    result = _pareto_front_build_return_structure(selected_points, records, experiment, absolute_metrics, primary_objective.name, secondary_objective.name)
+    result = _pareto_front_build_return_structure(path_to_calculate, selected_points, records, absolute_metrics, primary_objective, secondary_objective)
 
     return result
 
@@ -8320,17 +8343,17 @@ def sanitize_json(obj: Any) -> Any:
     return obj
 
 @beartype
-def set_arg_min_or_max_if_required() -> None:
+def set_arg_min_or_max_if_required(path_to_calculate: str) -> None:
     global arg_result_names
     global arg_result_min_or_max
 
-    if args.calculate_pareto_front_of_job:
+    if path_to_calculate:
         _found_result_min_max = []
         _default_min_max = "min"
 
         _found_result_names = []
 
-        _look_for_result_names_file = f"{args.calculate_pareto_front_of_job}/result_names.txt"
+        _look_for_result_names_file = f"{path_to_calculate}/result_names.txt"
 
         if os.path.exists(_look_for_result_names_file):
             try:
@@ -8348,7 +8371,7 @@ def set_arg_min_or_max_if_required() -> None:
             print_yellow(f"{_look_for_result_names_file} not found!")
 
         for _n in range(len(_found_result_names)):
-            _min_max = get_min_max_from_file(args.calculate_pareto_front_of_job, _n, _default_min_max)
+            _min_max = get_min_max_from_file(path_to_calculate, _n, _default_min_max)
 
             _found_result_min_max.append(_min_max)
 
@@ -8356,11 +8379,7 @@ def set_arg_min_or_max_if_required() -> None:
         arg_result_min_or_max = _found_result_min_max
 
 @beartype
-def get_calculated_or_cached_frontier(metric_i: ax.core.metric.Metric, metric_j: ax.core.metric.Metric, res_names: list, force: bool) -> Any:
-    if ax_client is None:
-        print_red("get_calculated_or_cached_frontier: Cannot get pareto-front. ax_client is undefined.")
-        return None
-
+def get_calculated_or_cached_frontier(path_to_calculate: str, metric_i: str, metric_j: str, res_names: list, force: bool) -> Any:
     try:
         state_dir = os.path.join(get_current_run_folder(), "state_files")
         os.makedirs(state_dir, exist_ok=True)
@@ -8378,18 +8397,19 @@ def get_calculated_or_cached_frontier(metric_i: ax.core.metric.Metric, metric_j:
                     frontier = pickle.loads(binary_data)
                     return frontier
 
-        data = ax_client.experiment.fetch_data()
-
-        set_arg_min_or_max_if_required()
+        set_arg_min_or_max_if_required(path_to_calculate)
 
         frontier = custom_pareto_frontier(
-            experiment=ax_client.experiment,
-            data=data,
+            path_to_calculate=path_to_calculate,
             primary_objective=metric_i,
             secondary_objective=metric_j,
             absolute_metrics=res_names,
             num_points=count_done_jobs()
         )
+
+        if frontier is None:
+            print_red(f"Could not get frontier for {path_to_calculate}")
+            return None
 
         frontier = sanitize_json(frontier)
 
@@ -8407,7 +8427,7 @@ def get_calculated_or_cached_frontier(metric_i: ax.core.metric.Metric, metric_j:
 
 @beartype
 def live_share_after_pareto() -> None:
-    if args.calculate_pareto_front_of_job or args.live_share:
+    if args.calculate_pareto_front_of_job is not None or args.live_share:
         if not args.live_share:
             live_share_file = f"{args.calculate_pareto_front_of_job}/state_files/live_share"
             if os.path.exists(live_share_file):
@@ -8424,19 +8444,15 @@ def live_share_after_pareto() -> None:
 
         SHOWN_LIVE_SHARE_COUNTER = 1
 
-        live_share()
+        live_share(True)
 
 @beartype
-def show_pareto_frontier_data(res_names: list, force: bool = False) -> None:
+def show_pareto_frontier_data(path_to_calculate: str, res_names: list, force: bool = False) -> None:
     if len(res_names) <= 1:
         print_debug(f"--result_names (has {len(res_names)} entries) must be at least 2.")
         return
 
-    if ax_client is None:
-        print_red("show_pareto_frontier_data: Cannot plot pareto-front. ax_client is undefined.")
-        return
-
-    objectives = ax_client.experiment.optimization_config.objective.objectives
+    objectives = arg_result_names
     pareto_front_data: dict = {}
     all_combinations = list(combinations(range(len(objectives)), 2))
     collected_data = []
@@ -8453,15 +8469,16 @@ def show_pareto_frontier_data(res_names: list, force: bool = False) -> None:
 
         for i, j in all_combinations:
             if not skip:
-                metric_i = objectives[i].metric
-                metric_j = objectives[j].metric
+                metric_i = objectives[i]
+                metric_j = objectives[j]
 
                 try:
-                    calculated_frontier = get_calculated_or_cached_frontier(metric_i, metric_j, res_names, force)
+                    calculated_frontier = get_calculated_or_cached_frontier(path_to_calculate, metric_i, metric_j, res_names, force)
 
-                    collected_data.append((i, j, metric_i, metric_j, calculated_frontier))
+                    if calculated_frontier is not None:
+                        collected_data.append((i, j, metric_i, metric_j, calculated_frontier))
                 except ax.exceptions.core.DataRequiredError as e:
-                    print_red(f"Error computing Pareto frontier for {metric_i.name} and {metric_j.name}: {e}")
+                    print_red(f"Error computing Pareto frontier for {metric_i} and {metric_j}: {e}")
                 except SignalINT:
                     print_red("Calculating pareto-fronts was cancelled by pressing CTRL-c")
                     skip = True
@@ -8469,36 +8486,41 @@ def show_pareto_frontier_data(res_names: list, force: bool = False) -> None:
             progress.update(task, advance=1)
 
     for i, j, metric_i, metric_j, calculated_frontier in collected_data:
-        plot_pareto_frontier_sixel(calculated_frontier, i, j)
+        hide_pareto = os.environ.get('HIDE_PARETO_FRONT_TABLE_DATA')
+        if hide_pareto is None:
+            plot_pareto_frontier_sixel(calculated_frontier, i, j)
+        else:
+            print(f"Not showing pareto-front-sixel for {path_to_calculate}")
 
-        if metric_i.name not in pareto_front_data:
-            pareto_front_data[metric_i.name] = {}
+        if metric_i not in pareto_front_data:
+            pareto_front_data[metric_i] = {}
 
-        metric_i_name = metric_i.name
-        metric_j_name = metric_j.name
+        metric_i_name = metric_i
+        metric_j_name = metric_j
 
         cf = calculated_frontier[metric_i_name][metric_j_name]
 
         _param_dicts = cf["param_dicts"]
         _means = cf["means"]
-        _sems = cf["sems"]
 
-        pareto_front_data[metric_i.name][metric_j.name] = {
+        pareto_front_data[metric_i][metric_j] = {
             "param_dicts": _param_dicts,
             "means": _means,
-            "sems": _sems,
             "absolute_metrics": arg_result_names
         }
 
         rich_table = pareto_front_as_rich_table(
             _param_dicts,
             arg_result_names,
-            metric_j.name,
-            metric_i.name
+            metric_j,
+            metric_i
         )
 
         if rich_table is not None:
-            console.print(rich_table)
+            if hide_pareto is None:
+                console.print(rich_table)
+            else:
+                print(f"Not showing pareto-front-table for {path_to_calculate}")
 
             with open(f"{get_current_run_folder()}/pareto_front_table.txt", mode="a", encoding="utf-8") as text_file:
                 with console.capture() as capture:
@@ -8760,11 +8782,11 @@ def _filter_valid_constraints(constraints: List[str]) -> List[str]:
     return final_constraints_list
 
 @beartype
-def load_username_to_args() -> None:
-    if not args.calculate_pareto_front_of_job:
+def load_username_to_args(path_to_calculate: str) -> None:
+    if not path_to_calculate:
         return
 
-    username_file_path = os.path.join(args.calculate_pareto_front_of_job, "state_files", "username")
+    username_file_path = os.path.join(path_to_calculate, "state_files", "username")
     if os.path.isfile(username_file_path) and not args.username:
         try:
             with open(username_file_path, mode="r", encoding="utf-8") as f:
@@ -8773,52 +8795,95 @@ def load_username_to_args() -> None:
             print_red(f"Error reading from file: {e}")
 
 @beartype
+def find_results_paths(base_path: str) -> list:
+    if not os.path.exists(base_path):
+        raise FileNotFoundError(f"Path not found: {base_path}")
+
+    if not os.path.isdir(base_path):
+        raise NotADirectoryError(f"No directory: {base_path}")
+
+    direct_result_file = os.path.join(base_path, "results.csv")
+    if os.path.isfile(direct_result_file):
+        return [base_path]
+
+    found_paths = []
+    with console.status("[bold green]Searching for subfolders with results.csv..."):
+        for root, _, files in os.walk(base_path):
+            if "results.csv" in files:
+                found_paths.append(root)
+
+    return found_paths
+
+@beartype
 def post_job_calculate_pareto_front() -> None:
     if not args.calculate_pareto_front_of_job:
         return
 
+    failure = False
+
+    for _path_to_calculate in args.calculate_pareto_front_of_job:
+        try:
+            found_paths = find_results_paths(_path_to_calculate)
+            for path_to_calculate in found_paths:
+                if _post_job_calculate_pareto_front(path_to_calculate):
+                    failure = True
+        except (FileNotFoundError, NotADirectoryError) as e:
+            print_red(f"post_job_calculate_pareto_front: find_results_paths('{_path_to_calculate}') failed with {e}")
+
+            failure = True
+
+    if failure:
+        my_exit(24)
+
+    my_exit(0)
+
+@beartype
+def _post_job_calculate_pareto_front(path_to_calculate: str) -> bool:
+    # Returns true if it fails
+    if not path_to_calculate:
+        return True
+
     global CURRENT_RUN_FOLDER
-    global ax_client
     global RESULT_CSV_FILE
     global arg_result_names
 
-    if not args.calculate_pareto_front_of_job:
+    if not path_to_calculate:
         print_red("Can only calculate pareto front of previous job when --calculate_pareto_front_of_job is set")
-        my_exit(24)
+        return True
 
-    if not os.path.exists(args.calculate_pareto_front_of_job):
-        print_red(f"Path '{args.calculate_pareto_front_of_job}' does not exist")
-        my_exit(24)
+    if not os.path.exists(path_to_calculate):
+        print_red(f"Path '{path_to_calculate}' does not exist")
+        return True
 
-    ax_client_json = f"{args.calculate_pareto_front_of_job}/state_files/ax_client.experiment.json"
+    ax_client_json = f"{path_to_calculate}/state_files/ax_client.experiment.json"
 
     if not os.path.exists(ax_client_json):
         print_red(f"Path '{ax_client_json}' not found")
-        my_exit(24)
+        return True
 
-    checkpoint_file: str = f"{args.calculate_pareto_front_of_job}/state_files/checkpoint.json"
+    checkpoint_file: str = f"{path_to_calculate}/state_files/checkpoint.json"
     if not os.path.exists(checkpoint_file):
         print_red(f"The checkpoint file '{checkpoint_file}' does not exist")
-        my_exit(24)
+        return True
 
-    RESULT_CSV_FILE = f"{args.calculate_pareto_front_of_job}/results.csv"
+    RESULT_CSV_FILE = f"{path_to_calculate}/results.csv"
     if not os.path.exists(RESULT_CSV_FILE):
         print_red(f"{RESULT_CSV_FILE} not found")
-        my_exit(24)
+        return True
 
     res_names = []
 
-    res_names_file = f"{args.calculate_pareto_front_of_job}/result_names.txt"
+    res_names_file = f"{path_to_calculate}/result_names.txt"
     if not os.path.exists(res_names_file):
         print_red(f"File '{res_names_file}' does not exist")
-        my_exit(24)
+        return True
 
     try:
         with open(res_names_file, "r", encoding="utf-8") as file:
             lines = file.readlines()
     except Exception as e:
         print_red(f"Error reading file '{res_names_file}': {e}")
-        my_exit(24)
+        return True
 
     for line in lines:
         entry = line.strip()
@@ -8826,30 +8891,23 @@ def post_job_calculate_pareto_front() -> None:
             res_names.append(entry)
 
     if len(res_names) < 2:
-        print_red(f"Error: There are less than 2 result names (is: {len(res_names)}, {', '.join(res_names)}). Cannot continue calculating the pareto front.")
-        my_exit(24)
+        print_red(f"Error: There are less than 2 result names (is: {len(res_names)}, {', '.join(res_names)}) in {path_to_calculate}. Cannot continue calculating the pareto front.")
+        return True
 
-    load_username_to_args()
+    load_username_to_args(path_to_calculate)
 
-    CURRENT_RUN_FOLDER = args.calculate_pareto_front_of_job
-
-    ax_client = AxClient(
-        verbose_logging=args.verbose
-    )
+    CURRENT_RUN_FOLDER = path_to_calculate
 
     arg_result_names = res_names
 
-    experiment_parameters = load_experiment_parameters_from_checkpoint_file(checkpoint_file)
+    experiment_parameters = load_experiment_parameters_from_checkpoint_file(checkpoint_file, False)
 
-    tmp_file_path = get_tmp_file_from_json(experiment_parameters)
-    ax_client = AxClient.load_from_json_file(tmp_file_path)
-    os.unlink(tmp_file_path)
+    if experiment_parameters is None:
+        return True
 
-    ax_client = cast(AxClient, ax_client)
+    show_pareto_or_error_msg(path_to_calculate, res_names, True)
 
-    show_pareto_or_error_msg(res_names)
-
-    my_exit(0)
+    return False
 
 @beartype
 def set_arg_states_from_continue() -> None:
@@ -8919,7 +8977,8 @@ def main() -> None:
 
         write_failed_logs(data_dict, error_description)
 
-    save_state_files()
+    if len(args.calculate_pareto_front_of_job) == 0:
+        save_state_files()
 
     print_run_info()
 

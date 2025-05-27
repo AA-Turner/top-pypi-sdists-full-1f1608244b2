@@ -18,6 +18,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 """State Module."""
+
 from __future__ import annotations
 
 import logging
@@ -30,7 +31,6 @@ from molecule import util
 
 
 if TYPE_CHECKING:
-
     from molecule.config import Config
 
 
@@ -87,7 +87,7 @@ def marshal(func: F) -> F:
         func(self, *args, **kwargs)
         self._write_state_file()
 
-    return cast(F, wrapper)
+    return cast("F", wrapper)
 
 
 class State:
@@ -230,7 +230,7 @@ class State:
         }
 
     def _load_file(self) -> StateData:
-        return cast(StateData, util.safe_load_file(self._state_file))
+        return cast("StateData", util.safe_load_file(self._state_file))
 
     def _write_state_file(self) -> None:
         util.write_file(self.state_file, util.safe_dump(self._data))

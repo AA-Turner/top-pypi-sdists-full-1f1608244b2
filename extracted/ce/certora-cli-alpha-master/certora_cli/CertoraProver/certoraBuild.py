@@ -3542,8 +3542,9 @@ class CertoraBuildGenerator:
                 raise Util.CertoraUserInputError(f"collect_sources: {path_to_file} does not exist cwd - {Path.cwd()}."
                                                  f"abs - {os.path.normpath(Path.cwd() / path_to_file)}")
 
-        sources = set()
-        sources |= sources_from_SDCs
+        sources = set(sources_from_SDCs)
+        if context.files:
+            sources.update(Path(p) for p in context.files)  # all files in "files" attribute are uploaded
         sources |= certora_verify_generator.get_spec_files()
         if Util.PACKAGE_FILE.exists():
             add_to_sources(Util.PACKAGE_FILE)
@@ -3652,7 +3653,8 @@ def build_source_tree(sources: Set[Path], context: CertoraContext, overwrite: bo
         build_logger.debug("Couldn't copy repro conf to certora sources.", exc_info=e)
         raise
 
-def build_from_scratch(certora_build_generator: CertoraBuildGenerator,
+def build_from_scratch(context: CertoraContext,
+                       certora_build_generator: CertoraBuildGenerator,
                        certora_verify_generator: CertoraVerifyGenerator,
                        build_cache_enabled: bool) -> CachedFiles:
     """
@@ -3678,9 +3680,15 @@ def build_from_scratch(certora_build_generator: CertoraBuildGenerator,
     may_store_in_build_cache = True
     absolute_sources_dir = Util.get_certora_sources_dir().absolute()
     for sdc in certora_build_generator.SDCs.values():
+
+        # add to cache also source files that were found in the SDCs (e.g., storage extensions)
+        paths_set = sdc.all_contract_files
+        for p in context.files:
+            paths_set.add(Path(p).absolute())
+
         # the contract files in SDCs are relative to .certora_sources. Which isn't good for us here.
         # Need to be relative to original paths
-        for f in sdc.all_contract_files:
+        for f in paths_set:
             if is_relative_to(f, absolute_sources_dir):
                 rel_f = f.relative_to(absolute_sources_dir)
             else:
@@ -3729,7 +3737,7 @@ def build_from_cache_or_scratch(context: CertoraContext,
     cached_files: Optional[CachedFiles] = None
 
     if not context.build_cache:
-        cached_files = build_from_scratch(certora_build_generator,
+        cached_files = build_from_scratch(context, certora_build_generator,
                                           certora_verify_generator,
                                           False)
         return cache_hit, False, cached_files
@@ -3740,7 +3748,7 @@ def build_from_cache_or_scratch(context: CertoraContext,
         build_cache_disabling_options = certora_build_cache_manager.cache_disabling_options(context)
         build_logger.warning("Requested to enable the build cache, but the build cache is not applicable "
                              f"to this run because of the given options: {build_cache_disabling_options}")
-        cached_files = build_from_scratch(certora_build_generator,
+        cached_files = build_from_scratch(context, certora_build_generator,
                                           certora_verify_generator,
                                           False)
         return cache_hit, False, cached_files
@@ -3766,7 +3774,7 @@ def build_from_cache_or_scratch(context: CertoraContext,
         cache_hit = True
     else:
         # rebuild
-        cached_files = build_from_scratch(certora_build_generator,
+        cached_files = build_from_scratch(context, certora_build_generator,
                                           certora_verify_generator,
                                           True)
 

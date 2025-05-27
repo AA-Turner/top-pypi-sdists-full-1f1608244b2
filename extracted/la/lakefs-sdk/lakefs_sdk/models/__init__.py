@@ -33,6 +33,7 @@ from lakefs_sdk.models.commit_overrides import CommitOverrides
 from lakefs_sdk.models.commit_record_creation import CommitRecordCreation
 from lakefs_sdk.models.complete_presign_multipart_upload import CompletePresignMultipartUpload
 from lakefs_sdk.models.config import Config
+from lakefs_sdk.models.copy_part_source import CopyPartSource
 from lakefs_sdk.models.credentials import Credentials
 from lakefs_sdk.models.credentials_list import CredentialsList
 from lakefs_sdk.models.credentials_with_secret import CredentialsWithSecret
@@ -61,6 +62,7 @@ from lakefs_sdk.models.import_location import ImportLocation
 from lakefs_sdk.models.import_status import ImportStatus
 from lakefs_sdk.models.installation_usage_report import InstallationUsageReport
 from lakefs_sdk.models.internal_delete_branch_protection_rule_request import InternalDeleteBranchProtectionRuleRequest
+from lakefs_sdk.models.license import License
 from lakefs_sdk.models.login_config import LoginConfig
 from lakefs_sdk.models.login_information import LoginInformation
 from lakefs_sdk.models.merge import Merge
@@ -115,6 +117,9 @@ from lakefs_sdk.models.underlying_object_properties import UnderlyingObjectPrope
 from lakefs_sdk.models.update_object_user_metadata import UpdateObjectUserMetadata
 from lakefs_sdk.models.update_token import UpdateToken
 from lakefs_sdk.models.upload_part import UploadPart
+from lakefs_sdk.models.upload_part_copy_from import UploadPartCopyFrom
+from lakefs_sdk.models.upload_part_from import UploadPartFrom
+from lakefs_sdk.models.upload_to import UploadTo
 from lakefs_sdk.models.usage_report import UsageReport
 from lakefs_sdk.models.user import User
 from lakefs_sdk.models.user_creation import UserCreation

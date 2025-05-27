@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """A Language Server Protocol (LSP) server for SQL with SQLMesh integration, refactored without globals."""
 
+from itertools import chain
 import logging
 import typing as t
 from pathlib import Path
@@ -20,8 +21,19 @@ from sqlmesh.lsp.api import (
     ApiResponseGetModels,
 )
 from sqlmesh.lsp.completions import get_sql_completions
-from sqlmesh.lsp.context import LSPContext, ModelTarget
-from sqlmesh.lsp.custom import ALL_MODELS_FEATURE, AllModelsRequest, AllModelsResponse
+from sqlmesh.lsp.context import (
+    LSPContext,
+    ModelTarget,
+    render_model as render_model_context,
+)
+from sqlmesh.lsp.custom import (
+    ALL_MODELS_FEATURE,
+    RENDER_MODEL_FEATURE,
+    AllModelsRequest,
+    AllModelsResponse,
+    RenderModelRequest,
+    RenderModelResponse,
+)
 from sqlmesh.lsp.reference import (
     get_references,
 )
@@ -87,6 +99,12 @@ class SQLMeshLanguageServer:
                 return get_sql_completions(context, uri)
             except Exception as e:
                 return get_sql_completions(None, uri)
+
+        @self.server.feature(RENDER_MODEL_FEATURE)
+        def render_model(ls: LanguageServer, params: RenderModelRequest) -> RenderModelResponse:
+            uri = URI(params.textDocumentUri)
+            context = self._context_get_or_load(uri)
+            return RenderModelResponse(models=list(render_model_context(context, uri)))
 
         @self.server.feature(API_FEATURE)
         def api(ls: LanguageServer, request: ApiRequest) -> t.Dict[str, t.Any]:
@@ -200,15 +218,29 @@ class SQLMeshLanguageServer:
                 uri = URI(params.text_document.uri)
                 self._ensure_context_for_document(uri)
                 document = ls.workspace.get_text_document(params.text_document.uri)
+                before = document.source
                 if self.lsp_context is None:
                     raise RuntimeError(f"No context found for document: {document.path}")
 
-                # Perform formatting using the loaded context
-                self.lsp_context.context.format(paths=(str(uri.to_path()),))
-                with open(uri.to_path(), "r+", encoding="utf-8") as file:
-                    new_text = file.read()
-
-                # Return a single edit that replaces the entire file.
+                target = next(
+                    (
+                        target
+                        for target in chain(
+                            self.lsp_context.context._models.values(),
+                            self.lsp_context.context._audits.values(),
+                        )
+                        if target._path is not None
+                        and target._path.suffix == ".sql"
+                        and (target._path.samefile(uri.to_path()))
+                    ),
+                    None,
+                )
+                if target is None:
+                    return []
+                after = self.lsp_context.context._format(
+                    target=target,
+                    before=before,
+                )
                 return [
                     types.TextEdit(
                         range=types.Range(
@@ -218,7 +250,7 @@ class SQLMeshLanguageServer:
                                 character=len(document.lines[-1]) if document.lines else 0,
                             ),
                         ),
-                        new_text=new_text,
+                        new_text=after,
                     )
                 ]
             except Exception as e:
@@ -239,11 +271,12 @@ class SQLMeshLanguageServer:
                 if not references:
                     return None
                 reference = references[0]
-                if not reference.description:
+                if not reference.markdown_description:
                     return None
                 return types.Hover(
                     contents=types.MarkupContent(
-                        kind=types.MarkupKind.Markdown, value=reference.description
+                        kind=types.MarkupKind.Markdown,
+                        value=reference.markdown_description,
                     ),
                     range=reference.range,
                 )
@@ -265,21 +298,31 @@ class SQLMeshLanguageServer:
                     raise RuntimeError(f"No context found for document: {document.path}")
 
                 references = get_references(self.lsp_context, uri, params.position)
-                return [
-                    types.LocationLink(
-                        target_uri=reference.uri,
-                        target_selection_range=types.Range(
+                location_links = []
+                for reference in references:
+                    # Use target_range if available (for CTEs), otherwise default to start of file
+                    if reference.target_range:
+                        target_range = reference.target_range
+                        target_selection_range = reference.target_range
+                    else:
+                        target_range = types.Range(
                             start=types.Position(line=0, character=0),
                             end=types.Position(line=0, character=0),
-                        ),
-                        target_range=types.Range(
+                        )
+                        target_selection_range = types.Range(
                             start=types.Position(line=0, character=0),
                             end=types.Position(line=0, character=0),
-                        ),
-                        origin_selection_range=reference.range,
+                        )
+
+                    location_links.append(
+                        types.LocationLink(
+                            target_uri=reference.uri,
+                            target_selection_range=target_selection_range,
+                            target_range=target_range,
+                            origin_selection_range=reference.range,
+                        )
                     )
-                    for reference in references
-                ]
+                return location_links
             except Exception as e:
                 ls.show_message(f"Error getting references: {e}", types.MessageType.Error)
                 return []

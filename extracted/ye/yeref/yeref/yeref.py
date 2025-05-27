@@ -4711,7 +4711,7 @@ async def refund_star_payment_fun(bot, state, chat_id, lz, username, telegram_pa
             res = await bot.refund_star_payment(user_id=chat_id, telegram_payment_charge_id=telegram_payment_id)
             # await extra_bot.session.close()
 
-            text = f"👩🏽‍💻 <b>{l_refund_title[lz]}</b>: @{username} [<code>{chat_id}</code>]"
+            text = f"👩🏽‍💻 <b>{l_refund_title[lz]}</b>: @{username} [<code>{chat_id}</code>]\n\n#refund"
             await bot.send_message(chat_id=my_tid, text=text, parse_mode=ParseMode.HTML)
         except Exception as e:
             logger.info(log_ % str(e))  # CHARGE_NOT_FOUND

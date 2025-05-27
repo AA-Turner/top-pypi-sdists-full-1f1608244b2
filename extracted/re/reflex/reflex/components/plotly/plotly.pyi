@@ -14,9 +14,8 @@ from reflex.utils.imports import ImportDict
 from reflex.vars.base import Var
 
 try:
-    from plotly.graph_objects import Figure, layout
-
-    Template = layout.Template
+    from plotly.graph_objs import Figure
+    from plotly.graph_objs.layout import Template
 except ImportError:
     console.warn("Plotly is not installed. Please run `pip install plotly`.")
     Figure = Any

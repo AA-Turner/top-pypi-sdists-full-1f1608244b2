@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: fancycompleter
-Version: 0.11.0
+Version: 0.11.1
 Summary: colorful TAB completion for Python prompt
 Author-email: Antonio Cuni <anto.cuni@gmail.com>
 Maintainer-email: bretello <bretello@distruzione.org>
@@ -24,13 +24,13 @@ Classifier: Topic :: Utilities
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: pyreadline3; platform_system == "Windows"
+Requires-Dist: pyreadline3; platform_system == "Windows" and python_version < "3.13"
 Requires-Dist: pyrepl>=0.11.3; python_version < "3.13"
 Provides-Extra: tests
 Requires-Dist: pytest; extra == "tests"
 Requires-Dist: pytest-cov; extra == "tests"
 Provides-Extra: dev
-Requires-Dist: ruff==0.11.2; extra == "dev"
+Requires-Dist: ruff==0.11.8; extra == "dev"
 Requires-Dist: mypy; extra == "dev"
 Requires-Dist: fancycompleter[tests]; extra == "dev"
 Dynamic: license-file

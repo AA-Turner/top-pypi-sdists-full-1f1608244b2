@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bcpkgfox",
-    version="0.15.144",
+    version="0.15.147",
     author="Guilherme Neri",
     author_email="guilherme.neri@bcfox.com.br",
     description="Biblioteca BCFOX",

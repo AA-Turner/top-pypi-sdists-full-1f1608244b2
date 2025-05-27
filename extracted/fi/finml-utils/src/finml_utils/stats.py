@@ -1,3 +1,4 @@
+from enum import Enum
 from functools import partial
 from math import isnan, sqrt
 from typing import Literal
@@ -165,27 +166,49 @@ def idiosyncratic_sharpe(
     return sharpe(returns, annualization_period) * (1 - correlation_to_underlying)
 
 
+class RollingMetric(str, Enum):
+    alpha = "alpha"
+    geometric_alpha = "geometric_alpha"
+    beta = "beta"
+    pearson_corr = "pearson_corr"
+    idiosyncratic_sharpe = "idiosyncratic_sharpe"
+    sharpe = "sharpe"
+
+    def get_func(self, annualization_period: int):
+        if self == RollingMetric.alpha:
+            return partial(alpha, annualization_period=annualization_period)
+        if self == RollingMetric.geometric_alpha:
+            return partial(geometric_alpha, annualization_period=annualization_period)
+        if self == RollingMetric.beta:
+            return beta
+        if self == RollingMetric.pearson_corr:
+            return safe_pearson
+        if self == RollingMetric.idiosyncratic_sharpe:
+            return lambda x, y: idiosyncratic_sharpe(x, y, annualization_period)
+        if self == RollingMetric.sharpe:
+            return lambda x, _: sharpe(x, annualization_period=annualization_period)
+        raise ValueError(f"Invalid rolling metric: {self}")
+
+
 def get_rolling(
     returns: pd.Series,
     underlying: pd.Series,
     window: int,
     mode: Literal[
-        "alpha", "geometric_alpha", "beta", "pearson_corr", "idiosyncratic_sharpe"
+        "alpha",
+        "geometric_alpha",
+        "beta",
+        "pearson_corr",
+        "idiosyncratic_sharpe",
+        "sharpe",
     ],
     step: int,
     annualization_period: int,
     min_periods: int | None = None,
 ) -> pd.Series:
     min_periods = min_periods if min_periods is not None else window
-    func = partial(geometric_alpha, annualization_period=annualization_period)
-    if mode == "alpha":
-        func = partial(alpha, annualization_period=annualization_period)
-    elif mode == "beta":
-        func = beta
-    elif mode == "pearson_corr":
-        func = safe_pearson
-    elif mode == "idiosyncratic_sharpe":
-        func = lambda x, y: idiosyncratic_sharpe(x, y, annualization_period)  # noqa
+    rolling_metric = RollingMetric(mode)
+    func = rolling_metric.get_func(annualization_period)
 
     def func_to_apply(x, y):
         if len(x) < window:

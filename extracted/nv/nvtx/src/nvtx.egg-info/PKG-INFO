@@ -1,11 +1,11 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: nvtx
-Version: 0.2.11
-Summary: PyNVTX - Python code annotation library
+Version: 0.2.12
+Summary: Python NVTX - Python code annotation library
 Author: NVIDIA Corporation
 License: Apache 2.0
 Project-URL: Homepage, https://github.com/NVIDIA/NVTX
-Project-URL: Documentation, https://github.com/NVIDIA/NVTX/blob/release-v3/python/docs/index.rst
+Project-URL: Documentation, https://nvidia.github.io/NVTX/python/
 Project-URL: Repository, https://github.com/NVIDIA/NVTX
 Project-URL: License, https://nvidia.github.io/NVTX/LICENSE.txt
 Project-URL: Issues, https://github.com/NVIDIA/NVTX/issues
@@ -27,6 +27,10 @@ Provides-Extra: test
 Requires-Dist: pytest; extra == "test"
 Requires-Dist: Cython==3.0.11; extra == "test"
 Requires-Dist: setuptools; extra == "test"
+Provides-Extra: docs
+Requires-Dist: sphinx; extra == "docs"
+Requires-Dist: nvidia_sphinx_theme; extra == "docs"
+Dynamic: license-file
 
 # nvtx Python package
 
@@ -45,7 +49,7 @@ python -m pip install nvtx
 ## Quick start
 
 1. Annotate the parts of your Python code you wish to profile/analyze:
-   
+
    ```python
    # demo.py
 
@@ -67,11 +71,19 @@ python -m pip install nvtx
    ```
    nsys profile -t nvtx python demo.py
    ```
-   
+
 3. Visualize the results using the Nsight systems GUI:
 
    ![demo](https://raw.githubusercontent.com/NVIDIA/NVTX/release-v3/docs/images/example_range.png)
 
 ## Documentation
 
-See [here](https://github.com/NVIDIA/NVTX/blob/release-v3/python/docs/index.rst) for detailed docs.
+See [here](https://nvidia.github.io/NVTX/python/) for detailed docs.
+
+## Release Notes
+
+### 0.2.12
+
+- Expose API via `domain` object for better performance.
+- No-OP when domain is disabled.
+- Improved documentation.

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: flexget
-Version: 3.16.1
+Version: 3.16.2
 Summary: FlexGet is a program aimed to automate downloading or processing content (torrents, podcasts, etc.) from different sources like RSS-feeds, html-pages, various sites and more.
 Project-URL: Homepage, https://flexget.com
 Project-URL: Issue Tracker, https://github.com/Flexget/Flexget/issues
@@ -37,7 +37,7 @@ Requires-Dist: beautifulsoup4~=4.12
 Requires-Dist: cherrypy~=18.10
 Requires-Dist: feedparser~=6.0
 Requires-Dist: flask-compress~=1.17
-Requires-Dist: flask-cors~=5.0
+Requires-Dist: flask-cors~=6.0
 Requires-Dist: flask-login~=0.6.3
 Requires-Dist: flask-restx~=1.3
 Requires-Dist: flask~=3.1
@@ -113,7 +113,7 @@ Requires-Dist: execnet==2.1.1; extra == 'locked'
 Requires-Dist: feedparser==6.0.11; extra == 'locked'
 Requires-Dist: filelock==3.18.0; extra == 'locked'
 Requires-Dist: flask-compress==1.17; extra == 'locked'
-Requires-Dist: flask-cors==5.0.1; extra == 'locked'
+Requires-Dist: flask-cors==6.0.0; extra == 'locked'
 Requires-Dist: flask-login==0.6.3; extra == 'locked'
 Requires-Dist: flask-restx==1.3.0; extra == 'locked'
 Requires-Dist: flask==3.1.0; extra == 'locked'

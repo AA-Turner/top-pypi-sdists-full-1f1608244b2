@@ -12,8 +12,9 @@ from fireworks._const import FIREWORKS_API_BASE_URL
 from fireworks.client.api import ChatCompletionMessageToolCall
 import grpc
 from pydantic import ValidationError
+from openai import NotGiven, NOT_GIVEN
 from ._list_fireworks_models_response_cached import models
-from fireworks.client.error import RateLimitError
+from fireworks.client.error import InvalidRequestError, RateLimitError
 from fireworks.client.api_client import FireworksClient
 from fireworks.client.chat import Chat as FireworksChat
 from fireworks.client.chat_completion import ChatCompletionV2 as FireworksChatCompletion
@@ -81,26 +82,25 @@ from openai.types.chat.chat_completion import ChatCompletion as OpenAIChatComple
 from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
 from openai.types.chat.completion_create_params import ResponseFormat
-from openai import NOT_GIVEN, NotGiven
+from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from fireworks._util import is_valid_resource_name
 import sysconfig
 from fireworks._literals import (
     DeploymentStrategyLiteral,
     DeploymentTypeLiteral,
+    DirectRouteTypeLiteral,
+    PrecisionLiteral,
     RegionLiteral,
     AcceleratorTypeLiteral,
     ReasoningEffort,
 )
-from fireworks._logger import logger
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
-from rich.text import Text
+from fireworks._logger import log_execution_time, logger
 
 # Type checking imports to avoid circular imports
 if TYPE_CHECKING:
     from fireworks.supervised_fine_tuning_job import SupervisedFineTuningJob
 
-DEFAULT_MAX_RETRIES = 5
+DEFAULT_MAX_RETRIES = 10
 DEFAULT_DELAY = 0.5
 
 
@@ -126,6 +126,7 @@ class ChatCompletion:
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
+        tools: Union[List[ChatCompletionToolParam], NotGiven] = NOT_GIVEN,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion:
@@ -140,10 +141,49 @@ class ChatCompletion:
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
+        tools: Union[List[ChatCompletionToolParam], NotGiven] = NOT_GIVEN,
         extra_headers=None,
         **kwargs,
     ) -> Generator[ChatCompletionChunk, None, None]:
         pass
+
+    def _build_request_params(
+        self,
+        model_id: str,
+        messages: Iterable[ChatCompletionMessageParam],
+        stream: bool = False,
+        response_format: Optional[ResponseFormat] = None,
+        reasoning_effort: Optional[ReasoningEffort] = None,
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        tools: Union[List[ChatCompletionToolParam], NotGiven] = NOT_GIVEN,
+        extra_headers=None,
+        **kwargs,
+    ) -> dict:
+        """Build common request parameters for both sync and async calls."""
+        params = {
+            "model": model_id,
+            "prompt_or_messages": messages,
+            "stream": stream,
+            "extra_headers": extra_headers,
+            "response_format": response_format,
+            "reasoning_effort": reasoning_effort,
+            "max_tokens": max_tokens,
+            "temperature": temperature if temperature is not None else self._llm.temperature,
+            **kwargs,
+        }
+
+        # Only include tools if it's not NotGiven
+        if not isinstance(tools, NotGiven):
+            params["tools"] = tools
+
+        return params
+
+    def _should_retry_error(self, e: Exception) -> bool:
+        """Check if an error should trigger a retry."""
+        if isinstance(e, InvalidRequestError):
+            return "Model not found, inaccessible, and/or not deployed" in str(e)
+        return isinstance(e, (BadGatewayError, ServiceUnavailableError, RateLimitError))
 
     def create(
         self,
@@ -153,32 +193,41 @@ class ChatCompletion:
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
+        tools: Union[List[ChatCompletionToolParam], NotGiven] = NOT_GIVEN,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, Generator[ChatCompletionChunk, None, None]]:
         model_id = self._create_setup()
+        params = self._build_request_params(
+            model_id,
+            messages,
+            stream,
+            response_format,
+            reasoning_effort,
+            max_tokens,
+            temperature,
+            tools,
+            extra_headers,
+            **kwargs,
+        )
+
         retries = 0
         delay = DEFAULT_DELAY
         while retries < self._llm.max_retries:
             try:
-                if self._llm.enable_metrics:
+                if self._llm.enable_metrics and not stream:
                     start_time = time.time()
-                result = self._client.create(
-                    model=model_id,
-                    prompt_or_messages=messages,
-                    stream=stream,
-                    extra_headers=extra_headers,
-                    response_format=response_format,
-                    reasoning_effort=reasoning_effort,
-                    max_tokens=max_tokens,
-                    temperature=temperature if temperature is not None else self._llm.temperature,
-                    **kwargs,
-                )  # type: ignore
-                if self._llm.enable_metrics:
+
+                result = self._client.create(**params)  # type: ignore
+
+                if self._llm.enable_metrics and not stream:
                     end_time = time.time()
                     self._llm._metrics.add_metric("time_to_last_token", end_time - start_time)
+
                 return result
-            except (BadGatewayError, ServiceUnavailableError, RateLimitError) as e:
+            except Exception as e:
+                if not self._should_retry_error(e):
+                    raise e
                 logger.debug(f"{type(e).__name__}: {e}. model_id: {model_id}")
                 time.sleep(delay)
                 retries += 1
@@ -194,6 +243,7 @@ class ChatCompletion:
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
+        tools: Union[List[ChatCompletionToolParam], NotGiven] = NOT_GIVEN,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion: ...
@@ -207,6 +257,7 @@ class ChatCompletion:
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
+        tools: Union[List[ChatCompletionToolParam], NotGiven] = NOT_GIVEN,
         extra_headers=None,
         **kwargs,
     ) -> AsyncGenerator[ChatCompletionChunk, None]:
@@ -220,25 +271,29 @@ class ChatCompletion:
         reasoning_effort: Optional[ReasoningEffort] = None,
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
+        tools: Union[List[ChatCompletionToolParam], NotGiven] = NOT_GIVEN,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, AsyncGenerator[ChatCompletionChunk, None]]:
         model_id = self._create_setup()
+        params = self._build_request_params(
+            model_id,
+            messages,
+            stream,
+            response_format,
+            reasoning_effort,
+            max_tokens,
+            temperature,
+            tools,
+            extra_headers,
+            **kwargs,
+        )
+
         retries = 0
         delay = DEFAULT_DELAY
         while retries < self._llm.max_retries:
             try:
-                resp_or_generator = self._client.acreate(  # type: ignore
-                    model=model_id,
-                    prompt_or_messages=messages,
-                    stream=stream,
-                    extra_headers=extra_headers,
-                    response_format=response_format,
-                    reasoning_effort=reasoning_effort,
-                    max_tokens=max_tokens,
-                    temperature=temperature if temperature is not None else self._llm.temperature,
-                    **kwargs,
-                )
+                resp_or_generator = self._client.acreate(**params)  # type: ignore
                 if stream:
                     return resp_or_generator  # type: ignore
                 else:
@@ -249,7 +304,9 @@ class ChatCompletion:
                         end_time = time.time()
                         self._llm._metrics.add_metric("time_to_last_token", end_time - start_time)
                     return resp
-            except (BadGatewayError, ServiceUnavailableError, RateLimitError) as e:
+            except Exception as e:
+                if not self._should_retry_error(e):
+                    raise e
                 logger.debug(f"{type(e).__name__}: {e}. model_id: {model_id}")
                 await asyncio.sleep(delay)
                 retries += 1
@@ -376,35 +433,23 @@ class LLM:
         deployment_type: DeploymentTypeLiteral,
         deployment_name: Optional[str] = None,
         deployment_display_name: Optional[str] = None,
+        base_deployment_name: Optional[str] = None,
         api_key: Optional[str] = None,
         base_url: str = f"{FIREWORKS_API_BASE_URL}/inference/v1",
-        accelerator_type: Union[AcceleratorTypeLiteral, NotGiven] = NOT_GIVEN,
+        max_retries: int = DEFAULT_MAX_RETRIES,
         scale_up_window: timedelta = timedelta(seconds=1),
         scale_down_window: timedelta = timedelta(minutes=1),
         scale_to_zero_window: timedelta = timedelta(minutes=5),
         enable_metrics: bool = False,
-        max_retries: int = DEFAULT_MAX_RETRIES,
+        accelerator_type: Optional[AcceleratorTypeLiteral] = None,
         region: Optional[RegionLiteral] = None,
         description: Optional[str] = None,
         annotations: Optional[dict[str, str]] = None,
-        min_replica_count: Optional[int] = 0,
+        min_replica_count: Optional[int] = None,
         max_replica_count: Optional[int] = None,
         replica_count: Optional[int] = None,
         accelerator_count: Optional[int] = None,
-        precision: Optional[
-            Literal[
-                "FP16",
-                "FP8",
-                "FP8_MM",
-                "FP8_AR",
-                "FP8_MM_KV_ATTN",
-                "FP8_KV",
-                "FP8_MM_V2",
-                "FP8_V2",
-                "FP8_MM_KV_ATTN_V2",
-                "NF4",
-            ]
-        ] = None,
+        precision: Optional[PrecisionLiteral] = None,
         world_size: Optional[int] = None,
         generator_count: Optional[int] = None,
         disaggregated_prefill_count: Optional[int] = None,
@@ -421,7 +466,7 @@ class LLM:
         enable_session_affinity: Optional[bool] = None,
         direct_route_api_keys: Optional[list[str]] = None,
         num_peft_device_cached: Optional[int] = None,
-        direct_route_type: Optional[Literal["INTERNET", "GCP_PRIVATE_SERVICE_CONNECT", "AWS_PRIVATELINK"]] = None,
+        direct_route_type: Optional[DirectRouteTypeLiteral] = None,
         direct_route_handle: Optional[str] = None,
         long_prompt_optimized: Optional[bool] = None,
         temperature: Optional[float] = None,
@@ -439,14 +484,20 @@ class LLM:
                 recommend using "on-demand". Otherwise, you can enforce that you
                 only use "serverless" by setting this parameter to "serverless".
             deployment_name: The name of the deployment to use. If not provided,
-                the deployment name will be generated from the filename of the
-                caller where this LLM was instantiated. If specified, it is used
-                to identify a deployment in the SDK. This can useful when you want
-                to specifically use a deployment that already exists.
+                the deployment name will be auto-generated by Fireworks. If
+                specified, it is used to identify a deployment in the SDK. This
+                can be useful when you want to specifically use a deployment that
+                already exists.
             deployment_display_name: The display name of the deployment to use.
                 If not provided, the deployment display name will be generated
                 from the filename of the caller where this LLM was instantiated.
                 This is used to identify a deployment in the SDK.
+            base_deployment_name: The base deployment name to use. If not provided,
+                the base deployment name will be queried by looking for base
+                models with the same display name. Display names are generated
+                from file names or provided explicitly through
+                deployment_display_name. This is useful when you want to specify
+                a base deployment for LoRA addons.
             api_key: The API key to use.
             base_url: The base URL to use.
             accelerator_type: The accelerator type to use.
@@ -470,6 +521,11 @@ class LLM:
         self._deployment_name = deployment_name
         self._gateway = Gateway(api_key=api_key)
         self._deployment_display_name = deployment_display_name
+        if base_deployment_name is not None and self.is_peft_addon():
+            raise ValueError(
+                "base_deployment_name is only for PEFT addons. Use deployment_name instead for specifying an existing deployment."
+            )
+        self._base_deployment_name = base_deployment_name
         self._model = model
         self.chat = Chat(self, self.model)
         self.deployment_type: DeploymentTypeLiteral = deployment_type
@@ -482,12 +538,11 @@ class LLM:
         # inside of this thread
         self._get_deployment_display_name()
 
+        self._accelerator_type_original: Optional[AcceleratorTypeLiteral] = accelerator_type
         if isinstance(accelerator_type, str):
             self._accelerator_type = AcceleratorTypeEnum.from_string(accelerator_type)
             self._validate_model_for_gpu(self.model, self._accelerator_type)
-            self._accelerator_type_sync: Union[NotGiven, SyncAcceleratorType] = getattr(
-                SyncAcceleratorType, accelerator_type
-            )
+            self._accelerator_type_sync: Optional[SyncAcceleratorType] = getattr(SyncAcceleratorType, accelerator_type)
         else:
             self._accelerator_type = accelerator_type
             self._accelerator_type_sync = accelerator_type
@@ -510,7 +565,7 @@ class LLM:
         self._max_replica_count = max_replica_count
         self._replica_count = replica_count
         self._accelerator_count = accelerator_count
-        self._precision = precision
+        self._precision: Optional[PrecisionLiteral] = precision
         self._world_size = world_size
         self._generator_count = generator_count
         self._disaggregated_prefill_count = disaggregated_prefill_count
@@ -527,7 +582,7 @@ class LLM:
         self._enable_session_affinity = enable_session_affinity
         self._direct_route_api_keys = direct_route_api_keys
         self._num_peft_device_cached = num_peft_device_cached
-        self._direct_route_type = direct_route_type
+        self._direct_route_type: Optional[DirectRouteTypeLiteral] = direct_route_type
         self._direct_route_handle = direct_route_handle
         self._temperature = temperature
         self._auto_tune = AutoTune()
@@ -545,14 +600,33 @@ class LLM:
     def deployment_name(self):
         """
         Properly converts provided deployment name to a full resource name if
-        only the ID was provided. Does not query the API to get the full
-        resource name if deployment name was not provided on instantiation.
+        only the ID was provided.
+
+        NOTE: Does not query the API to get the full resource name if deployment
+        name was not provided on instantiation.
         """
         if self._deployment_name is None:
             return None
         if self._deployment_name.startswith("accounts/"):
             return self._deployment_name
         return f"accounts/{self._gateway.account_id()}/deployments/{self._deployment_name}"
+
+    @property
+    def base_deployment_name(self):
+        """
+        Used for on-demand-lora deployments.
+
+        The base deployment name to use. If not provided, the base deployment
+        name will be queried by looking for base models with the same display
+        name. Display names are generated from file names or provided explicitly
+        through deployment_display_name. This is useful when you want to specify
+        a base deployment for LoRA addons.
+        """
+        if self._base_deployment_name is None:
+            return None
+        if self._base_deployment_name.startswith("accounts/"):
+            return self._base_deployment_name
+        return f"accounts/{self._gateway.account_id()}/deployments/{self._base_deployment_name}"
 
     @property
     def temperature(self):
@@ -664,6 +738,83 @@ class LLM:
         self._ensure_deployment_ready()
         return self
 
+    def _with_modified_params(self, **kwargs) -> "LLM":
+        """
+        Helper method to create a new LLM instance with modified parameters.
+
+        Args:
+            **kwargs: Parameters to override in the new LLM instance
+
+        Returns:
+            A new LLM instance with the specified parameters modified
+        """
+        # Try to get api_key and base_url from the client
+        api_key = self._client.api_key
+        base_url = self._client.base_url
+        # Get long_prompt_optimized if it exists
+        long_prompt_optimized = getattr(self._auto_tune, "long_prompt_optimized", None)
+
+        # Default parameters from current instance
+        params = {
+            "model": self._model,
+            "deployment_type": self.deployment_type,
+            "deployment_name": self._deployment_name,
+            "deployment_display_name": self._deployment_display_name,
+            "api_key": api_key,
+            "base_url": str(base_url),
+            "max_retries": self.max_retries,
+            "accelerator_type": self._accelerator_type_original,
+            "scale_up_window": self._autoscaling_policy.scale_up_window,
+            "scale_down_window": self._autoscaling_policy.scale_down_window,
+            "scale_to_zero_window": self._autoscaling_policy.scale_to_zero_window,
+            "enable_metrics": self.enable_metrics,
+            "region": self._region,
+            "description": self._description,
+            "annotations": self._annotations,
+            "min_replica_count": self._min_replica_count,
+            "max_replica_count": self._max_replica_count,
+            "replica_count": self._replica_count,
+            "accelerator_count": self._accelerator_count,
+            "precision": self._precision,
+            "world_size": self._world_size,
+            "generator_count": self._generator_count,
+            "disaggregated_prefill_count": self._disaggregated_prefill_count,
+            "disaggregated_prefill_world_size": self._disaggregated_prefill_world_size,
+            "max_batch_size": self._max_batch_size,
+            "cluster": self._cluster,
+            "enable_addons": self._enable_addons,
+            "live_merge": self._live_merge,
+            "draft_token_count": self._draft_token_count,
+            "draft_model": self._draft_model,
+            "ngram_speculation_length": self._ngram_speculation_length,
+            "max_peft_batch_size": self._max_peft_batch_size,
+            "kv_cache_memory_pct": self._kv_cache_memory_pct,
+            "enable_session_affinity": self._enable_session_affinity,
+            "direct_route_api_keys": self._direct_route_api_keys,
+            "num_peft_device_cached": self._num_peft_device_cached,
+            "direct_route_type": self._direct_route_type,
+            "direct_route_handle": self._direct_route_handle,
+            "long_prompt_optimized": long_prompt_optimized,
+            "temperature": self._temperature,
+        }
+
+        # Override with provided parameters
+        params.update(kwargs)
+
+        return LLM(**params)
+
+    def with_deployment_type(self, deployment_type: DeploymentTypeLiteral) -> "LLM":
+        """
+        Returns a new LLM with the deployment type set to the given value.
+        """
+        return self._with_modified_params(deployment_type=deployment_type)
+
+    def with_temperature(self, temperature: Optional[float]) -> "LLM":
+        """
+        Returns a new LLM with the temperature set to the given value.
+        """
+        return self._with_modified_params(temperature=temperature)
+
     def get_time_to_last_token_mean(self) -> Optional[float]:
         """
         Returns the mean time to last token for non-streaming requests. If no metrics are available, returns None.
@@ -690,58 +841,36 @@ class LLM:
             logger.debug(f"Deleting deployed model {deployment.name}")
             self._gateway.delete_deployed_model_sync(deployment.name)
 
-            # Use rich console for beautiful logging
-            console = Console()
+            logger.debug(f"Deleting serverless LoRA model {self.model}...")
+            start_time = time.time()
+            last_log_time = 0
 
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                TimeElapsedColumn(),
-                console=console,
-                transient=False,
-            ) as progress:
-                task = progress.add_task(
-                    f"Deleting serverless LoRA model [bold cyan]{self.model}[/bold cyan]...", total=None
-                )
+            while True:
+                current_time = time.time()
 
-                start_time = time.time()
-                last_log_time = 0
+                # Try to get the deployed model to check if it still exists
+                deployed_model = self._gateway.get_deployed_model_sync(deployment.name)
 
-                while True:
-                    current_time = time.time()
+                if deployed_model is None:
+                    # Deployed model no longer exists, deletion is complete
+                    total_time = time.time() - start_time
+                    logger.debug(f"Serverless LoRA model {self.model} deleted successfully!")
+                    logger.debug(f"Deletion completed in {total_time:.2f} seconds!")
+                    logger.debug(f"Deployed model {deployment.name} no longer exists (deleted successfully)")
+                    break
 
-                    # Try to get the deployed model to check if it still exists
-                    deployed_model = self._gateway.get_deployed_model_sync(deployment.name)
-
-                    if deployed_model is None:
-                        # Deployed model no longer exists, deletion is complete
-                        total_time = time.time() - start_time
-                        progress.update(
-                            task,
-                            description=f"✅ Serverless LoRA model [bold green]{self.model}[/bold green] deleted successfully!",
-                        )
-                        console.print(f"[bold green]✅ Deletion completed in {total_time:.2f} seconds![/bold green]")
-                        logger.debug(f"Deployed model {deployment.name} no longer exists (deleted successfully)")
-                        break
-
-                    # Update progress description with current state
+                # Log detailed info every 10 seconds
+                if current_time - last_log_time >= 10:
+                    elapsed_so_far = current_time - start_time
                     state_name = SyncDeployedModel.State.Name(deployed_model.state)
-                    progress.update(
-                        task,
-                        description=f"Deleting serverless LoRA model [bold cyan]{self.model}[/bold cyan] - State: [yellow]{state_name}[/yellow]",
+                    logger.debug(
+                        f"Waiting for deployed model {deployed_model.name} to be deleted, "
+                        f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s"
                     )
+                    last_log_time = current_time
 
-                    # Log detailed info every 10 seconds
-                    if current_time - last_log_time >= 10:
-                        elapsed_so_far = current_time - start_time
-                        console.print(
-                            f"[dim]Waiting for deployed model {deployed_model.name} to be deleted, "
-                            f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s[/dim]"
-                        )
-                        last_log_time = current_time
-
-                    # Wait before checking again
-                    time.sleep(2)
+                # Wait before checking again
+                time.sleep(2)
 
             return
         logger.debug(f"Deleting deployment {deployment.name}")
@@ -779,7 +908,10 @@ class LLM:
                 return "on-demand"
         else:
             # Check if model supports serverless deployment
-            if self.deployment_type in ["serverless", "auto"] and self.is_peft_addon():
+            if self.deployment_type in ["serverless", "auto", "on-demand-lora"] and self.is_peft_addon():
+                if self.deployment_type == "on-demand-lora":
+                    logger.debug(f"Model {self.model} is a PEFT model, using on-demand-lora deployment")
+                    return "on-demand-lora"
                 logger.debug(f"Checking if model {self.model} supports serverless LoRA")
 
                 # If model supports serverless LoRA, use serverless deployment
@@ -799,7 +931,7 @@ class LLM:
                     If the model is not available on serverless, but the deployment type is auto,
                     we will deploy the base model with addons enabled, and load the LoRA onto it.
                     This is useful for models that are not available on serverless, but only want to use a single deployment
-                    to save on GPU costs. If you really want
+                    to save on GPU costs. If you really want dedicated resources, then use deployment_type="on-demand".
                     """
                     return "on-demand-lora"
 
@@ -870,11 +1002,12 @@ class LLM:
                         return True
         return False
 
+    @log_execution_time
     def get_deployment(self) -> Optional[Union[SyncDeployment, SyncDeployedModel]]:
         """
-        Queries all deployments for the same model and display name and returns
-        the first one. If a deployment name is provided, it will return the
-        deployment with that name.
+        1. If a deployment name is provided, return the deployment with that name.
+        2. If model is a PEFT model, return and deployed model with the same model
+        3. Otherwise, look for deployment by model and display name
         """
         if self.is_peft_addon():
             if self.deployment_name is not None:
@@ -884,9 +1017,7 @@ class LLM:
                 if deployed_model.model != self.model:
                     raise ValueError(f"Deployed model {self.deployment_name} is not for model {self.model}")
                 return deployed_model
-            request = SyncListDeployedModelsRequest(
-                filter=f'display_name="{self.deployment_display_name}" AND model="{self.model}"'
-            )
+            request = SyncListDeployedModelsRequest(filter=f'model="{self.model}"')
             deployed_models = self._gateway.list_deployed_models_sync(request)
             deployed_model = next(iter(deployed_models.deployed_models), None)
             if deployed_model is None:
@@ -916,6 +1047,7 @@ class LLM:
             return False
         return True
 
+    @log_execution_time
     def _ensure_deployment_ready(self) -> None:
         """
         Ensure this LLM is deployed in any way, otherwise raise an error if it
@@ -924,9 +1056,7 @@ class LLM:
         if self.deployment_strategy == "serverless":
             # no deployment needed, just return
             return
-
         deployment = self.get_deployment()
-
         if self.deployment_strategy == "serverless-lora":
             if deployment is not None:
                 deployed_model = deployment
@@ -939,75 +1069,108 @@ class LLM:
             if deployed_model.state == SyncDeployedModel.State.DEPLOYED:
                 return
 
-            # Use rich console for beautiful logging
-            console = Console()
+            logger.debug(f"Deploying serverless LoRA model {self.model}...")
+            start_time = time.time()
+            last_log_time = 0
 
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                TimeElapsedColumn(),
-                console=console,
-                transient=False,
-            ) as progress:
-                task = progress.add_task(
-                    f"Deploying serverless LoRA model [bold cyan]{self.model}[/bold cyan]...", total=None
-                )
+            while deployed_model.state != SyncDeployedModel.State.DEPLOYED:
+                current_time = time.time()
 
-                start_time = time.time()
-                last_log_time = 0
-
-                while deployed_model.state != SyncDeployedModel.State.DEPLOYED:
-                    current_time = time.time()
-
-                    # Update progress description with current state
+                # Log detailed info every 10 seconds
+                if current_time - last_log_time >= 10:
+                    elapsed_so_far = current_time - start_time
                     state_name = SyncDeployedModel.State.Name(deployed_model.state)
-                    progress.update(
-                        task,
-                        description=f"Deploying serverless LoRA model [bold cyan]{self.model}[/bold cyan] - State: [yellow]{state_name}[/yellow]",
+                    logger.debug(
+                        f"Waiting for deployed model {deployed_model.name} to be ready, "
+                        f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s"
                     )
+                    last_log_time = current_time
 
-                    # Log detailed info every 10 seconds
-                    if current_time - last_log_time >= 10:
-                        elapsed_so_far = current_time - start_time
-                        console.print(
-                            f"[dim]Waiting for deployed model {deployed_model.name} to be ready, "
-                            f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s[/dim]"
-                        )
-                        last_log_time = current_time
+                # Check if deployment failed
+                if deployed_model.state == SyncDeployedModel.State.STATE_UNSPECIFIED:
+                    raise ValueError(f"Deployed model {deployed_model.name} failed to deploy")
 
-                    # Check if deployment failed
-                    if deployed_model.state == SyncDeployedModel.State.STATE_UNSPECIFIED:
-                        raise ValueError(f"Deployed model {deployed_model.name} failed to deploy")
+                # Wait before checking again
+                time.sleep(2)
 
-                    # Wait before checking again
-                    time.sleep(2)
+                # Get updated deployed model state
+                updated_deployed_model = self._gateway.get_deployed_model_sync(deployed_model.name)
+                if updated_deployed_model is None:
+                    raise ValueError(
+                        f"Deployed model {deployed_model.name} was unexpectedly deleted during deployment"
+                    )
+                deployed_model = updated_deployed_model
 
-                    # Get updated deployed model state
-                    updated_deployed_model = self._gateway.get_deployed_model_sync(deployed_model.name)
-                    if updated_deployed_model is None:
-                        raise ValueError(
-                            f"Deployed model {deployed_model.name} was unexpectedly deleted during deployment"
-                        )
-                    deployed_model = updated_deployed_model
-
-                total_time = time.time() - start_time
-                progress.update(
-                    task,
-                    description=f"✅ Serverless LoRA model [bold green]{self.model}[/bold green] deployed successfully!",
-                )
-                console.print(f"[bold green]✅ Deployment completed in {total_time:.2f} seconds![/bold green]")
-
-            return
-
-        if self.deployment_strategy == "on-demand-lora":
-            # first ensure that the base model is deployed with enable_addons=True
+            total_time = time.time() - start_time
+            logger.debug(f"✅ Serverless LoRA model {self.model} deployed successfully!")
+            logger.debug(f"✅ Deployment completed in {total_time:.2f} seconds!")
+        elif self.deployment_strategy == "on-demand-lora":
+            # Validate that a base model is specified for LoRA deployment
             if self.peft_base_model is None:
                 raise ValueError(f"PEFT base model is not set for {self.model}")
 
+            # Handle existing deployment if one exists
+            if deployment is not None:
+                logger.debug(f"Found existing deployment {deployment.name}")
+
+                # Ensure the deployment is a deployed model, not a deployment
+                if isinstance(deployment, SyncDeployment):
+                    logger.debug(f"Deployment {deployment.name} is a deployment, not a deployed model")
+                    raise ValueError(f"Deployment {deployment.name} is a deployment, not a deployed model")
+
+                # Verify the deployment is for the correct model
+                if deployment.model != self.model:
+                    logger.debug(
+                        f"Deployment {deployment.name} model {deployment.model} does not match expected model {self.model}"
+                    )
+                    raise ValueError(f"Existing deployment with name {deployment.name} is not for model {self.model}")
+
+                # Validate base deployment name matches if specified
+                if self.base_deployment_name is not None and deployment.deployment != self.base_deployment_name:
+                    logger.debug(
+                        f"Deployment {deployment.name} base deployment {deployment.deployment} "
+                        f"does not match specified base deployment {self.base_deployment_name}"
+                    )
+                    raise ValueError(
+                        f"Existing deployment with base deployment {deployment.name} "
+                        f"does not match the provided base deployment name "
+                        f"{self.base_deployment_name}. You should probably just use "
+                        f"the existing deployment instead of creating a new one by "
+                        f"removing base_deployment_name from LLM instantiation."
+                    )
+
+                if deployment.display_name != self.deployment_display_name:
+                    logger.debug(
+                        f'Deployment "{deployment.name}" has display name '
+                        f'"{deployment.display_name}", but "{self.deployment_display_name}" '
+                        f"was expected. Will reuse existing deployment as there is no "
+                        f"functional difference in creating a new deployment"
+                    )
+
+                # Skip deployment if already successfully deployed
+                if deployment.state == SyncDeployedModel.State.DEPLOYED:
+                    logger.debug(f"Deployment {deployment.name} is already deployed, skipping")
+                    return
+
+                # Clean up failed deployments
+                if (
+                    deployment.state == SyncDeployment.State.STATE_UNSPECIFIED
+                    or deployment.state == SyncDeployment.State.FAILED
+                    or deployment.state == SyncDeployment.State.DELETING
+                ):
+                    logger.debug(
+                        f"Deployment {deployment.name} is in {SyncDeployment.State.Name(deployment.state)} state, deleting it"
+                    )
+                    self.delete_deployment()
+                    logger.debug(f"Successfully deleted failed deployment {deployment.name}")
+                    deployment = None
+
+            # Deploy the base model first with addons enabled
             base_model_llm = LLM(
-                model=self.peft_base_model,
                 deployment_type="on-demand",
                 enable_addons=True,
+                model=self.peft_base_model,
+                deployment_name=self.base_deployment_name,
                 min_replica_count=self._min_replica_count,
                 max_replica_count=self._max_replica_count,
                 replica_count=self._replica_count,
@@ -1021,274 +1184,254 @@ class LLM:
             base_model_llm.apply()
             base_model_deployment = base_model_llm.get_deployment()
 
+            # Verify base model deployment was successful
             if base_model_deployment is None:
                 raise ValueError(f"Base model {self.peft_base_model} is not deployed")
-            if deployment is not None and deployment.state == SyncDeployedModel.State.DEPLOYED:
-                return
-            if deployment is not None and deployment.state == SyncDeployment.State.STATE_UNSPECIFIED:
+
+            # Create and deploy the LoRA model on top of the base model
+            request = SyncCreateDeployedModelRequest()
+            request.deployed_model.display_name = self.deployment_display_name
+            request.deployed_model.model = self.model
+            request.deployed_model.deployment = base_model_deployment.name
+            deployed_model = self._gateway.create_deployed_model_sync(request)
+
+            # Monitor the LoRA model deployment progress
+            logger.debug(f"Loading LoRA model {self.model} onto base model deployment {base_model_deployment.name}")
+            start_time = time.time()
+            last_log_time = 0
+
+            while True:
+                current_time = time.time()
+
+                # Poll for deployment status
+                deployed_model = self._gateway.get_deployed_model_sync(deployed_model.name)
+
+                # Handle unexpected deletion during deployment
+                if deployed_model is None:
+                    raise ValueError(
+                        f"Deployed model {request.deployed_model.name} was unexpectedly deleted during deployment"
+                    )
+
+                # Exit loop when deployment is successful
+                if deployed_model.state == SyncDeployedModel.State.DEPLOYED:
+                    total_time = time.time() - start_time
+                    logger.debug(f"LoRA model {self.model} loaded successfully!")
+                    logger.debug(f"Loading completed in {total_time:.2f} seconds!")
+                    break
+
+                # Handle deployment failure
+                if deployed_model.state == SyncDeployedModel.State.STATE_UNSPECIFIED:
+                    raise ValueError(f"Deployed model {deployed_model.name} failed to deploy")
+
+                # Log progress every 10 seconds
+                if current_time - last_log_time >= 10:
+                    elapsed_so_far = current_time - start_time
+                    state_name = SyncDeployedModel.State.Name(deployed_model.state)
+                    logger.debug(
+                        f"Waiting for deployed model {deployed_model.name} to be ready, "
+                        f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s"
+                    )
+                    last_log_time = current_time
+
+                # Wait before next status check
+                time.sleep(2)
+        elif self.deployment_strategy == "on-demand":
+
+            if deployment is not None and deployment.state == SyncDeployment.State.FAILED:
                 logger.debug(f"Deployment {deployment.name} is in FAILED state, deleting it")
                 self.delete_deployment()
                 logger.debug(f"Successfully deleted failed deployment {deployment.name}")
                 deployment = None
 
-            # now load the LoRA onto the base model deployment
-            request = SyncCreateDeployedModelRequest()
-            request.deployed_model.display_name = self.deployment_display_name
-            request.deployed_model.model = self.model
-            request.deployed_model.deployment = base_model_deployment.name
-            self._gateway.create_deployed_model_sync(request)
-
-            # Use rich console for beautiful logging
-            console = Console()
-
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                TimeElapsedColumn(),
-                console=console,
-                transient=False,
-            ) as progress:
-                task = progress.add_task(
-                    f"Loading LoRA model [bold cyan]{self.model}[/bold cyan] onto base model deployment...", total=None
+            if deployment is None:
+                logger.debug(f"No existing deployment found, creating deployment for {self.model}")
+                deployment_proto = SyncDeployment(
+                    display_name=self.deployment_display_name,
+                    base_model=self.model,
+                    autoscaling_policy=self._autoscaling_policy_sync,
                 )
+                if self._accelerator_type_sync is not None:
+                    deployment_proto.accelerator_type = self._accelerator_type_sync
+                if self._accelerator_count is not None:
+                    deployment_proto.accelerator_count = self._accelerator_count
+                if self._precision is not None:
+                    deployment_proto.precision = getattr(SyncDeployment.Precision, self._precision)
+                if self._world_size is not None:
+                    deployment_proto.world_size = self._world_size
+                if self._generator_count is not None:
+                    deployment_proto.generator_count = self._generator_count
+                if self._region is not None:
+                    deployment_proto.region = getattr(SyncRegion, self._region)
+                if self._description is not None:
+                    deployment_proto.description = self._description
+                if self._annotations is not None:
+                    deployment_proto.annotations.update(self._annotations)
+                if self._min_replica_count is not None:
+                    deployment_proto.min_replica_count = self._min_replica_count
+                else:
+                    # default to 0 if not specified
+                    deployment_proto.min_replica_count = 0
+                if self._max_replica_count is not None:
+                    deployment_proto.max_replica_count = self._max_replica_count
+                if self._replica_count is not None:
+                    deployment_proto.replica_count = self._replica_count
+                if self._disaggregated_prefill_count is not None:
+                    deployment_proto.disaggregated_prefill_count = self._disaggregated_prefill_count
+                if self._disaggregated_prefill_world_size is not None:
+                    deployment_proto.disaggregated_prefill_world_size = self._disaggregated_prefill_world_size
+                if self._max_batch_size is not None:
+                    deployment_proto.max_batch_size = self._max_batch_size
+                if self._cluster is not None:
+                    deployment_proto.cluster = self._cluster
+                if self._enable_addons is not None:
+                    deployment_proto.enable_addons = self._enable_addons
+                if self._live_merge is not None:
+                    deployment_proto.live_merge = self._live_merge
+                if self._draft_token_count is not None:
+                    deployment_proto.draft_token_count = self._draft_token_count
+                if self._draft_model is not None:
+                    deployment_proto.draft_model = self._draft_model
+                if self._ngram_speculation_length is not None:
+                    deployment_proto.ngram_speculation_length = self._ngram_speculation_length
+                if self._max_peft_batch_size is not None:
+                    deployment_proto.max_peft_batch_size = self._max_peft_batch_size
+                if self._kv_cache_memory_pct is not None:
+                    deployment_proto.kv_cache_memory_pct = self._kv_cache_memory_pct
+                if self._enable_session_affinity is not None:
+                    deployment_proto.enable_session_affinity = self._enable_session_affinity
+                if self._direct_route_api_keys is not None:
+                    deployment_proto.direct_route_api_keys.extend(self._direct_route_api_keys)
+                if self._num_peft_device_cached is not None:
+                    deployment_proto.num_peft_device_cached = self._num_peft_device_cached
+                if self._direct_route_type is not None:
+                    deployment_proto.direct_route_type = getattr(SyncDirectRouteType, self._direct_route_type)
+                if self._direct_route_handle is not None:
+                    deployment_proto.direct_route_handle = self._direct_route_handle
+                if self._auto_tune_sync.long_prompt:
+                    deployment_proto.auto_tune.long_prompt = self._auto_tune_sync.long_prompt
+                created_deployment = self._gateway.create_deployment_sync(deployment_proto)
+                logger.debug(f"Deployment {created_deployment.name} created, waiting for it to be ready")
 
+                # poll deployment status until it's ready
                 start_time = time.time()
                 last_log_time = 0
-
-                while True:
+                while created_deployment.state != SyncDeployment.State.READY:
                     current_time = time.time()
-
-                    # Try to get the deployed model to check its state
-                    deployed_model = self._gateway.get_deployed_model_sync(request.deployed_model.name)
-
-                    if deployed_model is None:
-                        raise ValueError(
-                            f"Deployed model {request.deployed_model.name} was unexpectedly deleted during deployment"
-                        )
-
-                    # Check if deployment is complete
-                    if deployed_model.state == SyncDeployedModel.State.DEPLOYED:
-                        total_time = time.time() - start_time
-                        progress.update(
-                            task,
-                            description=f"✅ LoRA model [bold green]{self.model}[/bold green] loaded successfully!",
-                        )
-                        console.print(f"[bold green]✅ Loading completed in {total_time:.2f} seconds![/bold green]")
-                        break
-
-                    # Check if deployment failed
-                    if deployed_model.state == SyncDeployedModel.State.STATE_UNSPECIFIED:
-                        raise ValueError(f"Deployed model {deployed_model.name} failed to deploy")
-
-                    # Update progress description with current state
-                    state_name = SyncDeployedModel.State.Name(deployed_model.state)
-                    progress.update(
-                        task,
-                        description=f"Loading LoRA model [bold cyan]{self.model}[/bold cyan] - State: [yellow]{state_name}[/yellow]",
-                    )
-
-                    # Log detailed info every 10 seconds
-                    if current_time - last_log_time >= 10:
-                        elapsed_so_far = current_time - start_time
-                        console.print(
-                            f"[dim]Waiting for deployed model {deployed_model.name} to be ready, "
-                            f"current state: {state_name}, elapsed time: {elapsed_so_far:.2f}s[/dim]"
-                        )
-                        last_log_time = current_time
-
-                    # Wait before checking again
-                    time.sleep(2)
-
-        if deployment is not None and deployment.state == SyncDeployment.State.FAILED:
-            logger.debug(f"Deployment {deployment.name} is in FAILED state, deleting it")
-            self.delete_deployment()
-            logger.debug(f"Successfully deleted failed deployment {deployment.name}")
-            deployment = None
-
-        if deployment is None:
-            logger.debug(f"No existing deployment found, creating deployment for {self.model}")
-            deployment_proto = SyncDeployment(
-                display_name=self.deployment_display_name,
-                base_model=self.model,
-                autoscaling_policy=self._autoscaling_policy_sync,
-            )
-            if not isinstance(self._accelerator_type_sync, NotGiven):
-                deployment_proto.accelerator_type = self._accelerator_type_sync
-            if self._accelerator_count is not None:
-                deployment_proto.accelerator_count = self._accelerator_count
-            if self._precision is not None:
-                deployment_proto.precision = getattr(SyncDeployment.Precision, self._precision)
-            if self._world_size is not None:
-                deployment_proto.world_size = self._world_size
-            if self._generator_count is not None:
-                deployment_proto.generator_count = self._generator_count
-            if self._region is not None:
-                deployment_proto.region = getattr(SyncRegion, self._region)
-            if self._description is not None:
-                deployment_proto.description = self._description
-            if self._annotations is not None:
-                deployment_proto.annotations.update(self._annotations)
-            if self._min_replica_count is not None:
-                deployment_proto.min_replica_count = self._min_replica_count
-            if self._max_replica_count is not None:
-                deployment_proto.max_replica_count = self._max_replica_count
-            if self._replica_count is not None:
-                deployment_proto.replica_count = self._replica_count
-            if self._disaggregated_prefill_count is not None:
-                deployment_proto.disaggregated_prefill_count = self._disaggregated_prefill_count
-            if self._disaggregated_prefill_world_size is not None:
-                deployment_proto.disaggregated_prefill_world_size = self._disaggregated_prefill_world_size
-            if self._max_batch_size is not None:
-                deployment_proto.max_batch_size = self._max_batch_size
-            if self._cluster is not None:
-                deployment_proto.cluster = self._cluster
-            if self._enable_addons is not None:
-                deployment_proto.enable_addons = self._enable_addons
-            if self._live_merge is not None:
-                deployment_proto.live_merge = self._live_merge
-            if self._draft_token_count is not None:
-                deployment_proto.draft_token_count = self._draft_token_count
-            if self._draft_model is not None:
-                deployment_proto.draft_model = self._draft_model
-            if self._ngram_speculation_length is not None:
-                deployment_proto.ngram_speculation_length = self._ngram_speculation_length
-            if self._max_peft_batch_size is not None:
-                deployment_proto.max_peft_batch_size = self._max_peft_batch_size
-            if self._kv_cache_memory_pct is not None:
-                deployment_proto.kv_cache_memory_pct = self._kv_cache_memory_pct
-            if self._enable_session_affinity is not None:
-                deployment_proto.enable_session_affinity = self._enable_session_affinity
-            if self._direct_route_api_keys is not None:
-                deployment_proto.direct_route_api_keys.extend(self._direct_route_api_keys)
-            if self._num_peft_device_cached is not None:
-                deployment_proto.num_peft_device_cached = self._num_peft_device_cached
-            if self._direct_route_type is not None:
-                deployment_proto.direct_route_type = getattr(SyncDirectRouteType, self._direct_route_type)
-            if self._direct_route_handle is not None:
-                deployment_proto.direct_route_handle = self._direct_route_handle
-            if self._auto_tune_sync.long_prompt:
-                deployment_proto.auto_tune.long_prompt = self._auto_tune_sync.long_prompt
-            created_deployment = self._gateway.create_deployment_sync(deployment_proto)
-            logger.debug(f"Deployment {created_deployment.name} created, waiting for it to be ready")
-
-            # poll deployment status until it's ready
-            start_time = time.time()
-            last_log_time = 0
-            while created_deployment.state != SyncDeployment.State.READY:
-                current_time = time.time()
-                # wait for 9 seconds
-                time.sleep(9)
-                created_deployment = self._gateway.get_deployment_sync(created_deployment.name)
-                if created_deployment.state == DeploymentState.FAILED:
-                    raise ValueError(f"Deployment {created_deployment.name} failed to be created")
-                if current_time - last_log_time >= 10:
-                    elapsed_so_far = current_time - start_time
-                    logger.debug(
-                        f"Waiting for deployment {created_deployment.name} to be ready, current state: {created_deployment.state}, elapsed time: {elapsed_so_far:.2f}s"
-                    )
-                    last_log_time = current_time
-
-            total_time = time.time() - start_time
-            logger.debug(
-                f"Deployment {created_deployment.name} state is READY, checking replicas now (Became READY in {total_time:.2f} seconds)"
-            )
-        elif isinstance(deployment, SyncDeployment):
-            logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
-
-            field_mask = SyncFieldMask()
-
-            # if autoscaling policy is not equal, update it
-            if not self._is_autoscaling_policy_equal(deployment):
-                logger.debug(
-                    f"Updating autoscaling policy for {deployment.name} to "
-                    f"{self._autoscaling_policy.scale_up_window.total_seconds()}s up, "
-                    f"{self._autoscaling_policy.scale_down_window.total_seconds()}s down, "
-                    f"{self._autoscaling_policy.scale_to_zero_window.total_seconds()}s to zero"
-                )
-                deployment.autoscaling_policy.scale_up_window = self._autoscaling_policy.scale_up_window  # type: ignore
-                deployment.autoscaling_policy.scale_down_window = self._autoscaling_policy.scale_down_window  # type: ignore
-                deployment.autoscaling_policy.scale_to_zero_window = self._autoscaling_policy.scale_to_zero_window  # type: ignore
-                field_mask.paths.append("autoscaling_policy")
-
-            for field, value in [
-                ("region", self._region),
-                ("description", self._description),
-                ("annotations", self._annotations),
-                ("min_replica_count", self._min_replica_count),
-                ("max_replica_count", self._max_replica_count),
-                ("replica_count", self._replica_count),
-                ("accelerator_count", self._accelerator_count),
-                ("precision", self._precision),
-                ("world_size", self._world_size),
-                ("generator_count", self._generator_count),
-                ("disaggregated_prefill_count", self._disaggregated_prefill_count),
-                ("disaggregated_prefill_world_size", self._disaggregated_prefill_world_size),
-                ("max_batch_size", self._max_batch_size),
-                ("cluster", self._cluster),
-                ("enable_addons", self._enable_addons),
-                ("live_merge", self._live_merge),
-                ("draft_token_count", self._draft_token_count),
-                ("draft_model", self._draft_model),
-                ("ngram_speculation_length", self._ngram_speculation_length),
-                ("max_peft_batch_size", self._max_peft_batch_size),
-                ("kv_cache_memory_pct", self._kv_cache_memory_pct),
-                ("enable_session_affinity", self._enable_session_affinity),
-                ("direct_route_api_keys", self._direct_route_api_keys),
-                ("num_peft_device_cached", self._num_peft_device_cached),
-                ("direct_route_type", self._direct_route_type),
-                ("direct_route_handle", self._direct_route_handle),
-            ]:
-                if value is not None and getattr(deployment, field) != value:
-                    logger.debug(f"Updating {field} for {deployment.name} to {value}")
-                    setattr(deployment, field, value)
-                    field_mask.paths.append(field)
-
-            if (
-                deployment.accelerator_type != self._accelerator_type_sync
-                and self._accelerator_type_sync is not NOT_GIVEN
-            ):
-                raise ValueError(
-                    f'Deployment "{deployment.name}" has accelerator type {deployment.accelerator_type}, '
-                    f"but LLM has accelerator type {self._accelerator_type}. Please use a different deployment_display_name "
-                    f"to use a different accelerator type, as accelerator type cannot be changed for existing deployments."
-                )
-
-            if len(field_mask.paths) > 0:
-                logger.debug(f"Updating deployment {deployment.name} with {field_mask}")
-                start_time = time.time()
-                self._gateway.update_deployment_sync(deployment, field_mask)
-
-                # poll until deployment is ready
-                while deployment.state != DeploymentState.READY:
-                    time.sleep(1)
-                    deployment = self._gateway.get_deployment_sync(deployment.name)
-
-                elapsed_time = time.time() - start_time
-                logger.debug(f"Deployment update completed in {elapsed_time:.2f} seconds")
-
-            if deployment.replica_count == 0:
-                logger.debug(f"Deployment {deployment.name} is not ready, scaling to 1 replica")
-                start_time = time.time()
-                self._gateway.scale_deployment_sync(deployment.name, 1)
-
-                # Poll until deployment has at least one replica
-                last_log_time = 0
-                while deployment.replica_count == 0:
-                    current_time = time.time()
-                    time.sleep(1)
-                    deployment = self._gateway.get_deployment_sync(deployment.name)
-                    if deployment.state == SyncDeployment.State.FAILED:
-                        raise ValueError(f"Deployment {deployment.name} failed to scale up")
+                    # wait for 9 seconds
+                    time.sleep(9)
+                    created_deployment = self._gateway.get_deployment_sync(created_deployment.name)
+                    if created_deployment.state == DeploymentState.FAILED:
+                        raise ValueError(f"Deployment {created_deployment.name} failed to be created")
                     if current_time - last_log_time >= 10:
                         elapsed_so_far = current_time - start_time
                         logger.debug(
-                            f"Waiting for deployment {deployment.name} to scale up, current replicas: {deployment.replica_count}, elapsed time: {elapsed_so_far:.2f}s"
+                            f"Waiting for deployment {created_deployment.name} to be ready, current state: {SyncDeployment.State.Name(created_deployment.state)}, elapsed time: {elapsed_so_far:.2f}s"
                         )
                         last_log_time = current_time
 
-                total_scale_time = time.time() - start_time
-                logger.debug(f"Deployment {deployment.name} scaled up in {total_scale_time:.2f} seconds")
-            logger.debug(f"Deployment {deployment.name} is ready, using deployment")
+                total_time = time.time() - start_time
+                logger.debug(
+                    f"Deployment {created_deployment.name} state is READY, checking replicas now (Became READY in {total_time:.2f} seconds)"
+                )
+            elif isinstance(deployment, SyncDeployment):
+                logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
+
+                field_mask = SyncFieldMask()
+
+                # if autoscaling policy is not equal, update it
+                if not self._is_autoscaling_policy_equal(deployment):
+                    logger.debug(
+                        f"Updating autoscaling policy for {deployment.name} to "
+                        f"{self._autoscaling_policy.scale_up_window.total_seconds()}s up, "
+                        f"{self._autoscaling_policy.scale_down_window.total_seconds()}s down, "
+                        f"{self._autoscaling_policy.scale_to_zero_window.total_seconds()}s to zero"
+                    )
+                    deployment.autoscaling_policy.scale_up_window = self._autoscaling_policy.scale_up_window  # type: ignore
+                    deployment.autoscaling_policy.scale_down_window = self._autoscaling_policy.scale_down_window  # type: ignore
+                    deployment.autoscaling_policy.scale_to_zero_window = self._autoscaling_policy.scale_to_zero_window  # type: ignore
+                    field_mask.paths.append("autoscaling_policy")
+
+                for field, value in [
+                    ("region", self._region),
+                    ("description", self._description),
+                    ("annotations", self._annotations),
+                    ("min_replica_count", self._min_replica_count),
+                    ("max_replica_count", self._max_replica_count),
+                    ("replica_count", self._replica_count),
+                    ("accelerator_count", self._accelerator_count),
+                    ("precision", self._precision),
+                    ("world_size", self._world_size),
+                    ("generator_count", self._generator_count),
+                    ("disaggregated_prefill_count", self._disaggregated_prefill_count),
+                    ("disaggregated_prefill_world_size", self._disaggregated_prefill_world_size),
+                    ("max_batch_size", self._max_batch_size),
+                    ("cluster", self._cluster),
+                    ("enable_addons", self._enable_addons),
+                    ("live_merge", self._live_merge),
+                    ("draft_token_count", self._draft_token_count),
+                    ("draft_model", self._draft_model),
+                    ("ngram_speculation_length", self._ngram_speculation_length),
+                    ("max_peft_batch_size", self._max_peft_batch_size),
+                    ("kv_cache_memory_pct", self._kv_cache_memory_pct),
+                    ("enable_session_affinity", self._enable_session_affinity),
+                    ("direct_route_api_keys", self._direct_route_api_keys),
+                    ("num_peft_device_cached", self._num_peft_device_cached),
+                    ("direct_route_type", self._direct_route_type),
+                    ("direct_route_handle", self._direct_route_handle),
+                ]:
+                    if value is not None and getattr(deployment, field) != value:
+                        logger.debug(f"Updating {field} for {deployment.name} to {value}")
+                        setattr(deployment, field, value)
+                        field_mask.paths.append(field)
+
+                if (
+                    deployment.accelerator_type != self._accelerator_type_sync
+                    and self._accelerator_type_sync is not None
+                ):
+                    raise ValueError(
+                        f'Deployment "{deployment.name}" has accelerator type {SyncAcceleratorType.Name(deployment.accelerator_type)}, '
+                        f"but LLM has accelerator type {self._accelerator_type}. Please use a different deployment_display_name "
+                        f"to use a different accelerator type, as accelerator type cannot be changed for existing deployments."
+                    )
+
+                if len(field_mask.paths) > 0:
+                    logger.debug(f"Updating deployment {deployment.name} with {field_mask}")
+                    start_time = time.time()
+                    self._gateway.update_deployment_sync(deployment, field_mask)
+
+                    # poll until deployment is ready
+                    while deployment.state != DeploymentState.READY:
+                        time.sleep(1)
+                        deployment = self._gateway.get_deployment_sync(deployment.name)
+
+                    elapsed_time = time.time() - start_time
+                    logger.debug(f"Deployment update completed in {elapsed_time:.2f} seconds")
+
+                if deployment.replica_count == 0:
+                    logger.debug(f"Deployment {deployment.name} is not ready, scaling to 1 replica")
+                    start_time = time.time()
+                    self._gateway.scale_deployment_sync(deployment.name, 1)
+
+                    # Poll until deployment has at least one replica
+                    last_log_time = 0
+                    while deployment.replica_count == 0:
+                        current_time = time.time()
+                        time.sleep(1)
+                        deployment = self._gateway.get_deployment_sync(deployment.name)
+                        if deployment.state == SyncDeployment.State.FAILED:
+                            raise ValueError(f"Deployment {deployment.name} failed to scale up")
+                        if current_time - last_log_time >= 10:
+                            elapsed_so_far = current_time - start_time
+                            logger.debug(
+                                f"Waiting for deployment {deployment.name} to scale up, current replicas: {deployment.replica_count}, elapsed time: {elapsed_so_far:.2f}s"
+                            )
+                            last_log_time = current_time
+
+                    total_scale_time = time.time() - start_time
+                    logger.debug(f"Deployment {deployment.name} scaled up in {total_scale_time:.2f} seconds")
+                logger.debug(f"Deployment {deployment.name} is ready, using deployment")
+        else:
+            raise ValueError(f"Invalid deployment strategy: {self.deployment_strategy}")
 
     def scale_to_zero(self) -> Optional[SyncDeployment]:
         """
@@ -1350,6 +1493,24 @@ class LLM:
             return None
         return model.peft_details.base_model
 
+    @classmethod
+    def list_models(cls, api_key: Optional[str] = None) -> List[SyncModel]:
+        gateway = Gateway(api_key=api_key)
+
+        result = []
+        page_token = None
+        while True:
+            response = gateway.list_models_sync(
+                page_size=200, page_token=page_token if page_token else "", include_deployed_model_refs=True
+            )
+            result.extend(response.models)
+
+            if not response.next_page_token:
+                break
+            page_token = response.next_page_token
+
+        return result
+
     def model_id(self):
         """
         Returns the model ID, which is the model name plus the deployment name
@@ -1369,11 +1530,62 @@ class LLM:
                 return self.model
         return f"{self.model}#{deployment.name}"
 
+    @property
+    def addons_enabled(self) -> bool:
+        return False if self._enable_addons is None else self._enable_addons
+
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
-        return f"LLM(model={self.model})"
+        attrs = [f"model={self.model}"]
+        if self._deployment_display_name is not None:
+            attrs.append(f"deployment_display_name={self._deployment_display_name}")
+        if self.deployment_type is not None:
+            attrs.append(f"deployment_type={self.deployment_type}")
+        if self._accelerator_type is not None:
+            attrs.append(f"accelerator_type={self._accelerator_type}")
+        if self._region is not None:
+            attrs.append(f"region={self._region}")
+        if self._min_replica_count is not None:
+            attrs.append(f"min_replica_count={self._min_replica_count}")
+        if self._max_replica_count is not None:
+            attrs.append(f"max_replica_count={self._max_replica_count}")
+        if self._replica_count is not None:
+            attrs.append(f"replica_count={self._replica_count}")
+        if self._accelerator_count is not None:
+            attrs.append(f"accelerator_count={self._accelerator_count}")
+        if self._precision is not None:
+            attrs.append(f"precision={self._precision}")
+        if self._world_size is not None:
+            attrs.append(f"world_size={self._world_size}")
+        if self._generator_count is not None:
+            attrs.append(f"generator_count={self._generator_count}")
+        if self._disaggregated_prefill_count is not None:
+            attrs.append(f"disaggregated_prefill_count={self._disaggregated_prefill_count}")
+        if self._disaggregated_prefill_world_size is not None:
+            attrs.append(f"disaggregated_prefill_world_size={self._disaggregated_prefill_world_size}")
+        if self._max_peft_batch_size is not None:
+            attrs.append(f"max_peft_batch_size={self._max_peft_batch_size}")
+        if self._kv_cache_memory_pct is not None:
+            attrs.append(f"kv_cache_memory_pct={self._kv_cache_memory_pct}")
+        if self._enable_session_affinity is not None:
+            attrs.append(f"enable_session_affinity={self._enable_session_affinity}")
+        if self._direct_route_api_keys is not None:
+            attrs.append(f"direct_route_api_keys={self._direct_route_api_keys}")
+        if self._num_peft_device_cached is not None:
+            attrs.append(f"num_peft_device_cached={self._num_peft_device_cached}")
+        if self._direct_route_type is not None:
+            attrs.append(f"direct_route_type={self._direct_route_type}")
+        if self._direct_route_handle is not None:
+            attrs.append(f"direct_route_handle={self._direct_route_handle}")
+        if self._temperature is not None:
+            attrs.append(f"temperature={self._temperature}")
+        if self._enable_addons is not None:
+            attrs.append(f"enable_addons={self._enable_addons}")
+        if self._live_merge is not None:
+            attrs.append(f"live_merge={self._live_merge}")
+        return f"LLM({', '.join(attrs)})"
 
     def _create_fine_tuning_job(
         self,
@@ -1433,14 +1645,7 @@ class LLM:
             batch_size=batch_size,
         )
         job = job.sync()
-        if job.id is not None:
-            base_url = "dev.fireworks.ai" if "dev." in FIREWORKS_API_BASE_URL else "fireworks.ai"
-            logger.info(
-                f'Synced fine-tuning job "{name}". See https://{base_url}/dashboard/fine-tuning/supervised/{job.id}.'
-            )
-        else:
-            logger.info(f'Synced fine-tuning job "{name}".')
-
+        logger.debug(f"See the fine-tuning job at {job.url()}")
         return job
 
     def create_supervised_fine_tuning_job(

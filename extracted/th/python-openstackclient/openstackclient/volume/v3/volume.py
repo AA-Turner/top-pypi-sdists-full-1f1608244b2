@@ -31,7 +31,6 @@ from osc_lib import utils
 from openstackclient.common import pagination
 from openstackclient.i18n import _
 from openstackclient.identity import common as identity_common
-from openstackclient.volume.v2 import volume as volume_v2
 
 
 LOG = logging.getLogger(__name__)
@@ -91,7 +90,7 @@ class AttachmentsColumn(cliff_columns.FormattableColumn):
         return msg
 
 
-class CreateVolume(volume_v2.CreateVolume):
+class CreateVolume(command.ShowOne):
     _description = _("Create new volume")
 
     @staticmethod
@@ -117,8 +116,48 @@ class CreateVolume(volume_v2.CreateVolume):
             raise exceptions.CommandError(msg)
 
     def get_parser(self, prog_name):
-        parser, source_group = self._get_parser(prog_name)
-
+        parser = super().get_parser(prog_name)
+        parser.add_argument(
+            "name",
+            metavar="<name>",
+            nargs="?",
+            help=_("Volume name"),
+        )
+        parser.add_argument(
+            "--size",
+            metavar="<size>",
+            type=int,
+            help=_(
+                "Volume size in GB (required unless --snapshot or "
+                "--source specified)"
+            ),
+        )
+        parser.add_argument(
+            "--type",
+            metavar="<volume-type>",
+            help=_("Set the type of volume"),
+        )
+        source_group = parser.add_mutually_exclusive_group()
+        source_group.add_argument(
+            "--image",
+            metavar="<image>",
+            help=_("Use <image> as source of volume (name or ID)"),
+        )
+        source_group.add_argument(
+            "--snapshot",
+            metavar="<snapshot>",
+            help=_("Use <snapshot> as source of volume (name or ID)"),
+        )
+        source_group.add_argument(
+            "--source",
+            metavar="<volume>",
+            help=_("Volume to clone (name or ID)"),
+        )
+        source_group.add_argument(
+            "--source-replicated",
+            metavar="<replicated-volume>",
+            help=argparse.SUPPRESS,
+        )
         source_group.add_argument(
             "--backup",
             metavar="<backup>",
@@ -137,6 +176,72 @@ class CreateVolume(volume_v2.CreateVolume):
                 "attributes, e.g.: '--remote-source source-name=test_name "
                 "--remote-source source-id=test_id')"
             ),
+        )
+        parser.add_argument(
+            "--description",
+            metavar="<description>",
+            help=_("Volume description"),
+        )
+        parser.add_argument(
+            "--availability-zone",
+            metavar="<availability-zone>",
+            help=_("Create volume in <availability-zone>"),
+        )
+        parser.add_argument(
+            "--consistency-group",
+            metavar="consistency-group>",
+            help=_("Consistency group where the new volume belongs to"),
+        )
+        parser.add_argument(
+            "--property",
+            metavar="<key=value>",
+            action=parseractions.KeyValueAction,
+            dest="properties",
+            help=_(
+                "Set a property to this volume "
+                "(repeat option to set multiple properties)"
+            ),
+        )
+        parser.add_argument(
+            "--hint",
+            metavar="<key=value>",
+            action=KeyValueHintAction,
+            help=_(
+                "Arbitrary scheduler hint key-value pairs to help creating "
+                "a volume. Repeat the option to set multiple hints. "
+                "'same_host' and 'different_host' get values appended when "
+                "repeated, all other keys take the last given value"
+            ),
+        )
+        bootable_group = parser.add_mutually_exclusive_group()
+        bootable_group.add_argument(
+            "--bootable",
+            action="store_true",
+            dest="bootable",
+            default=None,
+            help=_("Mark volume as bootable"),
+        )
+        bootable_group.add_argument(
+            "--non-bootable",
+            action="store_false",
+            dest="bootable",
+            default=None,
+            help=_("Mark volume as non-bootable (default)"),
+        )
+        readonly_group = parser.add_mutually_exclusive_group()
+        readonly_group.add_argument(
+            "--read-only",
+            action="store_true",
+            dest="read_only",
+            default=None,
+            help=_("Set volume to read-only access mode"),
+        )
+        readonly_group.add_argument(
+            "--read-write",
+            action="store_false",
+            dest="read_only",
+            default=None,
+            help=_("Set volume to read-write access mode (default)"),
         )
         parser.add_argument(
             "--host",
@@ -160,7 +265,7 @@ class CreateVolume(volume_v2.CreateVolume):
         return parser
 
     def take_action(self, parsed_args):
-        CreateVolume._check_size_arg(parsed_args)
+        self._check_size_arg(parsed_args)
         # size is validated in the above call to
         # _check_size_arg where we check that size
         # should be passed if we are not creating a
@@ -194,8 +299,7 @@ class CreateVolume(volume_v2.CreateVolume):
                 parsed_args.size
                 or parsed_args.consistency_group
                 or parsed_args.hint
-                or parsed_args.read_only
-                or parsed_args.read_write
+                or parsed_args.read_only is not None
             ):
                 msg = _(
                     "The --size, --consistency-group, --hint, --read-only "
@@ -232,10 +336,24 @@ class CreateVolume(volume_v2.CreateVolume):
                 description=parsed_args.description,
                 volume_type=parsed_args.type,
                 availability_zone=parsed_args.availability_zone,
-                metadata=parsed_args.property,
+                metadata=parsed_args.properties,
                 bootable=parsed_args.bootable,
             )
-            return zip(*sorted(volume.items()))
+            data = {}
+            for key, value in volume.to_dict().items():
+                # FIXME(stephenfin): Stop ignoring these once we bump SDK
+                # https://review.opendev.org/c/openstack/openstacksdk/+/945836/
+                if key in (
+                    'cluster_name',
+                    'consumes_quota',
+                    'encryption_key_id',
+                    'service_uuid',
+                    'shared_targets',
+                    'volume_type_id',
+                ):
+                    continue
+                data[key] = value
+            return zip(*sorted(data.items()))
 
         source_volume = None
         if parsed_args.source:
@@ -287,7 +405,7 @@ class CreateVolume(volume_v2.CreateVolume):
             description=parsed_args.description,
             volume_type=parsed_args.type,
             availability_zone=parsed_args.availability_zone,
-            metadata=parsed_args.property,
+            metadata=parsed_args.properties,
             imageRef=image,
             source_volid=source_volume,
             consistencygroup_id=consistency_group,
@@ -295,7 +413,7 @@ class CreateVolume(volume_v2.CreateVolume):
             backup_id=backup,
         )
 
-        if parsed_args.bootable or parsed_args.non_bootable:
+        if parsed_args.bootable is not None:
             try:
                 if utils.wait_for_status(
                     volume_client.volumes.get,
@@ -314,7 +432,8 @@ class CreateVolume(volume_v2.CreateVolume):
                     raise exceptions.CommandError(msg)
             except Exception as e:
                 LOG.error(_("Failed to set volume bootable property: %s"), e)
-        if parsed_args.read_only or parsed_args.read_write:
+
+        if parsed_args.read_only is not None:
             try:
                 if utils.wait_for_status(
                     volume_client.volumes.get,
@@ -351,11 +470,33 @@ class CreateVolume(volume_v2.CreateVolume):
         return zip(*sorted(volume._info.items()))
 
 
-class DeleteVolume(volume_v2.DeleteVolume):
+class DeleteVolume(command.Command):
     _description = _("Delete volume(s)")
 
     def get_parser(self, prog_name):
         parser = super().get_parser(prog_name)
+        parser.add_argument(
+            "volumes",
+            metavar="<volume>",
+            nargs="+",
+            help=_("Volume(s) to delete (name or ID)"),
+        )
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument(
+            "--force",
+            action="store_true",
+            help=_(
+                "Attempt forced removal of volume(s), regardless of state "
+                "(defaults to False)"
+            ),
+        )
+        group.add_argument(
+            "--purge",
+            action="store_true",
+            help=_(
+                "Remove any snapshots along with volume(s) (defaults to False)"
+            ),
+        )
         parser.add_argument(
             '--remote',
             action='store_true',
@@ -364,8 +505,7 @@ class DeleteVolume(volume_v2.DeleteVolume):
         return parser
 
     def take_action(self, parsed_args):
-        volume_client = self.app.client_manager.volume
-        volume_client_sdk = self.app.client_manager.sdk_connection.volume
+        volume_client = self.app.client_manager.sdk_connection.volume
         result = 0
 
         if parsed_args.remote and (parsed_args.force or parsed_args.purge):
@@ -375,16 +515,18 @@ class DeleteVolume(volume_v2.DeleteVolume):
             )
             raise exceptions.CommandError(msg)
 
-        for i in parsed_args.volumes:
+        for volume in parsed_args.volumes:
             try:
-                volume_obj = utils.find_resource(volume_client.volumes, i)
+                volume_obj = volume_client.find_volume(
+                    volume, ignore_missing=False
+                )
                 if parsed_args.remote:
-                    volume_client_sdk.unmanage_volume(volume_obj.id)
-                elif parsed_args.force:
-                    volume_client.volumes.force_delete(volume_obj.id)
+                    volume_client.unmanage_volume(volume_obj.id)
                 else:
-                    volume_client.volumes.delete(
-                        volume_obj.id, cascade=parsed_args.purge
+                    volume_client.delete_volume(
+                        volume_obj.id,
+                        force=parsed_args.force,
+                        cascade=parsed_args.purge,
                     )
             except Exception as e:
                 result += 1
@@ -393,7 +535,7 @@ class DeleteVolume(volume_v2.DeleteVolume):
                         "Failed to delete volume with "
                         "name or ID '%(volume)s': %(e)s"
                     ),
-                    {'volume': i, 'e': e},
+                    {'volume': volume, 'e': e},
                 )
 
         if result > 0:
@@ -638,6 +780,7 @@ class SetVolume(command.Command):
             '--property',
             metavar='<key=value>',
             action=parseractions.KeyValueAction,
+            dest='properties',
             help=_(
                 'Set a property on this volume '
                 '(repeat option to set multiple properties)'
@@ -647,6 +790,7 @@ class SetVolume(command.Command):
             '--image-property',
             metavar='<key=value>',
             action=parseractions.KeyValueAction,
+            dest='image_properties',
             help=_(
                 'Set an image property on this volume '
                 '(repeat option to set multiple image properties)'
@@ -723,22 +867,30 @@ class SetVolume(command.Command):
         bootable_group.add_argument(
             "--bootable",
             action="store_true",
+            dest="bootable",
+            default=None,
             help=_("Mark volume as bootable"),
         )
         bootable_group.add_argument(
             "--non-bootable",
-            action="store_true",
+            action="store_false",
+            dest="bootable",
+            default=None,
             help=_("Mark volume as non-bootable"),
         )
         readonly_group = parser.add_mutually_exclusive_group()
         readonly_group.add_argument(
             "--read-only",
             action="store_true",
+            dest="read_only",
+            default=None,
             help=_("Set volume to read-only access mode"),
         )
         readonly_group.add_argument(
             "--read-write",
-            action="store_true",
+            action="store_false",
+            dest="read_only",
+            default=None,
             help=_("Set volume to read-write access mode"),
         )
         return parser
@@ -796,28 +948,31 @@ class SetVolume(command.Command):
                 LOG.error(_("Failed to clean volume properties: %s"), e)
                 result += 1
 
-        if parsed_args.property:
+        if parsed_args.properties:
             try:
                 volume_client.volumes.set_metadata(
-                    volume.id, parsed_args.property
+                    volume.id, parsed_args.properties
                 )
             except Exception as e:
-                LOG.error(_("Failed to set volume property: %s"), e)
+                LOG.error(_("Failed to set volume properties: %s"), e)
                 result += 1
-        if parsed_args.image_property:
+
+        if parsed_args.image_properties:
             try:
                 volume_client.volumes.set_image_metadata(
-                    volume.id, parsed_args.image_property
+                    volume.id, parsed_args.image_properties
                 )
             except Exception as e:
-                LOG.error(_("Failed to set image property: %s"), e)
+                LOG.error(_("Failed to set image properties: %s"), e)
                 result += 1
+
         if parsed_args.state:
             try:
                 volume_client.volumes.reset_state(volume.id, parsed_args.state)
             except Exception as e:
                 LOG.error(_("Failed to set volume state: %s"), e)
                 result += 1
+
         if parsed_args.attached:
             try:
                 volume_client.volumes.reset_state(
@@ -826,6 +981,7 @@ class SetVolume(command.Command):
             except Exception as e:
                 LOG.error(_("Failed to set volume attach-status: %s"), e)
                 result += 1
+
         if parsed_args.detached:
             try:
                 volume_client.volumes.reset_state(
@@ -834,7 +990,8 @@ class SetVolume(command.Command):
             except Exception as e:
                 LOG.error(_("Failed to set volume attach-status: %s"), e)
                 result += 1
-        if parsed_args.bootable or parsed_args.non_bootable:
+
+        if parsed_args.bootable is not None:
             try:
                 volume_client.volumes.set_bootable(
                     volume.id, parsed_args.bootable
@@ -842,7 +999,8 @@ class SetVolume(command.Command):
             except Exception as e:
                 LOG.error(_("Failed to set volume bootable property: %s"), e)
                 result += 1
-        if parsed_args.read_only or parsed_args.read_write:
+
+        if parsed_args.read_only is not None:
             try:
                 volume_client.volumes.update_readonly_flag(
                     volume.id, parsed_args.read_only
@@ -853,6 +1011,7 @@ class SetVolume(command.Command):
                     e,
                 )
                 result += 1
+
         policy = parsed_args.migration_policy or parsed_args.retype_policy
         if parsed_args.type:
             # get the migration policy
@@ -953,6 +1112,7 @@ class UnsetVolume(command.Command):
             '--property',
             metavar='<key>',
             action='append',
+            dest='properties',
             help=_(
                 'Remove a property from volume '
                 '(repeat option to remove multiple properties)'
@@ -962,6 +1122,7 @@ class UnsetVolume(command.Command):
             '--image-property',
             metavar='<key>',
             action='append',
+            dest='image_properties',
             help=_(
                 'Remove an image property from volume '
                 '(repeat option to remove multiple image properties)'
@@ -974,22 +1135,22 @@ class UnsetVolume(command.Command):
         volume = utils.find_resource(volume_client.volumes, parsed_args.volume)
 
         result = 0
-        if parsed_args.property:
+        if parsed_args.properties:
             try:
                 volume_client.volumes.delete_metadata(
-                    volume.id, parsed_args.property
+                    volume.id, parsed_args.properties
                 )
             except Exception as e:
-                LOG.error(_("Failed to unset volume property: %s"), e)
+                LOG.error(_("Failed to unset volume properties: %s"), e)
                 result += 1
 
-        if parsed_args.image_property:
+        if parsed_args.image_properties:
             try:
                 volume_client.volumes.delete_image_metadata(
-                    volume.id, parsed_args.image_property
+                    volume.id, parsed_args.image_properties
                 )
             except Exception as e:
-                LOG.error(_("Failed to unset image property: %s"), e)
+                LOG.error(_("Failed to unset image properties: %s"), e)
                 result += 1
 
         if result > 0:

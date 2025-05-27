@@ -56,11 +56,11 @@ class TimestampWithTimezone(
 class TimestampWithoutTimezone(
     RootModel[constr(pattern=r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?( BC)?$')]
 ):
-    root: constr(pattern=r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?( BC)?$') = (
-        Field(
-            ...,
-            description='Also known as a localdatetime, or just datetime. Under RFC 3339§5.6, this would be represented as `full-date "T" partial-time`, extended with BC era support.\n',
-        )
+    root: constr(
+        pattern=r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?( BC)?$'
+    ) = Field(
+        ...,
+        description='Also known as a localdatetime, or just datetime. Under RFC 3339§5.6, this would be represented as `full-date "T" partial-time`, extended with BC era support.\n',
     )
 
 

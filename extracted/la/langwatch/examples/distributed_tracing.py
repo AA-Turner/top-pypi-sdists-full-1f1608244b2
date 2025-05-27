@@ -14,7 +14,12 @@ client = OpenAI()
 
 
 @cl.on_message
+@langwatch.trace()
 async def main(message: cl.Message):
+    langwatch.get_current_trace().update(
+        metadata={"labels": ["distributed_tracing"]},
+    )
+
     msg = cl.Message(
         content="",
     )

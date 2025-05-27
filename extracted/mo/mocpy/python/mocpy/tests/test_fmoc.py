@@ -22,6 +22,10 @@ def test_n_cells():
         match=f"The depth should be comprised between 0 and {FrequencyMOC.MAX_ORDER}*",
     ):
         FrequencyMOC.n_cells(-1)
+    with pytest.raises(
+        ValueError,
+        match=f"The depth should be comprised between 0 and {FrequencyMOC.MAX_ORDER}*",
+    ):
         FrequencyMOC.n_cells(FrequencyMOC.MAX_ORDER + 1)
     assert FrequencyMOC.n_cells(5) == 2 * FrequencyMOC.n_cells(4)
 
@@ -55,6 +59,20 @@ def test_degrade_to_order():
         fmoc.to_depth59_ranges
         == np.array([[0, FrequencyMOC.MAX_INDEX_EXCLUSIVE]], dtype=np.uint64)
     ).all()
+    with pytest.warns(
+        UserWarning,
+        match="The new order is more precise than the current order, nothing done.",
+    ):
+        fmoc.degrade_to_order(FrequencyMOC.MAX_ORDER)
+
+
+def test_refine_to_order():
+    moc = FrequencyMOC.from_str("5/1")
+    moc.refine_to_order(6)
+    assert moc.max_order == 6
+
+    with pytest.warns(UserWarning, match="'new_order' is less precise*"):
+        moc.refine_to_order(0)
 
 
 def test_from_depth59_ranges():
