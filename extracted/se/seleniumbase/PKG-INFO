@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: seleniumbase
-Version: 4.39.0
+Version: 4.39.1
 Summary: A complete web automation framework for end-to-end testing.
 Home-page: https://github.com/seleniumbase/SeleniumBase
 Author: Michael Mintz
@@ -121,7 +121,8 @@ Requires-Dist: pytest-metadata==3.1.1
 Requires-Dist: pytest-ordering==0.6
 Requires-Dist: pytest-rerunfailures==14.0; python_version < "3.9"
 Requires-Dist: pytest-rerunfailures==15.1; python_version >= "3.9"
-Requires-Dist: pytest-xdist==3.6.1
+Requires-Dist: pytest-xdist==3.6.1; python_version < "3.9"
+Requires-Dist: pytest-xdist==3.7.0; python_version >= "3.9"
 Requires-Dist: parameterized==0.9.0
 Requires-Dist: behave==1.2.6
 Requires-Dist: soupsieve==2.7
@@ -158,7 +159,7 @@ Provides-Extra: pdfminer
 Requires-Dist: pdfminer.six==20250324; python_version < "3.9" and extra == "pdfminer"
 Requires-Dist: pdfminer.six==20250506; python_version >= "3.9" and extra == "pdfminer"
 Requires-Dist: cryptography==39.0.2; python_version < "3.9" and extra == "pdfminer"
-Requires-Dist: cryptography==45.0.2; python_version >= "3.9" and extra == "pdfminer"
+Requires-Dist: cryptography==45.0.3; python_version >= "3.9" and extra == "pdfminer"
 Requires-Dist: cffi==1.17.1; extra == "pdfminer"
 Requires-Dist: pycparser==2.22; extra == "pdfminer"
 Provides-Extra: pillow

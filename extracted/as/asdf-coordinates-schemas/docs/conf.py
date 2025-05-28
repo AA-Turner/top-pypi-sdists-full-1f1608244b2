@@ -28,19 +28,40 @@ configuration = conf["project"]
 
 project = configuration["name"]
 author = f"{configuration['authors'][0]['name']} <{configuration['authors'][0]['email']}>"
-copyright = f"{datetime.datetime.now().year}, {configuration['authors'][0]}"
+copyright = f"{datetime.datetime.now().year}, {author}"
 
 release = get_distribution(configuration["name"]).version
+# The short X.Y version
 version = ".".join(release.split(".")[:2])
 
 # If your documentation needs a minimal Sphinx version, state it here.
 # needs_sphinx = '1.2'
 
 intersphinx_mapping["pypa-packaging"] = ("https://packaging.python.org/en/latest/", None)  # noqa
-intersphinx_mapping["asdf"] = ("https://asdf.readthedocs.io/en/latest/", None)  # noqa
-intersphinx_mapping["asdf-standard"] = ("https://asdf-standard.readthedocs.io/en/latest/", None)  # noqa
 intersphinx_mapping["asdf-astropy"] = ("https://asdf-astropy.readthedocs.io/en/latest/", None)  # noqa
 intersphinx_mapping["pytest"] = ("https://docs.pytest.org/en/latest/", None)  # noqa
+
+subprojects = {
+    # main project
+    "asdf-website": ("https://www.asdf-format.org/en/latest", None),
+    # other subprojects
+    "asdf": ("https://www.asdf-format.org/projects/asdf/en/stable/", None),
+    "asdf-standard": ("https://asdf-standard.readthedocs.io/en/latest/", None),
+    "asdf-transform-schemas": ("https://www.asdf-format.org/projects/asdf-transform-schemas/en/latest/", None),
+    "asdf-wcs-schemas": ("https://www.asdf-format.org/projects/asdf-wcs-schemas/en/latest/", None),
+}
+
+intersphinx_mapping.update(subprojects)  # noqa
+
+# Adds a global navigation in the topbar - consistent across subprojects
+globalnavlinks = {
+    "ASDF Projects": "https://www.asdf-format.org",
+    "Tutorials": "https://www.asdf-format.org/en/latest/tutorials/index.html",
+    "Community": "https://www.asdf-format.org/en/latest/community/index.html",
+}
+topbanner = ""
+for text, link in globalnavlinks.items():
+    topbanner += f"<a href={link}>{text}</a>"
 
 # To perform a Sphinx version check that needs to be more specific than
 # major.minor, call `check_sphinx_version("x.y.z")` here.
@@ -71,19 +92,29 @@ rst_epilog += """"""  # noqa
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes. To override the custom theme, set this to the
 # name of a builtin theme or the name of a custom theme in html_theme_path.
-html_theme = "sphinx_rtd_theme"
-html_theme_options = {}
+html_theme = "furo"
 
 html_static_path = ["_static"]
 
 # Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+# Override default settings from sphinx_asdf / sphinx_astropy (incompatible with furo)
+html_sidebars = {}
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "_static/logo.ico"
-html_logo = "_static/logo.png"
+html_favicon = "_static/images/favicon.ico"
+html_logo = ""
+html_theme_options = {
+    "light_logo": "images/logo-light-mode.png",
+    "dark_logo": "images/logo-dark-mode.png",
+    "announcement": topbanner,
+}
+
+pygments_style = "monokai"
+
+# NB Dark style pygments is furo-specific at this time
+pygments_dark_style = "monokai"
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -91,11 +122,23 @@ html_logo = "_static/logo.png"
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = f"{project} v{release}"
+html_title = f"{project.replace('_', ' ')} v{release}"
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = project + "doc"
 
+# Render inheritance diagrams in SVG
+graphviz_output_format = "svg"
+
+graphviz_dot_args = [
+    "-Nfontsize=10",
+    "-Nfontname=Helvetica Neue, Helvetica, Arial, sans-serif",
+    "-Efontsize=10",
+    "-Efontname=Helvetica Neue, Helvetica, Arial, sans-serif",
+    "-Gbgcolor=white",
+    "-Gfontsize=10",
+    "-Gfontname=Helvetica Neue, Helvetica, Arial, sans-serif",
+]
 
 # -- Options for LaTeX output --------------------------------------------------
 
@@ -103,7 +146,7 @@ htmlhelp_basename = project + "doc"
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [("index", project + ".tex", project + " Documentation", author, "manual")]
 
-latex_logo = "_static/logo.pdf"
+latex_logo = "_static/images/logo-light-mode.png"
 
 
 # -- Options for manual page output --------------------------------------------
@@ -113,11 +156,7 @@ latex_logo = "_static/logo.pdf"
 man_pages = [("index", project.lower(), project + " Documentation", [author], 1)]
 
 sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname("__file__")), "sphinxext"))
-extensions += ["sphinx_asdf"]  # noqa
-
-
-def setup(app):
-    app.add_css_file("custom.css")
+extensions += ["sphinx_asdf", "sphinx.ext.intersphinx", "sphinx.ext.extlinks"]  # noqa
 
 
 # -- sphinx_asdf configuration ---------------------------------------------
@@ -126,3 +165,7 @@ def setup(app):
 asdf_schema_path = "../resources"
 # This is the prefix common to all schema IDs in this repository
 asdf_schema_standard_prefix = "schemas"
+
+
+def setup(app):
+    app.add_css_file("custom.css")

@@ -50,7 +50,7 @@ async def delete_files(client, threshold: int = 666):
 
 
 @rcache(ttl=7 * 24 * 3600)
-async def file_extract(file):
+async def file_extract(file, enable_reader: bool = True):
     """
 
     :param file: url bytes path
@@ -63,8 +63,9 @@ async def file_extract(file):
     filename = Path(file).name if isinstance(file, str) else 'untitled'
     mime_type = guess_mime_type(file)
 
-    if str(file).startswith("http") and mime_type in {"application/octet-stream", "text/html"}:
+    if enable_reader and str(file).startswith("http") and mime_type in {"application/octet-stream", "text/html"}:
         logger.debug(f"jina reader")
+
         markdown_content = await url_reader(file)
         return {
             'filename': filename,

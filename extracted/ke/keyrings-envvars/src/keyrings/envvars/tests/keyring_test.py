@@ -1,4 +1,4 @@
-"""keyrings.envvars tests."""
+"""Tests for keyrings.envvars."""
 
 from __future__ import annotations
 
@@ -13,6 +13,11 @@ from ..keyring import EnvvarsKeyring
 
 class TestKeyring:
     """Test backend via keyring."""
+
+    @pytest.mark.usefixtures('_mock_keyring_environment')
+    def test_env_patching_works_as_excected(self) -> None:
+        """Test the environment monkeypatching."""
+        assert os.getenv('KEYRING_SERVICE_PASSWORD_0') == 'testpassword'
 
     @pytest.mark.usefixtures('_mock_keyring_environment')
     def test_get_password(self) -> None:

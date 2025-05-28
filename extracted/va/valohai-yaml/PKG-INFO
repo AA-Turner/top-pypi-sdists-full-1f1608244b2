@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: valohai-yaml
-Version: 0.46.0
+Version: 0.47.1
 Summary: Valohai.yaml validation and parsing
 Project-URL: Homepage, https://github.com/valohai/valohai-yaml
 Author-email: Valohai <info@valohai.com>
@@ -10,12 +10,13 @@ Keywords: strings,utility
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Requires-Dist: jsonschema>=4.0
 Requires-Dist: leval>=1.1.1
 Requires-Dist: pyyaml

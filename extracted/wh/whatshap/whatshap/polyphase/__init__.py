@@ -2,17 +2,37 @@ import logging
 from collections import defaultdict
 from dataclasses import dataclass
 from queue import Queue
-from typing import List
+from typing import List, Dict, Iterator
 
 from pulp import listSolvers, getSolver
 from whatshap.core import ReadSet
 from whatshap.polyphase.solver import AlleleMatrix
+from whatshap.vcf import VariantTable
 
 logger = logging.getLogger(__name__)
 
 
+Position = int
+Allele = int
+Genotype = Dict[Allele, int]
+AlleleDepth = Dict[Allele, int]
+Haplotype = List[Allele]
+ReadId = int
+Cluster = List[ReadId]
+Clustering = List[Cluster]
+ClusterId = int
+Threading = List[List[ClusterId]]
+
+
 class SolverError(Exception):
     pass
+
+
+class Interval:
+    def __init__(self, start: Position, end: Position):
+        self.start = start
+        self.end = end
+        self.length = end - start
 
 
 @dataclass
@@ -24,12 +44,21 @@ class PolyphaseParameter:
     block_cut_sensitivity: int
     plot_clusters: bool
     plot_threading: bool
+    plot_path: str
     threads: int
     use_prephasing: bool
 
 
+@dataclass
+class BlockContext:
+    block_id: int
+    job_id: int
+    total_blocks: int
+    recursion_level: int
+
+
 class PhaseBreakpoint:
-    def __init__(self, position, haplotypes, confidence):
+    def __init__(self, position: int, haplotypes: List[int], confidence: float):
         self.position = position
         self.haplotypes = sorted(haplotypes[:])
         self.confidence = confidence
@@ -52,14 +81,16 @@ class PolyphaseResult:
     breakpoints: List[PhaseBreakpoint]
 
 
-def get_coverage(allele_matrix, clustering):
+def get_coverage(
+    allele_matrix: AlleleMatrix, clustering: List[Cluster]
+) -> List[Dict[ClusterId, float]]:
     """
     Returns a list, which for every position contains a dictionary, mapping a cluster id to
     a relative coverage on this position.
     """
     num_vars = allele_matrix.getNumPositions()
     num_clusters = len(clustering)
-    coverage = [defaultdict(int) for pos in range(num_vars)]
+    coverage = [defaultdict(float) for pos in range(num_vars)]
     coverage_sum = [0 for pos in range(num_vars)]
     for c_id in range(num_clusters):
         for read in clustering[c_id]:
@@ -76,7 +107,9 @@ def get_coverage(allele_matrix, clustering):
     return coverage
 
 
-def compute_block_starts(am, ploidy, single_linkage=False):
+def compute_block_bounds(
+    am: AlleleMatrix, ploidy: int, single_linkage: bool = False
+) -> Iterator[Interval]:
     """
     Based on the connectivity of the reads, we want to divide the phasing input, as non- or poorly
     connected regions can be phased independently. This is done based on how pairs of variants are
@@ -118,14 +151,14 @@ def compute_block_starts(am, ploidy, single_linkage=False):
     logger.debug(f"Cut position threshold: coverage >= {cut_threshold}")
 
     # start by looking at neighbouring
-    link_to_next = [0 for i in range(num_vars)]
+    link_to_next = [0 for _ in range(num_vars)]
     for read in am:
         pos_list = [pos for (pos, allele) in read]
         for i in range(len(pos_list) - 1):
             if pos_list[i] + 1 == pos_list[i + 1]:
                 link_to_next[pos_list[i]] += 1
 
-    pos_clust = [0 for i in range(num_vars)]
+    pos_clust = [0 for _ in range(num_vars)]
     for i in range(1, num_vars):
         if link_to_next[i - 1] >= cut_threshold:
             pos_clust[i] = pos_clust[i - 1]
@@ -135,7 +168,7 @@ def compute_block_starts(am, ploidy, single_linkage=False):
 
     # find linkage between clusters
     link_coverage = [defaultdict(int) for i in range(num_clust)]
-    for i, read in enumerate(am):
+    for read in am:
         covered_pos_clusts = {pos_clust[pos] for (pos, allele) in read}
         for p1 in covered_pos_clusts:
             for p2 in covered_pos_clusts:
@@ -159,15 +192,15 @@ def compute_block_starts(am, ploidy, single_linkage=False):
         new_num_clust += 1
 
     # determine cut positions
-    cuts = [0]
+    start = 0
     for i in range(1, num_vars):
         if merged_clust[pos_clust[i]] != merged_clust[pos_clust[i - 1]]:
-            cuts.append(i)
+            yield Interval(start, i)
+            start = i
+    yield Interval(start, num_vars)
 
-    return cuts
 
-
-def create_genotype_list(variant_table, sample):
+def create_genotype_list(variant_table: VariantTable, sample: str):
     """
     Creates a list, which stores a dictionary for every position. The dictionary maps every allele
     to its frequency in the genotype of the respective position.
@@ -184,7 +217,7 @@ def create_genotype_list(variant_table, sample):
     return genotype_list
 
 
-def extract_partial_phasing(variant_table, sample, ploidy):
+def extract_partial_phasing(variant_table: VariantTable, sample: str, ploidy: int):
     readset = ReadSet()
     vars = variant_table.variants
     for read in variant_table.phased_blocks_as_reads(sample, vars, 0, 0, target_ploidy=ploidy):

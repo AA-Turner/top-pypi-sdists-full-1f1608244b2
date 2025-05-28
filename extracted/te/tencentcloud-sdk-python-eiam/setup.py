@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-eiam',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1388"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1389"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Eiam SDK for Python',
     long_description=open('README.rst').read(),

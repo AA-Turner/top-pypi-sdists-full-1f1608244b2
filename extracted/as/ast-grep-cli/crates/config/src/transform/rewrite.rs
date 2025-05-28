@@ -1,5 +1,5 @@
 use super::Ctx;
-use super::{transformation::parse_meta_var, TransformError};
+use super::{trans::parse_meta_var, TransformError};
 use crate::rule_core::RuleCore;
 
 use ast_grep_core::meta_var::MetaVariable;
@@ -11,11 +11,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Rewrite<T> {
-  pub(super) source: T,
-  pub(super) rewriters: Vec<String>,
+  pub source: T,
+  pub rewriters: Vec<String>,
   // do we need this?
   // sort_by: Option<String>,
-  pub(super) join_by: Option<String>,
+  pub join_by: Option<String>,
 }
 
 fn get_nodes_from_env<'b, D: Doc>(var: &MetaVariable, ctx: &Ctx<'_, 'b, D>) -> Vec<Node<'b, D>> {

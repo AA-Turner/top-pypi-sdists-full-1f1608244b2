@@ -3,15 +3,11 @@ name = 'asdf_transform_schemas'
 description = 'ASDF schemas for transforms'
 readme = 'README.md'
 requires-python = '>=3.9'
-license = { file = 'LICENSE' }
+license-files = ['LICENSE']
 authors = [{ name = 'The ASDF Developers', email = 'help@stsci.edu' }]
 classifiers = [
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',
     'Development Status :: 5 - Production/Stable',
 ]
 dependencies = [
@@ -29,7 +25,7 @@ docs = [
     'graphviz',
     'matplotlib',
     'docutils',
-    'sphinx-rtd-theme',
+    'furo',
 ]
 test = [
     'asdf >= 2.8.0',
@@ -40,7 +36,7 @@ test = [
 
 [project.urls]
 'tracker' = 'https://github.com/asdf-format/asdf-transform-schemas/issues'
-'documentation' = 'https://asdf-transform-schemas.readthedocs.io/en/stable'
+'documentation' = 'https://www.asdf-format.org/projects/asdf-transform-schemas/en/latest'
 'repository' = 'https://github.com/asdf-format/asdf-transform-schemas'
 
 [project.entry-points]
@@ -48,7 +44,7 @@ test = [
 
 [build-system]
 requires = [
-    "setuptools >=42",
+    "setuptools >77",
     "setuptools_scm[toml] >=3.4",
     "wheel",
 ]

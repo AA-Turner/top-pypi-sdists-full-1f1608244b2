@@ -61,6 +61,7 @@ async def get_task(task_id: str, token: Optional[str] = None):
 
 
 if __name__ == '__main__':
+    # https://fal.ai/models/fal-ai/tavus/hummingbird-lipsync/v0
     model = "latentsync"
     # model = "sync-lipsync"
     audio_url = "https://oss.ffire.cc/files/lipsync.mp3"

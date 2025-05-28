@@ -10,7 +10,7 @@ import narwhals.stable.v1 as nw
 from narwhals.stable.v1.typing import IntoFrameT
 
 from marimo import _loggers
-from marimo._data.models import ColumnSummary, ExternalDataType
+from marimo._data.models import ColumnStats, ExternalDataType
 from marimo._dependencies.dependencies import DependencyManager
 from marimo._output.data.data import sanitize_json_bigint
 from marimo._plugins.core.media import io_to_data_url
@@ -164,24 +164,56 @@ class NarwhalsTableManager(
     def calculate_top_k_rows(
         self, column: ColumnName, k: int
     ) -> list[tuple[Any, int]]:
-        frame = self.as_lazy_frame()
         if column not in self.get_column_names():
             raise ValueError(f"Column {column} not found in table.")
 
+        frame = self.as_lazy_frame()
         _unique_name = "__len_count__"
-        result = (
-            frame.group_by(column)
-            .agg(nw.len().alias(_unique_name))
-            .sort([_unique_name, column], descending=[True, False])
-            .head(k)
-            .collect()
-        )
 
-        return [
-            (
-                unwrap_py_scalar(row[0]),
-                int(unwrap_py_scalar(row[1])),
+        def _calculate_top_k_rows(
+            df: nw.DataFrame[Any] | nw.LazyFrame[Any],
+        ) -> nw.DataFrame[Any]:
+            result = (
+                df.group_by(column)
+                .agg(nw.len().alias(_unique_name))
+                .sort(
+                    [_unique_name, column],
+                    descending=[True, False],
+                    nulls_last=False,
+                )
+                .head(k)
             )
+            if isinstance(result, nw.LazyFrame):
+                return result.collect()
+            return result
+
+        # For pandas, dicts and lists are unhashable, and thus cannot be grouped_by
+        # so we convert them to strings
+        if self.data.implementation.is_pandas():
+            import pandas as pd
+
+            df = self.data.to_native()
+            if (
+                isinstance(df, pd.DataFrame)
+                and not df.empty
+                and isinstance(df[column].iloc[0], (list, dict))
+            ):
+                str_data = self.data.select(self.data[column].cast(nw.String))
+                result = _calculate_top_k_rows(str_data)
+                str_to_val = {str(val): val for val in df[column]}
+
+                # Map back to the original values
+                return [
+                    (
+                        str_to_val.get(unwrap_py_scalar(row[0])),
+                        int(unwrap_py_scalar(row[1])),
+                    )
+                    for row in result.rows()
+                ]
+
+        result = _calculate_top_k_rows(frame)
+        return [
+            (unwrap_py_scalar(row[0]), int(unwrap_py_scalar(row[1])))
             for row in result.rows()
         ]
 
@@ -228,7 +260,13 @@ class NarwhalsTableManager(
         if offset == 0:
             return self.with_new_data(self.data.head(count))
         else:
-            return self.with_new_data(self.data[offset : offset + count])
+            if is_narwhals_lazyframe(self.data):
+                # Lazyframes do not support slicing, https://github.com/narwhals-dev/narwhals/issues/2389
+                # So we collect the first n rows
+                data = self.data.head(offset + count).collect()
+                return self.with_new_data(data[offset : offset + count])
+            else:
+                return self.with_new_data(self.data[offset : offset + count])
 
     def search(self, query: str) -> TableManager[Any]:
         query = query.lower()
@@ -264,8 +302,8 @@ class NarwhalsTableManager(
         filtered = self.data.filter(or_expr)
         return NarwhalsTableManager(filtered)
 
-    def get_summary(self, column: str) -> ColumnSummary:
-        summary = self._get_summary_internal(column)
+    def get_stats(self, column: str) -> ColumnStats:
+        stats = self._get_stats_internal(column)
         import warnings
 
         with warnings.catch_warnings():
@@ -275,15 +313,15 @@ class NarwhalsTableManager(
                 category=UserWarning,
             )
 
-            for key, value in summary.__dict__.items():
+            for key, value in stats.__dict__.items():
                 if value is not None:
-                    summary.__dict__[key] = unwrap_py_scalar(value)
-        return summary
+                    stats.__dict__[key] = unwrap_py_scalar(value)
+        return stats
 
-    def _get_summary_internal(self, column: str) -> ColumnSummary:
-        # If column is not in the dataframe, return an empty summary
+    def _get_stats_internal(self, column: str) -> ColumnStats:
+        # If column is not in the dataframe, return empty stats
         if column not in self.nw_schema:
-            return ColumnSummary()
+            return ColumnStats()
 
         frame = self.data.lazy()
         col = nw.col(column)
@@ -390,15 +428,15 @@ class NarwhalsTableManager(
                 }
             )
 
-        summary = frame.select(**exprs)
-        summary_dict = summary.collect().rows(named=True)[0]
+        stats = frame.select(**exprs)
+        stats_dict = stats.collect().rows(named=True)[0]
 
-        # Maybe add units to the summary
-        for key, value in summary_dict.items():
+        # Maybe add units to the stats
+        for key, value in stats_dict.items():
             if key in units:
-                summary_dict[key] = f"{value} {units[key]}"
+                stats_dict[key] = f"{value} {units[key]}"
 
-        return ColumnSummary(**summary_dict)
+        return ColumnStats(**stats_dict)
 
     def get_num_rows(self, force: bool = True) -> Optional[int]:
         # If force is true, collect the data and get the number of rows

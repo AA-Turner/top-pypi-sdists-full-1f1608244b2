@@ -2,7 +2,7 @@ import copy
 from itertools import chain
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
-from valohai_yaml.excs import InvalidType
+from valohai_yaml.excs import InvalidType, ValidationError
 from valohai_yaml.lint import LintResult
 from valohai_yaml.objs.base import Item
 from valohai_yaml.objs.endpoint import Endpoint
@@ -37,21 +37,24 @@ class Config(Item):
         self.pipelines = check_type_and_dictify(pipelines, Pipeline, "name")
 
     @classmethod
-    def parse(cls, data: Any) -> "Config":
+    def parse(cls, data: Iterable) -> "Config":
         """
-        Parse a Config structure out of a Python dict (that's likely deserialized from YAML).
+        Parse a Config structure out of a list of Python dicts (that's likely deserialized from YAML).
 
-        :param data: Config-y dict
+        :param data: Config-y iterable container of dicts
         :return: Config object
         """
         parsers = cls.get_top_level_parsers()
         parse_warnings = []
+        require_unique_name = _get_unique_name_checker()
+
         for datum in data:
             if not isinstance(datum, dict):
-                raise InvalidType(f"Top-level YAML {datum} is not a dictionary")
+                raise InvalidType(f"Top-level YAML item {datum} is not a dictionary")
             for type, (items, parse) in parsers.items():
                 if type in datum:
-                    items.append(parse(datum[type]))
+                    items.append(parsed_item := parse(datum[type]))
+                    require_unique_name(type, parsed_item)
                     break
             else:
                 parse_warnings.append(f"No parser for {datum}")
@@ -173,11 +176,31 @@ class Config(Item):
         return result
 
     def __repr__(self) -> str:  # pragma: no cover  # noqa: D105
-        return "<Config with %d steps (%r), %d endpoints (%r), and %d pipelines (%r)>" % (
-            len(self.steps),
-            self.steps,
-            len(self.endpoints),
-            sorted(self.endpoints),
-            len(self.pipelines),
-            sorted(self.pipelines),
+        return (
+            f"<Config with {len(self.steps)} steps ({self.steps!r}), "
+            f"{len(self.endpoints)} endpoints ({sorted(self.endpoints)!r}), "
+            f"and {len(self.pipelines)} pipelines ({sorted(self.pipelines)!r})>"
         )
+
+
+def _get_unique_name_checker() -> Callable:
+    used_item_names = set()
+
+    def checker(item_type: str, item: Any) -> None:
+        """
+        Check that the name is not already used in the config.
+
+        Checks within the item type, i.e.,
+        two steps with the same name is an error, but not a step and a task with the same name.
+        Raises a validation error if the name is already used.
+        """
+        try:
+            if (item_type, item.name) in used_item_names:
+                raise ValidationError(f"Duplicate {item_type} name: {item.name}.")
+            used_item_names.add((item_type, item.name))
+        except AttributeError:
+            # all current items have a name, but that is not guaranteed for the future
+            # so make sure things don't break if we get a top-level item without a name
+            pass
+
+    return checker

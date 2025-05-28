@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING, List, Mapping, Optional, Sequence, Type, Union
 import pyarrow as pa
 
 if TYPE_CHECKING:
-    from pydantic import BaseModel, Field
+    from pydantic import BaseModel
 else:
     try:
-        from pydantic.v1 import BaseModel, Field
+        from pydantic.v1 import BaseModel
     except ImportError:
-        from pydantic import BaseModel, Field
+        from pydantic import BaseModel
 
 from chalk.features.underscore import Underscore, UnderscoreFunction
 from chalk.utils.pydanticutil.pydantic_compat import is_pydantic_v1
@@ -179,45 +179,79 @@ class Message(BaseModel):
 
 
 class Prompt(BaseModel):
+    """Chalk Prompts are bundles of a model, a list of messages, and parameters."""
+
     model: str
+    """The name of the model, e.g. "gpt-4o"."""
     messages: List[Message]
+    """The list of messages of the type P.Message. Each message in the array contains the following properties: role and content.
+    The role of the message's author. Roles can be: system, user, or assistant.
+    The contents of the message. It is required for all messages."""
     timeout_seconds: Optional[float] = None
-    output_structure: Optional[str] = Field(description="Json representation of the output structure", default=None)
+    """The timeout in seconds for completion requests."""
+    output_structure: Optional[str] = None
+    """The object specifying the format that the model must output. Accepts a Pydantic model or a JSON schema string (see https://docs.pydantic.dev/1.10/usage/schema/)."""
     temperature: Optional[float] = None
+    """The sampling temperature to be used, between 0 and 2 inclusive. Higher values like 0.8 produce more random outputs, while lower values like 0.2 make outputs more focused and deterministic.
+    Note: This parameter is between 0 and 1 (inclusive) for Anthropic models."""
     top_p: Optional[float] = None
+    """The alternative to sampling with temperature. It instructs the model to consider the results of the tokens with top_p probability. For example, 0.1 means only the tokens comprising the top 10% probability mass are considered."""
     max_completion_tokens: Optional[int] = None
+    """The upper bound for the number of tokens that can be generated for a completion, including visible output tokens and reasoning tokens."""
     max_tokens: Optional[int] = None
+    """The maximum number of tokens to generate in the chat completion."""
     stop: Optional[List[str]] = None
+    """Custom text sequences that will cause the model to stop generating."""
     presence_penalty: Optional[float] = None
+    """It is used to penalize new tokens based on their existence in the text so far."""
     frequency_penalty: Optional[float] = None
+    """It is used to penalize new tokens based on their frequency in the text so far."""
     logit_bias: Optional[Mapping[int, float]] = None
+    """Used to modify the probability of specific tokens appearing in the completion."""
     seed: Optional[int] = None
+    """If specified, the system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result. Determinism is not guaranteed."""
     user: Optional[str] = None
+    """The unique identifier representing your end-user. This parameter is specific to OpenAI and can help to monitor and detect abuse."""
     model_provider: Optional[str] = None
+    """The model provider."""
     base_url: Optional[str] = None
+    """The URL of the API endpoint where requests are sent."""
     num_retries: Optional[int] = None
+    """The number of times to retry the API call if an APIError, TimeoutError or ServiceUnavailableError occurs."""
 
 
 class Usage(BaseModel):
-    input_tokens: int = Field(description="Number of tokens in the request.")
-    output_tokens: int = Field(description="Number of tokens in the response.")
-    total_tokens: int = Field(description="Total number of tokens used, equal to input_tokens + output_tokens.")
+    """Usage statistics for the response."""
+
+    input_tokens: int
+    """Number of tokens in the request."""
+    output_tokens: int
+    """Number of tokens in the response."""
+    total_tokens: int
+    """Total number of tokens used, equal to input_tokens + output_tokens."""
 
 
 class RuntimeStats(BaseModel):
-    total_latency: float = Field(description="Total time in seconds to generate the response, including any retries.")
-    last_try_latency: Optional[float] = Field(
-        description="Time in seconds to generate the response in the last successful try."
-    )
+    """Runtime statistics for the response."""
 
-    total_retries: int = Field(description="Total number of retries.")
-    rate_limit_retries: int = Field(description="Number of retries due to rate limiting.")
+    total_latency: float
+    """Total time in seconds to generate the response, including any retries."""
+    last_try_latency: Optional[float]
+    """Time in seconds to generate the response in the last successful try."""
+    total_retries: int
+    """Total number of retries."""
+    rate_limit_retries: int
+    """Number of retries due to rate limiting."""
 
 
 class PromptResponse(BaseModel):
-    response: Optional[str] = Field(
-        description="Response from the model. Raw string if no output structure specified, json encoded string otherwise. None if the response was not received or incorrectly formatted."
-    )
+    """Response from the model."""
+
+    response: Optional[str]
+    """Response from the model. Raw string if no output structure specified, json encoded string otherwise. None if the response was not received or incorrectly formatted."""
     prompt: Prompt
+    """Prompt used to generate the response."""
     usage: Usage
+    """Usage statistics for the response."""
     runtime_stats: RuntimeStats
+    """Runtime statistics for the response."""

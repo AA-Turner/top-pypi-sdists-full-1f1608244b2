@@ -9,6 +9,7 @@
 # @Description  : 
 
 from meutils.pipe import *
+from meutils.hash_utils import murmurhash
 from meutils.schemas.oneapi import BASE_URL, GROUP_RATIO
 
 headers = {
@@ -72,24 +73,27 @@ async def edit_channel(models, token: Optional[str] = None):
 
 
 # todo: 分批
+
 async def create_or_update_channel(api_key, base_url: Optional[str] = "https://api.ffire.cc"):
     if isinstance(api_key, list):
         api_keys = api_key | xgroup(128)  # [[],]
     else:
         api_keys = [[api_key]]
 
-    models = "gemini-1.0-pro-vision-latest,gemini-pro-vision,gemini-1.5-pro-latest,gemini-1.5-pro-001,gemini-1.5-pro-002,gemini-1.5-pro,gemini-1.5-flash-latest,gemini-1.5-flash-001,gemini-1.5-flash-001-tuning,gemini-1.5-flash,gemini-1.5-flash-002,gemini-1.5-flash-8b,gemini-1.5-flash-8b-001,gemini-1.5-flash-8b-latest,gemini-1.5-flash-8b-exp-0827,gemini-1.5-flash-8b-exp-0924,gemini-2.5-pro-exp-03-25,gemini-2.5-pro-preview-03-25,gemini-2.5-flash-preview-04-17,gemini-2.0-flash-exp,gemini-2.0-flash,gemini-2.0-flash-001,gemini-2.0-flash-exp-image-generation,gemini-2.0-flash-lite-001,gemini-2.0-flash-lite,gemini-2.0-flash-lite-preview-02-05,gemini-2.0-flash-lite-preview,gemini-2.0-pro-exp,gemini-2.0-pro-exp-02-05,gemini-2.0-flash-thinking-exp-01-21,gemini-2.0-flash-thinking-exp,gemini-2.0-flash-thinking-exp-1219,learnlm-1.5-pro-experimental,learnlm-2.0-flash-experimental,gemma-3-1b-it,gemma-3-4b-it,gemma-3-12b-it,gemma-3-27b-it,gemini-2.0-flash-live-001"
-    nothinking_models = 'gemini-2.5-pro-exp-03-25-nothinking,gemini-2.5-pro-preview-03-25-nothinking,gemini-2.5-flash-preview-04-17-nothinking,gemini-2.0-flash-thinking-exp-01-21-nothinking,gemini-2.0-flash-thinking-exp-nothinking,gemini-2.0-flash-thinking-exp-1219-nothinking'
+    models = "gemini-2.5-flash-preview-05-20,gemini-1.5-flash-latest,gemini-1.5-flash-001,gemini-1.5-flash-001-tuning,gemini-1.5-flash,gemini-1.5-flash-002,gemini-1.5-flash-8b,gemini-1.5-flash-8b-001,gemini-1.5-flash-8b-latest,gemini-1.5-flash-8b-exp-0827,gemini-1.5-flash-8b-exp-0924,gemini-2.5-flash-preview-04-17,gemini-2.0-flash-exp,gemini-2.0-flash,gemini-2.0-flash-001,gemini-2.0-flash-exp-image-generation,gemini-2.0-flash-lite-001,gemini-2.0-flash-lite,gemini-2.0-flash-lite-preview-02-05,gemini-2.0-flash-lite-preview,gemini-2.0-flash-thinking-exp-01-21,gemini-2.0-flash-thinking-exp,gemini-2.0-flash-thinking-exp-1219,learnlm-2.0-flash-experimental,gemma-3-1b-it,gemma-3-4b-it,gemma-3-12b-it,gemma-3-27b-it,gemini-2.0-flash-live-001"
+    nothinking_models = 'gemini-2.5-flash-preview-05-20-nothinking,gemini-2.5-flash-preview-04-17-nothinking,gemini-2.0-flash-thinking-exp-01-21-nothinking,gemini-2.0-flash-thinking-exp-nothinking,gemini-2.0-flash-thinking-exp-1219-nothinking'
     models = f"{models},{nothinking_models}"
 
     payload = {
         # "id": 7493,
-        "type": 24,# gemini
+        "type": 24,  # gemini
         # "key": "AIzaSyCXWV19FRM4XX0KHmpR9lYUz9i1wxQTYUg",
         "openai_organization": "",
         "test_model": "",
         "status": 1,
         "name": "gemini",
+
+        "priority": murmurhash(api_key, bins=3),
         "weight": 0,
         # "created_time": 1745554162,
         # "test_time": 1745554168,
@@ -102,7 +106,6 @@ async def create_or_update_channel(api_key, base_url: Optional[str] = "https://a
         # "used_quota": 0,
         "model_mapping": """{"gemini-2.5-pro-preview-03-25": "gemini-2.5-pro-exp-03-25"}""",
         # "status_code_mapping": "",
-        # "priority": 0,
         # "auto_ban": 1,
         # "other_info": "",
         # "settings": "",
@@ -154,11 +157,10 @@ if __name__ == '__main__':
     # base_url = "https://api.ffire.cc"
     base_url = "https://usa.chatfire.cn"
     #
-    tokens = arun(get_series(FEISHU_URL))
+    tokens = arun(get_series(FEISHU_URL))  # [:5]
     arun(create_or_update_channel(tokens, base_url))
     # arun(create_or_update_channel(tokens))
     # # arun(delete_channel(range(10000, 20000)))
-
 
 """
 API_KEY=6c255307-7b4d-4be8-984b-5440a3e867eb
@@ -201,3 +203,5 @@ curl --location --request POST 'https://api.ffire.cc/api/channel/' \
     ]
 }'
 """
+
+

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: semantic-kernel
-Version: 1.31.0
+Version: 1.32.0
 Summary: Semantic Kernel Python SDK
 Author-email: Microsoft <SK-Support@microsoft.com>
 Requires-Python: >=3.10
@@ -52,7 +52,7 @@ Requires-Dist: dapr>=1.14.0 ; extra == "dapr"
 Requires-Dist: dapr-ext-fastapi>=1.14.0 ; extra == "dapr"
 Requires-Dist: flask-dapr>=1.14.0 ; extra == "dapr"
 Requires-Dist: faiss-cpu>=1.10.0 ; extra == "faiss"
-Requires-Dist: google-cloud-aiplatform == 1.91.0 ; extra == "google"
+Requires-Dist: google-cloud-aiplatform == 1.93.0 ; extra == "google"
 Requires-Dist: google-generativeai ~= 0.8 ; extra == "google"
 Requires-Dist: transformers[torch] ~= 4.28 ; extra == "hugging-face"
 Requires-Dist: sentence-transformers >= 2.2,< 5.0 ; extra == "hugging-face"
@@ -65,15 +65,14 @@ Requires-Dist: pymongo >= 4.8.0, < 4.13 ; extra == "mongo"
 Requires-Dist: motor >= 3.3.2,< 3.8.0 ; extra == "mongo"
 Requires-Dist: ipykernel ~= 6.29 ; extra == "notebooks"
 Requires-Dist: ollama ~= 0.4 ; extra == "ollama"
-Requires-Dist: onnxruntime-genai ~= 0.5 ; extra == "onnx" and ( python_version < '3.13' and platform_system != 'Windows')
-Requires-Dist: onnxruntime == 1.21.0 ; extra == "onnx" and ( platform_system == 'Windows')
+Requires-Dist: onnxruntime-genai ~= 0.7 ; extra == "onnx"
 Requires-Dist: pandas ~= 2.2 ; extra == "pandas"
 Requires-Dist: pinecone[asyncio, grpc] ~= 6.0 ; extra == "pinecone"
 Requires-Dist: psycopg[binary, pool] ~= 3.2 ; extra == "postgres"
 Requires-Dist: qdrant-client ~= 1.9 ; extra == "qdrant"
 Requires-Dist: websockets >= 13, < 16 ; extra == "realtime"
 Requires-Dist: aiortc>=1.9.0 ; extra == "realtime"
-Requires-Dist: redis[hiredis] ~= 5.0 ; extra == "redis"
+Requires-Dist: redis[hiredis] >= 5,< 7 ; extra == "redis"
 Requires-Dist: types-redis ~= 4.6.0.20240425 ; extra == "redis"
 Requires-Dist: redisvl ~= 0.4 ; extra == "redis"
 Requires-Dist: pyodbc >= 5.2 ; extra == "sql"

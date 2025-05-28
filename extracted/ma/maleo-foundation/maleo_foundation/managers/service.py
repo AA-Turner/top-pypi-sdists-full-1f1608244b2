@@ -41,7 +41,7 @@ from maleo_foundation.utils.logging import (
     ServiceLogger,
     MiddlewareLogger
 )
-from maleo_foundation.utils.mergers import BaseMergers
+from maleo_foundation.utils.merger import deep_merge
 
 class Settings(BaseSettings):
     ENVIRONMENT:BaseEnums.EnvironmentType = Field(..., description="Environment")
@@ -264,7 +264,7 @@ class ServiceManager:
         )
 
         #* Load whole configurations
-        merged_configs = BaseMergers.deep_merge(
+        merged_configs = deep_merge(
             static_configs.model_dump(),
             runtime_configs.model_dump(exclude={"database"}),
             {"cache": cache.model_dump()},

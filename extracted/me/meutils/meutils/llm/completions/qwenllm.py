@@ -34,9 +34,6 @@ base_url = "https://chat.qwen.ai/api"
 from fake_useragent import UserAgent
 
 ua = UserAgent()
-cookie = storage_to_cookie(
-    "cookies.json"
-)
 
 thinking_budget_mapping = {
     "low": 1000,
@@ -44,15 +41,19 @@ thinking_budget_mapping = {
     "high": 24000
 }
 
+COOKIE = """
+cna=KP9DIEqqyjUCATrw/+LjJV8F; _bl_uid=LXmp28z7dwezpmyejeXL9wh6U1Rb; cnaui=310cbdaf-3754-461c-a3ff-9ec8005329c9; aui=310cbdaf-3754-461c-a3ff-9ec8005329c9; x-ap=ap-southeast-1; sca=43897cb0; acw_tc=0a03e53417483123807755658e597c5e3685457054f2ca60a0a8d87b657874; _gcl_au=1.1.106229673.1748312382; xlly_s=1; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMxMGNiZGFmLTM3NTQtNDYxYy1hM2ZmLTllYzgwMDUzMjljOSIsImV4cCI6MTc1MDkwNDU2MH0.nV7I1sp6rAE0QnqXYKNm4I0vLZmA-TdOKWEHg_37_tw; SERVERID=1e5b6792fa61468bae321990103ad502|1748312579|1748312380; atpsida=0450727e7c9d8a7299a0b2bd_1748312579_5; ssxmod_itna=iqGxRDuQqWqxgDUxeKYI5q=xBDeMDWK07DzxC5750CDmxjKidKDUGQN0bFP=jhWOGxDkYCA+UQSD0HPKmDA5DnGx7YDtr4FN4SeKhDwIa78YRwwHQiGoh=LTX90w=3qflZqcj1T3xoD==hYDmeDUxD1GDDkS0PDxOPD5xDTDWeDGDD3t4DCCfYYD0RpiboIVxRhTABpDYPYPR4YDY56DAqEz4SpVaxXTDDzw4iaPf4vwDi8D7FRG0RpD7P6fmQDXaYDEAWmFk=Dv6Lh+QwI1/oYOyyDc=DoCO0Km0DTVj2qPGGiU5eiBdnNC4490i+yte+in2MWYHDDW=4=5rzqDxKGe1qC+LimweRk5yxmLhdYY4KGYqOqIheUk5ZB5x2QgohQBxN7spmxFezNiDD; ssxmod_itna2=iqGxRDuQqWqxgDUxeKYI5q=xBDeMDWK07DzxC5750CDmxjKidKDUGQN0bFP=jhWOGxDkYCA+UQmDDpU3qY6obeDLWr7pfFyiDDsa7QaIhEVl4FKFerBUoQiRQlSzS+caiWpDOqz2HrsO6xFOwpKsSOYH0Q0WwhDs0Ye1mah+b99w34Im3AYwt4oztFoQ7xBhThYqatKQWcgkRDBDCOiLViK62z51rnpzpbHH7pFpS=Y4zfHiWfozYCf+9FcGmRMsMEYFGRP+TgG9EbEi3Khm0lQmt2AL=quK6RomKnFmmpjzYzxHQ/QEK0AAa3qGPOl3crGu7DDpQnxjfEEgWD/oEHaE4l6jOpKp6DI6P=vQa39gN6h5i3R5eInP2Gob9pY7DKDr3lYiTZrC3R2Yiz/rsFIG1j5n=2=DD3=obLGPQsWnOZWSinlZ=KjKGpIwRPKn3jpohCU+2PciIEehVxTSnioeIx6xdp91zK29tHtN2Zcgi0clGNaY4jIenYlnw+/Qlapjg6Qho=3E/2v3mIjaYygren01ebwPI4EKgDY+4NyiTXYmU+o/lGSogI=GT/38rPOnA5mjuDg2Ub=+HtTjKnpYoEaTvwj3K0GI7FKARVAv=Wojxe0nHRBwhrQIa1vMpv5pfQ8LGCXGp=lZ3Q8v+6=lSfexroPjNP9MvyNVAXQhnKvyAwT/KEsgh/eOdqx0YiHaP1kwxzsu54i4eGiQDshEOQoiRlPBqiDiSRDQay2k1x4xWDhpBTjqZ0Neer0qlDK0YbDpBYKxSGDD; tfstk=gy8S5jal7pL47z_LOgc4laG38cQQOjuaeW1psBUz9aQRdW9e6MCzzbxBcpJ5eU7-ZoUBQpYrZMdRRipBCgUKqMCvlpJBzkd82-QvQ1KUpv4LH-C1yMxPLTWCRBvsgAuZ7QAl-akZQVyg4ccA76BdpJPAkw5IYeMoXQAl-SDk9fRkZW1NLUsRJpQAD1CRJkB8yjsAs1bLyMU8D-BcHwCdvTQAk61dpkIJpIhfttBdJgpdkj1n_yV1O06kNbzD-uH4ifA5hyUplsHhpQig5_8lNgW9wUwzUXf5VOdRhAjyDMIBFgTqPRfWDC9PNp0graIB2hQJRAg5kCx2es9KCk6vfUYCbUM_jTLlKd_JcxU5JaK95wQIf7f2PILGAUD7kT9DMh7kWx4BBIRwriYIC-BH41bANnGLDTId4azNCak3ASsgRs6ZGjZ3xSw1l2pVr0vc2sf50jGbeHjRis1mGjZ3xgCcN_GjG8Kh.; isg=BOrqXB6_dpCyTPX0tTuBOG9yO1aMW261hQXS_3ShLD3Op4xhWOtyxWGRN9O7V-ZN
+""".strip()
+
 
 @retrying()
-async def to_file(file, api_key):
+async def to_file(file, api_key, cookie: Optional[str] = None):
     qwen_client = AsyncOpenAI(
         base_url="https://all.chatfire.cn/qwen/v1",
         api_key=api_key,
         default_headers={
             'User-Agent': ua.random,
-            'Cookie': cookie
+            'Cookie': cookie or COOKIE
         }
     )
     filename = Path(file).name if isinstance(file, str) else 'untitled'
@@ -64,7 +65,8 @@ async def to_file(file, api_key):
     return file_object
 
 
-async def create(request: CompletionRequest, token: Optional[str] = None):  # ChatCompletionRequest 重构
+async def create(request: CompletionRequest, token: Optional[str] = None, cookie: Optional[str] = None):
+    cookie = cookie or COOKIE
 
     if request.temperature > 1:
         request.temperature = 1
@@ -79,9 +81,6 @@ async def create(request: CompletionRequest, token: Optional[str] = None):  # Ch
         default_headers={
             'User-Agent': ua.random,
             'Cookie': cookie,
-            "bx-v": "2.5.28",
-            "bx-umidtoken": "T2gAeo1Mqj6q05L65Ro3Hjf9KHuOsB63ttVeMP_-13M2-R82AvHnHe-o9nAbz7J8Si4=",
-            "x-request-id": "08cb2785-53d2-4c6d-a24c-069cf0303d1a"
         }
     )
     # qwen结构
@@ -120,13 +119,13 @@ async def create(request: CompletionRequest, token: Optional[str] = None):  # Ch
             for i, content in enumerate(user_content):
                 if content.get("type") == 'file_url':  # image_url file_url video_url
                     url = content.get(content.get("type")).get("url")
-                    file_object = await to_file(url, token)
+                    file_object = await to_file(url, token, cookie)
 
                     user_content[i] = {"type": "file", "file": file_object.id}
 
                 elif content.get("type") == 'image_url':
                     url = content.get(content.get("type")).get("url")
-                    file_object = await to_file(url, token)
+                    file_object = await to_file(url, token, cookie)
 
                     user_content[i] = {"type": "image", "image": file_object.id}
 
@@ -135,7 +134,7 @@ async def create(request: CompletionRequest, token: Optional[str] = None):  # Ch
 
             user_content = [{"type": "text", "text": user_content}]
 
-            file_object = await to_file(file_url, token)
+            file_object = await to_file(file_url, token, cookie)
 
             content_type = file_object.meta.get("content_type", "")
             if content_type.startswith("image"):
@@ -262,11 +261,11 @@ if __name__ == '__main__':
                 'role': 'user',
                 # 'content': '今天南京天气',
                 # 'content': "9.8 9.11哪个大",
-                # 'content': 'https://oss.ffire.cc/files/AIGC.pdf 总结下',
+                'content': 'https://oss.ffire.cc/files/AIGC.pdf 总结下',
 
                 # "chat_type": "search",
 
-                'content': user_content,
+                # 'content': user_content,
 
                 # "content": [
                 #     {
@@ -332,8 +331,6 @@ if __name__ == '__main__':
 
     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMxMGNiZGFmLTM3NTQtNDYxYy1hM2ZmLTllYzgwMDUzMjljOSIsImV4cCI6MTc0ODQ3OTE0M30.oAIE1K0XA0YYqlxB8Su-u0UJbY_BBZa4_tvZpFJKxGY"
 
-    # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEwNzY1N2Y1LTgxN2ItNDg5Yi1iNjk4LWFhZjAyM2EwZTE4MyIsImV4cCI6MTc0NjI5NTAwNH0.D1uJN44NHiEt6URce4upbHvs7v73_Vd0V1s3T_JzclI"
     arun(create(request, token))
-    # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEwNzY1N2Y1LTgxN2ItNDg5Yi1iNjk4LWFhZjAyM2EwZTE4MyIsImV4cCI6MTc0NjI5NTAwNH0.D1uJN44NHiEt6URce4upbHvs7v73_Vd0V1s3T_JzclI"
 
     # arun(to_file("https://oss.ffire.cc/files/kling_watermark.png", token))

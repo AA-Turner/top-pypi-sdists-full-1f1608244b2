@@ -1,6 +1,7 @@
 use crate::prelude::*;
 
-use super::spec::{GraphDeclaration, GraphElementMapping, NodeFromFieldsSpec, TargetFieldMapping};
+use super::shared::property_graph::*;
+
 use crate::setup::components::{self, State, apply_component_changes};
 use crate::setup::{ResourceSetupStatus, SetupChangeType};
 use crate::{ops::sdk::*, setup::CombinedState};
@@ -33,6 +34,8 @@ pub struct Declaration {
     decl: GraphDeclaration,
 }
 
+type Neo4jGraphElement = GraphElementType<ConnectionSpec>;
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 struct GraphKey {
     uri: String,
@@ -44,61 +47,6 @@ impl GraphKey {
         Self {
             uri: spec.uri.clone(),
             db: spec.db.clone().unwrap_or_else(|| DEFAULT_DB.to_string()),
-        }
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Hash, Clone)]
-enum ElementType {
-    Node(String),
-    Relationship(String),
-}
-
-impl ElementType {
-    fn label(&self) -> &str {
-        match self {
-            ElementType::Node(label) => label,
-            ElementType::Relationship(label) => label,
-        }
-    }
-
-    fn from_mapping_spec(spec: &GraphElementMapping) -> Self {
-        match spec {
-            GraphElementMapping::Relationship(spec) => {
-                ElementType::Relationship(spec.rel_type.clone())
-            }
-            GraphElementMapping::Node(spec) => ElementType::Node(spec.label.clone()),
-        }
-    }
-
-    fn matcher(&self, var_name: &str) -> String {
-        match self {
-            ElementType::Relationship(label) => format!("()-[{var_name}:{label}]->()"),
-            ElementType::Node(label) => format!("({var_name}:{label})"),
-        }
-    }
-}
-
-impl std::fmt::Display for ElementType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ElementType::Node(label) => write!(f, "Node(label:{label})"),
-            ElementType::Relationship(rel_type) => write!(f, "Relationship(type:{rel_type})"),
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub struct GraphElement {
-    connection: AuthEntryReference<ConnectionSpec>,
-    typ: ElementType,
-}
-
-impl GraphElement {
-    fn from_spec(spec: &Spec) -> Self {
-        Self {
-            connection: spec.connection.clone(),
-            typ: ElementType::from_mapping_spec(&spec.mapping),
         }
     }
 }
@@ -119,7 +67,7 @@ pub struct GraphPool {
 }
 
 impl GraphPool {
-    pub async fn get_graph(&self, spec: &ConnectionSpec) -> Result<Arc<Graph>> {
+    async fn get_graph(&self, spec: &ConnectionSpec) -> Result<Arc<Graph>> {
         let graph_key = GraphKey::from_spec(spec);
         let cell = {
             let mut graphs = self.graphs.lock().unwrap();
@@ -139,18 +87,15 @@ impl GraphPool {
             .await?;
         Ok(graph.clone())
     }
-}
 
-#[derive(Debug, Clone)]
-struct AnalyzedGraphFieldMapping {
-    field_idx: usize,
-    field_name: String,
-    value_type: schema::ValueType,
-}
-
-struct AnalyzedNodeLabelInfo {
-    key_fields: Vec<AnalyzedGraphFieldMapping>,
-    value_fields: Vec<AnalyzedGraphFieldMapping>,
+    async fn get_graph_for_key(
+        &self,
+        key: &Neo4jGraphElement,
+        auth_registry: &AuthRegistry,
+    ) -> Result<Arc<Graph>> {
+        let spec = auth_registry.get::<ConnectionSpec>(&key.connection)?;
+        self.get_graph(&spec).await
+    }
 }
 
 pub struct ExportContext {
@@ -163,14 +108,10 @@ pub struct ExportContext {
     insert_cypher: String,
     delete_before_upsert: bool,
 
+    analyzed_data_coll: AnalyzedDataCollection,
+
     key_field_params: Vec<String>,
-    key_fields: Vec<FieldSchema>,
-    value_fields: Vec<AnalyzedGraphFieldMapping>,
-
-    src_fields: Option<AnalyzedNodeLabelInfo>,
     src_key_field_params: Vec<String>,
-
-    tgt_fields: Option<AnalyzedNodeLabelInfo>,
     tgt_key_field_params: Vec<String>,
 }
 
@@ -225,16 +166,17 @@ fn field_values_to_bolt<'a>(
     Ok(bolt_value)
 }
 
-fn mapped_field_values_to_bolt<'a>(
-    field_values: impl IntoIterator<Item = &'a value::Value>,
-    field_mappings: impl IntoIterator<Item = &'a AnalyzedGraphFieldMapping>,
+fn mapped_field_values_to_bolt(
+    fields_schema: &Vec<schema::FieldSchema>,
+    fields_input_idx: &Vec<usize>,
+    field_values: &FieldValues,
 ) -> Result<BoltType> {
     let bolt_value = BoltType::Map(neo4rs::BoltMap {
-        value: std::iter::zip(field_mappings, field_values)
-            .map(|(mapping, value)| {
+        value: std::iter::zip(fields_schema.iter(), fields_input_idx.iter())
+            .map(|(schema, field_idx)| {
                 Ok((
-                    neo4rs::BoltString::new(&mapping.field_name),
-                    value_to_bolt(value, &mapping.value_type)?,
+                    neo4rs::BoltString::new(&schema.name),
+                    value_to_bolt(&field_values.fields[*field_idx], &schema.value_type.typ)?,
                 ))
             })
             .collect::<Result<_>>()?,
@@ -356,13 +298,11 @@ impl ExportContext {
     fn new(
         graph: Arc<Graph>,
         spec: Spec,
-        key_fields: Vec<FieldSchema>,
-        value_fields: Vec<AnalyzedGraphFieldMapping>,
-        end_node_fields: Option<(AnalyzedNodeLabelInfo, AnalyzedNodeLabelInfo)>,
+        analyzed_data_coll: AnalyzedDataCollection,
     ) -> Result<Self> {
         let (key_field_params, key_fields_literal) = Self::build_key_field_params_n_literal(
             CORE_KEY_PARAM_PREFIX,
-            key_fields.iter().map(|f| &f.name),
+            analyzed_data_coll.schema.key_fields.iter().map(|f| &f.name),
         );
         let result = match spec.mapping {
             GraphElementMapping::Node(node_spec) => {
@@ -384,10 +324,10 @@ impl ExportContext {
                     FINISH
                     ",
                     label = node_spec.label,
-                    optional_set_props = if value_fields.is_empty() {
-                        "".to_string()
-                    } else {
+                    optional_set_props = if !analyzed_data_coll.value_fields_input_idx.is_empty() {
                         format!(", new_node += ${CORE_PROPS_PARAM}\n")
+                    } else {
+                        "".to_string()
                     },
                 };
 
@@ -398,13 +338,10 @@ impl ExportContext {
                     delete_cypher,
                     insert_cypher,
                     delete_before_upsert: false,
+                    analyzed_data_coll,
                     key_field_params,
-                    key_fields,
-                    value_fields,
                     src_key_field_params: vec![],
-                    src_fields: None,
                     tgt_key_field_params: vec![],
-                    tgt_fields: None,
                 }
             }
             GraphElementMapping::Relationship(rel_spec) => {
@@ -425,19 +362,22 @@ impl ExportContext {
                     rel_type = rel_spec.rel_type,
                 };
 
-                let (src_fields, tgt_fields) = match end_node_fields {
-                    Some((src_fields, tgt_fields)) => (src_fields, tgt_fields),
-                    None => anyhow::bail!("Relationship spec requires source / target fields"),
-                };
+                let analyzed_rel = analyzed_data_coll
+                    .rel
+                    .as_ref()
+                    .ok_or_else(invariance_violation)?;
+                let analyzed_src = &analyzed_rel.source;
+                let analyzed_tgt = &analyzed_rel.target;
+
                 let (src_key_field_params, src_key_fields_literal) =
                     Self::build_key_field_params_n_literal(
                         SRC_KEY_PARAM_PREFIX,
-                        src_fields.key_fields.iter().map(|f| &f.field_name),
+                        analyzed_src.schema.key_fields.iter().map(|f| &f.name),
                     );
                 let (tgt_key_field_params, tgt_key_fields_literal) =
                     Self::build_key_field_params_n_literal(
                         TGT_KEY_PARAM_PREFIX,
-                        tgt_fields.key_fields.iter().map(|f| &f.field_name),
+                        analyzed_tgt.schema.key_fields.iter().map(|f| &f.name),
                     );
 
                 let insert_cypher = formatdoc! {"
@@ -453,22 +393,22 @@ impl ExportContext {
                     FINISH
                     ",
                     src_node_label = rel_spec.source.label,
-                    optional_set_src_props = if src_fields.value_fields.is_empty() {
-                        "".to_string()
-                    } else {
+                    optional_set_src_props = if analyzed_src.has_value_fields() {
                         format!("SET new_src += ${SRC_PROPS_PARAM}\n")
+                    } else {
+                        "".to_string()
                     },
                     tgt_node_label = rel_spec.target.label,
-                    optional_set_tgt_props = if tgt_fields.value_fields.is_empty() {
-                        "".to_string()
-                    } else {
+                    optional_set_tgt_props = if analyzed_tgt.has_value_fields() {
                         format!("SET new_tgt += ${TGT_PROPS_PARAM}\n")
+                    } else {
+                        "".to_string()
                     },
                     rel_type = rel_spec.rel_type,
-                    optional_set_rel_props = if value_fields.is_empty() {
-                        "".to_string()
-                    } else {
+                    optional_set_rel_props = if !analyzed_data_coll.value_fields_input_idx.is_empty() {
                         format!("SET new_rel += ${CORE_PROPS_PARAM}\n")
+                    } else {
+                        "".to_string()
                     },
                 };
                 Self {
@@ -478,13 +418,10 @@ impl ExportContext {
                     delete_cypher,
                     insert_cypher,
                     delete_before_upsert: true,
+                    analyzed_data_coll,
                     key_field_params,
-                    key_fields,
-                    value_fields,
                     src_key_field_params,
-                    src_fields: Some(src_fields),
                     tgt_key_field_params,
-                    tgt_fields: Some(tgt_fields),
                 }
             }
         };
@@ -509,10 +446,16 @@ impl ExportContext {
         val: &KeyValue,
     ) -> Result<neo4rs::Query> {
         let mut query = query;
-        for (i, val) in val.fields_iter(self.key_fields.len())?.enumerate() {
+        for (i, val) in val
+            .fields_iter(self.analyzed_data_coll.schema.key_fields.len())?
+            .enumerate()
+        {
             query = query.param(
                 &self.key_field_params[i],
-                key_to_bolt(val, &self.key_fields[i].value_type.typ)?,
+                key_to_bolt(
+                    val,
+                    &self.analyzed_data_coll.schema.key_fields[i].value_type.typ,
+                )?,
             );
         }
         Ok(query)
@@ -530,67 +473,50 @@ impl ExportContext {
         }
 
         let value = &upsert.value;
-        let mut insert_cypher =
+        let mut query =
             self.bind_rel_key_field_params(neo4rs::query(&self.insert_cypher), &upsert.key)?;
 
-        if let Some(src_fields) = &self.src_fields {
-            insert_cypher = Self::bind_key_field_params(
-                insert_cypher,
-                &self.src_key_field_params,
-                src_fields
-                    .key_fields
-                    .iter()
-                    .map(|f| (&f.value_type, &value.fields[f.field_idx])),
-            )?;
-
-            if !src_fields.value_fields.is_empty() {
-                insert_cypher = insert_cypher.param(
-                    SRC_PROPS_PARAM,
-                    mapped_field_values_to_bolt(
-                        src_fields
-                            .value_fields
-                            .iter()
-                            .map(|f| &value.fields[f.field_idx]),
-                        src_fields.value_fields.iter(),
-                    )?,
-                );
-            }
+        if let Some(analyzed_rel) = &self.analyzed_data_coll.rel {
+            let bind_params = |query: neo4rs::Query,
+                               analyzed: &AnalyzedGraphElementFieldMapping,
+                               key_field_params: &[String]|
+             -> Result<neo4rs::Query> {
+                let mut query = Self::bind_key_field_params(
+                    query,
+                    key_field_params,
+                    std::iter::zip(
+                        analyzed.schema.key_fields.iter(),
+                        analyzed.fields_input_idx.key.iter(),
+                    )
+                    .map(|(f, field_idx)| (&f.value_type.typ, &value.fields[*field_idx])),
+                )?;
+                if analyzed.has_value_fields() {
+                    query = query.param(
+                        SRC_PROPS_PARAM,
+                        mapped_field_values_to_bolt(
+                            &analyzed.schema.value_fields,
+                            &analyzed.fields_input_idx.value,
+                            value,
+                        )?,
+                    );
+                }
+                Ok(query)
+            };
+            query = bind_params(query, &analyzed_rel.source, &self.src_key_field_params)?;
+            query = bind_params(query, &analyzed_rel.target, &self.tgt_key_field_params)?;
         }
 
-        if let Some(tgt_fields) = &self.tgt_fields {
-            insert_cypher = Self::bind_key_field_params(
-                insert_cypher,
-                &self.tgt_key_field_params,
-                tgt_fields
-                    .key_fields
-                    .iter()
-                    .map(|f| (&f.value_type, &value.fields[f.field_idx])),
-            )?;
-
-            if !tgt_fields.value_fields.is_empty() {
-                insert_cypher = insert_cypher.param(
-                    TGT_PROPS_PARAM,
-                    mapped_field_values_to_bolt(
-                        tgt_fields
-                            .value_fields
-                            .iter()
-                            .map(|f| &value.fields[f.field_idx]),
-                        tgt_fields.value_fields.iter(),
-                    )?,
-                );
-            }
-        }
-
-        if !self.value_fields.is_empty() {
-            insert_cypher = insert_cypher.param(
+        if !self.analyzed_data_coll.value_fields_input_idx.is_empty() {
+            query = query.param(
                 CORE_PROPS_PARAM,
                 mapped_field_values_to_bolt(
-                    self.value_fields.iter().map(|f| &value.fields[f.field_idx]),
-                    self.value_fields.iter(),
+                    &self.analyzed_data_coll.schema.value_fields,
+                    &self.analyzed_data_coll.value_fields_input_idx,
+                    value,
                 )?,
             );
         }
-        queries.push(insert_cypher);
+        queries.push(query);
         Ok(())
     }
 
@@ -616,36 +542,43 @@ pub struct SetupState {
 
 impl SetupState {
     fn new(
-        object_label: &ElementType,
-        key_field_names: Vec<String>,
+        schema: &GraphElementSchema,
         index_options: &IndexOptions,
-        field_types: &HashMap<String, schema::ValueType>,
-        dependent_node_labels: Option<Vec<String>>,
+        dependent_node_labels: Vec<String>,
     ) -> Result<Self> {
+        let key_field_names: Vec<String> =
+            schema.key_fields.iter().map(|f| f.name.clone()).collect();
         let mut sub_components = vec![];
         sub_components.push(ComponentState {
-            object_label: object_label.clone(),
+            object_label: schema.elem_type.clone(),
             index_def: IndexDef::KeyConstraint {
                 field_names: key_field_names.clone(),
             },
         });
+        let value_field_types = schema
+            .value_fields
+            .iter()
+            .map(|f| (f.name.as_str(), &f.value_type.typ))
+            .collect::<HashMap<_, _>>();
         for index_def in index_options.vector_indexes.iter() {
             sub_components.push(ComponentState {
-                object_label: object_label.clone(),
+                object_label: schema.elem_type.clone(),
                 index_def: IndexDef::from_vector_index_def(
                     index_def,
-                    field_types.get(&index_def.field_name).ok_or_else(|| {
-                        api_error!(
-                            "Unknown field name for vector index: {}",
-                            index_def.field_name
-                        )
-                    })?,
+                    value_field_types
+                        .get(index_def.field_name.as_str())
+                        .ok_or_else(|| {
+                            api_error!(
+                                "Unknown field name for vector index: {}",
+                                index_def.field_name
+                            )
+                        })?,
                 )?,
             });
         }
         Ok(Self {
             key_field_names,
-            dependent_node_labels: dependent_node_labels.unwrap_or_default(),
+            dependent_node_labels,
             sub_components,
         })
     }
@@ -856,19 +789,12 @@ fn build_composite_field_names(qualifier: &str, field_names: &[String]) -> Strin
 }
 #[derive(Debug)]
 pub struct GraphElementDataSetupStatus {
-    key: GraphElement,
-    conn_spec: ConnectionSpec,
     data_clear: Option<DataClearAction>,
     change_type: SetupChangeType,
 }
 
 impl GraphElementDataSetupStatus {
-    fn new(
-        key: GraphElement,
-        conn_spec: ConnectionSpec,
-        desired_state: Option<&SetupState>,
-        existing: &CombinedState<SetupState>,
-    ) -> Self {
+    fn new(desired_state: Option<&SetupState>, existing: &CombinedState<SetupState>) -> Self {
         let mut data_clear: Option<DataClearAction> = None;
         for v in existing.possible_versions() {
             if desired_state.as_ref().is_none_or(|desired| {
@@ -895,8 +821,6 @@ impl GraphElementDataSetupStatus {
         };
 
         Self {
-            key,
-            conn_spec,
             data_clear,
             change_type,
         }
@@ -936,7 +860,7 @@ impl ResourceSetupStatus for GraphElementDataSetupStatus {
 
 async fn clear_graph_element_data(
     graph: &Graph,
-    key: &GraphElement,
+    key: &Neo4jGraphElement,
     is_self_contained: bool,
 ) -> Result<()> {
     let var_name = CORE_ELEMENT_MATCHER_VAR;
@@ -985,95 +909,6 @@ impl Factory {
     }
 }
 
-struct DependentNodeLabelAnalyzer<'a> {
-    label_name: &'a str,
-    fields: IndexMap<&'a str, AnalyzedGraphFieldMapping>,
-    remaining_fields: HashMap<&'a str, &'a TargetFieldMapping>,
-    primary_key_fields: &'a Vec<String>,
-}
-
-impl<'a> DependentNodeLabelAnalyzer<'a> {
-    fn new(
-        rel_end_spec: &'a NodeFromFieldsSpec,
-        index_options_map: &'a HashMap<String, IndexOptions>,
-    ) -> Result<Self> {
-        Ok(Self {
-            label_name: rel_end_spec.label.as_str(),
-            fields: IndexMap::new(),
-            remaining_fields: rel_end_spec
-                .fields
-                .iter()
-                .map(|f| (f.source.as_str(), f))
-                .collect(),
-            primary_key_fields: index_options_map
-                .get(&rel_end_spec.label)
-                .and_then(|o| o.primary_key_fields.as_ref())
-                .ok_or_else(|| {
-                    anyhow::anyhow!(
-                        "No key fields specified for Node label `{}`",
-                        rel_end_spec.label
-                    )
-                })?,
-        })
-    }
-
-    fn process_field(&mut self, field_idx: usize, field_schema: &FieldSchema) -> bool {
-        let field_mapping = match self.remaining_fields.remove(field_schema.name.as_str()) {
-            Some(field_mapping) => field_mapping,
-            None => return false,
-        };
-        self.fields.insert(
-            field_mapping.get_target().as_str(),
-            AnalyzedGraphFieldMapping {
-                field_idx,
-                field_name: field_mapping.get_target().clone(),
-                value_type: field_schema.value_type.typ.clone(),
-            },
-        );
-        true
-    }
-
-    fn build(
-        self,
-        label_value_field_types: &mut HashMap<String, HashMap<String, schema::ValueType>>,
-    ) -> Result<AnalyzedNodeLabelInfo> {
-        if !self.remaining_fields.is_empty() {
-            anyhow::bail!(
-                "Fields not mapped for  Node label `{}`: {}",
-                self.label_name,
-                self.remaining_fields.keys().join(", ")
-            );
-        }
-        let mut fields = self.fields;
-        let key_fields = self
-            .primary_key_fields
-            .iter()
-            .map(|key_field| {
-                let e = fields.shift_remove(key_field.as_str()).ok_or_else(|| {
-                    anyhow!(
-                        "Key field `{}` not mapped in Node label `{}`",
-                        key_field,
-                        self.label_name
-                    )
-                })?;
-                Ok(e)
-            })
-            .collect::<Result<Vec<_>>>()?;
-        label_value_field_types
-            .entry(self.label_name.to_string())
-            .or_insert_with(HashMap::new)
-            .extend(
-                fields
-                    .values()
-                    .map(|f| (f.field_name.clone(), f.value_type.clone())),
-            );
-        Ok(AnalyzedNodeLabelInfo {
-            key_fields,
-            value_fields: fields.into_values().collect(),
-        })
-    }
-}
-
 #[async_trait]
 impl StorageFactoryBase for Factory {
     type Spec = Spec;
@@ -1083,7 +918,7 @@ impl StorageFactoryBase for Factory {
         GraphElementDataSetupStatus,
         components::SetupStatus<SetupComponentOperator>,
     );
-    type Key = GraphElement;
+    type Key = Neo4jGraphElement;
     type ExportContext = ExportContext;
 
     fn name(&self) -> &str {
@@ -1097,115 +932,50 @@ impl StorageFactoryBase for Factory {
         context: Arc<FlowInstanceContext>,
     ) -> Result<(
         Vec<TypedExportDataCollectionBuildOutput<Self>>,
-        Vec<(GraphElement, SetupState)>,
+        Vec<(Neo4jGraphElement, SetupState)>,
     )> {
-        let node_labels_index_options = data_collections
-            .iter()
-            .filter_map(|d| match &d.spec.mapping {
-                GraphElementMapping::Node(n) => Some((n.label.clone(), d.index_options.clone())),
-                _ => None,
-            })
-            .chain(
-                declarations
-                    .iter()
-                    .map(|n| (n.decl.nodes_label.clone(), n.decl.index_options.clone())),
-            )
-            .collect::<HashMap<String, IndexOptions>>();
-        let mut label_value_field_types =
-            HashMap::<String, HashMap<String, schema::ValueType>>::new();
-        let data_coll_output = data_collections
-            .into_iter()
-            .map(|d| {
-                let setup_key = GraphElement::from_spec(&d.spec);
-
-                let (value_fields_info, rel_end_label_info, dependent_node_labels) = match &d
-                    .spec
-                    .mapping
-                {
-                    GraphElementMapping::Node(_) => (
-                        d.value_fields_schema
-                            .iter()
-                            .enumerate()
-                            .map(|(field_idx, field_schema)| AnalyzedGraphFieldMapping {
-                                field_idx,
-                                field_name: field_schema.name.clone(),
-                                value_type: field_schema.value_type.typ.clone(),
-                            })
-                            .collect(),
-                        None,
-                        None,
-                    ),
-                    GraphElementMapping::Relationship(rel_spec) => {
-                        let mut src_label_analyzer = DependentNodeLabelAnalyzer::new(
-                            &rel_spec.source,
-                            &node_labels_index_options,
-                        )?;
-                        let mut tgt_label_analyzer = DependentNodeLabelAnalyzer::new(
-                            &rel_spec.target,
-                            &node_labels_index_options,
-                        )?;
-                        let mut value_fields_info = vec![];
-                        for (field_idx, field_schema) in d.value_fields_schema.iter().enumerate() {
-                            if !src_label_analyzer.process_field(field_idx, field_schema)
-                                && !tgt_label_analyzer.process_field(field_idx, field_schema)
-                            {
-                                value_fields_info.push(AnalyzedGraphFieldMapping {
-                                    field_idx,
-                                    field_name: field_schema.name.clone(),
-                                    value_type: field_schema.value_type.typ.clone(),
-                                });
-                            }
-                        }
-                        let src_label_info =
-                            src_label_analyzer.build(&mut label_value_field_types)?;
-                        let tgt_label_info =
-                            tgt_label_analyzer.build(&mut label_value_field_types)?;
-                        let dependent_node_labels: Vec<String> = IndexSet::<&String>::from_iter([
-                            &rel_spec.source.label,
-                            &rel_spec.target.label,
-                        ])
-                        .into_iter()
-                        .cloned()
-                        .collect();
-                        (
-                            value_fields_info,
-                            Some((src_label_info, tgt_label_info)),
-                            Some(dependent_node_labels),
-                        )
-                    }
+        let (analyzed_data_colls, declared_graph_elements) = analyze_graph_mappings(
+            data_collections
+                .iter()
+                .map(|d| DataCollectionGraphMappingInput {
+                    auth_ref: &d.spec.connection,
+                    mapping: &d.spec.mapping,
+                    index_options: &d.index_options,
+                    key_fields_schema: d.key_fields_schema.clone(),
+                    value_fields_schema: d.value_fields_schema.clone(),
+                }),
+            declarations.iter().map(|d| (&d.connection, &d.decl)),
+        )?;
+        let data_coll_output = std::iter::zip(data_collections, analyzed_data_colls)
+            .map(|(data_coll, analyzed)| {
+                let setup_key = Neo4jGraphElement {
+                    connection: data_coll.spec.connection.clone(),
+                    typ: analyzed.schema.elem_type.clone(),
                 };
-
-                let value_field_types = value_fields_info
-                    .iter()
-                    .map(|f| (f.field_name.clone(), f.value_type.clone()))
-                    .collect::<HashMap<String, schema::ValueType>>();
                 let desired_setup_state = SetupState::new(
-                    &setup_key.typ,
-                    d.key_fields_schema.iter().map(|f| f.name.clone()).collect(),
-                    &d.index_options,
-                    &value_field_types,
-                    dependent_node_labels,
+                    &analyzed.schema,
+                    &data_coll.index_options,
+                    analyzed
+                        .dependent_node_labels()
+                        .into_iter()
+                        .map(|s| s.to_string())
+                        .collect(),
                 )?;
 
                 let conn_spec = context
                     .auth_registry
-                    .get::<ConnectionSpec>(&d.spec.connection)?;
+                    .get::<ConnectionSpec>(&data_coll.spec.connection)?;
                 let factory = self.clone();
                 let executors = async move {
                     let graph = factory.graph_pool.get_graph(&conn_spec).await?;
-                    let executor = Arc::new(ExportContext::new(
-                        graph,
-                        d.spec,
-                        d.key_fields_schema,
-                        value_fields_info,
-                        rel_end_label_info,
-                    )?);
+                    let executor = Arc::new(ExportContext::new(graph, data_coll.spec, analyzed)?);
                     Ok(TypedExportTargetExecutors {
                         export_context: executor,
                         query_target: None,
                     })
                 }
                 .boxed();
+
                 Ok(TypedExportDataCollectionBuildOutput {
                     executors,
                     setup_key,
@@ -1213,42 +983,15 @@ impl StorageFactoryBase for Factory {
                 })
             })
             .collect::<Result<Vec<_>>>()?;
-        let decl_output = declarations
+        let decl_output = std::iter::zip(declarations, declared_graph_elements)
             .into_iter()
-            .map(|d| {
-                let label_value_field_types = &label_value_field_types;
-                let setup_key = GraphElement {
-                    connection: d.connection.clone(),
-                    typ: ElementType::Node(d.decl.nodes_label.clone()),
+            .map(|(decl, graph_elem_schema)| {
+                let setup_state =
+                    SetupState::new(&graph_elem_schema, &decl.decl.index_options, vec![])?;
+                let setup_key = GraphElementType {
+                    connection: decl.connection,
+                    typ: graph_elem_schema.elem_type.clone(),
                 };
-                let primary_key_fields = d
-                    .decl
-                    .index_options
-                    .primary_key_fields
-                    .as_ref()
-                    .ok_or_else(|| {
-                        api_error!(
-                            "No primary key fields specified for node label `{}`",
-                            &d.decl.nodes_label
-                        )
-                    })?
-                    .iter()
-                    .map(|f| f.clone())
-                    .collect();
-                let setup_state = SetupState::new(
-                    &setup_key.typ,
-                    primary_key_fields,
-                    &d.decl.index_options,
-                    label_value_field_types
-                        .get(&d.decl.nodes_label)
-                        .ok_or_else(|| {
-                            api_error!(
-                                "Data for nodes with label `{}` not provided",
-                                d.decl.nodes_label
-                            )
-                        })?,
-                    None,
-                )?;
                 Ok((setup_key, setup_state))
             })
             .collect::<Result<Vec<_>>>()?;
@@ -1257,14 +1000,13 @@ impl StorageFactoryBase for Factory {
 
     async fn check_setup_status(
         &self,
-        key: GraphElement,
+        key: Neo4jGraphElement,
         desired: Option<SetupState>,
         existing: CombinedState<SetupState>,
         auth_registry: &Arc<AuthRegistry>,
     ) -> Result<Self::SetupStatus> {
         let conn_spec = auth_registry.get::<ConnectionSpec>(&key.connection)?;
-        let data_status =
-            GraphElementDataSetupStatus::new(key, conn_spec.clone(), desired.as_ref(), &existing);
+        let data_status = GraphElementDataSetupStatus::new(desired.as_ref(), &existing);
         let components = components::SetupStatus::create(
             SetupComponentOperator {
                 graph_pool: self.graph_pool.clone(),
@@ -1284,7 +1026,7 @@ impl StorageFactoryBase for Factory {
         Ok(desired.check_compatible(existing))
     }
 
-    fn describe_resource(&self, key: &GraphElement) -> Result<String> {
+    fn describe_resource(&self, key: &Neo4jGraphElement) -> Result<String> {
         Ok(format!("Neo4j {}", key.typ))
     }
 
@@ -1314,8 +1056,8 @@ impl StorageFactoryBase for Factory {
                     }
                     for mut_with_ctx in muts.iter().rev() {
                         let export_ctx = &mut_with_ctx.export_context;
-                        for delete_key in mut_with_ctx.mutation.delete_keys.iter() {
-                            export_ctx.add_delete_queries(delete_key, &mut queries)?;
+                        for deletion in mut_with_ctx.mutation.deletes.iter() {
+                            export_ctx.add_delete_queries(&deletion.key, &mut queries)?;
                         }
                     }
                     let mut txn = graph.start_txn().await?;
@@ -1333,51 +1075,58 @@ impl StorageFactoryBase for Factory {
 
     async fn apply_setup_changes(
         &self,
-        changes: Vec<&'async_trait Self::SetupStatus>,
+        changes: Vec<TypedResourceSetupChangeItem<'async_trait, Self>>,
+        auth_registry: &Arc<AuthRegistry>,
     ) -> Result<()> {
-        let (data_statuses, components): (Vec<_>, Vec<_>) =
-            changes.into_iter().map(|c| (&c.0, &c.1)).unzip();
-
         // Relationships first, then nodes, as relationships need to be deleted before nodes they referenced.
-        let mut relationship_types = IndexMap::<&GraphElement, &ConnectionSpec>::new();
-        let mut node_labels = IndexMap::<&GraphElement, &ConnectionSpec>::new();
-        let mut dependent_node_labels = IndexMap::<GraphElement, &ConnectionSpec>::new();
-        for data_status in data_statuses.iter() {
-            if let Some(data_clear) = &data_status.data_clear {
-                match &data_status.key.typ {
+        let mut relationship_types = IndexSet::<&Neo4jGraphElement>::new();
+        let mut node_labels = IndexSet::<&Neo4jGraphElement>::new();
+        let mut dependent_node_labels = IndexSet::<Neo4jGraphElement>::new();
+
+        let mut components = vec![];
+        for change in changes.iter() {
+            if let Some(data_clear) = &change.setup_status.0.data_clear {
+                match &change.key.typ {
                     ElementType::Relationship(_) => {
-                        relationship_types.insert(&data_status.key, &data_status.conn_spec);
+                        relationship_types.insert(&change.key);
                         for label in &data_clear.dependent_node_labels {
-                            dependent_node_labels.insert(
-                                GraphElement {
-                                    connection: data_status.key.connection.clone(),
-                                    typ: ElementType::Node(label.clone()),
-                                },
-                                &data_status.conn_spec,
-                            );
+                            dependent_node_labels.insert(Neo4jGraphElement {
+                                connection: change.key.connection.clone(),
+                                typ: ElementType::Node(label.clone()),
+                            });
                         }
                     }
                     ElementType::Node(_) => {
-                        node_labels.insert(&data_status.key, &data_status.conn_spec);
+                        node_labels.insert(&change.key);
                     }
                 }
             }
+            components.push(&change.setup_status.1);
         }
 
         // Relationships have no dependency, so can be cleared first.
-        for (rel_type, conn_spec) in relationship_types.iter() {
-            let graph = self.graph_pool.get_graph(conn_spec).await?;
+        for rel_type in relationship_types.into_iter() {
+            let graph = self
+                .graph_pool
+                .get_graph_for_key(rel_type, auth_registry)
+                .await?;
             clear_graph_element_data(&graph, rel_type, true).await?;
         }
         // Clear standalone nodes, which is simpler than dependent nodes.
-        for (node_label, conn_spec) in node_labels.iter() {
-            let graph = self.graph_pool.get_graph(conn_spec).await?;
+        for node_label in node_labels.iter() {
+            let graph = self
+                .graph_pool
+                .get_graph_for_key(node_label, auth_registry)
+                .await?;
             clear_graph_element_data(&graph, node_label, true).await?;
         }
         // Clear dependent nodes if they're not covered by standalone nodes.
-        for (node_label, conn_spec) in dependent_node_labels.iter() {
-            if !node_labels.contains_key(node_label) {
-                let graph = self.graph_pool.get_graph(conn_spec).await?;
+        for node_label in dependent_node_labels.iter() {
+            if !node_labels.contains(node_label) {
+                let graph = self
+                    .graph_pool
+                    .get_graph_for_key(node_label, auth_registry)
+                    .await?;
                 clear_graph_element_data(&graph, node_label, false).await?;
             }
         }

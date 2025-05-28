@@ -8,7 +8,7 @@ use super::python_errors::{
     BaseConnectionError, BaseConnectionPoolError, BaseCursorError, BaseListenerError,
     BaseTransactionError, ConnectionClosedError, ConnectionExecuteError, ConnectionPoolBuildError,
     ConnectionPoolConfigurationError, ConnectionPoolExecuteError, CursorCloseError,
-    CursorClosedError, CursorFetchError, CursorStartError, DriverError, ListenerCallbackError,
+    CursorClosedError, CursorFetchError, CursorStartError, DatabaseError, ListenerCallbackError,
     ListenerClosedError, ListenerStartError, MacAddrParseError, RuntimeJoinError, SSLError,
     TransactionBeginError, TransactionClosedError, TransactionCommitError, TransactionExecuteError,
     TransactionRollbackError, TransactionSavepointError, UUIDValueConvertError,
@@ -49,8 +49,8 @@ pub enum RustPSQLDriverError {
     TransactionSavepointError(String),
     #[error("Transaction execute error: {0}")]
     TransactionExecuteError(String),
-    #[error("Underlying connection is returned to the pool")]
-    TransactionClosedError,
+    #[error("Underlying connection is returned to the pool: {0}")]
+    TransactionClosedError(String),
 
     // Cursor Errors
     #[error("Cursor error: {0}")]
@@ -104,7 +104,7 @@ impl From<RustPSQLDriverError> for pyo3::PyErr {
         let error_desc = error.to_string();
         match error {
             RustPSQLDriverError::RustPyError(err) => err,
-            RustPSQLDriverError::RustDriverError(_) => DriverError::new_err((error_desc,)),
+            RustPSQLDriverError::RustDriverError(_) => DatabaseError::new_err((error_desc,)),
             RustPSQLDriverError::RustMacAddrConversionError(_) => {
                 MacAddrParseError::new_err((error_desc,))
             }
@@ -162,7 +162,7 @@ impl From<RustPSQLDriverError> for pyo3::PyErr {
             RustPSQLDriverError::TransactionExecuteError(_) => {
                 TransactionExecuteError::new_err((error_desc,))
             }
-            RustPSQLDriverError::TransactionClosedError => {
+            RustPSQLDriverError::TransactionClosedError(_) => {
                 TransactionClosedError::new_err((error_desc,))
             }
             RustPSQLDriverError::BaseCursorError(_) => BaseCursorError::new_err((error_desc,)),

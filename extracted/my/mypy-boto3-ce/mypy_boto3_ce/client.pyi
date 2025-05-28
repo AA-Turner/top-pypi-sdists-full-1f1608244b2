@@ -29,6 +29,8 @@ from .paginator import (
     GetAnomaliesPaginator,
     GetAnomalyMonitorsPaginator,
     GetAnomalySubscriptionsPaginator,
+    GetCostAndUsageComparisonsPaginator,
+    GetCostComparisonDriversPaginator,
 )
 from .type_defs import (
     CreateAnomalyMonitorRequestTypeDef,
@@ -53,12 +55,16 @@ from .type_defs import (
     GetApproximateUsageRecordsResponseTypeDef,
     GetCommitmentPurchaseAnalysisRequestTypeDef,
     GetCommitmentPurchaseAnalysisResponseTypeDef,
+    GetCostAndUsageComparisonsRequestTypeDef,
+    GetCostAndUsageComparisonsResponseTypeDef,
     GetCostAndUsageRequestTypeDef,
     GetCostAndUsageResponseTypeDef,
     GetCostAndUsageWithResourcesRequestTypeDef,
     GetCostAndUsageWithResourcesResponseTypeDef,
     GetCostCategoriesRequestTypeDef,
     GetCostCategoriesResponseTypeDef,
+    GetCostComparisonDriversRequestTypeDef,
+    GetCostComparisonDriversResponseTypeDef,
     GetCostForecastRequestTypeDef,
     GetCostForecastResponseTypeDef,
     GetDimensionValuesRequestTypeDef,
@@ -316,6 +322,17 @@ class CostExplorerClient(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_ce/client/#get_cost_and_usage)
         """
 
+    def get_cost_and_usage_comparisons(
+        self, **kwargs: Unpack[GetCostAndUsageComparisonsRequestTypeDef]
+    ) -> GetCostAndUsageComparisonsResponseTypeDef:
+        """
+        Retrieves cost and usage comparisons for your account between two periods
+        within the last 13 months.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_and_usage_comparisons.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_ce/client/#get_cost_and_usage_comparisons)
+        """
+
     def get_cost_and_usage_with_resources(
         self, **kwargs: Unpack[GetCostAndUsageWithResourcesRequestTypeDef]
     ) -> GetCostAndUsageWithResourcesResponseTypeDef:
@@ -334,6 +351,18 @@ class CostExplorerClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_categories.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_ce/client/#get_cost_categories)
+        """
+
+    def get_cost_comparison_drivers(
+        self, **kwargs: Unpack[GetCostComparisonDriversRequestTypeDef]
+    ) -> GetCostComparisonDriversResponseTypeDef:
+        """
+        Retrieves key factors driving cost changes between two time periods within the
+        last 13 months, such as usage changes, discount changes, and commitment-based
+        savings.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_comparison_drivers.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_ce/client/#get_cost_comparison_drivers)
         """
 
     def get_cost_forecast(
@@ -659,6 +688,28 @@ class CostExplorerClient(BaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["get_anomaly_subscriptions"]
     ) -> GetAnomalySubscriptionsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_paginator.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_ce/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_cost_and_usage_comparisons"]
+    ) -> GetCostAndUsageComparisonsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_paginator.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_ce/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_cost_comparison_drivers"]
+    ) -> GetCostComparisonDriversPaginator:
         """
         Create a paginator for an operation.
 

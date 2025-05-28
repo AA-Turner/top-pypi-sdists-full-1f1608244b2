@@ -4,7 +4,7 @@ from .supervised_fine_tuning_job import SupervisedFineTuningJob
 import importlib.metadata
 
 try:
-    __version__ = importlib.metadata.version(__name__)
+    __version__ = importlib.metadata.version("fireworks-ai")
 except importlib.metadata.PackageNotFoundError:
     __version__ = "0.0.0"  # Fallback for development mode
 

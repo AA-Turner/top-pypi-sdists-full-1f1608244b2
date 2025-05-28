@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: burr
-Version: 0.40.0
+Version: 0.40.2
 Summary: A state machine for data projects
 Author-email: Elijah ben Izzy <elijah@dagworks.io>, Stefan Krawczyk <stefan@dagworks.io>
 Maintainer-email: Elijah ben Izzy <elijah@dagworks.io>, Stefan Krawczyk <stefan@dagworks.io>
@@ -112,6 +112,7 @@ Provides-Extra: inappexamples
 Requires-Dist: opentelemetry-api; extra == "inappexamples"
 Requires-Dist: opentelemetry-sdk; extra == "inappexamples"
 Requires-Dist: opentelemetry-instrumentation-openai; extra == "inappexamples"
+Requires-Dist: tavily-python; extra == "inappexamples"
 Provides-Extra: examples
 Requires-Dist: langchain; extra == "examples"
 Requires-Dist: langchain-community; extra == "examples"
@@ -364,6 +365,7 @@ Users who have contributed core functionality, integrations, or examples.
 - [Thierry Jean](https://github.com/zilto)
 - [Hamza Farhan](https://github.com/HamzaFarhan)
 - [Abdul Rafay](https://github.com/proftorch)
+- [Margaret Lange](https://github.com/margaretlange)
 
 ### Bug hunters/special mentions
 

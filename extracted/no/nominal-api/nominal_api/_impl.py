@@ -11872,23 +11872,31 @@ class ingest_api_UpdateContainerizedExtractorRequest(ConjureBeanType):
         return {
             'name': ConjureFieldDefinition('name', OptionalTypeWrapper[str]),
             'description': ConjureFieldDefinition('description', OptionalTypeWrapper[str]),
+            'inputs': ConjureFieldDefinition('inputs', OptionalTypeWrapper[List[ingest_api_FileExtractionInput]]),
             'properties': ConjureFieldDefinition('properties', OptionalTypeWrapper[Dict[api_PropertyName, api_PropertyValue]]),
             'labels': ConjureFieldDefinition('labels', OptionalTypeWrapper[List[api_Label]]),
             'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', OptionalTypeWrapper[ingest_api_TimestampMetadata]),
+            'output_file_format': ConjureFieldDefinition('outputFileFormat', OptionalTypeWrapper[ingest_api_FileOutputFormat]),
             'tags': ConjureFieldDefinition('tags', OptionalTypeWrapper[List[str]]),
-            'default_tag': ConjureFieldDefinition('defaultTag', OptionalTypeWrapper[str])
+            'default_tag': ConjureFieldDefinition('defaultTag', OptionalTypeWrapper[str]),
+            'authentication': ConjureFieldDefinition('authentication', OptionalTypeWrapper[ingest_api_Authentication]),
+            'command': ConjureFieldDefinition('command', OptionalTypeWrapper[str])
         }
 
-    __slots__: List[str] = ['_name', '_description', '_properties', '_labels', '_timestamp_metadata', '_tags', '_default_tag']
+    __slots__: List[str] = ['_name', '_description', '_inputs', '_properties', '_labels', '_timestamp_metadata', '_output_file_format', '_tags', '_default_tag', '_authentication', '_command']
 
-    def __init__(self, default_tag: Optional[str] = None, description: Optional[str] = None, labels: Optional[List[str]] = None, name: Optional[str] = None, properties: Optional[Dict[str, str]] = None, tags: Optional[List[str]] = None, timestamp_metadata: Optional["ingest_api_TimestampMetadata"] = None) -> None:
+    def __init__(self, authentication: Optional["ingest_api_Authentication"] = None, command: Optional[str] = None, default_tag: Optional[str] = None, description: Optional[str] = None, inputs: Optional[List["ingest_api_FileExtractionInput"]] = None, labels: Optional[List[str]] = None, name: Optional[str] = None, output_file_format: Optional["ingest_api_FileOutputFormat"] = None, properties: Optional[Dict[str, str]] = None, tags: Optional[List[str]] = None, timestamp_metadata: Optional["ingest_api_TimestampMetadata"] = None) -> None:
         self._name = name
         self._description = description
+        self._inputs = inputs
         self._properties = properties
         self._labels = labels
         self._timestamp_metadata = timestamp_metadata
+        self._output_file_format = output_file_format
         self._tags = tags
         self._default_tag = default_tag
+        self._authentication = authentication
+        self._command = command
 
     @builtins.property
     def name(self) -> Optional[str]:
@@ -11897,6 +11905,10 @@ class ingest_api_UpdateContainerizedExtractorRequest(ConjureBeanType):
     @builtins.property
     def description(self) -> Optional[str]:
         return self._description
+
+    @builtins.property
+    def inputs(self) -> Optional[List["ingest_api_FileExtractionInput"]]:
+        return self._inputs
 
     @builtins.property
     def properties(self) -> Optional[Dict[str, str]]:
@@ -11911,12 +11923,24 @@ class ingest_api_UpdateContainerizedExtractorRequest(ConjureBeanType):
         return self._timestamp_metadata
 
     @builtins.property
+    def output_file_format(self) -> Optional["ingest_api_FileOutputFormat"]:
+        return self._output_file_format
+
+    @builtins.property
     def tags(self) -> Optional[List[str]]:
         return self._tags
 
     @builtins.property
     def default_tag(self) -> Optional[str]:
         return self._default_tag
+
+    @builtins.property
+    def authentication(self) -> Optional["ingest_api_Authentication"]:
+        return self._authentication
+
+    @builtins.property
+    def command(self) -> Optional[str]:
+        return self._command
 
 
 ingest_api_UpdateContainerizedExtractorRequest.__name__ = "UpdateContainerizedExtractorRequest"
@@ -19720,6 +19744,36 @@ a file, primarily CSV.
         _decoder = ConjureDecoder()
         return _decoder.decode(_response.json(), scout_catalog_DatasetFileUri, self._return_none_for_unknown_union_types)
 
+    def get_origin_file_uris(self, auth_header: str, dataset_rid: str, file_id: str) -> List["scout_catalog_OriginFileUri"]:
+
+        _headers: Dict[str, Any] = {
+            'Accept': 'application/json',
+            'Authorization': auth_header,
+        }
+
+        _params: Dict[str, Any] = {
+        }
+
+        _path_params: Dict[str, Any] = {
+            'datasetRid': dataset_rid,
+            'fileId': file_id,
+        }
+
+        _json: Any = None
+
+        _path = '/catalog/v1/datasets/{datasetRid}/{fileId}/origin-uris'
+        _path = _path.format(**_path_params)
+
+        _response: Response = self._request(
+            'GET',
+            self._uri + _path,
+            params=_params,
+            headers=_headers,
+            json=_json)
+
+        _decoder = ConjureDecoder()
+        return _decoder.decode(_response.json(), List[scout_catalog_OriginFileUri], self._return_none_for_unknown_union_types)
+
     def mark_file_ingest_successful(self, auth_header: str, dataset_rid: str, file_id: str, request: "scout_catalog_MarkFileIngestSuccessful") -> "scout_catalog_DatasetFile":
 
         _headers: Dict[str, Any] = {
@@ -21025,6 +21079,39 @@ Two files cannot have the same ingested at timestamp.
 scout_catalog_MarkFileIngestSuccessful.__name__ = "MarkFileIngestSuccessful"
 scout_catalog_MarkFileIngestSuccessful.__qualname__ = "MarkFileIngestSuccessful"
 scout_catalog_MarkFileIngestSuccessful.__module__ = "nominal_api.scout_catalog"
+
+
+class scout_catalog_OriginFileUri(ConjureBeanType):
+    """
+    Pre-signed URI that can be used to download an origin file directly. Expires if the download has
+not been initiated within 1 minute.
+    """
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'uri': ConjureFieldDefinition('uri', str),
+            'path': ConjureFieldDefinition('path', str)
+        }
+
+    __slots__: List[str] = ['_uri', '_path']
+
+    def __init__(self, path: str, uri: str) -> None:
+        self._uri = uri
+        self._path = path
+
+    @builtins.property
+    def uri(self) -> str:
+        return self._uri
+
+    @builtins.property
+    def path(self) -> str:
+        return self._path
+
+
+scout_catalog_OriginFileUri.__name__ = "OriginFileUri"
+scout_catalog_OriginFileUri.__qualname__ = "OriginFileUri"
+scout_catalog_OriginFileUri.__module__ = "nominal_api.scout_catalog"
 
 
 class scout_catalog_RelativeTimestamp(ConjureBeanType):
@@ -64255,6 +64342,24 @@ scout_integrations_api_SimpleWebhookIntegration.__qualname__ = "SimpleWebhookInt
 scout_integrations_api_SimpleWebhookIntegration.__module__ = "nominal_api.scout_integrations_api"
 
 
+class scout_integrations_api_SlackInstanceType(ConjureEnumType):
+
+    COMMERCIAL = 'COMMERCIAL'
+    '''COMMERCIAL'''
+    GOV = 'GOV'
+    '''GOV'''
+    UNKNOWN = 'UNKNOWN'
+    '''UNKNOWN'''
+
+    def __reduce_ex__(self, proto):
+        return self.__class__, (self.name,)
+
+
+scout_integrations_api_SlackInstanceType.__name__ = "SlackInstanceType"
+scout_integrations_api_SlackInstanceType.__qualname__ = "SlackInstanceType"
+scout_integrations_api_SlackInstanceType.__module__ = "nominal_api.scout_integrations_api"
+
+
 class scout_integrations_api_SlackWebhookIntegration(ConjureBeanType):
 
     @builtins.classmethod
@@ -64262,15 +64367,17 @@ class scout_integrations_api_SlackWebhookIntegration(ConjureBeanType):
         return {
             'team_name': ConjureFieldDefinition('teamName', str),
             'channel': ConjureFieldDefinition('channel', str),
-            'channel_id': ConjureFieldDefinition('channelId', str)
+            'channel_id': ConjureFieldDefinition('channelId', str),
+            'slack_instance': ConjureFieldDefinition('slackInstance', OptionalTypeWrapper[scout_integrations_api_SlackInstanceType])
         }
 
-    __slots__: List[str] = ['_team_name', '_channel', '_channel_id']
+    __slots__: List[str] = ['_team_name', '_channel', '_channel_id', '_slack_instance']
 
-    def __init__(self, channel: str, channel_id: str, team_name: str) -> None:
+    def __init__(self, channel: str, channel_id: str, team_name: str, slack_instance: Optional["scout_integrations_api_SlackInstanceType"] = None) -> None:
         self._team_name = team_name
         self._channel = channel
         self._channel_id = channel_id
+        self._slack_instance = slack_instance
 
     @builtins.property
     def team_name(self) -> str:
@@ -64283,6 +64390,10 @@ class scout_integrations_api_SlackWebhookIntegration(ConjureBeanType):
     @builtins.property
     def channel_id(self) -> str:
         return self._channel_id
+
+    @builtins.property
+    def slack_instance(self) -> Optional["scout_integrations_api_SlackInstanceType"]:
+        return self._slack_instance
 
 
 scout_integrations_api_SlackWebhookIntegration.__name__ = "SlackWebhookIntegration"

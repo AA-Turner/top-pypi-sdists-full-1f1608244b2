@@ -26,7 +26,7 @@ from httpx import AsyncClient
 def guess_mime_type(file):
     mime_type = None
     if isinstance(file, str):
-        mime_type, _ = mimetypes.guess_type(file)
+        mime_type, _ = mimetypes.guess_type(file.strip())
     return mime_type or "application/octet-stream"
 
 
@@ -280,5 +280,7 @@ if __name__ == '__main__':
 
     # arun(to_bytes("https://oss.ffire.cc/files/kling_watermark.png"))
 
-    file = "https://v3.fal.media/files/penguin/Rx-8V0MVgkVZM6PJ0RiPD_douyin.mp4"
-    arun(to_bytes(file))
+    # file = "https://v3.fal.media/files/penguin/Rx-8V0MVgkVZM6PJ0RiPD_douyin.mp4"
+    # arun(to_bytes(file))
+
+    print(guess_mime_type("http://admin.ilovechatgpt.top/file/ceshiwendangdocx_31118702.docx "))

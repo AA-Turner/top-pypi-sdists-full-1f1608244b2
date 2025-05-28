@@ -38,11 +38,22 @@ class QrackAceBackend:
         col_length(int): Qubits per column.
     """
 
-    def __init__(self, qubit_count=-1, alternating_codes=True, isTensorNetwork=False, toClone=None):
-        self.sim = toClone.sim.clone() if toClone else QrackSimulator(3 * qubit_count + 1, isTensorNetwork=isTensorNetwork)
+    def __init__(
+        self,
+        qubit_count=1,
+        alternating_codes=True,
+        isTensorNetwork=False,
+        toClone=None,
+    ):
+        self.sim = (
+            toClone.sim.clone()
+            if toClone
+            else QrackSimulator(3 * qubit_count + 1, isTensorNetwork=isTensorNetwork)
+        )
         self._ancilla = 3 * qubit_count
         self._factor_width(qubit_count)
         self.alternating_codes = alternating_codes
+        self._is_init = [False] * qubit_count
 
     def _factor_width(self, width):
         col_len = math.floor(math.sqrt(width))
@@ -100,64 +111,76 @@ class QrackAceBackend:
         )
 
     def _encode(self, hq, reverse=False):
-        row = (hq[0] // 3) // self.row_length
+        lq = hq[0] // 3
+        row = lq // self.row_length
         even_row = not (row & 1)
         if ((not self.alternating_codes) and reverse) or (even_row == reverse):
-            self._cx_shadow(hq[0], hq[1])
-            self.sim.mcx([hq[1]], hq[2])
+            if self._is_init[lq]:
+                # Encode shadow-first
+                self._cx_shadow(hq[0], hq[1])
+                self.sim.mcx([hq[1]], hq[2])
+            else:
+                self.sim.mcx([hq[2]], hq[1])
         else:
+            if self._is_init[lq]:
+                # Encode shadow-first
+                self._cx_shadow(hq[0], hq[2])
             self.sim.mcx([hq[0]], hq[1])
-            self._cx_shadow(hq[1], hq[2])
+        self._is_init[lq] = True
 
     def _decode(self, hq, reverse=False):
-        row = (hq[0] // 3) // self.row_length
+        lq = hq[0] // 3
+        if not self._is_init[lq]:
+            return
+        row = lq // self.row_length
         even_row = not (row & 1)
         if ((not self.alternating_codes) and reverse) or (even_row == reverse):
+            # Decode entangled-first
             self.sim.mcx([hq[1]], hq[2])
             self._cx_shadow(hq[0], hq[1])
         else:
-            self._cx_shadow(hq[1], hq[2])
+            # Decode entangled-first
             self.sim.mcx([hq[0]], hq[1])
+            self._cx_shadow(hq[0], hq[2])
 
     def _correct(self, lq):
+        if not self._is_init[lq]:
+            return
         # We can't use true syndrome-based error correction,
         # because one of the qubits in the code is separated.
         # However, we can get pretty close!
-        hq = self._unpack(lq)
         shots = 1024
-        samples = self.sim.measure_shots(hq, shots)
-        syndrome = [0, 0, 0]
-        for sample in samples:
-            match sample:
-                case 1:
-                    syndrome[0] += 1
-                case 2:
-                    syndrome[1] += 1
-                case 4:
-                    syndrome[2] += 1
-                case 6:
-                    syndrome[0] += 1
-                case 5:
-                    syndrome[1] += 1
-                case 3:
-                    syndrome[2] += 1
-
-        row = lq // self.row_length
-        even_row = not (row & 1)
+        even_row = not ((lq // self.row_length) & 1)
         single_bit = 0
         other_bits = []
-        if (not self.alternating_codes or even_row):
+        if not self.alternating_codes or even_row:
             single_bit = 2
             other_bits = [0, 1]
         else:
             single_bit = 0
             other_bits = [1, 2]
+        hq = self._unpack(lq)
+        single_bit_value = self.sim.prob(hq[single_bit])
+        single_bit_polarization = max(single_bit_value, 1 - single_bit_value)
+        samples = self.sim.measure_shots([hq[other_bits[0]], hq[other_bits[1]]], shots)
+        syndrome_indices = [other_bits[1], other_bits[0]] if (single_bit_value >= 0.5) else [other_bits[0], other_bits[1]]
+        syndrome = [0, 0, 0]
+        for sample in samples:
+            match sample:
+                case 0:
+                    syndrome[single_bit] += single_bit_value
+                case 1:
+                    syndrome[syndrome_indices[0]] += single_bit_polarization
+                case 2:
+                    syndrome[syndrome_indices[1]] += single_bit_polarization
+                case 3:
+                    syndrome[single_bit] += 1 - single_bit_value
 
-        max_syndrome = max(syndrome)
+        sum_syndrome = sum(syndrome)
         force_syndrome = True
-        if (2 * max_syndrome) > shots:
+        if (2 * sum_syndrome) > shots:
             # There is an error.
-            error_bit = syndrome.index(max_syndrome)
+            error_bit = syndrome.index(max(syndrome))
             if error_bit == single_bit:
                 # The stand-alone bit carries the error.
                 self.sim.x(hq[error_bit])
@@ -183,6 +206,8 @@ class QrackAceBackend:
             self.sim.force_m(self._ancilla, False)
 
     def _correct_if_like_h(self, th, lq):
+        if not self._is_init[lq]:
+            return
         while th > math.pi:
             th -= 2 * math.pi
         while th <= -math.pi:
@@ -190,7 +215,6 @@ class QrackAceBackend:
         th = abs(th)
         if not math.isclose(th, 0):
             self._correct(lq)
-
 
     def u(self, th, ph, lm, lq):
         while ph > math.pi:
@@ -206,6 +230,8 @@ class QrackAceBackend:
             self._correct_if_like_h(th, lq)
             self._decode(hq)
             self.sim.u(hq[0], th, ph, lm)
+            if not self._is_init[lq]:
+                self.sim.u(hq[2], th, ph, lm)
             self._encode(hq)
         else:
             for b in hq:
@@ -225,13 +251,16 @@ class QrackAceBackend:
         else:
             self._decode(hq)
             self.sim.r(p, th, hq[0])
+            if not self._is_init[lq]:
+                self.sim.r(p, th, hq[2])
             self._encode(hq)
 
     def h(self, lq):
-        self._correct(lq)
         hq = self._unpack(lq)
         self._decode(hq)
         self.sim.h(hq[0])
+        if not self._is_init[lq]:
+            self.sim.h(hq[2])
         self._encode(hq)
 
     def s(self, lq):
@@ -271,7 +300,6 @@ class QrackAceBackend:
 
     def _cpauli(self, lq1, lq2, anti, pauli):
         self._correct(lq1)
-
         gate = None
         shadow = None
         if pauli == Pauli.PauliX:
@@ -284,6 +312,15 @@ class QrackAceBackend:
             gate = self.sim.macz if anti else self.sim.mcz
             shadow = self._anti_cz_shadow if anti else self._cz_shadow
         else:
+            return
+
+        if not self._is_init[lq1]:
+            hq1 = self._unpack(lq1)
+            hq2 = self._unpack(lq2)
+            gate([hq1[0]], hq2[0])
+            gate([hq1[1]], hq2[1])
+            gate([hq1[2]], hq2[2])
+
             return
 
         lq1_col = lq1 // self.row_length
@@ -320,7 +357,6 @@ class QrackAceBackend:
             else:
                 gate([hq1[1]], hq2[1])
             gate([hq1[2]], hq2[2])
-
 
     def cx(self, lq1, lq2):
         self._cpauli(lq1, lq2, False, Pauli.PauliX)
@@ -369,6 +405,8 @@ class QrackAceBackend:
         for i in range(len(hq)):
             if bits[i] != result:
                 self.sim.x(hq[i])
+
+        self._is_init[lq] = False
 
         return result
 

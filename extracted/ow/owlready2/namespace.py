@@ -412,7 +412,7 @@ class World(_GraphManager):
         
     for iri in self.graph.ontologies_iris():
       self.get_ontology(iri) # Create all possible ontologies if not yet done
-
+      
     self._full_text_search_properties = CallbackList([self._get_by_storid(storid, default_to_none = True) or storid for storid in self.graph.get_fts_prop_storid()], self, World._full_text_search_changed)
     
   def close(self):
@@ -504,24 +504,28 @@ class World(_GraphManager):
     return (NamespaceClass or Namespace)(self, base_iri, name or base_iri[:-1].rsplit("/", 1)[-1])
     
   def _del_triple_with_update(self, s, p, o, d = None):
-    sub = None
     if d == 'o': d = None # For SPARQL engine, because None is NULL in SQL, but '=' cannot be used on NULL
     
-    if   (s > 0) and (s in self.world._entities):
-      sub = self._entities[s]
-    elif  s < 0:
+    if    s is None:
+      storids = { s for s, p, o, d in self._get_triples_spod_spod(None, p, o, d) }
+      subs = [self.world._entities[s] for s in storids if s in self._entities]
+    elif s > 0:
+      if s in self._entities: subs = [self._entities[s]]
+      else:                   subs = []
+    elif s < 0:
       for ontology in self.ontologies.values():
         if s in ontology._bnodes:
-          sub = ontology._bnodes[s]
+          subs = [ontology._bnodes[s]]
           break
-        
-    if not sub is None:
+      else: subs = []
+      
+    for sub in subs:
       prop = self._entities.get(p)
       if   prop:
         try: delattr(sub, prop.python_name)
         except: pass
         
-      elif d is None:
+      elif o and (d is None):
         obj = self._load_by_storid(o)
         if not obj is None:
           if (p == rdf_type) or (p == rdfs_subclassof) or (p == rdfs_subpropertyof):
@@ -544,9 +548,13 @@ class World(_GraphManager):
             sub.range.remove(obj)
             return
           
-    if d is None: self._del_obj_triple_raw_spo  (s,p,o)
-    else:         self._del_data_triple_raw_spod(s,p,o,d)
-    
+    if (p is None) or (o is None):
+      self._del_obj_triple_raw_spo  (s,p,o)
+      self._del_data_triple_raw_spod(s,p,o,d)
+    else:
+      if d is None: self._del_obj_triple_raw_spo  (s,p,o)
+      else:         self._del_data_triple_raw_spod(s,p,o,d)
+      
   def _add_quads_with_update(self, ontology0, quads):
     l = owlready2.namespace.CURRENT_NAMESPACES.get()
     if l:
@@ -815,7 +823,7 @@ class Ontology(Namespace, _GraphManager):
         for method in self.graph.__class__.BASE_METHODS + self.graph.__class__.ONTO_METHODS:
           setattr(self, method, getattr(self.graph, method))
         if not new_in_quadstore:
-          self._load_properties()
+          self._load_properties(False) # Either new (=> nothing to update) or already in quadstore (update already done, no new triples)
 
       #world.ontologies[self._base_iri] = self
       world._register_ontology(self)
@@ -1056,13 +1064,14 @@ class Ontology(Namespace, _GraphManager):
         owlready2.default_world, owlready2.IRIS, owlready2.get_ontology, owlready2.get_namespace = saved
     return self
   
-  def _load_properties(self):
-    # Update props from other ontologies, if needed
-    for prop in list(self.world._props.values()):
-      if prop.namespace.world is owl_world: continue
-      if prop._check_update(self) and _LOG_LEVEL:
-        print("* Owlready2 * Reseting property %s: new triples are now available." % prop)
-        
+  def _load_properties(self, update_props = True):
+    if update_props: # Update props from other ontologies, if needed
+      for prop_storid, in self.world.graph.execute("""SELECT DISTINCT q1.s FROM objs q1, objs q2 INDEXED BY index_objs_sp WHERE q1.p=6 AND q1.o IN (13, 14, 15) AND q2.s=q1.s AND q2.c=? AND q1.c != ?""", (self.graph.c, self.graph.c,)):
+        prop = self.world._get_by_storid(prop_storid)
+        if prop.namespace.world is owl_world: continue
+        if prop._check_update(self) and _LOG_LEVEL:
+          print("* Owlready2 * Reseting property %s: new triples are now available." % prop)
+          
     # Loads new props
     props = []
     for prop_storid in itertools.chain(self._get_obj_triples_po_s(rdf_type, owl_object_property), self._get_obj_triples_po_s(rdf_type, owl_data_property), self._get_obj_triples_po_s(rdf_type, owl_annotation_property)):

@@ -1387,6 +1387,8 @@ class MutateApp:
             args = ["--compilation_steps_only"]
             if self.prover_version:
                 args += ['--prover_version', self.prover_version]
+            if self.server:
+                args += ['--server', self.server]
             run_certora([str(self.conf)] + args)
         except CertoraFoundViolations:  # violations should not stop execution
             pass
@@ -1898,7 +1900,7 @@ class MutateApp:
             common_flags.extend(['--optimize'])
 
         if hasattr(self.prover_context, MConstants.SOLC_ALLOW_PATH):
-            common_flags.extend([f'--allow-paths, {self.prover_context.solc_allow_path}'])
+            common_flags.extend(['--allow-paths', '/'])
 
         if hasattr(self.prover_context, MConstants.SOLC_EVM_VERSION):
             common_flags.extend(['--evm-version', self.prover_context.solc_evm_version])

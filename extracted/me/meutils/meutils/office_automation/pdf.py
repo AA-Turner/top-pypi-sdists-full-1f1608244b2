@@ -56,10 +56,46 @@ def doc2text(filename):
     pass
 
 
+def extract_images_from_pdf(file, output: Optional[str] = None):
+    import fitz
+
+    # 打开PDF文件
+
+    pdf_document = fitz.open(file)
+
+    # 遍历每一页
+
+    for page_number in range(pdf_document.page_count):
+
+        page = pdf_document.load_page(page_number)
+
+        image_list = page.get_images(full=True)
+
+        # 遍历每个图像
+
+        for image_index, img in enumerate(image_list):
+            xref = img[0]
+
+            base_image = pdf_document.extract_image(xref)
+
+            image_bytes = base_image["image"]
+
+            image_ext = base_image["ext"]
+
+            image_filename = f"{output or ''}/image{page_number + 1}_{image_index + 1}.{image_ext}"
+            Path(image_filename).parent.mkdir(parents=True, exist_ok=True)
+
+            # 将图像写入文件
+
+            with open(image_filename, "wb") as image_file:
+                image_file.write(image_bytes)
+
+
 if __name__ == '__main__':
     with timer():
-       r = extract_text('x.pdf')
+        # r = extract_text('x.pdf')
 
+        r = extract_images_from_pdf('《锋利的jQuery》(高清扫描版-有书签)_副本_加水印.pdf', 'images')
 
     # import tiktoken
     # print(tiktoken.encoding_for_model('gpt-3.5-turbo'))

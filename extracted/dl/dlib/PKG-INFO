@@ -1,12 +1,11 @@
-Metadata-Version: 1.1
+Metadata-Version: 2.1
 Name: dlib
-Version: 19.24.9
+Version: 20.0.0
 Summary: A toolkit for making real world machine learning and data analysis applications
 Home-page: https://github.com/davisking/dlib
 Author: Davis King
 Author-email: davis@dlib.net
 License: Boost Software License
-Description: See http://dlib.net for documentation.
 Keywords: dlib,Computer Vision,Machine Learning
 Platform: UNKNOWN
 Classifier: Development Status :: 5 - Production/Stable
@@ -23,3 +22,7 @@ Classifier: Topic :: Scientific/Engineering
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Classifier: Topic :: Scientific/Engineering :: Image Recognition
 Classifier: Topic :: Software Development
+License-File: LICENSE.txt
+
+See http://dlib.net for documentation.
+
