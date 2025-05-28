@@ -4,15 +4,19 @@
 # This source code is licensed under the terms described in the LICENSE file in
 # the root directory of this source tree.
 
+import base64
 from unittest.mock import AsyncMock, patch
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from llama_stack.distribution.datatypes import AccessAttributes
+from llama_stack.distribution.datatypes import AuthenticationConfig
 from llama_stack.distribution.server.auth import AuthenticationMiddleware
-from llama_stack.distribution.server.auth_providers import AuthProviderConfig, AuthProviderType
+from llama_stack.distribution.server.auth_providers import (
+    AuthProviderType,
+    get_attributes_from_claims,
+)
 
 
 class MockResponse:
@@ -22,6 +26,10 @@ class MockResponse:
 
     def json(self):
         return self._json_data
+
+    def raise_for_status(self):
+        if self.status_code != 200:
+            raise Exception(f"HTTP error: {self.status_code}")
 
 
 @pytest.fixture
@@ -52,7 +60,7 @@ def invalid_token():
 @pytest.fixture
 def http_app(mock_auth_endpoint):
     app = FastAPI()
-    auth_config = AuthProviderConfig(
+    auth_config = AuthenticationConfig(
         provider_type=AuthProviderType.CUSTOM,
         config={"endpoint": mock_auth_endpoint},
     )
@@ -68,7 +76,7 @@ def http_app(mock_auth_endpoint):
 @pytest.fixture
 def k8s_app():
     app = FastAPI()
-    auth_config = AuthProviderConfig(
+    auth_config = AuthenticationConfig(
         provider_type=AuthProviderType.KUBERNETES,
         config={"api_server_url": "https://kubernetes.default.svc"},
     )
@@ -108,7 +116,7 @@ def mock_scope():
 @pytest.fixture
 def mock_http_middleware(mock_auth_endpoint):
     mock_app = AsyncMock()
-    auth_config = AuthProviderConfig(
+    auth_config = AuthenticationConfig(
         provider_type=AuthProviderType.CUSTOM,
         config={"endpoint": mock_auth_endpoint},
     )
@@ -118,7 +126,7 @@ def mock_http_middleware(mock_auth_endpoint):
 @pytest.fixture
 def mock_k8s_middleware():
     mock_app = AsyncMock()
-    auth_config = AuthProviderConfig(
+    auth_config = AuthenticationConfig(
         provider_type=AuthProviderType.KUBERNETES,
         config={"api_server_url": "https://kubernetes.default.svc"},
     )
@@ -130,6 +138,7 @@ async def mock_post_success(*args, **kwargs):
         200,
         {
             "message": "Authentication successful",
+            "principal": "test-principal",
             "access_attributes": {
                 "roles": ["admin", "user"],
                 "teams": ["ml-team", "nlp-team"],
@@ -223,6 +232,7 @@ async def test_http_middleware_with_access_attributes(mock_http_middleware, mock
             200,
             {
                 "message": "Authentication successful",
+                "principal": "test-principal",
                 "access_attributes": {
                     "roles": ["admin", "user"],
                     "teams": ["ml-team", "nlp-team"],
@@ -268,105 +278,295 @@ async def test_http_middleware_no_attributes(mock_http_middleware, mock_scope):
 
         assert "user_attributes" in mock_scope
         attributes = mock_scope["user_attributes"]
-        assert "namespaces" in attributes
-        assert attributes["namespaces"] == ["test.jwt.token"]
-
-
-# Kubernetes Tests
-def test_missing_auth_header_k8s(k8s_client):
-    response = k8s_client.get("/test")
-    assert response.status_code == 401
-    assert "Missing or invalid Authorization header" in response.json()["error"]["message"]
-
-
-def test_invalid_auth_header_format_k8s(k8s_client):
-    response = k8s_client.get("/test", headers={"Authorization": "InvalidFormat token123"})
-    assert response.status_code == 401
-    assert "Missing or invalid Authorization header" in response.json()["error"]["message"]
-
-
-@patch("kubernetes.client.ApiClient")
-def test_valid_k8s_authentication(mock_api_client, k8s_client, valid_token):
-    # Mock the Kubernetes client
-    mock_client = AsyncMock()
-    mock_api_client.return_value = mock_client
-
-    # Mock successful token validation
-    mock_client.set_default_header = AsyncMock()
-
-    # Mock the token validation to return valid access attributes
-    with patch("llama_stack.distribution.server.auth_providers.KubernetesAuthProvider.validate_token") as mock_validate:
-        mock_validate.return_value = AccessAttributes(
-            roles=["admin"], teams=["ml-team"], projects=["llama-3"], namespaces=["research"]
-        )
-        response = k8s_client.get("/test", headers={"Authorization": f"Bearer {valid_token}"})
-        assert response.status_code == 200
-        assert response.json() == {"message": "Authentication successful"}
-
-
-@patch("kubernetes.client.ApiClient")
-def test_invalid_k8s_authentication(mock_api_client, k8s_client, invalid_token):
-    # Mock the Kubernetes client
-    mock_client = AsyncMock()
-    mock_api_client.return_value = mock_client
-
-    # Mock failed token validation by raising an exception
-    with patch("llama_stack.distribution.server.auth_providers.KubernetesAuthProvider.validate_token") as mock_validate:
-        mock_validate.side_effect = ValueError("Invalid or expired token")
-        response = k8s_client.get("/test", headers={"Authorization": f"Bearer {invalid_token}"})
-        assert response.status_code == 401
-        assert "Invalid or expired token" in response.json()["error"]["message"]
-
-
-@pytest.mark.asyncio
-async def test_k8s_middleware_with_access_attributes(mock_k8s_middleware, mock_scope):
-    middleware, mock_app = mock_k8s_middleware
-    mock_receive = AsyncMock()
-    mock_send = AsyncMock()
-
-    with patch("kubernetes.client.ApiClient") as mock_api_client:
-        mock_client = AsyncMock()
-        mock_api_client.return_value = mock_client
-
-        # Mock successful token validation
-        mock_client.set_default_header = AsyncMock()
-
-        # Mock token payload with access attributes
-        mock_token_parts = ["header", "eyJzdWIiOiJhZG1pbiIsImdyb3VwcyI6WyJtbC10ZWFtIl19", "signature"]
-        mock_scope["headers"][1] = (b"authorization", f"Bearer {'.'.join(mock_token_parts)}".encode())
-
-        await middleware(mock_scope, mock_receive, mock_send)
-
-        assert "user_attributes" in mock_scope
-        assert mock_scope["user_attributes"]["roles"] == ["admin"]
-        assert mock_scope["user_attributes"]["teams"] == ["ml-team"]
-
-        mock_app.assert_called_once_with(mock_scope, mock_receive, mock_send)
-
-
-@pytest.mark.asyncio
-async def test_k8s_middleware_no_attributes(mock_k8s_middleware, mock_scope):
-    """Test middleware behavior with no access attributes"""
-    middleware, mock_app = mock_k8s_middleware
-    mock_receive = AsyncMock()
-    mock_send = AsyncMock()
-
-    with patch("kubernetes.client.ApiClient") as mock_api_client:
-        mock_client = AsyncMock()
-        mock_api_client.return_value = mock_client
-
-        # Mock successful token validation
-        mock_client.set_default_header = AsyncMock()
-
-        # Mock token payload without access attributes
-        mock_token_parts = ["header", "eyJzdWIiOiJhZG1pbiJ9", "signature"]
-        mock_scope["headers"][1] = (b"authorization", f"Bearer {'.'.join(mock_token_parts)}".encode())
-
-        await middleware(mock_scope, mock_receive, mock_send)
-
-        assert "user_attributes" in mock_scope
-        attributes = mock_scope["user_attributes"]
         assert "roles" in attributes
-        assert attributes["roles"] == ["admin"]
+        assert attributes["roles"] == ["test.jwt.token"]
 
-        mock_app.assert_called_once_with(mock_scope, mock_receive, mock_send)
+
+# oauth2 token provider tests
+
+
+@pytest.fixture
+def oauth2_app():
+    app = FastAPI()
+    auth_config = AuthenticationConfig(
+        provider_type=AuthProviderType.OAUTH2_TOKEN,
+        config={
+            "jwks": {
+                "uri": "http://mock-authz-service/token/introspect",
+                "key_recheck_period": "3600",
+            },
+            "audience": "llama-stack",
+        },
+    )
+    app.add_middleware(AuthenticationMiddleware, auth_config=auth_config)
+
+    @app.get("/test")
+    def test_endpoint():
+        return {"message": "Authentication successful"}
+
+    return app
+
+
+@pytest.fixture
+def oauth2_client(oauth2_app):
+    return TestClient(oauth2_app)
+
+
+def test_missing_auth_header_oauth2(oauth2_client):
+    response = oauth2_client.get("/test")
+    assert response.status_code == 401
+    assert "Missing or invalid Authorization header" in response.json()["error"]["message"]
+
+
+def test_invalid_auth_header_format_oauth2(oauth2_client):
+    response = oauth2_client.get("/test", headers={"Authorization": "InvalidFormat token123"})
+    assert response.status_code == 401
+    assert "Missing or invalid Authorization header" in response.json()["error"]["message"]
+
+
+async def mock_jwks_response(*args, **kwargs):
+    return MockResponse(
+        200,
+        {
+            "keys": [
+                {
+                    "kid": "1234567890",
+                    "kty": "oct",
+                    "alg": "HS256",
+                    "use": "sig",
+                    "k": base64.b64encode(b"foobarbaz").decode(),
+                }
+            ]
+        },
+    )
+
+
+@pytest.fixture
+def jwt_token_valid():
+    from jose import jwt
+
+    return jwt.encode(
+        {
+            "sub": "my-user",
+            "groups": ["group1", "group2"],
+            "scope": "foo bar",
+            "aud": "llama-stack",
+        },
+        key="foobarbaz",
+        algorithm="HS256",
+        headers={"kid": "1234567890"},
+    )
+
+
+@patch("httpx.AsyncClient.get", new=mock_jwks_response)
+def test_valid_oauth2_authentication(oauth2_client, jwt_token_valid):
+    response = oauth2_client.get("/test", headers={"Authorization": f"Bearer {jwt_token_valid}"})
+    assert response.status_code == 200
+    assert response.json() == {"message": "Authentication successful"}
+
+
+@patch("httpx.AsyncClient.get", new=mock_jwks_response)
+def test_invalid_oauth2_authentication(oauth2_client, invalid_token):
+    response = oauth2_client.get("/test", headers={"Authorization": f"Bearer {invalid_token}"})
+    assert response.status_code == 401
+    assert "Invalid JWT token" in response.json()["error"]["message"]
+
+
+def test_get_attributes_from_claims():
+    claims = {
+        "sub": "my-user",
+        "groups": ["group1", "group2"],
+        "scope": "foo bar",
+        "aud": "llama-stack",
+    }
+    attributes = get_attributes_from_claims(claims, {"sub": "roles", "groups": "teams"})
+    assert attributes.roles == ["my-user"]
+    assert attributes.teams == ["group1", "group2"]
+
+    claims = {
+        "sub": "my-user",
+        "tenant": "my-tenant",
+    }
+    attributes = get_attributes_from_claims(claims, {"sub": "roles", "tenant": "namespaces"})
+    assert attributes.roles == ["my-user"]
+    assert attributes.namespaces == ["my-tenant"]
+
+    claims = {
+        "sub": "my-user",
+        "username": "my-username",
+        "tenant": "my-tenant",
+        "groups": ["group1", "group2"],
+        "team": "my-team",
+    }
+    attributes = get_attributes_from_claims(
+        claims,
+        {
+            "sub": "roles",
+            "tenant": "namespaces",
+            "username": "roles",
+            "team": "teams",
+            "groups": "teams",
+        },
+    )
+    assert set(attributes.roles) == {"my-user", "my-username"}
+    assert set(attributes.teams) == {"my-team", "group1", "group2"}
+    assert attributes.namespaces == ["my-tenant"]
+
+
+# TODO: add more tests for oauth2 token provider
+
+
+# oauth token introspection tests
+@pytest.fixture
+def mock_introspection_endpoint():
+    return "http://mock-authz-service/token/introspect"
+
+
+@pytest.fixture
+def introspection_app(mock_introspection_endpoint):
+    app = FastAPI()
+    auth_config = AuthenticationConfig(
+        provider_type=AuthProviderType.OAUTH2_TOKEN,
+        config={
+            "jwks": None,
+            "introspection": {"url": mock_introspection_endpoint, "client_id": "myclient", "client_secret": "abcdefg"},
+        },
+    )
+    app.add_middleware(AuthenticationMiddleware, auth_config=auth_config)
+
+    @app.get("/test")
+    def test_endpoint():
+        return {"message": "Authentication successful"}
+
+    return app
+
+
+@pytest.fixture
+def introspection_app_with_custom_mapping(mock_introspection_endpoint):
+    app = FastAPI()
+    auth_config = AuthenticationConfig(
+        provider_type=AuthProviderType.OAUTH2_TOKEN,
+        config={
+            "jwks": None,
+            "introspection": {
+                "url": mock_introspection_endpoint,
+                "client_id": "myclient",
+                "client_secret": "abcdefg",
+                "send_secret_in_body": "true",
+            },
+            "claims_mapping": {
+                "sub": "roles",
+                "scope": "roles",
+                "groups": "teams",
+                "aud": "namespaces",
+            },
+        },
+    )
+    app.add_middleware(AuthenticationMiddleware, auth_config=auth_config)
+
+    @app.get("/test")
+    def test_endpoint():
+        return {"message": "Authentication successful"}
+
+    return app
+
+
+@pytest.fixture
+def introspection_client(introspection_app):
+    return TestClient(introspection_app)
+
+
+@pytest.fixture
+def introspection_client_with_custom_mapping(introspection_app_with_custom_mapping):
+    return TestClient(introspection_app_with_custom_mapping)
+
+
+def test_missing_auth_header_introspection(introspection_client):
+    response = introspection_client.get("/test")
+    assert response.status_code == 401
+    assert "Missing or invalid Authorization header" in response.json()["error"]["message"]
+
+
+def test_invalid_auth_header_format_introspection(introspection_client):
+    response = introspection_client.get("/test", headers={"Authorization": "InvalidFormat token123"})
+    assert response.status_code == 401
+    assert "Missing or invalid Authorization header" in response.json()["error"]["message"]
+
+
+async def mock_introspection_active(*args, **kwargs):
+    return MockResponse(
+        200,
+        {
+            "active": True,
+            "sub": "my-user",
+            "groups": ["group1", "group2"],
+            "scope": "foo bar",
+            "aud": ["set1", "set2"],
+        },
+    )
+
+
+async def mock_introspection_inactive(*args, **kwargs):
+    return MockResponse(
+        200,
+        {
+            "active": False,
+        },
+    )
+
+
+async def mock_introspection_invalid(*args, **kwargs):
+    class InvalidResponse:
+        def __init__(self, status_code):
+            self.status_code = status_code
+
+        def json(self):
+            raise ValueError("Not JSON")
+
+    return InvalidResponse(200)
+
+
+async def mock_introspection_failed(*args, **kwargs):
+    return MockResponse(
+        500,
+        {},
+    )
+
+
+@patch("httpx.AsyncClient.post", new=mock_introspection_active)
+def test_valid_introspection_authentication(introspection_client, valid_api_key):
+    response = introspection_client.get("/test", headers={"Authorization": f"Bearer {valid_api_key}"})
+    assert response.status_code == 200
+    assert response.json() == {"message": "Authentication successful"}
+
+
+@patch("httpx.AsyncClient.post", new=mock_introspection_inactive)
+def test_inactive_introspection_authentication(introspection_client, invalid_api_key):
+    response = introspection_client.get("/test", headers={"Authorization": f"Bearer {invalid_api_key}"})
+    assert response.status_code == 401
+    assert "Token not active" in response.json()["error"]["message"]
+
+
+@patch("httpx.AsyncClient.post", new=mock_introspection_invalid)
+def test_invalid_introspection_authentication(introspection_client, invalid_api_key):
+    response = introspection_client.get("/test", headers={"Authorization": f"Bearer {invalid_api_key}"})
+    assert response.status_code == 401
+    assert "Not JSON" in response.json()["error"]["message"]
+
+
+@patch("httpx.AsyncClient.post", new=mock_introspection_failed)
+def test_failed_introspection_authentication(introspection_client, invalid_api_key):
+    response = introspection_client.get("/test", headers={"Authorization": f"Bearer {invalid_api_key}"})
+    assert response.status_code == 401
+    assert "Token introspection failed: 500" in response.json()["error"]["message"]
+
+
+@patch("httpx.AsyncClient.post", new=mock_introspection_active)
+def test_valid_introspection_with_custom_mapping_authentication(
+    introspection_client_with_custom_mapping, valid_api_key
+):
+    response = introspection_client_with_custom_mapping.get(
+        "/test", headers={"Authorization": f"Bearer {valid_api_key}"}
+    )
+    assert response.status_code == 200
+    assert response.json() == {"message": "Authentication successful"}

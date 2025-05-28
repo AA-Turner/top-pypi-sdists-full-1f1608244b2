@@ -206,7 +206,7 @@ def features(
                 raise_error=ValueError,
             )
 
-        if notebook.is_notebook() and previous_features_class is not None and not notebook.is_defined_in_module(previous_features_class):
+        if notebook.is_notebook() and previous_features_class is not None and notebook.is_defined_in_module(previous_features_class):
             # Not generating an LSP here because we're in a notebook anyway
             # TODO: See if we can pretty-print lsp errors in notebooks, at which point we can generate one that points to the old feature class
             raise ValueError(

@@ -44,7 +44,7 @@ joined_valid_occ_types: str = ", ".join(valid_occ_types)
 SUPPORTED_MODELS: list = ["SOBOL", "FACTORIAL", "SAASBO", "BOTORCH_MODULAR", "UNIFORM", "BO_MIXED", "RANDOMFOREST", "EXTERNAL_GENERATOR", "PSEUDORANDOM"]
 joined_supported_models: str = ", ".join(SUPPORTED_MODELS)
 
-special_col_names: list = ["arm_name", "generation_method", "trial_index", "trial_status", "generation_node"]
+special_col_names: list = ["arm_name", "generation_method", "trial_index", "trial_status", "generation_node", "idxs"]
 IGNORABLE_COLUMNS: list = ["start_time", "end_time", "hostname", "signal", "exit_code", "run_time", "program_string"] + special_col_names
 
 post_generation_constraints: list = []
@@ -71,93 +71,156 @@ try:
         width=max(200, terminal_width)
     )
 
-    with console.status("[bold green]Loading base modules...") as status:
+    with console.status("[bold green]Importing logging..."):
         import logging
         logging.basicConfig(level=logging.CRITICAL)
 
+    with console.status("[bold green]Importing warnings..."):
         import warnings
-
         warnings.filterwarnings(
             "ignore",
             category=FutureWarning,
             module="ax.modelbridge.best_model_selector"
         )
 
+    with console.status("[bold green]Importing argparse..."):
         import argparse
+
+    with console.status("[bold green]Importing datetime..."):
         import datetime
 
-        from ax.utils.common.random import set_rng_seed
-
+    with console.status("[bold green]Importing dataclass..."):
         from dataclasses import dataclass
 
+    with console.status("[bold green]Importing hashlib..."):
         import hashlib
 
+    with console.status("[bold green]Importing socket..."):
         import socket
+
+    with console.status("[bold green]Importing stat..."):
         import stat
+
+    with console.status("[bold green]Importing pwd..."):
         import pwd
+
+    with console.status("[bold green]Importing signal..."):
         import signal
+
+    with console.status("[bold green]Importing base64..."):
         import base64
 
+    with console.status("[bold green]Importing json..."):
         import json
+
+    with console.status("[bold green]Importing yaml..."):
         import yaml
+
+    with console.status("[bold green]Importing toml..."):
         import toml
+
+    with console.status("[bold green]Importing csv..."):
         import csv
 
+    with console.status("[bold green]Importing ast..."):
         import ast
 
-        from rich.progress import Progress, TimeRemainingColumn
+    with console.status("[bold green]Importing rich.table..."):
         from rich.table import Table
+
+    with console.status("[bold green]Importing rich.text..."):
+        from rich.text import Text
+
+    with console.status("[bold green]Importing rich print..."):
         from rich import print
+
+    with console.status("[bold green]Importing rich.pretty..."):
         from rich.pretty import pprint
 
+    with console.status("[bold green]Importing fcntl..."):
         import fcntl
 
+    with console.status("[bold green]Importing types.FunctionType..."):
         from types import FunctionType
-        from typing import Pattern, Optional, Tuple, Any, cast, Union, TextIO, List, Dict, Type, Sequence
 
+    with console.status("[bold green]Importing typing..."):
+        from typing import Pattern, Optional, Tuple, Any, cast, Union, TextIO, List, Dict, Type
+
+    with console.status("[bold green]Importing ThreadPoolExecutor..."):
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
+    with console.status("[bold green]Importing submitit.LocalExecutor..."):
         from submitit import LocalExecutor, AutoExecutor
+
+    with console.status("[bold green]Importing submitit.Job..."):
         from submitit import Job
 
+    with console.status("[bold green]Importing importlib.util..."):
         import importlib.util
+
+    with console.status("[bold green]Importing inspect..."):
         import inspect
+
+    with console.status("[bold green]Importing platform..."):
         import platform
 
+    with console.status("[bold green]Importing inspect frame info..."):
         from inspect import currentframe, getframeinfo
+
+    with console.status("[bold green]Importing pathlib.Path..."):
         from pathlib import Path
 
+    with console.status("[bold green]Importing uuid..."):
         import uuid
 
+    with console.status("[bold green]Importing traceback..."):
         import traceback
 
+    with console.status("[bold green]Importing cowsay..."):
         import cowsay
 
+    with console.status("[bold green]Importing psutil..."):
         import psutil
+
+    with console.status("[bold green]Importing shutil..."):
         import shutil
 
+    with console.status("[bold green]Importing itertools.combinations..."):
         from itertools import combinations
 
+    with console.status("[bold green]Importing pandas..."):
         import pandas as pd
 
+    with console.status("[bold green]Importing os.listdir..."):
         from os import listdir
+
+    with console.status("[bold green]Importing os.path..."):
         from os.path import isfile, join
 
+    with console.status("[bold green]Importing PIL.Image..."):
         from PIL import Image
+
+    with console.status("[bold green]Importing sixel..."):
         import sixel
 
+    with console.status("[bold green]Importing subprocess..."):
         import subprocess
 
+    with console.status("[bold green]Importing tqdm..."):
         from tqdm import tqdm
 
+    with console.status("[bold green]Importing beartype..."):
         from beartype import beartype
 
+    with console.status("[bold green]Importing statistics..."):
         from statistics import mean, median
-    try:
-        from pyfiglet import Figlet
-        figlet_loaded = True
-    except ModuleNotFoundError:
-        figlet_loaded = False
+
+    with console.status("[bold green]Trying to import pyfiglet..."):
+        try:
+            from pyfiglet import Figlet
+            figlet_loaded = True
+        except ModuleNotFoundError:
+            figlet_loaded = False
 except ModuleNotFoundError as e:
     print(f"Some of the base modules could not be loaded. Most probably that means you have not loaded or installed the virtualenv properly. Error: {e}")
     print("Exit-Code: 2")
@@ -173,7 +236,7 @@ except KeyboardInterrupt:
 def fool_linter(*fool_linter_args: Any) -> Any:
     return fool_linter_args
 
-with console.status("[bold green]Loading rich_argparse...") as status:
+with console.status("[bold green]Importing rich_argparse...") as status:
     try:
         from rich_argparse import RichHelpFormatter
     except ModuleNotFoundError:
@@ -223,21 +286,22 @@ error_8_saved: List[str] = []
 def get_current_run_folder() -> str:
     return CURRENT_RUN_FOLDER
 
-script_dir = os.path.dirname(os.path.realpath(__file__))
-helpers_file: str = f"{script_dir}/.helpers.py"
-spec = importlib.util.spec_from_file_location(
-    name="helpers",
-    location=helpers_file,
-)
-if spec is not None and spec.loader is not None:
-    helpers = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(helpers)
-else:
-    raise ImportError(f"Could not load module from {helpers_file}")
+with console.status("[bold green]Importing helpers..."):
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    helpers_file: str = f"{script_dir}/.helpers.py"
+    spec = importlib.util.spec_from_file_location(
+        name="helpers",
+        location=helpers_file,
+    )
+    if spec is not None and spec.loader is not None:
+        helpers = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(helpers)
+    else:
+        raise ImportError(f"Could not load module from {helpers_file}")
 
-dier: FunctionType = helpers.dier
-is_equal: FunctionType = helpers.is_equal
-is_not_equal: FunctionType = helpers.is_not_equal
+    dier: FunctionType = helpers.dier
+    is_equal: FunctionType = helpers.is_equal
+    is_not_equal: FunctionType = helpers.is_not_equal
 
 ORCHESTRATE_TODO: dict = {}
 
@@ -353,6 +417,24 @@ def print_debug(msg: str) -> None:
         original_print(f"_debug: Error trying to write log file: {e}")
 
 @beartype
+def human_time_when_larger_than_a_min(seconds: Union[int, float]) -> str:
+    total_seconds = int(seconds)
+
+    if total_seconds < 60:
+        return ""
+
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, secs = divmod(remainder, 60)
+    parts = []
+    if hours:
+        parts.append(f"{hours}h")
+    if minutes:
+        parts.append(f"{minutes}m")
+    if secs or not parts:
+        parts.append(f"{secs}s")
+    return f"({''.join(parts)})"
+
+@beartype
 def my_exit(_code: int = 0) -> None:
     tb = traceback.format_exc()
 
@@ -375,8 +457,10 @@ def my_exit(_code: int = 0) -> None:
     print_debug(exit_code_string)
 
     whole_end_time: float = time.time()
-    whole_run_time = whole_end_time - whole_start_time
-    print(f"Wallclock-Runtime: {whole_run_time} seconds")
+    whole_run_time = round(whole_end_time - whole_start_time)
+    human_time = human_time_when_larger_than_a_min(whole_run_time)
+
+    print(f"Wallclock-Runtime: {whole_run_time} seconds {human_time}")
 
     sys.exit(_code)
 
@@ -478,7 +562,6 @@ class ConfigLoader:
     external_generator: Optional[str]
     generation_strategy: Optional[str]
     root_venv_dir: str
-    pareto_front_confidence: float
     follow: bool
     show_generation_and_submission_sixel: bool
     n_estimators_randomforest: int
@@ -706,12 +789,16 @@ class ConfigLoader:
 
         return _args
 
-loader = ConfigLoader()
-args = loader.parse_arguments()
+with console.status("[bold green]Parsing arguments..."):
+    loader = ConfigLoader()
+    args = loader.parse_arguments()
 
 original_result_names = args.result_names
 
 if args.seed is not None:
+    with console.status("[bold green]Importing ax random seed..."):
+        from ax.utils.common.random import set_rng_seed
+
     set_rng_seed(args.seed)
 
 if args.max_eval is None and args.generation_strategy is None and args.continue_previous_job is None and (not args.calculate_pareto_front_of_job or len(args.calculate_pareto_front_of_job) == 0):
@@ -799,56 +886,110 @@ if args.continue_previous_job is not None:
 disable_logs = None
 
 try:
-    with console.status("[bold green]Loading torch...") as status:
+    with console.status("[bold green]Importing torch...") as status:
         import torch
-    with console.status("[bold green]Loading numpy...") as status:
+    with console.status("[bold green]Importing numpy...") as status:
         import numpy as np
-    with console.status("[bold green]Loading collections...") as status:
+    with console.status("[bold green]Importing collections...") as status:
         from collections import defaultdict
-    with console.status("[bold green]Loading ax...") as status:
+    with console.status("[bold green]Importing ax..."):
         import ax
 
+    with console.status("[bold green]Importing ax.core.generator_run..."):
         from ax.core.generator_run import GeneratorRun
+
+    with console.status("[bold green]Importing ax.core.arm..."):
         from ax.core.arm import Arm
 
+    with console.status("[bold green]Importing ax.core.objective..."):
         from ax.core.objective import MultiObjective
+
+    with console.status("[bold green]Importing ax.core.Metric..."):
         from ax.core import Metric
+
+    with console.status("[bold green]Importing ax.exceptions.core..."):
         import ax.exceptions.core
+
+    with console.status("[bold green]Importing ax.exceptions.generation_strategy..."):
         import ax.exceptions.generation_strategy
 
+    with console.status("[bold green]Importing CORE_DECODER_REGISTRY..."):
         from ax.storage.json_store.registry import CORE_DECODER_REGISTRY
 
-        try:
+    try:
+        with console.status("[bold green]Trying ax.generation_strategy.generation_node..."):
             import ax.generation_strategy.generation_node
-            from ax.generation_strategy.generation_strategy import (GenerationStep, GenerationStrategy)
+
+        with console.status("[bold green]Importing GenerationStep, GenerationStrategy from generation_strategy..."):
+            from ax.generation_strategy.generation_strategy import GenerationStep, GenerationStrategy
+
+        with console.status("[bold green]Importing GenerationNode from generation_node..."):
             from ax.generation_strategy.generation_node import GenerationNode
+
+        with console.status("[bold green]Importing ExternalGenerationNode..."):
             from ax.generation_strategy.external_generation_node import ExternalGenerationNode
+
+        with console.status("[bold green]Importing MaxTrials..."):
             from ax.generation_strategy.transition_criterion import MaxTrials
+
+        with console.status("[bold green]Importing GeneratorSpec..."):
             from ax.generation_strategy.model_spec import GeneratorSpec
-        except Exception:
+
+    except Exception:
+        with console.status("[bold green]Fallback: Importing ax.modelbridge.generation_node..."):
             import ax.modelbridge.generation_node
-            from ax.modelbridge.generation_strategy import (GenerationStep, GenerationStrategy)
+
+        with console.status("[bold green]Fallback: Importing GenerationStep, GenerationStrategy from modelbridge..."):
+            from ax.modelbridge.generation_strategy import GenerationStep, GenerationStrategy
+
+        with console.status("[bold green]Fallback: Importing GenerationNode..."):
             from ax.modelbridge.generation_node import GenerationNode
+
+        with console.status("[bold green]Fallback: Importing ExternalGenerationNode..."):
             from ax.modelbridge.external_generation_node import ExternalGenerationNode
+
+        with console.status("[bold green]Fallback: Importing MaxTrials..."):
             from ax.modelbridge.transition_criterion import MaxTrials
+
+        with console.status("[bold green]Fallback: Importing GeneratorSpec..."):
             from ax.modelbridge.model_spec import GeneratorSpec
 
+    with console.status("[bold green]Importing Models from ax.modelbridge.registry..."):
         from ax.modelbridge.registry import Models
+
+    with console.status("[bold green]Importing get_pending_observation_features..."):
         from ax.modelbridge.modelbridge_utils import get_pending_observation_features
+
+    with console.status("[bold green]Importing load_experiment..."):
         from ax.storage.json_store.load import load_experiment
+
+    with console.status("[bold green]Importing save_experiment..."):
         from ax.storage.json_store.save import save_experiment
 
+    with console.status("[bold green]Importing TrialStatus..."):
         from ax.core.base_trial import TrialStatus
+
+    with console.status("[bold green]Importing Data..."):
         from ax.core.data import Data
+
+    with console.status("[bold green]Importing Experiment..."):
         from ax.core.experiment import Experiment
+
+    with console.status("[bold green]Importing parameter types..."):
         from ax.core.parameter import RangeParameter, FixedParameter, ChoiceParameter, ParameterType
+
+    with console.status("[bold green]Importing TParameterization..."):
         from ax.core.types import TParameterization
 
+    with console.status("[bold green]Importing AxClient and ObjectiveProperties..."):
         from ax.service.ax_client import AxClient, ObjectiveProperties
+
+    with console.status("[bold green]Importing RandomForestRegressor..."):
         from sklearn.ensemble import RandomForestRegressor
-    with console.status("[bold green]Loading botorch...") as status:
+
+    with console.status("[bold green]Importing botorch...") as status:
         import botorch
-    with console.status("[bold green]Loading submitit...") as status:
+    with console.status("[bold green]Importing submitit...") as status:
         import submitit
         from submitit import DebugJob, LocalJob, SlurmJob
 except ModuleNotFoundError as ee:
@@ -876,7 +1017,7 @@ except ImportError as e:
     print(f"Failed to load module: {e}")
     my_exit(93)
 
-with console.status("[bold green]Loading ax logger...") as status:
+with console.status("[bold green]Importing ax logger...") as status:
     from ax.utils.common.logger import disable_loggers
 disable_logs = disable_loggers(names=["ax.modelbridge.base"], level=logging.CRITICAL)
 
@@ -3139,27 +3280,12 @@ def write_job_infos_csv(parameters: dict, stdout: Optional[str], program_string_
     values = ['None' if element is None else element for element in values]
 
     if get_current_run_folder() is not None and os.path.exists(get_current_run_folder()):
-        add_to_csv(f"{get_current_run_folder()}/job_infos.csv", headline, values)
+        try:
+            add_to_csv(f"{get_current_run_folder()}/job_infos.csv", headline, values)
+        except Exception as e:
+            print_red(f"Error writing job_infos.csv: {e}")
     else:
         print_debug(f"evaluate: get_current_run_folder() {get_current_run_folder()} could not be found")
-
-@beartype
-def human_time_when_larger_than_a_min(seconds: Union[int, float]) -> str:
-    total_seconds = int(seconds)
-
-    if total_seconds < 60:
-        return ""
-
-    hours, remainder = divmod(total_seconds, 3600)
-    minutes, secs = divmod(remainder, 60)
-    parts = []
-    if hours:
-        parts.append(f"{hours}h")
-    if minutes:
-        parts.append(f"{minutes}m")
-    if secs or not parts:
-        parts.append(f"{secs}s")
-    return f"({''.join(parts)})"
 
 @beartype
 def print_evaluate_times() -> None:
@@ -4103,10 +4229,10 @@ def abandon_all_jobs() -> None:
             print_debug(f"Job {job} could not be abandoned.")
 
 @beartype
-def show_pareto_or_error_msg(path_to_calculate: str, res_names: list = arg_result_names, force: bool = False) -> None:
+def show_pareto_or_error_msg(path_to_calculate: str, res_names: list = arg_result_names, disable_sixel_and_table: bool = False) -> None:
     if len(res_names) > 1:
         try:
-            show_pareto_frontier_data(path_to_calculate, res_names, force)
+            show_pareto_frontier_data(path_to_calculate, res_names, disable_sixel_and_table)
         except Exception as e:
             print_red(f"show_pareto_frontier_data() failed with exception '{e}'")
     else:
@@ -4118,7 +4244,7 @@ def end_program(_force: Optional[bool] = False, exit_code: Optional[int] = None)
 
     wait_for_jobs_to_complete()
 
-    show_pareto_or_error_msg(get_current_run_folder(), arg_result_names, True)
+    show_pareto_or_error_msg(get_current_run_folder(), arg_result_names)
 
     if os.getpid() != main_pid:
         print_debug("returning from end_program, because it can only run in the main thread, not any forks")
@@ -6055,6 +6181,9 @@ def finish_job_core(job: Any, trial_index: int, this_jobs_finished: int) -> int:
 
             try:
                 _finish_job_core_helper_mark_success(_trial, result)
+
+                if len(arg_result_names) > 1 and count_done_jobs() > 1 and job_calculate_pareto_front(get_current_run_folder(), True):
+                    print_red("job_calculate_pareto_front post job failed")
             except Exception as e:
                 print(f"ERROR in line {get_line_info()}: {e}")
         else:
@@ -7947,7 +8076,7 @@ def parse_orchestrator_file(_f: str, _test: bool = False) -> Union[dict, None]:
                     die_orchestrator_exit_code_206(_test)
 
                 valid_keys: list = ['name', 'match_strings', 'behavior']
-                valid_behaviours: list = ["ExcludeNodeAndRestartAll", "RestartOnDifferentNode", "ExcludeNode", "Restart"]
+                valid_behaviours: list = ["RestartOnDifferentNode", "ExcludeNode", "Restart"]
 
                 for x in data["errors"]:
                     expected_types = {
@@ -8030,63 +8159,75 @@ def parse_parameters() -> Any:
         return experiment_parameters, cli_params_experiment_parameters, classic_params
 
 @beartype
-def get_csv_data(csv_path: str) -> Tuple[Union[Sequence[str], None], List[Dict[Union[str, Any], Union[str, Any]]]]:
-    with open(csv_path, encoding="utf-8", mode="r") as file:
-        reader = csv.DictReader(file)
-        all_columns = reader.fieldnames
-        rows = list(reader)
-    return all_columns, rows
+def create_pareto_front_table(idxs: List[int], metric_x: str, metric_y: str) -> Table:
+    table = Table(title=f"Pareto-Front for {metric_y}/{metric_x}:", show_lines=True)
 
-@beartype
-def extract_parameters_and_metrics(rows: List, all_columns: Optional[Sequence[str]], metrics: List) -> Tuple[List, dict, List]:
-    if all_columns is None:
-        return [], {}, []
+    rows = _pareto_front_table_read_csv()
+    if not rows:
+        table.add_column("No data found")
+        return table
 
-    param_names = [col for col in all_columns if col not in metrics and col not in IGNORABLE_COLUMNS]
-    metrics = [col for col in all_columns if col in arg_result_names]
+    filtered_rows = _pareto_front_table_filter_rows(rows, idxs)
+    if not filtered_rows:
+        table.add_column("No matching entries")
+        return table
 
-    param_dicts = []
-    means: dict = {metric: [] for metric in metrics}
+    param_cols, result_cols = _pareto_front_table_get_columns(filtered_rows[0])
 
-    for row in rows:
-        param_dict = {param: row[param] for param in param_names}
-        for metric in metrics:
-            if row[metric] != "":
-                means[metric].append(float(row[metric]))
-        param_dicts.append(param_dict)
-
-    return param_dicts, means, metrics
-
-@beartype
-def create_pareto_front_table(param_dicts: List, means: dict, metrics: List, metric_i: str, metric_j: str) -> Table:
-    table = Table(title=f"Pareto-Front for {metric_j}/{metric_i}:", show_lines=True)
-
-    headers = list(param_dicts[0].keys()) + metrics
-    for header in headers:
-        table.add_column(header, justify="center")
-
-    for i, params in enumerate(param_dicts):
-        this_table_row = [str(params[k]) for k in params.keys()]
-        for metric in metrics:
-            try:
-                _mean = means[metric][i]
-                this_table_row.append(f"{_mean:.3f}")
-            except IndexError:
-                this_table_row.append("")
-
-        table.add_row(*this_table_row, style="bold green")
+    _pareto_front_table_add_headers(table, param_cols, result_cols)
+    _pareto_front_table_add_rows(table, filtered_rows, param_cols, result_cols)
 
     return table
 
 @beartype
-def pareto_front_as_rich_table(param_dicts: list, metrics: list, metric_i: str, metric_j: str) -> Optional[Table]:
+def _pareto_front_table_read_csv() -> List[Dict[str, str]]:
+    with open(RESULT_CSV_FILE, mode="r", encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+@beartype
+def _pareto_front_table_filter_rows(rows: List[Dict[str, str]], idxs: List[int]) -> List[Dict[str, str]]:
+    result = []
+    for row in rows:
+        try:
+            trial_index = int(row["trial_index"])
+        except (KeyError, ValueError):
+            continue
+
+        if row.get("trial_status", "").strip().upper() == "COMPLETED" and trial_index in idxs:
+            result.append(row)
+    return result
+
+@beartype
+def _pareto_front_table_get_columns(first_row: Dict[str, str]) -> Tuple[List[str], List[str]]:
+    all_columns = list(first_row.keys())
+    ignored_cols = set(special_col_names) - {"trial_index"}
+
+    param_cols = [col for col in all_columns if col not in ignored_cols and col not in arg_result_names]
+    result_cols = [col for col in arg_result_names if col in all_columns]
+    return param_cols, result_cols
+
+@beartype
+def _pareto_front_table_add_headers(table: Table, param_cols: List[str], result_cols: List[str]) -> None:
+    for col in param_cols:
+        table.add_column(col, justify="center")
+    for col in result_cols:
+        table.add_column(Text(f"{col}", style="cyan"), justify="center")
+
+@beartype
+def _pareto_front_table_add_rows(table: Table, rows: List[Dict[str, str]],
+                                 param_cols: List[str], result_cols: List[str]) -> None:
+    for row in rows:
+        values = [str(helpers.to_int_when_possible(row[col])) for col in param_cols]
+        result_values = [Text(str(helpers.to_int_when_possible(row[col])), style="cyan") for col in result_cols]
+        table.add_row(*values, *result_values, style="bold green")
+
+@beartype
+def pareto_front_as_rich_table(idxs: list, metric_x: str, metric_y: str) -> Optional[Table]:
     if not os.path.exists(RESULT_CSV_FILE):
         print_debug(f"pareto_front_as_rich_table: File '{RESULT_CSV_FILE}' not found")
         return None
 
-    all_columns, rows = get_csv_data(RESULT_CSV_FILE)
-    param_dicts, means, metrics = extract_parameters_and_metrics(rows, all_columns, metrics)
-    return create_pareto_front_table(param_dicts, means, metrics, metric_i, metric_j)
+    return create_pareto_front_table(idxs, metric_x, metric_y)
 
 @beartype
 def supports_sixel() -> bool:
@@ -8104,15 +8245,10 @@ def supports_sixel() -> bool:
     return False
 
 @beartype
-def plot_pareto_frontier_sixel(data: Any, i: int, j: int) -> None:
+def plot_pareto_frontier_sixel(data: Any, x_metric: str, y_metric: str) -> None:
     if data is None:
         print("[italic yellow]The data seems to be empty. Cannot plot pareto frontier.[/]")
         return
-
-    absolute_metrics = arg_result_names
-
-    x_metric = absolute_metrics[i]
-    y_metric = absolute_metrics[j]
 
     if not supports_sixel():
         print(f"[italic yellow]Your console does not support sixel-images. Will not print pareto-frontier as a matplotlib-sixel-plot for {x_metric}/{y_metric}.[/]")
@@ -8150,14 +8286,38 @@ def convert_to_serializable(obj: np.ndarray) -> Union[str, list]:
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 @beartype
-def pareto_front_general(x: np.ndarray, y: np.ndarray) -> np.ndarray:
-    is_dominated = np.zeros(len(x), dtype=bool)
-    for i in range(len(x)):
-        for j in range(len(x)):
-            if (x[j] <= x[i] and y[j] <= y[i]) and (x[j] < x[i] or y[j] < y[i]):
-                is_dominated[i] = True
-                break
-    return np.where(~is_dominated)[0]
+def pareto_front_general(
+    x: np.ndarray,
+    y: np.ndarray,
+    x_minimize: bool = True,
+    y_minimize: bool = True
+) -> np.ndarray:
+    try:
+        if x.shape != y.shape:
+            raise ValueError("Input arrays x and y must have the same shape.")
+
+        num_points = len(x)
+        is_dominated = np.zeros(num_points, dtype=bool)
+
+        for i in range(num_points):
+            for j in range(num_points):
+                if i == j:
+                    continue
+
+                x_better_or_equal = x[j] <= x[i] if x_minimize else x[j] >= x[i]
+                y_better_or_equal = y[j] <= y[i] if y_minimize else y[j] >= y[i]
+                x_strictly_better = x[j] < x[i] if x_minimize else x[j] > x[i]
+                y_strictly_better = y[j] < y[i] if y_minimize else y[j] > y[i]
+
+                if x_better_or_equal and y_better_or_equal and (x_strictly_better or y_strictly_better):
+                    is_dominated[i] = True
+                    break
+
+        return np.where(~is_dominated)[0]
+
+    except Exception as e:
+        print("Error in pareto_front_general:", str(e))
+        return np.array([], dtype=int)
 
 @beartype
 def _pareto_front_aggregate_data(path_to_calculate: str) -> Optional[Dict[Tuple[int, str], Dict[str, Dict[str, float]]]]:
@@ -8236,10 +8396,12 @@ def _pareto_front_transform_objectives(
 def _pareto_front_select_pareto_points(
     x: np.ndarray,
     y: np.ndarray,
+    x_minimize: bool,
+    y_minimize: bool,
     points: List[Tuple[Any, float, float]],
     num_points: int
 ) -> List[Tuple[Any, float, float]]:
-    indices = pareto_front_general(x, y)
+    indices = pareto_front_general(x, y, x_minimize, y_minimize)
     sorted_indices = indices[np.argsort(x[indices])]
     sorted_indices = sorted_indices[:num_points]
     selected_points = [points[i] for i in sorted_indices]
@@ -8273,12 +8435,15 @@ def _pareto_front_build_return_structure(
     ignored_columns.update(result_names)
 
     param_dicts = []
+    idxs = []
     means_dict = defaultdict(list)
 
     for (trial_index, arm_name), _, _ in selected_points:
         row = csv_rows.get(trial_index)
         if row is None or row['arm_name'] != arm_name:
             continue  # Sicherheitshalber prüfen
+
+        idxs.append(int(row["trial_index"]))
 
         # Parameter extrahieren
         param_dict = {}
@@ -8303,7 +8468,8 @@ def _pareto_front_build_return_structure(
             secondary_name: {
                 "absolute_metrics": absolute_metrics,
                 "param_dicts": param_dicts,
-                "means": dict(means_dict)
+                "means": dict(means_dict),
+                "idxs": idxs
             },
             "absolute_metrics": absolute_metrics
         }
@@ -8312,20 +8478,23 @@ def _pareto_front_build_return_structure(
     return ret
 
 @beartype
-def custom_pareto_frontier(
+def get_pareto_frontier_points(
     path_to_calculate: str,
     primary_objective: str,
     secondary_objective: str,
+    x_minimize: bool,
+    y_minimize: bool,
     absolute_metrics: List[str],
     num_points: int
 ) -> Optional[dict]:
     records = _pareto_front_aggregate_data(path_to_calculate)
+
     if records is None:
         return None
 
     points = _pareto_front_filter_complete_points(path_to_calculate, records, primary_objective, secondary_objective)
     x, y = _pareto_front_transform_objectives(points, primary_objective, secondary_objective)
-    selected_points = _pareto_front_select_pareto_points(x, y, points, num_points)
+    selected_points = _pareto_front_select_pareto_points(x, y, x_minimize, y_minimize, points, num_points)
     result = _pareto_front_build_return_structure(path_to_calculate, selected_points, records, absolute_metrics, primary_objective, secondary_objective)
 
     return result
@@ -8379,30 +8548,21 @@ def set_arg_min_or_max_if_required(path_to_calculate: str) -> None:
         arg_result_min_or_max = _found_result_min_max
 
 @beartype
-def get_calculated_or_cached_frontier(path_to_calculate: str, metric_i: str, metric_j: str, res_names: list, force: bool) -> Any:
+def get_calculated_frontier(path_to_calculate: str, metric_x: str, metric_y: str, x_minimize: bool, y_minimize: bool, res_names: list) -> Any:
     try:
         state_dir = os.path.join(get_current_run_folder(), "state_files")
         os.makedirs(state_dir, exist_ok=True)
 
-        cache_file = os.path.join(state_dir, "pareto_front_data.json")
-
-        if os.path.isfile(cache_file) and not force:
-            with open(cache_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                b64_encoded = data.get("pickle_data", "")
-                if not b64_encoded:
-                    print_red(f"Cache-file '{cache_file}' exists, but has no valid data")
-                else:
-                    binary_data = base64.b64decode(b64_encoded)
-                    frontier = pickle.loads(binary_data)
-                    return frontier
+        json_file = os.path.join(state_dir, "pareto_front_data.json")
 
         set_arg_min_or_max_if_required(path_to_calculate)
 
-        frontier = custom_pareto_frontier(
+        frontier = get_pareto_frontier_points(
             path_to_calculate=path_to_calculate,
-            primary_objective=metric_i,
-            secondary_objective=metric_j,
+            primary_objective=metric_x,
+            secondary_objective=metric_y,
+            x_minimize=x_minimize,
+            y_minimize=y_minimize,
             absolute_metrics=res_names,
             num_points=count_done_jobs()
         )
@@ -8416,13 +8576,13 @@ def get_calculated_or_cached_frontier(path_to_calculate: str, metric_i: str, met
         pickled_data = pickle.dumps(frontier)
         b64_data = base64.b64encode(pickled_data).decode("utf-8")
 
-        with open(cache_file, "w", encoding="utf-8") as f:
+        with open(json_file, "w", encoding="utf-8") as f:
             json.dump({"pickle_data": b64_data}, f, indent=2)
 
         return frontier
 
     except Exception as e:
-        print_red(f"Error in get_calculated_or_cached_frontier: {str(e)}")
+        print_red(f"Error in get_calculated_frontier: {str(e)}")
         return None
 
 @beartype
@@ -8446,86 +8606,130 @@ def live_share_after_pareto() -> None:
 
         live_share(True)
 
+def get_result_minimize_flag(path_to_calculate: str, resname: str) -> bool:
+    result_names_path = os.path.join(path_to_calculate, "result_names.txt")
+    result_min_max_path = os.path.join(path_to_calculate, "result_min_max.txt")
+
+    if not os.path.isdir(path_to_calculate):
+        print_red(f"Error: Directory '{path_to_calculate}' does not exist.")
+        my_exit(24)
+
+    if not os.path.isfile(result_names_path) or not os.path.isfile(result_min_max_path):
+        print_red(f"Error: Missing 'result_names.txt' or 'result_min_max.txt' in '{path_to_calculate}'.")
+        my_exit(24)
+
+    try:
+        with open(result_names_path, "r", encoding="utf-8") as f:
+            names = [line.strip() for line in f]
+    except Exception as e:
+        print_red(f"Error: Failed to read 'result_names.txt': {e}")
+        my_exit(24)
+
+    if resname not in names:
+        print_red(f"Error: Result name '{resname}' not found in 'result_names.txt'.")
+        my_exit(24)
+
+    index = names.index(resname)
+
+    try:
+        with open(result_min_max_path, "r", encoding="utf-8") as f:
+            minmax = [line.strip().lower() for line in f]
+    except Exception as e:
+        print_red(f"Error: Failed to read 'result_min_max.txt': {e}")
+        my_exit(24)
+
+    if index >= len(minmax):
+        print_red(f"Error: Not enough entries in 'result_min_max.txt' for index {index}.")
+        my_exit(24)
+
+    return minmax[index] == "min"
+
 @beartype
-def show_pareto_frontier_data(path_to_calculate: str, res_names: list, force: bool = False) -> None:
+def rename_pareto_file_with_old_cleanup():
+    folder = get_current_run_folder()
+    original_file = os.path.join(folder, "pareto_front_table.txt")
+    old_file = original_file + "_OLD"
+
+    try:
+        # Delete the old backup file if it exists
+        if os.path.exists(old_file):
+            os.remove(old_file)
+
+        # Rename the original file to the backup name if it exists
+        if os.path.exists(original_file):
+            os.rename(original_file, old_file)
+    except Exception as e:
+        print_debug(f"Error while processing file: {e}")
+
+@beartype
+def show_pareto_frontier_data(path_to_calculate: str, res_names: list, disable_sixel_and_table: bool = False) -> None:
     if len(res_names) <= 1:
         print_debug(f"--result_names (has {len(res_names)} entries) must be at least 2.")
         return
 
-    objectives = arg_result_names
     pareto_front_data: dict = {}
-    all_combinations = list(combinations(range(len(objectives)), 2))
-    collected_data = []
+    all_combinations = list(combinations(range(len(arg_result_names)), 2))
 
-    with Progress(
-        "[progress.description]{task.description}",
-        "[progress.percentage]{task.percentage:>3.0f}%",
-        TimeRemainingColumn(),
-        transient=True
-    ) as progress:
-        task = progress.add_task("Calculating Pareto-Front...", total=len(all_combinations))
+    skip = False
 
-        skip = False
+    for i, j in all_combinations:
+        if not skip:
+            metric_x = arg_result_names[i]
+            metric_y = arg_result_names[j]
 
-        for i, j in all_combinations:
-            if not skip:
-                metric_i = objectives[i]
-                metric_j = objectives[j]
+            x_minimize = get_result_minimize_flag(path_to_calculate, metric_x)
+            y_minimize = get_result_minimize_flag(path_to_calculate, metric_y)
 
-                try:
-                    calculated_frontier = get_calculated_or_cached_frontier(path_to_calculate, metric_i, metric_j, res_names, force)
+            try:
+                if metric_x not in pareto_front_data:
+                    pareto_front_data[metric_x] = {}
 
-                    if calculated_frontier is not None:
-                        collected_data.append((i, j, metric_i, metric_j, calculated_frontier))
-                except ax.exceptions.core.DataRequiredError as e:
-                    print_red(f"Error computing Pareto frontier for {metric_i} and {metric_j}: {e}")
-                except SignalINT:
-                    print_red("Calculating pareto-fronts was cancelled by pressing CTRL-c")
-                    skip = True
+                pareto_front_data[metric_x][metric_y] = get_calculated_frontier(path_to_calculate, metric_x, metric_y, x_minimize, y_minimize, res_names)
+            except ax.exceptions.core.DataRequiredError as e:
+                print_red(f"Error computing Pareto frontier for {metric_x} and {metric_y}: {e}")
+            except SignalINT:
+                print_red("Calculating pareto-fronts was cancelled by pressing CTRL-c")
+                skip = True
 
-            progress.update(task, advance=1)
+    if pareto_front_data.keys():
+        rename_pareto_file_with_old_cleanup()
 
-    for i, j, metric_i, metric_j, calculated_frontier in collected_data:
-        hide_pareto = os.environ.get('HIDE_PARETO_FRONT_TABLE_DATA')
-        if hide_pareto is None:
-            plot_pareto_frontier_sixel(calculated_frontier, i, j)
-        else:
-            print(f"Not showing pareto-front-sixel for {path_to_calculate}")
+    for metric_x in pareto_front_data.keys():
+        for metric_y in pareto_front_data[metric_x].keys():
+            calculated_frontier = pareto_front_data[metric_x][metric_y]
 
-        if metric_i not in pareto_front_data:
-            pareto_front_data[metric_i] = {}
+            hide_pareto = os.environ.get('HIDE_PARETO_FRONT_TABLE_DATA')
 
-        metric_i_name = metric_i
-        metric_j_name = metric_j
+            if not disable_sixel_and_table:
+                if hide_pareto is None:
+                    plot_pareto_frontier_sixel(calculated_frontier, metric_x, metric_y)
+                else:
+                    print(f"Not showing pareto-front-sixel for {path_to_calculate}")
 
-        cf = calculated_frontier[metric_i_name][metric_j_name]
+            pareto_front_data[metric_x][metric_y] = {
+                "param_dicts": calculated_frontier[metric_x][metric_y]["param_dicts"],
+                "means": calculated_frontier[metric_x][metric_y]["means"],
+                "absolute_metrics": arg_result_names,
+                "idxs": calculated_frontier[metric_x][metric_y]["idxs"]
+            }
 
-        _param_dicts = cf["param_dicts"]
-        _means = cf["means"]
+            rich_table = pareto_front_as_rich_table(
+                calculated_frontier[metric_x][metric_y]["idxs"],
+                metric_y,
+                metric_x
+            )
 
-        pareto_front_data[metric_i][metric_j] = {
-            "param_dicts": _param_dicts,
-            "means": _means,
-            "absolute_metrics": arg_result_names
-        }
+            if rich_table is not None:
+                if not disable_sixel_and_table:
+                    if hide_pareto is None:
+                        console.print(rich_table)
+                    else:
+                        print(f"Not showing pareto-front-table for {path_to_calculate}")
 
-        rich_table = pareto_front_as_rich_table(
-            _param_dicts,
-            arg_result_names,
-            metric_j,
-            metric_i
-        )
-
-        if rich_table is not None:
-            if hide_pareto is None:
-                console.print(rich_table)
-            else:
-                print(f"Not showing pareto-front-table for {path_to_calculate}")
-
-            with open(f"{get_current_run_folder()}/pareto_front_table.txt", mode="a", encoding="utf-8") as text_file:
-                with console.capture() as capture:
-                    console.print(rich_table)
-                text_file.write(capture.get())
+                with open(f"{get_current_run_folder()}/pareto_front_table.txt", mode="a", encoding="utf-8") as text_file:
+                    with console.capture() as capture:
+                        console.print(rich_table)
+                    text_file.write(capture.get())
 
     with open(f"{get_current_run_folder()}/pareto_front_data.json", mode="w", encoding="utf-8") as pareto_front_json_handle:
         json.dump(pareto_front_data, pareto_front_json_handle, default=convert_to_serializable)
@@ -8807,12 +9011,14 @@ def find_results_paths(base_path: str) -> list:
         return [base_path]
 
     found_paths = []
-    with console.status("[bold green]Searching for subfolders with results.csv..."):
-        for root, _, files in os.walk(base_path):
-            if "results.csv" in files:
-                found_paths.append(root)
 
-    return found_paths
+    if "DO_NOT_SEARCH_FOLDERS_FOR_RESULTS_CSV" not in os.environ:
+        with console.status("[bold green]Searching for subfolders with results.csv..."):
+            for root, _, files in os.walk(base_path):
+                if "results.csv" in files:
+                    found_paths.append(root)
+
+    return list(set(found_paths))
 
 @beartype
 def post_job_calculate_pareto_front() -> None:
@@ -8821,16 +9027,24 @@ def post_job_calculate_pareto_front() -> None:
 
     failure = False
 
-    for _path_to_calculate in args.calculate_pareto_front_of_job:
+    _paths_to_calculate = []
+
+    for _path_to_calculate in list(set(args.calculate_pareto_front_of_job)):
         try:
             found_paths = find_results_paths(_path_to_calculate)
-            for path_to_calculate in found_paths:
-                if _post_job_calculate_pareto_front(path_to_calculate):
-                    failure = True
+
+            for _fp in found_paths:
+                if _fp not in _paths_to_calculate:
+                    _paths_to_calculate.append(_fp)
         except (FileNotFoundError, NotADirectoryError) as e:
             print_red(f"post_job_calculate_pareto_front: find_results_paths('{_path_to_calculate}') failed with {e}")
 
             failure = True
+
+    for _path_to_calculate in _paths_to_calculate:
+        for path_to_calculate in found_paths:
+            if job_calculate_pareto_front(path_to_calculate):
+                failure = True
 
     if failure:
         my_exit(24)
@@ -8838,7 +9052,7 @@ def post_job_calculate_pareto_front() -> None:
     my_exit(0)
 
 @beartype
-def _post_job_calculate_pareto_front(path_to_calculate: str) -> bool:
+def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: bool = False) -> bool:
     # Returns true if it fails
     if not path_to_calculate:
         return True
@@ -8905,7 +9119,7 @@ def _post_job_calculate_pareto_front(path_to_calculate: str) -> bool:
     if experiment_parameters is None:
         return True
 
-    show_pareto_or_error_msg(path_to_calculate, res_names, True)
+    show_pareto_or_error_msg(path_to_calculate, res_names, disable_sixel_and_table)
 
     return False
 
@@ -9543,7 +9757,7 @@ Exit-Code: 159
 
     if os.path.exists(orchestrator_yaml):
         _is: str = json.dumps(parse_orchestrator_file(orchestrator_yaml, True))
-        should_be: str = '{"errors": [{"name": "GPUDisconnected", "match_strings": ["AssertionError: ``AmpOptimizerWrapper`` is only available"], "behavior": "ExcludeNode"}, {"name": "Timeout", "match_strings": ["Timeout"], "behavior": "RestartOnDifferentNode"}, {"name": "StorageError", "match_strings": ["Read/Write failure"], "behavior": "ExcludeNodeAndRestartAll"}]}'
+        should_be: str = '{"errors": [{"name": "GPUDisconnected", "match_strings": ["AssertionError: ``AmpOptimizerWrapper`` is only available"], "behavior": "ExcludeNode"}, {"name": "Timeout", "match_strings": ["Timeout"], "behavior": "RestartOnDifferentNode"}]}'
         nr_errors += is_equal(f"parse_orchestrator_file({orchestrator_yaml})", should_be, _is)
     else:
         nr_errors += is_equal(".tests/example_orchestrator_config.yaml exists", True, False)

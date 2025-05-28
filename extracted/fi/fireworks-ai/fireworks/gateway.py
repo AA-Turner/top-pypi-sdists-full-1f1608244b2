@@ -3,6 +3,7 @@
 # All Rights Reserved.
 
 import os
+import time
 from typing import List, Optional, TypeVar, Union
 
 from fireworks._const import FIREWORKS_API_BASE_URL, FIREWORKS_GATEWAY_ADDR
@@ -91,7 +92,9 @@ from fireworks.control_plane.generated.protos.gateway import (
 from asyncstdlib.functools import cache
 from openai import NOT_GIVEN, NotGiven
 
-from grpc import AuthMetadataPlugin, AuthMetadataContext
+from grpc import (
+    AuthMetadataPlugin,
+)
 
 
 class CustomAuthMetadata(AuthMetadataPlugin):
@@ -99,8 +102,56 @@ class CustomAuthMetadata(AuthMetadataPlugin):
         self._api_key = api_key
 
     def __call__(self, context, callback):
-        metadata = [("x-api-key", self._api_key)]
+        from fireworks import __version__
+
+        metadata = [("x-api-key", self._api_key), ("x-python-sdk-version", __version__)]
         callback(metadata, None)
+
+
+class CustomAuthInterceptor(
+    grpc.UnaryUnaryClientInterceptor,
+    grpc.UnaryStreamClientInterceptor,
+    grpc.StreamUnaryClientInterceptor,
+    grpc.StreamStreamClientInterceptor,
+):
+    def __init__(self, api_key: str):
+        self._api_key = api_key
+
+    def intercept_unary_unary(self, continuation, client_call_details, request):
+        from fireworks import __version__
+
+        metadata = list(client_call_details.metadata or [])
+        metadata.append(("x-api-key", self._api_key))
+        metadata.append(("x-python-sdk-version", __version__))
+        new_details = client_call_details._replace(metadata=metadata)
+        return continuation(new_details, request)
+
+    def intercept_unary_stream(self, continuation, client_call_details, request):
+        from fireworks import __version__
+
+        metadata = list(client_call_details.metadata or [])
+        metadata.append(("x-api-key", self._api_key))
+        metadata.append(("x-python-sdk-version", __version__))
+        new_details = client_call_details._replace(metadata=metadata)
+        return continuation(new_details, request)
+
+    def intercept_stream_unary(self, continuation, client_call_details, request_iterator):
+        from fireworks import __version__
+
+        metadata = list(client_call_details.metadata or [])
+        metadata.append(("x-api-key", self._api_key))
+        metadata.append(("x-python-sdk-version", __version__))
+        new_details = client_call_details._replace(metadata=metadata)
+        return continuation(new_details, request_iterator)
+
+    def intercept_stream_stream(self, continuation, client_call_details, request_iterator):
+        from fireworks import __version__
+
+        metadata = list(client_call_details.metadata or [])
+        metadata.append(("x-api-key", self._api_key))
+        metadata.append(("x-python-sdk-version", __version__))
+        new_details = client_call_details._replace(metadata=metadata)
+        return continuation(new_details, request_iterator)
 
 
 def _get_api_key_from_env() -> Optional[str]:
@@ -153,11 +204,19 @@ class Gateway:
             self._stub = GatewayStub(self._channel, metadata=[("x-api-key", api_key)])
         except RuntimeError as e:
             pass
-        creds = grpc.composite_channel_credentials(
-            grpc.ssl_channel_credentials(),
-            grpc.metadata_call_credentials(CustomAuthMetadata(api_key)),
-        )
-        self._sync_channel = grpc.secure_channel(self._server_addr, creds)
+
+        # Only use SSL credentials if port is 443, but always include API key auth
+        if self._port == 443:
+            creds = grpc.composite_channel_credentials(
+                grpc.ssl_channel_credentials(),
+                grpc.metadata_call_credentials(CustomAuthMetadata(api_key)),
+            )
+            self._sync_channel = grpc.secure_channel(self._server_addr, creds)
+        else:
+            # For non-SSL connections, still need to add API key auth
+            self._sync_channel = grpc.insecure_channel(self._server_addr)
+            self._sync_channel = grpc.intercept_channel(self._sync_channel, CustomAuthInterceptor(api_key))
+
         self._sync_stub = SyncGatewayStub(self._sync_channel)
 
     async def __aenter__(self):
@@ -183,22 +242,16 @@ class Gateway:
         return response
 
     async def delete_supervised_fine_tuning_job(self, name: str) -> None:
-        account_id = self.account_id()
         try:
-            await self._stub.delete_supervised_fine_tuning_job(
-                DeleteSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
-            )
+            await self._stub.delete_supervised_fine_tuning_job(DeleteSupervisedFineTuningJobRequest(name=name))
         except grpclib.exceptions.GRPCError as e:
             if e.status == grpclib.Status.NOT_FOUND:
                 return
             raise e
 
     def delete_supervised_fine_tuning_job_sync(self, name: str) -> None:
-        account_id = self.account_id()
         try:
-            self._sync_stub.DeleteSupervisedFineTuningJob(
-                SyncDeleteSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
-            )
+            self._sync_stub.DeleteSupervisedFineTuningJob(SyncDeleteSupervisedFineTuningJobRequest(name=name))
         except _InactiveRpcError as e:
             if e.code() == grpc.StatusCode.NOT_FOUND:
                 return
@@ -219,15 +272,27 @@ class Gateway:
         account_id = self.account_id()
         request.parent = f"accounts/{account_id}"
         request.page_size = 200
-        response = self._sync_stub.ListSupervisedFineTuningJobs(request)
-        return response
+
+        max_retries = 3
+        base_delay = 1.0  # Start with 1 second delay
+
+        for attempt in range(max_retries):
+            try:
+                response = self._sync_stub.ListSupervisedFineTuningJobs(request)
+                return response
+            except _InactiveRpcError as e:
+                if e.code() != grpc.StatusCode.UNAVAILABLE:
+                    raise e
+                if attempt == max_retries - 1:  # Last attempt
+                    raise e
+                delay = base_delay * (2**attempt)  # Exponential backoff
+                time.sleep(delay)
+                continue
+        raise Exception("Failed to list supervised fine tuning jobs")
 
     async def get_supervised_fine_tuning_job(self, name: str) -> Optional[SupervisedFineTuningJob]:
-        account_id = self.account_id()
         try:
-            response = await self._stub.get_supervised_fine_tuning_job(
-                GetSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
-            )
+            response = await self._stub.get_supervised_fine_tuning_job(GetSupervisedFineTuningJobRequest(name=name))
             return response
         except grpclib.exceptions.GRPCError as e:
             if e.status == grpclib.Status.NOT_FOUND:
@@ -235,11 +300,8 @@ class Gateway:
             raise e
 
     def get_supervised_fine_tuning_job_sync(self, name: str) -> Optional[SyncSupervisedFineTuningJob]:
-        account_id = self.account_id()
         try:
-            response = self._sync_stub.GetSupervisedFineTuningJob(
-                SyncGetSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
-            )
+            response = self._sync_stub.GetSupervisedFineTuningJob(SyncGetSupervisedFineTuningJobRequest(name=name))
             return response
         except _InactiveRpcError as e:
             if e.code() == grpc.StatusCode.NOT_FOUND:

@@ -33,7 +33,7 @@ use tiny_skia::{Pixmap, PremultipliedColorU8};
 
 use crate::html::{bundle_vega_snippet, get_vega_or_vegalite_script};
 use image::codecs::jpeg::JpegEncoder;
-use image::io::Reader as ImageReader;
+use image::ImageReader;
 use resvg::render;
 
 use crate::text::{vl_convert_text_runtime, USVG_OPTIONS};
@@ -314,7 +314,7 @@ class WarningCollector {
 
             // Override text width measurement in vega-scenegraph
             for path in IMPORT_MAP.keys() {
-                if path.ends_with("vega-scenegraph.js") {
+                if path.contains("vega-scenegraph@") {
                     let script_code = format!(
                         r#"
 import('{url}').then((sg) => {{
@@ -1343,7 +1343,7 @@ impl VlConverter {
         } else {
             format!(
                 r#"
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@{vl_ver}"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
             "#,

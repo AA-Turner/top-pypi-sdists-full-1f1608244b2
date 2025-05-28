@@ -1,4 +1,4 @@
-"""keyrings.envvars backend."""
+"""Keyring backend for keyrings.envvars."""
 
 from __future__ import annotations
 
@@ -28,11 +28,37 @@ class EnvvarsKeyring(KeyringBackend):
 
     @staticmethod
     def _get_trailing_number(s: str) -> str | None:
-        m = re.search(r'^KEYRING_SERVICE_NAME_(\d+)$', s)
+        """
+        Get the number at the end of environment variable name.
+
+        Parameters
+        ----------
+        s : str
+            Environment variable.
+
+        Returns
+        -------
+        str | None
+            Trailing number as a string.
+        """
+        m = re.search(r'^KEYRING_SERVICE_NAME_([0-9]+)$', s)
         return m.group(1) if m else None
 
     @staticmethod
     def _get_ids(environ_keys: AbstractSet[str]) -> filter[str]:
+        """
+        Get all the id numbers from KEYRING_SERVICE_NAME environment variables.
+
+        Parameters
+        ----------
+        environ_keys : AbstractSet[str]
+            Set of environment variable names.
+
+        Returns
+        -------
+        filter[str]
+            Environment variable id numbers.
+        """
         return filter(
             None,
             map(
@@ -43,6 +69,14 @@ class EnvvarsKeyring(KeyringBackend):
 
     @classmethod
     def _get_mapping(cls) -> EnvMapping:
+        """
+        Map service name to user name and credentials.
+
+        Returns
+        -------
+        EnvMapping
+            Mapping of service names to username/credentials.
+        """
         env_ids = EnvvarsKeyring._get_ids(os.environ.keys())
 
         env_map: EnvvarsKeyring.EnvMapping = defaultdict(dict)
@@ -65,9 +99,17 @@ class EnvvarsKeyring(KeyringBackend):
         """
         Get the password for the username of the service.
 
-        :param service: keyring service
-        :param username: service username
-        :rtype: str | None
+        Parameters
+        ----------
+        service : str
+            Keyring service.
+        username : str
+            Service username.
+
+        Returns
+        -------
+        str | None
+            Password if it exists for the given service and username.
         """
         cred = self.get_credential(service, username)
         if cred is not None:
@@ -78,10 +120,19 @@ class EnvvarsKeyring(KeyringBackend):
         """
         Set the password for the username of the service.
 
-        :param service: keyring service
-        :param username: service username
-        :param password: service password
-        :raises PasswordSetError: error when setting password
+        Parameters
+        ----------
+        service : str
+            Keyring service.
+        username : str
+            Service username.
+        password : str
+            Service password.
+
+        Raises
+        ------
+        PasswordSetError
+            Error when setting password.
         """
         message = 'Environment should not be modified by keyring'
         raise PasswordSetError(message)
@@ -90,9 +141,17 @@ class EnvvarsKeyring(KeyringBackend):
         """
         Delete the password for the username of the service.
 
-        :param service: keyring service
-        :param username: service username
-        :raises PasswordDeleteError: error when deleting password
+        Parameters
+        ----------
+        service : str
+            Keyring service.
+        username : str
+            Service username.
+
+        Raises
+        ------
+        PasswordDeleteError
+            Error when deleting password.
         """
         message = 'Environment should not be modified by keyring'
         raise PasswordDeleteError(message)
@@ -105,10 +164,17 @@ class EnvvarsKeyring(KeyringBackend):
         """
         Get the username and password for the service.
 
-        :param service: keyring service
-        :param username: service username
-        :return: credentials if service/username credentials exist in keyring
-        :rtype: EnvvarCredential | None
+        Parameters
+        ----------
+        service : str
+            Keyring service.
+        username : str
+            Service username.
+
+        Returns
+        -------
+        EnvvarCredential | None
+            Credentials if service/username credentials exist in keyring.
         """
         creds = EnvvarsKeyring._get_mapping().get(service)
         if not creds:

@@ -15,6 +15,8 @@ Usage::
         GetAnomaliesPaginator,
         GetAnomalyMonitorsPaginator,
         GetAnomalySubscriptionsPaginator,
+        GetCostAndUsageComparisonsPaginator,
+        GetCostComparisonDriversPaginator,
     )
 
     session = Session()
@@ -23,6 +25,8 @@ Usage::
     get_anomalies_paginator: GetAnomaliesPaginator = client.get_paginator("get_anomalies")
     get_anomaly_monitors_paginator: GetAnomalyMonitorsPaginator = client.get_paginator("get_anomaly_monitors")
     get_anomaly_subscriptions_paginator: GetAnomalySubscriptionsPaginator = client.get_paginator("get_anomaly_subscriptions")
+    get_cost_and_usage_comparisons_paginator: GetCostAndUsageComparisonsPaginator = client.get_paginator("get_cost_and_usage_comparisons")
+    get_cost_comparison_drivers_paginator: GetCostComparisonDriversPaginator = client.get_paginator("get_cost_comparison_drivers")
     ```
 """
 
@@ -40,6 +44,10 @@ from .type_defs import (
     GetAnomalyMonitorsResponsePaginatorTypeDef,
     GetAnomalySubscriptionsRequestPaginateTypeDef,
     GetAnomalySubscriptionsResponsePaginatorTypeDef,
+    GetCostAndUsageComparisonsRequestPaginateTypeDef,
+    GetCostAndUsageComparisonsResponsePaginatorTypeDef,
+    GetCostComparisonDriversRequestPaginateTypeDef,
+    GetCostComparisonDriversResponsePaginatorTypeDef,
 )
 
 if sys.version_info >= (3, 12):
@@ -52,6 +60,8 @@ __all__ = (
     "GetAnomaliesPaginator",
     "GetAnomalyMonitorsPaginator",
     "GetAnomalySubscriptionsPaginator",
+    "GetCostAndUsageComparisonsPaginator",
+    "GetCostComparisonDriversPaginator",
 )
 
 
@@ -117,4 +127,50 @@ class GetAnomalySubscriptionsPaginator(_GetAnomalySubscriptionsPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/paginator/GetAnomalySubscriptions.html#CostExplorer.Paginator.GetAnomalySubscriptions.paginate)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_ce/paginators/#getanomalysubscriptionspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _GetCostAndUsageComparisonsPaginatorBase = Paginator[
+        GetCostAndUsageComparisonsResponsePaginatorTypeDef
+    ]
+else:
+    _GetCostAndUsageComparisonsPaginatorBase = Paginator  # type: ignore[assignment]
+
+
+class GetCostAndUsageComparisonsPaginator(_GetCostAndUsageComparisonsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/paginator/GetCostAndUsageComparisons.html#CostExplorer.Paginator.GetCostAndUsageComparisons)
+    [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_ce/paginators/#getcostandusagecomparisonspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[GetCostAndUsageComparisonsRequestPaginateTypeDef]
+    ) -> PageIterator[GetCostAndUsageComparisonsResponsePaginatorTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/paginator/GetCostAndUsageComparisons.html#CostExplorer.Paginator.GetCostAndUsageComparisons.paginate)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_ce/paginators/#getcostandusagecomparisonspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _GetCostComparisonDriversPaginatorBase = Paginator[
+        GetCostComparisonDriversResponsePaginatorTypeDef
+    ]
+else:
+    _GetCostComparisonDriversPaginatorBase = Paginator  # type: ignore[assignment]
+
+
+class GetCostComparisonDriversPaginator(_GetCostComparisonDriversPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/paginator/GetCostComparisonDrivers.html#CostExplorer.Paginator.GetCostComparisonDrivers)
+    [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_ce/paginators/#getcostcomparisondriverspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[GetCostComparisonDriversRequestPaginateTypeDef]
+    ) -> PageIterator[GetCostComparisonDriversResponsePaginatorTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/paginator/GetCostComparisonDrivers.html#CostExplorer.Paginator.GetCostComparisonDrivers.paginate)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_ce/paginators/#getcostcomparisondriverspaginator)
         """

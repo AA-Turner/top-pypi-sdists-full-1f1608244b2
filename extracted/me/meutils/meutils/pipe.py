@@ -390,4 +390,7 @@ data: [DONE]"""
 
     # print()
 
-    sse.splitlines() | xsse_parser(skip_strings=['DONE', 'TRACEID']) | xprint
+    # sse.splitlines() | xsse_parser(skip_strings=['DONE', 'TRACEID']) | xprint
+
+
+    a = [[{"a":1}]] | xgroup(2)

@@ -13,8 +13,9 @@ from opentelemetry.instrumentation.instrumentor import BaseInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, TELEMETRY_SDK_NAME, DEPLOYMENT_ENVIRONMENT
 from agentops.instrumentation.crewai.version import __version__
 from agentops.semconv import SpanAttributes, AgentOpsSpanKindValues, Meters, ToolAttributes, MessageAttributes
+from agentops.semconv.core import CoreAttributes
 from .crewai_span_attributes import CrewAISpanAttributes, set_span_attribute
-
+from agentops import get_client
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -160,12 +161,23 @@ def wrap_kickoff(
     logger.debug(
         f"CrewAI: Starting workflow instrumentation for Crew with {len(getattr(instance, 'agents', []))} agents"
     )
+
+    config = get_client().config
+    attributes = {
+        SpanAttributes.LLM_SYSTEM: "crewai",
+    }
+
+    if config.default_tags and len(config.default_tags) > 0:
+        tag_list = list(config.default_tags)
+        attributes[CoreAttributes.TAGS] = tag_list
+
+    # Use trace_name from config if available, otherwise default to "crewai.workflow"
+    span_name = config.trace_name if config.trace_name else "crewai.workflow"
+
     with tracer.start_as_current_span(
-        "crewai.workflow",
+        span_name,
         kind=SpanKind.INTERNAL,
-        attributes={
-            SpanAttributes.LLM_SYSTEM: "crewai",
-        },
+        attributes=attributes,
     ) as span:
         try:
             span.set_attribute(TELEMETRY_SDK_NAME, "agentops")
@@ -382,12 +394,21 @@ def wrap_task_execute(
 ):
     task_name = instance.description if hasattr(instance, "description") else "task"
 
+    config = get_client().config
+    attributes = {
+        SpanAttributes.AGENTOPS_SPAN_KIND: AgentOpsSpanKindValues.TASK.value,
+    }
+
+    if config.default_tags and len(config.default_tags) > 0:
+        tag_list = list(config.default_tags)
+        # TODO: This should be a set to prevent duplicates, but we need to ensure
+        # that the tags are not modified in place, so we convert to list first.
+        attributes[CoreAttributes.TAGS] = tag_list
+
     with tracer.start_as_current_span(
         f"{task_name}.task",
         kind=SpanKind.CLIENT,
-        attributes={
-            SpanAttributes.AGENTOPS_SPAN_KIND: AgentOpsSpanKindValues.TASK.value,
-        },
+        attributes=attributes,
     ) as span:
         try:
             span.set_attribute(TELEMETRY_SDK_NAME, "agentops")
@@ -411,91 +432,58 @@ def wrap_task_execute(
 def wrap_llm_call(
     tracer, duration_histogram, token_histogram, environment, application_name, wrapped, instance, args, kwargs
 ):
-    try:
-        llm = instance.model if hasattr(instance, "model") else "llm"
-        # To get the model provider (e.g. "openai") or the model name (e.g. "gpt-4o-mini")
-        provider = llm.split("/")[0] if "/" in llm else llm.split("-")[0]
+    llm = instance.model if hasattr(instance, "model") else "llm"
+    with tracer.start_as_current_span(f"{llm}.llm", kind=SpanKind.CLIENT, attributes={}) as span:
+        start_time = time.time()
+        try:
+            span.set_attribute(TELEMETRY_SDK_NAME, "agentops")
+            span.set_attribute(SERVICE_NAME, application_name)
+            span.set_attribute(DEPLOYMENT_ENVIRONMENT, environment)
 
-        provider_instrumentor = {
-            "gpt": "OpenAIInstrumentor",
-            "openai": "OpenAIInstrumentor",
-            "claude": "AnthropicInstrumentor",
-            "anthropic": "AnthropicInstrumentor",
-            "google": "GoogleGenerativeAIInstrumentor",
-            "gemini": "GoogleGenerativeAIInstrumentor",
-            "ibm": "IBMWatsonXInstrumentor",
-            "watsonx": "IBMWatsonXInstrumentor",
-            "agents": "OpenAIAgentsInstrumentor",
-        }
+            CrewAISpanAttributes(span=span, instance=instance)
 
-        instrumentor = provider_instrumentor.get(provider.lower())
-
-        if instrumentor:
-            logger.debug(f"Skipping instrumentation for CrewAI LLM call for {provider} and using {instrumentor}")
             result = wrapped(*args, **kwargs)
+
+            # Set prompt attributes from args
+            if args and isinstance(args[0], list):
+                for i, message in enumerate(args[0]):
+                    if isinstance(message, dict):
+                        if "role" in message:
+                            span.set_attribute(MessageAttributes.PROMPT_ROLE.format(i=i), message["role"])
+                        if "content" in message:
+                            span.set_attribute(MessageAttributes.PROMPT_CONTENT.format(i=i), message["content"])
+
+            # Set completion attributes from result
+            if result:
+                span.set_attribute(MessageAttributes.COMPLETION_CONTENT.format(i=0), str(result))
+                span.set_attribute(MessageAttributes.COMPLETION_ROLE.format(i=0), "assistant")
+
+            # Set token usage attributes from callbacks
+            if "callbacks" in kwargs and kwargs["callbacks"] and hasattr(kwargs["callbacks"][0], "token_cost_process"):
+                token_process = kwargs["callbacks"][0].token_cost_process
+                if hasattr(token_process, "completion_tokens"):
+                    span.set_attribute(SpanAttributes.LLM_USAGE_COMPLETION_TOKENS, token_process.completion_tokens)
+                if hasattr(token_process, "prompt_tokens"):
+                    span.set_attribute(SpanAttributes.LLM_USAGE_PROMPT_TOKENS, token_process.prompt_tokens)
+                if hasattr(token_process, "total_tokens"):
+                    span.set_attribute(SpanAttributes.LLM_USAGE_TOTAL_TOKENS, token_process.total_tokens)
+
+            if duration_histogram:
+                duration = time.time() - start_time
+                duration_histogram.record(
+                    duration,
+                    attributes={
+                        SpanAttributes.LLM_SYSTEM: "crewai",
+                        SpanAttributes.LLM_RESPONSE_MODEL: str(instance.model),
+                    },
+                )
+
+            span.set_status(Status(StatusCode.OK))
             return result
-        else:
-            logger.debug(f"Instrumenting CrewAI LLM call for provider: {provider}")
-            with tracer.start_as_current_span(f"{llm}.llm", kind=SpanKind.CLIENT, attributes={}) as span:
-                start_time = time.time()
-                try:
-                    span.set_attribute(TELEMETRY_SDK_NAME, "agentops")
-                    span.set_attribute(SERVICE_NAME, application_name)
-                    span.set_attribute(DEPLOYMENT_ENVIRONMENT, environment)
-
-                    CrewAISpanAttributes(span=span, instance=instance)
-
-                    result = wrapped(*args, **kwargs)
-
-                    # Set prompt attributes from args
-                    if args and isinstance(args[0], list):
-                        for i, message in enumerate(args[0]):
-                            if isinstance(message, dict):
-                                if "role" in message:
-                                    span.set_attribute(MessageAttributes.PROMPT_ROLE.format(i=i), message["role"])
-                                if "content" in message:
-                                    span.set_attribute(MessageAttributes.PROMPT_CONTENT.format(i=i), message["content"])
-
-                    # Set completion attributes from result
-                    if result:
-                        span.set_attribute(MessageAttributes.COMPLETION_CONTENT.format(i=0), str(result))
-                        span.set_attribute(MessageAttributes.COMPLETION_ROLE.format(i=0), "assistant")
-
-                    # Set token usage attributes from callbacks
-                    if (
-                        "callbacks" in kwargs
-                        and kwargs["callbacks"]
-                        and hasattr(kwargs["callbacks"][0], "token_cost_process")
-                    ):
-                        token_process = kwargs["callbacks"][0].token_cost_process
-                        if hasattr(token_process, "completion_tokens"):
-                            span.set_attribute(
-                                SpanAttributes.LLM_USAGE_COMPLETION_TOKENS, token_process.completion_tokens
-                            )
-                        if hasattr(token_process, "prompt_tokens"):
-                            span.set_attribute(SpanAttributes.LLM_USAGE_PROMPT_TOKENS, token_process.prompt_tokens)
-                        if hasattr(token_process, "total_tokens"):
-                            span.set_attribute(SpanAttributes.LLM_USAGE_TOTAL_TOKENS, token_process.total_tokens)
-
-                    if duration_histogram:
-                        duration = time.time() - start_time
-                        duration_histogram.record(
-                            duration,
-                            attributes={
-                                SpanAttributes.LLM_SYSTEM: "crewai",
-                                SpanAttributes.LLM_RESPONSE_MODEL: str(instance.model),
-                            },
-                        )
-
-                    span.set_status(Status(StatusCode.OK))
-                    return result
-                except Exception as e:
-                    span.set_status(Status(StatusCode.ERROR, str(e)))
-                    logger.error("Error in trace creation: %s", e)
-                    raise e
-    except Exception as e:
-        logger.error(f"Error in provider detection: {e}")
-        raise e
+        except Exception as ex:
+            span.set_status(Status(StatusCode.ERROR, str(ex)))
+            logger.error("Error in trace creation: %s", ex)
+            raise
 
 
 def wrap_tool_execution(tracer, duration_histogram, environment, application_name):

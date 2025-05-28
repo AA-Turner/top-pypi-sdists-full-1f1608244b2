@@ -150,38 +150,6 @@ class SingleQueryResult:
         Type that return passed function.
         """
 
-class SynchronousCommit(Enum):
-    """
-    Synchronous_commit option for transactions.
-
-    ### Variants:
-    - `On`: The meaning may change based on whether you have
-        a synchronous standby or not.
-        If there is a synchronous standby,
-        setting the value to on will result in waiting till “remote flush”.
-    - `Off`: As the name indicates, the commit acknowledgment can come before
-        flushing the records to disk.
-        This is generally called as an asynchronous commit.
-        If the PostgreSQL instance crashes,
-        the last few asynchronous commits might be lost.
-    - `Local`: WAL records are written and flushed to local disks.
-        In this case, the commit will be acknowledged after the
-        local WAL Write and WAL flush completes.
-    - `RemoteWrite`: WAL records are successfully handed over to
-        remote instances which acknowledged back
-        about the write (not flush).
-    - `RemoteApply`: This will result in commits waiting until replies from the
-        current synchronous standby(s) indicate they have received
-        the commit record of the transaction and applied it so
-        that it has become visible to queries on the standby(s).
-    """
-
-    On = 1
-    Off = 2
-    Local = 3
-    RemoteWrite = 4
-    RemoteApply = 5
-
 class IsolationLevel(Enum):
     """Isolation Level for transactions."""
 
@@ -285,11 +253,12 @@ class KeepaliveConfig:
         """Initialize new config."""
 
 class Cursor:
-    """Represent opened cursor in a transaction.
+    """Represent binary cursor in a transaction.
 
     It can be used as an asynchronous iterator.
     """
 
+    array_size: int
     cursor_name: str
     querystring: str
     parameters: ParamsT = None
@@ -314,118 +283,27 @@ class Cursor:
 
         Execute DECLARE command for the cursor.
         """
-    async def close(self: Self) -> None:
+    def close(self: Self) -> None:
         """Close the cursor.
 
         Execute CLOSE command for the cursor.
         """
-    async def fetch(
+    async def execute(
         self: Self,
-        fetch_number: int | None = None,
+        querystring: str,
+        parameters: ParamsT = None,
     ) -> QueryResult:
-        """Fetch next <fetch_number> rows.
+        """Start cursor with querystring and parameters.
 
-        By default fetches 10 next rows.
-
-        ### Parameters:
-        - `fetch_number`: how many rows need to fetch.
-
-        ### Returns:
-        result as `QueryResult`.
+        Method should be used instead of context manager
+        and `start` method.
         """
-    async def fetch_next(
-        self: Self,
-    ) -> QueryResult:
-        """Fetch next row.
-
-        Execute FETCH NEXT
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_prior(
-        self: Self,
-    ) -> QueryResult:
-        """Fetch previous row.
-
-        Execute FETCH PRIOR
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_first(
-        self: Self,
-    ) -> QueryResult:
-        """Fetch first row.
-
-        Execute FETCH FIRST
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_last(
-        self: Self,
-    ) -> QueryResult:
-        """Fetch last row.
-
-        Execute FETCH LAST
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_absolute(
-        self: Self,
-        absolute_number: int,
-    ) -> QueryResult:
-        """Fetch absolute rows.
-
-        Execute FETCH ABSOLUTE <absolute_number>.
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_relative(
-        self: Self,
-        relative_number: int,
-    ) -> QueryResult:
-        """Fetch absolute rows.
-
-        Execute FETCH RELATIVE <relative_number>.
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_forward_all(
-        self: Self,
-    ) -> QueryResult:
-        """Fetch forward all rows.
-
-        Execute FETCH FORWARD ALL.
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_backward(
-        self: Self,
-        backward_count: int,
-    ) -> QueryResult:
-        """Fetch backward rows.
-
-        Execute FETCH BACKWARD <backward_count>.
-
-        ### Returns:
-        result as `QueryResult`.
-        """
-    async def fetch_backward_all(
-        self: Self,
-    ) -> QueryResult:
-        """Fetch backward all rows.
-
-        Execute FETCH BACKWARD ALL.
-
-        ### Returns:
-        result as `QueryResult`.
-        """
+    async def fetchone(self: Self) -> QueryResult:
+        """Return next one row from the cursor."""
+    async def fetchmany(self: Self, size: int | None = None) -> QueryResult:
+        """Return <size> rows from the cursor."""
+    async def fetchall(self: Self, size: int | None = None) -> QueryResult:
+        """Return all remaining rows from the cursor."""
 
 class Transaction:
     """Single connection for executing queries.
@@ -462,6 +340,26 @@ class Transaction:
         Execute `COMMIT`.
 
         `commit()` can be called only once per transaction.
+        """
+    async def rollback(self: Self) -> None:
+        """Rollback all queries in the transaction.
+
+        It can be done only one, after execution transaction marked
+        as `done`.
+
+        ### Example:
+        ```python
+        import asyncio
+
+        from psqlpy import PSQLPool, QueryResult
+
+        async def main() -> None:
+            db_pool = PSQLPool()
+            connection = await db_pool.connection()
+            transaction = connection.transaction()
+            await transaction.execute(...)
+            await transaction.rollback()
+        ```
         """
     async def execute(
         self: Self,
@@ -744,26 +642,6 @@ class Transaction:
             await transaction.rollback_savepoint("my_savepoint")
         ```
         """
-    async def rollback(self: Self) -> None:
-        """Rollback all queries in the transaction.
-
-        It can be done only one, after execution transaction marked
-        as `done`.
-
-        ### Example:
-        ```python
-        import asyncio
-
-        from psqlpy import PSQLPool, QueryResult
-
-        async def main() -> None:
-            db_pool = PSQLPool()
-            connection = await db_pool.connection()
-            transaction = connection.transaction()
-            await transaction.execute(...)
-            await transaction.rollback()
-        ```
-        """
     async def rollback_savepoint(self: Self, savepoint_name: str) -> None:
         """ROLLBACK to the specified `savepoint_name`.
 
@@ -818,8 +696,6 @@ class Transaction:
         querystring: str,
         parameters: ParamsT = None,
         fetch_number: int | None = None,
-        scroll: bool | None = None,
-        prepared: bool = True,
     ) -> Cursor:
         """Create new cursor object.
 
@@ -829,9 +705,6 @@ class Transaction:
         - `querystring`: querystring to execute.
         - `parameters`: list of parameters to pass in the query.
         - `fetch_number`: how many rows need to fetch.
-        - `scroll`: SCROLL or NO SCROLL cursor.
-        - `prepared`: should the querystring be prepared before the request.
-            By default any querystring will be prepared.
 
         ### Returns:
         new initialized cursor.
@@ -886,6 +759,34 @@ class Transaction:
         number of inserted rows;
         """
 
+async def connect(
+    dsn: str | None = None,
+    username: str | None = None,
+    password: str | None = None,
+    host: str | None = None,
+    hosts: list[str] | None = None,
+    port: int | None = None,
+    ports: list[int] | None = None,
+    db_name: str | None = None,
+    target_session_attrs: TargetSessionAttrs | None = None,
+    options: str | None = None,
+    application_name: str | None = None,
+    connect_timeout_sec: int | None = None,
+    connect_timeout_nanosec: int | None = None,
+    tcp_user_timeout_sec: int | None = None,
+    tcp_user_timeout_nanosec: int | None = None,
+    keepalives: bool | None = None,
+    keepalives_idle_sec: int | None = None,
+    keepalives_idle_nanosec: int | None = None,
+    keepalives_interval_sec: int | None = None,
+    keepalives_interval_nanosec: int | None = None,
+    keepalives_retries: int | None = None,
+    load_balance_hosts: LoadBalanceHosts | None = None,
+    ssl_mode: SslMode | None = None,
+    ca_file: str | None = None,
+) -> Connection:
+    """Create new standalone connection."""
+
 class Connection:
     """Connection from Database Connection Pool.
 
@@ -905,6 +806,25 @@ class Connection:
         exception: BaseException | None,
         traceback: types.TracebackType | None,
     ) -> None: ...
+    async def prepare(
+        self,
+        querystring: str,
+        parameters: ParamsT = None,
+    ) -> PreparedStatement:
+        """Prepare statement.
+
+        Return representation of prepared statement.
+        """
+    async def commit(self: Self) -> None:
+        """Commit the transaction.
+
+        Do nothing if there is no active transaction.
+        """
+    async def rollback(self: Self) -> None:
+        """Rollback the transaction.
+
+        Do nothing if there is no active transaction.
+        """
     async def execute(
         self: Self,
         querystring: str,
@@ -1089,7 +1009,6 @@ class Connection:
         isolation_level: IsolationLevel | None = None,
         read_variant: ReadVariant | None = None,
         deferrable: bool | None = None,
-        synchronous_commit: SynchronousCommit | None = None,
     ) -> Transaction:
         """Create new transaction.
 
@@ -1097,15 +1016,12 @@ class Connection:
         - `isolation_level`: configure isolation level of the transaction.
         - `read_variant`: configure read variant of the transaction.
         - `deferrable`: configure deferrable of the transaction.
-        - `synchronous_commit`: configure synchronous_commit option for transaction.
         """
     def cursor(
         self: Self,
         querystring: str,
         parameters: ParamsT = None,
         fetch_number: int | None = None,
-        scroll: bool | None = None,
-        prepared: bool = True,
     ) -> Cursor:
         """Create new cursor object.
 
@@ -1115,9 +1031,6 @@ class Connection:
         - `querystring`: querystring to execute.
         - `parameters`: list of parameters to pass in the query.
         - `fetch_number`: how many rows need to fetch.
-        - `scroll`: SCROLL or NO SCROLL cursor.
-        - `prepared`: should the querystring be prepared before the request.
-            By default any querystring will be prepared.
 
         ### Returns:
         new initialized cursor.
@@ -1142,12 +1055,13 @@ class Connection:
                         ...  # do something with this result.
         ```
         """
-    def back_to_pool(self: Self) -> None:
+    def close(self: Self) -> None:
         """Return connection back to the pool.
 
         It necessary to commit all transactions and close all cursor
         made by this connection. Otherwise, it won't have any practical usage.
         """
+
     async def binary_copy_to_table(
         self: Self,
         source: bytes | bytearray | Buffer | BytesIO,
@@ -1336,7 +1250,7 @@ class ConnectionPool:
     def close(self: Self) -> None:
         """Close the connection pool."""
 
-def connect(
+def connect_pool(
     dsn: str | None = None,
     username: str | None = None,
     password: str | None = None,
@@ -1857,3 +1771,15 @@ class ListenerNotificationMsg:
     channel: str
     payload: str
     connection: Connection
+
+class Column:
+    name: str
+    table_oid: int | None
+
+class PreparedStatement:
+    async def execute(self: Self) -> QueryResult:
+        """Execute prepared statement."""
+    def cursor(self: Self) -> Cursor:
+        """Create new server-side cursor based on prepared statement."""
+    def columns(self: Self) -> list[Column]:
+        """Return information about statement columns."""

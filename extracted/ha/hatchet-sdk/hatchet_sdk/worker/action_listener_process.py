@@ -44,10 +44,7 @@ class ActionEvent:
 STOP_LOOP_TYPE = Literal["STOP_LOOP"]
 STOP_LOOP: STOP_LOOP_TYPE = "STOP_LOOP"  # Sentinel object to stop the loop
 
-# TODO link to a block post
-BLOCKED_THREAD_WARNING = (
-    "THE TIME TO START THE STEP RUN IS TOO LONG, THE MAIN THREAD MAY BE BLOCKED"
-)
+BLOCKED_THREAD_WARNING = "THE TIME TO START THE TASK RUN IS TOO LONG, THE EVENT LOOP MAY BE BLOCKED. See https://docs.hatchet.run/blog/warning-event-loop-blocked for details and debugging help."
 
 
 class WorkerActionListenerProcess:
@@ -160,6 +157,7 @@ class WorkerActionListenerProcess:
 
             if count > 0:
                 logger.warning(f"{BLOCKED_THREAD_WARNING}: Waiting Steps {count}")
+                print(asyncio.current_task())
             await asyncio.sleep(1)
 
     async def send_event(self, event: ActionEvent, retry_attempt: int = 1) -> None:

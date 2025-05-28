@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: qdrant-haystack
-Version: 9.1.1
+Version: 9.1.2
 Summary: An integration of Qdrant ANN vector database backend with Haystack
 Project-URL: Source, https://github.com/deepset-ai/haystack-core-integrations
 Project-URL: Documentation, https://github.com/deepset-ai/haystack-core-integrations/blob/main/integrations/qdrant/README.md

@@ -8,6 +8,7 @@ class ListExtendedJobsResponse200JobsItemType1Language(str, Enum):
     BUN = "bun"
     CSHARP = "csharp"
     DENO = "deno"
+    DUCKDB = "duckdb"
     GO = "go"
     GRAPHQL = "graphql"
     JAVA = "java"

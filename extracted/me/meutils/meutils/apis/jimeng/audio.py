@@ -124,7 +124,7 @@ async def create_tts(request: TTSRequest):  # audio.speech.create
 
         },
         "id_info": {
-            "id": VOICE_MAPPING.get(request.voice, request.voice) or "7459778019725414962",
+            "id": effect_id,
             "item_platform": 1
         }
     }

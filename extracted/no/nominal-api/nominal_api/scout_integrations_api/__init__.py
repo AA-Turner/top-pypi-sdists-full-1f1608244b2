@@ -17,6 +17,7 @@ from .._impl import (
     scout_integrations_api_OpsgenieRegion as OpsgenieRegion,
     scout_integrations_api_SendMessageRequest as SendMessageRequest,
     scout_integrations_api_SimpleWebhookIntegration as SimpleWebhookIntegration,
+    scout_integrations_api_SlackInstanceType as SlackInstanceType,
     scout_integrations_api_SlackWebhookIntegration as SlackWebhookIntegration,
     scout_integrations_api_UpdateIntegrationRequest as UpdateIntegrationRequest,
 )

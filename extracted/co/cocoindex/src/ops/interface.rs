@@ -195,18 +195,25 @@ pub trait SimpleFunctionFactory {
 #[derive(Debug)]
 pub struct ExportTargetUpsertEntry {
     pub key: KeyValue,
+    pub additional_key: serde_json::Value,
     pub value: FieldValues,
+}
+
+#[derive(Debug)]
+pub struct ExportTargetDeleteEntry {
+    pub key: KeyValue,
+    pub additional_key: serde_json::Value,
 }
 
 #[derive(Debug, Default)]
 pub struct ExportTargetMutation {
     pub upserts: Vec<ExportTargetUpsertEntry>,
-    pub delete_keys: Vec<KeyValue>,
+    pub deletes: Vec<ExportTargetDeleteEntry>,
 }
 
 impl ExportTargetMutation {
     pub fn is_empty(&self) -> bool {
-        self.upserts.is_empty() && self.delete_keys.is_empty()
+        self.upserts.is_empty() && self.deletes.is_empty()
     }
 }
 
@@ -214,6 +221,11 @@ impl ExportTargetMutation {
 pub struct ExportTargetMutationWithContext<'ctx, T: ?Sized + Send + Sync> {
     pub mutation: ExportTargetMutation,
     pub export_context: &'ctx T,
+}
+
+pub struct ResourceSetupChangeItem<'a> {
+    pub key: &'a serde_json::Value,
+    pub setup_status: &'a dyn setup::ResourceSetupStatus,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -281,6 +293,13 @@ pub trait ExportTargetFactory: Send + Sync {
 
     fn describe_resource(&self, key: &serde_json::Value) -> Result<String>;
 
+    fn extract_additional_key<'ctx>(
+        &self,
+        key: &KeyValue,
+        value: &FieldValues,
+        export_context: &'ctx (dyn Any + Send + Sync),
+    ) -> Result<serde_json::Value>;
+
     async fn apply_mutation(
         &self,
         mutations: Vec<ExportTargetMutationWithContext<'async_trait, dyn Any + Send + Sync>>,
@@ -288,7 +307,8 @@ pub trait ExportTargetFactory: Send + Sync {
 
     async fn apply_setup_changes(
         &self,
-        setup_status: Vec<&'async_trait dyn setup::ResourceSetupStatus>,
+        setup_status: Vec<ResourceSetupChangeItem<'async_trait>>,
+        auth_registry: &Arc<AuthRegistry>,
     ) -> Result<()>;
 }
 

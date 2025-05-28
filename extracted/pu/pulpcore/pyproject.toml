@@ -7,7 +7,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = "pulpcore"
-version = "3.79.0"
+version = "3.80.0"
 description = "Pulp Django Application and Related Modules"
 readme = "README.md"
 authors = [
@@ -34,7 +34,7 @@ dependencies = [
   "async-timeout>=4.0.3,<4.0.4;python_version<'3.11'",
   "backoff>=2.1.2,<2.2.2",
   "click>=8.1.0,<=8.1.8",
-  "cryptography>=38.0.1,<45.0.3",
+  "cryptography>=38.0.1,<45.0.4",
   "Django~=4.2.0",  # LTS version, switch only if we have a compelling reason to",
   "django-filter>=23.1,<=25.1",
   "django-guid>=3.3,<=3.5.1",
@@ -58,7 +58,7 @@ dependencies = [
   "protobuf>=4.21.1,<6.0",
   "pulp-glue>=0.18.0,<0.33",
   "pygtrie>=2.5,<=2.5.0",
-  "psycopg[binary]>=3.1.8,<=3.2.9",
+  "psycopg[binary]>=3.1.8,<3.3",  # semver, not explicitely stated, but mentioned on multiple changes
   "pyparsing>=3.1.0,<=3.2.3",
   "python-gnupg>=0.5,<=0.5.4",
   "PyYAML>=5.1.1,<=6.0.2",
@@ -208,7 +208,7 @@ ignore = [
 [tool.bumpversion]
 # This section is managed by the plugin template. Do not edit manually.
 
-current_version = "3.79.0"
+current_version = "3.80.0"
 commit = false
 tag = false
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<alpha>0a)?(?P<patch>\\d+)(\\.(?P<release>[a-z]+))?"

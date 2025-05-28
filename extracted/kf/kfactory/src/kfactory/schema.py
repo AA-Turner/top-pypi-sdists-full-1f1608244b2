@@ -1,3 +1,9 @@
+"""This is still experimental.
+
+Caution is advised when using this, as the API might suddenly change.
+In order to fix bugs etc.
+"""
+
 from __future__ import annotations
 
 import re
@@ -41,6 +47,8 @@ if TYPE_CHECKING:
 
 yaml = YAML(typ="safe")
 
+__all__ = ["DSchema", "Schema", "read_schema"]
+
 
 def _gez(value: TUnit) -> TUnit:
     if value < 0:
@@ -69,6 +77,14 @@ class Placement(MirrorPlacement, Generic[TUnit], extra="forbid"):
             raise ValueError("Either y or dy must be defined.")
 
         return self
+
+    @model_validator(mode="before")
+    @classmethod
+    def _replace_rotation_orientation(cls, data: dict[str, Any]) -> dict[str, Any]:
+        if "rotation" in data:
+            orientation = data.pop("rotation")
+            data["orientation"] = orientation
+        return data
 
     @property
     def is_absolute(self) -> bool:
@@ -321,6 +337,23 @@ class TSchema(BaseModel, Generic[TUnit], extra="forbid"):
         placement: Placement[TUnit] | None = None,
         kcl: KCLayout | None = None,
     ) -> SchemaInstance[TUnit]:
+        """Create a schema instance.
+
+        This would be an SREF or AREF in the resulting GDS cell.
+
+        Args:
+            name: Instance name. In a schema, each instance must be named,
+                unless created through routing functions.
+            component: Factory name of the component to instantiate.
+            settings: Settings dictionary to configure the factory.
+            array: If the instance should create an array instance (AREF),
+                this can be passed here as an `Array` class instance.
+            placement: Optional placement for the instance. Can also be configured
+                with `inst.place(...)` afterwards.
+
+        Returns:
+            Schema instance representing the args.
+        """
         inst = SchemaInstance[TUnit].model_validate(
             {
                 "name": name,
@@ -434,6 +467,7 @@ class TSchema(BaseModel, Generic[TUnit], extra="forbid"):
     @model_validator(mode="before")
     @classmethod
     def _validate_model(cls, data: dict[str, Any]) -> dict[str, Any]:
+        data.pop("nets", None)
         if not isinstance(data, dict):
             return data
         if "kcl" in data and isinstance(data["kcl"], str):
@@ -447,7 +481,7 @@ class TSchema(BaseModel, Generic[TUnit], extra="forbid"):
             for name, route in routes.items():
                 route["name"] = name
         connections = data.get("connections")
-        if connections and isinstance(connections, dict):
+        if connections is not None and isinstance(connections, dict):
             built_connections: list[Connection[TUnit]] = []
             connections_: list[tuple[tuple[str, str], tuple[str, str]]] = [
                 (k.rsplit(",", 1), v.rsplit(",", 1)) for k, v in connections.items()
@@ -672,6 +706,8 @@ class TSchema(BaseModel, Generic[TUnit], extra="forbid"):
         routing_strategy: str,
         **settings: JSONSerializable,
     ) -> Route[TUnit]:
+        if name in self.routes:
+            raise ValueError(f"Route with name {name!r} already exists")
         route = Route[TUnit](
             name=name,
             routing_strategy=routing_strategy,
@@ -685,11 +721,11 @@ class TSchema(BaseModel, Generic[TUnit], extra="forbid"):
 
 
 class Schema(TSchema[dbu]):
-    pass
+    """Schema with a base unit of dbu for placements."""
 
 
 class DSchema(TSchema[um]):
-    pass
+    """Schema with a base unit of um for placements."""
 
 
 def _place_islands(

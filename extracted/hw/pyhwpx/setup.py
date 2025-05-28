@@ -29,7 +29,7 @@ setup(
     author="ilco",
     author_email="martinii.fun@gmail.com",
     url="https://martiniifun.github.io/pyhwpx/",
-    python_requires=">= 3.10",
+    python_requires=">= 3.9",
     packages=find_packages(),
     include_package_data=True,
     package_data={

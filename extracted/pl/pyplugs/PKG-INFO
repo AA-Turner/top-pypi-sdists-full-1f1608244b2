@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyplugs
-Version: 0.5.1
+Version: 0.5.2
 Summary: PyPlugs, decorator based plug-in architecture for Python
 Author-email: Geir Arne Hjelle <geirarne@gmail.com>
 License-Expression: MIT

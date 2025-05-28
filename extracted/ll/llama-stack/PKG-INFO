@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: llama_stack
-Version: 0.2.7
+Version: 0.2.8
 Summary: Llama Stack
 Author-email: Meta Llama <llama-oss@meta.com>
 License: MIT
@@ -15,16 +15,16 @@ Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Classifier: Topic :: Scientific/Engineering :: Information Analysis
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
-Requires-Dist: blobfile
 Requires-Dist: fire
 Requires-Dist: httpx
 Requires-Dist: huggingface-hub
 Requires-Dist: jinja2>=3.1.6
 Requires-Dist: jsonschema
-Requires-Dist: llama-stack-client>=0.2.7
+Requires-Dist: llama-stack-client>=0.2.8
 Requires-Dist: openai>=1.66
 Requires-Dist: prompt-toolkit
 Requires-Dist: python-dotenv
+Requires-Dist: python-jose
 Requires-Dist: pydantic>=2
 Requires-Dist: requests
 Requires-Dist: rich
@@ -33,9 +33,9 @@ Requires-Dist: termcolor
 Requires-Dist: tiktoken
 Requires-Dist: pillow
 Requires-Dist: h11>=0.16.0
-Requires-Dist: kubernetes
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-timeout; extra == "dev"
 Requires-Dist: pytest-asyncio; extra == "dev"
 Requires-Dist: pytest-cov; extra == "dev"
 Requires-Dist: pytest-html; extra == "dev"
@@ -55,9 +55,13 @@ Requires-Dist: openai; extra == "unit"
 Requires-Dist: aiosqlite; extra == "unit"
 Requires-Dist: aiohttp; extra == "unit"
 Requires-Dist: pypdf; extra == "unit"
+Requires-Dist: mcp; extra == "unit"
 Requires-Dist: chardet; extra == "unit"
 Requires-Dist: qdrant-client; extra == "unit"
 Requires-Dist: opentelemetry-exporter-otlp-proto-http; extra == "unit"
+Requires-Dist: sqlalchemy; extra == "unit"
+Requires-Dist: sqlalchemy[asyncio]>=2.0.41; extra == "unit"
+Requires-Dist: blobfile; extra == "unit"
 Provides-Extra: test
 Requires-Dist: openai; extra == "test"
 Requires-Dist: aiosqlite; extra == "test"
@@ -72,9 +76,12 @@ Requires-Dist: mcp; extra == "test"
 Requires-Dist: datasets; extra == "test"
 Requires-Dist: autoevals; extra == "test"
 Requires-Dist: transformers; extra == "test"
+Requires-Dist: sqlalchemy; extra == "test"
+Requires-Dist: sqlalchemy[asyncio]>=2.0.41; extra == "test"
 Provides-Extra: docs
 Requires-Dist: sphinx-autobuild; extra == "docs"
 Requires-Dist: myst-parser; extra == "docs"
+Requires-Dist: sphinx; extra == "docs"
 Requires-Dist: sphinx-rtd-theme; extra == "docs"
 Requires-Dist: sphinx_rtd_dark_mode; extra == "docs"
 Requires-Dist: sphinx-copybutton; extra == "docs"
@@ -84,6 +91,8 @@ Requires-Dist: sphinxcontrib.redoc; extra == "docs"
 Requires-Dist: sphinxcontrib.video; extra == "docs"
 Requires-Dist: sphinxcontrib.mermaid; extra == "docs"
 Requires-Dist: tomli; extra == "docs"
+Requires-Dist: linkify; extra == "docs"
+Requires-Dist: sphinxcontrib.openapi; extra == "docs"
 Provides-Extra: codegen
 Requires-Dist: rich; extra == "codegen"
 Requires-Dist: pydantic; extra == "codegen"
@@ -91,7 +100,7 @@ Requires-Dist: jinja2>=3.1.6; extra == "codegen"
 Provides-Extra: ui
 Requires-Dist: streamlit; extra == "ui"
 Requires-Dist: pandas; extra == "ui"
-Requires-Dist: llama-stack-client>=0.2.7; extra == "ui"
+Requires-Dist: llama-stack-client>=0.2.8; extra == "ui"
 Requires-Dist: streamlit-option-menu; extra == "ui"
 
 # Llama Stack
@@ -206,7 +215,7 @@ Here is a list of the various API providers and available distributions that can
 | **API Provider Builder** |    **Environments**    | **Agents** | **Inference** | **Memory** | **Safety** | **Telemetry** |
 |:------------------------:|:----------------------:|:----------:|:-------------:|:----------:|:----------:|:-------------:|
 |      Meta Reference      |      Single Node       |     ✅      |       ✅       |     ✅      |     ✅      |       ✅       |
-|        SambaNova         |         Hosted         |            |       ✅       |            |            |               |
+|        SambaNova         |         Hosted         |            |       ✅       |            |     ✅      |               |
 |         Cerebras         |         Hosted         |            |       ✅       |            |            |               |
 |        Fireworks         |         Hosted         |     ✅      |       ✅       |     ✅      |            |               |
 |       AWS Bedrock        |         Hosted         |            |       ✅       |            |     ✅      |               |

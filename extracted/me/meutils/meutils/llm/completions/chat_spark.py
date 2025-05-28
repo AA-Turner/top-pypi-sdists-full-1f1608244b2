@@ -33,7 +33,7 @@ class Completions(object):
             file_url, *texts = request.last_user_content.split(maxsplit=1) + ["总结下"]
             text = texts[0]
 
-            file_content = await file_extract(file_url)
+            file_content = await file_extract(file_url, enable_reader=False)
 
             request.messages = [
                 {
@@ -73,7 +73,7 @@ class Completions(object):
 
                         text, file_url = texts[-1], file_urls[-1]
                         if file_url in image_urls:
-                            file_content = await file_extract(file_url)
+                            file_content = await file_extract(file_url, enable_reader=False)
 
                             message["content"] = f"""{json.dumps(file_content, ensure_ascii=False)}\n\n{text}"""
 
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     request = CompletionRequest(
         # model="qwen-turbo-2024-11-01",
         # model="claude-3-5-sonnet-20241022",
-        model="deepsek-chat",
+        model="deepseek-chat",
 
         messages=[
             # {
@@ -133,15 +133,15 @@ if __name__ == '__main__':
             {
                 'role': 'user',
                 # "content": '你好',
-                "content": [
-                    {"type": "text", "text": "https://oss.ffire.cc/files/kling_watermark.png 描述第一张图片"},
-
-                    # {"type": "text", "text": "描述第一张图片"},
-                    #
-                    # {"type": "image_url", "image_url": "https://oss.ffire.cc/files/kling_watermark.png"},
-                    #     # {"type": "image_url", "image_url": "https://oss.ffire.cc/files/nsfw.jpg"}
-                    #
-                ],
+                # "content": [
+                #     {"type": "text", "text": "https://oss.ffire.cc/files/kling_watermark.png 描述第一张图片"},
+                #
+                #     # {"type": "text", "text": "描述第一张图片"},
+                #     #
+                #     # {"type": "image_url", "image_url": "https://oss.ffire.cc/files/kling_watermark.png"},
+                #     #     # {"type": "image_url", "image_url": "https://oss.ffire.cc/files/nsfw.jpg"}
+                #     #
+                # ],
 
                 # 'content': {
                 #     "type": "file_url",
@@ -153,7 +153,7 @@ if __name__ == '__main__':
                 # "content": "https://oss.ffire.cc/files/百炼系列手机产品介绍.docx 总结下"
                 # "content": "https://mj101-1317487292.cos.ap-shanghai.myqcloud.com/ai/test.pdf\n\n总结下"
 
-                # "content": "https://admin.ilovechatgpt.top/file/lunIMYAIzhinengzhushouduishenghuodocx_14905733.docx 总结",
+                "content": "http://admin.ilovechatgpt.top/file/4docx_86529298.docx 我无法确定你是否准确识别word里面的论文？",
                 # "content": "http://admin.ilovechatgpt.top/file/xinjianMicrosoftWordwendangdoc-9052714901036-bGSJLeKbqQdnIZZn.doc 111111234234",
 
             },
@@ -276,4 +276,22 @@ if __name__ == '__main__':
     #  {},
     #  {'role': 'user', 'content': '总结一下'}]
 
+    request = {
+        "model": "gemini-all",
+        "messages": [
+            {
+                "role": "system",
+                "content": "\\n Current date: 2025-05-21"
+            },
+            {
+                "role": "user",
+                "content": "http://admin.ilovechatgpt.top/file/ceshiwendangdocx_31118702.docx 你好"
+            }
+        ],
+        "stream": True,
+        "top_p": 0.7,
+        "temperature": 0.8,
+        "n": 1
+    }
+    request = CompletionRequest(**request)
     arun(c.create(request))

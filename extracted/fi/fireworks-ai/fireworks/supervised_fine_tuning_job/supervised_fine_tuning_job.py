@@ -227,7 +227,12 @@ class SupervisedFineTuningJob:
     @classmethod
     async def adelete_by_name(cls, name: str, api_key: Optional[str] = None):
         gateway = Gateway(api_key=api_key)
-        await gateway.delete_supervised_fine_tuning_job(name)
+        if name.startswith("accounts/"):
+            await gateway.delete_supervised_fine_tuning_job(name)
+        else:
+            await gateway.delete_supervised_fine_tuning_job(
+                f"accounts/{gateway.account_id()}/supervisedFineTuningJobs/{name}"
+            )
         job = await gateway.get_supervised_fine_tuning_job(name)
         while job is not None:
             await asyncio.sleep(1)
@@ -235,7 +240,12 @@ class SupervisedFineTuningJob:
     @classmethod
     def delete_by_name(cls, name: str, api_key: Optional[str] = None):
         gateway = Gateway(api_key=api_key)
-        gateway.delete_supervised_fine_tuning_job_sync(name)
+        if name.startswith("accounts/"):
+            gateway.delete_supervised_fine_tuning_job_sync(name)
+        else:
+            gateway.delete_supervised_fine_tuning_job_sync(
+                f"accounts/{gateway.account_id()}/supervisedFineTuningJobs/{name}"
+            )
         job = gateway.get_supervised_fine_tuning_job_sync(name)
         while job is not None:
             time.sleep(1)
@@ -255,7 +265,14 @@ class SupervisedFineTuningJob:
             self.dataset_or_id.sync()
         existing_job = self.get()
         if existing_job is not None:
-            if existing_job.state == JobState.FAILED:
+            if (
+                existing_job.state == JobState.FAILED
+                or existing_job.state == JobState.FAILED_CLEANING_UP
+                or existing_job.state == JobState.CANCELLED
+                or existing_job.state == JobState.DELETING
+                or existing_job.state == JobState.DELETING_CLEANING_UP
+                or existing_job.state == JobState.UNSPECIFIED
+            ):
                 self.delete()
             else:
                 return existing_job
@@ -329,7 +346,6 @@ class SupervisedFineTuningJob:
         # Import here to avoid circular import
         from fireworks.llm.llm import LLM
 
-        logger.info(f'Fine-tuning job "{self.name}" completed')
         if self.output_model is None:
             raise ValueError(f'Fine-tuning job "{self.name}" did not create an output model')
         if self.llm.addons_enabled:
@@ -350,7 +366,9 @@ class SupervisedFineTuningJob:
                 minutes = delta_seconds // 60
                 seconds = delta_seconds % 60
                 time_str = f"{seconds}s" if minutes == 0 else f"{minutes}m{seconds}s"
-                logger.info(f'Fine-tuning job "{self.name}" is in state {self.state}. Job was created {time_str} ago.')
+                logger.debug(
+                    f'Fine-tuning job "{self.name}" is in state {self.state}. Job was created {time_str} ago.'
+                )
             time.sleep(5)
             updated_job = self.get()
             if updated_job is None:
@@ -372,7 +390,9 @@ class SupervisedFineTuningJob:
                 minutes = delta_seconds // 60
                 seconds = delta_seconds % 60
                 time_str = f"{seconds}s" if minutes == 0 else f"{minutes}m{seconds}s"
-                logger.info(f'Fine-tuning job "{self.name}" is in state {self.state}. Job was created {time_str} ago.')
+                logger.debug(
+                    f'Fine-tuning job "{self.name}" is in state {self.state}. Job was created {time_str} ago.'
+                )
             await asyncio.sleep(5)
             updated_job = self.get()
             if updated_job is None:
@@ -392,37 +412,47 @@ class SupervisedFineTuningJob:
             if page_token is not None:
                 request.page_token = page_token
             list_response = self._gateway.list_supervised_fine_tuning_jobs_sync(request)
-            for job_proto in list_response.supervised_fine_tuning_jobs:
-                if job_proto.display_name == self.name and job_proto.base_model == self.llm.model:
-                    id = job_proto.name.split("/")[-1]
-                    return SupervisedFineTuningJob(
-                        name=job_proto.display_name,
-                        llm=self.llm,
-                        id=id,
-                        dataset_or_id=self.dataset_or_id,
-                        api_key=self._api_key,
-                        state=JobState.try_value(job_proto.state),
-                        epochs=job_proto.epochs,
-                        learning_rate=job_proto.learning_rate,
-                        lora_rank=job_proto.lora_rank,
-                        jinja_template=job_proto.jinja_template,
-                        early_stop=job_proto.early_stop,
-                        max_context_length=job_proto.max_context_length,
-                        base_model_weight_precision=precision_proto_to_literal(job_proto.base_model_weight_precision),
-                        wandb_config=wandb_config_proto_to_dataclass(job_proto.wandb_config),
-                        evaluation_dataset=job_proto.evaluation_dataset,
-                        accelerator_type=accelerator_type_proto_to_literal(job_proto.accelerator_type),
-                        accelerator_count=job_proto.accelerator_count,
-                        is_turbo=job_proto.is_turbo,
-                        eval_auto_carveout=job_proto.eval_auto_carveout,
-                        region=region_proto_to_literal(job_proto.region),
-                        nodes=job_proto.nodes,
-                        batch_size=job_proto.batch_size,
-                        create_time=timestamp_proto_to_datetime(job_proto.create_time),
-                        update_time=timestamp_proto_to_datetime(job_proto.update_time),
-                        created_by=job_proto.created_by,
-                        output_model=job_proto.output_model,
-                    )
+
+            # Filter and sort jobs by state (COMPLETED first)
+            matching_jobs = [
+                job_proto
+                for job_proto in list_response.supervised_fine_tuning_jobs
+                if job_proto.display_name == self.name and job_proto.base_model == self.llm.model
+            ]
+            matching_jobs.sort(key=lambda x: x.state != JobState.COMPLETED)
+
+            if matching_jobs:
+                job_proto = matching_jobs[0]
+                id = job_proto.name.split("/")[-1]
+                return SupervisedFineTuningJob(
+                    name=job_proto.display_name,
+                    llm=self.llm,
+                    id=id,
+                    dataset_or_id=self.dataset_or_id,
+                    api_key=self._api_key,
+                    state=JobState.try_value(job_proto.state),
+                    epochs=job_proto.epochs,
+                    learning_rate=job_proto.learning_rate,
+                    lora_rank=job_proto.lora_rank,
+                    jinja_template=job_proto.jinja_template,
+                    early_stop=job_proto.early_stop,
+                    max_context_length=job_proto.max_context_length,
+                    base_model_weight_precision=precision_proto_to_literal(job_proto.base_model_weight_precision),
+                    wandb_config=wandb_config_proto_to_dataclass(job_proto.wandb_config),
+                    evaluation_dataset=job_proto.evaluation_dataset,
+                    accelerator_type=accelerator_type_proto_to_literal(job_proto.accelerator_type),
+                    accelerator_count=job_proto.accelerator_count,
+                    is_turbo=job_proto.is_turbo,
+                    eval_auto_carveout=job_proto.eval_auto_carveout,
+                    region=region_proto_to_literal(job_proto.region),
+                    nodes=job_proto.nodes,
+                    batch_size=job_proto.batch_size,
+                    create_time=timestamp_proto_to_datetime(job_proto.create_time),
+                    update_time=timestamp_proto_to_datetime(job_proto.update_time),
+                    created_by=job_proto.created_by,
+                    output_model=job_proto.output_model,
+                )
+
             if not list_response.next_page_token:
                 return None
             page_token = list_response.next_page_token

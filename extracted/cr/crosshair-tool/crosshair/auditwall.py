@@ -1,4 +1,5 @@
 import importlib
+import inspect
 import os
 import sys
 import traceback
@@ -28,9 +29,10 @@ def reject(event: str, args: Tuple) -> None:
 
 
 def inside_module(modules: Iterable[ModuleType]) -> bool:
-    files = {m.__file__ for m in modules}
-    for frame, lineno in traceback.walk_stack(None):
-        if frame.f_code.co_filename in files:
+    """Checks whether the current call stack is inside one of the given modules."""
+    for frame, _lineno in traceback.walk_stack(None):
+        frame_module = inspect.getmodule(frame)
+        if frame_module and frame_module in modules:
             return True
     return False
 
@@ -60,7 +62,7 @@ def check_msvcrt_open(event: str, args: Tuple) -> None:
 _MODULES_THAT_CAN_POPEN: Optional[Set[ModuleType]] = None
 
 
-def modules_with_allowed_popen():
+def modules_with_allowed_subprocess():
     global _MODULES_THAT_CAN_POPEN
     if _MODULES_THAT_CAN_POPEN is None:
         allowed_module_names = ("_aix_support", "ctypes", "platform", "uuid")
@@ -74,13 +76,14 @@ def modules_with_allowed_popen():
 
 
 def check_subprocess(event: str, args: Tuple) -> None:
-    if not inside_module(modules_with_allowed_popen()):
+    if not inside_module(modules_with_allowed_subprocess()):
         reject(event, args)
 
 
 _SPECIAL_HANDLERS = {
     "open": check_open,
     "subprocess.Popen": check_subprocess,
+    "os.posix_spawn": check_subprocess,
     "msvcrt.open_osfhandle": check_msvcrt_open,
 }
 

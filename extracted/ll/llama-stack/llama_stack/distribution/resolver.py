@@ -13,7 +13,7 @@ from llama_stack.apis.datasetio import DatasetIO
 from llama_stack.apis.datasets import Datasets
 from llama_stack.apis.eval import Eval
 from llama_stack.apis.files import Files
-from llama_stack.apis.inference import Inference
+from llama_stack.apis.inference import Inference, InferenceProvider
 from llama_stack.apis.inspect import Inspect
 from llama_stack.apis.models import Models
 from llama_stack.apis.post_training import PostTraining
@@ -47,7 +47,7 @@ from llama_stack.providers.datatypes import (
     RemoteProviderSpec,
     ScoringFunctionsProtocolPrivate,
     ShieldsProtocolPrivate,
-    ToolsProtocolPrivate,
+    ToolGroupsProtocolPrivate,
     VectorDBsProtocolPrivate,
 )
 
@@ -83,10 +83,17 @@ def api_protocol_map() -> dict[Api, Any]:
     }
 
 
+def api_protocol_map_for_compliance_check() -> dict[Api, Any]:
+    return {
+        **api_protocol_map(),
+        Api.inference: InferenceProvider,
+    }
+
+
 def additional_protocols_map() -> dict[Api, Any]:
     return {
         Api.inference: (ModelsProtocolPrivate, Models, Api.models),
-        Api.tool_groups: (ToolsProtocolPrivate, ToolGroups, Api.tool_groups),
+        Api.tool_groups: (ToolGroupsProtocolPrivate, ToolGroups, Api.tool_groups),
         Api.vector_io: (VectorDBsProtocolPrivate, VectorDBs, Api.vector_dbs),
         Api.safety: (ShieldsProtocolPrivate, Shields, Api.shields),
         Api.datasetio: (DatasetsProtocolPrivate, Datasets, Api.datasets),
@@ -133,7 +140,7 @@ async def resolve_impls(
 
     sorted_providers = sort_providers_by_deps(providers_with_specs, run_config)
 
-    return await instantiate_providers(sorted_providers, router_apis, dist_registry)
+    return await instantiate_providers(sorted_providers, router_apis, dist_registry, run_config)
 
 
 def specs_for_autorouted_apis(apis_to_serve: list[str] | set[str]) -> dict[str, dict[str, ProviderWithSpec]]:
@@ -236,7 +243,10 @@ def sort_providers_by_deps(
 
 
 async def instantiate_providers(
-    sorted_providers: list[tuple[str, ProviderWithSpec]], router_apis: set[Api], dist_registry: DistributionRegistry
+    sorted_providers: list[tuple[str, ProviderWithSpec]],
+    router_apis: set[Api],
+    dist_registry: DistributionRegistry,
+    run_config: StackRunConfig,
 ) -> dict:
     """Instantiates providers asynchronously while managing dependencies."""
     impls: dict[Api, Any] = {}
@@ -251,7 +261,7 @@ async def instantiate_providers(
         if isinstance(provider.spec, RoutingTableProviderSpec):
             inner_impls = inner_impls_by_provider_id[f"inner-{provider.spec.router_api.value}"]
 
-        impl = await instantiate_provider(provider, deps, inner_impls, dist_registry)
+        impl = await instantiate_provider(provider, deps, inner_impls, dist_registry, run_config)
 
         if api_str.startswith("inner-"):
             inner_impls_by_provider_id[api_str][provider.provider_id] = impl
@@ -301,10 +311,8 @@ async def instantiate_provider(
     deps: dict[Api, Any],
     inner_impls: dict[str, Any],
     dist_registry: DistributionRegistry,
+    run_config: StackRunConfig,
 ):
-    protocols = api_protocol_map()
-    additional_protocols = additional_protocols_map()
-
     provider_spec = provider.spec
     if not hasattr(provider_spec, "module"):
         raise AttributeError(f"ProviderSpec of type {type(provider_spec)} does not have a 'module' attribute")
@@ -323,7 +331,7 @@ async def instantiate_provider(
         method = "get_auto_router_impl"
 
         config = None
-        args = [provider_spec.api, deps[provider_spec.routing_table_api], deps]
+        args = [provider_spec.api, deps[provider_spec.routing_table_api], deps, run_config]
     elif isinstance(provider_spec, RoutingTableProviderSpec):
         method = "get_routing_table_impl"
 
@@ -342,6 +350,8 @@ async def instantiate_provider(
     impl.__provider_spec__ = provider_spec
     impl.__provider_config__ = config
 
+    protocols = api_protocol_map_for_compliance_check()
+    additional_protocols = additional_protocols_map()
     # TODO: check compliance for special tool groups
     # the impl should be for Api.tool_runtime, the name should be the special tool group, the protocol should be the special tool group protocol
     check_protocol_compliance(impl, protocols[provider_spec.api])

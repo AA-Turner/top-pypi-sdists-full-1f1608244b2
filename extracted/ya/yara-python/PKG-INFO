@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: yara-python
-Version: 4.5.2
+Version: 4.5.4
 Summary: Python interface for YARA
 Home-page: https://github.com/VirusTotal/yara-python
 Author: Victor M. Alvarez

@@ -19,7 +19,6 @@ import textwrap
 import warnings
 from collections import defaultdict
 from contextlib import contextmanager, nullcontext
-from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Callable, Literal, Optional, Union
 
@@ -30,7 +29,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import transformers
 from accelerate import PartialState
-from accelerate.utils import is_deepspeed_available, tqdm
+from accelerate.utils import tqdm
 from datasets import Dataset, IterableDataset
 from packaging import version
 from torch.utils.data import DataLoader
@@ -53,7 +52,7 @@ from transformers.trainer_utils import EvalLoopOutput
 from transformers.utils import is_peft_available, is_torch_xpu_available
 
 from ..data_utils import maybe_apply_chat_template, maybe_extract_prompt
-from ..models import PreTrainedModelWrapper, create_reference_model
+from ..models import create_reference_model, prepare_deepspeed
 from ..models.utils import prepare_fsdp
 from .callbacks import SyncRefModelCallback
 from .dpo_config import DPOConfig, FDivergenceConstants, FDivergenceType
@@ -63,6 +62,7 @@ from .utils import (
     disable_dropout_in_model,
     empty_cache,
     flush_left,
+    flush_right,
     generate_model_card,
     get_comet_experiment_url,
     log_table_to_comet_experiment,
@@ -79,9 +79,6 @@ if is_peft_available():
 
 if is_wandb_available():
     import wandb
-
-if is_deepspeed_available():
-    import deepspeed
 
 
 @dataclass
@@ -184,7 +181,6 @@ class DPOTrainer(Trainer):
             Processing class used to process the data. If provided, will be used to automatically process the inputs
             for the model, and it will be saved along the model to make it easier to rerun an interrupted training or
             reuse the fine-tuned model.
-            This supercedes the `tokenizer` argument, which is now deprecated.
         model_init (`Callable[[], transformers.PreTrainedModel]`):
             The model initializer to use for training. If None is specified, the default model initializer will be used.
         compute_metrics (`Callable[[EvalPrediction], dict]`, *optional*):
@@ -510,7 +506,7 @@ class DPOTrainer(Trainer):
                 )
         else:
             if self.is_deepspeed_enabled:
-                self.ref_model = self._prepare_deepspeed(self.ref_model)
+                self.ref_model = prepare_deepspeed(self.ref_model, self.accelerator)
             elif self.is_fsdp_enabled:
                 self.ref_model = prepare_fsdp(self.ref_model, self.accelerator)
             else:
@@ -558,7 +554,7 @@ class DPOTrainer(Trainer):
 
             dataset = dataset.map(
                 self.tokenize_row if not self.is_vision_model else self.process_row,
-                remove_columns=["prompt", "chosen", "rejected"],
+                remove_columns=["chosen", "rejected"],
                 fn_kwargs={
                     "processing_class": processing_class,
                     "max_prompt_length": args.max_prompt_length,
@@ -675,37 +671,6 @@ class DPOTrainer(Trainer):
             output["image_sizes"] = processed_features["image_sizes"][0]
 
         return output
-
-    def _prepare_deepspeed(self, model: PreTrainedModelWrapper):
-        # Adapted from accelerate: https://github.com/huggingface/accelerate/blob/739b135f8367becb67ffaada12fe76e3aa60fefd/src/accelerate/accelerator.py#L1473
-        deepspeed_plugin = self.accelerator.state.deepspeed_plugin
-        config_kwargs = deepcopy(deepspeed_plugin.deepspeed_config)
-
-        if model is not None:
-            if hasattr(model, "config"):
-                hidden_size = (
-                    max(model.config.hidden_sizes)
-                    if getattr(model.config, "hidden_sizes", None)
-                    else getattr(model.config, "hidden_size", None)
-                )
-                if hidden_size is not None and config_kwargs["zero_optimization"]["stage"] == 3:
-                    # Note that `stage3_prefetch_bucket_size` can produce DeepSpeed messages like: `Invalidate trace cache @ step 0: expected module 1, but got module 0`
-                    # This is expected and is not an error, see: https://github.com/microsoft/DeepSpeed/discussions/4081
-                    config_kwargs.update(
-                        {
-                            "zero_optimization.reduce_bucket_size": hidden_size * hidden_size,
-                            "zero_optimization.stage3_param_persistence_threshold": 10 * hidden_size,
-                            "zero_optimization.stage3_prefetch_bucket_size": 0.9 * hidden_size * hidden_size,
-                        }
-                    )
-
-        # If ZeRO-3 is used, we shard both the active and reference model.
-        # Otherwise, we assume the reference model fits in memory and is initialized on each device with ZeRO disabled (stage 0)
-        if config_kwargs["zero_optimization"]["stage"] != 3:
-            config_kwargs["zero_optimization"]["stage"] = 0
-        model, *_ = deepspeed.initialize(model=model, config=config_kwargs)
-        model.eval()
-        return model
 
     def _set_signature_columns_if_needed(self):
         # If `self.args.remove_unused_columns` is True, non-signature columns are removed.
@@ -840,9 +805,9 @@ class DPOTrainer(Trainer):
         with torch.no_grad(), compte_ref_context_manager:
             if self.ref_model is None:
                 with self.null_ref_context():
-                    ref_model_output = self.concatenated_forward(self.model, batch)
+                    ref_model_output = self.concatenated_forward(self.model, batch, is_ref_model=True)
             else:
-                ref_model_output = self.concatenated_forward(self.ref_model, batch)
+                ref_model_output = self.concatenated_forward(self.ref_model, batch, is_ref_model=True)
         return ref_model_output["chosen_logps"], ref_model_output["rejected_logps"]
 
     @staticmethod
@@ -1102,16 +1067,28 @@ class DPOTrainer(Trainer):
 
         return losses, chosen_rewards, rejected_rewards
 
-    def concatenated_forward(self, model: nn.Module, batch: dict[str, Union[list, torch.LongTensor]]):
-        """Run the given model on the given batch of inputs, concatenating the chosen and rejected inputs together.
+    def concatenated_forward(
+        self, model: nn.Module, batch: dict[str, Union[list, torch.LongTensor]], is_ref_model: bool = False
+    ):
+        """
+        Runs the given model on the given batch of inputs, concatenating the chosen and rejected inputs together.
 
         We do this to avoid doing two forward passes, because it's faster for FSDP.
+
+        Args:
+            model:
+                Model to run the forward pass on.
+            batch:
+                Batch of input data.
+            is_ref_model:
+                Whether this method is being called for the reference model. If `True`, length desensitization is not
+                applied.
         """
         num_examples = batch["prompt_input_ids"].shape[0]
 
         concatenated_batch = self.concatenated_inputs(batch, padding_value=self.padding_value)
 
-        model_kwargs = {}
+        model_kwargs = {"use_cache": False}
         if self.aux_loss_enabled:
             model_kwargs["output_router_logits"] = True
 
@@ -1148,26 +1125,35 @@ class DPOTrainer(Trainer):
                 dim=1,
             )
 
-            # Flush left to reduce the memory usage
-            # [[0, 0, x, x, x, x],  ->  [[x, x, x, x],
-            #  [0, x, x, x, 0, 0]]       [x, x, x, 0]]
-            attention_mask, input_ids, loss_mask = flush_left(attention_mask, input_ids, loss_mask)
-
-            # Truncate right
-            if self.max_length is not None:
-                if self.truncation_mode == "keep_end":
+            # Flush and truncate
+            if self.max_length is not None and self.max_length < attention_mask.size(1):
+                if self.truncation_mode == "keep_start":
+                    # Flush left to reduce the memory usage
+                    # [[0, 0, x, x, x, x],  ->  [[x, x, x, x],
+                    #  [0, x, x, x, 0, 0]]       [x, x, x, 0]]
+                    attention_mask, input_ids, loss_mask = flush_left(attention_mask, input_ids, loss_mask)
+                    attention_mask = attention_mask[:, : self.max_length]
+                    input_ids = input_ids[:, : self.max_length]
+                    loss_mask = loss_mask[:, : self.max_length]
+                elif self.truncation_mode == "keep_end":
+                    # Flush right before truncating left, then flush left
+                    # [[0, 0, x, x, x, x],  ->  [[0, 0, x, x],
+                    #  [0, x, x, x, 0, 0]]       [0, x, x, x]]
+                    attention_mask, input_ids, loss_mask = flush_right(attention_mask, input_ids, loss_mask)
                     input_ids = input_ids[:, -self.max_length :]
                     attention_mask = attention_mask[:, -self.max_length :]
                     loss_mask = loss_mask[:, -self.max_length :]
-                elif self.truncation_mode == "keep_start":
-                    input_ids = input_ids[:, : self.max_length]
-                    attention_mask = attention_mask[:, : self.max_length]
-                    loss_mask = loss_mask[:, : self.max_length]
+                    attention_mask, input_ids, loss_mask = flush_left(attention_mask, input_ids, loss_mask)
                 else:
                     raise ValueError(
                         f"Unknown truncation mode: '{self.truncation_mode}'. Should be one of ['keep_end', "
                         "'keep_start']."
                     )
+            else:
+                # Flush left to reduce the memory usage
+                # [[0, 0, x, x, x, x],  ->  [[x, x, x, x],
+                #  [0, x, x, x, 0, 0]]       [x, x, x, 0]]
+                attention_mask, input_ids, loss_mask = flush_left(attention_mask, input_ids, loss_mask)
 
             if self.use_logits_to_keep:
                 # Compute logits_to_keep based on loss_mask pattern:
@@ -1253,6 +1239,28 @@ class DPOTrainer(Trainer):
 
         if self.loss_type == "ipo":
             all_logps = all_logps / loss_mask.sum(-1)
+
+        if self.args.ld_alpha is not None and not is_ref_model:
+            # Compute response lengths based on loss_mask
+            completion_lengths = loss_mask.sum(dim=1)
+
+            chosen_lengths = completion_lengths[:num_examples]
+            rejected_lengths = completion_lengths[num_examples:]
+            public_lengths = torch.min(chosen_lengths, rejected_lengths)  # l_p in the paper
+            public_lengths = torch.cat([public_lengths, public_lengths], dim=0)
+
+            seq_len = per_token_logps.size(1)
+            position_ids = torch.arange(seq_len, device=per_token_logps.device).expand_as(per_token_logps)
+
+            ld_mask = position_ids < public_lengths.unsqueeze(1)
+            mask = position_ids < completion_lengths.unsqueeze(1)
+
+            front_mask = (ld_mask & mask).float()
+            rear_mask = (~ld_mask & mask).float()
+            front_logps = (per_token_logps * front_mask).sum(dim=1)
+            rear_logps = (per_token_logps * rear_mask).sum(dim=1)
+
+            all_logps = front_logps + self.args.ld_alpha * rear_logps
 
         output["chosen_logps"] = all_logps[:num_examples]
         output["rejected_logps"] = all_logps[num_examples:]
@@ -1488,7 +1496,7 @@ class DPOTrainer(Trainer):
                     )
                 ],
             )
-            if "wandb" in self.args.report_to:
+            if "wandb" in self.args.report_to and self.accelerator.is_main_process:
                 wandb.log({"game_log": wandb.Table(data=table)})
 
             if "comet_ml" in self.args.report_to:

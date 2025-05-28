@@ -11000,7 +11000,7 @@ l_media_btn2 = {
     'ar': "💨 الاشتراك",
 }
 l_media_welcome = {
-    'ru': "🌱 <b>{0}</b>, добро пожаловать в <i>@tg-приложение</i> создания медиа-заметок:\n\n<blockquote>▪️<b>стикеры</b> из текста и фото\n▪️<b>аудио-тренды</b>\n▪️<b>видео-заметки</b>\n▪️инлайн-<b>телескопы</b>\n▪️<b>кнопочные</b> #нейро-титры</blockquote>",
+    'ru': "🌱 <b>{0}</b>, добро пожаловать в <i>@tg-приложение</i> создания медиа-креативов:\n\n<blockquote>▪️<b>стикеры</b> из текста и фото\n▪️<b>аудио-тренды</b>\n▪️<b>видео-заметки</b>\n▪️инлайн-<b>телескопы</b>\n▪️<b>кнопочные</b> #нейро-титры</blockquote>",
     'en': "🌱 <b>{0}</b>, welcome to <i>landing bot</i> creating media notes:\n\n▪️<b>stickers</b> from text and photos\n▪️ <b>audio trends</b>\n▪️<b>video notes</b>\n▪️online <b>telescopes</b>\n▪️<b>push-button</b> media",
     'es': "🌱 <b>{0}</b>, bienvenido al <i>bot de aterrizaje</i> que crea notas multimedia:\n\n▪️<b>pegatinas</b> a partir de texto y fotos\n▪️ <b> tendencias de audio</b>\n▪️<b>notas de vídeo</b>\n▪️<b>telescopios en línea</b>\n▪️<b>medios de comunicación mediante botón</b>",
     'fr': "🌱 <b>{0}</b>, bienvenue dans le <i>bot d'atterrissage</i> qui crée des notes multimédias :\n\nnoyer<b>autocollants</b> à partir de texte et de photos\nnoyance <b> tendances audio</b>\nnounced<b>notes vidéo</b>\nnoyer <b>télescopes</b> en ligne</b>\nnoyam<b>médias à bouton-poussoir</b>",
@@ -11025,7 +11025,7 @@ l_subscribe_media = {
 }
 
 l_media_text = {
-    'ru': "👩🏽‍💻 <b>Выбери</b> тип выпадающих media-заметок (/add | /del)",
+    'ru': "👩🏽‍💻 <b>Выбери</b> тип выпадающих медиа-креативов (/add | /del)",
     'en': "👩🏽‍💻 <b>Here</b> you can select the type of drop-down media notes (/add | /del)",
     'es': "👩🏽‍💻 <b>Aquí</b> puedes seleccionar el tipo de notas multimedia desplegables (/add | /del)",
     'fr': "👩🏽‍💻 <b>Ici</b>, vous pouvez sélectionner le type de notes média déroulantes (/add | /del)",
@@ -11033,7 +11033,7 @@ l_media_text = {
     'ar': "👩🏽‍💻 <b>هنا</b> يمكنك تحديد نوع ملاحظات الوسائط المنسدلة (/add | /del)",
 }
 l_media_del = {
-    'ru': "👩🏽‍💻 <b>Выбери</b> media-заметку для удаления",
+    'ru': "👩🏽‍💻 <b>Выбери</b> медиа-креатив для удаления",
     'en': "👩🏽‍💻 <b>Select</b> media note to delete",
     'es': "👩🏽‍💻 <b>Seleccione</b> nota multimedia para eliminar",
     'fr': "👩🏽‍💻 <b>Sélectionnez</b> la note média à supprimer",
@@ -11041,7 +11041,7 @@ l_media_del = {
     'ar': "👩🏽‍💻 <b>اختر</b> ملاحظة الوسائط لحذفها",
 }
 l_media_show = {
-    'ru': "👩🏽‍💻 <b>Введи</b> текст для поиска по media-заметкам",
+    'ru': "👩🏽‍💻 <b>Введи</b> запрос для поиска по медиа-креативам",
     'en': "👩🏽‍💻 <b>Enter</b> text to search in media notes",
     'es': "👩🏽‍💻 <b>Ingrese</b> texto para buscar en notas multimedia",
     'fr': "👩🏽‍💻 <b>Saisissez</b> le texte à rechercher dans les notes des médias",
@@ -11057,7 +11057,7 @@ l_media_random = {
     'ar': "🎲 اختيار عشوائي",
 }
 l_media_none = {
-    'ru': "👩🏽‍💻 <b>Media</b>-заметок не найдено",
+    'ru': "👩🏽‍💻 <b>Медиа</b>-креатива не найдено",
     'en': "👩🏽‍💻 <b>Media</b>-notes not found",
     'es': "👩🏽‍💻 <b>Notas multimedia</b> no encontradas",
     'fr': "👩🏽‍💻 <b>Media</b>-notes introuvables",
@@ -11065,7 +11065,7 @@ l_media_none = {
     'ar': "👩🏽‍💻 <b>الوسائط</b>-لم يتم العثور على الملاحظات",
 }
 l_media_file = {
-    'ru': "👩🏽‍💻 1/2. <b>Прикрепи</b> audio/video, text/photo контент для создания media-заметки",
+    'ru': "👩🏽‍💻 1/2. <b>Прикрепи</b> audio/video, text/photo контент для создания медиа-креатива",
     'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media note",
     'es': "👩🏽‍💻 1/2. <b>Adjunte</b> contenido de audio/vídeo, texto/foto para crear una nota multimedia.",
     'fr': "👩🏽‍💻 1/2. <b>Joindre</b> du contenu audio/vidéo, texte/photo pour créer une note média",
@@ -11073,7 +11073,7 @@ l_media_file = {
     'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى الصوت/الفيديو والنص/الصورة لإنشاء ملاحظة إعلامية",
 }
 l_media_title1 = {
-    'ru': "👩🏽‍💻 2/2. <b>Введи</b> <code>ключевые слова</code> для твоей media-заметки\n\n<blockquote>изменить ключевые слова нельзя</blockquote>",
+    'ru': "👩🏽‍💻 2/2. <b>Введи</b> <code>ключевые слова</code> для твоего медиа-креатива\n\n<blockquote>изменить ключевые слова нельзя</blockquote>",
     'en': "👩🏽‍💻 2/2. <b>Enter</b> <code>keywords</code> for your media note\n[you cannot change <code>keywords</code>]",
     'es': "👩🏽‍💻 2/2. <b>Ingrese</b> <code>palabras clave</code> para su nota multimedia\n[no puede cambiar las <code>palabras clave</code>]",
     'fr': "👩🏽‍💻 2/2. <b>Saisissez</b> les <code>mots-clés</code> pour votre note média\n[vous ne pouvez pas modifier les <code>mots-clés</code>]",
@@ -11081,7 +11081,7 @@ l_media_title1 = {
     'ar': "👩🏽‍💻 2/2. <b>أدخل</b> <code>الكلمات الرئيسية</code> لملاحظة الوسائط الخاصة بك\n[لا يمكنك تغيير <code>الكلمات الرئيسية</code>]",
 }
 l_media_title2 = {
-    'ru': "👩🏽‍💻 2/2. <b>Текущие</b> ключевые слова для твоей media-заметки\n\n<blockquote>{0}</blockquote>\n\n[отправь новые или жми {1}]",
+    'ru': "👩🏽‍💻 2/2. <b>Текущие</b> ключевые слова для твоего медиа-креатива\n\n<blockquote>{0}</blockquote>\n\n[отправь новые или жми {1}]",
     'en': "👩🏽‍💻 2/2. <b>Current</b> keywords for your media note\n\n{0}\n\n[new ones arrived or press {1}]",
     'es': "👩🏽‍💻 2/2. Palabras clave <b>actuales</b> para su nota multimedia\n\n{0}\n\n[llegaron nuevas o presione {1}]",
     'fr': "👩🏽‍💻 2/2. <b>Mots clés actuels</b> pour votre note média\n\n{0}\n\n[de nouveaux mots sont arrivés ou appuyez sur {1}]",
@@ -11097,7 +11097,7 @@ l_media_confirm = {
     'ar': "🏁 كاملة",
 }
 l_media_error = {
-    'ru': "👩🏽‍💻 <b>Ошибка</b>: попробуй позже или загрузи другой media-файл",
+    'ru': "👩🏽‍💻 <b>Ошибка</b>: попробуй позже или загрузи другой медиа-файл",
     'en': "👩🏽‍💻 <b>Error</b> (try later or load another media)",
     'es': "👩🏽‍💻 <b>Error</b> (inténtalo más tarde o carga otro medio)",
     'fr': "👩🏽‍💻 <b>Erreur</b> (essayez plus tard ou chargez un autre média)",
@@ -11105,7 +11105,7 @@ l_media_error = {
     'ar': "👩🏽‍💻 <b>خطأ</b> (حاول لاحقًا أو قم بتحميل وسائط أخرى)",
 }
 l_media_finish = {
-    'ru': "👩🏽‍💻 <b>Media</b>-заметка успешно создана",
+    'ru': "👩🏽‍💻 <b>Медиа</b>-креатив успешно создан",
     'en': "👩🏽‍💻 <b>Media</b>-note successfully created",
     'es': "👩🏽‍💻 <b>Nota multimedia</b> creada correctamente",
     'fr': "👩🏽‍💻 <b>Media</b>-note créée avec succès",
@@ -11129,7 +11129,7 @@ l_media_check = {
     'ar': "🔗 فحص",
 }
 l_media_hasdeleted = {
-    'ru': "👩🏽‍💻 <b>Media</b>-заметка удалена",
+    'ru': "👩🏽‍💻 <b>Медиа</b>-креатив удален",
     'en': "👩🏽‍💻 <b>Media</b>-note deleted",
     'es': "👩🏽‍💻 <b>Nota multimedia</b> eliminada",
     'fr': "👩🏽‍💻 <b>Médias</b>-note supprimée",
@@ -11170,7 +11170,7 @@ l_titles_needpaid = {
     'ar': "👩🏽‍💻 1/2. <b>أرفق</b> محتوى الصوت/الفيديو والنص/الصورة لإنشاء ملاحظة إعلامية",
 }
 l_titles_error = {
-    'ru': "👩🏽‍💻 <b>Ошибка</b> создания титров к медиа-заметке: пропробуй еще раз позже или загрузи другой медиа-файл",
+    'ru': "👩🏽‍💻 <b>Ошибка</b> создания титров к медиа-креативу: пропробуй еще раз позже или загрузи другой медиа-файл",
     'en': "👩🏽‍💻 1/2. <b>Attach</b> audio/video, text/photo content to create a media note",
     'es': "👩🏽‍💻 1/2. <b>Adjunte</b> contenido de audio/vídeo, texto/foto para crear una nota multimedia.",
     'fr': "👩🏽‍💻 1/2. <b>Joindre</b> du contenu audio/vidéo, texte/photo pour créer une note média",
@@ -13950,7 +13950,7 @@ l_kind_6 = {
     'ar': "<b>👩🏽‍💻 @FereyPostBot </b>-المنشورات الخاصة\n\n▪️<b>زر</b> عداد\n▪️inline-<b>التلسكوبات</b>\n▪️parsing/notifications <b>النقرات</b>\n▪️<b>همسات</b>-الرسائل",
 }
 l_kind_7 = {
-    'ru': "<b>👩🏽‍💻@FereyMediaBot</b> - публичные медиа-заметки\n\n<blockquote>▪️<b>стикеры</b> из текста и фото\n▪️<b>аудио-тренды</b>\n▪️<b>видео-заметки</b>\n▪️инлайн-<b>телескопы</b>\n▪️<b>кнопочные</b> #нейро-титры</blockquote>",
+    'ru': "<b>👩🏽‍💻@FereyMediaBot</b> - публичные медиа-креативы\n\n<blockquote>▪️<b>стикеры</b> из текста и фото\n▪️<b>аудио-тренды</b>\n▪️<b>видео-заметки</b>\n▪️инлайн-<b>телескопы</b>\n▪️<b>кнопочные</b> #нейро-титры</blockquote>",
     'en': "<b>👩🏽‍💻 @FereyMediaBot </b>-public media notes\n\n▪️<b>stickers</b> from text and photos\n▪️<b>audio trends</b>\n▪️<b>video notes</b>\n▪️online<b>telescopes</b>\n▪️<b>button</b> media",
     'es': "<b>👩🏽‍💻 @FereyMediaBot </b>-notas de medios públicos\n\n▪️<b>pegatinas</b> de texto y fotos\n▪️<b>tendencias de audio</b>\n▪️<b>notas de vídeo</b>\n▪️online<b>telescopios</b>\n▪️<b>botón</b> medios",
     'fr': "<b>👩🏽‍💻 @FereyMediaBot </b> - notes des médias publics\n\nwithout b>notes vidéo</b>\nƒ️en ligne<b>télescopes</b>\nƒ️<b>bouton</b> média",
@@ -14226,7 +14226,7 @@ l_codex_6 = {
     'ar': "<b>👩🏽‍💻 @FereyPostBot </b>-المنشورات الخاصة\n\n▪️<b>زر</b> عداد\n▪️inline-<b>التلسكوبات</b>\n▪️parsing/notifications <b>النقرات</b>\n▪️<b>همسات</b>-الرسائل",
 }
 l_codex_7 = {
-    'ru': "<b>👩🏽‍💻@FereyMediaBot</b> - публичные медиа-заметки\n\n▪️<b>стикеры</b> из текста и фото\n▪️<b>аудио-тренды</b>\n▪️<b>видео-заметки</b>\n▪️инлайн-<b>телескопы</b>\n▪️<b>кнопочные</b> #нейро-титры",
+    'ru': "<b>👩🏽‍💻@FereyMediaBot</b> - публичные медиа-креативы\n\n▪️<b>стикеры</b> из текста и фото\n▪️<b>аудио-тренды</b>\n▪️<b>видео-заметки</b>\n▪️инлайн-<b>телескопы</b>\n▪️<b>кнопочные</b> #нейро-титры",
     'en': "<b>👩🏽‍💻 @FereyMediaBot </b>-public media notes\n\n▪️<b>stickers</b> from text and photos\n▪️<b>audio trends</b>\n▪️<b>video notes</b>\n▪️online<b>telescopes</b>\n▪️<b>button</b> media",
     'es': "<b>👩🏽‍💻 @FereyMediaBot </b>-notas de medios públicos\n\n▪️<b>pegatinas</b> de texto y fotos\n▪️<b>tendencias de audio</b>\n▪️<b>notas de vídeo</b>\n▪️online<b>telescopios</b>\n▪️<b>botón</b> medios",
     'fr': "<b>👩🏽‍💻 @FereyMediaBot </b> - notes des médias publics\n\nwithout b>notes vidéo</b>\nƒ️en ligne<b>télescopes</b>\nƒ️<b>bouton</b> média",

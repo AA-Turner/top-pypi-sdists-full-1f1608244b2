@@ -2847,7 +2847,7 @@ class Test(BaseTest, unittest.TestCase):
       
     o2 = BytesIO()
     onto2.save(o2)
-    
+
     w2 = self.new_world()
     onto1 = w2.get_ontology("http://test.org/t1.owl").load(fileobj = BytesIO(o1.getvalue()))
     onto2 = w2.get_ontology("http://test.org/t2.owl").load(fileobj = BytesIO(o2.getvalue()))
@@ -11095,6 +11095,259 @@ SELECT DISTINCT ?c {
     
     assert { tuple(x) for x in r } == { (c1,), (d1,), (d2,) }
     
+  def test_177(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class i(C >> int): pass
+      class p(C >> Thing): pass
+      c1 = C(i = [3])
+      c2 = C(i = [1, 2], p = [c1])
+      c3 = C(i = [4], p = [c2, c1])
+      
+    nb = world.sparql("""
+DELETE {
+  ?x ?p1 ?o .
+  ?s ?p2 ?x .
+}
+WHERE {
+  ?x onto:i 1 .
+}""")
+    
+    assert nb == 1
+    assert not list(world.graph.execute("SELECT * FROM resources WHERE storid=?", (c2.storid,)))
+    
+    assert c3.p == [c1]
+    
+    del c3.p
+    assert c3.p == [c1]
+    
+    world._entities.clear()
+    
+    assert onto.c2 is None
+    
+  def test_178(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class i(C >> int): pass
+      class p(C >> Thing): pass
+      c1 = C(i = [3])
+      c2 = C(i = [1, 2], p = [c1])
+      c3 = C(i = [4], p = [c2, c1])
+      
+    nb = world.sparql("""
+DELETE {
+  ?x onto:p ?o .
+}
+WHERE {
+  ?x onto:i 1 .
+}""")
+    
+    assert nb == 1
+    assert c2.p == []
+    
+  def test_179(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class i(C >> int): pass
+      class p(C >> Thing): pass
+      c1 = C(i = [3])
+      c2 = C(i = [1, 2], p = [c1])
+      c3 = C(i = [4], p = [c2, c1])
+      
+    nb = world.sparql("""
+DELETE {
+  ?x onto:i ?o .
+}
+WHERE {
+  ?x onto:i 1 .
+}""")
+
+    c2.i
+    del c2.i
+    
+    assert nb == 1
+    assert c2.i == []
+    
+  def test_180(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      c1 = C(label = ["Muscle pain"])
+      c2 = C(label = ["Muscular pain in the shoulder"])
+      c3 = C(label = ["Back pain"])
+    world.full_text_search_properties.append(label)
+    
+    sparql = """
+SELECT ?c {
+  ?c rdfs:label ?label .
+  FILTER(FTS(?label, "muscle pain"))
+}
+"""
+    q, r = self.sparql(world, sparql, compare_with_rdflib = False)
+    assert { i for i, in r } == { c1 }
+    
+    sparql = """
+SELECT ?c {
+  ?c rdfs:label ?label .
+  FILTER(FTS(?label, "musc* pain"))
+}
+"""
+    q, r = self.sparql(world, sparql, compare_with_rdflib = False)
+    assert { i for i, in r } == { c1, c2 }
+    
+    sparql = """
+SELECT ?c ?bm25 {
+  ?c rdfs:label ?label .
+  FILTER(FTS(?label, "musc* pain", ?bm25))
+}
+"""
+    q, r = self.sparql(world, sparql, compare_with_rdflib = False)
+    assert { i[0] for i in r } == { c1, c2 }
+
+  def test_181(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class C2(C): pass
+      class C3(C2): pass
+      class D(Thing): pass
+    
+    sparql = """
+SELECT ?x {
+  onto:C3 a ?x .
+  onto:C3 rdfs:subClassOf* onto:C .
+}
+"""
+    q, r = self.sparql(world, sparql, compare_with_rdflib = False)
+
+  def test_182(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class C2(C): pass
+      c1 = C(label = ["Muscle pain"])
+      c2 = C2(label = ["Muscular' pain"])
+      c3 = C(label = ["Back pain"])
+    
+    sparql = """
+SELECT ?x {
+  ?x rdfs:label ?label .
+  FILTER(?label IN ??)
+}
+"""
+    q = world.prepare_sparql(sparql)
+    r = list(q.execute([["Muscle pain", "Muscular' pain"]]))
+    assert { i for i, in r } == { c1, c2 }
+    r = list(q.execute([["Muscle pain"]]))
+    assert { i for i, in r } == { c1 }
+    
+    sparql = """
+SELECT ?x {
+  ?x a ?c .
+  FILTER(?c IN ??)
+}
+"""
+    q = world.prepare_sparql(sparql)
+    r = list(q.execute([[C, C2]]))
+    assert { i for i, in r } == { c1, c2, c3 }
+    r = list(q.execute([[C2]]))
+    assert { i for i, in r } == { c2 }
+
+  def test_183(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class terminology(Thing >> Thing): pass
+      class C1(C): label = [locstr("Muscle pain", "en")]
+      class C2(C): label = [locstr("Muscular pain", "en"), locstr("Douleur musculaire", "fr")]
+      class C3(C): label = [locstr("Back pain", "en")]
+    with onto.get_namespace("http://PYM/"):
+      class synonyms(AnnotationProperty): pass
+    world.full_text_search_properties.append(label)
+    world.full_text_search_properties.append(synonyms)
+    
+    from owlready2.pymedtermino2.model import TerminologySearcher
+    t = TerminologySearcher([C])
+    r = t.search("musc* pain")
+    assert set(r) == { C1, C2 }
+    r = t.search("muscle pain")
+    assert set(r) == { C1 }
+    
+    r = t.autocompletion("musc pain")
+    assert set(tuple(i) for i in r) == { ('http://test.org/onto.owl#C1', 'Muscle pain'), ('http://test.org/onto.owl#C2', 'Muscular pain') }
+    r = t.autocompletion("muscle pain")
+    assert set(tuple(i) for i in r) == { ('http://test.org/onto.owl#C1', 'Muscle pain') }
+    
+    r = t.search("douleur", )
+    assert set(r) == { C2 }
+    r = t.search("douleur", langs = ["fr"])
+    assert set(r) == { C2 }
+    r = t.search("douleur", langs = ["en"])
+    
+    assert set(r) == set()
+    
+    r = t.autocompletion("douleur")
+    assert set(r) == set()
+    r = t.autocompletion("douleur", "fr")
+    assert set(tuple(i) for i in r) == { ('http://test.org/onto.owl#C2', 'Douleur musculaire') }
+    r = t.autocompletion("douleur", "en", None)
+    assert set(tuple(i) for i in r) == { ('http://test.org/onto.owl#C2', 'Muscular pain') }
+    
+    t = TerminologySearcher([], world = world)
+    r = t.search("musc* pain")
+    assert set(r) == { C1, C2 }
+    r = t.search("muscle pain")
+    assert set(r) == { C1 }
+    
+    r = t.autocompletion("musc pain")
+    assert set(tuple(i) for i in r) == { ('http://test.org/onto.owl#C1', 'Muscle pain'), ('http://test.org/onto.owl#C2', 'Muscular pain') }
+    r = t.autocompletion("muscle pain")
+    assert set(tuple(i) for i in r) == { ('http://test.org/onto.owl#C1', 'Muscle pain') }
+    
+  def test_184(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): label = ["label C"]
+      
+    q = world.prepare_sparql("""
+SELECT (STR(??1) AS ?iri) ?label {
+  ??1 rdfs:label ?label .
+}
+""")
+    r = list(q.execute([C]))
+    assert r == [[C.iri, C.label.first()]]
+    
+    r = list(q.execute([C.storid]))
+    assert r == [[C.iri, C.label.first()]]
+    
+    with onto:
+      class D(Thing): label = [locstr("label D", "en"), locstr("libellé D", "fr")]
+      
+    q = world.prepare_sparql("""
+SELECT (STR(??1) AS ?iri) (STR(COALESCE(?label, ?label_en)) AS ?label_str) {
+  ??1 rdfs:label ?label_en .
+  FILTER(LANG(?label_en) = "en") .
+  OPTIONAL {
+  ??1 rdfs:label ?label .
+  FILTER(LANG(?label) = "fr") .
+  }
+} LIMIT 1
+""")
+    r = list(q.execute([D]))
+    assert r == [[D.iri, D.label.fr.first()]]
+    
+
     
 # Add test for Pellet
 for Class in [Test, Paper]:

@@ -1009,6 +1009,7 @@ class Map(MapWidget):
         opacity: float = 1.0,
         visible: bool = True,
         attribution: Optional[str] = None,
+        before_id: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         """
@@ -1029,6 +1030,8 @@ class Map(MapWidget):
             attribution (str, optional): The attribution text to display for the
                 basemap. If None, the attribution text is taken from the basemap
                 or the TileProvider. Defaults to None.
+            before_id (str, optional): The ID of an existing layer before which
+                the new layer should be inserted.
             **kwargs: Additional keyword arguments that are passed to the
                 RasterTileSource class. See https://bit.ly/4erD2MQ for more information.
 
@@ -1075,7 +1078,12 @@ class Map(MapWidget):
             token = kwargs.pop("token", "AWS_MAPS_API_KEY")
             url = f"https://maps.geo.{region}.amazonaws.com/v2/tiles/raster.satellite/{{z}}/{{x}}/{{y}}?key={os.getenv(token)}"
             attribution = "© Amazon"
-            print(url)
+        elif basemap == "USGS.Imagery":
+            url = "https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer?service=WMS&request=GetMap&layers=0&styles=&format=image%2Fpng&transparent=true&version=1.1.1&height=256&width=256&srs=EPSG%3A3857&bbox={bbox-epsg-3857}"
+            attribution = "© USGS"
+            name = "USGS.Imagery"
+            if before_id is None:
+                before_id = self.first_symbol_layer_id
         elif basemap in basemaps:
             url = basemaps[basemap]["url"]
             if attribution is None:
@@ -1110,7 +1118,7 @@ class Map(MapWidget):
         source_name = common.get_unique_name("source", self.source_names)
         self.add_source(source_name, raster_source)
         layer = Layer(id=layer_name, source=source_name, type=LayerType.RASTER)
-        self.add_layer(layer)
+        self.add_layer(layer, before_id=before_id)
         self.set_opacity(layer_name, opacity)
         self.set_visibility(layer_name, visible)
 
@@ -1634,7 +1642,7 @@ class Map(MapWidget):
                 Defaults to None.
             nodata (float, optional): The nodata value to use for the layer.
             titiler_endpoint (str, optional): The endpoint of the titiler service.
-                Defaults to "https://titiler.xyz".
+                Defaults to "https://giswqs-titiler-endpoint.hf.space".
             fit_bounds (bool, optional): Whether to adjust the viewport of
                 the map to fit the bounds of the layer. Defaults to True.
             overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
@@ -1707,7 +1715,7 @@ class Map(MapWidget):
             bands (list, optional): A list of band names, e.g.,
                 ["SR_B7", "SR_B5", "SR_B4"]. Defaults to None.
             no_data (int | float, optional): The nodata value to use for the layer.
-            titiler_endpoint (str, optional): Titiler endpoint, e.g., "https://titiler.xyz",
+            titiler_endpoint (str, optional): TiTiler endpoint, e.g., "https://giswqs-titiler-endpoint.hf.space",
                 "https://planetarycomputer.microsoft.com/api/data/v1",
                 "planetary-computer", "pc". Defaults to None.
             name (str, optional): The layer name to use for the layer. Defaults to 'STAC Layer'.
@@ -3190,6 +3198,17 @@ class Map(MapWidget):
             if layer["type"] == "symbol":
                 return layer
         return None
+
+    @property
+    def first_symbol_layer_id(self) -> Optional[str]:
+        """
+        Get the ID of the first symbol layer in the map's current style.
+        """
+        layer = self.find_first_symbol_layer()
+        if layer is not None:
+            return layer["id"]
+        else:
+            return None
 
     def add_text(
         self,
@@ -8215,6 +8234,7 @@ class DateFilterWidget(widgets.VBox):
         max_date: str = None,
         file_index: int = 0,
         group_col: str = None,
+        match: str = "partial",
         freq: str = "D",
         interval: int = 1,
         map_widget: Map = None,
@@ -8234,6 +8254,7 @@ class DateFilterWidget(widgets.VBox):
             max_date (str, optional): Maximum date. Defaults to None.
             file_index (int, optional): Index of the main file. Defaults to 0.
             group_col (str, optional): Name of the column containing the group. Defaults to None.
+            match (str, optional): Match type. Can be "partial" or "exact". Defaults to "partial".
             freq (str, optional): Frequency of the date range. Defaults to "D".
             interval (int, optional): Interval of the date range. Defaults to 1.
             map_widget (Map, optional): Map widget. Defaults to None.
@@ -8433,7 +8454,16 @@ class DateFilterWidget(widgets.VBox):
                         group_dropdown.value is not None
                         and group_col in point_gdf.columns
                     ):
-                        filtered = filtered[filtered[group_col] == group_dropdown.value]
+                        if match == "exact":
+                            filtered = filtered[
+                                filtered[group_col] == group_dropdown.value
+                            ]
+                        elif match == "partial":
+                            filtered = filtered[
+                                filtered[group_col].str.contains(group_dropdown.value)
+                            ]
+                        else:
+                            raise ValueError(f"Invalid match type: {match}")
 
                     map_widget.set_data(
                         names[index + file_index + 1], filtered.__geo_interface__
@@ -8514,7 +8544,7 @@ class SelectDataWidget(widgets.VBox):
             accept=".geojson",
             multiple=True,
             description="Upload",
-            layout=widgets.Layout(width="100px"),
+            layout=widgets.Layout(width="120px"),
         )
         output = widgets.Output()
 

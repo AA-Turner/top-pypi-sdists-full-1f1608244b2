@@ -1,6 +1,5 @@
 from sqlalchemy import (
     BigInteger,
-    Boolean,
     Column,
     ForeignKey,
     Index,
@@ -57,8 +56,18 @@ class SystemSchema:
         Column("queue_name", Text, nullable=True),
         Column("workflow_timeout_ms", BigInteger, nullable=True),
         Column("workflow_deadline_epoch_ms", BigInteger, nullable=True),
+        Column("started_at_epoch_ms", BigInteger(), nullable=True),
+        Column("deduplication_id", Text(), nullable=True),
+        Column("inputs", Text()),
+        Column("priority", Integer(), nullable=False, server_default=text("'0'::int")),
         Index("workflow_status_created_at_index", "created_at"),
         Index("workflow_status_executor_id_index", "executor_id"),
+        Index("workflow_status_status_index", "status"),
+        UniqueConstraint(
+            "queue_name",
+            "deduplication_id",
+            name="uq_workflow_status_queue_name_dedup_id",
+        ),
     )
 
     operation_outputs = Table(
@@ -78,21 +87,6 @@ class SystemSchema:
         Column("error", Text, nullable=True),
         Column("child_workflow_id", Text, nullable=True),
         PrimaryKeyConstraint("workflow_uuid", "function_id"),
-    )
-
-    workflow_inputs = Table(
-        "workflow_inputs",
-        metadata_obj,
-        Column(
-            "workflow_uuid",
-            Text,
-            ForeignKey(
-                "workflow_status.workflow_uuid", onupdate="CASCADE", ondelete="CASCADE"
-            ),
-            primary_key=True,
-            nullable=False,
-        ),
-        Column("inputs", Text, nullable=False),
     )
 
     notifications = Table(
@@ -137,55 +131,4 @@ class SystemSchema:
         Column("key", Text, nullable=False),
         Column("value", Text, nullable=False),
         PrimaryKeyConstraint("workflow_uuid", "key"),
-    )
-
-    scheduler_state = Table(
-        "scheduler_state",
-        metadata_obj,
-        Column("workflow_fn_name", Text, primary_key=True, nullable=False),
-        Column("last_run_time", BigInteger, nullable=False),
-    )
-
-    workflow_queue = Table(
-        "workflow_queue",
-        metadata_obj,
-        Column(
-            "workflow_uuid",
-            Text,
-            ForeignKey(
-                "workflow_status.workflow_uuid", onupdate="CASCADE", ondelete="CASCADE"
-            ),
-            nullable=False,
-            primary_key=True,
-        ),
-        # Column("executor_id", Text), # This column is deprecated. Do *not* use it.
-        Column("queue_name", Text, nullable=False),
-        Column(
-            "created_at_epoch_ms",
-            BigInteger,
-            nullable=False,
-            server_default=text("(EXTRACT(epoch FROM now()) * 1000::numeric)::bigint"),
-        ),
-        Column(
-            "started_at_epoch_ms",
-            BigInteger(),
-        ),
-        Column(
-            "completed_at_epoch_ms",
-            BigInteger(),
-        ),
-        Column(
-            "deduplication_id",
-            Text,
-            nullable=True,
-        ),
-        Column(
-            "priority",
-            Integer,
-            nullable=False,
-            server_default=text("'0'::int"),
-        ),
-        UniqueConstraint(
-            "queue_name", "deduplication_id", name="uq_workflow_queue_name_dedup_id"
-        ),
     )

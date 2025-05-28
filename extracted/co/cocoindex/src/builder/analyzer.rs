@@ -987,7 +987,6 @@ impl AnalyzerContext<'_> {
                                     .fields
                                     .iter()
                                     .position(|field| &field.name == f)
-                                    .map(|idx| idx as u32)
                                     .ok_or_else(|| anyhow!("field not found: {}", f))
                             })
                             .collect::<Result<Vec<_>>>()?;
@@ -1007,7 +1006,7 @@ impl AnalyzerContext<'_> {
                         let mut value_fields_schema: Vec<FieldSchema> = vec![];
                         let mut value_fields_idx = vec![];
                         for (idx, field) in collector_schema.fields.iter().enumerate() {
-                            if !pk_fields_idx.contains(&(idx as u32)) {
+                            if !pk_fields_idx.contains(&idx) {
                                 value_fields_schema.push(field.clone());
                                 value_fields_idx.push(idx as u32);
                             }
@@ -1064,6 +1063,7 @@ impl AnalyzerContext<'_> {
                     existing_target_states,
                 )?;
                 let op_name = export_op.name.clone();
+                let export_target_factory = export_op_group.target_factory.clone();
                 Ok(async move {
                     trace!("Start building executor for export op `{op_name}`");
                     let executors = data_coll_output
@@ -1075,6 +1075,7 @@ impl AnalyzerContext<'_> {
                         name: op_name,
                         target_id,
                         input: data_fields_info.local_collector_ref,
+                        export_target_factory,
                         export_context: executors.export_context,
                         query_target: executors.query_target,
                         primary_key_def: data_fields_info.primary_key_def,

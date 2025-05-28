@@ -1,13 +1,13 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: owlready2
-Version: 0.47
+Version: 0.48
 Summary: A package for ontology-oriented programming in Python: load OWL 2.0 ontologies as Python objects, modify them, save them, and perform reasoning via HermiT. Includes an optimized RDF quadstore.
 Author-email: "Lamy Jean-Baptiste (Jiba)" <jibalamy@free.fr>
+License-Expression: LGPL-3.0-or-later
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Information Technology
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
@@ -27,6 +27,7 @@ Provides-Extra: test
 Requires-Dist: rdflib; extra == "test"
 Requires-Dist: flask; extra == "test"
 Requires-Dist: gevent; extra == "test"
+Dynamic: license-file
 
 Owlready2
 =========
@@ -816,6 +817,25 @@ version 2 - 0.47
   * Fix descendants when using subclasses of ThingClass (as PyMedTermino2 does)
   * Fix and update pymedtermino2
   * Fix SPARQL queries with BIND and UNION
+
+version 2 - 0.48
+****************
+
+* Faster ontology loading (espescially when having a lot of small ontologies)
+* Add support for Full Text Search (FTS) in SPARQL (see FTS() SPARQL function)
+* Accept list as parameter in SPARQL queries when using the IN operator
+* Make prepared SPARQL queries picklable
+* Support DELETE SPARQL queries with free variables in the DELETE part
+* Improve DELETE SPARQL queries in order to delete IRI/storid of entirely deleted entities
+* Add support for SNOMED CT French translation in PyMedTermino2
+* Add function owlready2.pymedtermino2.umls.prune() to prune terminologies to the descendants of the given concepts
+* Add add_terminology() and add_term() methods in owlready2.pymedtermino2
+* Add owlready2.pymedtermino2.model.TerminologySearcher for fast search in terminologies
+* Bugfixes:
+  * Fix RDF parsing of axiom with restriction in the optimized C-compiled module.
+  * Properly close database when a World is destroyed
+  * Use requests module for importing French ICD10 (urllib does not work)
+  * Fix SPARQL query with fixed parameters
     
 
 Links

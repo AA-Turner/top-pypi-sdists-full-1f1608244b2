@@ -1,16 +1,15 @@
 from asyncio import TimeoutError
 from time import time
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, Final, Generator, List, Optional, Sequence, Tuple, Union, final
 
 import aiohttp
+import cchecksum
 import requests
-from eth_utils import to_checksum_address
-from eth_utils.toolz import concat, mapcat
-
-from multicall.call import AnyAddress
+from eth_typing import AnyAddress
+from eth_utils import toolz
 from web3 import Web3
 
-from multicall import Call
+from multicall.call import Call
 from multicall.constants import (
     GAS_LIMIT,
     MULTICALL2_ADDRESSES,
@@ -27,9 +26,16 @@ from multicall.utils import (
     state_override_supported,
 )
 
-logger = setup_logger(__name__)
+logger: Final = setup_logger(__name__)
+log_warning: Final = logger.warning
+log_debug: Final = logger.debug
 
 CallResponse = Tuple[Union[None, bool], bytes]
+
+to_checksum_address: Final = cchecksum.to_checksum_address
+
+concat: Final = toolz.concat  # type: ignore [attr-defined]
+mapcat: Final = toolz.mapcat  # type: ignore [attr-defined]
 
 
 def get_args(calls: List[Call], require_success: bool = True) -> List[Union[bool, List[List[Any]]]]:
@@ -42,6 +48,7 @@ def unpack_aggregate_outputs(outputs: Any) -> Tuple[CallResponse, ...]:
     return tuple((None, output) for output in outputs)
 
 
+@final
 class Multicall:
     __slots__ = (
         "calls",
@@ -50,7 +57,6 @@ class Multicall:
         "gas_limit",
         "w3",
         "chainid",
-        "multicall_sig",
         "multicall_address",
         "origin",
     )
@@ -64,39 +70,35 @@ class Multicall:
         _w3: Web3 = w3,
         origin: Optional[AnyAddress] = None,
     ) -> None:
-        self.calls = calls
+        self.calls: Final = calls
         self.block_id = block_id
-        self.require_success = require_success
-        self.gas_limit = gas_limit
-        self.w3 = _w3
-        self.origin = to_checksum_address(origin) if origin else None
-        self.chainid = chain_id(self.w3)
-        if require_success is True:
-            multicall_map = (
-                MULTICALL3_ADDRESSES
-                if self.chainid in MULTICALL3_ADDRESSES
-                else MULTICALL2_ADDRESSES
-            )
-            self.multicall_sig = "aggregate((address,bytes)[])(uint256,bytes[])"
-        else:
-            multicall_map = (
-                MULTICALL3_ADDRESSES
-                if self.chainid in MULTICALL3_ADDRESSES
-                else MULTICALL2_ADDRESSES
-            )
-            self.multicall_sig = (
-                "tryBlockAndAggregate(bool,(address,bytes)[])(uint256,uint256,(bool,bytes)[])"
-            )
-        self.multicall_address = multicall_map[self.chainid]
+        self.require_success: Final = require_success
+        self.gas_limit: Final = gas_limit
+        self.w3: Final = _w3
+        self.origin: Final = to_checksum_address(origin) if origin else None
+        chainid: int = chain_id(_w3)  # type: ignore [assignment]
+        self.chainid: Final = chainid
+        multicall_map = (
+            MULTICALL3_ADDRESSES if chainid in MULTICALL3_ADDRESSES else MULTICALL2_ADDRESSES
+        )
+        self.multicall_address: Final = multicall_map[chainid]
 
     def __call__(self) -> Dict[str, Any]:
         start = time()
         response = await_awaitable(self)
-        logger.debug("Multicall took %ss", time() - start)
+        log_debug("Multicall took %ss", time() - start)
         return response
 
-    def __await__(self) -> Dict[str, Any]:
+    def __await__(self) -> Generator[Any, Any, Dict[str, Any]]:
         return self.coroutine().__await__()
+
+    @property
+    def multicall_sig(self) -> str:
+        return (
+            "aggregate((address,bytes)[])(uint256,bytes[])"
+            if self.require_success
+            else "tryBlockAndAggregate(bool,(address,bytes)[])(uint256,uint256,(bool,bytes)[])"
+        )
 
     async def coroutine(self) -> Dict[str, Any]:
         batches = await gather(
@@ -110,7 +112,7 @@ class Multicall:
     async def fetch_outputs(
         self, calls: List[Call], ConnErr_retries: int = 0, id: str = ""
     ) -> List[CallResponse]:
-        logger.debug("coroutine %s started", id)
+        log_debug("coroutine %s started", id)
 
         if calls is None:
             calls = self.calls
@@ -127,7 +129,7 @@ class Multicall:
                     Call.decode_output(output, call.signature, call.returns, success)
                     for call, (success, output) in zip(calls, outputs)
                 ]
-                logger.debug("coroutine %s finished", id)
+                log_debug("coroutine %s finished", id)
                 return outputs
             except Exception as e:
                 _raise_or_proceed(e, len(calls), ConnErr_retries=ConnErr_retries)
@@ -140,8 +142,8 @@ class Multicall:
             )
         )
 
-        logger.debug("coroutine %s finished", id)
-        return list(concat(batch_results))
+        log_debug("coroutine %s finished", id)
+        return [result for chunk in batch_results for result in chunk]
 
     @property
     def aggregate(self) -> Call:
@@ -170,6 +172,7 @@ class Multicall:
         )
 
 
+@final
 class NotSoBrightBatcher:
     """
     This class helps with processing a large volume of large multicalls.
@@ -195,7 +198,9 @@ class NotSoBrightBatcher:
                 return batches
             start = end
 
-    def split_calls(self, calls: List[Call], unused: None = None) -> Tuple[List[Call], List[Call]]:
+    def split_calls(
+        self, calls: List[Call], unused: Optional[int] = None
+    ) -> Tuple[List[Call], List[Call]]:
         """
         Split calls into 2 batches in case request is too large.
         We do this to help us find optimal `self.step` value.
@@ -205,7 +210,7 @@ class NotSoBrightBatcher:
         chunk_2 = calls[center:]
         return chunk_1, chunk_2
 
-    def rebatch(self, calls):
+    def rebatch(self, calls: List[Call]) -> Sequence[List[Call]]:
         # If a separate coroutine changed `step` after calls were last batched, we will use the new `step` for rebatching.
         if self.step <= len(calls) // 2:
             return self.batch_calls(calls, self.step)
@@ -213,27 +218,28 @@ class NotSoBrightBatcher:
         # Otherwise we will split calls in half.
         if self.step >= len(calls):
             new_step = round(len(calls) * 0.99) if len(calls) >= 100 else len(calls) - 1
-            logger.warning(
+            log_warning(
                 f"Multicall batch size reduced from {self.step} to {new_step}. The failed batch had {len(calls)} calls."
             )
             self.step = new_step
         return self.split_calls(calls, self.step)
 
 
-batcher = NotSoBrightBatcher()
+batcher: Final = NotSoBrightBatcher()
 
 
 def _raise_or_proceed(e: Exception, ct_calls: int, ConnErr_retries: int) -> None:
     """Depending on the exception, either raises or ignores and allows `batcher` to rebatch."""
+    strings: Tuple[str, ...]
     if isinstance(e, aiohttp.ClientOSError):
         if "broken pipe" not in str(e).lower():
             raise e
-        logger.warning(e)
+        log_warning(e)
     elif isinstance(e, aiohttp.ClientResponseError):
-        strings = ["request entity too large", "connection reset by peer"]
-        if not any([string in str(e).lower() for string in strings]):
+        strings = "request entity too large", "connection reset by peer"
+        if all(string not in str(e).lower() for string in strings):
             raise e
-        logger.warning(e)
+        log_warning(e)
     elif isinstance(e, requests.ConnectionError):
         if (
             "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
@@ -250,7 +256,7 @@ def _raise_or_proceed(e: Exception, ct_calls: int, ConnErr_retries: int) -> None
         )
         if not any(map(str(e).lower().__contains__, strings)):
             raise e
-        logger.warning(e)
+        log_warning(e)
     elif isinstance(e, TimeoutError):
         pass
     elif isinstance(e, ValueError):
@@ -258,6 +264,6 @@ def _raise_or_proceed(e: Exception, ct_calls: int, ConnErr_retries: int) -> None
             raise e
         if ct_calls == 1:
             raise e
-        logger.warning(e)
+        log_warning(e)
     else:
         raise e

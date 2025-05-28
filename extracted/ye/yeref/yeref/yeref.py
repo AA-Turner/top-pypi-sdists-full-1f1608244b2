@@ -6238,17 +6238,26 @@ async def outsource_generate(lst, path='link_path'):
                                                     return
                                     elif provider_name == 'proxyapi':
                                         base_url = "https://api.proxyapi.ru/openai/v1"
-                                        client = AsyncOpenAI(api_key="sk-dR9xp1ei1uciIMd2ZPb3tdY8piZ4ICnn",
+                                        client = AsyncOpenAI(api_key=api_key,
                                                              base_url=base_url)
 
+                                        # res = await client.images.generate(prompt=item['prompt'],
+                                        #                                    model=f"dall-e-2",    # dall-e-3 11,52 rub 1024x1024
+                                        #                                    n=1,  # max 1 for dalle-3
+                                        #                                    quality="standard",
+                                        #                                    response_format='url',
+                                        #                                    # size="1024x1024",
+                                        #                                    # size="512x512",
+                                        #                                    size="256x256",
+                                        #                                    )
                                         res = await client.images.generate(prompt=item['prompt'],
-                                                                           model=f"dall-e-2",
+                                                                           model=f"gpt-image-1",
                                                                            n=1,  # max 1 for dalle-3
-                                                                           quality="standard",
+                                                                           quality="low",   # low 3 rub, medium 12 rub
                                                                            response_format='url',
-                                                                           # size="1024x1024",
+                                                                           size="1024x1024",
                                                                            # size="512x512",
-                                                                           size="256x256",
+                                                                           # size="256x256",
                                                                            )
                                         for it in res.data:
                                             result.append({'type': item['type'], 'answer': it.url})
@@ -6294,7 +6303,8 @@ async def outsource_generate(lst, path='link_path'):
                                         client = AsyncOpenAI(api_key=api_key, base_url=base_url)
 
                                         response = await client.audio.speech.create(
-                                            model="tts-1",
+                                            # model="tts-1",  # gpt-4o-mini-tts - new better and cheaper (34 < 43)
+                                            model="gpt-4o-mini-tts",  # gpt-4o-mini-tts - new better and cheaper (34 < 43)
                                             input=input_,
                                             voice=random.choice(['alloy', 'shimmer'])
                                         )
@@ -6444,7 +6454,11 @@ async def outsource_generate(lst, path='link_path'):
                                             base_url = "https://api.proxyapi.ru/openai/v1"
                                             client = AsyncOpenAI(api_key=api_key, base_url=base_url)
 
-                                            res = await client.audio.transcriptions.create(model="whisper-1",
+                                            # res = await client.audio.transcriptions.create(model="whisper-1",
+                                            #                                                file=open(src_mp3, "rb"))
+
+                                            # gpt-4o-transcribe 1,72 rub, gpt-4o-mini-transcribe 0,86 rub
+                                            res = await client.audio.transcriptions.create(model="gpt-4o-transcribe",
                                                                                            file=open(src_mp3, "rb"))
 
                                             result.append({'type': item['type'], 'answer': res.text})
@@ -10142,7 +10156,7 @@ async def convert_png_to_mp4(ENT_TID, input_name, output_name, MEDIA_D):
 
 
 async def item_to_static_sticker(bot, chat_id, input_file, PACK_TYPE, PACK_KIND, is_upload=True, is_circle=False,
-                                 is_rbg=False):
+                                 is_rbg=False, is_del=False):
     result = result_upl = None
     file_jpg = input_file[:input_file.rfind('.')] + '_.jpg'
     file_png = input_file[:input_file.rfind('.')] + '_.png'

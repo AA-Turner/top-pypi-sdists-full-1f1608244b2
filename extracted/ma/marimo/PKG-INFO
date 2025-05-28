@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: marimo
-Version: 0.13.11
+Version: 0.13.13
 Summary: A library for making reactive notebooks and apps
 Project-URL: homepage, https://github.com/marimo-team/marimo
 License: 
@@ -221,7 +221,7 @@ Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Requires-Python: >=3.9
-Requires-Dist: click!=8.2.0,<9,>=8.0
+Requires-Dist: click<9,>=8.0
 Requires-Dist: docutils>=0.16.0
 Requires-Dist: itsdangerous>=2.0.0
 Requires-Dist: jedi>=0.18.0
@@ -240,7 +240,7 @@ Requires-Dist: uvicorn>=0.22.0
 Requires-Dist: websockets>=10.0.0
 Provides-Extra: dev
 Requires-Dist: black~=23.12.1; extra == 'dev'
-Requires-Dist: click<8.1.4; extra == 'dev'
+Requires-Dist: click<9,>=8.0; extra == 'dev'
 Requires-Dist: duckdb>=1.0.0; extra == 'dev'
 Requires-Dist: openai>=1.55.3; extra == 'dev'
 Requires-Dist: opentelemetry-api~=1.26.0; extra == 'dev'
@@ -324,11 +324,13 @@ and deployable as apps.
 - 🚀 **batteries-included:** replaces `jupyter`, `streamlit`, `jupytext`, `ipywidgets`, `papermill`, and more
 - ⚡️ **reactive**: run a cell, and marimo reactively [runs all dependent cells](https://docs.marimo.io/guides/reactivity.html) or <a href="#expensive-notebooks">marks them as stale</a>
 - 🖐️ **interactive:** [bind sliders, tables, plots, and more](https://docs.marimo.io/guides/interactivity.html) to Python — no callbacks required
-- 🔬 **reproducible:** [no hidden state](https://docs.marimo.io/guides/reactivity.html#no-hidden-state), deterministic execution, [built-in package management](https://docs.marimo.io/guides/editor_features/package_management.html)
+- 🐍 **git-friendly:** stored as `.py` files
+- 🛢️ **designed for data**: query dataframes, databases, warehouses, or lakehouses [with SQL](https://docs.marimo.io/guides/working_with_data/sql.html), filter and search [dataframes](https://docs.marimo.io/guides/working_with_data/dataframes.html)
+- 🔬 **reproducible:** [no hidden state](https://docs.marimo.io/guides/reactivity.html#no-hidden-state), deterministic execution, [built-in package management](https://docs.marimo.io/guides/package_management/)
 - 🏃 **executable:** [execute as a Python script](https://docs.marimo.io/guides/scripts.html), parameterized by CLI args
 - 🛜 **shareable**: [deploy as an interactive web app](https://docs.marimo.io/guides/apps.html) or [slides](https://docs.marimo.io/guides/apps.html#slides-layout), [run in the browser via WASM](https://docs.marimo.io/guides/wasm.html)
-- 🛢️ **designed for data**: query dataframes and databases [with SQL](https://docs.marimo.io/guides/working_with_data/sql.html), filter and search [dataframes](https://docs.marimo.io/guides/working_with_data/dataframes.html)
-- 🐍 **git-friendly:** notebooks are stored as `.py` files
+- 🧩 **reusable:** [import functions and classes](https://docs.marimo.io/guides/reusing_functions/) from one notebook to another
+- 🧪 **testable:** [run pytest](https://docs.marimo.io/guides/testing/) on notebooks
 - ⌨️ **a modern editor**: [GitHub Copilot](https://docs.marimo.io/guides/editor_features/ai_completion.html#github-copilot), [AI assistants](https://docs.marimo.io/guides/editor_features/ai_completion.html#using-ollama), vim keybindings, variable explorer, and [more](https://docs.marimo.io/guides/editor_features/index.html)
 
 ```python
@@ -395,7 +397,7 @@ Organize your notebooks to best fit the stories you'd like to tell.
 **Built-in package management.** marimo has built-in support for all major
 package managers, letting you [install packages on import](https://docs.marimo.io/guides/editor_features/package_management.html). marimo can even
 [serialize package
-requirements](https://docs.marimo.io/guides/package_reproducibility.html)
+requirements](https://docs.marimo.io/guides/package_management/inlining_dependencies/)
 in notebook files, and auto install them in
 isolated venv sandboxes.
 

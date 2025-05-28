@@ -19,7 +19,8 @@ SemanticType = t.Literal[
 @dataclass
 class Discriminator:
     field: str
-    expected_value: t.Any
+    expected_value: t.Any | None = None
+    one_of_expected_values: list[t.Any] | None = None
 
 
 def _extract_json_schema_extra(**kwargs) -> dict[str, t.Any]:
@@ -85,6 +86,7 @@ def AnnotatedField(
         json_schema_extra["x-discriminator"] = {
             "field": discriminator.field,
             "expected_value": discriminator.expected_value,
+            "one_of_expected_values": discriminator.one_of_expected_values,
         }
     return pydantic.Field(*args, json_schema_extra=json_schema_extra, **kwargs)
 

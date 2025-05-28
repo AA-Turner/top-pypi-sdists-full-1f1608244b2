@@ -25,7 +25,7 @@ file = open(
 
 client = OpenAI(
     # base_url="https://openai.chatfire.cn/v1",
-    api_key=os.getenv("OPENAI_API_KEY") + "-336",
+    api_key=os.getenv("OPENAI_API_KEY") ,
     # api_key=os.getenv("OPENAI_API_KEY_OPENAI") + "-336",
 
     # api_key=os.getenv("SILICONFLOW_API_KEY"),
@@ -62,11 +62,11 @@ with timer():
     _ = client.audio.transcriptions.create(
         file=file,
 
-        # model="whisper-1",
+        model="whisper-1",
         # model="openai/whisper-large",
-
+        #
         # model="SenseVoiceSmall",
-        model="FunAudioLLM/SenseVoiceSmall",
+        # model="FunAudioLLM/SenseVoiceSmall",
 
         # model="distil-whisper/distil-large-v3-ct2",
 
@@ -75,7 +75,7 @@ with timer():
         # model="sensevoice",
         # model="whisper-large-v3",
         # response_format="text",  # ["json", "text", "srt", "verbose_json", "vtt"]
-        # response_format="srt",  # ["json", "text", "srt", "verbose_json", "vtt"]
+        response_format="srt",  # ["json", "text", "srt", "verbose_json", "vtt"]
         # response_format="verbose_json",  # ["json", "text", "srt", "verbose_json", "vtt"]
         # response_format="vtt",  # ["json", "text", "srt", "verbose_json", "vtt"]
 

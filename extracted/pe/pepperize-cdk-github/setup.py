@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.cdk-github",
-    "version": "0.0.994",
+    "version": "0.0.996",
     "description": "Manage GitHub resources like repositories, teams, members, integrations and workflows with the AWS CDK as Custom Resources in CloudFormation with [cdk-github](https://github.com/pepperize/cdk-github).",
     "license": "MIT",
     "url": "https://github.com/pepperize/cdk-github.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_cdk_github._jsii": [
-            "cdk-github@0.0.994.jsii.tgz"
+            "cdk-github@0.0.996.jsii.tgz"
         ],
         "pepperize_cdk_github": [
             "py.typed"

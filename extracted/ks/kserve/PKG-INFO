@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: kserve
-Version: 0.15.1
+Version: 0.15.2
 Summary: KServe Python SDK
 Home-page: https://github.com/kserve/kserve/tree/master/python/kserve
 License: Apache-2.0

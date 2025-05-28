@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "scotthsieh_projen_statemachine",
-    "version": "2.0.744",
+    "version": "2.0.745",
     "description": "An example construct for deploying to npm, PyPi, Maven, and Nuget with Amazon API Gateway and AWS Step Functions.",
     "license": "Apache-2.0",
     "url": "https://github.com/HsiehShuJeng/projen-simple.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "scotthsieh_projen_statemachine._jsii": [
-            "projen-statemachine-example@2.0.744.jsii.tgz"
+            "projen-statemachine-example@2.0.745.jsii.tgz"
         ],
         "scotthsieh_projen_statemachine": [
             "py.typed"

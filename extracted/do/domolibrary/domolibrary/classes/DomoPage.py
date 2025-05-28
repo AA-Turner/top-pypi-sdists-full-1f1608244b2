@@ -69,6 +69,7 @@ class DomoPage:
     async def _get_domo_owners_from_dd(
         self,
         owners: util_dd.DictDot,
+        suppress_no_results_error: bool= True,
         debug_api: bool = False,
         session: httpx.AsyncClient = None,
         debug_num_stacks_to_drop: int = 3,
@@ -112,7 +113,8 @@ class DomoPage:
                 auth=self.auth,
                 session=session,
                 debug_api=debug_api,
-                debug_num_stacks_to_drop = debug_num_stacks_to_drop
+                debug_num_stacks_to_drop = debug_num_stacks_to_drop,
+                suppress_no_results_error = suppress_no_results_error,
             )
 
         owner_ce = (domo_groups or []) + (domo_users or [])
@@ -254,6 +256,7 @@ class DomoPages:
 async def _from_content_stacks_v3(
     cls: DomoPage,
     page_obj,
+    suppress_no_results_error: bool = True,
     auth: dmda.DomoAuth = None,
     debug_api: bool = False,
     session: httpx.AsyncClient = None,
@@ -279,6 +282,7 @@ async def _from_content_stacks_v3(
     if dd.page.owners and len(dd.page.owners) > 0:
         pg.owners = await pg._get_domo_owners_from_dd(
             dd.page.owners,
+            suppress_no_results_error=suppress_no_results_error,
             debug_api=debug_api,
             session=session,
             debug_num_stacks_to_drop=debug_num_stacks_to_drop,
@@ -314,6 +318,7 @@ async def get_by_id(
     cls: DomoPage,
     page_id: str,
     auth: dmda.DomoAuth,
+    suppress_no_results_error : bool = True,
     return_raw: bool = False,
     debug_api: bool = False,
     include_layout: bool = False,
@@ -359,6 +364,7 @@ async def get_by_id(
         auth=auth,
         session=session,
         debug_api=debug_api,
+        suppress_no_results_error=suppress_no_results_error,
         debug_num_stacks_to_drop=debug_num_stacks_to_drop,
     )
 

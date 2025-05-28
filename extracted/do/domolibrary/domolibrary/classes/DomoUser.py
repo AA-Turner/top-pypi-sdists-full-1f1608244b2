@@ -769,22 +769,30 @@ async def by_id(
     cls: DomoUsers,
     auth: dmda.DomoAuth,
     user_ids: list[str],  # can search for one or multiple users
+    suppress_no_results_error: bool = False,
     only_allow_one: bool = True,
     debug_num_stacks_to_drop=2,
     debug_api: bool = False,
     return_raw: bool = False,
     session : httpx.AsyncClient = None
 ) -> list:
+    
+    res = None
 
-    res = await user_routes.search_users_by_id(
-        return_raw=False,
-        user_ids=user_ids,
-        debug_api=debug_api,
-        auth=auth,
-        debug_num_stacks_to_drop=debug_num_stacks_to_drop,
-        parent_class=cls.__name__,
-        session = session
-    )
+    try:
+        res = await user_routes.search_users_by_id(
+            return_raw=False,
+            user_ids=user_ids,
+            debug_api=debug_api,
+            auth=auth,
+            debug_num_stacks_to_drop=debug_num_stacks_to_drop,
+            parent_class=cls.__name__,
+            session = session
+        )
+
+    except SearchUser_NoResults as e:
+        if suppress_no_results_error:
+            return None
 
     if return_raw:
         return res

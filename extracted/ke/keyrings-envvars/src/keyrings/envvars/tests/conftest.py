@@ -3,12 +3,15 @@
 import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_keyring_environment(monkeypatch: pytest.MonkeyPatch) -> None:
     """
     Mock environment variables for keyring service, username and password.
 
-    :param monkeypatch: pytest monkeypatch
+    Parameters
+    ----------
+    monkeypatch : pytest.MonkeyPatch
+        Pytest monkeypatch.
     """
     monkeypatch.setenv('KEYRING_SERVICE_NAME_0', 'https://index.example.com')
     monkeypatch.setenv('KEYRING_SERVICE_USERNAME_0', 'testusername')

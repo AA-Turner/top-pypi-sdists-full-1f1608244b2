@@ -8,6 +8,28 @@ class BaseEnums:
         STAGING = "staging"
         PRODUCTION = "production"
 
+    class ServiceType(StrEnum):
+        BACKEND = "backend"
+        FRONTEND = "frontend"
+
+    class ServiceCategory(StrEnum):
+        CORE = "core"
+        AI = "ai"
+
+    class Service(StrEnum):
+        MALEO_STUDIO = "maleo-studio"
+        MALEO_NEXUS = "maleo-nexus"
+        MALEO_METADATA = "maleo-metadata"
+        MALEO_IDENTITY = "maleo-identity"
+        MALEO_ACCESS = "maleo-access"
+        MALEO_MEDIX = "maleo-medix"
+        MALEO_FHIR = "maleo-fhir"
+        MALEO_DICOM = "maleo-dicom"
+        MALEO_SCRIBE = "maleo-scribe"
+        MALEO_CDS = "maleo-cds"
+        MALEO_IMAGING = "maleo-imaging"
+        MALEO_MCU = "maleo-mcu"
+
     class StatusType(StrEnum):
         DELETED = "deleted"
         INACTIVE = "inactive"
@@ -16,6 +38,7 @@ class BaseEnums:
     class UserType(StrEnum):
         REGULAR = "regular"
         PROXY = "proxy"
+        SERVICE = "service"
 
     class SortOrder(StrEnum):
         ASC = "asc"

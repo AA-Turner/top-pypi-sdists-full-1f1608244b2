@@ -88,9 +88,9 @@ def batched_convolution(
 
         - ConvMode.After: Applies the convolution with the "Adstock" effect, resulting in a trailing decay effect.
         - ConvMode.Before: Applies the convolution with the "Excitement" effect, creating a leading effect
-            similar to the wow factor.
+          similar to the wow factor.
         - ConvMode.Overlap: Applies the convolution with both "Pull-Forward" and "Pull-Backward" effects,
-            where the effect overlaps with both preceding and succeeding elements.
+          where the effect overlaps with both preceding and succeeding elements.
 
     Returns
     -------
@@ -639,7 +639,7 @@ def tanh_saturation(
 
     References
     ----------
-    See https://www.pymc-labs.io/blog-posts/reducing-customer-acquisition-costs-how-we-helped-optimizing-hellofreshs-marketing-budget/ # noqa: E501
+    See https://www.pymc-labs.com/blog-posts/reducing-customer-acquisition-costs-how-we-helped-optimizing-hellofreshs-marketing-budget/ # noqa: E501
 
     """  # noqa: E501
     return b * pt.tanh(x / (b * c))

@@ -81,10 +81,47 @@ class TestSVG2Paths(unittest.TestCase):
         shutil.rmtree(tmpdir)
 
     def test_rect2pathd(self):
-        non_rounded = {"x":"10", "y":"10", "width":"100","height":"100"}
-        self.assertEqual(rect2pathd(non_rounded), 'M10.0 10.0 L 110.0 10.0 L 110.0 110.0 L 10.0 110.0 z')
-        rounded = {"x":"10", "y":"10", "width":"100","height":"100", "rx":"15", "ry": "12"}
-        self.assertEqual(rect2pathd(rounded), "M 25.0 10.0 L 95.0 10.0 A 15.0 12.0 0 0 1 110.0 22.0 L 110.0 98.0 A 15.0 12.0 0 0 1 95.0 110.0 L 25.0 110.0 A 15.0 12.0 0 0 1 10.0 98.0 L 10.0 22.0 A 15.0 12.0 0 0 1 25.0 10.0 z")
+        non_rounded_dict = {"x": "10", "y": "10", "width": "100", "height": "100"}
+        self.assertEqual(
+            rect2pathd(non_rounded_dict),
+            "M10.0 10.0 L 110.0 10.0 L 110.0 110.0 L 10.0 110.0 z",
+        )
+
+        non_rounded_svg = """<?xml version="1.0" encoding="UTF-8"?>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="200mm" height="200mm" version="1.1">
+              <rect id="non_rounded" x="10" y="10" width="100" height="100" />
+          </svg>"""
+
+        paths, _ = svg2paths(StringIO(non_rounded_svg))
+        self.assertEqual(len(paths), 1)
+        self.assertTrue(paths[0].isclosed())
+        self.assertEqual(
+            paths[0].d(use_closed_attrib=True),
+            "M 10.0,10.0 L 110.0,10.0 L 110.0,110.0 L 10.0,110.0 Z",
+        )
+        self.assertEqual(
+            paths[0].d(use_closed_attrib=False),
+            "M 10.0,10.0 L 110.0,10.0 L 110.0,110.0 L 10.0,110.0 L 10.0,10.0",
+        )
+
+        rounded_dict = {"x": "10", "y": "10", "width": "100","height": "100", "rx": "15", "ry": "12"}
+        self.assertEqual(
+            rect2pathd(rounded_dict),
+            "M 25.0 10.0 L 95.0 10.0 A 15.0 12.0 0 0 1 110.0 22.0 L 110.0 98.0 A 15.0 12.0 0 0 1 95.0 110.0 L 25.0 110.0 A 15.0 12.0 0 0 1 10.0 98.0 L 10.0 22.0 A 15.0 12.0 0 0 1 25.0 10.0 z",
+        )
+
+        rounded_svg = """<?xml version="1.0" encoding="UTF-8"?>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="200mm" height="200mm" version="1.1">
+              <rect id="rounded" x="10" y="10" width="100" height ="100" rx="15" ry="12" />
+          </svg>"""
+
+        paths, _ = svg2paths(StringIO(rounded_svg))
+        self.assertEqual(len(paths), 1)
+        self.assertTrue(paths[0].isclosed())
+        self.assertEqual(
+            paths[0].d(),
+            "M 25.0,10.0 L 95.0,10.0 A 15.0,12.0 0.0 0,1 110.0,22.0 L 110.0,98.0 A 15.0,12.0 0.0 0,1 95.0,110.0 L 25.0,110.0 A 15.0,12.0 0.0 0,1 10.0,98.0 L 10.0,22.0 A 15.0,12.0 0.0 0,1 25.0,10.0",
+        )
 
     def test_from_file_path_string(self):
         """Test reading svg from file provided as path"""
@@ -130,6 +167,44 @@ class TestSVG2Paths(unittest.TestCase):
             paths, _ = svgstr2paths(file_content)
 
             self.assertEqual(len(paths), 2)
+
+    def test_svg2paths_polygon_no_points(self):
+
+        paths, _ = svg2paths(join(dirname(__file__), 'polygons_no_points.svg'))
+
+        path = paths[0]
+        path_correct = Path()
+        self.assertTrue(len(path)==0)
+        self.assertTrue(path==path_correct)
+
+        path = paths[1]
+        self.assertTrue(len(path)==0)
+        self.assertTrue(path==path_correct)
+
+    def test_svg2paths_polyline_tests(self):
+
+        paths, _ = svg2paths(join(dirname(__file__), 'polyline.svg'))
+
+        path = paths[0]
+        path_correct = Path(Line(59+185j, 98+203j),
+                            Line(98+203j, 108+245j),
+                            Line(108+245j, 82+279j),
+                            Line(82+279j, 39+280j),
+                            Line(39+280j, 11+247j),
+                            Line(11+247j, 19+205j))
+        self.assertFalse(path.isclosed())
+        self.assertTrue(len(path)==6)
+        self.assertTrue(path==path_correct)
+
+        path = paths[1]
+        path_correct = Path(Line(220+50j, 267+84j),
+                            Line(267+84j, 249+140j),
+                            Line(249+140j, 190+140j),
+                            Line(190+140j, 172+84j),
+                            Line(172+84j, 220+50j))
+        self.assertTrue(path.isclosed())
+        self.assertTrue(len(path)==5)
+        self.assertTrue(path==path_correct)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: FLAML
-Version: 2.3.4
+Version: 2.3.5
 Summary: A fast library for automated machine learning and tuning
 Home-page: https://github.com/microsoft/FLAML
 Author: Microsoft Corporation
@@ -8,144 +8,34 @@ Author-email: hpo@microsoft.com
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+Provides-Extra: automl
+Provides-Extra: notebook
+Provides-Extra: spark
+Provides-Extra: test
+Provides-Extra: catboost
+Provides-Extra: blendsearch
+Provides-Extra: ray
+Provides-Extra: azureml
+Provides-Extra: nni
+Provides-Extra: vw
+Provides-Extra: hf
+Provides-Extra: nlp
+Provides-Extra: ts_forecast
+Provides-Extra: forecast
+Provides-Extra: benchmark
+Provides-Extra: openai
+Provides-Extra: autogen
+Provides-Extra: mathchat
+Provides-Extra: retrievechat
+Provides-Extra: synapse
+Provides-Extra: autozero
 License-File: LICENSE
 License-File: NOTICE.md
-Requires-Dist: NumPy>=1.17
-Provides-Extra: automl
-Requires-Dist: lightgbm>=2.3.1; extra == "automl"
-Requires-Dist: xgboost<3.0.0,>=0.90; extra == "automl"
-Requires-Dist: scipy>=1.4.1; extra == "automl"
-Requires-Dist: pandas>=1.1.4; extra == "automl"
-Requires-Dist: scikit-learn>=1.0.0; extra == "automl"
-Provides-Extra: notebook
-Requires-Dist: jupyter; extra == "notebook"
-Provides-Extra: spark
-Requires-Dist: pyspark>=3.2.0; extra == "spark"
-Requires-Dist: joblibspark>=0.5.0; extra == "spark"
-Requires-Dist: joblib<=1.3.2; extra == "spark"
-Provides-Extra: test
-Requires-Dist: jupyter; extra == "test"
-Requires-Dist: lightgbm>=2.3.1; extra == "test"
-Requires-Dist: xgboost<2.0.0,>=0.90; extra == "test"
-Requires-Dist: scipy>=1.4.1; extra == "test"
-Requires-Dist: pandas<2.0.0,>=1.1.4; python_version < "3.10" and extra == "test"
-Requires-Dist: pandas>=1.1.4; python_version >= "3.10" and extra == "test"
-Requires-Dist: scikit-learn>=1.0.0; extra == "test"
-Requires-Dist: thop; extra == "test"
-Requires-Dist: pytest>=6.1.1; extra == "test"
-Requires-Dist: coverage>=5.3; extra == "test"
-Requires-Dist: pre-commit; extra == "test"
-Requires-Dist: torch; extra == "test"
-Requires-Dist: torchvision; extra == "test"
-Requires-Dist: catboost<1.2,>=0.26; python_version < "3.11" and extra == "test"
-Requires-Dist: catboost>=0.26; python_version >= "3.11" and extra == "test"
-Requires-Dist: rgf-python; extra == "test"
-Requires-Dist: optuna<=3.6.1,>=2.8.0; extra == "test"
-Requires-Dist: openml; extra == "test"
-Requires-Dist: statsmodels>=0.12.2; extra == "test"
-Requires-Dist: psutil==5.8.0; extra == "test"
-Requires-Dist: dataclasses; extra == "test"
-Requires-Dist: transformers[torch]==4.26; extra == "test"
-Requires-Dist: datasets; extra == "test"
-Requires-Dist: nltk<=3.8.1; extra == "test"
-Requires-Dist: rouge_score; extra == "test"
-Requires-Dist: hcrystalball==0.1.10; extra == "test"
-Requires-Dist: seqeval; extra == "test"
-Requires-Dist: pytorch-forecasting<=0.10.1,>=0.9.0; python_version < "3.11" and extra == "test"
-Requires-Dist: mlflow==2.15.1; extra == "test"
-Requires-Dist: joblibspark>=0.5.0; extra == "test"
-Requires-Dist: joblib<=1.3.2; extra == "test"
-Requires-Dist: nbconvert; extra == "test"
-Requires-Dist: nbformat; extra == "test"
-Requires-Dist: ipykernel; extra == "test"
-Requires-Dist: pytorch-lightning<1.9.1; extra == "test"
-Requires-Dist: tensorboardX==2.6; extra == "test"
-Requires-Dist: requests<2.29.0; extra == "test"
-Requires-Dist: packaging; extra == "test"
-Requires-Dist: pydantic==1.10.9; extra == "test"
-Requires-Dist: sympy; extra == "test"
-Requires-Dist: wolframalpha; extra == "test"
-Requires-Dist: dill; extra == "test"
-Provides-Extra: catboost
-Requires-Dist: catboost<1.2,>=0.26; python_version < "3.11" and extra == "catboost"
-Requires-Dist: catboost<=1.2.5,>=0.26; python_version >= "3.11" and extra == "catboost"
-Provides-Extra: blendsearch
-Requires-Dist: optuna<=3.6.1,>=2.8.0; extra == "blendsearch"
-Requires-Dist: packaging; extra == "blendsearch"
-Provides-Extra: ray
-Requires-Dist: ray[tune]~=1.13; extra == "ray"
-Provides-Extra: azureml
-Requires-Dist: azureml-mlflow; extra == "azureml"
-Provides-Extra: nni
-Requires-Dist: nni; extra == "nni"
-Provides-Extra: vw
-Requires-Dist: vowpalwabbit<9.0.0,>=8.10.0; extra == "vw"
-Requires-Dist: scikit-learn; extra == "vw"
-Provides-Extra: hf
-Requires-Dist: transformers[torch]==4.26; extra == "hf"
-Requires-Dist: datasets; extra == "hf"
-Requires-Dist: nltk<=3.8.1; extra == "hf"
-Requires-Dist: rouge_score; extra == "hf"
-Requires-Dist: seqeval; extra == "hf"
-Provides-Extra: nlp
-Requires-Dist: transformers[torch]==4.26; extra == "nlp"
-Requires-Dist: datasets; extra == "nlp"
-Requires-Dist: nltk<=3.8.1; extra == "nlp"
-Requires-Dist: rouge_score; extra == "nlp"
-Requires-Dist: seqeval; extra == "nlp"
-Provides-Extra: ts-forecast
-Requires-Dist: holidays<0.14; extra == "ts-forecast"
-Requires-Dist: prophet>=1.0.1; extra == "ts-forecast"
-Requires-Dist: statsmodels>=0.12.2; extra == "ts-forecast"
-Requires-Dist: hcrystalball==0.1.10; extra == "ts-forecast"
-Provides-Extra: forecast
-Requires-Dist: holidays<0.14; extra == "forecast"
-Requires-Dist: prophet>=1.0.1; extra == "forecast"
-Requires-Dist: statsmodels>=0.12.2; extra == "forecast"
-Requires-Dist: hcrystalball==0.1.10; extra == "forecast"
-Requires-Dist: pytorch-forecasting>=0.9.0; python_version < "3.11" and extra == "forecast"
-Requires-Dist: pytorch-lightning==1.9.0; extra == "forecast"
-Requires-Dist: tensorboardX==2.6; extra == "forecast"
-Provides-Extra: benchmark
-Requires-Dist: catboost>=0.26; extra == "benchmark"
-Requires-Dist: psutil==5.8.0; extra == "benchmark"
-Requires-Dist: xgboost==1.3.3; extra == "benchmark"
-Requires-Dist: pandas==1.1.4; extra == "benchmark"
-Provides-Extra: openai
-Requires-Dist: openai==0.27.8; extra == "openai"
-Requires-Dist: diskcache; extra == "openai"
-Provides-Extra: autogen
-Requires-Dist: openai==0.27.8; extra == "autogen"
-Requires-Dist: diskcache; extra == "autogen"
-Requires-Dist: termcolor; extra == "autogen"
-Provides-Extra: mathchat
-Requires-Dist: openai==0.27.8; extra == "mathchat"
-Requires-Dist: diskcache; extra == "mathchat"
-Requires-Dist: termcolor; extra == "mathchat"
-Requires-Dist: sympy; extra == "mathchat"
-Requires-Dist: pydantic==1.10.9; extra == "mathchat"
-Requires-Dist: wolframalpha; extra == "mathchat"
-Provides-Extra: retrievechat
-Requires-Dist: openai==0.27.8; extra == "retrievechat"
-Requires-Dist: diskcache; extra == "retrievechat"
-Requires-Dist: termcolor; extra == "retrievechat"
-Requires-Dist: chromadb; extra == "retrievechat"
-Requires-Dist: tiktoken; extra == "retrievechat"
-Requires-Dist: sentence_transformers; extra == "retrievechat"
-Provides-Extra: synapse
-Requires-Dist: joblibspark>=0.5.0; extra == "synapse"
-Requires-Dist: optuna<=3.6.1,>=2.8.0; extra == "synapse"
-Requires-Dist: pyspark>=3.2.0; extra == "synapse"
-Provides-Extra: autozero
-Requires-Dist: scikit-learn; extra == "autozero"
-Requires-Dist: pandas; extra == "autozero"
-Requires-Dist: packaging; extra == "autozero"
 
 [![PyPI version](https://badge.fury.io/py/FLAML.svg)](https://badge.fury.io/py/FLAML)
 ![Conda version](https://img.shields.io/conda/vn/conda-forge/flaml)
@@ -189,7 +79,7 @@ FLAML has a .NET implementation in [ML.NET](http://dot.net/ml), an open-source, 
 
 ## Installation
 
-FLAML requires **Python version >= 3.8**. It can be installed from pip:
+FLAML requires **Python version >= 3.9**. It can be installed from pip:
 
 ```bash
 pip install flaml

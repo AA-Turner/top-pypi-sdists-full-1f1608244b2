@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/google provider version 6.36.1
+# CDKTF prebuilt bindings for hashicorp/google provider version 6.37.0
 
-This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.36.1/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform google provider version 1:
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.36.1)
+* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.37.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -177,6 +177,7 @@ __all__ = [
     "apigee_keystores_aliases_self_signed_cert",
     "apigee_nat_address",
     "apigee_organization",
+    "apigee_security_monitoring_condition",
     "apigee_security_profile_v2",
     "apigee_sharedflow",
     "apigee_sharedflow_deployment",
@@ -214,6 +215,10 @@ __all__ = [
     "beyondcorp_application_iam_member",
     "beyondcorp_application_iam_policy",
     "beyondcorp_security_gateway",
+    "beyondcorp_security_gateway_application",
+    "beyondcorp_security_gateway_application_iam_binding",
+    "beyondcorp_security_gateway_application_iam_member",
+    "beyondcorp_security_gateway_application_iam_policy",
     "beyondcorp_security_gateway_iam_binding",
     "beyondcorp_security_gateway_iam_member",
     "beyondcorp_security_gateway_iam_policy",
@@ -312,6 +317,10 @@ __all__ = [
     "cloud_run_v2_service_iam_binding",
     "cloud_run_v2_service_iam_member",
     "cloud_run_v2_service_iam_policy",
+    "cloud_run_v2_worker_pool",
+    "cloud_run_v2_worker_pool_iam_binding",
+    "cloud_run_v2_worker_pool_iam_member",
+    "cloud_run_v2_worker_pool_iam_policy",
     "cloud_scheduler_job",
     "cloud_tasks_queue",
     "cloud_tasks_queue_iam_binding",
@@ -376,6 +385,7 @@ __all__ = [
     "compute_firewall_policy",
     "compute_firewall_policy_association",
     "compute_firewall_policy_rule",
+    "compute_firewall_policy_with_rules",
     "compute_forwarding_rule",
     "compute_global_address",
     "compute_global_forwarding_rule",
@@ -418,6 +428,7 @@ __all__ = [
     "compute_network_firewall_policy",
     "compute_network_firewall_policy_association",
     "compute_network_firewall_policy_rule",
+    "compute_network_firewall_policy_with_rules",
     "compute_network_peering",
     "compute_network_peering_routes_config",
     "compute_node_group",
@@ -446,6 +457,7 @@ __all__ = [
     "compute_region_network_firewall_policy",
     "compute_region_network_firewall_policy_association",
     "compute_region_network_firewall_policy_rule",
+    "compute_region_network_firewall_policy_with_rules",
     "compute_region_per_instance_config",
     "compute_region_security_policy",
     "compute_region_security_policy_rule",
@@ -561,6 +573,7 @@ __all__ = [
     "data_google_beyondcorp_app_gateway",
     "data_google_beyondcorp_application_iam_policy",
     "data_google_beyondcorp_security_gateway",
+    "data_google_beyondcorp_security_gateway_application_iam_policy",
     "data_google_beyondcorp_security_gateway_iam_policy",
     "data_google_bigquery_analytics_hub_data_exchange_iam_policy",
     "data_google_bigquery_analytics_hub_listing_iam_policy",
@@ -569,6 +582,7 @@ __all__ = [
     "data_google_bigquery_dataset",
     "data_google_bigquery_dataset_iam_policy",
     "data_google_bigquery_default_service_account",
+    "data_google_bigquery_table",
     "data_google_bigquery_table_iam_policy",
     "data_google_bigquery_tables",
     "data_google_bigtable_instance_iam_policy",
@@ -594,6 +608,8 @@ __all__ = [
     "data_google_cloud_run_v2_job_iam_policy",
     "data_google_cloud_run_v2_service",
     "data_google_cloud_run_v2_service_iam_policy",
+    "data_google_cloud_run_v2_worker_pool",
+    "data_google_cloud_run_v2_worker_pool_iam_policy",
     "data_google_cloud_tasks_queue_iam_policy",
     "data_google_cloudbuild_trigger",
     "data_google_cloudbuildv2_connection_iam_policy",
@@ -717,6 +733,7 @@ __all__ = [
     "data_google_gke_backup_restore_plan_iam_policy",
     "data_google_gke_hub_feature",
     "data_google_gke_hub_feature_iam_policy",
+    "data_google_gke_hub_membership",
     "data_google_gke_hub_membership_binding",
     "data_google_gke_hub_membership_iam_policy",
     "data_google_gke_hub_scope_iam_policy",
@@ -913,9 +930,11 @@ __all__ = [
     "dataplex_entry_type_iam_member",
     "dataplex_entry_type_iam_policy",
     "dataplex_glossary",
+    "dataplex_glossary_category",
     "dataplex_glossary_iam_binding",
     "dataplex_glossary_iam_member",
     "dataplex_glossary_iam_policy",
+    "dataplex_glossary_term",
     "dataplex_lake",
     "dataplex_lake_iam_binding",
     "dataplex_lake_iam_member",
@@ -1128,6 +1147,7 @@ __all__ = [
     "iam_projects_policy_binding",
     "iam_workforce_pool",
     "iam_workforce_pool_provider",
+    "iam_workforce_pool_provider_key",
     "iam_workload_identity_pool",
     "iam_workload_identity_pool_provider",
     "iap_app_engine_service_iam_binding",
@@ -1218,6 +1238,7 @@ __all__ = [
     "logging_project_sink",
     "looker_instance",
     "lustre_instance",
+    "managed_kafka_acl",
     "managed_kafka_cluster",
     "managed_kafka_topic",
     "memcache_instance",
@@ -1577,6 +1598,7 @@ from . import apigee_keystores_aliases_pkcs12
 from . import apigee_keystores_aliases_self_signed_cert
 from . import apigee_nat_address
 from . import apigee_organization
+from . import apigee_security_monitoring_condition
 from . import apigee_security_profile_v2
 from . import apigee_sharedflow
 from . import apigee_sharedflow_deployment
@@ -1614,6 +1636,10 @@ from . import beyondcorp_application_iam_binding
 from . import beyondcorp_application_iam_member
 from . import beyondcorp_application_iam_policy
 from . import beyondcorp_security_gateway
+from . import beyondcorp_security_gateway_application
+from . import beyondcorp_security_gateway_application_iam_binding
+from . import beyondcorp_security_gateway_application_iam_member
+from . import beyondcorp_security_gateway_application_iam_policy
 from . import beyondcorp_security_gateway_iam_binding
 from . import beyondcorp_security_gateway_iam_member
 from . import beyondcorp_security_gateway_iam_policy
@@ -1712,6 +1738,10 @@ from . import cloud_run_v2_service
 from . import cloud_run_v2_service_iam_binding
 from . import cloud_run_v2_service_iam_member
 from . import cloud_run_v2_service_iam_policy
+from . import cloud_run_v2_worker_pool
+from . import cloud_run_v2_worker_pool_iam_binding
+from . import cloud_run_v2_worker_pool_iam_member
+from . import cloud_run_v2_worker_pool_iam_policy
 from . import cloud_scheduler_job
 from . import cloud_tasks_queue
 from . import cloud_tasks_queue_iam_binding
@@ -1776,6 +1806,7 @@ from . import compute_firewall
 from . import compute_firewall_policy
 from . import compute_firewall_policy_association
 from . import compute_firewall_policy_rule
+from . import compute_firewall_policy_with_rules
 from . import compute_forwarding_rule
 from . import compute_global_address
 from . import compute_global_forwarding_rule
@@ -1818,6 +1849,7 @@ from . import compute_network_endpoints
 from . import compute_network_firewall_policy
 from . import compute_network_firewall_policy_association
 from . import compute_network_firewall_policy_rule
+from . import compute_network_firewall_policy_with_rules
 from . import compute_network_peering
 from . import compute_network_peering_routes_config
 from . import compute_node_group
@@ -1846,6 +1878,7 @@ from . import compute_region_network_endpoint_group
 from . import compute_region_network_firewall_policy
 from . import compute_region_network_firewall_policy_association
 from . import compute_region_network_firewall_policy_rule
+from . import compute_region_network_firewall_policy_with_rules
 from . import compute_region_per_instance_config
 from . import compute_region_security_policy
 from . import compute_region_security_policy_rule
@@ -1961,6 +1994,7 @@ from . import data_google_beyondcorp_app_connector
 from . import data_google_beyondcorp_app_gateway
 from . import data_google_beyondcorp_application_iam_policy
 from . import data_google_beyondcorp_security_gateway
+from . import data_google_beyondcorp_security_gateway_application_iam_policy
 from . import data_google_beyondcorp_security_gateway_iam_policy
 from . import data_google_bigquery_analytics_hub_data_exchange_iam_policy
 from . import data_google_bigquery_analytics_hub_listing_iam_policy
@@ -1969,6 +2003,7 @@ from . import data_google_bigquery_datapolicy_data_policy_iam_policy
 from . import data_google_bigquery_dataset
 from . import data_google_bigquery_dataset_iam_policy
 from . import data_google_bigquery_default_service_account
+from . import data_google_bigquery_table
 from . import data_google_bigquery_table_iam_policy
 from . import data_google_bigquery_tables
 from . import data_google_bigtable_instance_iam_policy
@@ -1994,6 +2029,8 @@ from . import data_google_cloud_run_v2_job
 from . import data_google_cloud_run_v2_job_iam_policy
 from . import data_google_cloud_run_v2_service
 from . import data_google_cloud_run_v2_service_iam_policy
+from . import data_google_cloud_run_v2_worker_pool
+from . import data_google_cloud_run_v2_worker_pool_iam_policy
 from . import data_google_cloud_tasks_queue_iam_policy
 from . import data_google_cloudbuild_trigger
 from . import data_google_cloudbuildv2_connection_iam_policy
@@ -2117,6 +2154,7 @@ from . import data_google_gke_backup_backup_plan_iam_policy
 from . import data_google_gke_backup_restore_plan_iam_policy
 from . import data_google_gke_hub_feature
 from . import data_google_gke_hub_feature_iam_policy
+from . import data_google_gke_hub_membership
 from . import data_google_gke_hub_membership_binding
 from . import data_google_gke_hub_membership_iam_policy
 from . import data_google_gke_hub_scope_iam_policy
@@ -2313,9 +2351,11 @@ from . import dataplex_entry_type_iam_binding
 from . import dataplex_entry_type_iam_member
 from . import dataplex_entry_type_iam_policy
 from . import dataplex_glossary
+from . import dataplex_glossary_category
 from . import dataplex_glossary_iam_binding
 from . import dataplex_glossary_iam_member
 from . import dataplex_glossary_iam_policy
+from . import dataplex_glossary_term
 from . import dataplex_lake
 from . import dataplex_lake_iam_binding
 from . import dataplex_lake_iam_member
@@ -2528,6 +2568,7 @@ from . import iam_principal_access_boundary_policy
 from . import iam_projects_policy_binding
 from . import iam_workforce_pool
 from . import iam_workforce_pool_provider
+from . import iam_workforce_pool_provider_key
 from . import iam_workload_identity_pool
 from . import iam_workload_identity_pool_provider
 from . import iap_app_engine_service_iam_binding
@@ -2618,6 +2659,7 @@ from . import logging_project_exclusion
 from . import logging_project_sink
 from . import looker_instance
 from . import lustre_instance
+from . import managed_kafka_acl
 from . import managed_kafka_cluster
 from . import managed_kafka_topic
 from . import memcache_instance

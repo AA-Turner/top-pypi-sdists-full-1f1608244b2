@@ -2592,10 +2592,12 @@ class GetStepResponseTypeDef(TypedDict):
 class ServiceManagedEc2FleetConfigurationOutputTypeDef(TypedDict):
     instanceCapabilities: ServiceManagedEc2InstanceCapabilitiesOutputTypeDef
     instanceMarketOptions: ServiceManagedEc2InstanceMarketOptionsTypeDef
+    storageProfileId: NotRequired[str]
 
 class ServiceManagedEc2FleetConfigurationTypeDef(TypedDict):
     instanceCapabilities: ServiceManagedEc2InstanceCapabilitiesTypeDef
     instanceMarketOptions: ServiceManagedEc2InstanceMarketOptionsTypeDef
+    storageProfileId: NotRequired[str]
 
 class AssignedSessionActionTypeDef(TypedDict):
     sessionActionId: str

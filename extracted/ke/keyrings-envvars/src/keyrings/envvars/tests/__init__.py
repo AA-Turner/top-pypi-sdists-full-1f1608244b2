@@ -1,1 +1,1 @@
-"""keyrings.envvars tests."""
+"""Tests for keyrings.envvars."""

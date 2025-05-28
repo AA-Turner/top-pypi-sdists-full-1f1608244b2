@@ -100,7 +100,13 @@ from ._error import (
     DBOSNonExistentWorkflowError,
 )
 from ._event_loop import BackgroundEventLoop
-from ._logger import add_otlp_to_all_loggers, config_logger, dbos_logger, init_logger
+from ._logger import (
+    add_otlp_to_all_loggers,
+    add_transformer_to_all_loggers,
+    config_logger,
+    dbos_logger,
+    init_logger,
+)
 from ._workflow_commands import get_workflow, list_workflow_steps
 
 # Most DBOS functions are just any callable F, so decorators / wrappers work on F
@@ -215,6 +221,8 @@ class DBOSRegistry:
         sources = sorted(
             [inspect.getsource(wf) for wf in self.workflow_info_map.values()]
         )
+        # Different DBOS versions should produce different app versions
+        sources.append(GlobalParams.dbos_version)
         for source in sources:
             hasher.update(source.encode("utf-8"))
         return hasher.hexdigest()
@@ -297,7 +305,6 @@ class DBOS:
 
         self._launched: bool = False
         self._debug_mode: bool = False
-        self._configured_threadpool: bool = False
         self._sys_db_field: Optional[SystemDatabase] = None
         self._app_db_field: Optional[ApplicationDatabase] = None
         self._registry: DBOSRegistry = _get_or_create_dbos_registry()
@@ -410,7 +417,7 @@ class DBOS:
                 GlobalParams.executor_id = str(uuid.uuid4())
             dbos_logger.info(f"Executor ID: {GlobalParams.executor_id}")
             dbos_logger.info(f"Application version: {GlobalParams.app_version}")
-            self._executor_field = ThreadPoolExecutor(max_workers=64)
+            self._executor_field = ThreadPoolExecutor(max_workers=sys.maxsize)
             self._background_event_loop.start()
             assert self._config["database_url"] is not None
             assert self._config["database"]["sys_db_engine_kwargs"] is not None
@@ -513,6 +520,7 @@ class DBOS:
             for handler in dbos_logger.handlers:
                 handler.flush()
             add_otlp_to_all_loggers()
+            add_transformer_to_all_loggers()
         except Exception:
             dbos_logger.error(f"DBOS failed to launch: {traceback.format_exc()}")
             raise
@@ -941,11 +949,8 @@ class DBOS:
 
         This function is called before the first call to asyncio.to_thread.
         """
-        if _get_dbos_instance()._configured_threadpool:
-            return
         loop = asyncio.get_running_loop()
         loop.set_default_executor(_get_dbos_instance()._executor)
-        _get_dbos_instance()._configured_threadpool = True
 
     @classmethod
     def resume_workflow(cls, workflow_id: str) -> WorkflowHandle[Any]:

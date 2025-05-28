@@ -2,19 +2,38 @@ import itertools as it
 import logging
 from collections import defaultdict
 from bisect import bisect_right
-from typing import List
+from typing import List, Tuple, Dict
 from math import log, exp
 from functools import reduce
 from operator import mul
-from copy import deepcopy
 from pulp import LpProblem, LpVariable, LpMaximize, LpInteger
 
-from whatshap.polyphase import PolyphaseBlockResult, PhaseBreakpoint, get_ilp_solver
+from whatshap.polyphase import (
+    Position,
+    Haplotype,
+    Cluster,
+    ClusterId,
+    Threading,
+    PolyphaseResult,
+    PhaseBreakpoint,
+    get_ilp_solver,
+)
+from whatshap.polyphase.solver import AlleleMatrix
 
 logger = logging.getLogger(__name__)
 
 
-def find_subinstances(allele_matrix, clustering, threads, haplotypes):
+ThreadId = int
+SubInstance = Tuple[ClusterId, List[ThreadId], AlleleMatrix]
+ThreadPermutation = Tuple[int]
+
+
+def find_subinstances(
+    allele_matrix: AlleleMatrix,
+    clustering: List[Cluster],
+    threads: Threading,
+    haplotypes: List[Haplotype],
+) -> List[SubInstance]:
     """
     Scans clusters for heterozygous positions, i.e. the cluster contains at least 2 threads,
     but the alleles are different. Returns a list of triplets, containing of a cluster id,
@@ -29,14 +48,14 @@ def find_subinstances(allele_matrix, clustering, threads, haplotypes):
     cwise_snps = defaultdict(list)
     last_thread_set = defaultdict(list)
     collapsed = []
-    for pos in range(len(threads)):
+    for pos, tup in enumerate(threads):
         clusters = set()
         alleles = defaultdict(set)
         thread_set = defaultdict(list)
-        for i, cid in enumerate(threads[pos]):
+        for hid, cid in enumerate(tup):
             clusters.add(cid)
-            alleles[cid].add(haplotypes[i][pos])
-            thread_set[cid].append(i)
+            alleles[cid].add(haplotypes[hid][pos])
+            thread_set[cid].append(hid)
         for cid in clusters:
             if len(alleles[cid]) >= 2:
                 # if thread-set changed: write old list to results and start new one
@@ -67,14 +86,13 @@ def find_subinstances(allele_matrix, clustering, threads, haplotypes):
     return sub_instances
 
 
-# def integrate_sub_results(allele_matrix, sub_instances, sub_results, threads, haplotypes):
 def integrate_sub_results(
-    allele_matrix,
-    sub_instances,
-    sub_results: List[PolyphaseBlockResult],
-    threads: List[List[int]],
-    haplotypes,
-):
+    allele_matrix: AlleleMatrix,
+    threads: Threading,
+    haplotypes: List[Haplotype],
+    sub_instances: List[SubInstance],
+    sub_results: List[PolyphaseResult],
+) -> List[PhaseBreakpoint]:
     """
     Does two things:
     1. Update haplotype strings inside the collapsed regions according to the solved sub-instances
@@ -119,12 +137,12 @@ def integrate_sub_results(
 
 
 def run_reordering(
-    allele_matrix,
-    clustering,
-    threads,
-    haplotypes,
-    breakpoints,
-    prephasing,
+    allele_matrix: AlleleMatrix,
+    clustering: List[Cluster],
+    threads: Threading,
+    haplotypes: List[Haplotype],
+    breakpoints: List[PhaseBreakpoint],
+    prephasing: AlleleMatrix,
     error_rate=0.07,
 ):
     """
@@ -172,10 +190,11 @@ def run_reordering(
     # compute optimal permutation of threads for each block
     ploidy = len(haplotypes)
     perms = get_optimal_assignments(breakpoints, lllh, ploidy, aff)
-    permute_blocks(threads, haplotypes, breakpoints, lllh, perms)
+    permute_blocks(threads, haplotypes, breakpoints, perms)
+    compute_breakpoint_confidence(breakpoints, lllh, perms)
 
 
-def find_breakpoints(threads):
+def find_breakpoints(threads: Threading) -> List[PhaseBreakpoint]:
     """
     Finds positions p such that between p-1 and p there is an ambiguous switch in the haplotype
     threads. Ambiguous means that two or more threads switch clusters simultaneously or that
@@ -184,7 +203,7 @@ def find_breakpoints(threads):
     affected threads.
     """
     ploidy = len(threads[0])
-    breakpoints = []
+    breakpoints: List[PhaseBreakpoint] = []
 
     for i in range(1, len(threads)):
         changed_idx = {j for j in range(ploidy) if threads[i - 1][j] != threads[i][j]}
@@ -199,14 +218,19 @@ def find_breakpoints(threads):
 
 
 def compute_link_likelihoods(
-    threads, haplotypes, breakpoints, clustering, allele_matrix, error_rate
-):
+    threads: Threading,
+    haplotypes: List[Haplotype],
+    breakpoints: List[PhaseBreakpoint],
+    clustering: List[Cluster],
+    allele_matrix: AlleleMatrix,
+    error_rate: float,
+) -> List[Dict[ThreadPermutation, float]]:
     """
     For each breakpoint and for each pair of threads t1 and t2, computes a log likelihood that the
     left side of t1 is linked to the right side of t2 (left/right = before/after the breakpoint).
-    Returns a 2D-list, where the first dimension one entry for each breakpoint and the second
-    dimension contains k! entries, representing the linkage likelihoods for every possible
-    permutation of the k affected haplotypes.
+    Returns a 2D-list, where the first dimension contains one entry for each breakpoint and the
+    second dimension contains a dictionary that maps all possible k! permutations of thread linkages
+    to their linkage likelihoods.
     """
     ploidy = len(threads[0])
     lllh = []
@@ -253,7 +277,7 @@ def compute_link_likelihoods(
         for perm in it.permutations(affected):
             left_h = list(affected)
             right_h = [perm[affected.index(i)] for i in affected]
-            perm_llh = 0
+            perm_llh = 0.0
             for i, read in enumerate(submatrix):
                 read_llh = -float("inf")
                 for left, right in zip(left_h, right_h):
@@ -268,7 +292,13 @@ def compute_link_likelihoods(
     return lllh
 
 
-def compute_phase_affiliation(allele_matrix, haplotypes, breakpoints, prephasing, error_rate):
+def compute_phase_affiliation(
+    allele_matrix: AlleleMatrix,
+    haplotypes: List[Haplotype],
+    breakpoints: List[PhaseBreakpoint],
+    prephasing: AlleleMatrix,
+    error_rate: float,
+) -> List[List[List[float]]]:
     """
     For each thread in each block computes the affiliation to each phase as given by the
     prephasing. Result is 3D-list, with dimensions being block id, thread inside block and phase
@@ -318,7 +348,9 @@ def compute_phase_affiliation(allele_matrix, haplotypes, breakpoints, prephasing
     return aff
 
 
-def get_heterozygous_pos_for_haps(haplotypes, subset, pivot_pos, limit=0):
+def get_heterozygous_pos_for_haps(
+    haplotypes: List[Haplotype], subset: List[ThreadId], pivot_pos: int, limit: int = 0
+) -> Tuple[List[Position], List[Position]]:
     """
     For a subset of given haplotypes, returns two lists of positions on which these haplotypes
     contain at least two different alleles. The first list contains positions left to the
@@ -344,7 +376,12 @@ def get_heterozygous_pos_for_haps(haplotypes, subset, pivot_pos, limit=0):
     return left, right
 
 
-def get_optimal_assignments(breakpoints, lllh, ploidy, affiliations):
+def get_optimal_assignments(
+    breakpoints: List[PhaseBreakpoint],
+    lllh: List[Dict[ThreadPermutation, float]],
+    ploidy: int,
+    affiliations: List[List[List[float]]],
+) -> List[ThreadPermutation]:
     """
     Computes optimal permutations of haplotypes within blocks determined by breakpoints. Result
     is a list with one permutation (list) per block.
@@ -457,18 +494,28 @@ def get_optimal_assignments(breakpoints, lllh, ploidy, affiliations):
     return assignments
 
 
-def permute_blocks(threads, haplotypes, breakpoints, lllh, perms):
+def permute_blocks(
+    threads: Threading,
+    haplotypes: List[Haplotype],
+    breakpoints: List[PhaseBreakpoint],
+    perms: List[ThreadPermutation],
+):
     # shuffle threads and haplotypes according to optimal assignments
     ploidy = len(haplotypes)
-    threads_copy = deepcopy(threads)
-    haplotypes_copy = deepcopy(haplotypes)
     ext_bp = [0] + [b.position for b in breakpoints] + [len(threads)]
     for i, (s, e) in enumerate(zip(ext_bp[:-1], ext_bp[1:])):
         for p in range(s, e):
-            for t in list(range(ploidy)):
-                threads[p][t] = threads_copy[p][perms[i][t]]
-                haplotypes[t][p] = haplotypes_copy[perms[i][t]][p]
+            threads[p] = [threads[p][perms[i][t]] for t in range(ploidy)]
+            hap_copy = [haplotypes[t][p] for t in range(ploidy)]
+            for t in range(ploidy):
+                haplotypes[t][p] = hap_copy[perms[i][t]]
 
+
+def compute_breakpoint_confidence(
+    breakpoints: List[PhaseBreakpoint],
+    lllh: List[Dict[ThreadPermutation, float]],
+    perms: List[ThreadPermutation],
+):
     # collect reorder events
     for i, bp in enumerate(breakpoints):
         # compute confidence of decision

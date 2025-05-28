@@ -36,6 +36,8 @@ async def get_task(task_id: str, token: str = "916fed81175f5186a2c05375699ea40d"
     $..image_to_avatar 成功： 先检测图片or视频
     :param task_ids:
     :return:
+
+    todo： fail_code
     """
     task_ids = task_id.split()
 

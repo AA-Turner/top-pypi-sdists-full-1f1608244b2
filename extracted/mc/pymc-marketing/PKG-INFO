@@ -1,10 +1,10 @@
 Metadata-Version: 2.4
 Name: pymc-marketing
-Version: 0.13.1
+Version: 0.14.0
 Summary: Marketing Statistical Models in PyMC
 Project-URL: repository, https://github.com/pymc-labs/pymc-marketing
 Project-URL: homepage, https://www.pymc-marketing.io
-Maintainer-email: PyMC Labs <info@pymc-labs.io>
+Maintainer-email: PyMC Labs <info@pymc-labs.com>
 License:                                  Apache License
                                    Version 2.0, January 2004
                                 http://www.apache.org/licenses/
@@ -237,6 +237,7 @@ Provides-Extra: dag
 Requires-Dist: dowhy; extra == 'dag'
 Requires-Dist: networkx; extra == 'dag'
 Requires-Dist: osqp<1.0.0,>=0.6.2; extra == 'dag'
+Requires-Dist: pygraphviz; extra == 'dag'
 Provides-Extra: docs
 Requires-Dist: blackjax; extra == 'docs'
 Requires-Dist: dowhy; extra == 'docs'
@@ -261,6 +262,7 @@ Requires-Dist: sphinx-autodoc-typehints; extra == 'docs'
 Requires-Dist: sphinx-copybutton; extra == 'docs'
 Requires-Dist: sphinx-design; extra == 'docs'
 Requires-Dist: sphinx-notfound-page; extra == 'docs'
+Requires-Dist: sphinx-remove-toctrees; extra == 'docs'
 Requires-Dist: sphinxext-opengraph; extra == 'docs'
 Requires-Dist: watermark; extra == 'docs'
 Provides-Extra: lint
@@ -279,6 +281,7 @@ Requires-Dist: numpyro; extra == 'test'
 Requires-Dist: nutpie; extra == 'test'
 Requires-Dist: osqp<1.0.0,>=0.6.2; extra == 'test'
 Requires-Dist: papermill; extra == 'test'
+Requires-Dist: pygraphviz; extra == 'test'
 Requires-Dist: pyprojroot; extra == 'test'
 Requires-Dist: pytest-cov>=3.0.0; extra == 'test'
 Requires-Dist: pytest-mock>=3.14.0; extra == 'test'
@@ -514,6 +517,14 @@ mvits.plot_counterfactual()
 </center>
 
 See our example notebooks for [saturated markets](https://www.pymc-marketing.io/en/stable/notebooks/customer_choice/mv_its_saturated.html) and [unsaturated markets](https://www.pymc-marketing.io/en/stable/notebooks/customer_choice/mv_its_unsaturated.html) to learn more about customer choice modeling with PyMC-Marketing.
+
+## Bass Diffusion Model
+
+The Bass Diffusion Model is a popular model for predicting the adoption of new products. It is a type of product life cycle model that describes the market penetration of a new product as a function of time. PyMC-Marketing provides a flexible implementation of the Bass Diffusion Model, allowing you to customize the model parameters and fit the model to your specific data (many products).
+
+<center>
+    <img src="https://raw.githubusercontent.com/pymc-labs/pymc-marketing/main/docs/source/_static/bass.png" width="100%" />
+</center>
 
 ## Why PyMC-Marketing vs other solutions?
 

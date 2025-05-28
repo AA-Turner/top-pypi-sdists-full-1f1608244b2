@@ -164,9 +164,22 @@ impl Almanac {
         }
 
         if let Ok(metadata) = Metadata::decode_header(&bytes) {
+            // Use `try_from` to validate the dataset type
+            let dataset_type =
+                DataSetType::try_from(metadata.dataset_type as u8).map_err(|err| {
+                    AlmanacError::GenericError {
+                        err: format!("Invalid dataset type: {err}"),
+                    }
+                })?;
+
             // Now, we can load this depending on the kind of data that it is
-            match metadata.dataset_type {
-                DataSetType::NotApplicable => unreachable!("no such ANISE data yet"),
+            match dataset_type {
+                DataSetType::NotApplicable => {
+                    // Not something that can be decoded
+                    Err(AlmanacError::GenericError {
+                        err: format!("Malformed dataset type in {}", path.unwrap_or("bytes")),
+                    })
+                }
                 DataSetType::SpacecraftData => {
                     // Decode as spacecraft data
                     let dataset = SpacecraftDataSet::try_from_bytes(bytes).context({
@@ -207,14 +220,8 @@ impl Almanac {
             })
         }
     }
-}
 
-#[cfg_attr(feature = "python", pymethods)]
-impl Almanac {
     /// Generic function that tries to load the provided path guessing to the file type.
-    ///
-    /// :type path: str
-    /// :rtype: Almanac
     pub fn load(&self, path: &str) -> AlmanacResult<Self> {
         // Load the data onto the heap
         let bytes = file2heap!(path).context(LoadingSnafu {
@@ -233,32 +240,8 @@ impl Almanac {
             })
     }
 
-    /// Initializes a new Almanac from the provided file path, guessing at the file type
-    #[cfg(feature = "python")]
-    #[new]
-    pub fn py_new(path: &str) -> AlmanacResult<Self> {
-        Self::new(path)
-    }
-
-    #[cfg(feature = "python")]
-    fn __str__(&self) -> String {
-        format!("{self}")
-    }
-
-    #[cfg(feature = "python")]
-    fn __repr__(&self) -> String {
-        format!("{self} (@{self:p})")
-    }
-
     /// Pretty prints the description of this Almanac, showing everything by default. Default time scale is TDB.
     /// If any parameter is set to true, then nothing other than that will be printed.
-    ///
-    /// :type spk: bool, optional
-    /// :type bpc: bool, optional
-    /// :type planetary: bool, optional
-    /// :type time_scale: TimeScale, optional
-    /// :type round_time: bool, optional
-    /// :rtype: None
     pub fn describe(
         &self,
         spk: Option<bool>,

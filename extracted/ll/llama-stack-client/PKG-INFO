@@ -1,10 +1,10 @@
 Metadata-Version: 2.4
 Name: llama_stack_client
-Version: 0.2.7
+Version: 0.2.8
 Summary: The official Python library for the llama-stack-client API
 Project-URL: Homepage, https://github.com/meta-llama/llama-stack-client-python
 Project-URL: Repository, https://github.com/meta-llama/llama-stack-client-python
-Author-email: Llama Stack Client <dev-feedback@llama-stack-client.com>
+Author-email: Meta Llama <llama-oss@meta.com>
 License-Expression: Apache-2.0
 License-File: LICENSE
 Classifier: Intended Audience :: Developers

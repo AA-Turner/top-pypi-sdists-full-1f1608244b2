@@ -1,4 +1,4 @@
-"""keyrings.envvars tests."""
+"""Tests for keyrings.envvars."""
 
 from __future__ import annotations
 
@@ -18,6 +18,10 @@ class TestKeyringBackend:
         """Test getting trailing number from an environment variable."""
         assert EnvvarsKeyring._get_trailing_number('KEYRING_SERVICE_NAME_A') is None
         assert EnvvarsKeyring._get_trailing_number('KEYRING_SERVICE_NAME_0') == '0'
+        assert EnvvarsKeyring._get_trailing_number('OTHER_KEYRING_SERVICE_NAME_0') is None
+        assert EnvvarsKeyring._get_trailing_number('KEYRING_SERVICE_NAME_١') is None, (  # noqa: RUF001 # ARABIC-INDIC DIGIT ONE is expected here
+            'Arabic Unicode digits are not allowed'
+        )
 
     @pytest.mark.usefixtures('_mock_keyring_environment')
     @pytest.mark.parametrize(
@@ -154,8 +158,12 @@ class TestKeyringBackend:
         """
         Test getting None from an empty service and username.
 
-        :param service: Service
-        :param expected: Expected return value from _get_mapping()
+        Parameters
+        ----------
+        service : str
+            Service.
+        expected : EnvvarCredential
+            Expected return value from _get_mapping().
         """
         mapping = EnvvarsKeyring._get_mapping()
         # Number of valid services defined in conftest.py
@@ -315,9 +323,14 @@ class TestKeyringBackend:
         """
         Test getting a credential.
 
-        :param service: Service
-        :param username: Username
-        :param expected: Expected return value from EnvvarsKeyring.get_credential()
+        Parameters
+        ----------
+        service : str
+            Service.
+        username : str
+            Username.
+        expected : EnvvarCredential
+            Expected return value from EnvvarsKeyring.get_credential().
         """
         k = EnvvarsKeyring()
 

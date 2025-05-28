@@ -80,7 +80,7 @@ def get_spreadsheet_values(
 
 
 @alru_cache(ttl=600)
-@rcache(ttl=600, serializer='pickle')  # 缓存
+@rcache(ttl=300, serializer='pickle')  # 缓存
 async def aget_spreadsheet_values(
         spreadsheet_token: Optional[str] = None,
         sheet_id: Optional[str] = None,
@@ -101,10 +101,10 @@ async def aget_spreadsheet_values(
         if response.is_success:
             data = response.json()
             if to_dataframe:
-                # values = data.get('data').get('valueRange').get('values')
-                # [value | xmap(lambda x: x['text']) | xjoin('') for value in values]
+                values = data.get('data').get('valueRange').get('values')
 
-                return pd.DataFrame(data.get('data').get('valueRange').get('values'))
+                return pd.DataFrame(values)
+
             return data
         else:
             send_message(

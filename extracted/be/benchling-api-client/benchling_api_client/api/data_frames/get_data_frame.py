@@ -112,6 +112,10 @@ def sync(
     Notes:
       - Using this endpoint with `rowDataFormat=csv` might be slow and timeout on large data frames.
        We suggest using `rowDataFormat=parquet` for large data frames.
+      - Parquet files contain column system names, which are unique column identifiers within the
+        data frame and may be different from the column display names. The `columns` part of the
+        response provides the display name and corresponding system name for each column.
+      - CSV files contain column display names.
       - Manifest URLs are valid for 1 hour after being returned from this endpoint. They should not be stored
     persistently for later use.
     """
@@ -166,6 +170,10 @@ async def asyncio(
     Notes:
       - Using this endpoint with `rowDataFormat=csv` might be slow and timeout on large data frames.
        We suggest using `rowDataFormat=parquet` for large data frames.
+      - Parquet files contain column system names, which are unique column identifiers within the
+        data frame and may be different from the column display names. The `columns` part of the
+        response provides the display name and corresponding system name for each column.
+      - CSV files contain column display names.
       - Manifest URLs are valid for 1 hour after being returned from this endpoint. They should not be stored
     persistently for later use.
     """

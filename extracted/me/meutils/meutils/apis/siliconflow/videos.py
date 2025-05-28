@@ -20,18 +20,16 @@ from openai import OpenAI, AsyncOpenAI
 
 check_token = partial(check_token_for_siliconflow, threshold=0.01)
 
-MODELS_MAP = {
-    "hunyuan-video": "tencent/HunyuanVideo",
-    "hunyuanvideo": "tencent/HunyuanVideo",
-    "mochi-1-preview": "genmo/mochi-1-preview",
-    "ltx-video": "Lightricks/LTX-Video",
-}
 """
+
+tencent/HunyuanVideo-HD
+
 Wan-AI/Wan2.1-T2V-14B
 Wan-AI/Wan2.1-T2V-14B-Turbo
 
 Wan-AI/Wan2.1-I2V-14B-720P
 Wan-AI/Wan2.1-I2V-14B-720P-Turbo
+
 
 16:9 👉 1280×720
 9:16 👉 720×1280
@@ -44,17 +42,12 @@ Wan-AI/Wan2.1-I2V-14B-720P-Turbo
 async def create_task(request: VideoRequest, token: Optional[str] = None):
     token = token or await get_next_token_for_polling(FEISHU_URL_FREE, check_token=check_token, from_redis=True)
 
+    if 'Wan-AI' in request.model:
+        request.model = "Wan-AI/Wan2.1-T2V-14B-720P-Turbo"
+
     if request.image:
         request.image = await to_base64(request.image)
-
-    if request.model == "Wan-AI/Wan2.1-T2V-14B":
-        request.model = "Wan-AI/Wan2.1-T2V-14B-Turbo"
-
-    elif request.model == "Wan-AI/Wan2.1-I2V-14B-720P":
-        request.model = "Wan-AI/Wan2.1-I2V-14B-720P-Turbo"
-
-    else:
-        request.model = "Wan-AI/Wan2.1-I2V-14B-720P-Turbo" if request.image else "Wan-AI/Wan2.1-T2V-14B-Turbo"
+        request.model = request.model.replace("-T2V-", "-I2V-")
 
     payload = request.model_dump(exclude_none=True)
 

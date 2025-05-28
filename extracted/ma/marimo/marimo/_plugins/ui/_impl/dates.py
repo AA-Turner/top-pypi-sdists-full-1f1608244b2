@@ -209,6 +209,7 @@ class datetime(UIElement[Optional[str], Optional[dt.datetime]]):
         label (str, optional): Markdown label for the element.
         on_change (Callable[[Optional[datetime.datetime]], None], optional): Optional callback to run when this element's value changes.
         full_width (bool, optional): Whether the input should take up the full width of its container.
+        disabled (bool, optional): Whether the input should be disabled. Defaults to False.
     """
 
     _name: Final[str] = "marimo-datetime"
@@ -223,6 +224,7 @@ class datetime(UIElement[Optional[str], Optional[dt.datetime]]):
         label: Optional[str] = None,
         on_change: Optional[Callable[[Optional[dt.datetime]], None]] = None,
         full_width: bool = False,
+        disabled: bool = False,
     ):
         if isinstance(start, str):
             start = self._convert_value(start)
@@ -264,6 +266,7 @@ class datetime(UIElement[Optional[str], Optional[dt.datetime]]):
                 "start": self._start.strftime(self.DATETIME_FORMAT),
                 "stop": self._stop.strftime(self.DATETIME_FORMAT),
                 "full-width": full_width,
+                "disabled": disabled,
             },
             on_change=on_change,
         )
@@ -355,6 +358,7 @@ class date_range(UIElement[tuple[str, str], tuple[dt.date, dt.date]]):
         label (str, optional): Markdown label for the element.
         on_change (Callable[[Tuple[datetime.date, datetime.date]], None], optional): Optional callback to run when this element's value changes.
         full_width (bool, optional): Whether the input should take up the full width of its container.
+        disabled (bool, optional): Whether the input should be disabled.
     """
 
     _name: Final[str] = "marimo-date-range"
@@ -369,6 +373,7 @@ class date_range(UIElement[tuple[str, str], tuple[dt.date, dt.date]]):
         label: Optional[str] = None,
         on_change: Optional[Callable[[tuple[dt.date, dt.date]], None]] = None,
         full_width: bool = False,
+        disabled: bool = False,
     ):
         if isinstance(start, str):
             start = self._convert_single_value(start)
@@ -410,6 +415,7 @@ class date_range(UIElement[tuple[str, str], tuple[dt.date, dt.date]]):
                 "start": self._start.isoformat(),
                 "stop": self._stop.isoformat(),
                 "full-width": full_width,
+                "disabled": disabled,
             },
             on_change=on_change,
         )

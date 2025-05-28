@@ -1,4 +1,5 @@
 #![allow(clippy::too_many_arguments)]
+#![allow(clippy::useless_conversion)]
 
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
@@ -375,7 +376,7 @@ fn vega_to_png(
     };
 
     Ok(Python::with_gil(|py| -> PyObject {
-        PyBytes::new_bound(py, png_data.as_slice()).into()
+        PyBytes::new(py, png_data.as_slice()).into()
     }))
 }
 
@@ -451,7 +452,7 @@ fn vegalite_to_png(
     };
 
     Ok(Python::with_gil(|py| -> PyObject {
-        PyBytes::new_bound(py, png_data.as_slice()).into()
+        PyBytes::new(py, png_data.as_slice()).into()
     }))
 }
 
@@ -507,7 +508,7 @@ fn vega_to_jpeg(
     };
 
     Ok(Python::with_gil(|py| -> PyObject {
-        PyBytes::new_bound(py, jpeg_data.as_slice()).into()
+        PyBytes::new(py, jpeg_data.as_slice()).into()
     }))
 }
 
@@ -583,7 +584,7 @@ fn vegalite_to_jpeg(
     };
 
     Ok(Python::with_gil(|py| -> PyObject {
-        PyBytes::new_bound(py, jpeg_data.as_slice()).into()
+        PyBytes::new(py, jpeg_data.as_slice()).into()
     }))
 }
 
@@ -633,7 +634,7 @@ fn vega_to_pdf(
         }
     };
     Ok(Python::with_gil(|py| -> PyObject {
-        PyObject::from(PyBytes::new_bound(py, pdf_bytes.as_slice()))
+        PyObject::from(PyBytes::new(py, pdf_bytes.as_slice()))
     }))
 }
 
@@ -704,7 +705,7 @@ fn vegalite_to_pdf(
     };
 
     Ok(Python::with_gil(|py| -> PyObject {
-        PyObject::from(PyBytes::new_bound(py, pdf_data.as_slice()))
+        PyObject::from(PyBytes::new(py, pdf_data.as_slice()))
     }))
 }
 
@@ -856,7 +857,7 @@ fn vega_to_html(
 fn svg_to_png(svg: &str, scale: Option<f32>, ppi: Option<f32>) -> PyResult<PyObject> {
     let png_data = vl_convert_rs::converter::svg_to_png(svg, scale.unwrap_or(1.0), ppi)?;
     Ok(Python::with_gil(|py| -> PyObject {
-        PyBytes::new_bound(py, png_data.as_slice()).into()
+        PyBytes::new(py, png_data.as_slice()).into()
     }))
 }
 
@@ -873,7 +874,7 @@ fn svg_to_png(svg: &str, scale: Option<f32>, ppi: Option<f32>) -> PyResult<PyObj
 fn svg_to_jpeg(svg: &str, scale: Option<f32>, quality: Option<u8>) -> PyResult<PyObject> {
     let jpeg_data = vl_convert_rs::converter::svg_to_jpeg(svg, scale.unwrap_or(1.0), quality)?;
     Ok(Python::with_gil(|py| -> PyObject {
-        PyBytes::new_bound(py, jpeg_data.as_slice()).into()
+        PyBytes::new(py, jpeg_data.as_slice()).into()
     }))
 }
 
@@ -890,7 +891,7 @@ fn svg_to_pdf(svg: &str, scale: Option<f32>) -> PyResult<PyObject> {
     warn_if_scale_not_one_for_pdf(scale)?;
     let pdf_data = vl_convert_rs::converter::svg_to_pdf(svg)?; // Always pass 1.0 as scale
     Ok(Python::with_gil(|py| -> PyObject {
-        PyBytes::new_bound(py, pdf_data.as_slice()).into()
+        PyBytes::new(py, pdf_data.as_slice()).into()
     }))
 }
 
@@ -1230,10 +1231,11 @@ fn warn_if_scale_not_one_for_pdf(scale: Option<f32>) -> PyResult<()> {
     if let Some(scale) = scale {
         if scale != 1.0 {
             Python::with_gil(|py| -> PyResult<()> {
-                let warning_message = "The scale argument is no longer supported for PDF export.";
-                let deprecation_warning =
-                    py.get_type_bound::<pyo3::exceptions::PyDeprecationWarning>();
-                PyErr::warn_bound(py, &deprecation_warning, warning_message, 1)?;
+                let warnings = py.import("warnings")?;
+                warnings.call_method1(
+                    "warn",
+                    ("The scale argument is no longer supported for PDF export.",),
+                )?;
                 Ok(())
             })?;
         }

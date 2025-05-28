@@ -79,3 +79,27 @@ def create_shipyard_link() -> str:
     logger.debug(f"Created Shipyard link: {shipyard_link}")
 
     return shipyard_link
+
+
+def create_workflows_link() -> str:
+    logger.debug("Creating workflows log link...")
+    base_url = "https://app.alliplatform.com/client/"
+    client_slug = os.getenv("ALLI_CLIENT_SLUG")
+    marketplace_workflow_id = os.getenv("MARKETPLACE_WORKFLOW_ID")
+
+    if client_slug and marketplace_workflow_id:
+        logger.debug("Detecting client_slug and marketplace_workflow_id...")
+        dynamic_link_section = (
+            f"{client_slug}/automations/workflows/{marketplace_workflow_id}/logs"
+        )
+    else:
+        logger.debug(
+            "No client_slug or marketplace_workflow_id detected. Using generic link..."
+        )
+        return "www.alliplatform.com"
+
+    workflows_log_link = base_url + parse.quote(dynamic_link_section)
+
+    logger.debug(f"Created workflows log link: {workflows_log_link}")
+
+    return workflows_log_link

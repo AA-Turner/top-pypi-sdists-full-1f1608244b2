@@ -461,7 +461,7 @@ async def entrada_de_notas_39(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                 status=RpaHistoricoStatusEnum.Descartado,
             )
 
-        await worker_sleep(60)
+        await worker_sleep(80)
         
         await emsys.verify_warning_and_error("Information", "No")
         
