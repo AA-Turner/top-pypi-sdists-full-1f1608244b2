@@ -1,18 +1,26 @@
-from functools import lru_cache
-from typing import Any, List, Optional, Tuple
+# mypy: disable-error-code="attr-defined"
+from typing import Any, Dict, Final, List, Optional, Tuple, Union, final
 
-# For eth_abi versions < 2.2.0, `decode` and `encode` have not yet been added.
-# As we require web3 >=5.27, we require eth_abi compatability with eth_abi v2.0.0b6 and greater.
-try:
-    from eth_abi import decode, encode
-except ImportError:
-    from eth_abi import encode_abi as encode, decode_abi as decode
-
-from eth_typing.abi import Decodable, TypeStr
-from eth_utils import function_signature_to_4byte_selector
+import eth_abi.abi
+import eth_abi.decoding
+import eth_abi.encoding
+import eth_hash.auto
+from eth_typing import Decodable, TypeStr
 
 
-get_4byte_selector = lru_cache(maxsize=None)(function_signature_to_4byte_selector)
+_SIGNATURES: Final[Dict[str, "Signature"]] = {}
+
+TupleEncoder: Final = eth_abi.encoding.TupleEncoder
+TupleDecoder: Final = eth_abi.decoding.TupleDecoder
+
+_keccak: Final = eth_hash.auto.keccak
+_get_encoder: Final = eth_abi.abi.default_codec._registry.get_encoder
+_get_decoder: Final = eth_abi.abi.default_codec._registry.get_decoder
+_stream_cls: Final = eth_abi.abi.default_codec.stream_class
+
+
+def get_4byte_selector(signature: str) -> bytes:
+    return _keccak(signature.replace(" ", "").encode("utf-8"))[:4]
 
 
 def parse_signature(signature: str) -> Tuple[str, List[TypeStr], List[TypeStr]]:
@@ -58,7 +66,7 @@ def parse_signature(signature: str) -> Tuple[str, List[TypeStr], List[TypeStr]]:
     return function, input_types, output_types
 
 
-def parse_typestring(typestring: str) -> Optional[List[TypeStr]]:
+def parse_typestring(typestring: str) -> List[TypeStr]:
     if typestring == "()":
         return []
     parts = []
@@ -78,24 +86,47 @@ def parse_typestring(typestring: str) -> Optional[List[TypeStr]]:
     return parts
 
 
-@lru_cache(maxsize=None)
 def _get_signature(signature: str) -> "Signature":
-    return Signature(signature)
+    try:
+        return _SIGNATURES[signature]
+    except KeyError:
+        instance = Signature(signature)
+        _SIGNATURES[signature] = instance
+        return instance
 
 
+@final
 class Signature:
-    __slots__ = "signature", "function", "input_types", "output_types"
+    __slots__ = (
+        "signature",
+        "function",
+        "input_types",
+        "output_types",
+        "fourbyte",
+        "_encoder",
+        "_decoder",
+    )
 
     def __init__(self, signature: str) -> None:
-        self.signature = signature
-        self.function, self.input_types, self.output_types = parse_signature(signature)
+        self.signature: Final = signature
+        parsed = parse_signature(signature)
+        self.function: Final = parsed[0]
+        input_types = parsed[1]
+        self.input_types: Final = input_types
+        output_types = parsed[2]
+        self.output_types: Final = output_types
+        self.fourbyte: Final = get_4byte_selector(self.function)
+        self._encoder: Final = (
+            TupleEncoder(encoders=[_get_encoder(type_str) for type_str in input_types])
+            if input_types
+            else None
+        )
+        self._decoder: Final = TupleDecoder(
+            decoders=[_get_decoder(type_str) for type_str in output_types]
+        )
 
-    @property
-    def fourbyte(self) -> bytes:
-        return get_4byte_selector(self.function)
-
-    def encode_data(self, args: Optional[Any] = None) -> bytes:
-        return self.fourbyte + encode(self.input_types, args) if args else self.fourbyte
+    def encode_data(self, args: Optional[Union[List[Any], Tuple[Any, ...]]] = None) -> bytes:
+        return self.fourbyte + self._encoder(args) if args else self.fourbyte  # type: ignore [misc]
 
     def decode_data(self, output: Decodable) -> Any:
-        return decode(self.output_types, output)
+        return self._decoder(_stream_cls(output))

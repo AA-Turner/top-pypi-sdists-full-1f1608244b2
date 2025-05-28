@@ -252,6 +252,10 @@ def _init_workflow(
             raise DBOSNonExistentWorkflowError(wfid)
         return get_status_result
 
+    # If we have a class name, the first arg is the instance and do not serialize
+    if class_name is not None:
+        inputs = {"args": inputs["args"][1:], "kwargs": inputs["kwargs"]}
+
     # Initialize a workflow status object from the context
     status: WorkflowStatusInternal = {
         "workflow_uuid": wfid,
@@ -279,18 +283,25 @@ def _init_workflow(
         "updated_at": None,
         "workflow_timeout_ms": workflow_timeout_ms,
         "workflow_deadline_epoch_ms": workflow_deadline_epoch_ms,
+        "deduplication_id": (
+            enqueue_options["deduplication_id"] if enqueue_options is not None else None
+        ),
+        "priority": (
+            (
+                enqueue_options["priority"]
+                if enqueue_options["priority"] is not None
+                else 0
+            )
+            if enqueue_options is not None
+            else 0
+        ),
+        "inputs": _serialization.serialize_args(inputs),
     }
-
-    # If we have a class name, the first arg is the instance and do not serialize
-    if class_name is not None:
-        inputs = {"args": inputs["args"][1:], "kwargs": inputs["kwargs"]}
 
     # Synchronously record the status and inputs for workflows
     wf_status, workflow_deadline_epoch_ms = dbos._sys_db.init_workflow(
         status,
-        _serialization.serialize_args(inputs),
         max_recovery_attempts=max_recovery_attempts,
-        enqueue_options=enqueue_options,
     )
 
     if workflow_deadline_epoch_ms is not None:
@@ -342,13 +353,12 @@ def _get_wf_invoke_func(
             return recorded_result
         try:
             output = func()
-            status["status"] = "SUCCESS"
-            status["output"] = _serialization.serialize(output)
             if not dbos.debug_mode:
-                if status["queue_name"] is not None:
-                    queue = dbos._registry.queue_info_map[status["queue_name"]]
-                    dbos._sys_db.remove_from_queue(status["workflow_uuid"], queue)
-                dbos._sys_db.update_workflow_status(status)
+                dbos._sys_db.update_workflow_outcome(
+                    status["workflow_uuid"],
+                    "SUCCESS",
+                    output=_serialization.serialize(output),
+                )
             return output
         except DBOSWorkflowConflictIDError:
             # Await the workflow result
@@ -357,13 +367,12 @@ def _get_wf_invoke_func(
         except DBOSWorkflowCancelledError as error:
             raise
         except Exception as error:
-            status["status"] = "ERROR"
-            status["error"] = _serialization.serialize_exception(error)
             if not dbos.debug_mode:
-                if status["queue_name"] is not None:
-                    queue = dbos._registry.queue_info_map[status["queue_name"]]
-                    dbos._sys_db.remove_from_queue(status["workflow_uuid"], queue)
-                dbos._sys_db.update_workflow_status(status)
+                dbos._sys_db.update_workflow_outcome(
+                    status["workflow_uuid"],
+                    "ERROR",
+                    error=_serialization.serialize_exception(error),
+                )
             raise
 
     return persist
@@ -432,16 +441,13 @@ def execute_workflow_by_id(dbos: "DBOS", workflow_id: str) -> "WorkflowHandle[An
     status = dbos._sys_db.get_workflow_status(workflow_id)
     if not status:
         raise DBOSRecoveryError(workflow_id, "Workflow status not found")
-    inputs = dbos._sys_db.get_workflow_inputs(workflow_id)
-    if not inputs:
-        raise DBOSRecoveryError(workflow_id, "Workflow inputs not found")
+    inputs = _serialization.deserialize_args(status["inputs"])
     wf_func = dbos._registry.workflow_info_map.get(status["name"], None)
     if not wf_func:
         raise DBOSWorkflowFunctionNotFoundError(
             workflow_id, "Workflow function not found"
         )
     with DBOSContextEnsure():
-        ctx = assert_current_dbos_context()
         # If this function belongs to a configured class, add that class instance as its first argument
         if status["config_name"] is not None:
             config_name = status["config_name"]

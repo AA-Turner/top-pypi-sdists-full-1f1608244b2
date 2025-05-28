@@ -491,7 +491,7 @@ async def get_group_membership(
 ) -> rgd.ResponseGetData:
 
     # url = f"https://{auth.domo_instance}.domo.com/api/content/v2/groups/access"
-    url = f"https://{auth.domo_instance}.domo.com/api/content/v2/groups/users?group={group_id}"
+    url = f"https://{auth.domo_instance}.domo.com/api/content/v2/groups/users"
 
     # res = await gd.get_data(
     #     auth=auth,
@@ -508,11 +508,14 @@ async def get_group_membership(
     # )
     def arr_fn(res):
         return res.response.get("groupUserList")
+
+    fixed_params = {"group" :  group_id}
     
     res = await gd.looper(
         auth= auth,
         session  = session,
         url = url,
+        fixed_params = fixed_params,
         offset_params = {"offset" : "offset" , "limit" : "limit"},
         arr_fn = arr_fn,
         loop_until_end = True if maximum is None else False,  # usually you'll set this to true.  it will override maximum

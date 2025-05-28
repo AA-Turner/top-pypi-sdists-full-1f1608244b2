@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pytools"
-version = "2025.1.5"
+version = "2025.1.6"
 description = "A collection of tools for Python"
 readme = "README.rst"
 license = "MIT"
@@ -108,6 +108,7 @@ reportImplicitStringConcatenation = "none"
 reportUnnecessaryIsInstance = "none"
 reportUnusedCallResult = "none"
 reportExplicitAny = "none"
+reportUnreachable = "hint"
 
 # This reports even cycles that are qualified by 'if TYPE_CHECKING'. Not what
 # we care about at this moment.
@@ -115,6 +116,11 @@ reportExplicitAny = "none"
 reportImportCycles = "none"
 pythonVersion = "3.10"
 pythonPlatform = "All"
+
+[[tool.basedpyright.executionEnvironments]]
+root = "pytools/test"
+reportUnknownArgumentType = "hint"
+reportPrivateUsage = "none"
 
 [tool.mypy]
 python_version = "3.10"

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: autogenstudio
-Version: 0.4.2.1
+Version: 0.4.2.2
 Summary: AutoGen Studio
 Author-email: AutoGen Team <autogen@microsoft.com>
 License:     MIT License
@@ -46,9 +46,9 @@ Requires-Dist: alembic
 Requires-Dist: loguru
 Requires-Dist: pyyaml
 Requires-Dist: html2text
-Requires-Dist: autogen-core<0.5,>=0.4.9.2
-Requires-Dist: autogen-agentchat<0.5,>=0.4.9.2
-Requires-Dist: autogen-ext[azure,magentic-one,openai]<0.5,>=0.4.2
+Requires-Dist: autogen-core<0.6,>=0.4.9.2
+Requires-Dist: autogen-agentchat<0.6,>=0.4.9.2
+Requires-Dist: autogen-ext[azure,magentic-one,openai]<0.6,>=0.4.2
 Requires-Dist: anthropic
 Provides-Extra: web
 Requires-Dist: fastapi; extra == "web"

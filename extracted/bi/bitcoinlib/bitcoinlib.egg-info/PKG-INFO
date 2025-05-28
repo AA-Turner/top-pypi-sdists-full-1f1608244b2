@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bitcoinlib
-Version: 0.7.3
+Version: 0.7.4
 Summary: Bitcoin cryptocurrency Library
 Home-page: http://github.com/1200wd/bitcoinlib
 Author: 1200wd
@@ -33,10 +33,11 @@ Requires-Dist: ecdsa>=0.18; platform_system == "Windows"
 Requires-Dist: pycryptodome>=3.19.0
 Requires-Dist: SQLAlchemy>=2.0.20
 Requires-Dist: numpy==1.24.4; python_version < "3.9"
-Requires-Dist: numpy>=1.22.0; python_version >= "3.9"
+Requires-Dist: numpy<2,>=1.24.4; python_version >= "3.9"
 Provides-Extra: dev
 Requires-Dist: scrypt>=0.8.20; platform_system != "Windows" and extra == "dev"
-Requires-Dist: sphinx>=7.1.0; extra == "dev"
+Requires-Dist: sphinx>=7.1.0; python_version < "3.9" and extra == "dev"
+Requires-Dist: sphinx>=7.2.0; python_version >= "3.9" and extra == "dev"
 Requires-Dist: coveralls>=4.0.1; extra == "dev"
 Requires-Dist: psycopg>=3.1.16; extra == "dev"
 Requires-Dist: mysql-connector-python>=8.4.0; extra == "dev"
@@ -59,8 +60,10 @@ With BitcoinLib you can:
  - Create, analyse and run Bitcoin scripts
  - Generate Bitcoin addresses and represent them in different address formats like P2PKH, P2SH, Bech32, etc
  - Create private keys and work with Mnemonic password phrases
- - Uses external Service providers to fetch address, transaction, utxo and blockchain data. Or connect to you local `Bitcoin core <https://bitcoinlib.readthedocs.io/en/latest/source/_static/manuals.setup-bitcoind-connection.html>`_, `Bcoin <https://bitcoinlib.readthedocs.io/en/latest/source/_static/manuals.setup-bcoin.html>`_ or `Blockbook <https://bitcoinlib.readthedocs.io/en/latest/source/_static/manuals.setup-blockbook.html>`_ node.
- - Can be extended to support other cryptocurrencies by configuring custom parameters. At the moment Litecoin and Dogecoin are also supported.
+ - Use external Service providers to fetch address, transaction, utxo and blockchain data.
+ - Connect to you local `Bitcoin core <https://bitcoinlib.readthedocs.io/en/latest/source/_static/manuals.setup-bitcoind-connection.html>`_, `Bcoin <https://bitcoinlib.readthedocs.io/en/latest/source/_static/manuals.setup-bcoin.html>`_, `Blockbook <https://bitcoinlib.readthedocs.io/en/latest/source/_static/manuals.setup-blockbook.html>`_ or  `ElectrumX <https://bitcoinlib.readthedocs.io/en/latest/source/_static/manuals.setup-electrumx.html>`_ node.
+ - Can be extended to support other cryptocurrencies by configuring custom parameters.
+ - At the moment Litecoin, Dogecoin and various test networks are supported out-of-the-box.
 
 
 .. image:: https://github.com/1200wd/bitcoinlib/actions/workflows/unittests.yaml/badge.svg

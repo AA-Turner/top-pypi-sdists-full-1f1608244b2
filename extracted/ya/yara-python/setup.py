@@ -178,7 +178,7 @@ class BuildExtCommand(build_ext):
           '--enable-macho can''t be used with --dynamic-linking')
     if self.enable_openssl and self.dynamic_linking:
       raise distutils.errors.DistutilsOptionError(
-          '--enable-enable-openssl can''t be used with --dynamic-linking')
+          '--enable-openssl can''t be used with --dynamic-linking')
 
 
   def run(self):
@@ -393,7 +393,7 @@ with open('README.rst', 'r', 'utf-8') as f:
 
 setup(
     name='yara-python',
-    version='4.5.2',
+    version='4.5.4',
     description='Python interface for YARA',
     long_description=readme,
     long_description_content_type='text/markdown',

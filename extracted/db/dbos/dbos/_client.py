@@ -141,6 +141,11 @@ class DBOSClient:
             "priority": options.get("priority"),
         }
 
+        inputs: WorkflowInputs = {
+            "args": args,
+            "kwargs": kwargs,
+        }
+
         status: WorkflowStatusInternal = {
             "workflow_uuid": workflow_id,
             "status": WorkflowStatusString.ENQUEUED.value,
@@ -163,18 +168,18 @@ class DBOSClient:
                 int(workflow_timeout * 1000) if workflow_timeout is not None else None
             ),
             "workflow_deadline_epoch_ms": None,
-        }
-
-        inputs: WorkflowInputs = {
-            "args": args,
-            "kwargs": kwargs,
+            "deduplication_id": enqueue_options_internal["deduplication_id"],
+            "priority": (
+                enqueue_options_internal["priority"]
+                if enqueue_options_internal["priority"] is not None
+                else 0
+            ),
+            "inputs": _serialization.serialize_args(inputs),
         }
 
         self._sys_db.init_workflow(
             status,
-            _serialization.serialize_args(inputs),
             max_recovery_attempts=None,
-            enqueue_options=enqueue_options_internal,
         )
         return workflow_id
 
@@ -230,6 +235,9 @@ class DBOSClient:
             "app_version": None,
             "workflow_timeout_ms": None,
             "workflow_deadline_epoch_ms": None,
+            "deduplication_id": None,
+            "priority": 0,
+            "inputs": _serialization.serialize_args({"args": (), "kwargs": {}}),
         }
         with self._sys_db.engine.begin() as conn:
             self._sys_db._insert_workflow_status(

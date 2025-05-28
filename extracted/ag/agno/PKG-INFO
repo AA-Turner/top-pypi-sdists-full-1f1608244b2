@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: agno
-Version: 1.5.4
+Version: 1.5.5
 Summary: Agno: a lightweight library for building Reasoning Agents
 Author-email: Ashpreet Bedi <ashpreet@agno.com>
 License: Copyright (c) Agno, Inc.
@@ -566,6 +566,12 @@ Provides-Extra: text
 Requires-Dist: aiofiles; extra == "text"
 Provides-Extra: csv
 Requires-Dist: aiofiles; extra == "csv"
+Provides-Extra: markdown
+Requires-Dist: unstructured; extra == "markdown"
+Requires-Dist: markdown; extra == "markdown"
+Requires-Dist: aiofiles; extra == "markdown"
+Provides-Extra: huggingface
+Requires-Dist: huggingface-hub; extra == "huggingface"
 Provides-Extra: performance
 Requires-Dist: memory_profiler; extra == "performance"
 Provides-Extra: cookbooks
@@ -636,6 +642,9 @@ Requires-Dist: agno[pdf]; extra == "knowledge"
 Requires-Dist: agno[docx]; extra == "knowledge"
 Requires-Dist: agno[text]; extra == "knowledge"
 Requires-Dist: agno[csv]; extra == "knowledge"
+Requires-Dist: agno[markdown]; extra == "knowledge"
+Provides-Extra: embedders
+Requires-Dist: agno[huggingface]; extra == "embedders"
 Provides-Extra: tests
 Requires-Dist: agno[dev]; extra == "tests"
 Requires-Dist: agno[models]; extra == "tests"
@@ -643,6 +652,7 @@ Requires-Dist: agno[tools]; extra == "tests"
 Requires-Dist: agno[storage]; extra == "tests"
 Requires-Dist: agno[vectordbs]; extra == "tests"
 Requires-Dist: agno[knowledge]; extra == "tests"
+Requires-Dist: agno[embedders]; extra == "tests"
 Requires-Dist: agno[performance]; extra == "tests"
 Requires-Dist: agno[cookbooks]; extra == "tests"
 Requires-Dist: twine; extra == "tests"

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "burr"
-version = "0.40.0"
+version = "0.40.2"
 dependencies = [] # yes, there are none
 requires-python = ">=3.9"
 authors = [
@@ -164,6 +164,7 @@ inappexamples  = [
   "opentelemetry-api",
   "opentelemetry-sdk",
   'opentelemetry-instrumentation-openai',
+  'tavily-python',
 ]
 
 # All the bloatware from various LLM demos

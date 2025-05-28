@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: smolagents
-Version: 1.16.1
+Version: 1.17.0
 Summary: 🤗 smolagents: a barebones library for agents. Agents write python code to call tools or orchestrate other agents.
 Author-email: Aymeric Roucher <aymeric@hf.co>
 Requires-Python: >=3.10
@@ -32,7 +32,7 @@ Requires-Dist: gradio>=5.14.0; extra == "gradio"
 Provides-Extra: litellm
 Requires-Dist: litellm>=1.60.2; extra == "litellm"
 Provides-Extra: mcp
-Requires-Dist: mcpadapt>=0.0.19; extra == "mcp"
+Requires-Dist: mcpadapt>=0.1.8; extra == "mcp"
 Requires-Dist: mcp; extra == "mcp"
 Provides-Extra: mlx-lm
 Requires-Dist: mlx-lm; extra == "mlx-lm"
@@ -178,7 +178,7 @@ model = LiteLLMModel(
 ```
 </details>
 <details>
-<summary> <b>OpenAI-compatible servers</b></summary>
+<summary> <b>OpenAI-compatible servers: Together AI</b></summary>
 
 ```py
 import os
@@ -190,6 +190,21 @@ model = OpenAIServerModel(
     api_key=os.environ["TOGETHER_API_KEY"], # Switch to the API key for the server you're targeting.
 )
 ```
+</details>
+<details>
+<summary> <b>OpenAI-compatible servers: OpenRouter</b></summary>
+
+```py
+import os
+from smolagents import OpenAIServerModel
+
+model = OpenAIServerModel(
+    model_id="openai/gpt-4o",
+    api_base="https://openrouter.ai/api/v1", # Leave this blank to query OpenAI servers.
+    api_key=os.environ["OPENROUTER_API_KEY"], # Switch to the API key for the server you're targeting.
+)
+```
+
 </details>
 <details>
 <summary> <b>Local `transformers` model</b></summary>

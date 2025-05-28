@@ -78,9 +78,9 @@ impl ExportContext {
         }
 
         let ids = mutation
-            .delete_keys
+            .deletes
             .iter()
-            .map(key_to_point_id)
+            .map(|deletion| key_to_point_id(&deletion.key))
             .collect::<Result<Vec<_>>>()?;
 
         if !ids.is_empty() {
@@ -429,7 +429,8 @@ impl StorageFactoryBase for Arc<Factory> {
 
     async fn apply_setup_changes(
         &self,
-        _setup_status: Vec<&'async_trait Self::SetupStatus>,
+        _setup_status: Vec<TypedResourceSetupChangeItem<'async_trait, Self>>,
+        _auth_registry: &Arc<AuthRegistry>,
     ) -> Result<()> {
         Err(anyhow!("Qdrant does not support setup changes"))
     }

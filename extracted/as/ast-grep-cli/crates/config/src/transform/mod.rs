@@ -1,6 +1,7 @@
+mod parse;
 mod rewrite;
 mod string_case;
-mod transformation;
+mod trans;
 
 use crate::{DeserializeEnv, RuleCore};
 
@@ -9,14 +10,37 @@ use ast_grep_core::meta_var::MetaVariable;
 use ast_grep_core::Doc;
 use ast_grep_core::Language;
 
+use parse::ParseTransError;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use thiserror::Error;
 
-use transformation::Transformation as Trans;
-pub type Transformation = Trans<String>;
+pub use trans::Trans;
+
+#[derive(Serialize, Deserialize, Clone, JsonSchema)]
+#[serde(untagged)]
+pub enum Transformation {
+  Simplied(String),
+  Object(Trans<String>),
+}
+
+impl Transformation {
+  pub fn parse<L: Language>(&self, lang: &L) -> Result<Trans<MetaVariable>, TransformError> {
+    match self {
+      Transformation::Simplied(s) => {
+        let t: Trans<String> = s.parse()?;
+        t.parse(lang)
+      }
+      Transformation::Object(t) => t.parse(lang),
+    }
+  }
+}
 
 #[derive(Debug, Error)]
 pub enum TransformError {
+  #[error("Cannot parse transform string.")]
+  Parse(#[from] ParseTransError),
   #[error("`{0}` has a cyclic dependency.")]
   Cyclic(String),
   #[error("Transform var `{0}` has already defined.")]
@@ -34,16 +58,19 @@ impl Transform {
     map: &HashMap<String, Transformation>,
     env: &DeserializeEnv<L>,
   ) -> Result<Self, TransformError> {
-    let orders = env
-      .get_transform_order(map)
-      .map_err(TransformError::Cyclic)?;
-    let transforms: Result<_, _> = orders
-      .into_iter()
-      .map(|key| map[key].parse(&env.lang).map(|t| (key.to_string(), t)))
+    let map: Result<_, _> = map
+      .iter()
+      .map(|(key, val)| val.parse(&env.lang).map(|t| (key.to_string(), t)))
       .collect();
-    Ok(Self {
-      transforms: transforms?,
-    })
+    let map = map?;
+    let order = env
+      .get_transform_order(&map)
+      .map_err(TransformError::Cyclic)?;
+    let transforms = order
+      .iter()
+      .map(|&key| (key.to_string(), map[key].clone()))
+      .collect();
+    Ok(Self { transforms })
   }
 
   pub fn apply_transform<'c, D: Doc>(
@@ -84,6 +111,9 @@ mod test {
   use crate::from_str;
   use crate::test::TypeScript;
   use ast_grep_core::tree_sitter::LanguageExt;
+
+  #[test]
+  fn test_transform_str() {}
 
   #[test]
   fn test_single_cyclic_transform() {

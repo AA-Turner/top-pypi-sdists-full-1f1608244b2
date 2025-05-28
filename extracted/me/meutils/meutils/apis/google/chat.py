@@ -122,6 +122,8 @@ class Completions(object):
             yield f"```json\n{file_object.model_dump_json(indent=4)}\n```\n\n"
 
             s = time.time()
+
+            yield "[Thinking]("
             for i in range(100):
                 file_object = self.client.files.get(
                     name=file_object.name,
@@ -129,6 +131,7 @@ class Completions(object):
                 )
 
                 logger.debug(file_object)
+
                 if file_object.state.name in {"ACTIVE", }:
                     yield f"100%) ✅️✅️✅️{time.time() - s:.2f}s.\n\n"
                     break

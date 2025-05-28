@@ -132,7 +132,7 @@ def generate_cookie(refresh_token: str, ms_token: Optional[str] = None) -> str:
     return "; ".join(cookie_parts)
 
 
-async def get_upload_token():  # 3600过期
+async def get_upload_token(refresh_token):  # 3600过期
     """
 
     {'code': 0,
@@ -148,7 +148,7 @@ async def get_upload_token():  # 3600过期
 
     :return:
     """
-    cookie = generate_cookie('de2215a7bb8e442774cf388f03fac84c')
+    cookie = generate_cookie(refresh_token)
     url = "https://www.doubao.com/alice/upload/auth_token"
 
     headers = {
@@ -170,6 +170,6 @@ async def get_upload_token():  # 3600过期
 if __name__ == '__main__':
     # generate_cookie("")
 
-    # arun(get_upload_token())
-    print(generate_params())
+    arun(get_upload_token("712a47e7eec7c03b4cc7229775e06841"))
+    # print(generate_params())
     # print(get_signing_key('xW9YbDhTlWsXdaN7O2g1lfcyePxf5kJyg/r2mwSZG/iuSmbvVgToO6LVCLmUjVJ3'))

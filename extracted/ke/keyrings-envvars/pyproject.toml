@@ -2,14 +2,37 @@
 build-backend = "poetry_dynamic_versioning.backend"
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
 
+[project]
+authors = [{email = "<wirelessduck+py@gmail.com>", name = "wwuck"}]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Typing :: Typed",
+]
+dependencies = [
+  "keyring>=23.4.0",
+]
+description = "keyring backend plugin to retrieve credentials from environment variables."
+dynamic = []
+license = {text = "MIT"}
+name = "keyrings.envvars"
+readme = "README.rst"
+requires-python = ">=3.9.0"
+version = "2.0.0"
+
+[project.entry-points."keyring.backends"]
+envvars = "keyrings.envvars.keyring:EnvvarsKeyring"
+
+[project.urls]
+Documentation = "https://codeberg.org/wwuck/keyrings.envvars"
+Repository = "https://codeberg.org/wwuck/keyrings.envvars"
+Tracker = "https://codeberg.org/wwuck/keyrings.envvars/issues"
+
 [tool.bandit.assert_used]
 skips = [
   "*_test.py",
 ]
-
-[tool.black]
-line-length = 120
-skip-string-normalization = true
 
 [tool.check-wheel-contents]
 package = "src/keyrings"
@@ -35,56 +58,49 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-[tool.poetry]
-authors = ["wwuck <wirelessduck+py@gmail.com>"]
-classifiers = [
-  "Development Status :: 5 - Production/Stable",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Typing :: Typed",
+[tool.numpydoc_validation]
+checks = [
+  'ES01',
+  'EX01',
+  'SA01',
+  'SS05',
+  'all',
 ]
-description = "keyring backend plugin to retrieve credentials from environment variables."
-license = "MIT"
-name = "keyrings.envvars"
-packages = [{from = "src", include = "keyrings"}]
-readme = "README.rst"
-repository = "https://codeberg.org/wwuck/keyrings.envvars"
-version = "1.1.0"
+exclude = [
+  '\.__init__$',
+]
 
-[tool.poetry.dependencies]
-keyring = ">=23.4.0"
-python = "^3.9"
+[tool.poetry]
+packages = [{from = "src", include = "keyrings"}]
+requires-poetry = ">=2.0"
 
 [tool.poetry.group.build-check.dependencies]
-check-wheel-contents = "^0.6.0"
-twine = "^5.0.0"
+check-wheel-contents = "^0.6.1"
+twine = "^6.0.0"
 
 [tool.poetry.group.mypy.dependencies]
-keyring = "^24.3.0"
-mypy = "^1.8.0"
-nox = "^2023.4.22"
-pytest = "^8.0.0"
+keyring = "^25.6.0"
+mypy = "^1.14.1"
+nox = "^2024.10.9"
+pytest = "^8.3.4"
 
 [tool.poetry.group.ruff.dependencies]
-ruff = "^0.2.1"
+ruff = "^0.8.6"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.0.0"
-pytest-antilru = "^1.1.1"
-pytest-cov = "^4.1.0"
+pytest = "^8.3.4"
+pytest-antilru = "^2.0.0"
+pytest-cov = "^6.0.0"
 pytest-flakefinder = "^1.1.0"
-pytest-randomly = "^3.15.0"
-pytest-xdist = {extras = ["psutil"], version = "^3.5.0"}
+pytest-randomly = "^3.16.0"
+pytest-socket = {python = "<4", version = "^0.7.0"}
+pytest-xdist = {extras = ["psutil"], version = "^3.6.1"}
 
 [tool.poetry.group.yamllint.dependencies]
 yamllint = "^1.35.0"
 
-[tool.poetry.plugins."keyring.backends"]
-envvars = "keyrings.envvars.keyring:EnvvarsKeyring"
-
-[tool.poetry.urls]
-Documentation = "https://codeberg.org/wwuck/keyrings.envvars"
-Tracker = "https://codeberg.org/wwuck/keyrings.envvars/issues"
+[tool.poetry.requires-plugins]
+poetry-dynamic-versioning = {extras = ["plugin"], version = ">=1.0.0,<2.0.0"}
 
 [tool.poetry-dynamic-versioning]
 enable = false
@@ -130,6 +146,9 @@ known-first-party = ["src"]
 [tool.ruff.lint.per-file-ignores]
 "src/keyrings/envvars/keyring.py" = ["ARG002", "PLR6301"]
 "src/keyrings/envvars/tests/*.py" = ["PLR6301", "S101", "S105", "SLF001", "TID252"]
+
+[tool.ruff.lint.pydocstyle]
+convention = 'numpy'
 
 [tool.tomlsort]
 all = true

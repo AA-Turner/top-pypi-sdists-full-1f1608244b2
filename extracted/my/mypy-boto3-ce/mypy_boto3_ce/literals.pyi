@@ -47,6 +47,8 @@ __all__ = (
     "GetAnomaliesPaginatorName",
     "GetAnomalyMonitorsPaginatorName",
     "GetAnomalySubscriptionsPaginatorName",
+    "GetCostAndUsageComparisonsPaginatorName",
+    "GetCostComparisonDriversPaginatorName",
     "GranularityType",
     "GroupDefinitionTypeType",
     "LookbackPeriodInDaysType",
@@ -153,6 +155,8 @@ GenerationStatusType = Literal["FAILED", "PROCESSING", "SUCCEEDED"]
 GetAnomaliesPaginatorName = Literal["get_anomalies"]
 GetAnomalyMonitorsPaginatorName = Literal["get_anomaly_monitors"]
 GetAnomalySubscriptionsPaginatorName = Literal["get_anomaly_subscriptions"]
+GetCostAndUsageComparisonsPaginatorName = Literal["get_cost_and_usage_comparisons"]
+GetCostComparisonDriversPaginatorName = Literal["get_cost_comparison_drivers"]
 GranularityType = Literal["DAILY", "HOURLY", "MONTHLY"]
 GroupDefinitionTypeType = Literal["COST_CATEGORY", "DIMENSION", "TAG"]
 LookbackPeriodInDaysType = Literal["SEVEN_DAYS", "SIXTY_DAYS", "THIRTY_DAYS"]
@@ -502,7 +506,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -563,7 +566,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -571,6 +573,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -623,4 +626,10 @@ ResourceServiceName = Literal[
     "sns",
     "sqs",
 ]
-PaginatorName = Literal["get_anomalies", "get_anomaly_monitors", "get_anomaly_subscriptions"]
+PaginatorName = Literal[
+    "get_anomalies",
+    "get_anomaly_monitors",
+    "get_anomaly_subscriptions",
+    "get_cost_and_usage_comparisons",
+    "get_cost_comparison_drivers",
+]

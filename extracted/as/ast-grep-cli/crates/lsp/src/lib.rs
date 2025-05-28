@@ -13,8 +13,9 @@ use ast_grep_core::{
   AstGrep, Doc,
 };
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use utils::{convert_match_to_diagnostic, diagnostic_to_code_action, RewriteData};
 
@@ -23,16 +24,22 @@ pub use tower_lsp_server::{LspService, Server};
 pub trait LSPLang: LanguageExt + Eq + Send + Sync + 'static {}
 impl<T> LSPLang for T where T: LanguageExt + Eq + Send + Sync + 'static {}
 
+type Notes = BTreeMap<(u32, u32, u32, u32), Arc<String>>;
+
 struct VersionedAst<D: Doc> {
   version: i32,
   root: AstGrep<D>,
+  notes: Notes,
 }
 
 pub struct Backend<L: LSPLang> {
   client: Client,
   map: DashMap<String, VersionedAst<StrDoc<L>>>,
   base: PathBuf,
-  rules: std::result::Result<RuleCollection<L>, String>,
+  rules: RuleCollection<L>,
+  errors: Option<String>,
+  // interner for rule ids to note, to avoid duplication
+  interner: DashMap<String, Arc<String>>,
 }
 
 const FALLBACK_CODE_ACTION_PROVIDER: Option<CodeActionProviderCapability> =
@@ -81,6 +88,7 @@ impl<L: LSPLang> LanguageServer for Backend<L> {
           commands: vec![APPLY_ALL_FIXES.to_string()],
           work_done_progress_options: Default::default(),
         }),
+        hover_provider: Some(HoverProviderCapability::Simple(true)),
         ..ServerCapabilities::default()
       },
     })
@@ -93,7 +101,7 @@ impl<L: LSPLang> LanguageServer for Backend<L> {
       .await;
 
     // Report errors loading config once, upon initialization
-    if let Err(error) = &self.rules {
+    if let Some(error) = &self.errors {
       // popup message
       self
         .client
@@ -171,6 +179,24 @@ impl<L: LSPLang> LanguageServer for Backend<L> {
   async fn execute_command(&self, params: ExecuteCommandParams) -> Result<Option<Value>> {
     Ok(self.on_execute_command(params).await)
   }
+
+  async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
+    self
+      .client
+      .log_message(MessageType::LOG, "Get Hover Notes")
+      .await;
+    Ok(self.do_hover(params.text_document_position_params))
+  }
+}
+
+fn pos_tuple_to_range((line, character, end_line, end_character): (u32, u32, u32, u32)) -> Range {
+  Range {
+    start: Position { line, character },
+    end: Position {
+      line: end_line,
+      character: end_character,
+    },
+  }
 }
 
 impl<L: LSPLang> Backend<L> {
@@ -179,11 +205,17 @@ impl<L: LSPLang> Backend<L> {
     base: PathBuf,
     rules: std::result::Result<RuleCollection<L>, String>,
   ) -> Self {
+    let (rules, errors) = match rules {
+      Ok(r) => (r, None),
+      Err(e) => (RuleCollection::default(), Some(e)),
+    };
     Self {
       client,
       rules,
       base,
       map: DashMap::new(),
+      errors,
+      interner: DashMap::new(),
     }
   }
 
@@ -194,8 +226,34 @@ impl<L: LSPLang> Backend<L> {
     } else {
       &absolute_path
     };
-    let rules = self.rules.as_ref().ok()?.for_path(path);
+    let rules = self.rules.for_path(path);
     Some(rules)
+  }
+
+  fn do_hover(&self, pos_params: TextDocumentPositionParams) -> Option<Hover> {
+    let uri = pos_params.text_document.uri;
+    let Position {
+      line,
+      character: column,
+    } = pos_params.position;
+    let ast = self.map.get(uri.as_str())?;
+    let query = (line, column, line, column);
+    // TODO: next_back is not precise, it can return a note that is larger
+    let (pos, markdown) = ast.notes.range(..=query).next_back()?;
+    // out of range check
+    if pos.0 > line || pos.2 < line {
+      return None;
+    }
+    if pos.0 == line && pos.1 > column || pos.2 == line && pos.3 < column {
+      return None;
+    }
+    Some(Hover {
+      contents: HoverContents::Markup(MarkupContent {
+        kind: MarkupKind::Markdown,
+        value: markdown.to_string(),
+      }),
+      range: Some(pos_tuple_to_range(*pos)),
+    })
   }
 
   fn get_diagnostics(
@@ -220,8 +278,34 @@ impl<L: LSPLang> Backend<L> {
     Some(diagnostics)
   }
 
-  async fn publish_diagnostics(&self, uri: Uri, versioned: &VersionedAst<StrDoc<L>>) -> Option<()> {
+  fn build_notes(&self, diagnostics: &[Diagnostic]) -> Notes {
+    let mut notes = BTreeMap::new();
+    for diagnostic in diagnostics {
+      let Some(NumberOrString::String(id)) = &diagnostic.code else {
+        continue;
+      };
+      let Some(note) = self.rules.get_rule(id).and_then(|r| r.note.clone()) else {
+        continue;
+      };
+      let start = diagnostic.range.start;
+      let end = diagnostic.range.end;
+      let atom = self
+        .interner
+        .entry(id.clone())
+        .or_insert_with(|| Arc::new(note.clone()))
+        .clone();
+      notes.insert((start.line, start.character, end.line, end.character), atom);
+    }
+    notes
+  }
+
+  async fn publish_diagnostics(
+    &self,
+    uri: Uri,
+    versioned: &mut VersionedAst<StrDoc<L>>,
+  ) -> Option<()> {
     let diagnostics = self.get_diagnostics(&uri, versioned).unwrap_or_default();
+    versioned.notes = self.build_notes(&diagnostics);
     self
       .client
       .publish_diagnostics(uri, diagnostics, Some(versioned.version))
@@ -263,15 +347,16 @@ impl<L: LSPLang> Backend<L> {
       .await;
     let lang = Self::infer_lang_from_uri(&text_doc.uri)?;
     let root = AstGrep::new(text, lang);
-    let versioned = VersionedAst {
+    let mut versioned = VersionedAst {
       version: text_doc.version,
       root,
+      notes: BTreeMap::new(),
     };
     self
       .client
       .log_message(MessageType::LOG, "Publishing init diagnostics.")
       .await;
-    self.publish_diagnostics(text_doc.uri, &versioned).await;
+    self.publish_diagnostics(text_doc.uri, &mut versioned).await;
     self.map.insert(uri.to_owned(), versioned); // don't lock dashmap
     Some(())
   }
@@ -294,12 +379,15 @@ impl<L: LSPLang> Backend<L> {
     *versioned = VersionedAst {
       version: text_doc.version,
       root,
+      notes: BTreeMap::new(),
     };
     self
       .client
       .log_message(MessageType::LOG, "Publishing diagnostics.")
       .await;
-    self.publish_diagnostics(text_doc.uri, &versioned).await;
+    self
+      .publish_diagnostics(text_doc.uri, &mut *versioned)
+      .await;
     Some(())
   }
   async fn on_close(&self, params: DidCloseTextDocumentParams) {

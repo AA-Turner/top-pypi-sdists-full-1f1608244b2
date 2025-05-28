@@ -1651,8 +1651,8 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                                 console.print("Selecionando NOP do item: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN '")
                                 natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN ")
                             except:
-                                console.print("Selecionando NOP do item: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE'")
-                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE")
+                                console.print("Selecionando NOP do item: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN FE'")
+                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN FE")
                         else:
                             if nop_to_be_select != '':
                                 console.print(f"Selecionando NOP do item: '{nop_to_be_select}'")
@@ -2914,8 +2914,8 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                                 natureza_oper_select.select("5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE")
                         except:
                             if item_arla:
-                                console.print("Selecionando NOP: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE'")
-                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE")
+                                console.print("Selecionando NOP: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN FE'")
+                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN FE")
                             else:
                                 console.print("Selecionando NOP: '5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC'")
                                 natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
@@ -2924,6 +2924,7 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                         # natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
                             
 
+                        await worker_sleep(3)
                         console.print("Natureza da operação selecionado com sucesso, preenchendo os itens...\n")
 
                         #INSERINDO A QUANTIDADE
@@ -4127,6 +4128,7 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
         await worker_sleep(2)
         pyautogui.press("enter")
         await worker_sleep(5)
+        path_to_txt = ''
 
         boletim_caixa_opened = await is_window_open_by_class("TFrmRelBoletimCaixa", "TFrmRelBoletimCaixa")
         if boletim_caixa_opened["IsOpened"] == True:
@@ -4221,61 +4223,9 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
             )
         
-        txt = ""
-        with open(f"{path_to_txt}.pdf", "rb") as f:
-            reader = PdfReader(f)
-            for p in reader.pages:
-                txt += p.extract_text()
-        
-        console.print(f"Texto extraido {txt}...\n")
-        v = re.findall(r'\b\d{1,3},\d{2}\b(?!\s*\d+\.\d+\.\d+)',txt)
 
-        ultimo_valor = v[-1]
-        penultimo_valor = v[-2]
-
-        if ultimo_valor == penultimo_valor:
-            console.print("Valores no relatorio corretamente gerados...\n")
-            with open(f"{path_to_txt}.pdf", 'rb') as file:
-                file_bytes = io.BytesIO(file.read())
-
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            desArquivo = f"CAIXA 13 DEVOLUCAO {numero_cupom_fiscal}.pdf"
-            try:
-                await send_file(historico_id, desArquivo, "pdf", file_bytes, file_extension="pdf")
-                os.remove(f"{path_to_txt}.pdf")
-                retorno = f"Processo de devolução executado com sucesso \nEtapas Executadas:\n{steps}"
-
-                try:
-                    url_retorno = nota.get("urlRetorno")
-                    identificador = nota.get("identificador")
-
-                    if url_retorno and identificador:
-                        await post_partner(url_retorno, identificador, numero_nota_fiscal, valor_nota_fiscal)
-                    else:
-                        console.print("Não foi possivel obter o valor de urlRetorno/identificador")
-                except:
-                    console.print(f"Erro ao obter os dados ou enviar a requisição: {e}")
-                
-                return RpaRetornoProcessoDTO(
-                    sucesso=True,
-                    retorno=retorno,
-                    status=RpaHistoricoStatusEnum.Sucesso)
-            except Exception as e:
-                result = f"Arquivo CAIXA 13 DEVOLUÇÃO gerado com sucesso, porém gerou erro ao realizar o envio para o backoffice {e} - Arquivo ainda salvo na dispositivo utilizado no diretório {path_to_txt} !"
-                console.print(result, style="bold red")
-                return RpaRetornoProcessoDTO(
-                    sucesso=False,
-                    retorno=result,
-                    status=RpaHistoricoStatusEnum.Falha,
-                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                )
-        else:
-            console.print("Valores no relatorio não batem...\n")
-            with open(f"{path_to_txt}.pdf", 'rb') as file:
-                file_bytes = io.BytesIO(file.read())
-
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            desArquivo = f"CAIXA 13 DEVOLUCAO {numero_cupom_fiscal}.pdf"
+        desArquivo = f"CAIXA 13 DEVOLUCAO {numero_cupom_fiscal}.pdf"
+        try:
             await send_file(historico_id, desArquivo, "pdf", file_bytes, file_extension="pdf")
             os.remove(f"{path_to_txt}.pdf")
             retorno = f"Processo de devolução executado com sucesso \nEtapas Executadas:\n{steps}"
@@ -4290,12 +4240,19 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                     console.print("Não foi possivel obter o valor de urlRetorno/identificador")
             except:
                 console.print(f"Erro ao obter os dados ou enviar a requisição: {e}")
-
+            
+            return RpaRetornoProcessoDTO(
+                sucesso=True,
+                retorno=retorno,
+                status=RpaHistoricoStatusEnum.Sucesso)
+        except Exception as e:
+            result = f"Arquivo CAIXA 13 DEVOLUÇÃO gerado com sucesso, porém gerou erro ao realizar o envio para o backoffice {e} - Arquivo ainda salvo na dispositivo utilizado no diretório {path_to_txt} !"
+            console.print(result, style="bold red")
             return RpaRetornoProcessoDTO(
                 sucesso=False,
-                retorno=f"O valor de entrada {penultimo_valor} não esta batendo com o valor de saída {ultimo_valor}, por favor verificar. \nEtapas Executadas:\n{steps}",
+                retorno=result,
                 status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)]
+                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
             )
         
 

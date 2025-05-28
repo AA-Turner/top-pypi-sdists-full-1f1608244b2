@@ -20,10 +20,6 @@ def test_systemdb_migration(dbos: DBOS) -> None:
         result = connection.execute(sql)
         assert result.fetchall() == []
 
-        sql = SystemSchema.workflow_inputs.select()
-        result = connection.execute(sql)
-        assert result.fetchall() == []
-
         sql = SystemSchema.operation_outputs.select()
         result = connection.execute(sql)
         assert result.fetchall() == []
@@ -33,10 +29,6 @@ def test_systemdb_migration(dbos: DBOS) -> None:
         assert result.fetchall() == []
 
         sql = SystemSchema.notifications.select()
-        result = connection.execute(sql)
-        assert result.fetchall() == []
-
-        sql = SystemSchema.scheduler_state.select()
         result = connection.execute(sql)
         assert result.fetchall() == []
 

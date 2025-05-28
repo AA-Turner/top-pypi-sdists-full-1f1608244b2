@@ -31,11 +31,12 @@ class Translator(object):
   def __init__(self, world, error_on_undefined_entities = True):
     self.world                         = world
     self.error_on_undefined_entities   = error_on_undefined_entities
-    self.prefixes                      = { "rdf:" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdfs:" : "http://www.w3.org/2000/01/rdf-schema#", "owl:" : "http://www.w3.org/2002/07/owl#", "xsd:" : "http://www.w3.org/2001/XMLSchema#", "obo:" : "http://purl.obolibrary.org/obo/", "owlready:" : "http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#" }
+    self.prefixes                      = { "rdf:" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdfs:" : "http://www.w3.org/2000/01/rdf-schema#", "owl:" : "http://www.w3.org/2002/07/owl#", "xsd:" : "http://www.w3.org/2001/XMLSchema#", "obo:" : "http://purl.obolibrary.org/obo/", "owlready:" : "http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#", "pym:" : "http://PYM/" }
     self.base_iri                      = ""
     self.current_anonynous_var         = 0
     self.current_parameter             = 0
     self.max_fixed_parameter           = 0
+    self.parameter_2_parameter_datatypes = {}
     self.main_query                    = None
     self.preliminary_selects           = []
     self.recursive_preliminary_selects = {}
@@ -84,18 +85,19 @@ class Translator(object):
       sql += " OFFSET %s" % self._to_sql(self.solution_modifier[4])
       
     nb_parameter = max(self.current_parameter, self.max_fixed_parameter)
-    parameter_2_parameter_datatypes = {}
     parameter_datatypes = []
     if self.escape_mark in sql:
       def sub(m):
         escape = m.group(0)[len(self.escape_mark):]
         if escape.startswith("TypeOfParam?"):
           number = int(escape[12:])
-          r = parameter_2_parameter_datatypes.get(number)
+          r = self.parameter_2_parameter_datatypes.get(number)
+          if r == "o":
+            return "'o'"
           if r is None:
-            r = parameter_2_parameter_datatypes[number] = self.new_parameter()
+            r = self.parameter_2_parameter_datatypes[number] = self.new_parameter()
             parameter_datatypes.append(number - 1)
-        return "?%s" % r
+          return "?%s" % r
       sql = re.sub("%s[^ ]*" % self.escape_mark, sub, sql)
       
     if   self.main_query.type == "select":
@@ -129,13 +131,20 @@ class Translator(object):
           if x.value.startswith("??anon") or x.value.startswith("_:"): # a new blank node
             triple.append(("bn", x.value))
           else: # a normal var
-            column = var_2_column[x.value]
-            triple.append(("vars", column.index))
-            if len(triple) == o_pos: # in 'o' position => can be objs or datas!
-              if column.index + 1 < len(columns):
-                next_column = columns[column.index + 1]
-                if next_column.name.endswith("d"):
-                  triple.append(("vars", next_column.index))
+            column = var_2_column.get(x.value)
+            if column:
+              triple.append(("vars", column.index))
+              if len(triple) == o_pos: # in 'o' position => can be objs or datas!
+                if column.index + 1 < len(columns):
+                  next_column = columns[column.index + 1]
+                  if next_column.name.endswith("d"):
+                    triple.append(("vars", next_column.index))
+            else:
+              if is_insert: raise ValueError("Cannot insert variable %s not present in the where clause of the query!" % x.value)
+              triple.append(("any", 0))
+              if len(triple) == o_pos: # in 'o' position => can be objs or datas!
+                triple.append(("any", 0))
+                
         elif x.name == "PARAM":
           triple.append(("param", x.number - 1))
           if len(triple) == o_pos: # in 'o' position => can be datas!
@@ -152,35 +161,34 @@ class Translator(object):
             triple.append(("datas", d2))
             
       r.append(triple)
-      
     return r
   
-  def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None, copy_vars = False):
+  def new_sql_query(self, name, parent, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, copy_vars = False, is_delete = False):
     if preliminary and not name: name = "prelim%s" % (len(self.preliminary_selects) + 1)
     
     if isinstance(block, UnionBlock) and block.simple_union_triples:
       block = SimpleTripleBlock(block.simple_union_triples)
       
     if   isinstance(block, SimpleTripleBlock):
-      s = SQLQuery(name)
+      s = SQLQuery(name, parent, is_delete = is_delete)
       
     elif isinstance(block, OptionalBlock):
-      s = SQLQuery(name)
+      s = SQLQuery(name, parent, is_delete = is_delete)
       s.optional = True
       
     elif isinstance(block, UnionBlock):
-      s = SQLCompoundQuery(name, nested_inside)
+      s = SQLCompoundQuery(name, parent, is_delete = is_delete)
       if selects is None:
         selects = block.get_ordered_vars()
         
     elif isinstance(block, FilterBlock):
-      s = SQLNestedQuery(name)
+      s = SQLNestedQuery(name, parent, is_delete = is_delete)
       s.exists = isinstance(block, ExistsBlock)
-      if nested_inside: s.vars = nested_inside.vars
+      if parent: s.vars = parent.vars
       preliminary = False
       
     elif isinstance(block, NotExistsBlock):
-      s = SQLCompoundQuery(name, nested_inside)
+      s = SQLCompoundQuery(name, parent, is_delete = is_delete)
       
     elif isinstance(block, SubQueryBlock):
       s = block.parse()
@@ -219,7 +227,7 @@ class Translator(object):
       
     elif isinstance(block, UnionBlock):
       for alternative in block:
-        query = self.new_sql_query(None, alternative, selects, distinct, None, False, extra_binds, nested_inside = s, copy_vars = False)
+        query = self.new_sql_query(None, s, alternative, selects, distinct, None, False, extra_binds, copy_vars = False)
         s.append(query, "UNION")
       s.finalize_compounds()
       
@@ -268,6 +276,10 @@ class Translator(object):
 
 from owlready2.sparql import _default_spawn
 
+def _list_2_json(l):
+  return "[%s]" % (",".join(str(i.storid) if hasattr(i, "storid") else repr(i) for i in l))
+
+
 class PreparedQuery(object):
   def __init__(self, world, sql, column_names, column_types, nb_parameter, parameter_datatypes):
     self.world               = world
@@ -279,8 +291,8 @@ class PreparedQuery(object):
     
   def execute_raw(self, params = (), spawn = False):
     self.world._nb_sparql_call += 1
-    sql_params = [self.world._to_rdf(param)[0] for param in params]
-    for i in self.parameter_datatypes: sql_params.append(self.world._to_rdf(params[i])[1])
+    sql_params = [_list_2_json(param) if isinstance(param, list) else self.world._to_rdf(param)[0] for param in params]
+    for i in self.parameter_datatypes: sql_params.append(self.world._to_rdf(params[i])[1] or "o")
     if spawn:
       if spawn is True: spawn = _default_spawn
       with self.world.graph.connexion_pool.get() as db:
@@ -296,10 +308,18 @@ class PreparedQuery(object):
   def execute_raw_with_db(self, params, db):
     self.world._nb_sparql_call += 1
     sql_params = [self.world._to_rdf(param)[0] for param in params]
-    for i in self.parameter_datatypes: sql_params.append(self.world._to_rdf(params[i])[1])
+    for i in self.parameter_datatypes: sql_params.append(self.world._to_rdf(params[i])[1] or "o")
     return db.execute(self.sql, sql_params)
   
 class PreparedSelectQuery(PreparedQuery):
+  def __getstate__(self):
+    return [self.sql, self.column_names, self.column_types, self.nb_parameter, self.parameter_datatypes]
+  
+  def __setstate__(self, l):
+    import owlready2
+    self.sql, self.column_names, self.column_types, self.nb_parameter, self.parameter_datatypes = l
+    self.world = owlready2.default_world
+    
   def execute(self, params = (), execute_raw_result = None, spawn = False):
     if execute_raw_result is None: execute_raw_result = self.execute_raw(params, spawn)
     for l in execute_raw_result:
@@ -486,6 +506,22 @@ class PreparedModifyQuery(PreparedQuery):
     self.deletes  = deletes
     self.inserts  = inserts
     self.select_param_indexes = select_param_indexes
+    if self.deletes:
+      delete_s = set()
+      delete_o = set()
+      for delete in self.deletes:
+        if   (delete[0][0] != "any") and (delete[1][0] == "any") and (delete[2][0] == "any"): delete_s.add(delete[0])
+        elif (delete[0][0] == "any") and (delete[1][0] == "any") and (delete[2][0] != "any"): delete_o.add(delete[2])
+      self.full_deletes = list(delete_s & delete_o) # Also destroy IRI/storid in resources table!
+      
+  def __getstate__(self):
+    return [self.sql, self.column_names, self.column_types, self.nb_parameter, self.parameter_datatypes, self.ontology and self.ontology.iri, self.deletes, self.inserts, self.select_param_indexes]
+  
+  def __setstate__(self, l):
+    import owlready2
+    self.sql, self.column_names, self.column_types, self.nb_parameter, self.parameter_datatypes, ontology_iri, self.deletes, self.inserts, self.select_param_indexes = l
+    self.world = owlready2.default_world
+    self.ontology = ontology_iri and self.world.get_ontology(ontology_iri)
     
   def execute_raw(self, params = (), spawn = False):
     if self.sql: return PreparedQuery.execute_raw(self, [params[i] for i in self.select_param_indexes], spawn)
@@ -499,21 +535,30 @@ class PreparedModifyQuery(PreparedQuery):
     nb_match = 0
     if execute_raw_result is None: resultss = self.execute_raw(params, spawn)
     else:                          resultss = execute_raw_result
+    if self.deletes and self.full_deletes: full_delete_storids = []
     
     added_triples = []
     for results in set(resultss):
       nb_match += 1
-      
-      for delete in self.deletes:
-        triple = []
-        for type, value in delete:
-          if   type == "vars":          triple.append(results[value])
-          elif type == "param":         triple.append(self.world._to_rdf(params[value])[0])
-          elif type == "paramdatatype": triple.append(self.world._to_rdf(params[value])[1])
-          else:                         triple.append(value)
-        #print("DEL", triple)
-        self.world._del_triple_with_update(*triple)
-        
+
+      if self.deletes:
+        for delete in self.deletes:
+          triple = []
+          for type, value in delete:
+            if   type == "vars":          triple.append(results[value])
+            elif type == "param":         triple.append(self.world._to_rdf(params[value])[0])
+            elif type == "paramdatatype": triple.append(self.world._to_rdf(params[value])[1])
+            elif type == "any":           triple.append(None)
+            else:                         triple.append(value)
+          self.world._del_triple_with_update(*triple)
+
+        for type, value in self.full_deletes:
+          storid = None
+          if   type == "vars":          storid = results[value]
+          elif type == "param":         storid = self.world._to_rdf(params[value])[0]
+          else:                         storid = value
+          if storid: full_delete_storids.append((storid,))
+          
       bns = {}
       for insert in self.inserts:
         triple = []
@@ -536,6 +581,10 @@ class PreparedModifyQuery(PreparedQuery):
         added_triples.append(triple)
         
     if added_triples: self.world._add_quads_with_update(self.ontology, added_triples)
+    
+    if self.deletes and self.full_deletes:
+      self.world.graph.db.executemany("DELETE FROM resources WHERE storid=?", full_delete_storids)
+      
     return nb_match
   
 
@@ -600,8 +649,10 @@ class Table(object):
   
   
 class SQLQuery(FuncSupport):
-  def __init__(self, name):
+  def __init__(self, name, parent = None, is_delete = False):
+    assert not isinstance(parent, bool)
     self.name                     = name
+    self.parent                   = parent
     self.preliminary              = False
     self.recursive                = False
     self.translator               = CURRENT_TRANSLATOR.get()
@@ -617,7 +668,7 @@ class SQLQuery(FuncSupport):
     self.extra_sql                = ""
     self.select_simple_union      = False
     self.optional                 = False
-    
+    self.is_delete                = is_delete
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
 
@@ -791,6 +842,8 @@ class SQLQuery(FuncSupport):
         continue # Optional => cannot be used to restrict variable type
       
       s, p, o = triple
+      if s.name == "PARAM":
+        self.translator.parameter_2_parameter_datatypes[s.number] = "o"
       if s.name == "VAR":
         var = self.parse_var(s)
         var.update_type("objs")
@@ -953,11 +1006,11 @@ class SQLQuery(FuncSupport):
       elif isinstance(triple, Block):
         if   isinstance(triple, SimpleTripleBlock) and (len(triple) == 0): continue # Empty
         elif isinstance(triple, FilterBlock):
-          sub = self.translator.new_sql_query(None, triple, nested_inside = self)
+          sub = self.translator.new_sql_query(None, self, triple)
           self.add_subquery(sub)
           continue
         else:
-          sub = self.translator.new_sql_query(None, triple, preliminary = True, nested_inside = self, copy_vars = True)
+          sub = self.translator.new_sql_query(None, self, triple, preliminary = True, copy_vars = True)
           self.add_subquery(sub)
           continue
       if triple.to_skip: continue
@@ -1147,7 +1200,7 @@ class SQLQuery(FuncSupport):
         selected_parameter_index += 1
 
       return var_name, sql, sql_type, sql_d, sql_d_type
-    
+
     for select in selects:
       i += 1
       if isinstance(select, SimpleUnion):
@@ -1166,8 +1219,13 @@ class SQLQuery(FuncSupport):
           sql = "NULL"
           sql_type = "objs"
         else:
-          raise ValueError("Cannot select '%s'!" % select)
-        
+          if self.is_delete:
+            continue
+            sql = "NULL"
+            sql_type = "quads"
+          else:
+            raise ValueError("Cannot select '%s'!" % select)
+          
       if isinstance(sql, str) and sql.startswith("IN "):
         if   not "," in sql: sql = sql[4 : -1]
         elif len(selects) == 1: pass # Ok
@@ -1229,7 +1287,7 @@ class SQLQuery(FuncSupport):
     
 class SQLCompoundQuery(object):
   recursive = False
-  def __init__(self, name, parent):
+  def __init__(self, name, parent, is_delete = False):
     self.name                    = name
     self.parent                  = parent
     self.translator              = CURRENT_TRANSLATOR.get()
@@ -1237,6 +1295,10 @@ class SQLCompoundQuery(object):
     self.preliminary             = False
     self.optional                = False
     self.has_select              = False
+    self.is_delete               = is_delete
+    self.columns                 = []
+    self.conditions              = []
+    self.name_2_table            = {}
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
   
@@ -1275,8 +1337,8 @@ class SQLCompoundQuery(object):
     
     
 class SQLNestedQuery(SQLQuery):
-  def __init__(self, name):
-    SQLQuery.__init__(self, name)
+  def __init__(self, name, parent, is_delete = False):
+    SQLQuery.__init__(self, name, parent, is_delete)
     self.exists = True
     
   def finalize_columns(self):
@@ -1303,7 +1365,7 @@ class SQLNestedQuery(SQLQuery):
   
 
 class SQLRecursivePreliminaryQuery(SQLQuery):
-  def __init__(self, name, triple, fixed, fixed_var):
+  def __init__(self, name, triple, fixed, fixed_var, is_delete = False):
     s, p, o = triple
     translator = CURRENT_TRANSLATOR.get()
     self.fixed        = fixed
@@ -1316,7 +1378,7 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     self.need_orig    = not self.fixed_var is None # XXX Optimizable
     self.need_nb      = p.modifier != "*"
     
-    SQLQuery.__init__(self, "%s_%s" % (name, "quads2" if self.need_d else "objs"))
+    SQLQuery.__init__(self, "%s_%s" % (name, "quads2" if self.need_d else "objs"), is_delete = is_delete)
     self.recursive    = True
     self.preliminary  = True
     
@@ -1385,11 +1447,12 @@ SELECT q.%s%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
       
 class SQLStaticValuesPreliminaryQuery(object):
   recursive = False
-  def __init__(self, translator, name, static_values):
+  def __init__(self, translator, name, static_values, is_delete = False):
     self.translator    = translator
     self.name          = name
     self.static_values = static_values
     self.has_select    = True
+    self.is_delete     = is_delete
     
     if self.static_values.valuess:
       self.nb_value = len(self.static_values.valuess[0])

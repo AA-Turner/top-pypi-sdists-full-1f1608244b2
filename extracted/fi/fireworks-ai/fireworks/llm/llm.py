@@ -182,7 +182,11 @@ class ChatCompletion:
     def _should_retry_error(self, e: Exception) -> bool:
         """Check if an error should trigger a retry."""
         if isinstance(e, InvalidRequestError):
-            return "Model not found, inaccessible, and/or not deployed" in str(e)
+            error_msg = str(e).lower()
+            return any(
+                msg in error_msg
+                for msg in ["model not found, inaccessible, and/or not deployed", "model does not exist"]
+            )
         return isinstance(e, (BadGatewayError, ServiceUnavailableError, RateLimitError))
 
     def create(
@@ -731,11 +735,11 @@ class LLM:
                 return os.path.basename(filename)
         raise ValueError("No caller found outside of library code")
 
-    def apply(self):
+    def apply(self, wait: bool = True):
         """
         Like Terraform apply, this will ensure the deployment is ready and return the deployment.
         """
-        self._ensure_deployment_ready()
+        self._ensure_deployment_ready(wait=wait)
         return self
 
     def _with_modified_params(self, **kwargs) -> "LLM":
@@ -829,7 +833,7 @@ class LLM:
         """
         return self.is_model_available_on_serverless(self.model)
 
-    def delete_deployment(self, ignore_checks: bool = False):
+    def delete_deployment(self, ignore_checks: bool = False, wait: bool = True):
         """
         If there is an existing deployment, delete it.
         """
@@ -840,6 +844,11 @@ class LLM:
         if self.is_peft_addon():
             logger.debug(f"Deleting deployed model {deployment.name}")
             self._gateway.delete_deployed_model_sync(deployment.name)
+            if not wait:
+                logger.debug(
+                    f"wait=False, not polling for serverless LoRA model unloading completion of {deployment.name}"
+                )
+                return
 
             logger.debug(f"Deleting serverless LoRA model {self.model}...")
             start_time = time.time()
@@ -873,17 +882,22 @@ class LLM:
                 time.sleep(2)
 
             return
-        logger.debug(f"Deleting deployment {deployment.name}")
-        self._gateway.delete_deployment_sync(deployment.name, ignore_checks)
-        # spin until deployment is deleted
-        start_time = time.time()
-        while deployment is not None:
-            current_time = time.time()
-            if current_time - start_time >= 10:
-                logger.debug(f"Waiting for deployment {deployment.name} to be deleted...")
-                start_time = current_time
-            deployment = self.get_deployment()
-            time.sleep(1)
+        else:
+            if not wait:
+                logger.debug(f"wait=False, not polling for deployment deletion completion of {deployment.name}")
+                return
+
+            logger.debug(f"Deleting deployment {deployment.name}")
+            self._gateway.delete_deployment_sync(deployment.name, ignore_checks)
+            # spin until deployment is deleted
+            start_time = time.time()
+            while deployment is not None:
+                current_time = time.time()
+                if current_time - start_time >= 10:
+                    logger.debug(f"Waiting for deployment {deployment.name} to be deleted...")
+                    start_time = current_time
+                deployment = self.get_deployment()
+                time.sleep(1)
 
     def _compute_deployment_strategy(self) -> DeploymentStrategyLiteral:
         """
@@ -1048,7 +1062,7 @@ class LLM:
         return True
 
     @log_execution_time
-    def _ensure_deployment_ready(self) -> None:
+    def _ensure_deployment_ready(self, wait: bool = True) -> None:
         """
         Ensure this LLM is deployed in any way, otherwise raise an error if it
         can't be deployed based on the deployment_type.
@@ -1070,6 +1084,11 @@ class LLM:
                 return
 
             logger.debug(f"Deploying serverless LoRA model {self.model}...")
+
+            if not wait:
+                logger.debug(f"wait=False, not polling for deployment completion of {deployed_model.name}")
+                return
+
             start_time = time.time()
             last_log_time = 0
 
@@ -1181,7 +1200,7 @@ class LLM:
                 annotations=self._annotations,
                 description=self._description,
             )
-            base_model_llm.apply()
+            base_model_llm.apply(wait=wait)
             base_model_deployment = base_model_llm.get_deployment()
 
             # Verify base model deployment was successful
@@ -1197,6 +1216,11 @@ class LLM:
 
             # Monitor the LoRA model deployment progress
             logger.debug(f"Loading LoRA model {self.model} onto base model deployment {base_model_deployment.name}")
+
+            if not wait:
+                logger.debug(f"wait=False, not polling for LoRA model loading completion of {deployed_model.name}")
+                return
+
             start_time = time.time()
             last_log_time = 0
 
@@ -1312,6 +1336,10 @@ class LLM:
                 created_deployment = self._gateway.create_deployment_sync(deployment_proto)
                 logger.debug(f"Deployment {created_deployment.name} created, waiting for it to be ready")
 
+                if not wait:
+                    logger.debug(f"wait=False, not polling for deployment readiness of {created_deployment.name}")
+                    return
+
                 # poll deployment status until it's ready
                 start_time = time.time()
                 last_log_time = 0
@@ -1399,18 +1427,27 @@ class LLM:
                     start_time = time.time()
                     self._gateway.update_deployment_sync(deployment, field_mask)
 
-                    # poll until deployment is ready
-                    while deployment.state != DeploymentState.READY:
-                        time.sleep(1)
-                        deployment = self._gateway.get_deployment_sync(deployment.name)
+                    if not wait:
+                        logger.debug(f"wait=False, not polling for deployment update completion of {deployment.name}")
+                    else:
+                        # poll until deployment is ready
+                        while deployment.state != DeploymentState.READY:
+                            time.sleep(1)
+                            deployment = self._gateway.get_deployment_sync(deployment.name)
 
-                    elapsed_time = time.time() - start_time
-                    logger.debug(f"Deployment update completed in {elapsed_time:.2f} seconds")
+                        elapsed_time = time.time() - start_time
+                        logger.debug(f"Deployment update completed in {elapsed_time:.2f} seconds")
 
                 if deployment.replica_count == 0:
                     logger.debug(f"Deployment {deployment.name} is not ready, scaling to 1 replica")
                     start_time = time.time()
                     self._gateway.scale_deployment_sync(deployment.name, 1)
+
+                    if not wait:
+                        logger.debug(
+                            f"wait=False, not polling for deployment scale up completion of {deployment.name}"
+                        )
+                        return
 
                     # Poll until deployment has at least one replica
                     last_log_time = 0
@@ -1516,7 +1553,7 @@ class LLM:
         Returns the model ID, which is the model name plus the deployment name
         if it exists. This is used for the "model" arg when calling the model.
         """
-        if self.is_available_on_serverless():
+        if self.is_available_on_serverless() and self.deployment_strategy == "serverless":
             return self.model
         deployment = self.get_deployment()
         if isinstance(deployment, SyncDeployedModel):
@@ -1696,75 +1733,6 @@ class LLM:
 
         Returns:
             Fine-tuned LLM
-        """
-        job = self._create_fine_tuning_job(
-            name=name,
-            dataset_or_id=dataset_or_id,
-            epochs=epochs,
-            learning_rate=learning_rate,
-            lora_rank=lora_rank,
-            jinja_template=jinja_template,
-            early_stop=early_stop,
-            max_context_length=max_context_length,
-            base_model_weight_precision=base_model_weight_precision,
-            wandb_config=wandb_config,
-            evaluation_dataset=evaluation_dataset,
-            accelerator_type=accelerator_type,
-            accelerator_count=accelerator_count,
-            is_turbo=is_turbo,
-            eval_auto_carveout=eval_auto_carveout,
-            region=region,
-            nodes=nodes,
-            batch_size=batch_size,
-            output_model=output_model if output_model is not None else name,
-        )
-        return job
-
-    async def acreate_supervised_fine_tuning_job(
-        self,
-        name: str,
-        dataset_or_id: Union[Dataset, str],
-        epochs: Optional[int] = None,
-        learning_rate: Optional[float] = None,
-        lora_rank: Optional[int] = None,
-        jinja_template: Optional[str] = None,
-        early_stop: Optional[bool] = None,
-        max_context_length: Optional[int] = None,
-        base_model_weight_precision: Optional[SupervisedFineTuningJobWeightPrecisionLiteral] = None,
-        wandb_config: Optional[WandbConfig] = None,
-        evaluation_dataset: Optional[str] = None,
-        accelerator_type: Optional[AcceleratorTypeLiteral] = None,
-        accelerator_count: Optional[int] = None,
-        is_turbo: Optional[bool] = None,
-        eval_auto_carveout: Optional[bool] = None,
-        region: Optional[RegionLiteral] = None,
-        nodes: Optional[int] = None,
-        batch_size: Optional[int] = None,
-        output_model: Optional[str] = None,
-    ) -> "SupervisedFineTuningJob":
-        """
-        Creates a fine-tuning job for this dataset. If the fine-tuning job already exists, it will block until the job is ready.
-
-        Args:
-            name: The name of the fine-tuning job.
-            dataset_or_id: The dataset instance to fine-tune on or the dataset id to fine-tune on.
-            epochs: The number of epochs to fine-tune for.
-            learning_rate: The learning rate to use for fine-tuning.
-            lora_rank: The LoRA rank to use for fine-tuning.
-            jinja_template: The Jinja template to use for fine-tuning.
-            early_stop: Whether to use early stopping.
-            max_context_length: The maximum context length to use.
-            base_model_weight_precision: The weight precision to use for the base model.
-            wandb_config: The Weights & Biases configuration to use.
-            evaluation_dataset: The evaluation dataset to use.
-            accelerator_type: The accelerator type to use.
-            accelerator_count: The number of accelerators to use.
-            is_turbo: Whether to use turbo mode.
-            eval_auto_carveout: Whether to use automatic evaluation carveout.
-            region: The region to use.
-            nodes: The number of nodes to use.
-            batch_size: The batch size to use.
-            output_model: The name of the output model.
         """
         job = self._create_fine_tuning_job(
             name=name,

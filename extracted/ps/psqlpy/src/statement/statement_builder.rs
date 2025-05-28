@@ -2,27 +2,30 @@ use pyo3::PyObject;
 use tokio::sync::RwLockWriteGuard;
 use tokio_postgres::Statement;
 
-use crate::{driver::inner_connection::PsqlpyConnection, exceptions::rust_errors::PSQLPyResult};
+use crate::{
+    connection::{structs::PSQLPyConnection, traits::Connection},
+    exceptions::rust_errors::PSQLPyResult,
+};
 
 use super::{
     cache::{StatementCacheInfo, StatementsCache, STMTS_CACHE},
-    parameters::ParametersBuilder,
+    parameters::{Column, ParametersBuilder},
     query::QueryString,
     statement::PsqlpyStatement,
 };
 
 pub struct StatementBuilder<'a> {
-    querystring: String,
-    parameters: Option<PyObject>,
-    inner_conn: &'a PsqlpyConnection,
+    querystring: &'a String,
+    parameters: &'a Option<PyObject>,
+    inner_conn: &'a PSQLPyConnection,
     prepared: bool,
 }
 
 impl<'a> StatementBuilder<'a> {
     pub fn new(
-        querystring: String,
-        parameters: Option<PyObject>,
-        inner_conn: &'a PsqlpyConnection,
+        querystring: &'a String,
+        parameters: &'a Option<PyObject>,
+        inner_conn: &'a PSQLPyConnection,
         prepared: Option<bool>,
     ) -> Self {
         Self {
@@ -48,7 +51,8 @@ impl<'a> StatementBuilder<'a> {
     }
 
     fn build_with_cached(self, cached: StatementCacheInfo) -> PSQLPyResult<PsqlpyStatement> {
-        let raw_parameters = ParametersBuilder::new(&self.parameters, Some(cached.types()));
+        let raw_parameters =
+            ParametersBuilder::new(&self.parameters, Some(cached.types()), cached.columns());
 
         let parameters_names = if let Some(converted_qs) = &cached.query.converted_qs {
             Some(converted_qs.params_names().clone())
@@ -73,8 +77,17 @@ impl<'a> StatementBuilder<'a> {
         querystring.process_qs();
 
         let prepared_stmt = self.prepare_query(&querystring, self.prepared).await?;
-        let parameters_builder =
-            ParametersBuilder::new(&self.parameters, Some(prepared_stmt.params().to_vec()));
+
+        let columns = prepared_stmt
+            .columns()
+            .iter()
+            .map(|column| Column::new(column.name().to_string(), column.table_oid().clone()))
+            .collect::<Vec<Column>>();
+        let parameters_builder = ParametersBuilder::new(
+            &self.parameters,
+            Some(prepared_stmt.params().to_vec()),
+            columns,
+        );
 
         let parameters_names = if let Some(converted_qs) = &querystring.converted_qs {
             Some(converted_qs.params_names().clone())

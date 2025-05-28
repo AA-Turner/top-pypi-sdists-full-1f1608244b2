@@ -19,6 +19,7 @@
 
 import sys, os, re, urllib.parse, functools, datetime
 from owlready2.base import _universal_datatype_2_abbrev, _parse_datetime, rdf_type, owl_named_individual
+from owlready2.util import FTS
 import owlready2, owlready2.rply as rply
 
 
@@ -76,6 +77,7 @@ _FUNC_2_DATATYPE = {
   "ISNUMERIC" : _universal_datatype_2_abbrev[bool], # ok
   "REGEX" : _universal_datatype_2_abbrev[bool],
   "LIKE" : _universal_datatype_2_abbrev[bool],
+  "FTS" : _universal_datatype_2_abbrev[bool],
   #"SUBSTR" :  # ok
   #"REPLACE" :  # ok
   #"SIMPLEREPLACE" :  # ok
@@ -277,6 +279,58 @@ class FuncSupport(object):
             return "(INSTR(%s)!=0)" % self.parse_expression(expression[2])
           elif func == "LIKE":
             return "(%s LIKE %s)" % (self.parse_expression(expression[2][0]), self.parse_expression(expression[2][2]))
+          
+          elif func == "FTS":
+            var_bind = self.parse_expression(expression[2][0])
+            fts_p = None
+            conditions   = []
+            name_2_table = {}
+            sql_query = self
+            while sql_query:
+              conditions  .extend(sql_query.conditions)
+              name_2_table.update(sql_query.name_2_table)
+              sql_query = sql_query.parent
+            for var in self.vars.values():
+              if var_bind in var.bindings:
+                for binding in var.bindings:
+                  table = self.name_2_table.get(binding.split(".")[0])
+                  if not table: continue
+                  for condition in conditions:
+                    if condition.startswith("%s.p=" % table.name):
+                      try:    fts_p = int(condition.split("=")[1])
+                      except: continue
+                      break
+                  else: continue
+                  break
+            if fts_p is None: raise ValueError("""Cannot use FTS search here! If you are using FTS() inside UNION, please repeat the triple that define the FTS variable, e.g.:
+SELECT DISTINCT ?x {
+  {
+    ?x rdfs:label ?label .
+    FILTER(FTS(?label, "chronic back pain")) .
+  } UNION {
+    ?x rdfs:label ?label .
+    FILTER(FTS(?label, "low back pain")) .
+  }
+}
+""")
+            if not self.translator.world._get_by_storid(fts_p) in self.translator.world.full_text_search_properties: raise ValueError("Cannot use FTS search on property '%s', you need to enable FTS on this property first using World.full_text_search_properties.append() !" % self.translator.world._get_by_storid(fts_p))
+            from owlready2.sparql.main import Table
+            fts_table = Table(self, "fts%s" % self.translator.next_table_id, "fts_%s" % fts_p)
+            self.translator.next_table_id += 1
+            query = self.parse_expression(expression[2][2]).strip()
+            if query and (query.startswith("'") or query.startswith('"')): query = repr(FTS(query[1:-1]))
+            
+            if len(expression[2]) >= 5:
+              var_bm25 = expression[2][4]
+              while isinstance(var_bm25, list): var_bm25 = var_bm25[0]
+              var_bm25 = self.parse_var(var_bm25)
+              var_bm25.type = "datas"
+              var_bm25.fixed_datatype = 43
+              var_bm25.bindings.append("bm25(fts_%s)" % fts_p)
+              
+            #return "(%s.s=%s) AND (%s.o MATCH %s)" % (fts_table.name, "%s.s" % table.name, fts_table.name, query)
+            return "(%s.s=%s) AND (%s.o=%s) AND (%s.o MATCH %s)" % (fts_table.name, "%s.s" % table.name, fts_table.name, "%s.o" % table.name, fts_table.name, query)
+          
           elif func == "STRSTARTS":
             x     = self.parse_expression(expression[2][0])
             start = self.parse_expression(expression[2][2]).strip()
@@ -402,7 +456,11 @@ class FuncSupport(object):
           return "%s ASC" % self.parse_expression(expression[1][1])
         elif isinstance(expression[0], rply.Token) and expression[0].name == "DESC":
           return "%s DESC" % self.parse_expression(expression[1][1])
-          
+        
+        elif (len(expression) == 3) and isinstance(expression[1], rply.Token) and (expression[1].name == "LIST_COMPARATOR")and isinstance(expression[2], rply.Token) and (expression[2].name == "PARAM"):
+          # IN with a parameter value, e.g. "IN ??"
+          return "%s IN (SELECT value FROM json_each(%s))" % (self.parse_expression(expression[0]), self.parse_expression(expression[2]))
+        
         return "".join(self.parse_expression(i) for i in expression) 
     elif expression is None: pass
     elif expression.name  == "VAR":
@@ -411,6 +469,7 @@ class FuncSupport(object):
     elif expression.name  == "PARAM":  return "?%s" % expression.number
     elif expression.value == "(":      return "("
     elif expression.value == ")":      return ")"
+      
     else:                              return " %s" % expression.value
     return ""
   
@@ -494,6 +553,8 @@ class FuncSupport(object):
       if var.type == "objs": return "objs", "'o'"
       return var.type, "%sd" % var.get_binding(self)[:-1]
     elif  expression.name == "PARAM":
+      if self.translator.parameter_2_parameter_datatypes.get(expression.number) == "o":
+        return "objs", "'o'"
       return "quads2", "%sTypeOfParam?%s " % (self.translator.escape_mark, expression.number)
     return None, None
   

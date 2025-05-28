@@ -31,6 +31,7 @@ from .._impl import (
     scout_catalog_ListDatasetsRequest as ListDatasetsRequest,
     scout_catalog_MarkFileIngestError as MarkFileIngestError,
     scout_catalog_MarkFileIngestSuccessful as MarkFileIngestSuccessful,
+    scout_catalog_OriginFileUri as OriginFileUri,
     scout_catalog_RelativeTimestamp as RelativeTimestamp,
     scout_catalog_RetentionPolicy as RetentionPolicy,
     scout_catalog_RetentionPolicyType as RetentionPolicyType,

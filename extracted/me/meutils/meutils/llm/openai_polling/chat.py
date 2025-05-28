@@ -72,7 +72,7 @@ class Completions(object):
                 self.client = zhipuai_client
 
         elif "deepseek-r" in request.model:
-            request.separate_reasoning = True
+            request.separate_reasoning = True  # pp
         ###########################################################################
 
         data = to_openai_params(request)
@@ -82,7 +82,7 @@ class Completions(object):
             data.pop("frequency_penalty", None)
             data.pop("extra_body", None)
 
-            if not request.reasoning_effort:  # 默认关闭思考
+            if '2.5' in request.model and not request.reasoning_effort:  # 默认关闭思考
                 data['reasoning_effort'] = "none"
 
             if "thinking" in request.model:

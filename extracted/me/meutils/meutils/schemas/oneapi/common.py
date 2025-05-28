@@ -413,9 +413,6 @@ MODEL_RATIO = {
     'baichuan3-turbo-128k': 12,
     'baichuan2-turbo': 4,
 
-    "claude-3-5-haiku-20241022": 0.5,
-    "anthropic/claude-3-5-haiku-20241022:beta": 0.5,
-
     # grok
     "grok-2": 1,
     "grok-2-1212": 1,
@@ -671,6 +668,7 @@ MODEL_RATIO = {
     "doubao-1-5-thinking-pro-vision": 2,
     "doubao-1-5-thinking-pro-vision-250415": 2,
     "doubao-1-5-thinking-pro-m-250415": 2,
+    "doubao-1-5-thinking-pro-m-250428": 2,
 
     # 商汤 https://platform.sensenova.cn/pricing
     # https://platform.sensenova.cn/doc?path=/pricingdoc/pricing.md
@@ -712,6 +710,11 @@ MODEL_RATIO = {
     "tts-1-hd-1106": 15,
     "whisper-1": 15,
 
+    # claude
+
+    "claude-3-5-haiku-20241022": 0.5,
+    "anthropic/claude-3-5-haiku-20241022:beta": 0.5,
+
     "claude-3-haiku-20240307": 0.125,
     "claude-3-sonnet-20240229": 1.5,
 
@@ -730,6 +733,11 @@ MODEL_RATIO = {
     "claude-3-7-sonnet-latest-thinking": 1.5,
 
     "claude-3-7-sonnet-20250219": 1.5,
+
+    "claude-sonnet-4-20250514": 1.5,
+    "claude-sonnet-4-20250514-thinking": 1.5,
+    "claude-opus-4-20250514": 7.5,
+    "claude-opus-4-20250514-thinking": 7.5,
 
     "deepclaude": 1.5,
     "deep-claude": 1.5,
@@ -774,6 +782,7 @@ MODEL_RATIO = {
     "gemini-2.0-flash-thinking-exp-01-21": 0.075,
 
     "gemini-2.5-flash-preview-04-17": 0.075,
+    "gemini-2.5-flash-preview-05-20": 0.075,
 
     "gemini-2.0-pro": 0.625,
     "gemini-2.0-pro-exp": 0.625,
@@ -793,11 +802,12 @@ MODEL_RATIO = {
     "gemini-pro-vision": 1,
     "gemini-ultra": 1,
 
-    "gemini-2.5-flash-thinking": 0.15,
-    "gemini-2.5-flash-preview-04-17-thinking": 0.15 * 2,
-    "gemini-2.5-pro-thinking": 0.625 * 2,
-    "gemini-2.5-pro-exp-03-25-thinking": 0.625 * 2,
-    "gemini-2.5-pro-preview-03-25-thinking": 0.625 * 2,
+    "gemini-2.5-flash-thinking": 0.075,
+    "gemini-2.5-flash-preview-04-17-thinking": 0.075,
+    "gemini-2.5-flash-preview-05-20-thinking": 0.075,
+    "gemini-2.5-pro-thinking": 0.625,
+    "gemini-2.5-pro-exp-03-25-thinking": 0.625,
+    "gemini-2.5-pro-preview-03-25-thinking": 0.625,
 
     "gemini-thinking": 0.625,  # 逆向
 
@@ -954,9 +964,6 @@ COMPLETION_RATIO = {
     "grok-3-mini-beta": 5 / 3,
     "grok-3-mini-fast-beta": 4 / 0.6,
 
-    "claude-3-5-haiku-20241022": 5,
-    "anthropic/claude-3-5-haiku-20241022:beta": 5,
-
     "gpt-4-all": 4,
     "gpt-4-gizmo-*": 4,
     "gpt-4o-all": 4,
@@ -989,6 +996,9 @@ COMPLETION_RATIO = {
     "gpt-image-1": 8,
 
     # claude
+    "claude-3-5-haiku-20241022": 5,
+    "anthropic/claude-3-5-haiku-20241022:beta": 5,
+
     "claude-3-opus-20240229": 5,
     "anthropic/claude-3-opus:beta": 5,  # openrouter
 
@@ -999,6 +1009,11 @@ COMPLETION_RATIO = {
     "claude-3-7-sonnet-latest": 5,
     "claude-3-7-sonnet-20250219": 5,
     "claude-3-7-sonnet-latest-thinking": 5,
+
+    "claude-sonnet-4-20250514": 5,
+    "claude-sonnet-4-20250514-thinking": 5,
+    "claude-opus-4-20250514": 5,
+    "claude-opus-4-20250514-thinking": 5,
 
     "llama-3.1-70b-instruct": 2,
     "meta-llama/Meta-Llama-3.1-70B-Instruct": 2,
@@ -1063,11 +1078,13 @@ COMPLETION_RATIO = {
     "gemma2-27b-it": 4,
     "google/gemma-3-27b-it": 4,
     # thinking
-    "gemini-2.5-flash-thinking": 8,
-    "gemini-2.5-flash-preview-04-17-thinking": 8,
-    "gemini-2.5-pro-thinking": 8,
-    "gemini-2.5-pro-exp-03-25-thinking": 8,
-    "gemini-2.5-pro-preview-03-25-thinking": 8,
+    "gemini-2.5-flash-thinking": 23,
+    "gemini-2.5-flash-preview-04-17-thinking": 23,
+    "gemini-2.5-flash-preview-05-20-thinking": 23,
+
+    "gemini-2.5-pro-thinking": 23,
+    "gemini-2.5-pro-exp-03-25-thinking": 23,
+    "gemini-2.5-pro-preview-03-25-thinking": 23,
 
     "hunyuan-a52b-instruct": 5,
     "qwen2.5-coder-32b-instruct": 3,
@@ -1096,7 +1113,6 @@ COMPLETION_RATIO = {
     "qwen-max-2025-01-25": 4,
 
     "qwen-plus": 2.5,
-
 
     "qwq-plus": 2.5,
     "qwq-max": 2.5,
@@ -1161,6 +1177,7 @@ COMPLETION_RATIO = {
     "doubao-1-5-thinking-pro-vision": 4,
     "doubao-1-5-thinking-pro-vision-250415": 4,
     "doubao-1-5-thinking-pro-m-250415": 4,
+    "doubao-1-5-thinking-pro-m-250428": 4,
 
     "doubao-1-5-thinking-vision-pro-250428": 3,
 
@@ -1379,8 +1396,7 @@ REDIRECT_MODEL = {
     "todo": "gpt-4-vision-preview",
 
     # https://chat.tune.app/api/models
-    "claude-3-haiku-20240307": "anthropic/claude-3-haiku",
-    "claude-3-5-sonnet-20240620": "anthropic/claude-3.5-sonnet",
+
     "gpt-4o": "openai/gpt-4o",
     "gpt-4o-mini": "openai/gpt-4o-mini",
     "mistral-large": "mistral/mistral-large",

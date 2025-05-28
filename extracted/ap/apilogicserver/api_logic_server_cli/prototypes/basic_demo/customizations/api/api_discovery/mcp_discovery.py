@@ -85,7 +85,7 @@ def add_service(app, api, project_dir, swagger_host: str, PORT: str, method_deco
         test: curl -X GET "http://localhost:5656/.well-known/mcp.json"
         '''
         # return docs/mcp_schema.json
-        schema_path = os.path.join(project_dir, "docs", "mcp_schema.json")
+        schema_path = os.path.join(project_dir, "docs/mcp_learning/mcp_schema.json")
         try:
             with open(schema_path, "r") as schema_file:
                 schema = json.load(schema_file)

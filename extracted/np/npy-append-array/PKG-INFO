@@ -1,17 +1,14 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: npy-append-array
-Version: 0.9.16
+Version: 0.9.17
 Summary: Create Numpy .npy files by appending on the growth axis
-Home-page: https://github.com/xor2k/npy-append-array
-Author: Michael Siebert
-Author-email: michael.siebert2k@gmail.com
-License: MIT
-Classifier: Programming Language :: Python :: 3
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Operating System :: OS Independent
-Requires-Python: >=3.8
+Author: Joshua Adelman, Yoav Git
+Author-email: Michael Siebert <michael.siebert2k@gmail.com>
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/xor2k/npy-append-array
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Dynamic: license-file
 
 # NpyAppendArray
 
@@ -69,7 +66,7 @@ arr2 = np.array([[1,2],[3,4],[5,6]])
 
 filename = 'out.npy'
 
-with NpyAppendArray(filename) as npaa:
+with NpyAppendArray(filename, delete_if_exists=True) as npaa:
     npaa.append(arr1)
     npaa.append(arr2)
     npaa.append(arr2)
@@ -102,4 +99,4 @@ header size. This allows to simply rewrite the header as we append data to the
 end of the `.npy` file.
 
 ## Supported Systems
-Testes with Ubuntu Linux, macOS and Windows.
+Tested with Ubuntu Linux, macOS and Windows.

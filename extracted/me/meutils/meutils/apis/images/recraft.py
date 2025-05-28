@@ -41,8 +41,10 @@ async def get_access_token(token: str):
         logger.debug(response.json())
         return response.json()["accessToken"]
 
+
 @retrying()
-async def edit_image(image, task: Literal["vectorize", "super_resolution",] = "super_resolution", response_format: Literal["url", "base64"] = "url"):
+async def edit_image(image, task: Literal["vectorize", "super_resolution",] = "super_resolution",
+                     response_format: Literal["url", "base64"] = "url"):
     token = await get_next_token_for_polling(
         feishu_url=FEISHU_URL,
         check_token=check_token,
@@ -141,14 +143,17 @@ async def generate(request: RecraftImageRequest, token: Optional[str] = None):
 
 # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDY5MjY2MjQsInVzZXIiOnsiaWQiOiIzNjIzNjMwNDU2OTAxNTkxMDciLCJuYW1lIjoibWtybiBhbmJ2IiwiYXZhdGFyIjoiIiwiZGV2aWNlSUQiOiIzMjg2MDA4MzYzNzEwMzQxMTgiLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.JyCL0Be9YsEBlLVIeSpqDv3bTKAlU9Jsds3y5cJKXa4
 async def check_token(token, threshold: float = 1):
-    if not isinstance(token, str):
+    if isinstance(token, list):
         tokens = token
         r = []
+        logger.debug(tokens)
         for batch in tqdm(tokens | xgroup(32)):
             bools = await asyncio.gather(*map(check_token, batch))
             r += list(itertools.compress(batch, bools))
         return r
+
     try:
+
         access_token = await get_access_token(token)
         headers = {"Authorization": f"Bearer {access_token}"}
 
@@ -200,10 +205,8 @@ if __name__ == '__main__':
     # with timer():
     #     arun(generate(request, token=token))
 
-    with timer():
-        arun(edit_image("https://oss.ffire.cc/files/kling_watermark.png"))
+    # with timer():
+    #     arun(edit_image("https://oss.ffire.cc/files/kling_watermark.png"))
     # tokens = [token]
-    #
-    # tokens = list(arun(aget_spreadsheet_values(feishu_url=FEISHU_URL, to_dataframe=True))[0]) | xfilter_
-    # #
-    # r = arun(check_token(tokens[:5]))
+    tokens = list(arun(aget_spreadsheet_values(feishu_url=FEISHU_URL, to_dataframe=True))[0]) | xfilter_
+    r = arun(check_token(tokens))
