@@ -8,6 +8,8 @@ class BaseGeneralParametersTransfers:
         BaseParameterSchemas.Data
     ): pass
 
+    class FieldModificationProcessor(BaseParameterSchemas.Data): pass
+
     class GetSingleQuery(BaseParameterSchemas.OptionalListOfStatuses): pass
 
     class BaseGetSingle(

@@ -1,16 +1,17 @@
 import sys
 from collections.abc import Iterator
-from typing import Any, Protocol, TypeAlias
+from typing import Any, Never, Protocol, TypeAlias
 
 if sys.version_info >= (3, 13):
-    from typing import Never, TypeAliasType, TypeVar
+    from typing import TypeAliasType, TypeVar
 else:
-    from typing_extensions import Never, TypeAliasType, TypeVar
+    from typing_extensions import TypeAliasType, TypeVar
 
 import numpy as np
 
 import optype.numpy._compat as _x
 import optype.numpy._scalar as _sc
+from ._shape import AnyShape
 from optype._core import CanBuffer, JustComplex, JustFloat, JustInt, JustObject
 from optype._utils import set_module
 
@@ -66,23 +67,16 @@ def __dir__() -> list[str]:
 
 
 _T = TypeVar("_T")
-_T_co = TypeVar("_T_co", covariant=True)
-_ST = TypeVar("_ST", bound=np.generic, default=np.generic)
-_ST_co = TypeVar("_ST_co", bound=np.generic, covariant=True)
+_ST = TypeVar("_ST", bound=np.generic, default=Any)
 _VT = TypeVar("_VT", default=_ST)
+_T_co = TypeVar("_T_co", covariant=True)
+_ST_co = TypeVar("_ST_co", bound=np.generic, covariant=True)
 
 
 # NOTE: Does not include scalar types
 class _AnyArrayNP(Protocol[_ST_co]):
     def __len__(self, /) -> int: ...
-
-    if _x.NP21:
-
-        def __array__(self, /) -> np.ndarray[tuple[int, ...], np.dtype[_ST_co]]: ...
-
-    else:
-
-        def __array__(self, /) -> np.ndarray[Any, np.dtype[_ST_co]]: ...
+    def __array__(self, /) -> np.ndarray[AnyShape, np.dtype[_ST_co]]: ...
 
 
 # NOTE: does not include tuple
@@ -171,21 +165,19 @@ AnyTimeDelta64Array: TypeAlias = _AnyArray[np.timedelta64]
 AnyObjectArray: TypeAlias = _AnyArray[np.object_, np.object_ | JustObject]
 
 
-if _x.NP20:
+if _x.NP20:  # `numpy>=2.0`
 
     @set_module("optype.numpy")
     class AnyStringArray(Protocol):
         def __len__(self, /) -> int: ...
 
-        if _x.NP21:
-            # `numpy>=2.1`
-            def __array__(
-                self, /
-            ) -> np.ndarray[tuple[int, ...], np.dtypes.StringDType]: ...
+        if _x.NP21:  # numpy>=2.1
 
-        elif _x.NP20:
-            # `numpy>=2,<2.1`
-            def __array__(self, /) -> np.ndarray[Any, np.dtype[Never]]: ...
+            def __array__(self, /) -> np.ndarray[AnyShape, np.dtypes.StringDType]: ...
 
-else:  # `numpy<2`
+        else:  # numpy==2.0.*
+
+            def __array__(self, /) -> np.ndarray[AnyShape, np.dtype[Never]]: ...
+
+else:  # `numpy<2.0`
     AnyStringArray: TypeAlias = Never

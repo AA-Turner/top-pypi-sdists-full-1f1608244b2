@@ -87,6 +87,11 @@ class NeutronAPIDictWrapper(base.APIDictWrapper):
             else:
                 apidict['admin_state'] = 'DOWN'
 
+        # https://bugs.launchpad.net/horizon/+bug/2093367
+        if 'is_port_security_enabled' in apidict:
+            if apidict['is_port_security_enabled']:
+                apidict['port_security_enabled'] = 'UP'
+
         # Django cannot handle a key name with ':', so use '__'.
         apidict.update({
             key.replace(':', '__'): value
@@ -2550,8 +2555,6 @@ def dscp_marking_rule_create(request, policy_id, **kwargs):
     :param dscp_mark: integer
     :return: A dscp_mark_rule object.
     """
-    if 'tenant_id' not in kwargs:
-        kwargs['tenant_id'] = request.user.project_id
     body = {'dscp_marking_rule': kwargs}
     rule = 'dscp_marking_rule'
     dscp_marking_rule = neutronclient(request)\
@@ -2590,8 +2593,6 @@ def minimum_bandwidth_rule_create(request, policy_id, **kwargs):
     :param direction: string (egress or ingress)
     :return: A minimum_bandwidth_rule object.
     """
-    if 'tenant_id' not in kwargs:
-        kwargs['tenant_id'] = request.user.project_id
     body = {'minimum_bandwidth_rule': kwargs}
     rule = 'minimum_bandwidth_rule'
     minimum_bandwidth_rule = neutronclient(request)\
@@ -2639,9 +2640,6 @@ def bandwidth_limit_rule_create(request, policy_id, **kwargs):
     :return: A bandwidth_limit_rule object.
     """
     body = {'bandwidth_limit_rule': kwargs}
-    if 'tenant_id' not in kwargs:
-        kwargs['tenant_id'] = request.user.project_id
-    body = {'bandwidth_limit_rule': kwargs}
     rule = 'bandwidth_limit_rule'
     bandwidth_limit_rule = neutronclient(request)\
         .create_bandwidth_limit_rule(policy_id, body).get(rule)
@@ -2687,9 +2685,6 @@ def minimum_packet_rate_rule_create(request, policy_id, **kwargs):
     :param direction: string (egress or ingress)
     :return: A minimum_packet_rate_rule object.
     """
-    body = {'minimum_packet_rate_rule': kwargs}
-    if 'tenant_id' not in kwargs:
-        kwargs['tenant_id'] = request.user.project_id
     body = {'minimum_packet_rate_rule': kwargs}
     rule = 'minimum_packet_rate_rule'
     minimum_packet_rate_rule = neutronclient(request)\

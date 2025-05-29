@@ -26,7 +26,9 @@ try:
 except ImportError:
     import importlib_metadata
 
-from . import functions, object_store, substrait
+from datafusion.col import col, column
+
+from . import functions, object_store, substrait, unparser
 
 # The following imports are okay to remain as opaque to the user.
 from ._internal import Config
@@ -45,10 +47,21 @@ from .expr import (
     Expr,
     WindowFrame,
 )
+from .html_formatter import configure_formatter
 from .io import read_avro, read_csv, read_json, read_parquet
 from .plan import ExecutionPlan, LogicalPlan
 from .record_batch import RecordBatch, RecordBatchStream
-from .udf import Accumulator, AggregateUDF, ScalarUDF, WindowUDF, udaf, udf, udwf
+from .user_defined import (
+    Accumulator,
+    AggregateUDF,
+    ScalarUDF,
+    TableFunction,
+    WindowUDF,
+    udaf,
+    udf,
+    udtf,
+    udwf,
+)
 
 __version__ = importlib_metadata.version(__name__)
 
@@ -71,11 +84,13 @@ __all__ = [
     "SessionConfig",
     "SessionContext",
     "Table",
+    "TableFunction",
     "WindowFrame",
     "WindowUDF",
     "col",
     "column",
     "common",
+    "configure_formatter",
     "expr",
     "functions",
     "lit",
@@ -88,18 +103,10 @@ __all__ = [
     "substrait",
     "udaf",
     "udf",
+    "udtf",
     "udwf",
+    "unparser",
 ]
-
-
-def column(value: str) -> Expr:
-    """Create a column expression."""
-    return Expr.column(value)
-
-
-def col(value: str) -> Expr:
-    """Create a column expression."""
-    return Expr.column(value)
 
 
 def literal(value) -> Expr:

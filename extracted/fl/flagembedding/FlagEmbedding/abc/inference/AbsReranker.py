@@ -92,7 +92,8 @@ class AbsReranker(ABC):
             torch.cuda.empty_cache()
         except:
             pass
-        gc.collect()
+        if gc is not None and callable(gc.collect):
+            gc.collect()
 
     @staticmethod
     def get_target_devices(devices: Union[str, int, List[str], List[int]]) -> List[str]:
@@ -149,6 +150,8 @@ class AbsReranker(ABC):
         Returns:
             str: The complete sentence with instruction
         """
+        if "\\n" in instruction_format:
+            instruction_format = instruction_format.replace("\\n", "\n")
         return instruction_format.format(instruction, sentence)
     
     def get_detailed_inputs(self, sentence_pairs: Union[str, List[str]]):

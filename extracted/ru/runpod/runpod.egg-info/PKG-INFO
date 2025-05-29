@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: runpod
-Version: 1.7.9
+Version: 1.7.10
 Summary: 🐍 | Python library for RunPod API and serverless worker SDK.
 Home-page: https://runpod.io
 Author: RunPod
@@ -33,7 +33,7 @@ Requires-Dist: backoff>=2.2.1
 Requires-Dist: boto3>=1.26.165
 Requires-Dist: click>=8.1.7
 Requires-Dist: colorama<0.4.7,>=0.2.5
-Requires-Dist: cryptography<45.0.0
+Requires-Dist: cryptography<46.0.0
 Requires-Dist: fastapi[all]>=0.94.0
 Requires-Dist: paramiko>=3.3.1
 Requires-Dist: prettytable>=3.9.0

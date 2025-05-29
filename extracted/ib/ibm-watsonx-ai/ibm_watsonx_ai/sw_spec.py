@@ -68,9 +68,7 @@ class SwSpec(WMLResource):
 
         if sw_spec_id:
             response = requests.get(
-                self._client.service_instance._href_definitions.get_sw_spec_href(
-                    sw_spec_id
-                ),
+                self._client._href_definitions.get_sw_spec_href(sw_spec_id),
                 params=self._client._params(skip_space_project_chk=True),
                 headers=self._client._get_headers(),
             )
@@ -84,7 +82,7 @@ class SwSpec(WMLResource):
         else:
             if state_info:
                 response = requests.get(
-                    self._client.service_instance._href_definitions.get_sw_specs_href(),
+                    self._client._href_definitions.get_sw_specs_href(),
                     params=self._client._params(),
                     headers=self._client._get_headers(),
                 )
@@ -92,7 +90,7 @@ class SwSpec(WMLResource):
                 return self._handle_response(200, "get sw specs details", response)
             else:
                 response = requests.get(
-                    self._client.service_instance._href_definitions.get_sw_specs_href(),
+                    self._client._href_definitions.get_sw_specs_href(),
                     params=self._client._params(
                         skip_space_project_chk=self._client.ICP_PLATFORM_SPACES
                     ),
@@ -143,7 +141,7 @@ class SwSpec(WMLResource):
         )
 
         sw_spec_meta_json = json.dumps(sw_spec_meta)
-        href = self._client.service_instance._href_definitions.get_sw_specs_href()
+        href = self._client._href_definitions.get_sw_specs_href()
 
         creation_response = requests.post(
             href,
@@ -275,7 +273,7 @@ class SwSpec(WMLResource):
         parameters.update(name=sw_spec_name)
 
         response = requests.get(
-            self._client.service_instance._href_definitions.get_sw_specs_href(),
+            self._client._href_definitions.get_sw_specs_href(),
             params=parameters,
             headers=self._client._get_headers(),
         )
@@ -360,9 +358,7 @@ class SwSpec(WMLResource):
         SwSpec._validate_type(sw_spec_id, "sw_spec_id", str, True)
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_sw_spec_href(
-                sw_spec_id
-            ),
+            self._client._href_definitions.get_sw_spec_href(sw_spec_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )
@@ -410,9 +406,7 @@ class SwSpec(WMLResource):
         self._validate_type(sw_spec_id, "sw_spec_id", str, True)
         self._validate_type(pkg_extn_id, "pkg_extn_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_sw_spec_href(
-            sw_spec_id
-        )
+        url = self._client._href_definitions.get_sw_spec_href(sw_spec_id)
 
         url = url + "/package_extensions/" + pkg_extn_id
 
@@ -464,9 +458,7 @@ class SwSpec(WMLResource):
         self._validate_type(sw_spec_id, "sw_spec_id", str, True)
         self._validate_type(pkg_extn_id, "pkg_extn_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_sw_spec_href(
-            sw_spec_id
-        )
+        url = self._client._href_definitions.get_sw_spec_href(sw_spec_id)
 
         url = url + "/package_extensions/" + pkg_extn_id
 

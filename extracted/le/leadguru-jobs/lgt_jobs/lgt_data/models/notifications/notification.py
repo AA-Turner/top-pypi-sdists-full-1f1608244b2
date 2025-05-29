@@ -147,7 +147,8 @@ class IncomingMessageNotification(Notification):
         for user_id in user_ids[:3]:
             user = [user for user in users if user_id == user['sender_id']][0]
             photo = user.get('images', {}).get('image_72', '{{ IMAGE_PERSON.src }}')
-            item = self.name_html_item.replace('$$USER_NAME$$', user['real_name'])
+            name = user['real_name'] if user.get('real_name') else user.get('display_name', '')
+            item = self.name_html_item.replace('$$USER_NAME$$', name)
             item = item.replace('$$USER_IMAGE$$', photo)
             title += item
 
@@ -249,7 +250,8 @@ class InboxNotification(Notification):
         for user_id in user_ids[:3]:
             user = [user for user in users if user_id == user['sender_id']][0]
             photo = user.get('images', {}).get('image_72', '{{ IMAGE_PERSON.src }}')
-            item = self.name_html_item.replace('$$USER_NAME$$', user['real_name'])
+            name = user['real_name'] if user.get('real_name') else user.get('display_name', '')
+            item = self.name_html_item.replace('$$USER_NAME$$', name)
             item = item.replace('$$USER_IMAGE$$', photo)
             title += item
 

@@ -25,56 +25,54 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from .core import (
-    Tlv,
-    Version,
-    NotSupportedError,
-    InvalidPinError,
-    require_version,
-    int2bytes,
-    bytes2int,
-)
-from .core.smartcard import (
-    SmartCardConnection,
-    SmartCardProtocol,
-    ApduError,
-    AID,
-    SW,
-    ScpKeyParams,
+import abc
+import logging
+import os
+import struct
+from dataclasses import dataclass
+from enum import Enum, IntEnum, IntFlag, unique
+from typing import (
+    ClassVar,
+    Mapping,
+    Optional,
+    Sequence,
+    SupportsBytes,
+    Union,
 )
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.serialization import (
-    Encoding,
-    PrivateFormat,
-    PublicFormat,
-    NoEncryption,
-)
-from cryptography.hazmat.primitives.asymmetric import rsa, ec, ed25519, x25519
+from cryptography.hazmat.primitives.asymmetric import ec, ed25519, rsa, x25519
 from cryptography.hazmat.primitives.asymmetric.utils import (
     Prehashed,
     encode_dss_signature,
 )
-
-import os
-import abc
-from enum import Enum, IntEnum, IntFlag, unique
-from dataclasses import dataclass
-from typing import (
-    Optional,
-    Tuple,
-    ClassVar,
-    Mapping,
-    Sequence,
-    SupportsBytes,
-    Union,
-    Dict,
-    List,
+from cryptography.hazmat.primitives.serialization import (
+    Encoding,
+    NoEncryption,
+    PrivateFormat,
+    PublicFormat,
 )
-import struct
-import logging
+
+from .core import (
+    InvalidPinError,
+    NotSupportedError,
+    Tlv,
+    Version,
+    _override_version,
+    bytes2int,
+    int2bytes,
+    require_version,
+)
+from .core.smartcard import (
+    AID,
+    SW,
+    ApduError,
+    ScpKeyParams,
+    SmartCardConnection,
+    SmartCardProtocol,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -220,7 +218,7 @@ class OpenPgpAid(bytes):
     """
 
     @property
-    def version(self) -> Tuple[int, int]:
+    def version(self) -> tuple[int, int]:
         """OpenPGP version (tuple of 2 integers: main version, secondary version)."""
         return (_bcd(self[6]), _bcd(self[7]))
 
@@ -756,8 +754,8 @@ class KdfIterSaltedS2k(Kdf):
     hash_algorithm: HASH_ALGORITHM
     iteration_count: int
     salt_user: bytes
-    salt_reset: bytes
-    salt_admin: bytes
+    salt_reset: Optional[bytes]
+    salt_admin: Optional[bytes]
     initial_hash_user: Optional[bytes]
     initial_hash_admin: Optional[bytes]
 
@@ -833,7 +831,7 @@ class KdfIterSaltedS2k(Kdf):
 class PrivateKeyTemplate(abc.ABC):
     crt: CRT
 
-    def _get_template(self) -> Sequence[Tlv]:
+    def _get_template(self) -> list[Tlv]:
         raise NotImplementedError()
 
     def __bytes__(self) -> bytes:
@@ -853,11 +851,11 @@ class RsaKeyTemplate(PrivateKeyTemplate):
     q: bytes
 
     def _get_template(self):
-        return (
+        return [
             Tlv(0x91, self.e),
             Tlv(0x92, self.p),
             Tlv(0x93, self.q),
-        )
+        ]
 
 
 @dataclass
@@ -868,13 +866,13 @@ class RsaCrtKeyTemplate(RsaKeyTemplate):
     n: bytes
 
     def _get_template(self):
-        return (
+        return [
             *super()._get_template(),
             Tlv(0x94, self.iqmp),
             Tlv(0x95, self.dmp1),
             Tlv(0x96, self.dmq1),
             Tlv(0x97, self.n),
-        )
+        ]
 
 
 @dataclass
@@ -883,9 +881,9 @@ class EcKeyTemplate(PrivateKeyTemplate):
     public_key: Optional[bytes]
 
     def _get_template(self):
-        tlvs: Tuple[Tlv, ...] = (Tlv(0x92, self.private_key),)
+        tlvs = [Tlv(0x92, self.private_key)]
         if self.public_key:
-            tlvs = (*tlvs, Tlv(0x99, self.public_key))
+            tlvs.append(Tlv(0x99, self.public_key))
 
         return tlvs
 
@@ -985,11 +983,13 @@ def _pad_message(attributes, message, hash_algorithm):
 
     if isinstance(attributes, EcAttributes):
         return hashed
-    if isinstance(attributes, RsaAttributes):
+    elif isinstance(attributes, RsaAttributes):
         try:
             return _pkcs1v15_headers[type(hash_algorithm)] + hashed
         except KeyError:
             raise ValueError(f"Unsupported hash algorithm for RSA: {hash_algorithm}")
+    else:
+        raise ValueError(f"Unsupported algorithm attributes: {attributes}")
 
 
 class OpenPgpSession:
@@ -1028,7 +1028,7 @@ class OpenPgpSession:
         logger.debug("Getting version number")
         try:
             bcd = self.protocol.send_apdu(0, INS.GET_VERSION, 0, 0)
-            return Version(*(_bcd(x) for x in bcd))
+            return _override_version.patch(Version(*(_bcd(x) for x in bcd)))
         except ApduError as e:
             # Pre 1.0.2 versions don't support reading the version
             if e.sw == SW.CONDITIONS_NOT_SATISFIED:
@@ -1384,7 +1384,7 @@ class OpenPgpSession:
             buf = Tlv.unpack(DO.ALGORITHM_INFORMATION, buf + b"\0\0")[:-2]
 
         slots = {slot.algorithm_attributes_do: slot for slot in KEY_REF}
-        data: Dict[KEY_REF, List[AlgorithmAttributes]] = {}
+        data: dict[KEY_REF, list[AlgorithmAttributes]] = {}
         for tlv in Tlv.parse_list(buf):
             data.setdefault(slots[DO(tlv.tag)], []).append(
                 AlgorithmAttributes.parse(tlv.value)
@@ -1755,11 +1755,15 @@ class OpenPgpSession:
             data = value.public_bytes(Encoding.Raw, PublicFormat.Raw)
         elif isinstance(value, bytes):
             data = value
+        else:
+            raise ValueError("Value must be a bytes or public key")
 
         if isinstance(attributes, RsaAttributes):
             data = b"\0" + data
         elif isinstance(attributes, EcAttributes):
             data = Tlv(0xA6, Tlv(0x7F49, Tlv(0x86, data)))
+        else:
+            raise ValueError("Unsupported algorithm attributes")
 
         response = self.protocol.send_apdu(0, INS.PSO, 0x80, 0x86, data)
         logger.info("Value decrypted")

@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: FalkorDB
-Version: 1.1.1
+Version: 1.1.2
 Summary: Python client for interacting with FalkorDB database
 Keywords: FalkorDB,GraphDB,Cypher
 Author: FalkorDB inc

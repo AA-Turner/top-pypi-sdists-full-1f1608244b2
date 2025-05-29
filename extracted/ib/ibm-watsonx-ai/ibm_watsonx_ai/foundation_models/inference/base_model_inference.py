@@ -28,6 +28,7 @@ import requests as _requests
 from ibm_watsonx_ai.foundation_models.utils.utils import (
     HAPDetectionWarning,
     PIIDetectionWarning,
+    GraniteGuardianDetectionWarning,
 )
 from ibm_watsonx_ai.foundation_models.schema import (
     TextChatParameters,
@@ -169,6 +170,7 @@ class BaseModelInference(WMLResource, ABC):
         concurrency_limit: int = DEFAULT_CONCURRENCY_LIMIT,
         async_mode: bool = False,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict | list[dict] | Generator:
         """
         Given a text prompt as input, and parameters the selected inference
@@ -184,6 +186,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
         validate_prompt_variables: bool = True,
     ) -> dict:
         """
@@ -201,6 +204,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> AsyncGenerator:
         """
         Given a text prompt as input, and parameters the selected inference
@@ -218,6 +222,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> Generator:
         """
         Given a text prompt as input, and parameters the selected inference
@@ -251,6 +256,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         raise NotImplementedError
 
@@ -261,6 +267,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         raise NotImplementedError
 
@@ -272,23 +279,26 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
         _http_client: httpx.Client | None = None,
     ) -> httpx.Response | _requests.Response:
         if self._client._use_fm_ga_api:
             payload = self._prepare_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
         else:  # Remove on CPD 5.0 release
             payload = self._prepare_beta_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
         http_client = _http_client or self._http_client
 
@@ -309,6 +319,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
         _http_client: requests.HTTPXClient | httpx.Client | None = None,
     ) -> dict:
 
@@ -319,6 +330,7 @@ class BaseModelInference(WMLResource, ABC):
             guardrails=guardrails,
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             _http_client=_http_client,
         )
 
@@ -432,22 +444,25 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         if self._client._use_fm_ga_api:
             payload = self._prepare_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
         else:  # Remove on CPD 5.0 release
             payload = self._prepare_beta_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
 
         response = await self._apost(
@@ -468,22 +483,25 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> AsyncGenerator:
         if self._client._use_fm_ga_api:
             payload = self._prepare_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
         else:  # Remove on CPD 5.0 release
             payload = self._prepare_beta_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
 
         if isinstance(self._async_http_client, requests.HTTPXAsyncClient):
@@ -769,6 +787,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
         _http_client: requests.HTTPXClient | httpx.Client | None = None,
     ) -> dict:
         """Rate-limited request with dynamic token adjustment and retry logic."""
@@ -781,6 +800,7 @@ class BaseModelInference(WMLResource, ABC):
             guardrails=guardrails,
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             _http_client=_http_client,
         )
         rate_limit = int(inference_response.headers.get(LIMIT_RATE_HEADER, 8))
@@ -809,6 +829,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
         concurrency_limit: int = DEFAULT_CONCURRENCY_LIMIT,
     ) -> list | dict:
         """
@@ -834,6 +855,7 @@ class BaseModelInference(WMLResource, ABC):
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
                 _http_client=http_client,
             )  # If CDP, don't use Token Bucket
 
@@ -853,6 +875,7 @@ class BaseModelInference(WMLResource, ABC):
                 guardrails,
                 guardrails_hap_params,
                 guardrails_pii_params,
+                guardrails_granite_guardian_params,
             )
         return response
 
@@ -864,6 +887,7 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
         concurrency_limit: int = DEFAULT_CONCURRENCY_LIMIT,
     ) -> Generator:
         """
@@ -896,6 +920,7 @@ class BaseModelInference(WMLResource, ABC):
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
                 _http_client=http_client,
             )
 
@@ -926,12 +951,13 @@ class BaseModelInference(WMLResource, ABC):
                         raise
         else:
             response = self._send_inference_payload(
-                prompt,
-                async_params,
-                generate_url,
-                guardrails,
-                guardrails_hap_params,
-                guardrails_pii_params,
+                prompt=prompt,
+                params=async_params,
+                generate_url=generate_url,
+                guardrails=guardrails,
+                guardrails_hap_params=guardrails_hap_params,
+                guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
             yield response
 
@@ -944,22 +970,25 @@ class BaseModelInference(WMLResource, ABC):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> Generator:
         if self._client._use_fm_ga_api:
             payload = self._prepare_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
         else:  # Remove on CPD 5.0 release
             payload = self._prepare_beta_inference_payload(
-                prompt,
+                prompt=prompt,
                 params=params,
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
             )
 
         kw_args: dict = dict(
@@ -1083,6 +1112,22 @@ class BaseModelInference(WMLResource, ABC):
                     f"Personally identifiable information detected: {pii_details}"
                 )
                 warn(identifiable_information_warning, category=PIIDetectionWarning)
+        granite_guardian_details = results.get("moderations", {}).get(
+            "granite_guardian"
+        )
+        if granite_guardian_details:
+            if granite_guardian_details[0].get("input"):
+                unsuitable_input_warning = next(
+                    warning.get("message")
+                    for warning in single_response.get("system", {}).get("warnings")
+                    if warning.get("id") == "UNSUITABLE_INPUT"
+                )
+                warn(unsuitable_input_warning, category=GraniteGuardianDetectionWarning)
+            else:
+                granite_guardian_warning = (
+                    f"Potentially granite guardian detected: {granite_guardian_details}"
+                )
+                warn(granite_guardian_warning, category=GraniteGuardianDetectionWarning)
         return results
 
     @staticmethod

@@ -99,7 +99,7 @@ class Experiments(WMLResource):
         )
 
         response_experiment_post = requests.post(
-            self._client.service_instance._href_definitions.get_experiments_href(),
+            self._client._href_definitions.get_experiments_href(),
             params=self._client._params(skip_for_create=True),
             json=metaProps,
             headers=self._client._get_headers(),
@@ -153,9 +153,7 @@ class Experiments(WMLResource):
             details, changes, with_validation=True
         )
 
-        url = self._client.service_instance._href_definitions.get_experiment_href(
-            experiment_id
-        )
+        url = self._client._href_definitions.get_experiment_href(experiment_id)
         response = requests.patch(
             url,
             json=patch_payload,
@@ -218,7 +216,7 @@ class Experiments(WMLResource):
 
         # For CP4D, check if either spce or project ID is set
         self._client._check_if_either_is_set()
-        url = self._client.service_instance._href_definitions.get_experiments_href()
+        url = self._client._href_definitions.get_experiments_href()
 
         if experiment_id is None:
             filter_func = (
@@ -353,9 +351,7 @@ class Experiments(WMLResource):
         self._client._check_if_either_is_set()
         Experiments._validate_type(experiment_id, "experiment_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_experiment_href(
-            experiment_id
-        )
+        url = self._client._href_definitions.get_experiment_href(experiment_id)
         response = requests.delete(
             url, params=self._client._params(), headers=self._client._get_headers()
         )
@@ -415,7 +411,7 @@ class Experiments(WMLResource):
         self._client._check_if_either_is_set()
         Experiments._validate_type(experiment_id, "experiment_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_experiments_href()
+        url = self._client._href_definitions.get_experiments_href()
         return self._create_revision_artifact(url, experiment_id, "experiments")
 
     def get_revision_details(
@@ -457,9 +453,7 @@ class Experiments(WMLResource):
         Experiments._validate_type(experiment_id, "experiment_id", str, True)
         Experiments._validate_type(rev_id, "rev_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_experiment_href(
-            experiment_id
-        )
+        url = self._client._href_definitions.get_experiment_href(experiment_id)
         return self._get_with_or_without_limit(
             url,
             limit=None,
@@ -502,9 +496,7 @@ class Experiments(WMLResource):
 
         Experiments._validate_type(experiment_id, "experiment_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_experiment_href(
-            experiment_id
-        )
+        url = self._client._href_definitions.get_experiment_href(experiment_id)
 
         experiment_resources = self._get_artifact_details(
             url,

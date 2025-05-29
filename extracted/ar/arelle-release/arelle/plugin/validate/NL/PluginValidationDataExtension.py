@@ -20,12 +20,13 @@ from arelle.ModelXbrl import ModelXbrl
 from arelle.typing import assert_type
 from arelle.utils.PluginData import PluginData
 from arelle.utils.validate.ValidationUtil import etreeIterWithDepth
-from arelle.XbrlConst import ixbrl11
+from arelle.XbrlConst import ixbrl11, xhtmlBaseIdentifier, xmlBaseIdentifier
 from arelle.XmlValidate import lexicalPatterns
 from arelle.XmlValidateConst import VALID
 
 XBRLI_IDENTIFIER_PATTERN = re.compile(r"^(?!00)\d{8}$")
 XBRLI_IDENTIFIER_SCHEMA = 'http://www.kvk.nl/kvk-id'
+
 
 DISALLOWED_IXT_NAMESPACES = frozenset((
     ixtNamespaces["ixt v1"],
@@ -44,6 +45,7 @@ UNTRANSFORMABLE_TYPES = frozenset((
 "language",
 ))
 STYLE_IX_HIDDEN_PATTERN = re.compile(r"(.*[^\w]|^)ix-hidden\s*:\s*([\w.-]+).*")
+STYLE_CSS_HIDDEN_PATTERN = re.compile(r"(.*[^\w]|^)display\s*:\s*none([^\w].*|$)")
 
 ALLOWABLE_LANGUAGES = frozenset((
     'nl',
@@ -61,12 +63,14 @@ class ContextData:
 
 @dataclass(frozen=True)
 class HiddenElementsData:
+    cssHiddenFacts: set[ModelInlineFact]
     eligibleForTransformHiddenFacts: set[ModelInlineFact]
     hiddenFactsOutsideHiddenSection: set[ModelInlineFact]
     requiredToDisplayFacts: set[ModelInlineFact]
 
 @dataclass(frozen=True)
 class InlineHTMLData:
+    baseElements: set[Any]
     noMatchLangFootnotes: set[ModelInlineFootnote]
     orphanedFootnotes: set[ModelInlineFootnote]
     tupleElements: set[tuple[Any]]
@@ -134,9 +138,11 @@ class PluginValidationDataExtension(PluginData):
 
     @lru_cache(1)
     def checkHiddenElements(self, modelXbrl: ModelXbrl) -> HiddenElementsData:
+        cssHiddenFacts = set()
         eligibleForTransformHiddenFacts = set()
         hiddenEltIds = {}
         hiddenFactsOutsideHiddenSection = set()
+        ixHiddenFacts = set()
         presentedHiddenEltIds = defaultdict(list)
         requiredToDisplayFacts = set()
         for ixdsHtmlRootElt in modelXbrl.ixdsHtmlElements:
@@ -149,6 +155,13 @@ class PluginValidationDataExtension(PluginData):
                                 eligibleForTransformHiddenFacts.add(ixElt)
                         if ixElt.id:
                             hiddenEltIds[ixElt.id] = ixElt
+                        ixHiddenFacts.add(ixElt)
+            for cssHiddenElt in ixdsHtmlRootElt.getroottree().iterfind(".//{http://www.w3.org/1999/xhtml}*[@style]"):
+                if STYLE_CSS_HIDDEN_PATTERN.match(cssHiddenElt.get("style","")):
+                    for tag in (ixNStag + "nonNumeric", ixNStag+"nonFraction"):
+                        for ixElt in cssHiddenElt.iterdescendants(tag=tag):
+                            if ixElt not in ixHiddenFacts:
+                                cssHiddenFacts.add(ixElt)
         for ixdsHtmlRootElt in modelXbrl.ixdsHtmlElements:
             for ixElt in ixdsHtmlRootElt.getroottree().iterfind(".//{http://www.w3.org/1999/xhtml}*[@style]"):
                 styleValue = ixElt.get("style","")
@@ -165,6 +178,7 @@ class PluginValidationDataExtension(PluginData):
                     (ixElt.concept.baseXsdType in UNTRANSFORMABLE_TYPES or ixElt.isNil)):
                 requiredToDisplayFacts.add(ixElt)
         return HiddenElementsData(
+            cssHiddenFacts=cssHiddenFacts,
             eligibleForTransformHiddenFacts=eligibleForTransformHiddenFacts,
             hiddenFactsOutsideHiddenSection=hiddenFactsOutsideHiddenSection,
             requiredToDisplayFacts=requiredToDisplayFacts,
@@ -172,6 +186,7 @@ class PluginValidationDataExtension(PluginData):
 
     @lru_cache(1)
     def checkInlineHTMLElements(self, modelXbrl: ModelXbrl) -> InlineHTMLData:
+        baseElements = set()
         factLangs = self.factLangs(modelXbrl)
         footnotesRelationshipSet = modelXbrl.relationshipSet("XBRL-footnotes")
         factLangFootnotes = defaultdict(set)
@@ -202,9 +217,15 @@ class PluginValidationDataExtension(PluginData):
                         tupleElements.add(elt)
                     if elt.tag == ixFractionTag:
                         fractionElements.add(elt)
+            for elt, depth in etreeIterWithDepth(ixdsHtmlRootElt):
+                if elt.get(xmlBaseIdentifier) is not None:
+                    baseElements.add(elt)
+                if elt.tag == xhtmlBaseIdentifier:
+                    baseElements.add(elt)
         factLangFootnotes.default_factory = None
         assert_type(factLangFootnotes, defaultdict[ModelObject, set[str]])
         return InlineHTMLData(
+            baseElements=baseElements,
             factLangFootnotes=cast(dict[ModelInlineFootnote, set[str]], factLangFootnotes),
             fractionElements=fractionElements,
             noMatchLangFootnotes=noMatchLangFootnotes,
@@ -231,6 +252,9 @@ class PluginValidationDataExtension(PluginData):
             if fact is not None:
                 factLangs.add(fact.xmlLang)
         return factLangs
+
+    def getBaseElements(self, modelXbrl: ModelXbrl) -> set[Any | None]:
+        return self.checkInlineHTMLElements(modelXbrl).baseElements
 
     def getContextsWithImproperContent(self, modelXbrl: ModelXbrl) -> list[ModelContext | None]:
         return self.checkContexts(modelXbrl).contextsWithImproperContent
@@ -289,6 +313,9 @@ class PluginValidationDataExtension(PluginData):
 
     def getOrphanedFootnotes(self, modelXbrl: ModelXbrl) -> set[ModelInlineFootnote]:
         return self.checkInlineHTMLElements(modelXbrl).orphanedFootnotes
+
+    def getCssHiddenFacts(self, modelXbrl: ModelXbrl) -> set[ModelInlineFact]:
+        return self.checkHiddenElements(modelXbrl).cssHiddenFacts
 
     def getRequiredToDisplayFacts(self, modelXbrl: ModelXbrl) -> set[ModelInlineFact]:
         return self.checkHiddenElements(modelXbrl).requiredToDisplayFacts

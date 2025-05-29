@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import json
+from functools import partial
 from pathlib import Path, PurePath
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 import anndata.utils
 import h5py
@@ -32,6 +33,7 @@ else:
         read_mtx,
         read_text,
     )
+
 from anndata import AnnData
 from matplotlib.image import imread
 
@@ -41,7 +43,7 @@ from ._settings import settings
 from ._utils import _empty
 
 if TYPE_CHECKING:
-    from datetime import datetime
+    from collections.abc import Callable
     from typing import BinaryIO, Literal
 
     from ._utils import Empty
@@ -139,7 +141,7 @@ def read(
 
     """
     filename = Path(filename)  # allow passing strings
-    if is_valid_filename(filename):
+    if is_valid_filename(filename, ext=ext):
         return _read(
             filename,
             backed=backed,
@@ -211,18 +213,19 @@ def read_10x_h5(
         Any additional metadata present in /matrix/features is read in.
 
     """
-    start = logg.info(f"reading {filename}")
-    is_present = _check_datafile_present_and_download(filename, backup_url=backup_url)
+    path = Path(filename)
+    start = logg.info(f"reading {path}")
+    is_present = _check_datafile_present_and_download(path, backup_url=backup_url)
     if not is_present:
-        logg.debug(f"... did not find original file {filename}")
-    with h5py.File(str(filename), "r") as f:
+        logg.debug(f"... did not find original file {path}")
+    with h5py.File(str(path), "r") as f:
         v3 = "/matrix" in f
     if v3:
-        adata = _read_v3_10x_h5(filename, start=start)
+        adata = _read_10x_h5(path, _read_v3_10x_h5)
         if genome:
             if genome not in adata.var["genome"].values:
                 msg = (
-                    f"Could not find data corresponding to genome {genome!r} in {filename}. "
+                    f"Could not find data corresponding to genome {genome!r} in {path}. "
                     f"Available genomes are: {list(adata.var['genome'].unique())}."
                 )
                 raise ValueError(msg)
@@ -232,68 +235,22 @@ def read_10x_h5(
         if adata.is_view:
             adata = adata.copy()
     else:
-        adata = _read_legacy_10x_h5(Path(filename), genome=genome, start=start)
+        adata = _read_10x_h5(path, partial(_read_legacy_10x_h5, genome=genome))
+    logg.info("", time=start)
     return adata
 
 
-def _read_legacy_10x_h5(
-    path: Path, *, genome: str | None = None, start: datetime | None = None
-):
-    """Read hdf5 file from Cell Ranger v2 or earlier versions."""
+def _read_10x_h5(path: Path, cb: Callable[[h5py.File], AnnData]) -> AnnData:
+    """Read hdf5 file from Cell Ranger v3 or later versions."""
     with h5py.File(str(path), "r") as f:
         try:
-            children = list(f.keys())
-            if not genome:
-                if len(children) > 1:
-                    msg = (
-                        f"{path} contains more than one genome. "
-                        "For legacy 10x h5 files you must specify the genome "
-                        "if more than one is present. "
-                        f"Available genomes are: {children}"
-                    )
-                    raise ValueError(msg)
-                genome = children[0]
-            elif genome not in children:
-                msg = (
-                    f"Could not find genome {genome!r} in {path}. "
-                    f"Available genomes are: {children}"
-                )
-                raise ValueError(msg)
-
-            dsets = {}
-            _collect_datasets(dsets, f[genome])
-
-            # AnnData works with csr matrices
-            # 10x stores the transposed data, so we do the transposition right away
-            from scipy.sparse import csr_matrix
-
-            M, N = dsets["shape"]
-            data = dsets["data"]
-            if dsets["data"].dtype == np.dtype("int32"):
-                data = dsets["data"].view("float32")
-                data[:] = dsets["data"]
-            matrix = csr_matrix(
-                (data, dsets["indices"], dsets["indptr"]),
-                shape=(N, M),
-            )
-            # the csc matrix is automatically the transposed csr matrix
-            # as scanpy expects it, so, no need for a further transpostion
-            adata = AnnData(
-                matrix,
-                obs=dict(obs_names=dsets["barcodes"].astype(str)),
-                var=dict(
-                    var_names=dsets["gene_names"].astype(str),
-                    gene_ids=dsets["genes"].astype(str),
-                ),
-            )
-            logg.info("", time=start)
-            return adata
-        except KeyError:
+            return cb(f)
+        except KeyError as e:
             msg = "File is missing one or more required datasets."
-            raise Exception(msg)
+            raise Exception(msg) from e
 
 
-def _collect_datasets(dsets: dict, group: h5py.Group):
+def _collect_datasets(dsets: dict, group: h5py.Group) -> None:
     for k, v in group.items():
         if isinstance(v, h5py.Dataset):
             dsets[k] = v[()]
@@ -301,76 +258,106 @@ def _collect_datasets(dsets: dict, group: h5py.Group):
             _collect_datasets(dsets, v)
 
 
-def _read_v3_10x_h5(filename, *, start=None):
-    """Read hdf5 file from Cell Ranger v3 or later versions."""
-    with h5py.File(str(filename), "r") as f:
-        try:
-            dsets = {}
-            _collect_datasets(dsets, f["matrix"])
+def _read_v3_10x_h5(f: h5py.File) -> AnnData:
+    dsets = {}
+    _collect_datasets(dsets, f["matrix"])
 
-            from scipy.sparse import csr_matrix
+    from scipy.sparse import csr_matrix  # noqa: TID251
 
-            M, N = dsets["shape"]
-            data = dsets["data"]
-            if dsets["data"].dtype == np.dtype("int32"):
-                data = dsets["data"].view("float32")
-                data[:] = dsets["data"]
-            matrix = csr_matrix(
-                (data, dsets["indices"], dsets["indptr"]),
-                shape=(N, M),
+    M, N = dsets["shape"]
+    data = dsets["data"]
+    if dsets["data"].dtype == np.dtype("int32"):
+        data = dsets["data"].view("float32")
+        data[:] = dsets["data"]
+    matrix = csr_matrix(
+        (data, dsets["indices"], dsets["indptr"]),
+        shape=(N, M),
+    )
+    obs_dict = {"obs_names": dsets["barcodes"].astype(str)}
+    var_dict = {"var_names": dsets["name"].astype(str)}
+
+    if "gene_id" not in dsets:
+        # Read metadata specific to a feature-barcode matrix
+        var_dict["gene_ids"] = dsets["id"].astype(str)
+    else:
+        # Read metadata specific to a probe-barcode matrix
+        var_dict.update(
+            {
+                "gene_ids": dsets["gene_id"].astype(str),
+                "probe_ids": dsets["id"].astype(str),
+            }
+        )
+    var_dict["feature_types"] = dsets["feature_type"].astype(str)
+    if "filtered_barcodes" in f["matrix"]:
+        obs_dict["filtered_barcodes"] = dsets["filtered_barcodes"].astype(bool)
+
+    if "features" in f["matrix"]:
+        var_dict.update(
+            (
+                feature_metadata_name,
+                dsets[feature_metadata_name].astype(
+                    bool if feature_metadata_item.dtype.kind == "b" else str
+                ),
             )
-            obs_dict = {"obs_names": dsets["barcodes"].astype(str)}
-            var_dict = {"var_names": dsets["name"].astype(str)}
+            for feature_metadata_name, feature_metadata_item in f["matrix"][
+                "features"
+            ].items()
+            if isinstance(feature_metadata_item, h5py.Dataset)
+            and feature_metadata_name
+            not in ["name", "feature_type", "id", "gene_id", "_all_tag_keys"]
+        )
+    else:
+        msg = "10x h5 has no features group"
+        raise ValueError(msg)
+    return AnnData(matrix, obs=obs_dict, var=var_dict)
 
-            if "gene_id" not in dsets:
-                # Read metadata specific to a feature-barcode matrix
-                var_dict["gene_ids"] = dsets["id"].astype(str)
-            else:
-                # Read metadata specific to a probe-barcode matrix
-                var_dict.update(
-                    {
-                        "gene_ids": dsets["gene_id"].astype(str),
-                        "probe_ids": dsets["id"].astype(str),
-                    }
-                )
-            var_dict["feature_types"] = dsets["feature_type"].astype(str)
-            if "filtered_barcodes" in f["matrix"]:
-                obs_dict["filtered_barcodes"] = dsets["filtered_barcodes"].astype(bool)
 
-            if "features" in f["matrix"]:
-                var_dict.update(
-                    (
-                        feature_metadata_name,
-                        dsets[feature_metadata_name].astype(
-                            bool if feature_metadata_item.dtype.kind == "b" else str
-                        ),
-                    )
-                    for feature_metadata_name, feature_metadata_item in f["matrix"][
-                        "features"
-                    ].items()
-                    if isinstance(feature_metadata_item, h5py.Dataset)
-                    and feature_metadata_name
-                    not in [
-                        "name",
-                        "feature_type",
-                        "id",
-                        "gene_id",
-                        "_all_tag_keys",
-                    ]
-                )
-            else:
-                msg = "10x h5 has no features group"
-                raise ValueError(msg)
-            adata = AnnData(
-                matrix,
-                obs=obs_dict,
-                var=var_dict,
+def _read_legacy_10x_h5(f: h5py.File, genome: str | None) -> AnnData:
+    children = list(f.keys())
+    if not genome:
+        if len(children) > 1:
+            msg = (
+                f"{f.filename} contains more than one genome. "
+                "For legacy 10x h5 files you must specify the genome "
+                "if more than one is present. "
+                f"Available genomes are: {children}"
             )
-            logg.info("", time=start)
-            return adata
-        except KeyError:
-            msg = "File is missing one or more required datasets."
-            raise Exception(msg)
+            raise ValueError(msg)
+        genome = children[0]
+    elif genome not in children:
+        msg = (
+            f"Could not find genome {genome!r} in {f.filename}. "
+            f"Available genomes are: {children}"
+        )
+        raise ValueError(msg)
+
+    dsets = {}
+    _collect_datasets(dsets, f[genome])
+
+    # AnnData works with csr matrices
+    # 10x stores the transposed data, so we do the transposition right away
+    from scipy.sparse import csr_matrix  # noqa: TID251
+
+    M, N = dsets["shape"]
+    data = dsets["data"]
+    if dsets["data"].dtype == np.dtype("int32"):
+        data = dsets["data"].view("float32")
+        data[:] = dsets["data"]
+    matrix = csr_matrix(
+        (data, dsets["indices"], dsets["indptr"]),
+        shape=(N, M),
+    )
+    # the csc matrix is automatically the transposed csr matrix
+    # as scanpy expects it, so, no need for a further transpostion
+    adata = AnnData(
+        matrix,
+        obs=dict(obs_names=dsets["barcodes"].astype(str)),
+        var=dict(
+            var_names=dsets["gene_names"].astype(str),
+            gene_ids=dsets["genes"].astype(str),
+        ),
+    )
+    return adata
 
 
 @deprecated("Use `squidpy.read.visium` instead.")
@@ -487,9 +474,9 @@ def read_visium(
                 adata.uns["spatial"][library_id]["images"][res] = imread(
                     str(files[f"{res}_image"])
                 )
-            except Exception:
+            except Exception as e:  # noqa: PERF203
                 msg = f"Could not find '{res}_image'"
-                raise OSError(msg)
+                raise OSError(msg) from e
 
         # read json scalefactors
         adata.uns["spatial"][library_id]["scalefactors"] = json.loads(
@@ -669,7 +656,6 @@ def write(
     """
     filename = Path(filename)  # allow passing strings
     if is_valid_filename(filename):
-        filename = filename
         ext_ = is_valid_filename(filename, return_ext=True)
         if ext is None:
             ext = ext_
@@ -726,9 +712,9 @@ def read_params(
     from collections import OrderedDict
 
     params = OrderedDict([])
-    for line in filename.open():
-        if "=" in line and (not as_header or line.startswith("#")):
-            line = line[1:] if line.startswith("#") else line
+    for line_raw in filename.open():
+        if "=" in line_raw and (not as_header or line_raw.startswith("#")):
+            line = line_raw[1:] if line_raw.startswith("#") else line_raw
             key, val = line.split("=")
             key = key.strip()
             val = val.strip()
@@ -759,7 +745,7 @@ def write_params(path: Path | str, *args, **maps):
 # -------------------------------------------------------------------------------
 
 
-def _read(
+def _read(  # noqa: PLR0912, PLR0915
     filename: Path,
     *,
     backed=None,
@@ -777,7 +763,7 @@ def _read(
         msg = f"Please provide one of the available extensions.\n{avail_exts}"
         raise ValueError(msg)
     else:
-        ext = is_valid_filename(filename, return_ext=True)
+        ext = is_valid_filename(filename, return_ext=True, ext=ext)
     is_present = _check_datafile_present_and_download(filename, backup_url=backup_url)
     if not is_present:
         logg.debug(f"... did not find original file {filename}")
@@ -808,7 +794,7 @@ def _read(
             "which enables much faster reading from a cache file."
         )
     # do the actual reading
-    if ext == "xlsx" or ext == "xls":
+    if ext in {"xlsx", "xls"}:
         if sheet is None:
             msg = "Provide `sheet` parameter when reading '.xlsx' files."
             raise ValueError(msg)
@@ -992,11 +978,10 @@ def get_used_files():
     for proc in loop_over_scanpy_processes:
         try:
             flist = proc.open_files()
-            for nt in flist:
-                filenames.append(nt.path)
+            filenames.extend(nt.path for nt in flist)
         # This catches a race condition where a process ends
         # before we can examine its files
-        except psutil.NoSuchProcess:
+        except psutil.NoSuchProcess:  # noqa: PERF203
             pass
     return set(filenames)
 
@@ -1063,7 +1048,7 @@ def _download(url: str, path: Path):
         raise
 
 
-def _check_datafile_present_and_download(path, backup_url=None):
+def _check_datafile_present_and_download(path: Path, backup_url=None):
     """Check whether the file is present, otherwise download."""
     path = Path(path)
     if path.is_file():
@@ -1082,25 +1067,43 @@ def _check_datafile_present_and_download(path, backup_url=None):
     return True
 
 
-def is_valid_filename(filename: Path, *, return_ext: bool = False):
+@overload
+def is_valid_filename(
+    filename: Path, *, return_ext: Literal[False] = False, ext: str | None = None
+) -> bool: ...
+@overload
+def is_valid_filename(
+    filename: Path, *, return_ext: Literal[True], ext: str | None = None
+) -> str: ...
+def is_valid_filename(
+    filename: Path, *, return_ext: bool = False, ext: str | None = None
+) -> str | bool:
     """Check whether the argument is a filename."""
-    ext = filename.suffixes
-
-    if len(ext) > 2:
+    ext_from_file = filename.suffixes
+    if ext is not None:
+        if not (joined_file_ext := ".".join(ext_from_file)).endswith(ext):
+            msg = f"{joined_file_ext} does not end in expected extension {ext}"
+            raise ValueError(msg)
+        return ext if return_ext else True
+    if len(ext_from_file) > 2:
         logg.warning(
-            f"Your filename has more than two extensions: {ext}.\n"
-            f"Only considering the two last: {ext[-2:]}."
+            f"Your filename has more than two extensions: {ext_from_file}.\n"
+            f"Only considering the two last: {ext_from_file[-2:]}."
         )
-        ext = ext[-2:]
+        ext_from_file = ext_from_file[-2:]
 
     # cases for gzipped/bzipped text files
-    if len(ext) == 2 and ext[0][1:] in text_exts and ext[1][1:] in ("gz", "bz2"):
-        return ext[0][1:] if return_ext else True
-    elif ext and ext[-1][1:] in avail_exts:
-        return ext[-1][1:] if return_ext else True
-    elif "".join(ext) == ".soft.gz":
+    if (
+        len(ext_from_file) == 2
+        and ext_from_file[0][1:] in text_exts
+        and ext_from_file[1][1:] in ("gz", "bz2")
+    ):
+        return ext_from_file[0][1:] if return_ext else True
+    elif ext_from_file and ext_from_file[-1][1:] in avail_exts:
+        return ext_from_file[-1][1:] if return_ext else True
+    elif "".join(ext_from_file) == ".soft.gz":
         return "soft.gz" if return_ext else True
-    elif "".join(ext) == ".mtx.gz":
+    elif "".join(ext_from_file) == ".mtx.gz":
         return "mtx.gz" if return_ext else True
     elif not return_ext:
         return False

@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List
+from wandelbots_api_client.v2.models.service_group import ServiceGroup
 from wandelbots_api_client.v2.models.service_status_status import ServiceStatusStatus
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,8 +29,9 @@ class ServiceStatus(BaseModel):
     ServiceStatus
     """ # noqa: E501
     service: StrictStr
+    group: ServiceGroup
     status: ServiceStatusStatus
-    __properties: ClassVar[List[str]] = ["service", "status"]
+    __properties: ClassVar[List[str]] = ["service", "group", "status"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,6 +92,7 @@ class ServiceStatus(BaseModel):
 
         _obj = cls.model_validate({
             "service": obj.get("service"),
+            "group": obj.get("group"),
             "status": ServiceStatusStatus.from_dict(obj["status"]) if obj.get("status") is not None else None
         })
         return _obj

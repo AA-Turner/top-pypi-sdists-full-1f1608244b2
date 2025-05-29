@@ -25,22 +25,21 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from yubikit.core import Tlv, int2bytes
-from yubikit.core.smartcard import (
-    SmartCardConnection,
-    SmartCardProtocol,
-    ApduError,
-    ApplicationNotAvailableError,
-)
-from cryptography.hazmat.primitives.serialization import pkcs12
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
-from cryptography import x509
-from typing import Tuple
 import ctypes
-
 import logging
 
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.serialization import pkcs12
+
+from yubikit.core import Tlv, int2bytes
+from yubikit.core.smartcard import (
+    ApduError,
+    ApplicationNotAvailableError,
+    SmartCardConnection,
+    SmartCardProtocol,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -192,7 +191,7 @@ class OSVERSIONINFOW(ctypes.Structure):
     ]
 
 
-def get_windows_version() -> Tuple[int, int, int]:
+def get_windows_version() -> tuple[int, int, int]:
     """Get the true Windows version, since sys.getwindowsversion lies."""
     osvi = OSVERSIONINFOW()
     osvi.dwOSVersionInfoSize = ctypes.sizeof(osvi)

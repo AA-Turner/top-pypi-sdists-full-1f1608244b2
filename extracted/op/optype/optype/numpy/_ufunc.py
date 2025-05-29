@@ -1,17 +1,17 @@
 import sys
 import types
 from collections.abc import Callable, Iterable, Mapping, Sequence
-from typing import Any, Literal as L, Protocol, TypeAlias  # noqa: N817
+from typing import Any, Literal as L, LiteralString, Protocol, TypeAlias  # noqa: N817
 
 if sys.version_info >= (3, 13):
-    from typing import LiteralString, TypeVar, runtime_checkable
+    from typing import TypeVar, runtime_checkable
 else:
-    from typing_extensions import LiteralString, TypeVar, runtime_checkable
+    from typing_extensions import TypeVar, runtime_checkable
 
 import numpy as np
-import numpy.typing as npt
 
 import optype.numpy._compat as _x
+from ._shape import AnyShape
 from optype._utils import set_module
 
 __all__ = ["CanArrayFunction", "CanArrayUFunc", "UFunc"]
@@ -24,8 +24,8 @@ def __dir__() -> list[str]:
 ###
 
 
-_AnyFunc: TypeAlias = Callable[..., object]
-_AnyArray: TypeAlias = npt.NDArray[np.generic]
+_AnyFunc: TypeAlias = Callable[..., Any]
+_AnyArray: TypeAlias = np.ndarray[AnyShape, np.dtype[Any]]
 
 _FT_co = TypeVar("_FT_co", bound=_AnyFunc, default=_AnyFunc, covariant=True)
 _NInT_co = TypeVar("_NInT_co", bound=int, default=int, covariant=True)
@@ -167,18 +167,14 @@ else:
         def outer(self, /) -> _AnyFunc | None: ...
         @property
         def reduce(self, /) -> _AnyFunc | None: ...
-
-        if _x.NP125:
-            # `reduceat` was missing in the stubs in `1.23`
-            @property
-            def reduceat(self, /) -> Callable[..., _AnyArray] | None: ...
-
+        @property
+        def reduceat(self, /) -> Callable[..., _AnyArray] | None: ...
         @property
         def accumulate(self, /) -> Callable[..., _AnyArray] | None: ...
 
 
 _UFT_contra = TypeVar("_UFT_contra", bound=UFunc, default=np.ufunc, contravariant=True)
-_T_co = TypeVar("_T_co", default=object, covariant=True)
+_T_co = TypeVar("_T_co", default=Any, covariant=True)
 
 _MethodCommon: TypeAlias = L["__call__", "reduce", "reduceat", "accumulate", "outer"]
 
@@ -233,6 +229,6 @@ class CanArrayFunction(Protocol[_FT_contra, _T_co]):
         # although this could be tighter, this ensures numpy.typing compat
         types: Iterable[type["CanArrayFunction"]],
         # ParamSpec can only be used on *args and **kwargs for some reason...
-        args: tuple[object, ...],
-        kwargs: Mapping[str, object],
+        args: tuple[Any, ...],
+        kwargs: Mapping[str, Any],
     ) -> types.NotImplementedType | _T_co: ...

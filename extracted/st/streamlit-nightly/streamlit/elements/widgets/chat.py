@@ -123,7 +123,7 @@ def _process_avatar_input(
     Tuple[AvatarType, str]
         The detected avatar type and the prepared avatar data.
     """
-    AvatarType = BlockProto.ChatMessage.AvatarType
+    AvatarType = BlockProto.ChatMessage.AvatarType  # noqa: N806
 
     if avatar is None:
         return AvatarType.ICON, ""
@@ -596,6 +596,7 @@ class ChatMixin:
             user_key=key,
             # chat_input is not allowed to be used in a form.
             form_id=None,
+            dg=self.dg,
             placeholder=placeholder,
             max_chars=max_chars,
             accept_file=accept_file,

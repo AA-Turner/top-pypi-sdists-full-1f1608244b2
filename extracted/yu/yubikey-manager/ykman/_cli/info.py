@@ -25,24 +25,23 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from yubikit.core import TRANSPORT
-from yubikit.core.otp import OtpConnection
-from yubikit.core.fido import FidoConnection
-from yubikit.core.smartcard import SmartCardConnection
-from yubikit.management import CAPABILITY, USB_INTERFACE
-from yubikit.yubiotp import YubiOtpSession
-from yubikit.oath import OathSession
-from yubikit.support import get_name
-
-from .util import CliFail, is_yk4_fips, click_command, pretty_print
-from ..otp import is_in_fips_mode as otp_in_fips_mode
-from ..oath import is_in_fips_mode as oath_in_fips_mode
-from ..fido import is_in_fips_mode as ctap_in_fips_mode
-from typing import List
-
-import click
 import logging
 
+import click
+
+from yubikit.core import TRANSPORT
+from yubikit.core.fido import FidoConnection
+from yubikit.core.otp import OtpConnection
+from yubikit.core.smartcard import SmartCardConnection
+from yubikit.management import CAPABILITY, USB_INTERFACE
+from yubikit.oath import OathSession
+from yubikit.support import get_name
+from yubikit.yubiotp import YubiOtpSession
+
+from ..fido import is_in_fips_mode as ctap_in_fips_mode
+from ..oath import is_in_fips_mode as oath_in_fips_mode
+from ..otp import is_in_fips_mode as otp_in_fips_mode
+from .util import CliFail, click_command, is_yk4_fips, pretty_print
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +72,7 @@ def print_app_status_table(supported_apps, enabled_apps):
         else:
             rows.append([app.display_name, usb_status])
 
-    column_l: List[int] = []
+    column_l: list[int] = []
     for row in rows:
         for idx, c in enumerate(row):
             if len(column_l) > idx:
@@ -165,8 +164,7 @@ def info(ctx, check_fips):
     if info.serial:
         click.echo(f"Serial number: {info.serial}")
     if info.version:
-        f_version = ".".join(str(x) for x in info.version)
-        click.echo(f"Firmware version: {f_version}")
+        click.echo(f"Firmware version: {info.version_name}")
     else:
         click.echo(
             "Firmware version: Uncertain, re-run with only one YubiKey connected"

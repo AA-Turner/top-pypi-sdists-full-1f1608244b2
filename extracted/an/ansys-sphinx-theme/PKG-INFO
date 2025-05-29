@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ansys-sphinx-theme
-Version: 1.4.5
+Version: 1.5.0
 Summary: A theme devised by ANSYS, Inc. for Sphinx documentation.
 Author-Email: "ANSYS, Inc." <pyansys.core@ansys.com>
 Maintainer-Email: "ANSYS, Inc." <pyansys.core@ansys.com>
@@ -45,7 +45,6 @@ Requires-Dist: pydata-sphinx-theme<0.17,>=0.15.4
 Requires-Dist: Jinja2>=3.1.2
 Requires-Dist: importlib-metadata>=4.0
 Requires-Dist: pdf2image>=1.17.0
-Requires-Dist: snowballstemmer<3
 Provides-Extra: autoapi
 Requires-Dist: sphinx-autoapi==3.6.0; extra == "autoapi"
 Requires-Dist: sphinx-design==0.6.1; extra == "autoapi"
@@ -53,14 +52,14 @@ Requires-Dist: sphinx-jinja==2.0.2; extra == "autoapi"
 Requires-Dist: astroid<4.0,>=3.0; extra == "autoapi"
 Provides-Extra: doc
 Requires-Dist: jupytext==1.17.1; extra == "doc"
-Requires-Dist: notebook==7.4.1; extra == "doc"
+Requires-Dist: notebook==7.4.3; extra == "doc"
 Requires-Dist: nbsphinx==0.9.7; extra == "doc"
 Requires-Dist: numpydoc==1.8.0; extra == "doc"
 Requires-Dist: pandas==2.2.3; extra == "doc"
 Requires-Dist: Pillow>=9.0; extra == "doc"
-Requires-Dist: plotly==6.0.1; extra == "doc"
+Requires-Dist: plotly==6.1.2; extra == "doc"
 Requires-Dist: PyGitHub==2.6.1; extra == "doc"
-Requires-Dist: pyvista[jupyter]==0.45.0; extra == "doc"
+Requires-Dist: pyvista[jupyter]==0.45.2; extra == "doc"
 Requires-Dist: PyYAML==6.0.2; extra == "doc"
 Requires-Dist: requests==2.32.3; extra == "doc"
 Requires-Dist: sphinx-autoapi==3.6.0; extra == "doc"
@@ -69,7 +68,7 @@ Requires-Dist: sphinx-design==0.6.1; extra == "doc"
 Requires-Dist: sphinx-gallery==0.19.0; extra == "doc"
 Requires-Dist: sphinx-jinja==2.0.2; extra == "doc"
 Requires-Dist: sphinx-notfound-page==1.1.0; extra == "doc"
-Requires-Dist: tox==4.25.0; extra == "doc"
+Requires-Dist: tox==4.26.0; extra == "doc"
 Requires-Dist: sphinx-theme-builder[cli]==0.2.0b2; extra == "doc"
 Provides-Extra: changelog
 Requires-Dist: PyYAML==6.0.2; extra == "changelog"

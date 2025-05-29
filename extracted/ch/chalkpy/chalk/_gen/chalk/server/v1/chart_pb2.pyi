@@ -82,20 +82,56 @@ class TimeSeriesChart(_message.Message):
         window_period: _Optional[_Union[_duration_pb2.Duration, _Mapping]] = ...,
     ) -> None: ...
 
+class ListChartsFilters(_message.Message):
+    __slots__ = ("link_entity_kind", "linked_entity_id")
+    LINK_ENTITY_KIND_FIELD_NUMBER: _ClassVar[int]
+    LINKED_ENTITY_ID_FIELD_NUMBER: _ClassVar[int]
+    link_entity_kind: _chart_pb2.ChartLinkKind
+    linked_entity_id: str
+    def __init__(
+        self,
+        link_entity_kind: _Optional[_Union[_chart_pb2.ChartLinkKind, str]] = ...,
+        linked_entity_id: _Optional[str] = ...,
+    ) -> None: ...
+
+class ListChartPageToken(_message.Message):
+    __slots__ = ("created_at_hwm", "id_hwm")
+    CREATED_AT_HWM_FIELD_NUMBER: _ClassVar[int]
+    ID_HWM_FIELD_NUMBER: _ClassVar[int]
+    created_at_hwm: _timestamp_pb2.Timestamp
+    id_hwm: str
+    def __init__(
+        self, created_at_hwm: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., id_hwm: _Optional[str] = ...
+    ) -> None: ...
+
 class ListChartsRequest(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
+    __slots__ = ("filters", "limit", "page_token")
+    FILTERS_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    PAGE_TOKEN_FIELD_NUMBER: _ClassVar[int]
+    filters: ListChartsFilters
+    limit: int
+    page_token: str
+    def __init__(
+        self,
+        filters: _Optional[_Union[ListChartsFilters, _Mapping]] = ...,
+        limit: _Optional[int] = ...,
+        page_token: _Optional[str] = ...,
+    ) -> None: ...
 
 class ListChartsResponse(_message.Message):
-    __slots__ = ("charts", "charts_with_links")
+    __slots__ = ("charts", "charts_with_links", "next_page_token")
     CHARTS_FIELD_NUMBER: _ClassVar[int]
     CHARTS_WITH_LINKS_FIELD_NUMBER: _ClassVar[int]
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _ClassVar[int]
     charts: _containers.RepeatedCompositeFieldContainer[_chart_pb2.MetricConfig]
     charts_with_links: _containers.RepeatedCompositeFieldContainer[_chart_pb2.Chart]
+    next_page_token: str
     def __init__(
         self,
         charts: _Optional[_Iterable[_Union[_chart_pb2.MetricConfig, _Mapping]]] = ...,
         charts_with_links: _Optional[_Iterable[_Union[_chart_pb2.Chart, _Mapping]]] = ...,
+        next_page_token: _Optional[str] = ...,
     ) -> None: ...
 
 class GetChartSnapshotRequest(_message.Message):

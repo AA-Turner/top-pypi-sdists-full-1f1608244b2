@@ -1,10 +1,12 @@
-from yubikit.core import TRANSPORT
+import logging
+from functools import partial
+
+import pytest
+from click.testing import CliRunner
+
 from ykman._cli.__main__ import cli
 from ykman._cli.util import CliFail
-from click.testing import CliRunner
-from functools import partial
-import pytest
-import logging
+from yubikit.core import TRANSPORT
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +14,7 @@ logger = logging.getLogger(__name__)
 @pytest.fixture()
 def ykman_cli(capsys, device, info):
     def _ykman_cli(*argv, **kwargs):
-        runner = CliRunner(mix_stderr=False)
+        runner = CliRunner()
         with capsys.disabled():
             logger.debug("CLI: ykman %r", argv)
             result = runner.invoke(cli, argv, obj={}, **kwargs)

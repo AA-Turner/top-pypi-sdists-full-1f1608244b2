@@ -75,6 +75,29 @@ class TestDocumentationExamples(unittest.TestCase):
                 reason = None
                 if name in {"plot_woe_transformer.py"}:
                     reason = "dot not available"
+                if name in {
+                    "plot_catwoe_transformer.py",
+                    "plot_gexternal_xgboost.py",
+                    "plot_pipeline_xgboost.py",
+                    "plot_usparse_xgboost.py",
+                }:
+                    reason = "unstable, xgboost not ready"
+
+                if not reason and name in {"plot_weird_pandas_and_hash.py"}:
+                    try:
+                        import onnxruntime_extensions  # noqa: F401
+                    except ImportError:
+                        reason = "onnxruntime_extensions not available"
+
+                if not reason and name in {
+                    "plot_gexternal_lightgbm_reg.py",
+                    "plot_gexternal_lightgbm.py",
+                    "plot_pipeline_lightgbm.py",
+                }:
+                    try:
+                        import onnxmltools  # noqa: F401
+                    except ImportError as e:
+                        reason = str(e)
 
                 if reason:
 

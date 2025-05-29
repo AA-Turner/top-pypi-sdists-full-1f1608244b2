@@ -5,6 +5,7 @@ import json
 import os
 import re
 import string
+import sys
 import traceback
 import types
 import uuid
@@ -15,7 +16,6 @@ from typing import Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 import pytz
-import sys
 from deprecated import deprecated
 
 from seeq.base import util
@@ -1037,6 +1037,22 @@ class LRUCache:
 
 def is_numeric(value):
     return isinstance(value, (int, float, complex)) and not isinstance(value, bool)
+
+
+def safe_to_numeric(
+        value: Union[float, int, str], default: Optional[Union[float, int, None]] = None
+) -> Union[float, int, None]:
+    if isinstance(value, (int, float)):
+        return value
+    if isinstance(value, str):
+        try:
+            return int(value)
+        except ValueError:
+            try:
+                return float(value)
+            except ValueError:
+                pass
+    return default
 
 
 def removesuffix(s: str, suffix: str) -> str:

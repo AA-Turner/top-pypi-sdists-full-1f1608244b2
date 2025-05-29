@@ -63,7 +63,7 @@ class TaskCredentials(WMLResource):
 
         if task_credentials_id:
             response = requests.get(
-                self._client.service_instance._href_definitions.get_task_credentials_href(
+                self._client._href_definitions.get_task_credentials_href(
                     task_credentials_id
                 ),
                 headers=self._client._get_headers(),
@@ -84,7 +84,7 @@ class TaskCredentials(WMLResource):
                 params["space_id"] = space_id
 
             response = requests.get(
-                self._client.service_instance._href_definitions.get_task_credentials_all_href(),
+                self._client._href_definitions.get_task_credentials_all_href(),
                 params=params,
                 headers=self._client._get_headers(),
             )
@@ -122,9 +122,7 @@ class TaskCredentials(WMLResource):
         if self._client.ICP_PLATFORM_SPACES:
             raise WMLClientError("Task Credentials API is supported on Cloud only.")
 
-        href = (
-            self._client.service_instance._href_definitions.get_task_credentials_all_href()
-        )
+        href = self._client._href_definitions.get_task_credentials_all_href()
 
         if kwargs.get("project_id") is not None or kwargs.get("space_id") is not None:
             scope_fields_not_supported_warning = "Scope fields: project_id/space_id are not yet supported by Task Credentials Service."
@@ -252,7 +250,7 @@ class TaskCredentials(WMLResource):
             warn(scope_fields_not_supported_warning)
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_task_credentials_href(
+            self._client._href_definitions.get_task_credentials_href(
                 task_credentials_id
             ),
             params=params,

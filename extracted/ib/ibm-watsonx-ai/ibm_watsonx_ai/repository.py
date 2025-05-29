@@ -372,7 +372,7 @@ class Repository(WMLResource):
         params.update({"purge_on_delete": "true"})
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_asset_href(artifact_id),
+            self._client._href_definitions.get_asset_href(artifact_id),
             params=params,
             headers=self._client._get_headers(),
         )
@@ -744,11 +744,11 @@ class Repository(WMLResource):
         isIcp = self._client.ICP_PLATFORM_SPACES
 
         endpoints = {
-            "model": self._client.service_instance._href_definitions.get_published_models_href(),
-            "experiment": self._client.service_instance._href_definitions.get_experiments_href(),
-            "pipeline": self._client.service_instance._href_definitions.get_pipelines_href(),
-            "function": self._client.service_instance._href_definitions.get_functions_href(),
-            "ai_service": self._client.service_instance._href_definitions.get_ai_services_href(),
+            "model": self._client._href_definitions.get_published_models_href(),
+            "experiment": self._client._href_definitions.get_experiments_href(),
+            "pipeline": self._client._href_definitions.get_pipelines_href(),
+            "function": self._client._href_definitions.get_functions_href(),
+            "ai_service": self._client._href_definitions.get_ai_services_href(),
         }
 
         artifact_get = {}
@@ -847,19 +847,15 @@ class Repository(WMLResource):
         isIcp = self._client.ICP_PLATFORM_SPACES
 
         endpoints = {
-            "model": self._client.service_instance._href_definitions.get_model_last_version_href(
+            "model": self._client._href_definitions.get_model_last_version_href(
                 artifact_id
             ),
-            "pipeline": self._client.service_instance._href_definitions.get_pipeline_href(
+            "pipeline": self._client._href_definitions.get_pipeline_href(artifact_id),
+            "experiment": self._client._href_definitions.get_experiment_href(
                 artifact_id
             ),
-            "experiment": self._client.service_instance._href_definitions.get_experiment_href(
-                artifact_id
-            ),
-            "function": self._client.service_instance._href_definitions.get_function_href(
-                artifact_id
-            ),
-            "ai_service": self._client.service_instance._href_definitions.get_ai_service_href(
+            "function": self._client._href_definitions.get_function_href(artifact_id),
+            "ai_service": self._client._href_definitions.get_ai_service_href(
                 artifact_id
             ),
         }

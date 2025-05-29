@@ -64,7 +64,7 @@ class Import(WMLResource):
         with open(file_path, "rb") as file:
             data = file.read()
 
-        href = self._client.service_instance._href_definitions.imports_href()
+        href = self._client._href_definitions.imports_href()
 
         params = {}
 
@@ -145,7 +145,7 @@ class Import(WMLResource):
                 "Either 'space_id' or 'project_id' can be provided, not both"
             )
 
-        href = self._client.service_instance._href_definitions.import_href(import_id)
+        href = self._client._href_definitions.import_href(import_id)
 
         params = {}
 
@@ -196,7 +196,7 @@ class Import(WMLResource):
 
         Import._validate_type(import_id, "import_id", str, True)
 
-        href = self._client.service_instance._href_definitions.import_href(import_id)
+        href = self._client._href_definitions.import_href(import_id)
 
         params: dict[str, bool | str] = {"hard_delete": True}
 
@@ -269,7 +269,7 @@ class Import(WMLResource):
         Import._validate_type(import_id, "import_id", str, False)
         Import._validate_type(limit, "limit", int, False)
 
-        href = self._client.service_instance._href_definitions.imports_href()
+        href = self._client._href_definitions.imports_href()
 
         params = {}
 

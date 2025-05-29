@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: musdb
-Version: 0.4.2
+Version: 0.4.3
 Summary: Python parser for the SIGSEP MUSDB18 dataset
 Home-page: https://github.com/sigsep/sigsep-mus-db
 Author: Fabian-Robert Stoeter
@@ -16,10 +16,30 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Topic :: Multimedia :: Sound/Audio :: Analysis
 Classifier: Topic :: Multimedia :: Sound/Audio :: Sound Synthesis
 Description-Content-Type: text/markdown
-Provides-Extra: dev
-Provides-Extra: tests
-Provides-Extra: docs
 License-File: LICENSE
+Requires-Dist: numpy<3.0,>=1.7
+Requires-Dist: stempeg>=0.2.4
+Requires-Dist: pyaml
+Requires-Dist: tqdm
+Provides-Extra: dev
+Requires-Dist: check-manifest; extra == "dev"
+Provides-Extra: tests
+Requires-Dist: pytest; extra == "tests"
+Provides-Extra: docs
+Requires-Dist: sphinx; extra == "docs"
+Requires-Dist: sphinx_rtd_theme; extra == "docs"
+Requires-Dist: recommonmark; extra == "docs"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: summary
 
 # musdb
 

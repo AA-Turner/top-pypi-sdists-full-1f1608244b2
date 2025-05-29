@@ -25,43 +25,43 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from yubikit.core.smartcard import SmartCardConnection, ApduError, SW
+import logging
+import sys
+from typing import Any
+
+import click
+from cryptography import x509
+from cryptography.hazmat.primitives import serialization
+
+from yubikit.core.smartcard import SW, ApduError, SmartCardConnection
 from yubikit.core.smartcard.scp import (
-    ScpKid,
     KeyRef,
     Scp03KeyParams,
     Scp11KeyParams,
+    ScpKid,
     StaticKeys,
 )
 from yubikit.management import CAPABILITY
 from yubikit.securitydomain import SecurityDomainSession
 
 from ..util import (
-    parse_private_key,
-    parse_certificates,
     InvalidPasswordError,
+    parse_certificates,
+    parse_private_key,
 )
 from .util import (
     CliFail,
-    click_group,
-    click_force_option,
-    click_postpone_execution,
-    click_callback,
-    click_prompt,
     HexIntParamType,
-    pretty_print,
+    click_callback,
+    click_force_option,
+    click_group,
+    click_postpone_execution,
+    click_prompt,
     get_scp_params,
-    organize_scp11_certificates,
     log_or_echo,
+    organize_scp11_certificates,
+    pretty_print,
 )
-from cryptography import x509
-from cryptography.hazmat.primitives import serialization
-from typing import Dict, List, Any
-
-import click
-import logging
-import sys
-
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +102,7 @@ def info(ctx):
     List keys in the Security Domain of the YubiKey.
     """
     sd = ctx.obj["session"]
-    data: List[Any] = []
+    data: list[Any] = []
     cas = sd.get_supported_ca_identifiers()
     for ref in sd.get_key_information().keys():
         if ref.kid == 1:  # SCP03
@@ -116,7 +116,7 @@ def info(ctx):
         elif ref.kid in (2, 3):  # SCP03 always in full key sets
             continue
         else:  # SCP11
-            inner: Dict[str, Any] = {}
+            inner: dict[str, Any] = {}
             if ref in cas:
                 inner["CA Key Identifier"] = ":".join(f"{b:02X}" for b in cas[ref])
             try:

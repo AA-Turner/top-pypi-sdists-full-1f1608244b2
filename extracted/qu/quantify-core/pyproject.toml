@@ -13,7 +13,7 @@ maintainers = [
     {name = "Robert Sokolewicz", email = "rsokolewicz@qblox.com"},
     {name = "Gábor Oszkár Dénes", email = "gdenes@qblox.com"},
     {name = "Amirtha Varshiny Arumugam", email = "amirthavarshiny@orangeqs.com"},
-    {name = "Viacheslav Ostroukh", email = "viacheslav@orangeqs.com"},
+    {name = "Olga Lebiga", email = "olga@orangeqs.com"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -25,6 +25,8 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering",
 ]
 keywords = [
@@ -49,7 +51,7 @@ dependencies = [
     "adaptive",
     "filelock",
     "appnope",
-    "uncertainties",
+    "uncertainties<v3.2.3",
     "dataclasses_json", # used in dataset_attrs
     "dill",  # Tests fail without dill installed, likely for a good reason
     "methodtools",  # used in base_analysis for self-bound lru_cache
@@ -57,6 +59,7 @@ dependencies = [
     # Scikit-learn is used in AnalysisClass
     "scikit-learn",
     "typing-extensions",  # Independency from python version for "new" typing features
+    
 ]
 
 [project.optional-dependencies]

@@ -11,7 +11,10 @@ from ibm_watsonx_ai.foundation_models.extensions.rag.vector_stores.langchain_vec
     LangChainVectorStoreAdapter,
 )
 
-from ibm_watsonx_ai.wml_client_error import MissingExtension
+from ibm_watsonx_ai.wml_client_error import (
+    MissingExtension,
+    VectorStoreSerializationError,
+)
 from ibm_watsonx_ai import APIClient
 from ibm_watsonx_ai.foundation_models.embeddings import BaseEmbeddings
 
@@ -21,6 +24,10 @@ try:
 
 except ImportError:
     raise MissingExtension("langchain_elasticsearch")
+
+from elastic_transport import ConnectionTimeout
+
+from langchain_core.documents import Document
 
 from .es_utils import HybridStrategyElasticsearch
 
@@ -227,6 +234,8 @@ class ElasticsearchVectorStore(LangChainVectorStoreAdapter[ElasticsearchStore]):
         self._connection_id = connection_id
         self._client = api_client
 
+        self._is_serializable = not bool(vector_store)
+
         # used in .to_dict method
         self._embedding = embedding
         self._index_name = index_name
@@ -301,12 +310,94 @@ class ElasticsearchVectorStore(LangChainVectorStoreAdapter[ElasticsearchStore]):
         es = self.get_client().client
         return es.count(index=self.get_client()._store.index)["count"]
 
+    def add_documents(
+        self, content: list[str] | list[dict] | list[Document], **kwargs: Any
+    ) -> list[str]:
+        """
+        Embed documents and add to the vectorstore.
+
+        :param content: Documents to add to the vectorstore.
+        :type content: list[str] | list[dict] | list[langchain_core.documents.Document]
+
+        :return: List of IDs of the added texts.
+        :rtype: list[str]
+        """
+        ids, docs = self._process_documents(content)
+        texts = [doc.page_content for doc in docs]
+        metadatas = [doc.metadata for doc in docs]
+
+        if len(texts) == 0:
+            return []
+
+        return self._fallback_add_documents(ids, docs, texts, metadatas, **kwargs)
+
+    def _fallback_add_documents(
+        self,
+        ids: list[str],
+        docs: list[Document],
+        texts: list[str],
+        metadatas: list[Any],
+        chunk_size: int = 500,  # default set to 500
+        text_embeddings: list[tuple[str, list[float]]] | None = None,
+        **kwargs: Any,
+    ) -> list[str]:
+        stop_fallback = False
+
+        bulk_kwargs: dict[str, Any] | None = kwargs.pop("bulk_kwargs", None)
+        if bulk_kwargs is None:
+            bulk_kwargs = {"chunk_size": chunk_size}
+        elif bulk_kwargs is not None and bulk_kwargs.get("chunk_size") is None:
+            bulk_kwargs["chunk_size"] = chunk_size
+        else:
+            stop_fallback = True
+
+        if self._embedding and not text_embeddings:
+            vectors = self._embedding.embed_documents(texts)  # type: ignore[union-attr]
+            text_embeddings = [(text, vector) for text, vector in zip(texts, vectors)]
+
+        try:
+            if text_embeddings:
+                return self._langchain_vector_store.add_embeddings(
+                    text_embeddings=text_embeddings,  # type: ignore[arg-type]
+                    metadatas=metadatas,
+                    ids=ids,
+                    bulk_kwargs=bulk_kwargs,
+                    **kwargs,
+                )
+            else:
+                return self._langchain_vector_store.add_texts(
+                    texts=texts,
+                    metadatas=metadatas,
+                    ids=ids,
+                    bulk_kwargs=bulk_kwargs,
+                    **kwargs,
+                )
+        except ConnectionTimeout as e:
+            if chunk_size <= 50 or stop_fallback:
+                raise e
+            return self._fallback_add_documents(
+                ids=ids,
+                docs=docs,
+                texts=texts,
+                metadatas=metadatas,
+                chunk_size=50,
+                text_embeddings=text_embeddings,
+                **kwargs,
+            )
+
     def to_dict(self) -> dict:
         """Serialize ``ElasticsearchVectorStore`` into a dict that allows reconstruction using the ``from_dict`` class method.
 
         :return: dict for the `from_dict` initialization
         :rtype: dict
+
+        :raises VectorStoreSerializationError: when instance is not serializable
         """
+        if not self._is_serializable:
+            raise VectorStoreSerializationError(
+                "Serialization is not available when passing vector store instance in `ElasticsearchVectorStore` constructor."
+            )
+
         strategy = self._index_properties.get("strategy")
         if (
             strategy is not None
@@ -318,7 +409,7 @@ class ElasticsearchVectorStore(LangChainVectorStoreAdapter[ElasticsearchStore]):
             self._embedding is not None
             and not isinstance(self._embedding, BaseEmbeddings)
         ):
-            raise ValueError(
+            raise VectorStoreSerializationError(
                 (
                     "Serialization is allowed only for `HybridStrategyElasticsearch` strategy or when no strategy is provided and "
                     "dense embeddings is an instance of `ibm_watsonx_ai.foundation_models.embeddings.BaseEmbeddings`."

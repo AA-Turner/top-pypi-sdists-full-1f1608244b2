@@ -56,7 +56,7 @@ all = [
 Homepage = "https://github.com/allenai/beaker"
 Repository = "https://github.com/allenai/beaker"
 Changelog = "https://github.com/allenai/beaker/blob/main/bindings/python/CHANGELOG.md"
-#Documentation = "https://beaker-py.readthedocs.io/"
+Documentation = "https://beaker-py-docs.allen.ai"
 
 [tool.setuptools]
 include-package-data = true

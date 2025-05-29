@@ -46,6 +46,15 @@ class _DatasetStorage:
 
 
 class DatasetClient(ServiceClient):
+    """
+    Methods for interacting with Beaker `Datasets <https://beaker-docs.apps.allenai.org/concept/datasets.html>`_.
+    Accessed via the :data:`Beaker.dataset <beaker.Beaker.dataset>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     HEADER_UPLOAD_ID = "Upload-ID"
     HEADER_UPLOAD_LENGTH = "Upload-Length"
     HEADER_UPLOAD_OFFSET = "Upload-Offset"
@@ -56,6 +65,16 @@ class DatasetClient(ServiceClient):
     DOWNLOAD_CHUNK_SIZE = 10 * 1024
 
     def get(self, dataset: str) -> pb2.Dataset:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     dataset = beaker.dataset.get(dataset_name)
+
+        :returns: A :class:`~beaker.types.BeakerDataset`.
+
+        :raises ~beaker.exceptions.BeakerDatasetNotFound: If the cluster doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetDatasetResponse](self.service.GetDataset),
             pb2.GetDatasetRequest(dataset_id=self.resolve_dataset_id(dataset)),
@@ -82,7 +101,7 @@ class DatasetClient(ServiceClient):
         strip_paths: bool = False,
     ) -> pb2.Dataset:
         """
-        Create a dataset with source files.
+        Create a dataset from local source files.
 
         :param name: The name to assign to the new dataset.
         :param sources: Local source files or directories to upload to the dataset.
@@ -101,6 +120,10 @@ class DatasetClient(ServiceClient):
                 This only applies to source paths that are children of the current working directory.
                 If a source path is outside of the current working directory, it will always
                 be uploaded under its name only.
+
+        :returns: A new :class:`beaker.types.BeakerDataset` object.
+
+        :raises ~beaker.exceptions.BeakerDatasetConflict: If a dataset with the given name already exists.
         """
         self._validate_beaker_name(name)
         workspace_id = self.resolve_workspace_id(workspace)
@@ -143,6 +166,11 @@ class DatasetClient(ServiceClient):
             return dataset
 
     def commit(self, dataset: pb2.Dataset) -> pb2.Dataset:
+        """
+        Commit a dataset.
+
+        :returns: The updated :class:`~beaker.types.BeakerDataset` object.
+        """
         if dataset.HasField("committed"):
             return dataset
 
@@ -240,6 +268,8 @@ class DatasetClient(ServiceClient):
         :param target: The path within the dataset to upload the file to.
 
         :returns: The number of bytes uploaded.
+
+        :raises ~beaker.exceptions.BeakerDatasetWriteError: If the dataset is already committed.
         """
         if dataset.HasField("committed"):
             raise BeakerDatasetWriteError(f"Dataset '{dataset.id}' has already been committed")
@@ -359,6 +389,9 @@ class DatasetClient(ServiceClient):
         chunk_size: int | None = None,
         validate_checksum: bool = True,
     ) -> Generator[bytes, None, None]:
+        """
+        Stream download the bytes content of a file from a dataset.
+        """
         file = self.get_file_info(dataset, file_path)
         yield from self._stream_file(
             dataset,
@@ -429,6 +462,11 @@ class DatasetClient(ServiceClient):
     def list_files(
         self, dataset: pb2.Dataset, *, prefix: str | None = None
     ) -> Iterable[pb2.DatasetFile]:
+        """
+        List files in a dataset.
+
+        :returns: An iterator over :class:`~beaker.types.BeakerDatasetFile` protobuf objects.
+        """
         for response in self.rpc_paged_request(
             RpcMethod[pb2.ListDatasetFilesResponse](self.service.ListDatasetFiles),
             pb2.ListDatasetFilesRequest(
@@ -441,6 +479,9 @@ class DatasetClient(ServiceClient):
             yield from response.dataset_files
 
     def get_file_info(self, dataset: pb2.Dataset, file_path: str) -> pb2.DatasetFile:
+        """
+        :returns: A :class:`~beaker.types.BeakerDatasetFile` protobuf object.
+        """
         prefix = os.path.dirname(file_path)
         for f in self.list_files(dataset, prefix=prefix):
             if f.path == file_path:
@@ -456,6 +497,11 @@ class DatasetClient(ServiceClient):
         ).download_url
 
     def update(self, dataset: pb2.Dataset, *, description: str | None = None) -> pb2.Dataset:
+        """
+        Update fields of a dataset.
+
+        :returns: The updated :class:`~beaker.types.BeakerDataset` object.
+        """
         return self.rpc_request(
             RpcMethod[pb2.UpdateDatasetResponse](self.service.UpdateDataset),
             pb2.UpdateDatasetRequest(
@@ -465,6 +511,9 @@ class DatasetClient(ServiceClient):
         ).dataset
 
     def delete(self, *datasets: pb2.Dataset):
+        """
+        Delete datasets.
+        """
         self.rpc_request(
             RpcMethod[pb2.DeleteDatasetsResponse](self.service.DeleteDatasets),
             pb2.DeleteDatasetsRequest(
@@ -487,6 +536,11 @@ class DatasetClient(ServiceClient):
         sort_field: Literal["created", "name"] = "name",
         limit: int | None = None,
     ) -> Iterable[pb2.Dataset]:
+        """
+        List datasets.
+
+        :returns: An iterator over :class:`~beaker.types.BeakerDataset` protobuf objects.
+        """
         Opts = pb2.ListDatasetsRequest.Opts
 
         if limit is not None and limit <= 0:
@@ -537,5 +591,8 @@ class DatasetClient(ServiceClient):
                     return
 
     def url(self, dataset: pb2.Dataset) -> str:
+        """
+        Get the URL to the cluster on the Beaker dashboard.
+        """
         dataset_id = self.resolve_dataset_id(dataset)
         return f"{self.config.agent_address}/ds/{self._url_quote(dataset_id)}"

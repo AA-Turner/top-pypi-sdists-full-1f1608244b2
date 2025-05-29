@@ -41,6 +41,7 @@ __all__ = (
     "ListRuleGroupsPaginatorName",
     "ListTLSInspectionConfigurationsPaginatorName",
     "ListTagsForResourcePaginatorName",
+    "ListVpcEndpointAssociationsPaginatorName",
     "LogDestinationTypeType",
     "LogTypeType",
     "NetworkFirewallServiceName",
@@ -85,6 +86,7 @@ ListFlowOperationsPaginatorName = Literal["list_flow_operations"]
 ListRuleGroupsPaginatorName = Literal["list_rule_groups"]
 ListTLSInspectionConfigurationsPaginatorName = Literal["list_tls_inspection_configurations"]
 ListTagsForResourcePaginatorName = Literal["list_tags_for_resource"]
+ListVpcEndpointAssociationsPaginatorName = Literal["list_vpc_endpoint_associations"]
 LogDestinationTypeType = Literal["CloudWatchLogs", "KinesisDataFirehose", "S3"]
 LogTypeType = Literal["ALERT", "FLOW", "TLS"]
 OverrideActionType = Literal["DROP_TO_ALERT"]
@@ -549,6 +551,7 @@ PaginatorName = Literal[
     "list_rule_groups",
     "list_tags_for_resource",
     "list_tls_inspection_configurations",
+    "list_vpc_endpoint_associations",
 ]
 RegionName = Literal[
     "af-south-1",

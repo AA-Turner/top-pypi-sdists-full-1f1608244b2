@@ -987,7 +987,7 @@ class PromptTemplateManager(WMLResource):
         :rtype: List
         """
         headers = self._client._get_headers()
-        url = self._client.service_instance._href_definitions.get_prompts_all_href()
+        url = self._client._href_definitions.get_prompts_all_href()
         json_data: dict[str, int | str] = {
             "query": "asset.asset_type:wx_prompt",
             "sort": "-asset.created_at<string>",
@@ -1038,7 +1038,7 @@ class PromptTemplateManager(WMLResource):
         json_data = {"locked": locked}
 
         url = (
-            self._client.service_instance._href_definitions.get_prompts_href(
+            self._client._href_definitions.get_prompts_href(
                 ga_api=self._client._use_pta_ga_api
             )
             + f"/{prompt_id}/lock"
@@ -1138,7 +1138,7 @@ class PromptTemplateManager(WMLResource):
         headers = self._client._get_headers()
         params = self._params | {"prompt_id": prompt_id}
         url = (
-            self._client.service_instance._href_definitions.get_prompts_href(
+            self._client._href_definitions.get_prompts_href(
                 ga_api=self._client._use_pta_ga_api
             )
             + f"/{prompt_id}"
@@ -1491,7 +1491,7 @@ class PromptTemplateManager(WMLResource):
 
         json_data.update(self._create_request_body(prompt_template))
 
-        url = self._client.service_instance._href_definitions.get_prompts_href(
+        url = self._client._href_definitions.get_prompts_href(
             ga_api=self._client._use_pta_ga_api
         )
         response = self._client.httpx_client.post(
@@ -1526,7 +1526,7 @@ class PromptTemplateManager(WMLResource):
         params = self._params | {"prompt_id": prompt_id}
 
         url = (
-            self._client.service_instance._href_definitions.get_prompts_href(
+            self._client._href_definitions.get_prompts_href(
                 ga_api=self._client._use_pta_ga_api
             )
             + f"/{prompt_id}"
@@ -1596,7 +1596,7 @@ class PromptTemplateManager(WMLResource):
         new_body.update(self._create_request_body(current_prompt_template))
 
         url = (
-            self._client.service_instance._href_definitions.get_prompts_href(
+            self._client._href_definitions.get_prompts_href(
                 ga_api=self._client._use_pta_ga_api
             )
             + f"/{prompt_id}"
@@ -1625,7 +1625,7 @@ class PromptTemplateManager(WMLResource):
         headers = self._client._get_headers()
         params = self._params | {"prompt_id": prompt_id}
         url = (
-            self._client.service_instance._href_definitions.get_prompts_href(
+            self._client._href_definitions.get_prompts_href(
                 ga_api=self._client._use_pta_ga_api
             )
             + f"/{prompt_id}/lock"
@@ -1719,7 +1719,7 @@ class PromptTemplateManager(WMLResource):
         params = self._params
 
         url = (
-            self._client.service_instance._href_definitions.get_prompts_href(
+            self._client._href_definitions.get_prompts_href(
                 ga_api=self._client._use_pta_ga_api
             )
             + f"/{prompt_id}/chat_items"

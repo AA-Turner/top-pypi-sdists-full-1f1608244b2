@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pdqhash
-Version: 0.2.7
+Version: 0.2.8
 Summary: "Python bindings for Facebook's PDQ hash"
 Home-page: https://github.com/faustomorales/pdqhash-python
 Author: Fausto Morales
@@ -20,6 +20,7 @@ Classifier: Operating System :: MacOS
 Classifier: Operating System :: Microsoft :: Windows
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Dynamic: license-file
 
 # pdqhash-python
 

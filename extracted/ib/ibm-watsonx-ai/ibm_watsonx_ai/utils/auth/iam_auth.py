@@ -52,7 +52,9 @@ class IAMTokenAuth(RefreshableTokenAuth):
             "Authorization": "Basic Yng6Yng=",
         }
 
-        mystr = "apikey=" + self._href_definitions.get_iam_token_api()
+        mystr = "apikey=" + self._href_definitions.get_iam_token_api(
+            self._credentials.api_key
+        )
         response = self._session.post(
             self._href_definitions.get_iam_token_url(), data=mystr, headers=headers
         )

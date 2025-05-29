@@ -9,7 +9,26 @@ from .types import *
 
 
 class ClusterClient(ServiceClient):
+    """
+    Methods for interacting with Beaker `Clusters <https://beaker-docs.apps.allenai.org/concept/clusters.html>`_.
+    Accessed via the :data:`Beaker.cluster <beaker.Beaker.cluster>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, cluster: str, *, include_cluster_occupancy: bool = False) -> pb2.Cluster:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     cluster = beaker.cluster.get(cluster_name)
+
+        :returns: A :class:`~beaker.types.BeakerCluster`.
+
+        :raises ~beaker.exceptions.BeakerClusterNotFound: If the cluster doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetClusterResponse](self.service.GetCluster),
             pb2.GetClusterRequest(
@@ -31,6 +50,11 @@ class ClusterClient(ServiceClient):
         include_cluster_occupancy: bool = False,
         limit: int | None = None,
     ) -> Iterable[pb2.Cluster]:
+        """
+        List clusters.
+
+        :returns: An iterator over :class:`~beaker.types.BeakerCluster` protobuf objects.
+        """
         if limit is not None and limit <= 0:
             raise ValueError("'limit' must be a positive integer")
 
@@ -64,4 +88,7 @@ class ClusterClient(ServiceClient):
                     return
 
     def url(self, cluster: pb2.Cluster) -> str:
+        """
+        Get the URL to the cluster on the Beaker dashboard.
+        """
         return f"{self.config.agent_address}/orgs/{self.beaker.org_name}/clusters/{cluster.name}"

@@ -25,3 +25,25 @@ class BaseGeneralExpandedTypes:
             ]
         ]
     ]
+
+    #* Modification processor related types
+    FieldModificationProcessor = Callable[
+        [BaseGeneralParametersTransfers.FieldModificationProcessor],
+        BaseTypes.ListOrDictOfAny
+    ]
+
+    ListOfFieldModificationProcessor = List[
+        Callable[
+            [BaseGeneralParametersTransfers.FieldModificationProcessor],
+            BaseTypes.ListOrDictOfAny
+        ]
+    ]
+
+    OptionalListOfFieldModificationProcessor = Optional[
+        List[
+            Callable[
+                [BaseGeneralParametersTransfers.FieldModificationProcessor],
+                BaseTypes.ListOrDictOfAny
+            ]
+        ]
+    ]

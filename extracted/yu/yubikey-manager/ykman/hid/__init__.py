@@ -25,12 +25,14 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from ..base import YkmanDevice, PID
-from .base import OtpYubiKeyDevice
-from yubikit.core import TRANSPORT
-from typing import List, Callable
-import sys
 import logging
+import sys
+from typing import Callable
+
+from yubikit.core import TRANSPORT
+
+from ..base import PID, YkmanDevice
+from .base import OtpYubiKeyDevice
 
 logger = logging.getLogger(__name__)
 
@@ -53,11 +55,11 @@ else:
             )
 
 
-list_otp_devices: Callable[[], List[OtpYubiKeyDevice]] = backend.list_devices
+list_otp_devices: Callable[[], list[OtpYubiKeyDevice]] = backend.list_devices
 
 
 try:
-    from fido2.hid import list_descriptors, open_connection, CtapHidDevice
+    from fido2.hid import CtapHidDevice, list_descriptors, open_connection
 
     class CtapYubiKeyDevice(YkmanDevice):
         """YubiKey FIDO USB HID device"""
@@ -76,7 +78,7 @@ try:
                 return CtapHidDevice(self.descriptor, open_connection(self.descriptor))
             return super(CtapYubiKeyDevice, self).open_connection(connection_type)
 
-    def list_ctap_devices() -> List[CtapYubiKeyDevice]:
+    def list_ctap_devices() -> list[CtapYubiKeyDevice]:
         devs = []
         for desc in list_descriptors():
             if desc.vid == 0x1050:
@@ -95,7 +97,7 @@ except Exception:
                 "CTAP HID support is not implemented on this platform"
             )
 
-    def list_ctap_devices() -> List[CtapYubiKeyDevice]:
+    def list_ctap_devices() -> list[CtapYubiKeyDevice]:
         raise NotImplementedError(
             "CTAP HID support is not implemented on this platform"
         )

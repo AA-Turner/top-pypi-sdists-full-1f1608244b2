@@ -9,7 +9,26 @@ from .types import *
 
 
 class GroupClient(ServiceClient):
+    """
+    Methods for interacting with Beaker `Groups <https://beaker-docs.apps.allenai.org/concept/groups.html>`_.
+    Accessed via the :data:`Beaker.group <beaker.Beaker.group>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, group_id: str) -> pb2.Group:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     group = beaker.group.get(group_id)
+
+        :returns: A :class:`~beaker.types.BeakerGroup` protobuf object.
+
+        :raises ~beaker.exceptions.BeakerGroupNotFound: If the group doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetGroupResponse](self.service.GetGroup),
             pb2.GetGroupRequest(group_id=group_id),
@@ -24,6 +43,11 @@ class GroupClient(ServiceClient):
         description: str | None = None,
         experiment_ids: list[str] | None = None,
     ) -> pb2.Group:
+        """
+        Create a new group.
+
+        :returns: The new :class:`~beaker.types.BeakerGroup` object.
+        """
         return self.rpc_request(
             RpcMethod[pb2.CreateGroupResponse](self.service.CreateGroup),
             pb2.CreateGroupRequest(

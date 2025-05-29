@@ -5,13 +5,13 @@
 #pragma once
 
 #include <condition_variable>
-#include <shared_mutex>
 #include <wrtc/wrtc.hpp>
 #include <ntgcalls/io/base_reader.hpp>
 #include <ntgcalls/io/base_writer.hpp>
 #include <ntgcalls/media/base_sink.hpp>
 #include <ntgcalls/models/media_description.hpp>
 #include <ntgcalls/models/media_state.hpp>
+#include <wrtc/interfaces/network_interface.hpp>
 
 namespace ntgcalls {
 
@@ -50,9 +50,9 @@ namespace ntgcalls {
 
         void enableVideoSimulcast(bool enable);
 
-        void setStreamSources(Mode mode, const MediaDescription& desc);
+        void setStreamSources(Mode mode, const MediaDescription& desc = MediaDescription());
 
-        void optimizeSources(wrtc::NetworkInterface* pc) const;
+        void optimizeSources(wrtc::NetworkInterface* pc);
 
         MediaState getState();
 
@@ -76,7 +76,9 @@ namespace ntgcalls {
 
         void start();
 
-        bool hasDevice(Mode mode, Device device) const;
+        bool hasDevice(Mode mode, Device device);
+
+        bool hasReaders();
 
         void onFrames(const std::function<void(Mode, Device, const std::vector<wrtc::Frame>&)>& callback);
 
@@ -91,10 +93,10 @@ namespace ntgcalls {
         std::map<Device, std::unique_ptr<BaseWriter>> writers;
         std::set<Device> externalWriters;
         std::set<Device> externalReaders;
-        mutable std::mutex syncMutex;
+        std::mutex syncMutex;
         std::condition_variable syncCV;
         std::set<Device> syncReaders, cancelSyncReaders;
-        std::shared_mutex mutex;
+        std::mutex mutex;
         wrtc::synchronized_callback<Type, Device> onEOF;
         wrtc::synchronized_callback<MediaState> onChangeStatus;
         wrtc::synchronized_callback<Mode, Device, std::vector<wrtc::Frame>> framesCallback;
@@ -110,6 +112,10 @@ namespace ntgcalls {
 
         bool isPaused();
 
+        bool hasDeviceInternal(Mode mode, Device device) const;
+
         static Type getStreamType(Device device);
+
+        void removeReader(Device device);
     };
 } // ntgcalls

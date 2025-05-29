@@ -315,7 +315,7 @@ async def get_content(
     session: httpx.AsyncClient = None,
 ):
     res = await publish_routes.get_publication_by_id(
-        auth=auth,
+        auth=self.auth,
         publication_id=self.id,
         timeout=timeout,
         debug_api=debug_api,

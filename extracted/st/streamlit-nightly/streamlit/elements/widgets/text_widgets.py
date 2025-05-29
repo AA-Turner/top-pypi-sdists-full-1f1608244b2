@@ -317,6 +317,7 @@ class TextWidgetsMixin:
             "text_input",
             user_key=key,
             form_id=current_form_id(self.dg),
+            dg=self.dg,
             label=label,
             value=value,
             max_chars=max_chars,
@@ -369,8 +370,7 @@ class TextWidgetsMixin:
             text_input_proto.type = TextInputProto.PASSWORD
         else:
             raise StreamlitAPIException(
-                "'%s' is not a valid text_input type. Valid types are 'default' and 'password'."
-                % type
+                f"'{type}' is not a valid text_input type. Valid types are 'default' and 'password'."
             )
 
         # Marshall the autocomplete param. If unspecified, this will be
@@ -622,6 +622,7 @@ class TextWidgetsMixin:
             "text_area",
             user_key=key,
             form_id=current_form_id(self.dg),
+            dg=self.dg,
             label=label,
             value=value,
             height=height,

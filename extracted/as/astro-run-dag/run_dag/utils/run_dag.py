@@ -83,7 +83,7 @@ def run_dag(
     """
     execution_date = timezone.coerce_datetime(execution_date) or timezone.utcnow()
     execution_date = typing.cast(datetime, execution_date)
-    dag.log.debug("Clearing existing task instances for execution date %s", execution_date)
+    log.debug("Clearing existing task instances for execution date %s", execution_date)
     if execution_date < dag.start_date:
         raise ValueError(f"Execution date {execution_date} is before dag start date {dag.start_date}")
     dag.clear(
@@ -92,7 +92,7 @@ def run_dag(
         dag_run_state=False,  # type: ignore
         session=session,
     )
-    dag.log.debug("Getting dagrun for dag %s", dag.dag_id)
+    log.debug("Getting dagrun for dag %s", dag.dag_id)
     dr: DagRun = _get_or_create_dagrun(
         dag=dag,
         start_date=execution_date,
@@ -115,7 +115,7 @@ def run_dag(
         secrets_backend_list.insert(0, local_secrets)
 
     tasks = dag.task_dict
-    dag.log.debug("starting dagrun")
+    log.debug("starting dagrun")
     # Instead of starting a scheduler, we run the minimal loop possible to check
     # for task readiness and dependency management. This is notably faster
     # than creating a BackfillJob and allows us to surface logs to the user
@@ -145,7 +145,7 @@ def add_logger_if_needed(dag: DAG, ti: TaskInstance) -> None:
 
     # only add log handler once
     if not any(isinstance(h, RichHandler) for h in ti.log.handlers):
-        dag.log.debug("Adding RichHandler to taskinstance %s", ti.task_id)
+        log.debug("Adding RichHandler to taskinstance %s", ti.task_id)
         ti.log.addHandler(handler)
 
 

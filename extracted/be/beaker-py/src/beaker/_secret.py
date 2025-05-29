@@ -9,7 +9,26 @@ from .types import *
 
 
 class SecretClient(ServiceClient):
+    """
+    Methods for interacting with Beaker `Secrets <https://beaker-docs.apps.allenai.org/concept/secrets.html>`_.
+    Accessed via the :data:`Beaker.secret <beaker.Beaker.secret>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, name: str, *, workspace: pb2.Workspace | None = None) -> pb2.Secret:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     secret = beaker.secret.get(secret_name)
+
+        :returns: A :class:`~beaker.types.BeakerSecret` protobuf object.
+
+        :raises ~beaker.exceptions.BeakerSecretNotFound: If the secret doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetSecretResponse](self.service.GetSecret),
             pb2.GetSecretRequest(

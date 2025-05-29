@@ -109,7 +109,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -186,7 +186,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -263,7 +263,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -415,7 +415,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -488,7 +488,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -561,7 +561,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -695,7 +695,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListProgramMetadataResponse",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -768,7 +768,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListProgramMetadataResponse",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -841,7 +841,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ListProgramMetadataResponse",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -978,7 +978,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "str",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1051,7 +1051,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "str",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1124,7 +1124,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "str",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1262,7 +1262,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1339,7 +1339,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1416,7 +1416,7 @@ class LibraryProgramApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramMetadata",
             '404': "HTTPExceptionResponse",
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,

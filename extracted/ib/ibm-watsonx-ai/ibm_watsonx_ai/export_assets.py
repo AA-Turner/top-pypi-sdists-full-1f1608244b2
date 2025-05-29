@@ -119,7 +119,7 @@ class Export(WMLResource):
 
         start_meta["assets"] = assets
 
-        href = self._client.service_instance._href_definitions.exports_href()
+        href = self._client._href_definitions.exports_href()
 
         params: dict = {}
 
@@ -219,7 +219,7 @@ class Export(WMLResource):
                 "Either 'space_id' or 'project_id' can be provided, not both"
             )
 
-        href = self._client.service_instance._href_definitions.export_href(export_id)
+        href = self._client._href_definitions.export_href(export_id)
 
         params: dict = {}
 
@@ -279,7 +279,7 @@ class Export(WMLResource):
 
         Export._validate_type(export_id, "export_id", str, True)
 
-        href = self._client.service_instance._href_definitions.export_href(export_id)
+        href = self._client._href_definitions.export_href(export_id)
 
         params: dict = {"hard_delete": True}
 
@@ -355,7 +355,7 @@ class Export(WMLResource):
         Export._validate_type(export_id, "export_id", str, False)
         Export._validate_type(limit, "limit", int, False)
 
-        href = self._client.service_instance._href_definitions.exports_href()
+        href = self._client._href_definitions.exports_href()
 
         params: dict = {}
 
@@ -514,9 +514,7 @@ class Export(WMLResource):
                 "File with name: '{}' already exists.".format(file_path)
             )
 
-        href = self._client.service_instance._href_definitions.export_content_href(
-            export_id
-        )
+        href = self._client._href_definitions.export_content_href(export_id)
 
         try:
             response = requests.get(

@@ -20,6 +20,7 @@ Usage::
         ListRuleGroupsPaginator,
         ListTLSInspectionConfigurationsPaginator,
         ListTagsForResourcePaginator,
+        ListVpcEndpointAssociationsPaginator,
         NetworkFirewallClient,
     )
 
@@ -35,6 +36,7 @@ Usage::
     list_rule_groups_paginator: ListRuleGroupsPaginator = client.get_paginator("list_rule_groups")
     list_tls_inspection_configurations_paginator: ListTLSInspectionConfigurationsPaginator = client.get_paginator("list_tls_inspection_configurations")
     list_tags_for_resource_paginator: ListTagsForResourcePaginator = client.get_paginator("list_tags_for_resource")
+    list_vpc_endpoint_associations_paginator: ListVpcEndpointAssociationsPaginator = client.get_paginator("list_vpc_endpoint_associations")
     ```
 """
 
@@ -49,6 +51,7 @@ from .paginator import (
     ListRuleGroupsPaginator,
     ListTagsForResourcePaginator,
     ListTLSInspectionConfigurationsPaginator,
+    ListVpcEndpointAssociationsPaginator,
 )
 
 Client = NetworkFirewallClient
@@ -64,5 +67,6 @@ __all__ = (
     "ListRuleGroupsPaginator",
     "ListTLSInspectionConfigurationsPaginator",
     "ListTagsForResourcePaginator",
+    "ListVpcEndpointAssociationsPaginator",
     "NetworkFirewallClient",
 )

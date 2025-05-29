@@ -4,18 +4,17 @@
 
 #pragma once
 
-#include <cmath>
 #include <condition_variable>
 #include <ntgcalls/io/base_reader.hpp>
+#include <wrtc/utils/sync_helper.hpp>
 #include <rtc_base/platform_thread.h>
 
 namespace ntgcalls {
 
-    class ThreadedReader: public BaseReader {
+    class ThreadedReader: public BaseReader, public wrtc::SyncHelper {
         std::vector<rtc::PlatformThread> bufferThreads;
         size_t activeBuffer = 0;
         size_t activeBufferCount = 0;
-        uint64_t frameSent = 0;
         std::condition_variable cv;
         std::mutex mtx;
 
@@ -29,9 +28,7 @@ namespace ntgcalls {
 
         void run(const std::function<bytes::unique_binary(int64_t)>& readCallback);
 
-        bool set_enabled(bool status) override;
-
-        double_t getFrameFrequency() const;
+        bool set_enabled(bool enable) override;
     };
 
 } // ntgcalls

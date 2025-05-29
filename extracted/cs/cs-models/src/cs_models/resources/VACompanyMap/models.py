@@ -15,7 +15,10 @@ class VACompanyMapModel(Base):
 
     id = Column(Integer, primary_key=True)
     cid = Column(Integer, nullable=False, index=True)
+    capiqcid = Column(Integer, nullable=True)
     cik = Column(String(191), nullable=False, index=True)
+    ticker = Column(String(50), nullable=True)
+    name = Column(String(191), nullable=True)
     company_sec_id = Column(
         Integer,
         ForeignKey('companies_sec.id'),

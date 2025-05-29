@@ -59,7 +59,6 @@ class AbsEmbedder(ABC):
         convert_to_numpy: bool = True,
         **kwargs: Any,
     ):
-        query_instruction_format = query_instruction_format.replace('\\n', '\n')
         self.model_name_or_path = model_name_or_path
         self.normalize_embeddings = normalize_embeddings
         self.use_fp16 = use_fp16
@@ -91,7 +90,8 @@ class AbsEmbedder(ABC):
             torch.cuda.empty_cache()
         except:
             pass
-        gc.collect()
+        if gc is not None and callable(gc.collect):
+            gc.collect()
 
     @staticmethod
     def get_target_devices(devices: Union[str, int, List[str], List[int]]) -> List[str]:
@@ -152,6 +152,8 @@ class AbsEmbedder(ABC):
         Returns:
             str: The complete sentence with instruction
         """
+        if "\\n" in instruction_format:
+            instruction_format = instruction_format.replace("\\n", "\n")
         return instruction_format.format(instruction, sentence)
 
     def encode_queries(

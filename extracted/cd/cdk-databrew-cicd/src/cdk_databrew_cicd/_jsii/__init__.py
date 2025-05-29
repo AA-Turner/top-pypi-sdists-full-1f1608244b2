@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "cdk-databrew-cicd",
-    "2.0.604",
+    "2.0.605",
     __name__[0:-6],
-    "cdk-databrew-cicd@2.0.604.jsii.tgz",
+    "cdk-databrew-cicd@2.0.605.jsii.tgz",
 )
 
 __all__ = [

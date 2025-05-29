@@ -366,7 +366,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -440,7 +440,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -514,7 +514,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -661,7 +661,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -735,7 +735,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -809,7 +809,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -943,7 +943,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ResponseGetValueProgramsValuesKeyGet",
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1017,7 +1017,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ResponseGetValueProgramsValuesKeyGet",
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1091,7 +1091,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ResponseGetValueProgramsValuesKeyGet",
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1493,7 +1493,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1571,7 +1571,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1649,7 +1649,7 @@ class ProgramValuesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
         }
         response_data = await self.api_client.call_api(
             *_param,

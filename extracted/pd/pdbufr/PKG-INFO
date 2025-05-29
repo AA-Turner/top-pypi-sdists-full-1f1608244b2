@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: pdbufr
-Version: 0.12.2
+Version: 0.13.0
 Summary: Pandas reader for the BUFR format using ecCodes.
 Author-email: "European Centre for Medium-Range Weather Forecasts (ECMWF)" <software.support@ecmwf.int>
 License: Apache License Version 2.0
@@ -27,11 +27,24 @@ License-File: LICENSE
 Requires-Dist: attrs
 Requires-Dist: eccodes
 Requires-Dist: pandas
+Requires-Dist: pint
+Provides-Extra: dev
+Requires-Dist: pdbufr[docs,tests]; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: nbsphinx; extra == "docs"
+Requires-Dist: pygments>=2.6.1; extra == "docs"
+Requires-Dist: sphinx>=7.3.7; extra == "docs"
+Requires-Dist: sphinx-copybutton; extra == "docs"
+Requires-Dist: sphinx-issues; extra == "docs"
+Requires-Dist: sphinx-rtd-theme; extra == "docs"
 Provides-Extra: tests
 Requires-Dist: flake8; extra == "tests"
+Requires-Dist: nbconvert; extra == "tests"
+Requires-Dist: nbformat; extra == "tests"
 Requires-Dist: pytest; extra == "tests"
 Requires-Dist: pytest-cov; extra == "tests"
 Requires-Dist: requests; extra == "tests"
+Dynamic: license-file
 
 # pdbufr
 

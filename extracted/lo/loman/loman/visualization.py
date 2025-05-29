@@ -14,8 +14,7 @@ import pydotplus
 from matplotlib.colors import Colormap
 
 import loman
-from .path_parser import path_join, Path, path_common_parent
-from .structs import NodeKey, InputName
+from .nodekey import NodeKey, Name, to_nodekey, match_pattern, is_pattern
 from .consts import NodeAttributes, States, NodeTransformations
 from .graph_utils import contract_node
 
@@ -166,12 +165,12 @@ class StandardLabel(NodeFormatter):
         return {'label': name.label}
 
 
-def get_group_path(name: NodeKey, data: dict) -> Path:
-    name_group_path = name.group_path
+def get_group_path(name: NodeKey, data: dict) -> NodeKey:
+    name_group_path = name.parent
     attribute_group = data.get(NodeAttributes.GROUP)
-    attribute_group_path = None if attribute_group is None else Path((attribute_group,))
+    attribute_group_path = None if attribute_group is None else NodeKey((attribute_group,))
 
-    group_path = path_join(name_group_path, attribute_group_path)
+    group_path = name_group_path.join(attribute_group_path)
     return group_path
 
 
@@ -181,7 +180,7 @@ class StandardGroup(NodeFormatter):
             data = nodes[0].data
             group_path = get_group_path(name, data)
         else:
-            group_path = name.group_path
+            group_path = name.parent
         if group_path.is_root:
             return None
         return {'_group': group_path}
@@ -220,9 +219,10 @@ class CompositeNodeFormatter(NodeFormatter):
 @dataclass
 class GraphView:
     computation: 'loman.Computation'
-    root: Optional[InputName] = None
+    root: Optional[Name] = None
     node_formatter: Optional[NodeFormatter] = None
     node_transformations: Optional[dict] = None
+    collapse_all: bool = True
 
     graph_attr: Optional[dict] = None
     node_attr: Optional[dict] = None
@@ -286,16 +286,53 @@ class GraphView:
 
         return dag_out, d_mapped_to_original, s_collapsed
 
-    def refresh(self):
-        node_transformations = {NodeKey.from_name(k): v for k, v in self.node_transformations.items()} if self.node_transformations is not None else {}
-        self.struct_dag, original_nodes, composite_nodes = self.get_sub_block(self.computation.dag, self.root, node_transformations)
+    def _initialize_transforms(self):
+        node_transformations = {}
+        if self.collapse_all:
+            self._apply_default_collapse_transforms(node_transformations)
+        self._apply_custom_transforms(node_transformations)
+        return node_transformations
 
+    def _apply_default_collapse_transforms(self, node_transformations):
+        for n in self.computation.get_tree_descendents(self.root):
+            nk = to_nodekey(n)
+            if not self.computation.has_node(nk):
+                node_transformations[nk] = NodeTransformations.COLLAPSE
+
+    def _apply_custom_transforms(self, node_transformations):
+        if self.node_transformations is not None:
+            for rule_name, transform in self.node_transformations.items():
+                include_ancestors = transform == NodeTransformations.EXPAND
+                rule_nk = to_nodekey(rule_name)
+                if is_pattern(rule_nk):
+                    apply_nodes = set(nk for nk in self.computation._node_keys() if match_pattern(rule_nk, nk))
+                else:
+                    apply_nodes = {rule_nk}
+                    node_transformations[rule_nk] = transform
+                if include_ancestors:
+                    for nk in apply_nodes:
+                        for nk1 in nk.ancestors():
+                            if nk1.is_root or nk1 == self.root:
+                                break
+                            node_transformations[nk1] = NodeTransformations.EXPAND
+                for rule_nk in apply_nodes:
+                    node_transformations[rule_nk] = transform
+        return node_transformations
+
+    def _create_visualization_dag(self, original_nodes, composite_nodes):
         node_formatter = self.node_formatter
         if node_formatter is None:
             node_formatter = NodeFormatter.create()
-        self.viz_dag = create_viz_dag(self.struct_dag, self.computation.dag, node_formatter, original_nodes, composite_nodes)
+        return create_viz_dag(self.struct_dag, self.computation.dag, node_formatter, original_nodes, composite_nodes)
 
-        self.viz_dot = to_pydot(self.viz_dag, self.graph_attr, self.node_attr, self.edge_attr)
+    def _create_dot_graph(self):
+        return to_pydot(self.viz_dag, self.graph_attr, self.node_attr, self.edge_attr)
+
+    def refresh(self):
+        node_transformations = self._initialize_transforms()
+        self.struct_dag, original_nodes, composite_nodes = self.get_sub_block(self.computation.dag, self.root, node_transformations)
+        self.viz_dag = self._create_visualization_dag(original_nodes, composite_nodes)
+        self.viz_dot = self._create_dot_graph()
 
     def svg(self) -> Optional[str]:
         if self.viz_dot is None:
@@ -349,7 +386,7 @@ def create_viz_dag(struct_dag, comp_dag, node_formatter: NodeFormatter, original
 
         group_path1 = get_group_path(name1, struct_dag.nodes[name1])
         group_path2 = get_group_path(name2, struct_dag.nodes[name2])
-        group_path = path_common_parent(group_path1, group_path2)
+        group_path = NodeKey.common_parent(group_path1, group_path2)
 
         attr_dict = {}
         if not group_path.is_root:
@@ -362,7 +399,7 @@ def create_viz_dag(struct_dag, comp_dag, node_formatter: NodeFormatter, original
 
 
 def to_pydot(viz_dag, graph_attr=None, node_attr=None, edge_attr=None) -> pydotplus.Dot:
-    root = Path(tuple(), False)
+    root = NodeKey.root()
 
     node_groups = {}
     for name, data in viz_dag.nodes(data=True):
@@ -394,7 +431,7 @@ def to_pydot(viz_dag, graph_attr=None, node_attr=None, edge_attr=None) -> pydotp
         while True:
             if group1.is_root:
                 break
-            group1 = group1.parent()
+            group1 = group1.parent
             if group1 in subgraphs:
                 break
             subgraphs[group1] = create_subgraph(group1)
@@ -404,7 +441,7 @@ def to_pydot(viz_dag, graph_attr=None, node_attr=None, edge_attr=None) -> pydotp
             continue
         parent = group
         while True:
-            parent = parent.parent()
+            parent = parent.parent
             if parent in subgraphs or parent.is_root:
                 break
         subgraphs[parent].add_subgraph(subgraph)
@@ -429,7 +466,7 @@ def create_root_graph(graph_attr, node_attr, edge_attr):
         root_graph.set_edge_defaults(**edge_attr)
     return root_graph
 
-def create_subgraph(group: Path):
+def create_subgraph(group: NodeKey):
     c = pydotplus.Subgraph('cluster_' + str(group))
     c.obj_dict['attributes']['label'] = str(group)
     return c

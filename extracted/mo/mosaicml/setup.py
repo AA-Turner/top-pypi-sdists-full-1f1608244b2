@@ -77,17 +77,17 @@ while True:
 install_requires = [
     'pyyaml>=6.0,<7',
     'tqdm>=4.62.3,<5',
-    'torchmetrics>=1.0,<1.6.1',
+    'torchmetrics>=1.0,<1.7.2',
     'torch_optimizer>=0.3.0,<0.4',
-    'torchvision>=0.19.0,<0.21.1',
-    'torch>=2.4.0,<2.6.1',
+    'torchvision>=0.21.0,<0.22.1',
+    'torch>=2.6.0,<2.7.1',
     'requests>=2.26.0,<3',
-    'numpy>=1.21.5,<2.2.0',
-    'psutil>=5.8.0,<7',
+    'numpy>=1.21.5,<2.3.0',
+    'psutil>=5.8.0,<8',
     'coolname>=1.1.0,<3',
     'tabulate==0.9.0',  # for auto-generating tables
     'py-cpuinfo>=8.0.0,<10',
-    'packaging>=21.3.0,<24.3',
+    'packaging>=21.3.0,<25.1',
     'importlib-metadata>=5.0.0,<9',
     'mosaicml-cli>=0.5.25,<0.8',
     'pillow>=10.3.0,<12',
@@ -102,13 +102,13 @@ extra_deps['dev'] = [
     # Should manually update dependency versions occassionally.
     'custom_inherit==2.4.1',
     'junitparser==3.1.2',
-    'coverage[toml]==7.6.8',
+    'coverage[toml]>=7.8.0,<8',
     'fasteners==0.18',  # object store tests require fasteners
     'pytest==7.4.4',
-    'ipython==8.11.0',
+    'ipython==8.36.0',
     'ipykernel==6.29.5',
     'jupyter==1.1.1',
-    'yamllint==1.35.1',
+    'yamllint==1.37.1',
     'recommonmark==0.7.1',
     'sphinx==4.4.0',
     'pre-commit>=3.4.0,<5',
@@ -135,13 +135,13 @@ extra_deps['dev'] = [
     'traitlets==5.14.3',
     'nbsphinx==0.9.1',
     'pandoc==2.4',
-    'pypandoc==1.14',
+    'pypandoc==1.15',
     'GitPython==3.1.44',
     'moto[s3]>=5.0.1,<6',
     'mock-ssh-server==0.9.1',
-    'cryptography==44.0.0',
+    'cryptography==44.0.3',
     'pytest-httpserver>=1.0.4,<1.2',
-    'setuptools==78.0.2',
+    'setuptools<79.0.0',
     'scikit-learn>=1.2.0,<1.7',
 ]
 
@@ -174,9 +174,9 @@ extra_deps['coco'] = [
 ]
 
 extra_deps['nlp'] = [
-    'transformers>=4.11,!=4.34.0,<4.51',
+    'transformers>=4.11,!=4.34.0,<4.52',
     'datasets>=2.4,<4',
-    'huggingface-hub>=0.21.2,<0.30',
+    'huggingface-hub>=0.21.2,<0.32',
 ]
 
 extra_deps['peft'] = [
@@ -209,7 +209,7 @@ extra_deps['oci'] = [
 ]
 
 extra_deps['gcs'] = [
-    'google-cloud-storage>=2.0.0,<3.0',
+    'google-cloud-storage>=2.0.0,<4.0',
 ]
 
 extra_deps['onnx'] = [
@@ -219,13 +219,13 @@ extra_deps['onnx'] = [
 
 extra_deps['mlflow'] = [
     'mlflow>=2.14.1,<3.0',
-    'databricks-sdk==0.47.0',
+    'databricks-sdk>=0.50.0,<1',
     'pynvml>=11.5.0,<12',
 ]
 
 extra_deps['pandas'] = ['pandas>=2.0.0,<3.0']
 
-extra_deps['databricks'] = ['databricks-sdk==0.47.0']
+extra_deps['databricks'] = ['databricks-sdk>=0.50.0,<1']
 
 extra_deps['all'] = {dep for deps in extra_deps.values() for dep in deps}
 

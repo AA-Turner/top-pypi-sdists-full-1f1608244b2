@@ -1,33 +1,32 @@
-from .core import Tlv, int2bytes, BadResponseError, Version
-from .core.smartcard import (
-    AID,
-    SmartCardConnection,
-    SmartCardProtocol,
-    ApduError,
-    SW,
-    ScpProcessor,
-)
-from .core.smartcard.scp import (
-    INS_INITIALIZE_UPDATE,
-    INS_EXTERNAL_AUTHENTICATE,
-    INS_INTERNAL_AUTHENTICATE,
-    INS_PERFORM_SECURITY_OPERATION,
-    KeyRef,
-    ScpKid,
-    ScpKeyParams,
-    StaticKeys,
-)
+import logging
+from enum import IntEnum, unique
+from typing import Mapping, Sequence, Union, cast
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.asymmetric import ec
-from typing import Mapping, Sequence, Union, cast
-from enum import IntEnum, unique
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-
-import logging
+from .core import BadResponseError, Tlv, Version, int2bytes
+from .core.smartcard import (
+    AID,
+    SW,
+    ApduError,
+    ScpProcessor,
+    SmartCardConnection,
+    SmartCardProtocol,
+)
+from .core.smartcard.scp import (
+    INS_EXTERNAL_AUTHENTICATE,
+    INS_INITIALIZE_UPDATE,
+    INS_INTERNAL_AUTHENTICATE,
+    INS_PERFORM_SECURITY_OPERATION,
+    KeyRef,
+    ScpKeyParams,
+    ScpKid,
+    StaticKeys,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -66,8 +65,10 @@ class Curve(IntEnum):
     BrainpoolP512R1 = 0x07
 
     @classmethod
-    def _from_key(cls, private_key: ec.EllipticCurvePrivateKey) -> "Curve":
-        name = private_key.curve.name.lower()
+    def _from_key(
+        cls, key: Union[ec.EllipticCurvePrivateKey, ec.EllipticCurvePublicKey]
+    ) -> "Curve":
+        name = key.curve.name.lower()
         for curve in cls:
             if curve.name.lower() == name:
                 return curve
@@ -341,7 +342,7 @@ class SecurityDomainSession:
 
         data = bytes([key.kvn])
         expected = data
-        dek = processor._state._keys.key_dek
+        dek = processor.state._keys.key_dek
         p2 = key.kid
         if isinstance(sk, StaticKeys):
             if not dek:

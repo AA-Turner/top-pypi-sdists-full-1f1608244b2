@@ -11,7 +11,26 @@ from .types import *
 
 
 class JobClient(ServiceClient):
+    """
+    Methods for interacting with Beaker Jobs.
+    Accessed via the :data:`Beaker.job <beaker.Beaker.job>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, job_id: str) -> pb2.Job:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     job = beaker.job.get(job_id)
+
+        :returns: A :class:`~beaker.types.BeakerJob` protobuf object.
+
+        :raises ~beaker.exceptions.BeakerJobNotFound: If the job doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetJobResponse](self.service.GetJob),
             pb2.GetJobRequest(job_id=job_id),
@@ -19,6 +38,9 @@ class JobClient(ServiceClient):
         ).job
 
     def get_results(self, job: pb2.Job) -> pb2.Dataset | None:
+        """
+        :returns: A :class:`~beaker.types.BeakerDataset` protobuf object.
+        """
         if job.assignment_details.HasField("result_dataset_id"):
             return self.beaker.dataset.get(job.assignment_details.result_dataset_id)
         else:
@@ -32,6 +54,9 @@ class JobClient(ServiceClient):
         follow: bool | None = None,
         since: datetime | None = None,
     ) -> Iterable[pb2.JobLog]:
+        """
+        :returns: An iterator over :class:`~beaker.types.BeakerJobLog` protobuf objects.
+        """
         request = pb2.StreamJobLogsRequest(
             job_id=job.id,
             tail_lines=tail_lines,
@@ -85,8 +110,16 @@ class JobClient(ServiceClient):
         *,
         sort_order: BeakerSortOrder | None = None,
         sort_field: Literal["latest_occurrence"] = "latest_occurrence",
+        limit: int | None = None,
     ) -> Iterable[pb2.SummarizedJobEvent]:
-        return self.rpc_request(
+        """
+        :returns: An iterator over :class:`~beaker.types.BeakerSummarizedJobEvent` protobuf objects.
+        """
+        if limit is not None and limit <= 0:
+            raise ValueError("'limit' must be a positive integer")
+
+        count = 0
+        for response in self.rpc_paged_request(
             RpcMethod[pb2.ListSummarizedJobEventsResponse](self.service.ListSummarizedJobEvents),
             pb2.ListSummarizedJobEventsRequest(
                 options=pb2.ListSummarizedJobEventsRequest.Opts(
@@ -95,9 +128,17 @@ class JobClient(ServiceClient):
                         latest_occurrence={} if sort_field == "latest_occurrence" else None,
                     ),
                     job_id=job.id,
+                    page_size=self.MAX_PAGE_SIZE
+                    if limit is None
+                    else min(self.MAX_PAGE_SIZE, limit),
                 )
             ),
-        ).summarized_job_events
+        ):
+            for event in response.summarized_job_events:
+                count += 1
+                yield event
+                if limit is not None and count >= limit:
+                    return
 
     def list(
         self,
@@ -114,6 +155,9 @@ class JobClient(ServiceClient):
         sort_field: Literal["created", "cluster_job_queue"] = "created",
         limit: int | None = None,
     ) -> Iterable[pb2.Job]:
+        """
+        :returns: An iterator over :class:`~beaker.types.BeakerJob` protobuf objects.
+        """
         if limit is not None and limit <= 0:
             raise ValueError("'limit' must be a positive integer")
 
@@ -154,5 +198,8 @@ class JobClient(ServiceClient):
                     return
 
     def url(self, job: pb2.Job) -> str:
+        """
+        Get the URL to the job on the Beaker dashboard.
+        """
         job_id = job.id
         return f"{self.config.agent_address}/job/{self._url_quote(job_id)}"

@@ -50,6 +50,7 @@ __all__ = [
     "ResourceByNameNotFound",
     "MultipleResourceIdByNameFound",
     "MissingToolRequiredProperties",
+    "VectorStoreSerializationError",
 ]
 
 
@@ -448,3 +449,8 @@ class MissingToolRequiredProperties(WMLClientError, KeyError):
                 f"The following properties are required: {required_properties}."
             ),
         )
+
+
+class VectorStoreSerializationError(
+    TypeError, ValueError
+): ...  # Keep ValueError for backward compatibility

@@ -6,18 +6,18 @@ from .cell_api import CellApi
 from .controller_api import ControllerApi
 from .controller_inputs_outputs_api import ControllerInputsOutputsApi
 from .coordinate_systems_api import CoordinateSystemsApi
+from .inverse_kinematics_api import InverseKinematicsApi
 from .jogging_api import JoggingApi
 from .license_api import LicenseApi
 from .motion_group_api import MotionGroupApi
 from .motion_group_info_api import MotionGroupInfoApi
 from .motion_group_kinematics_api import MotionGroupKinematicsApi
 from .program_api import ProgramApi
-from .program_library_api import ProgramLibraryApi
-from .program_library_metadata_api import ProgramLibraryMetadataApi
 from .program_operator_api import ProgramOperatorApi
 from .store_collision_components_api import StoreCollisionComponentsApi
 from .store_collision_scenes_api import StoreCollisionScenesApi
 from .store_object_api import StoreObjectApi
+from .store_program_api import StoreProgramApi
 from .system_api import SystemApi
 from .trajectory_execution_api import TrajectoryExecutionApi
 from .trajectory_planning_api import TrajectoryPlanningApi
@@ -33,18 +33,18 @@ __all__ = [
     "ControllerApi", 
     "ControllerInputsOutputsApi", 
     "CoordinateSystemsApi", 
+    "InverseKinematicsApi", 
     "JoggingApi", 
     "LicenseApi", 
     "MotionGroupApi", 
     "MotionGroupInfoApi", 
     "MotionGroupKinematicsApi", 
     "ProgramApi", 
-    "ProgramLibraryApi", 
-    "ProgramLibraryMetadataApi", 
     "ProgramOperatorApi", 
     "StoreCollisionComponentsApi", 
     "StoreCollisionScenesApi", 
     "StoreObjectApi", 
+    "StoreProgramApi", 
     "SystemApi", 
     "TrajectoryExecutionApi", 
     "TrajectoryPlanningApi", 

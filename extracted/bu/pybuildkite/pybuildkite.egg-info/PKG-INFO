@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pybuildkite
-Version: 1.2.5
+Version: 1.2.6
 Summary: Python wrapper for the Buildkite API
 Home-page: https://github.com/pyasi/pybuildkite
 Download-URL: https://github.com/pyasi/pybuildkite/archive/master.zip
@@ -37,7 +37,7 @@ Project-URL: Download, https://github.com/pyasi/pybuildkite/archive/master.zip
 Keywords: Buildkite,Continuous Integration,API,CI,wrapper,python
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: requests==2.32.0
+Requires-Dist: requests>=2.32.2
 Provides-Extra: dev
 Requires-Dist: black==22.6.0; extra == "dev"
 Requires-Dist: coveralls==3.3.1; extra == "dev"

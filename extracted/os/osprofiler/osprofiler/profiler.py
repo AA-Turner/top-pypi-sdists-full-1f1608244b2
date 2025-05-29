@@ -168,10 +168,7 @@ def trace(name, info=None, hide_args=False, hide_result=True,
                     stop_info = {"function": {"result": repr(result)}}
                 return result
             finally:
-                if stop_info:
-                    stop(info=stop_info)
-                else:
-                    stop()
+                stop(info=stop_info)
 
         return wrapper
 
@@ -292,7 +289,7 @@ class TracedMeta(type):
     traced - E.g. wsgi, rpc, db, etc...
     """
     def __init__(cls, cls_name, bases, attrs):
-        super(TracedMeta, cls).__init__(cls_name, bases, attrs)
+        super().__init__(cls_name, bases, attrs)
 
         trace_args = dict(getattr(cls, "__trace_args__", {}))
         trace_private = trace_args.pop("trace_private", False)
@@ -321,7 +318,7 @@ class TracedMeta(type):
                                                                 attr_name)))
 
 
-class Trace(object):
+class Trace:
 
     def __init__(self, name, info=None):
         """With statement way to use profiler start()/stop().
@@ -345,17 +342,16 @@ class Trace(object):
         start(self._name, info=self._info)
 
     def __exit__(self, etype, value, traceback):
+        info = None
         if etype:
             info = {
                 "etype": reflection.get_class_name(etype),
                 "message": value.args[0] if value.args else None
             }
-            stop(info=info)
-        else:
-            stop()
+        stop(info=info)
 
 
-class _Profiler(object):
+class _Profiler:
 
     def __init__(self, hmac_key, base_id=None, parent_id=None):
         self.hmac_key = hmac_key

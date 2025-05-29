@@ -1,7 +1,9 @@
 import json
+import logging
 import math
 from datetime import date, datetime
 from decimal import Decimal
+from enum import Enum
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -16,7 +18,18 @@ class JSONEncoder(json.JSONEncoder):
             return obj.isoformat()
         if isinstance(obj, Decimal):
             return {"_type": "decimal", "value": str(obj)}
-        return super().default(obj)
+        if isinstance(obj, Enum):
+            return obj.value
+
+        try:
+            return super().default(obj)
+        except Exception as e:
+            logging.warning(
+                "Failed to serialize object of type %s: %s",
+                type(obj),
+                e,
+            )
+            return str(obj)
 
     def iterencode(self, obj, _one_shot=False):
         return super().iterencode(self._nan_to_none(obj), _one_shot)

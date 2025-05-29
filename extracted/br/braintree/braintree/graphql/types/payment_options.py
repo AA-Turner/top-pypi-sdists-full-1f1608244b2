@@ -1,6 +1,8 @@
 from braintree.graphql.enums import RecommendedPaymentOption
+from braintree.util.experimental import Experimental
 
-
+@Experimental
+# This class is Experiemental and may change in future releases.
 class PaymentOptions:
     """
     Represents the payment method and priority associated with a PayPal customer session.

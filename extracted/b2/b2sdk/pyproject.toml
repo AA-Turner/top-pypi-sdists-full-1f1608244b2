@@ -33,7 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-version = "2.8.1"
+version = "2.9.1"
 
 [project.license]
 text = "MIT"
@@ -126,7 +126,7 @@ quote-style = "single"
     "I",
     "F401",
 ]
-"b2sdk/_v3/__init__.py" = [
+"b2sdk/v3/__init__.py" = [
     "E402",
 ]
 "b2sdk/v*/**" = [

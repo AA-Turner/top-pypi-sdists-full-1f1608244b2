@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: checkmk-dev-tools
-Version: 0.8.0
+Version: 0.9.0
 Summary: Checkmk DevOps tools
 Author: Frans Fürst
 Author-email: frans.fuerst@checkmk.com
@@ -14,7 +14,7 @@ Requires-Dist: python-jenkins-checkmk-retry-parameter (==1.8.3.dev8)
 Requires-Dist: retry
 Requires-Dist: rich
 Requires-Dist: trickkiste (>=0.2.1,<0.3.0)
-Project-URL: Changelog, https://github.com/Checkmk/checkmk-dev-tools/blob/release/0.8.0/changelog.md
+Project-URL: Changelog, https://github.com/Checkmk/checkmk-dev-tools/blob/release/0.9.0/changelog.md
 Project-URL: Repository, https://github.com/Checkmk/checkmk-dev-tools
 Description-Content-Type: text/markdown
 
@@ -153,6 +153,14 @@ Don't start new builds, even when no matching build could be found.
 **`--force-new-build`**
 
 Don't look for existing builds, always start a new build instead.
+
+**`--poll-sleep`**
+
+Overwrite default poll interval checking the status of a running Jenkins job.
+
+**`--poll-queue-sleep`**
+
+Overwrite default poll interval checking the status of a queued Jenkins job.
 
 ##### Request
 

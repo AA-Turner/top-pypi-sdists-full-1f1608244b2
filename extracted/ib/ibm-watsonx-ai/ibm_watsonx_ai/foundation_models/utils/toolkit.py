@@ -129,7 +129,7 @@ class Tool(WMLResource):
             payload.update({"config": config})  # type: ignore[dict-item]
 
         response = self._client.httpx_client.post(
-            url=self._client.service_instance._href_definitions.get_utility_agent_tools_run_href(),
+            url=self._client._href_definitions.get_utility_agent_tools_run_href(),
             json=payload,
             headers=self._client._get_headers(),
         )
@@ -216,7 +216,7 @@ class Toolkit(WMLResource):
         """
         if self._tools is None:
             response = self._client.httpx_client.get(
-                url=self._client.service_instance._href_definitions.get_utility_agent_tools_href(),
+                url=self._client._href_definitions.get_utility_agent_tools_href(),
                 headers=self._client._get_headers(),
             )
             resources = self._handle_response(

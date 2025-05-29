@@ -28,9 +28,10 @@ class TrajectoryData(BaseModel):
     TrajectoryData
     """ # noqa: E501
     message_type: StrictStr = Field(description="Type specifier for server, set automatically. ")
+    motion_group: Optional[StrictStr] = Field(default=None, description="Identifier of the motion-group.")
     data: JointTrajectory = Field(description="The trajectory consisting of a list of joint positions and an equal number of corresponding timestamps. ")
     tcp: Optional[StrictStr] = Field(default=None, description="Unique identifier of the tool the trajectory is planned for.")
-    __properties: ClassVar[List[str]] = ["message_type", "data", "tcp"]
+    __properties: ClassVar[List[str]] = ["message_type", "motion_group", "data", "tcp"]
 
     @field_validator('message_type')
     def message_type_validate_enum(cls, value):
@@ -98,6 +99,7 @@ class TrajectoryData(BaseModel):
 
         _obj = cls.model_validate({
             "message_type": obj.get("message_type"),
+            "motion_group": obj.get("motion_group"),
             "data": JointTrajectory.from_dict(obj["data"]) if obj.get("data") is not None else None,
             "tcp": obj.get("tcp")
         })

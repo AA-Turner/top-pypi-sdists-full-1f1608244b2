@@ -27,9 +27,11 @@ from .literals import (
     ImplementationEffortType,
     MemberAccountDiscountVisibilityType,
     OrderType,
+    PaymentOptionType,
     ResourceTypeType,
     SavingsEstimationModeType,
     SourceType,
+    TermType,
 )
 
 if sys.version_info >= (3, 9):
@@ -90,6 +92,7 @@ __all__ = (
     "OpenSearchReservedInstancesTypeDef",
     "OrderByTypeDef",
     "PaginatorConfigTypeDef",
+    "PreferredCommitmentTypeDef",
     "RdsDbInstanceConfigurationTypeDef",
     "RdsDbInstanceStorageConfigurationTypeDef",
     "RdsDbInstanceStorageTypeDef",
@@ -226,6 +229,10 @@ class TagTypeDef(TypedDict):
     key: NotRequired[str]
     value: NotRequired[str]
 
+class PreferredCommitmentTypeDef(TypedDict):
+    term: NotRequired[TermType]
+    paymentOption: NotRequired[PaymentOptionType]
+
 class ResponseMetadataTypeDef(TypedDict):
     RequestId: str
     HTTPStatusCode: int
@@ -357,10 +364,6 @@ class UpdateEnrollmentStatusRequestTypeDef(TypedDict):
     status: EnrollmentStatusType
     includeMemberAccounts: NotRequired[bool]
 
-class UpdatePreferencesRequestTypeDef(TypedDict):
-    savingsEstimationMode: NotRequired[SavingsEstimationModeType]
-    memberAccountDiscountVisibility: NotRequired[MemberAccountDiscountVisibilityType]
-
 class EcsServiceConfigurationTypeDef(TypedDict):
     compute: NotRequired[ComputeConfigurationTypeDef]
 
@@ -430,9 +433,15 @@ class RecommendationTypeDef(TypedDict):
     source: NotRequired[SourceType]
     tags: NotRequired[List[TagTypeDef]]
 
+class UpdatePreferencesRequestTypeDef(TypedDict):
+    savingsEstimationMode: NotRequired[SavingsEstimationModeType]
+    memberAccountDiscountVisibility: NotRequired[MemberAccountDiscountVisibilityType]
+    preferredCommitment: NotRequired[PreferredCommitmentTypeDef]
+
 class GetPreferencesResponseTypeDef(TypedDict):
     savingsEstimationMode: SavingsEstimationModeType
     memberAccountDiscountVisibility: MemberAccountDiscountVisibilityType
+    preferredCommitment: PreferredCommitmentTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class ListEnrollmentStatusesResponseTypeDef(TypedDict):
@@ -448,6 +457,7 @@ class UpdateEnrollmentStatusResponseTypeDef(TypedDict):
 class UpdatePreferencesResponseTypeDef(TypedDict):
     savingsEstimationMode: SavingsEstimationModeType
     memberAccountDiscountVisibility: MemberAccountDiscountVisibilityType
+    preferredCommitment: PreferredCommitmentTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class ListEnrollmentStatusesRequestPaginateTypeDef(TypedDict):

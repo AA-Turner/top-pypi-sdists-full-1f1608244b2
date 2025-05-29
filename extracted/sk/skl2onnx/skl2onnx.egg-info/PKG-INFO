@@ -1,11 +1,10 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: skl2onnx
-Version: 1.18.0
+Version: 1.19.1
 Summary: Convert scikit-learn models to ONNX
-Home-page: https://github.com/onnx/sklearn-onnx
-Author: ONNX
-Author-email: onnx-technical-discuss@lists.lfaidata.foundation
+Author-email: ONNX Contributors <onnx-technical-discuss@lists.lfaidata.foundation>
 License: Apache License v2.0
+Project-URL: Homepage, https://github.com/onnx/sklearn-onnx
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
@@ -16,13 +15,26 @@ Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: License :: OSI Approved :: Apache Software License
+Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
 License-File: NOTICE
 Requires-Dist: onnx>=1.2.1
 Requires-Dist: scikit-learn>=1.1
-Requires-Dist: onnxconverter-common>=1.7.0
+Dynamic: license-file
+
+<!--- SPDX-License-Identifier: Apache-2.0 -->
+
+<p align="center"><img width="50%" src="docs/logo_main.png" /></p>
+
+[![Linux](https://github.com/onnx/sklearn-onnx/actions/workflows/linux-ci.yml/badge.svg)](https://github.com/onnx/sklearn-onnx/actions/workflows/linux-ci.yml)
+
+[![Windows/Macos](https://github.com/onnx/sklearn-onnx/actions/workflows/windows-macos-ci.yml/badge.svg)](https://github.com/onnx/sklearn-onnx/actions/workflows/windows-macos-ci.yml)
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Introduction
 *sklearn-onnx* converts [scikit-learn](https://scikit-learn.org/stable/) models to [ONNX](https://github.com/onnx/onnx).

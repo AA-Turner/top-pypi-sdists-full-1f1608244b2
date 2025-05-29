@@ -1057,9 +1057,7 @@ class ServiceEngine(BaseEngine):
             pipeline_details = self.get_params()
             number_of_estimators = pipeline_details.get("max_num_daub_ensembles", 2)
 
-            base_url = (
-                self._api_client.service_instance._href_definitions.get_trainings_href()
-            )
+            base_url = self._api_client._href_definitions.get_trainings_href()
             url = f"{base_url.replace('https', 'wss')}/{self._current_run_id}"
 
             params = self._api_client._params()

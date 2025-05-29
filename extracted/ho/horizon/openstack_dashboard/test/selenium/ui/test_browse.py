@@ -93,8 +93,8 @@ t_b_p_s = conf.theme.browse_left_panel_sec
             "Trunks - OpenStack Dashboard", "Trunks"),
         (t_b_p_m[30], t_b_p_s[30], "RBAC Policies",
             "RBAC Policies - OpenStack Dashboard", "RBAC Policies"),
-        (t_b_p_m[31], t_b_p_s[31], "Defaults",
-            "Defaults - OpenStack Dashboard", "Defaults"),
+        (t_b_p_m[31], t_b_p_s[31], "Default Quotas",
+            "Default Quotas - OpenStack Dashboard", "Default Quotas"),
         (t_b_p_m[32], t_b_p_s[32], "Metadata Definitions",
             "Metadata Definitions - OpenStack Dashboard",
             "Metadata Definitions"),
@@ -165,7 +165,9 @@ def test_browse_left_panel(live_server, driver, user, dashboard_data,
             sec_line_xpath = config.theme.b_l_p_sec_line_xpath.format(
                 main_panel=main_panel)
             sidebar = driver.find_element_by_xpath(sec_line_xpath)
-        sidebar.find_element_by_link_text(link_text).click()
+        WebDriverWait(sidebar, config.selenium.implicit_wait).until(
+            EC.element_to_be_clickable(
+                (By.LINK_TEXT, link_text))).click()
         assert driver.title == title
         assert driver.find_element_by_css_selector("h1").text == h1_text
 

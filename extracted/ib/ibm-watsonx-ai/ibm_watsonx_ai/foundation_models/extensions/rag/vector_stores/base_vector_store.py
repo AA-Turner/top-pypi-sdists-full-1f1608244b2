@@ -190,11 +190,11 @@ class BaseVectorStore(ABC):
         """
         if self._client is not None:
             connection_data = self._client.connections.get_details(connection_id)
-            datasouce_type = self._get_connection_type(connection_data)
+            datasource_type = self._get_connection_type(connection_data)
             properties = connection_data["entity"]["properties"]
 
-            logger.info(f"Initializing vector store of type: {datasouce_type}")
-            return datasouce_type, properties
+            logger.info(f"Initializing vector store of type: {datasource_type}")
+            return datasource_type, properties
         else:
             raise WMLClientError(
                 "`api_client` is required if connecting by connection asset."

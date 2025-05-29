@@ -172,6 +172,8 @@ class ICLLLMEmbedder(AbsEmbedder):
         Returns:
             str: The complete example following the given format.
         """
+        if "\\n" in instruction_format:
+            instruction_format = instruction_format.replace("\\n", "\n")
         return instruction_format.format(instruction, query, response)
 
     def stop_self_query_pool(self):
@@ -366,7 +368,8 @@ class ICLLLMEmbedder(AbsEmbedder):
 
         # tokenize without padding to get the correct length
         all_inputs = []
-        for start_index in trange(0, len(input_texts), batch_size, desc='pre tokenize'):
+        for start_index in trange(0, len(input_texts), batch_size, desc='pre tokenize',
+                                  disable=len(input_texts) < batch_size):
             sentences_batch = input_texts[start_index:start_index + batch_size]
             inputs_batch = self.tokenizer(
                 sentences_batch,
@@ -415,7 +418,7 @@ class ICLLLMEmbedder(AbsEmbedder):
         # encode
         all_embeddings = []
         for start_index in tqdm(range(0, len(sentences_sorted), batch_size), desc="Inference Embeddings",
-                                disable=len(sentences_sorted) < 256):
+                                disable=len(sentences_sorted) < batch_size):
             inputs_batch = all_inputs_sorted[start_index:start_index + batch_size]
             inputs_batch = self.tokenizer.pad(
                 inputs_batch,
@@ -487,7 +490,7 @@ class ICLLLMEmbedder(AbsEmbedder):
         # tokenize without padding to get the correct length
         all_inputs = []
         for start_index in trange(0, len(sentences), batch_size, desc='pre tokenize',
-                                  disable=len(sentences) < 256):
+                                  disable=len(sentences) < batch_size):
             sentences_batch = sentences[start_index:start_index + batch_size]
             inputs_batch = self.tokenizer(
                 sentences_batch,
@@ -525,7 +528,7 @@ class ICLLLMEmbedder(AbsEmbedder):
         # encode
         all_embeddings = []
         for start_index in tqdm(range(0, len(sentences), batch_size), desc="Inference Embeddings",
-                                disable=len(sentences) < 256):
+                                disable=len(sentences) < batch_size):
             inputs_batch = all_inputs_sorted[start_index:start_index + batch_size]
             inputs_batch = self.tokenizer.pad(
                 inputs_batch,

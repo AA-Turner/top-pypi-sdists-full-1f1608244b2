@@ -35,6 +35,7 @@ from .paginator import (
     ListRuleGroupsPaginator,
     ListTagsForResourcePaginator,
     ListTLSInspectionConfigurationsPaginator,
+    ListVpcEndpointAssociationsPaginator,
 )
 from .type_defs import (
     AssociateFirewallPolicyRequestTypeDef,
@@ -49,6 +50,8 @@ from .type_defs import (
     CreateRuleGroupResponseTypeDef,
     CreateTLSInspectionConfigurationRequestTypeDef,
     CreateTLSInspectionConfigurationResponseTypeDef,
+    CreateVpcEndpointAssociationRequestTypeDef,
+    CreateVpcEndpointAssociationResponseTypeDef,
     DeleteFirewallPolicyRequestTypeDef,
     DeleteFirewallPolicyResponseTypeDef,
     DeleteFirewallRequestTypeDef,
@@ -58,6 +61,10 @@ from .type_defs import (
     DeleteRuleGroupResponseTypeDef,
     DeleteTLSInspectionConfigurationRequestTypeDef,
     DeleteTLSInspectionConfigurationResponseTypeDef,
+    DeleteVpcEndpointAssociationRequestTypeDef,
+    DeleteVpcEndpointAssociationResponseTypeDef,
+    DescribeFirewallMetadataRequestTypeDef,
+    DescribeFirewallMetadataResponseTypeDef,
     DescribeFirewallPolicyRequestTypeDef,
     DescribeFirewallPolicyResponseTypeDef,
     DescribeFirewallRequestTypeDef,
@@ -74,6 +81,8 @@ from .type_defs import (
     DescribeRuleGroupResponseTypeDef,
     DescribeTLSInspectionConfigurationRequestTypeDef,
     DescribeTLSInspectionConfigurationResponseTypeDef,
+    DescribeVpcEndpointAssociationRequestTypeDef,
+    DescribeVpcEndpointAssociationResponseTypeDef,
     DisassociateSubnetsRequestTypeDef,
     DisassociateSubnetsResponseTypeDef,
     GetAnalysisReportResultsRequestTypeDef,
@@ -94,6 +103,8 @@ from .type_defs import (
     ListTagsForResourceResponseTypeDef,
     ListTLSInspectionConfigurationsRequestTypeDef,
     ListTLSInspectionConfigurationsResponseTypeDef,
+    ListVpcEndpointAssociationsRequestTypeDef,
+    ListVpcEndpointAssociationsResponseTypeDef,
     PutResourcePolicyRequestTypeDef,
     StartAnalysisReportRequestTypeDef,
     StartAnalysisReportResponseTypeDef,
@@ -250,6 +261,16 @@ class NetworkFirewallClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#create_tls_inspection_configuration)
         """
 
+    def create_vpc_endpoint_association(
+        self, **kwargs: Unpack[CreateVpcEndpointAssociationRequestTypeDef]
+    ) -> CreateVpcEndpointAssociationResponseTypeDef:
+        """
+        Creates a firewall endpoint for an Network Firewall firewall.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/create_vpc_endpoint_association.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#create_vpc_endpoint_association)
+        """
+
     def delete_firewall(
         self, **kwargs: Unpack[DeleteFirewallRequestTypeDef]
     ) -> DeleteFirewallResponseTypeDef:
@@ -301,6 +322,16 @@ class NetworkFirewallClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#delete_tls_inspection_configuration)
         """
 
+    def delete_vpc_endpoint_association(
+        self, **kwargs: Unpack[DeleteVpcEndpointAssociationRequestTypeDef]
+    ) -> DeleteVpcEndpointAssociationResponseTypeDef:
+        """
+        Deletes the specified <a>VpcEndpointAssociation</a>.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/delete_vpc_endpoint_association.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#delete_vpc_endpoint_association)
+        """
+
     def describe_firewall(
         self, **kwargs: Unpack[DescribeFirewallRequestTypeDef]
     ) -> DescribeFirewallResponseTypeDef:
@@ -309,6 +340,17 @@ class NetworkFirewallClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_firewall.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#describe_firewall)
+        """
+
+    def describe_firewall_metadata(
+        self, **kwargs: Unpack[DescribeFirewallMetadataRequestTypeDef]
+    ) -> DescribeFirewallMetadataResponseTypeDef:
+        """
+        Returns the high-level information about a firewall, including the Availability
+        Zones where the Firewall is currently in use.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_firewall_metadata.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#describe_firewall_metadata)
         """
 
     def describe_firewall_policy(
@@ -381,6 +423,16 @@ class NetworkFirewallClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_tls_inspection_configuration.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#describe_tls_inspection_configuration)
+        """
+
+    def describe_vpc_endpoint_association(
+        self, **kwargs: Unpack[DescribeVpcEndpointAssociationRequestTypeDef]
+    ) -> DescribeVpcEndpointAssociationResponseTypeDef:
+        """
+        Returns the data object for the specified VPC endpoint association.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_vpc_endpoint_association.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#describe_vpc_endpoint_association)
         """
 
     def disassociate_subnets(
@@ -486,11 +538,22 @@ class NetworkFirewallClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#list_tags_for_resource)
         """
 
+    def list_vpc_endpoint_associations(
+        self, **kwargs: Unpack[ListVpcEndpointAssociationsRequestTypeDef]
+    ) -> ListVpcEndpointAssociationsResponseTypeDef:
+        """
+        Retrieves the metadata for the VPC endpoint associations that you have defined.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/list_vpc_endpoint_associations.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#list_vpc_endpoint_associations)
+        """
+
     def put_resource_policy(
         self, **kwargs: Unpack[PutResourcePolicyRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Creates or updates an IAM policy for your rule group or firewall policy.
+        Creates or updates an IAM policy for your rule group, firewall policy, or
+        firewall.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/put_resource_policy.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#put_resource_policy)
@@ -739,6 +802,17 @@ class NetworkFirewallClient(BaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_tags_for_resource"]
     ) -> ListTagsForResourcePaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/get_paginator.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_network_firewall/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_vpc_endpoint_associations"]
+    ) -> ListVpcEndpointAssociationsPaginator:
         """
         Create a paginator for an operation.
 

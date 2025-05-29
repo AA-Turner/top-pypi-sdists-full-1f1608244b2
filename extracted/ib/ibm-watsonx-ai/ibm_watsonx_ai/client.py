@@ -2,7 +2,6 @@
 #  (C) Copyright IBM Corp. 2023-2025.
 #  https://opensource.org/licenses/BSD-3-Clause
 #  -----------------------------------------------------------------------------------------
-
 """
 .. module:: APIClient
    :platform: Unix, Windows
@@ -10,7 +9,7 @@
 
 .. moduleauthor:: IBM
 """
-
+from __future__ import annotations
 import copy
 import logging
 import os
@@ -30,10 +29,12 @@ from ibm_watsonx_ai._wrappers.requests import (
 )
 from ibm_watsonx_ai.utils.auth import get_auth_method
 from ibm_watsonx_ai.utils import get_user_agent_header
+from ibm_watsonx_ai.utils.auth.base_auth import TokenRemovedDuringClientCopyPlaceholder
 from ibm_watsonx_ai.utils.utils import (
     _APIClientSession,
     HttpClientConfig,
     DEFAULT_HTTP_CLIENT_CONFIG,
+    _create_href_definitions,
 )
 from ibm_watsonx_ai.Set import Set
 from ibm_watsonx_ai.assets import Assets
@@ -267,6 +268,10 @@ class APIClient:
             # Toronto
             "https://ca-tor.ml.cloud.ibm.com": "https://api.ca-tor.dai.cloud.ibm.com",
             "https://private.ca-tor.ml.cloud.ibm.com": "https://private.api.ca-tor.dai.cloud.ibm.com",
+            # Mumbai (AWS)
+            "https://ap-south-1.aws.wxai.ibm.com": "https://api.ap-south-1.aws.data.ibm.com",
+            "https://private.ap-south-1.aws.wxai.ibm.com": "https://private.api.ap-south-1.aws.data.ibm.com",
+            # TODO ensure private platform url is correct
             # YPCR
             "https://yp-cr.ml.cloud.ibm.com": "https://api.dataplatform.test.cloud.ibm.com",
             "https://private.yp-cr.ml.cloud.ibm.com": "https://private.api.dataplatform.test.cloud.ibm.com",
@@ -285,9 +290,13 @@ class APIClient:
             # YS1Prod
             "https://us-south.ml.test.cloud.ibm.com": "https://api.dataplatform.dev.cloud.ibm.com",
             "https://private.us-south.ml.test.cloud.ibm.com": "https://private.api.dataplatform.dev.cloud.ibm.com",
-            # AWV DEV
+            # AWS DEV
             "https://dev.aws.wxai.ibm.com": "https://api.dev.aws.data.ibm.com",
             "https://private.dev.aws.wxai.ibm.com": "https://private.api.dev.aws.data.ibm.com",  # TODO ensure private platform url is correct
+            # AWS TEST
+            "https://test.aws.wxai.ibm.com": "https://api.test.aws.data.ibm.com",
+            "https://private.test.aws.wxai.ibm.com": "https://private.api.test.aws.data.ibm.com",
+            # TODO ensure private platform url is correct
         }
 
         requests.packages.urllib3.disable_warnings()  # type: ignore[attr-defined]
@@ -464,6 +473,8 @@ class APIClient:
                 self.CPD_version >= 5.0
             )
 
+            self._href_definitions = _create_href_definitions(self)
+
             self._auth_method = get_auth_method(self)
             self._auth_method.get_token()
 
@@ -552,6 +563,78 @@ class APIClient:
                 )
 
             self._async_httpx_client = async_httpx_client
+
+    def get_copy(self) -> APIClient:
+        """Prepares clean copy of APIClient. The clean copy contains no token, password, api key data. It is used
+        in AI services scenarios, when the client is used in deployed code, and can be reused between users.
+
+        The copy needs to be set with current user token in the inner function of AI service.
+
+        :returns: APIClient which is 2-level copy of the current one, without user secrets
+        :rtype: APIClient
+
+        **Example:**
+
+        .. code-block:: python
+            def deployable_ai_service(context, params={"k1":"v1"}, **kwargs):
+
+                # imports
+                from ibm_watsonx_ai import Credentials, APIClient
+                from ibm_watsonx_ai.foundation_models import ModelInference
+
+                task_token = context.generate_token()
+
+                outer_context = context
+
+                client = APIClient(Credentials(
+                    url = "https://us-south.ml.cloud.ibm.com",
+                    token = task_token
+                ))
+
+                # operations with client
+
+                def generate(context):
+                    user_client = client.get_copy()
+                    user_client.set_token(context.generate_token())
+
+                    # operations with user_client
+
+                    return {'body': response_body}
+
+                return generate
+
+            stored_ai_service_details = client._ai_services.store(deployable_ai_service, meta_props)
+        """
+        excluded = [
+            "_APIClient__session",
+            "_href_definitions",
+            "_httpx_client",
+            "_async_httpx_client",
+        ]
+
+        client_copy = copy.copy(self)
+
+        for key, value in client_copy.__dict__.items():
+            if key in excluded:
+                continue
+
+            client_copy.__dict__[key] = copy.copy(value)
+            if (
+                hasattr(client_copy.__dict__[key], "__dict__")
+                and "_client" in client_copy.__dict__[key].__dict__
+            ):
+                client_copy.__dict__[key].__dict__["_client"] = client_copy
+
+        client_copy._auth_method = TokenRemovedDuringClientCopyPlaceholder()
+        from ibm_watsonx_ai.libs.repo.mlrepositoryclient import MLRepositoryClient
+
+        client_copy.repository._ml_repository_client = MLRepositoryClient(
+            client_copy.credentials.url
+        )
+        client_copy.credentials.api_key = None
+        client_copy.credentials.password = None
+
+        return client_copy
 
     @property
     def wml_credentials(self) -> dict[str, str]:
@@ -812,9 +895,9 @@ class APIClient:
 
             warn(authentication_method_changed_warning)
 
-            self._auth_method = TokenAuth(
-                token, on_token_set=self.repository._refresh_repo_client
-            )
+            self._auth_method = TokenAuth(token)
+            self._auth_method._on_token_set = self.repository._refresh_repo_client
+            self._auth_method._on_token_set()
 
     def set_headers(self, headers: dict) -> None:
         """
@@ -875,7 +958,7 @@ class APIClient:
 
     def _is_ai_services_endpoint_available(self) -> bool:
         try:
-            url = self.service_instance._href_definitions.get_ai_services_href()
+            url = self._href_definitions.get_ai_services_href()
 
             response_ai_services_api = self._session.get(
                 url=f"{url}?limit=1",

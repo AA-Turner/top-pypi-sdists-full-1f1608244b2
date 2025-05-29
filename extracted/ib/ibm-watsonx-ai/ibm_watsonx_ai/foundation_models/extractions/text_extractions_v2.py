@@ -206,7 +206,7 @@ class TextExtractionsV2(WMLResource):
             payload["parameters"].update(parameters)
 
         response = self._client.httpx_client.post(
-            url=self._client.service_instance._href_definitions.get_text_extractions_href(),
+            url=self._client._href_definitions.get_text_extractions_href(),
             json=payload,
             params=self._client._params(skip_for_create=True, skip_userfs=True),
             headers=self._client._get_headers(),
@@ -277,7 +277,7 @@ class TextExtractionsV2(WMLResource):
 
         if extraction_job_id is not None:
             response = self._client.httpx_client.get(
-                url=self._client.service_instance._href_definitions.get_text_extraction_href(
+                url=self._client._href_definitions.get_text_extraction_href(
                     extraction_job_id
                 ),
                 params=self._client._params(skip_userfs=True),
@@ -290,7 +290,7 @@ class TextExtractionsV2(WMLResource):
 
             # TODO: pagination is not yet implemented
             response = self._client.httpx_client.get(
-                url=self._client.service_instance._href_definitions.get_text_extractions_href(),
+                url=self._client._href_definitions.get_text_extractions_href(),
                 params=params,
                 headers=self._client._get_headers(),
             )
@@ -324,7 +324,7 @@ class TextExtractionsV2(WMLResource):
         params["hard_delete"] = True
 
         response = self._client.httpx_client.delete(
-            url=self._client.service_instance._href_definitions.get_text_extraction_href(
+            url=self._client._href_definitions.get_text_extraction_href(
                 extraction_job_id
             ),
             params=params,
@@ -352,7 +352,7 @@ class TextExtractionsV2(WMLResource):
         self._validate_type(extraction_job_id, "extraction_job_id", str, True)
 
         response = self._client.httpx_client.delete(
-            url=self._client.service_instance._href_definitions.get_text_extraction_href(
+            url=self._client._href_definitions.get_text_extraction_href(
                 extraction_job_id
             ),
             params=self._client._params(skip_userfs=True),

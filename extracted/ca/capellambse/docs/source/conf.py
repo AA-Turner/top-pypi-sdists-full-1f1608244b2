@@ -35,7 +35,6 @@ copyright = f"{author} and the {_metadata['name']} contributors"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "capellambse.sphinx",
     "nbsphinx",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
@@ -57,13 +56,20 @@ nitpick_ignore = [
     ("any", "capellambse.aird.GLOBAL_FILTERS"),
     # Private type hinting helpers
     ("py:class", "_MapFunction"),
+    ("py:class", "_NotSpecifiedType"),
     ("py:class", "capellambse.model._descriptors._Specification"),
+    # Deprecated ABC
+    ("py:class", "capellambse.metamodel.fa._AbstractExchange"),
+    ("py:class", "capellambse.metamodel.interaction._CapabilityRelation"),
+    ("py:class", "capellambse.metamodel.interaction._EventOperation"),
 ]
 nitpick_ignore_regex = [
-    ("py:.*", r"^yaml\..*"),
+    ("py:.*", r"^(?:awesomeversion|yaml)\..*"),
     ("py:.*", r"^(?:.*\.)?_[A-Z]$"),  # Single-letter TypeVars (e.g. _T)
     # Super/subclass and "see also" references sometimes break
     ("py:(meth|obj)", r"(?:.*\.)?write_transaction"),
+    # Sometimes autodoc_typehints doesn't properly resolve aliases
+    ("py:class", r"(?:cabc|etree|m|t|_obj)\..*"),
 ]
 
 
@@ -146,10 +152,6 @@ pygments_dark_style = "monokai"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
-
-
-# -- Options for CapellaMBSE-Sphinx ------------------------------------------
-capellambse_model = "../capella-python-api/capella-python-api.aird"
 
 
 # -- Skip __new__ methods ----------------------------------------------------

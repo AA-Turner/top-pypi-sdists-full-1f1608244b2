@@ -354,7 +354,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -426,7 +426,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -498,7 +498,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -540,6 +540,12 @@ class StoreObjectApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            [
+                'application/json'
+            ]
+        )
 
 
         # authentication setting
@@ -624,7 +630,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -696,7 +702,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -768,7 +774,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "bytearray",
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -813,7 +819,8 @@ class StoreObjectApi:
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
             [
-                '*/*'
+                '*/*', 
+                'application/json'
             ]
         )
 
@@ -900,7 +907,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -972,7 +979,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1044,7 +1051,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
-            '404': None,
+            '404': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1086,6 +1093,12 @@ class StoreObjectApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            [
+                'application/json'
+            ]
+        )
 
 
         # authentication setting
@@ -1436,7 +1449,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': None,
+            '400': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1516,7 +1529,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': None,
+            '400': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1596,7 +1609,7 @@ class StoreObjectApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': None,
+            '400': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1644,6 +1657,12 @@ class StoreObjectApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            [
+                'application/json'
+            ]
+        )
 
         # set the HTTP header `Content-Type`
         if _content_type:

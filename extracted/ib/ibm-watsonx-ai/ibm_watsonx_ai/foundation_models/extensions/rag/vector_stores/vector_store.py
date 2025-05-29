@@ -11,6 +11,7 @@ from warnings import warn
 from langchain_core.documents import Document
 
 from ibm_watsonx_ai.client import APIClient
+from ibm_watsonx_ai.wml_client_error import VectorStoreSerializationError
 from ibm_watsonx_ai.foundation_models.embeddings import BaseEmbeddings
 from ibm_watsonx_ai.foundation_models.extensions.rag.vector_stores.base_vector_store import (
     BaseVectorStore,
@@ -152,6 +153,8 @@ class VectorStore(BaseVectorStore):
         self._vector_store: BaseVectorStore
         self._index_properties = kwargs
 
+        self._is_serializable = True
+
         if self._connection_id:
             logger.info("Connecting by connection asset.")
             if self._client:
@@ -185,6 +188,7 @@ class VectorStore(BaseVectorStore):
                     "`api_client` is required if connecting by connection asset."
                 )
         elif langchain_vector_store:
+            self._is_serializable = False
             logger.info("Connecting by already established LangChain vector store.")
             if issubclass(type(langchain_vector_store), LangChainVectorStore):
                 self._vector_store = LangChainVectorStoreAdapter(langchain_vector_store)
@@ -217,7 +221,13 @@ class VectorStore(BaseVectorStore):
 
         :return: dict for the from_dict initialization
         :rtype: dict
+
+        :raises VectorStoreSerializationError: when instance is not serializable
         """
+        if not self._is_serializable:
+            raise VectorStoreSerializationError(
+                "Serialization is not available when passing langchain vector store instance in `VectorStore` constructor."
+            )
         return {
             "connection_id": self._connection_id,
             "embeddings": (

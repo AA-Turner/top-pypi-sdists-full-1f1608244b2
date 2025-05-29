@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import datetime
 import re
+from abc import ABC, abstractmethod
 from functools import cached_property
 from typing import TYPE_CHECKING, Callable, Dict, Hashable, List, Optional, Union
 
@@ -33,7 +34,6 @@ from pandas.core.dtypes.common import is_dtype_equal, is_list_like, is_numeric_d
 from pandas.core.indexes.api import Index, RangeIndex
 
 from modin.config import (
-    Engine,
     IsRayCluster,
     MinColumnPartitionSize,
     MinRowPartitionSize,
@@ -80,7 +80,7 @@ if TYPE_CHECKING:
 
 
 class PandasDataframe(
-    ClassLogger, modin_layer="CORE-DATAFRAME", log_level=LogLevel.DEBUG
+    ABC, ClassLogger, modin_layer="CORE-DATAFRAME", log_level=LogLevel.DEBUG
 ):
     """
     An abstract class that represents the parent class for any pandas storage format dataframe class.
@@ -122,6 +122,31 @@ class PandasDataframe(
     _dtypes: Optional[ModinDtypes] = None
     _pandas_backend: Optional[str] = None
 
+    @property
+    def storage_format(self) -> str:
+        """
+        The storage format for this frame's data.
+
+        Returns
+        -------
+        str
+            The storage format.
+        """
+        return "Pandas"
+
+    @property
+    @abstractmethod
+    def engine(self) -> str:
+        """
+        The engine for this frame.
+
+        Returns
+        -------
+        str
+            The engine.
+        """
+        pass
+
     @cached_property
     def __constructor__(self) -> type[PandasDataframe]:
         """
@@ -149,7 +174,9 @@ class PandasDataframe(
         self._row_lengths_cache = row_lengths
         self._column_widths_cache = column_widths
         self._pandas_backend = pandas_backend
-        if pandas_backend != "pyarrow":
+        if pandas_backend != "pyarrow" or len(partitions) == 0:
+            # If the backend is pyarrow and there are no partitions, the computed dtype otherwise becomes NaN,
+            # which means we lost the dtype, so actually set it in that case
             self.set_dtypes_cache(dtypes)
         else:
             # In this case, the type precomputation may be incorrect; we need
@@ -1707,7 +1734,7 @@ class PandasDataframe(
                         new_dtypes = self_dtypes.copy()
                     # Update the new dtype series to the proper pandas dtype
                     new_dtype = pandas.api.types.pandas_dtype(dtype)
-                    if Engine.get() == "Dask" and hasattr(dtype, "_is_materialized"):
+                    if self.engine == "Dask" and hasattr(dtype, "_is_materialized"):
                         # FIXME: https://github.com/dask/distributed/issues/8585
                         _ = dtype._materialize_categories()
 
@@ -1733,10 +1760,10 @@ class PandasDataframe(
 
         else:
             # Assume that the dtype is a scalar.
-            if not (col_dtypes == self_dtypes).all():
+            if not (self_dtypes == col_dtypes).all():
                 new_dtypes = self_dtypes.copy()
                 new_dtype = pandas.api.types.pandas_dtype(col_dtypes)
-                if Engine.get() == "Dask" and hasattr(new_dtype, "_is_materialized"):
+                if self.engine == "Dask" and hasattr(new_dtype, "_is_materialized"):
                     # FIXME: https://github.com/dask/distributed/issues/8585
                     _ = new_dtype._materialize_categories()
                 if isinstance(new_dtype, pandas.CategoricalDtype):
@@ -4807,7 +4834,7 @@ class PandasDataframe(
         )
 
     @classmethod
-    def from_dataframe(cls, df: ProtocolDataframe) -> PandasDataframe:
+    def from_interchange_dataframe(cls, df: ProtocolDataframe) -> PandasDataframe:
         """
         Convert a DataFrame implementing the dataframe exchange protocol to a Core Modin Dataframe.
 

@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: cosmpy
-Version: 0.9.3
+Version: 0.11.0
 Summary: A library for interacting with the cosmos networks
 License: Apache-2.0
 Keywords: CosmPy,Cosmos-SDK
@@ -34,7 +34,7 @@ Requires-Dist: pycryptodome (>=3.18.0,<4.0.0)
 Requires-Dist: python-dateutil
 Requires-Dist: requests
 Requires-Dist: virtualenv (>=20.26.6)
-Project-URL: Documentation, https://docs.fetch.ai/CosmPy/
+Project-URL: Documentation, https://network.fetch.ai/docs/guides/cosmpy/installation/
 Project-URL: Homepage, https://github.com/fetchai/cosmpy
 Project-URL: Repository, https://github.com/fetchai/cosmpy
 Description-Content-Type: text/markdown
@@ -81,7 +81,7 @@ for coin in balances:
 
 ## Documentation
 
-The full documentation can be found [here](https://fetch.ai/docs/guides/fetch-network/cosmpy/install).
+The full documentation can be found [here](https://network.fetch.ai/docs/guides/cosmpy/installation).
 
 ## Examples
 

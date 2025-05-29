@@ -163,22 +163,50 @@ class QrackAceBackend:
         single_bit_value = self.sim.prob(hq[single_bit])
         single_bit_polarization = max(single_bit_value, 1 - single_bit_value)
         samples = self.sim.measure_shots([hq[other_bits[0]], hq[other_bits[1]]], shots)
-        syndrome_indices = [other_bits[1], other_bits[0]] if (single_bit_value >= 0.5) else [other_bits[0], other_bits[1]]
+        syndrome_indices = (
+            [other_bits[1], other_bits[0]]
+            if (single_bit_value >= 0.5)
+            else [other_bits[0], other_bits[1]]
+        )
         syndrome = [0, 0, 0]
+        values = []
         for sample in samples:
             match sample:
                 case 0:
-                    syndrome[single_bit] += single_bit_value
+                    value = single_bit_value
+                    syndrome[single_bit] += value
                 case 1:
-                    syndrome[syndrome_indices[0]] += single_bit_polarization
+                    value = single_bit_polarization
+                    syndrome[syndrome_indices[0]] += value
                 case 2:
-                    syndrome[syndrome_indices[1]] += single_bit_polarization
+                    value = single_bit_polarization
+                    syndrome[syndrome_indices[1]] += value
                 case 3:
-                    syndrome[single_bit] += 1 - single_bit_value
+                    value = 1 - single_bit_value
+                    syndrome[single_bit] += value
+            values.append(value)
 
-        sum_syndrome = sum(syndrome)
+        # Suggestion from Elara (custom OpenAI GPT):
+        # Compute the standard deviation and only correct if we're outside a confidence interval.
+        # (This helps avoid limit-point over-correction.)
+        syndrome_sum = sum(syndrome)
+        z_score_numer = syndrome_sum - shots / 2
+        z_score = 0
+        if z_score_numer > 0:
+            syndrome_component_mean = syndrome_sum / shots
+            syndrome_total_variance = sum(
+                (value - syndrome_component_mean) ** 2 for value in values
+            )
+            z_score_denom = math.sqrt(syndrome_total_variance)
+            z_score = (
+                math.inf
+                if math.isclose(z_score_denom, 0)
+                else (z_score_numer / z_score_denom)
+            )
+
         force_syndrome = True
-        if (2 * sum_syndrome) > shots:
+        # (From Elara, this is the value that minimizes the sum of Type I and Type II error.)
+        if z_score >= (497 / 999):
             # There is an error.
             error_bit = syndrome.index(max(syndrome))
             if error_bit == single_bit:
@@ -395,17 +423,34 @@ class QrackAceBackend:
 
     def m(self, lq):
         hq = self._unpack(lq)
+        even_row = not ((lq // self.row_length) & 1)
+        if not self.alternating_codes or even_row:
+            single_bit = 2
+            other_bits = [0, 1]
+        else:
+            single_bit = 0
+            other_bits = [1, 2]
         syndrome = 0
         bits = []
-        for q in hq:
-            bits.append(self.sim.m(q))
+        for q in other_bits:
+            bits.append(self.sim.m(hq[q]))
             if bits[-1]:
                 syndrome += 1
-        result = True if (syndrome > 1) else False
-        for i in range(len(hq)):
+        # single_bit never shares entanglement with other_bits.
+        # In the ideal, it should simply duplicate other_bits.
+        # So get more precision by using it analytically.
+        analytical = self.sim.prob(hq[single_bit])
+        syndrome += analytical
+        result = True if (syndrome >= 1.5) else False
+        # The two separable parts of the code are correlated,
+        # but not non-locally, via entanglement.
+        # Prefer to collapse the analytical part toward agreement.
+        bits.append(self.sim.m(hq[single_bit]) if math.isclose(analytical, 0 if result else 1) else self.sim.force_m(hq[single_bit], result))
+        for i in range(2):
             if bits[i] != result:
-                self.sim.x(hq[i])
-
+                self.sim.x(hq[other_bits[i]])
+        if bits[2] != result:
+            self.sim.x(hq[single_bit])
         self._is_init[lq] = False
 
         return result
@@ -419,7 +464,19 @@ class QrackAceBackend:
 
         return result
 
-    def measure_shots(self, q, s):
+    def measure_shots(self, q, s, high_accuracy=False):
+        if high_accuracy:
+            samples = []
+            for _ in range(s):
+                clone = self.sim.clone()
+                sample = 0
+                for i in range(len(q)):
+                    if clone.m(q[i]):
+                        sample |= 1 << i
+                samples.append(sample)
+
+            return samples
+
         _q = []
         for i in q:
             _q.append(3 * i)

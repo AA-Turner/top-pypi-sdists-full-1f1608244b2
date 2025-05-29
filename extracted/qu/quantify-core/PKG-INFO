@@ -1,8 +1,8 @@
 Metadata-Version: 2.4
 Name: quantify-core
-Version: 0.8.1
+Version: 0.8.2
 Summary: Quantify-core is a unified quantum computing, solid-state and pulse sequencing physical experimentation framework.
-Maintainer-email: Edgar Reehuis <ereehuis@qblox.com>, Robert Sokolewicz <rsokolewicz@qblox.com>, Gábor Oszkár Dénes <gdenes@qblox.com>, Amirtha Varshiny Arumugam <amirthavarshiny@orangeqs.com>, Viacheslav Ostroukh <viacheslav@orangeqs.com>
+Maintainer-email: Edgar Reehuis <ereehuis@qblox.com>, Robert Sokolewicz <rsokolewicz@qblox.com>, Gábor Oszkár Dénes <gdenes@qblox.com>, Amirtha Varshiny Arumugam <amirthavarshiny@orangeqs.com>, Olga Lebiga <olga@orangeqs.com>
 License: BSD-3-Clause
 Project-URL: Documentation, https://quantify-os.org/docs/quantify-core
 Project-URL: Source, https://gitlab.com/quantify-os/quantify-core
@@ -20,6 +20,8 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
 Classifier: Topic :: Scientific/Engineering
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
@@ -39,7 +41,7 @@ Requires-Dist: jsonschema
 Requires-Dist: adaptive
 Requires-Dist: filelock
 Requires-Dist: appnope
-Requires-Dist: uncertainties
+Requires-Dist: uncertainties<v3.2.3
 Requires-Dist: dataclasses_json
 Requires-Dist: dill
 Requires-Dist: methodtools

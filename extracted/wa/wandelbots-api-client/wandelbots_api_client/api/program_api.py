@@ -110,7 +110,7 @@ class ProgramApi:
             '400': None,
             '404': None,
             '406': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -187,7 +187,7 @@ class ProgramApi:
             '400': None,
             '404': None,
             '406': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -264,7 +264,7 @@ class ProgramApi:
             '400': None,
             '404': None,
             '406': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -413,7 +413,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -489,7 +489,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -565,7 +565,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -715,7 +715,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -791,7 +791,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -867,7 +867,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1273,7 +1273,7 @@ class ProgramApi:
             '200': "str",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1349,7 +1349,7 @@ class ProgramApi:
             '200': "str",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1425,7 +1425,7 @@ class ProgramApi:
             '200': "str",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1579,7 +1579,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1659,7 +1659,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1739,7 +1739,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -2163,7 +2163,7 @@ class ProgramApi:
             '204': None,
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -2239,7 +2239,7 @@ class ProgramApi:
             '204': None,
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -2315,7 +2315,7 @@ class ProgramApi:
             '204': None,
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }

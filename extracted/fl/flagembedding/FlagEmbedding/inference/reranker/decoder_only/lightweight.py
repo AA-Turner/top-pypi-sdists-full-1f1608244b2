@@ -1,4 +1,5 @@
 import torch
+import sys
 import warnings
 import numpy as np
 from tqdm import trange
@@ -9,8 +10,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from FlagEmbedding.abc.inference import AbsReranker
 from FlagEmbedding.inference.reranker.encoder_only.base import sigmoid
-
-from .models.gemma_model import CostWiseGemmaForCausalLM
 
 
 def last_logit_pool_lightweight(logits: Tensor,
@@ -144,6 +143,15 @@ class LightweightLLMReranker(AbsReranker):
         normalize: bool = False,
         **kwargs: Any,
     ) -> None:
+        try:
+            from .models.gemma_model import CostWiseGemmaForCausalLM
+        except:
+            print('*') * 20
+            print('*') * 20
+            print('error for load lightweight reranker, please install transformers==4.46.0')
+            print('*') * 20
+            print('*') * 20
+            sys.exit()
 
         super().__init__(
             model_name_or_path=model_name_or_path,
@@ -263,7 +271,7 @@ class LightweightLLMReranker(AbsReranker):
         all_queries_inputs = []
         all_passages_inputs = []
         for start_index in trange(0, len(sentence_pairs), batch_size, desc="pre tokenize",
-                                  disable=len(sentence_pairs) < 128):
+                                  disable=len(sentence_pairs) < batch_size):
             sentences_batch = sentence_pairs[start_index:start_index + batch_size]
             queries = [s[0] for s in sentences_batch]
             passages = [s[1] for s in sentences_batch]

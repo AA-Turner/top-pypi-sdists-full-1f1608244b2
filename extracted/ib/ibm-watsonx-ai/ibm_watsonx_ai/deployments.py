@@ -255,7 +255,7 @@ class Deployments(WMLResource):
                         metaProps.update({DeploymentMetaNames.BASE_MODEL_ID: model_id})
         # --- end note
 
-        url = self._client.service_instance._href_definitions.get_deployments_href()
+        url = self._client._href_definitions.get_deployments_href()
 
         response = self._client.httpx_client.post(
             url,
@@ -463,7 +463,7 @@ class Deployments(WMLResource):
             "version": self._client.version_param,
         }
 
-        url = self._client.service_instance._href_definitions.get_deployments_href()
+        url = self._client._href_definitions.get_deployments_href()
         res = self._client.httpx_client.get(
             url, headers=self._client._get_headers(), params=params
         )
@@ -560,7 +560,7 @@ class Deployments(WMLResource):
                 "'deployment_id' is not an id: '{}'".format(deployment_id)
             )
 
-        url = self._client.service_instance._href_definitions.get_deployments_href()
+        url = self._client._href_definitions.get_deployments_href()
 
         query_params = self._client._params()
 
@@ -718,10 +718,8 @@ class Deployments(WMLResource):
                 "'deployment_id' is not an id: '{}'".format(deployment_id)
             )
 
-        deployment_url = (
-            self._client.service_instance._href_definitions.get_deployment_href(
-                deployment_id
-            )
+        deployment_url = self._client._href_definitions.get_deployment_href(
+            deployment_id
         )
 
         response_delete = self._client.httpx_client.delete(
@@ -1171,9 +1169,7 @@ class Deployments(WMLResource):
                 }
             )
 
-        url = self._client.service_instance._href_definitions.get_deployment_href(
-            deployment_id
-        )
+        url = self._client._href_definitions.get_deployment_href(deployment_id)
 
         response = self._client.httpx_client.patch(
             url,
@@ -1271,9 +1267,7 @@ class Deployments(WMLResource):
         if transaction_id is not None:
             headers.update({"x-global-transaction-id": transaction_id})
         # making change - connection keep alive
-        scoring_url = (
-            self._client.service_instance._href_definitions.get_async_deployment_job_href()
-        )
+        scoring_url = self._client._href_definitions.get_async_deployment_job_href()
         params = self._client._params()
 
         if not self._client.ICP_PLATFORM_SPACES and retention is not None:
@@ -1531,9 +1525,7 @@ class Deployments(WMLResource):
         )
         if job_id is not None:
             Deployments._validate_type(job_id, "job_id", str, True)
-        url = (
-            self._client.service_instance._href_definitions.get_async_deployment_job_href()
-        )
+        url = self._client._href_definitions.get_async_deployment_job_href()
 
         params = self._client._params()
         if include:
@@ -1680,10 +1672,8 @@ class Deployments(WMLResource):
                 job_details = self.get_job_details(job_id=job_id)
                 run_id = job_details["entity"]["platform_job"]["run_id"]
 
-                jobs_runs_url = (
-                    self._client.service_instance._href_definitions.get_jobs_runs_href(
-                        job_id=job_id, run_id=run_id
-                    )
+                jobs_runs_url = self._client._href_definitions.get_jobs_runs_href(
+                    job_id=job_id, run_id=run_id
                 )
 
                 response_delete = self._client.httpx_client.delete(
@@ -1696,9 +1686,7 @@ class Deployments(WMLResource):
             except:
                 pass
 
-        url = self._client.service_instance._href_definitions.get_async_deployment_jobs_href(
-            job_id
-        )
+        url = self._client._href_definitions.get_async_deployment_jobs_href(job_id)
 
         if hard_delete is True:
             params.update({"hard_delete": "true"})
@@ -1748,25 +1736,31 @@ class Deployments(WMLResource):
 
         match inference_type:
             case "text":
-                generated_url = self._client.service_instance._href_definitions.get_fm_deployment_generation_href(
-                    deployment_id=deployment_id, item="text"
+                generated_url = (
+                    self._client._href_definitions.get_fm_deployment_generation_href(
+                        deployment_id=deployment_id, item="text"
+                    )
                 )
             case "text_stream":
                 if self._client._use_fm_ga_api:
-                    generated_url = self._client.service_instance._href_definitions.get_fm_deployment_generation_stream_href(
+                    generated_url = self._client._href_definitions.get_fm_deployment_generation_stream_href(
                         deployment_id=deployment_id
                     )
                 else:  # Remove on CPD 5.0 release
-                    generated_url = self._client.service_instance._href_definitions.get_fm_deployment_generation_href(
+                    generated_url = self._client._href_definitions.get_fm_deployment_generation_href(
                         deployment_id=deployment_id, item="text_stream"
                     )
             case "chat":
-                generated_url = self._client.service_instance._href_definitions.get_fm_deployment_chat_href(
-                    deployment_id=deployment_id
+                generated_url = (
+                    self._client._href_definitions.get_fm_deployment_chat_href(
+                        deployment_id=deployment_id
+                    )
                 )
             case "chat_stream":
-                generated_url = self._client.service_instance._href_definitions.get_fm_deployment_chat_stream_href(
-                    deployment_id=deployment_id
+                generated_url = (
+                    self._client._href_definitions.get_fm_deployment_chat_stream_href(
+                        deployment_id=deployment_id
+                    )
                 )
             case _:
                 raise InvalidValue(
@@ -1810,11 +1804,12 @@ class Deployments(WMLResource):
         prompt: str | None = None,
         params: dict | None = None,
         guardrails: bool = False,
-        guardrails_hap_params: bool | None = None,
-        guardrails_pii_params: bool | None = None,
+        guardrails_hap_params: dict | None = None,
+        guardrails_pii_params: dict | None = None,
         concurrency_limit: int = DEFAULT_CONCURRENCY_LIMIT,
         async_mode: bool = False,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         """Generate a raw response with `prompt` for given `deployment_id`.
 
@@ -1847,6 +1842,9 @@ class Deployments(WMLResource):
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool
 
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
+
         :return: scoring result containing generated content
         :rtype: dict
         """
@@ -1860,6 +1858,7 @@ class Deployments(WMLResource):
             params=params,
             async_mode=async_mode,
             validate_prompt_variables=validate_prompt_variables,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def generate_text(
@@ -1869,10 +1868,11 @@ class Deployments(WMLResource):
         params: dict | None = None,
         raw_response: bool = False,
         guardrails: bool = False,
-        guardrails_hap_params: bool | None = None,
-        guardrails_pii_params: bool | None = None,
+        guardrails_hap_params: dict | None = None,
+        guardrails_pii_params: dict | None = None,
         concurrency_limit: int = DEFAULT_CONCURRENCY_LIMIT,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> str:
         """Given the selected deployment (deployment_id), a text prompt as input, and the parameters and concurrency_limit,
         the selected inference will generate a completion text as generated_text response.
@@ -1904,6 +1904,9 @@ class Deployments(WMLResource):
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool
 
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
+
         :return: generated content
         :rtype: str
 
@@ -1928,6 +1931,7 @@ class Deployments(WMLResource):
             concurrency_limit=concurrency_limit,
             params=params,
             validate_prompt_variables=validate_prompt_variables,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def generate_text_stream(
@@ -1937,9 +1941,10 @@ class Deployments(WMLResource):
         params: dict | None = None,
         raw_response: bool = False,
         guardrails: bool = False,
-        guardrails_hap_params: bool | None = None,
-        guardrails_pii_params: bool | None = None,
+        guardrails_hap_params: dict | None = None,
+        guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> str:
         """Given the selected deployment (deployment_id), a text prompt as input and parameters,
         the selected inference will generate a streamed text as generate_text_stream.
@@ -1968,6 +1973,9 @@ class Deployments(WMLResource):
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool
 
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
+
         :return: generated content
         :rtype: str
 
@@ -1991,6 +1999,7 @@ class Deployments(WMLResource):
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
             validate_prompt_variables=validate_prompt_variables,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def chat(
@@ -2041,9 +2050,7 @@ class Deployments(WMLResource):
         Deployments._validate_type(ai_service_payload, "ai_service_payload", dict, True)
 
         scoring_url = (
-            self._client.service_instance._href_definitions.get_deployment_href(
-                deployment_id
-            )
+            self._client._href_definitions.get_deployment_href(deployment_id)
             + "/ai_service"
         )
         response_scoring = self._client.httpx_client.post(
@@ -2087,9 +2094,7 @@ class Deployments(WMLResource):
         Deployments._validate_type(ai_service_payload, "ai_service_payload", dict, True)
 
         scoring_url = (
-            self._client.service_instance._href_definitions.get_deployment_href(
-                deployment_id
-            )
+            self._client._href_definitions.get_deployment_href(deployment_id)
             + "/ai_service_stream"
         )
 

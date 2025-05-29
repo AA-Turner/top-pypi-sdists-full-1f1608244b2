@@ -10,7 +10,26 @@ from .types import *
 
 
 class WorkloadClient(ServiceClient):
+    """
+    Methods for interacting with Beaker Workloads.
+    Accessed via the :data:`Beaker.workload <beaker.Beaker.workload>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, workload: str) -> pb2.Workload:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     workload = beaker.workload.get(workload_id)
+
+        :returns: A :class:`~beaker.types.BeakerWorkload` protobuf object.
+
+        :raises ~beaker.exceptions.BeakerWorkloadNotFound: If the workload doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetWorkloadResponse](self.service.GetWorkload),
             pb2.GetWorkloadRequest(workload_id=self.resolve_workload_id(workload)),
@@ -18,14 +37,25 @@ class WorkloadClient(ServiceClient):
         ).workload
 
     def is_experiment(self, workload: pb2.Workload) -> bool:
+        """
+        Returns ``True`` if an workload is an experiment-type workload.
+        """
         return workload.HasField("experiment")
 
     def is_environment(self, workload: pb2.Workload) -> bool:
+        """
+        Returns ``True`` if an workload is an environment-type (session) workload.
+        """
         return workload.HasField("environment")
 
     def update(
         self, workload: pb2.Workload, *, name: str | None = None, description: str | None = None
     ) -> pb2.Workload:
+        """
+        Update fields of a workload.
+
+        :returns: The updated :class:`~beaker.types.BeakerWorkload` object.
+        """
         return self.rpc_request(
             RpcMethod[pb2.UpdateWorkloadResponse](self.service.UpdateWorkload),
             pb2.UpdateWorkloadRequest(
@@ -35,6 +65,9 @@ class WorkloadClient(ServiceClient):
         ).workload
 
     def cancel(self, *workloads: pb2.Workload) -> Iterable[str]:
+        """
+        Cancel a running workload.
+        """
         return self.rpc_request(
             RpcMethod[pb2.CancelWorkloadsResponse](self.service.CancelWorkloads),
             pb2.CancelWorkloadsRequest(
@@ -43,6 +76,9 @@ class WorkloadClient(ServiceClient):
         ).workload_ids
 
     def delete(self, *workloads: pb2.Workload):
+        """
+        Delete workloads.
+        """
         self.rpc_request(
             RpcMethod[pb2.DeleteWorkloadsResponse](self.service.DeleteWorkloads),
             pb2.DeleteWorkloadsRequest(
@@ -71,6 +107,17 @@ class WorkloadClient(ServiceClient):
     def get_latest_job(
         self, workload: pb2.Workload, *, task: pb2.Task | None = None, finalized: bool | None = None
     ) -> pb2.Job | None:
+        """
+        Get the latest job of an experiment-type workload.
+
+        :param task: Filter by a specific task.
+        :param finalized: Filter by finalized status.
+
+        :returns: The latest :class:`~beaker.types.BeakerJob` object or ``None``, if one hasn't
+            been created yet.
+
+        :raises ValueError: If the workload is not an experiment.
+        """
         env: pb2.Environment | None = None
         if self.is_experiment(workload):
             task = self._resolve_task(workload, task=task)
@@ -101,6 +148,9 @@ class WorkloadClient(ServiceClient):
     def get_results(
         self, workload: pb2.Workload, *, task: pb2.Task | None = None
     ) -> pb2.Dataset | None:
+        """
+        Get the results :class:`~beaker.types.BeakerDataset` from a workload.
+        """
         job = self.get_latest_job(workload, task=task)
         if job is None:
             return None
@@ -123,6 +173,11 @@ class WorkloadClient(ServiceClient):
         sort_field: Literal["created"] = "created",
         limit: int | None = None,
     ) -> Iterable[pb2.Workload]:
+        """
+        List workloads.
+
+        :returns: An iterator over :class:`~beaker.types.BeakerWorkload` objects.
+        """
         Opts = pb2.ListWorkloadsRequest.Opts
 
         if limit is not None and limit <= 0:
@@ -161,6 +216,9 @@ class WorkloadClient(ServiceClient):
                     return
 
     def url(self, workload: pb2.Workload) -> str:
+        """
+        Get the URL to a workload on the Beaker dashboard.
+        """
         return (
             f"{self.config.agent_address}/ex/{self._url_quote(self.resolve_workload_id(workload))}"
         )

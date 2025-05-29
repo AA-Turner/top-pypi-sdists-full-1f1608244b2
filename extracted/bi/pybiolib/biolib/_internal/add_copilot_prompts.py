@@ -5,7 +5,7 @@ import sys
 from biolib._internal import llm_instructions
 
 
-def add_copilot_prompts(force: bool, silent: bool = False) -> None:
+def add_copilot_prompts(force: bool, style: bool = True, silent: bool = False) -> None:
     current_working_directory = os.getcwd()
     config_file_path = f'{current_working_directory}/.biolib/config.yml'
     if not os.path.exists(config_file_path):
@@ -19,12 +19,14 @@ Error: Current directory has not been initialized as a BioLib application.
 
     conflicting_files = []
 
-    for root, _, files in os.walk(source_path):
+    for root, _, filenames in os.walk(source_path):
         relative_dir = os.path.relpath(root, source_path)
         destination_dir = os.path.join(destination_path, relative_dir)
-        for file in files:
-            source_file = os.path.join(root, file)
-            destination_file = os.path.join(destination_dir, file)
+        for filename in filenames:
+            if 'style' in filename and not style:
+                continue
+            source_file = os.path.join(root, filename)
+            destination_file = os.path.join(destination_dir, filename)
             if os.path.exists(destination_file) and not force:
                 with open(source_file, 'rb') as fsrc, open(destination_file, 'rb') as fdest:
                     if fsrc.read() != fdest.read():

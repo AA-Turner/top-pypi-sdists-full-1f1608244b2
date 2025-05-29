@@ -32,7 +32,7 @@ def test_unknown_file_format(tmp_path, cores):
     path = tmp_path / "unknown_format.txt"
     path.write_text("raw text")
     with pytest.raises(SystemExit):
-        main([f"--cores={cores}", str(path)])
+        main([f"--cores={cores}", path])
 
 
 def test_cores_negative():
@@ -230,7 +230,7 @@ def test_overlap_a(tmp_path, length):
     else:
         expected = ">read\nGAGACCATTCCAATG\n"
     output = tmp_path / "overlap-trimmed.fasta"
-    main(["-O", "7", "-e", "0", "-a", adapter, "-o", str(output), str(input)])
+    main(["-O", "7", "-e", "0", "-a", adapter, "-o", output, input])
     assert expected == output.read_text()
 
 
@@ -442,88 +442,6 @@ def test_issue_46(run, tmp_path):
 
 def test_strip_suffix(run):
     run("--strip-suffix _sequence -a XXXXXXX", "stripped.fasta", "simple.fasta")
-
-
-def test_info_file(run, tmp_path, cores):
-    # The true adapter sequence in the illumina.fastq.gz data set is
-    # GCCTAACTTCTTAGACTGCCTTAAGGACGT (fourth base is different from the sequence shown here)
-    info_path = tmp_path / "info.txt"
-    run(
-        [
-            "--cores",
-            str(cores),
-            "--info-file",
-            info_path,
-            "-a",
-            "adapt=GCCGAACTTCTTAGACTGCCTTAAGGACGT",
-        ],
-        "illumina.fastq",
-        "illumina.fastq.gz",
-    )
-    assert_files_equal(
-        cutpath("illumina.info.txt"), info_path, ignore_trailing_space=True
-    )
-
-
-def test_info_file_times(run, tmp_path, cores):
-    info_path = tmp_path / "info.txt"
-    run(
-        [
-            "--cores",
-            str(cores),
-            "--info-file",
-            info_path,
-            "--times",
-            "2",
-            "-a",
-            "adapt=GCCGAACTTCTTA",
-            "-a",
-            "adapt2=GACTGCCTTAAGGACGT",
-        ],
-        "illumina5.fastq",
-        "illumina5.fastq",
-    )
-    assert_files_equal(
-        cutpath("illumina5.info.txt"), info_path, ignore_trailing_space=True
-    )
-
-
-def test_info_file_fasta(run, tmp_path, cores):
-    info_path = tmp_path / "info.txt"
-    # Just make sure that it runs
-    run(
-        [
-            "--cores",
-            str(cores),
-            "--info-file",
-            info_path,
-            "-a",
-            "TTAGACATAT",
-            "-g",
-            "GAGATTGCCA",
-            "--no-indels",
-        ],
-        "no_indels.fasta",
-        "no_indels.fasta",
-    )
-
-
-def test_info_file_revcomp(run, tmp_path):
-    info_path = tmp_path / "info-rc.txt"
-    main(
-        [
-            "--info-file",
-            str(info_path),
-            "-a",
-            "adapt=GAGTCG",
-            "--revcomp",
-            "--rename={header}",
-            "-o",
-            str(tmp_path / "out.fasta"),
-            datapath("info-rc.fasta"),
-        ]
-    )
-    assert_files_equal(cutpath("info-rc.txt"), info_path)
 
 
 def test_named_adapter(run):
@@ -793,23 +711,6 @@ def test_linked_lowercase(run):
     )
 
 
-def test_linked_info_file(tmp_path):
-    info_path = tmp_path / "info.txt"
-    main(
-        [
-            "-a linkedadapter=^AAAAAAAAAA...TTTTTTTTTT",
-            "--info-file",
-            str(info_path),
-            "-o",
-            str(tmp_path / "out.fasta"),
-            datapath("linked.fasta"),
-        ]
-    )
-    assert_files_equal(
-        cutpath("linked-info.txt"), info_path, ignore_trailing_space=True
-    )
-
-
 def test_linked_anywhere():
     with pytest.raises(SystemExit):
         main(["-b", "AAA...TTT", datapath("linked.fasta")])
@@ -825,8 +726,8 @@ def test_anywhere_anchored_3p():
         main(["-b", "TTT$", datapath("small.fastq")])
 
 
-def test_fasta(run):
-    run("-a TTAGACATATCTCCGTCG", "small.fasta", "small.fastq")
+def test_fastq_input_fasta_output(run, cores):
+    run(f"-j {cores} -a TTAGACATATCTCCGTCG", "small.fasta", "small.fastq")
 
 
 def test_fasta_no_trim(run):
@@ -841,29 +742,6 @@ def test_negative_length(run):
     run("--length -5", "shortened-negative.fastq", "small.fastq")
 
 
-@pytest.mark.timeout(0.5)
-def test_issue_296(tmp_path):
-    # Hang when using both --no-trim and --info-file together
-    info_path = tmp_path / "info.txt"
-    reads_path = tmp_path / "reads.fasta"
-    out_path = tmp_path / "out.fasta"
-    reads_path.write_text(">read\nCACAAA\n")
-    main(
-        [
-            "--info-file",
-            str(info_path),
-            "--no-trim",
-            "-g",
-            "TTTCAC",
-            "-o",
-            str(out_path),
-            str(reads_path),
-        ]
-    )
-    # Output should be unchanged because of --no-trim
-    assert_files_equal(reads_path, out_path)
-
-
 def test_xadapter(run):
     run("-g XTCCGAATAGA", "xadapter.fasta", "xadapterx.fasta")
 
@@ -876,7 +754,7 @@ def test_not_rightmost(tmp_path):
     path = tmp_path / "reads.fasta"
     path.write_text(">r\nGGCTGAATTGGACTGAATTGGGT\n")
     trimmed = tmp_path / "trimmed.fasta"
-    main(["-g", "CTGAATT", "-o", str(trimmed), str(path)])
+    main(["-g", "CTGAATT", "-o", trimmed, path])
     assert trimmed.read_text() == ">r\nGGACTGAATTGGGT\n"
 
 
@@ -884,7 +762,7 @@ def test_rightmost(tmp_path):
     path = tmp_path / "reads.fasta"
     path.write_text(">r\nGGCTGAATTGGACTGAATTGGGT\n")
     trimmed = tmp_path / "trimmed.fasta"
-    main(["-g", "CTGAATT;rightmost", "-o", str(trimmed), str(path)])
+    main(["-g", "CTGAATT;rightmost", "-o", trimmed, path])
     assert trimmed.read_text() == ">r\nGGGT\n"
 
 
@@ -914,7 +792,7 @@ def test_empty_read_with_wildcard_in_adapter(run):
 
 def test_print_progress_to_tty(tmp_path, mocker):
     mocker.patch("cutadapt.utils.sys.stderr").isatty.return_value = True
-    main(["-o", str(tmp_path / "out.fastq"), datapath("small.fastq")])
+    main(["-o", tmp_path / "out.fastq", datapath("small.fastq")])
 
 
 def test_adapter_order(run):
@@ -927,7 +805,7 @@ def test_reverse_complement_no_rc_suffix(run, tmp_path):
     main(
         [
             "-o",
-            str(out_path),
+            out_path,
             "--revcomp",
             "--no-index",
             "--rename",
@@ -956,29 +834,6 @@ def test_reverse_complement_normalized(run):
     assert stats.reverse_complemented == 2
 
 
-def test_reverse_complement_and_info_file(run, tmp_path, cores):
-    info_path = str(tmp_path / "info.txt")
-    run(
-        [
-            "--revcomp",
-            "--no-index",
-            "-g",
-            "^TTATTTGTCT",
-            "-g",
-            "^TCCGCACTGG",
-            "--info-file",
-            info_path,
-        ],
-        "revcomp-single-normalize.fastq",
-        "revcomp.1.fastq",
-    )
-    with open(info_path) as f:
-        lines = f.readlines()
-    assert len(lines) == 6
-    assert lines[0].split("\t")[0] == "read1/1"
-    assert lines[1].split("\t")[0] == "read2/1 rc"
-
-
 def test_max_expected_errors(run, cores):
     stats = run("--max-ee=0.9", "maxee.fastq", "maxee.fastq")
     assert stats.filtered["too_many_expected_errors"] == 2
@@ -987,7 +842,7 @@ def test_max_expected_errors(run, cores):
 def test_max_expected_errors_fasta(tmp_path):
     path = tmp_path / "input.fasta"
     path.write_text(">read\nACGTACGT\n")
-    main(["--max-ee=0.001", "-o", os.devnull, str(path)])
+    main(["--max-ee=0.001", "-o", os.devnull, path])
 
 
 def test_warn_if_en_dashes_used():
@@ -1022,7 +877,7 @@ def test_rename_cannot_be_combined_with_other_renaming_options(opt):
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Disabled on Windows")
 def test_duplicate_output_paths(tmp_path):
-    path = str(tmp_path / "discard.fastq")
+    path = tmp_path / "discard.fastq"
     with pytest.raises(SystemExit):
         main(
             [
@@ -1060,7 +915,7 @@ def test_terminates_correctly_on_error_in_subprocess(tmp_path):
         "-j",
         "2",
         "-o",
-        str(tmp_path / "out.fastq.gz"),
+        tmp_path / "out.fastq.gz",
         datapath("format-error.fastq"),
     ]
     with pytest.raises(SystemExit):
@@ -1071,12 +926,12 @@ def test_json_report_and_discard_untrimmed(tmp_path):
     stats = main(
         [
             "--json",
-            str(tmp_path / "cutadapt.json"),
+            tmp_path / "cutadapt.json",
             "--discard-untrimmed",
             "-a",
             "name=ACGT",
             "-o",
-            str(tmp_path / "trimmed.fastq"),
+            tmp_path / "trimmed.fastq",
             datapath("illumina.fastq.gz"),
         ]
     )
@@ -1090,12 +945,12 @@ def test_json_report_and_discard_trimmed(tmp_path):
     stats = main(
         [
             "--json",
-            str(tmp_path / "cutadapt.json"),
+            tmp_path / "cutadapt.json",
             "--discard-trimmed",
             "-a",
             "name=ACGT",
             "-o",
-            str(tmp_path / "trimmed.fastq"),
+            tmp_path / "trimmed.fastq",
             datapath("illumina.fastq.gz"),
         ]
     )
@@ -1109,12 +964,12 @@ def test_json_report_with_demultiplexing_and_discard_untrimmed(tmp_path):
     stats = main(
         [
             "--json",
-            str(tmp_path / "demux.cutadapt.json"),
+            tmp_path / "demux.cutadapt.json",
             "--discard-untrimmed",
             "-a",
             "name=ACGT",
             "-o",
-            str(tmp_path / "{name}.fastq"),
+            tmp_path / "{name}.fastq",
             datapath("illumina.fastq.gz"),
         ]
     )
@@ -1131,8 +986,8 @@ def test_does_not_hang_on_error_in_reader_process(tmp_path, cores):
             [
                 f"--cores={cores}",
                 "-o",
-                str(tmp_path / "out.fastq"),
-                str(tmp_path / "does-not-exist.fastq"),
+                tmp_path / "out.fastq",
+                tmp_path / "does-not-exist.fastq",
             ],
         )
     assert e.value.args[0] == 1
@@ -1146,7 +1001,7 @@ def test_process_substitution(tmp_path, cores):
             [
                 f"--cores={cores}",
                 "-o",
-                str(tmp_path / "out.fastq"),
+                tmp_path / "out.fastq",
                 inpath,
             ]
         )

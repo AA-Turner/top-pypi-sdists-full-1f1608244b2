@@ -122,7 +122,6 @@ class CustomAuthInterceptor(
 
         metadata = list(client_call_details.metadata or [])
         metadata.append(("x-api-key", self._api_key))
-        metadata.append(("x-python-sdk-version", __version__))
         new_details = client_call_details._replace(metadata=metadata)
         return continuation(new_details, request)
 
@@ -131,7 +130,6 @@ class CustomAuthInterceptor(
 
         metadata = list(client_call_details.metadata or [])
         metadata.append(("x-api-key", self._api_key))
-        metadata.append(("x-python-sdk-version", __version__))
         new_details = client_call_details._replace(metadata=metadata)
         return continuation(new_details, request)
 
@@ -140,7 +138,6 @@ class CustomAuthInterceptor(
 
         metadata = list(client_call_details.metadata or [])
         metadata.append(("x-api-key", self._api_key))
-        metadata.append(("x-python-sdk-version", __version__))
         new_details = client_call_details._replace(metadata=metadata)
         return continuation(new_details, request_iterator)
 
@@ -149,7 +146,6 @@ class CustomAuthInterceptor(
 
         metadata = list(client_call_details.metadata or [])
         metadata.append(("x-api-key", self._api_key))
-        metadata.append(("x-python-sdk-version", __version__))
         new_details = client_call_details._replace(metadata=metadata)
         return continuation(new_details, request_iterator)
 
@@ -205,16 +201,19 @@ class Gateway:
         except RuntimeError as e:
             pass
 
+        from fireworks import __version__
+
+        user_agent_option = ("grpc.primary_user_agent", f"fireworks-python-sdk/{__version__}")
         # Only use SSL credentials if port is 443, but always include API key auth
         if self._port == 443:
             creds = grpc.composite_channel_credentials(
                 grpc.ssl_channel_credentials(),
                 grpc.metadata_call_credentials(CustomAuthMetadata(api_key)),
             )
-            self._sync_channel = grpc.secure_channel(self._server_addr, creds)
+            self._sync_channel = grpc.secure_channel(self._server_addr, creds, options=[user_agent_option])
         else:
             # For non-SSL connections, still need to add API key auth
-            self._sync_channel = grpc.insecure_channel(self._server_addr)
+            self._sync_channel = grpc.insecure_channel(self._server_addr, [user_agent_option])
             self._sync_channel = grpc.intercept_channel(self._sync_channel, CustomAuthInterceptor(api_key))
 
         self._sync_stub = SyncGatewayStub(self._sync_channel)

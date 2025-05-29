@@ -25,7 +25,7 @@ class Taxonomy:
     def __init__(self, id: str, api_client: APIClient):
         self.id = id
         self._client = api_client
-        self._href_definitions = self._client.service_instance._href_definitions
+        self._href_definitions = self._client._href_definitions
 
     def get_details(self) -> dict:
         """Get taxonomy import details
@@ -111,7 +111,7 @@ class TaxonomyImport:
     def __init__(self, name: str, api_client: APIClient):
         self.name = name
         self._client = api_client
-        self._href_definitions = self._client.service_instance._href_definitions
+        self._href_definitions = self._client._href_definitions
 
     def get_run_details(self) -> dict:
         """Get details of taxonomy import run
@@ -189,9 +189,7 @@ class TaxonomiesRuns(BaseRuns):
     """Class of InstructLab taxonomy import runs."""
 
     def __init__(self, api_client: APIClient):
-        url = (
-            api_client.service_instance._href_definitions.get_taxonomies_imports_href()
-        )
+        url = api_client._href_definitions.get_taxonomies_imports_href()
 
         BaseRuns.__init__(self, __name__, api_client, url)
 
@@ -221,7 +219,7 @@ class Taxonomies(WMLResource):
         WMLResource.__init__(self, "taxonomies", api_client)
         self.ilab_tuner_name = ilab_tuner_name
         self._client = api_client
-        self._href_definitions = self._client.service_instance._href_definitions
+        self._href_definitions = self._client._href_definitions
 
     def run_import(
         self,

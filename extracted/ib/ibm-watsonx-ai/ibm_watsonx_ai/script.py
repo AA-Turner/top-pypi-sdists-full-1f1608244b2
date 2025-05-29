@@ -345,14 +345,14 @@ class Script(WMLResource):
 
         if self._client.CLOUD_PLATFORM_SPACES:
             creation_response = requests.post(
-                self._client.service_instance._href_definitions.get_assets_href(),
+                self._client._href_definitions.get_assets_href(),
                 headers=self._client._get_headers(),
                 params=self._client._params(),
                 json=asset_meta,
             )
         else:  # if self._client.ICP_PLATFORM_SPACES
             creation_response = requests.post(
-                self._client.service_instance._href_definitions.get_data_assets_href(),
+                self._client._href_definitions.get_data_assets_href(),
                 headers=self._client._get_headers(),
                 params=self._client._params(),
                 json=asset_meta,
@@ -368,9 +368,7 @@ class Script(WMLResource):
             attachment_meta = {"asset_type": "script", "name": "attachment_" + asset_id}
 
             attachment_response = requests.post(
-                self._client.service_instance._href_definitions.get_attachments_href(
-                    asset_id
-                ),
+                self._client._href_definitions.get_attachments_href(asset_id),
                 headers=self._client._get_headers(),
                 params=self._client._params(),
                 json=attachment_meta,
@@ -394,9 +392,7 @@ class Script(WMLResource):
                             )
                 except Exception as e:
                     deletion_response = requests.delete(
-                        self._client.service_instance._href_definitions.get_data_asset_href(
-                            asset_id
-                        ),
+                        self._client._href_definitions.get_data_asset_href(asset_id),
                         params=self._client._params(),
                         headers=self._client._get_headers(),
                     )
@@ -407,7 +403,7 @@ class Script(WMLResource):
 
                     # Step4: Complete attachment
                     complete_response = requests.post(
-                        self._client.service_instance._href_definitions.get_attachment_complete_href(
+                        self._client._href_definitions.get_attachment_complete_href(
                             asset_id, attachment_id
                         ),
                         headers=self._client._get_headers(),
@@ -456,7 +452,7 @@ class Script(WMLResource):
         """
 
         Script._validate_type(limit, "limit", int, False)
-        href = self._client.service_instance._href_definitions.get_search_script_href()
+        href = self._client._href_definitions.get_search_script_href()
 
         data: dict[str, Any] = {"query": "*:*"}
         if limit is not None:
@@ -537,17 +533,13 @@ class Script(WMLResource):
 
         if not self._client.ICP_PLATFORM_SPACES:
             asset_response = requests.get(
-                self._client.service_instance._href_definitions.get_asset_href(
-                    asset_id
-                ),
+                self._client._href_definitions.get_asset_href(asset_id),
                 params=params,
                 headers=self._client._get_headers(),
             )
         else:
             asset_response = requests.get(
-                self._client.service_instance._href_definitions.get_data_asset_href(
-                    asset_id
-                ),
+                self._client._href_definitions.get_data_asset_href(asset_id),
                 params=params,
                 headers=self._client._get_headers(),
             )
@@ -556,9 +548,7 @@ class Script(WMLResource):
         attachment_id = asset_details["attachments"][0]["id"]
 
         response = requests.get(
-            self._client.service_instance._href_definitions.get_attachment_href(
-                asset_id, attachment_id
-            ),
+            self._client._href_definitions.get_attachment_href(asset_id, attachment_id),
             params=params,
             headers=self._client._get_headers(),
         )
@@ -687,7 +677,7 @@ class Script(WMLResource):
 
         updated_details = None
 
-        url = self._client.service_instance._href_definitions.get_asset_href(script_id)
+        url = self._client._href_definitions.get_asset_href(script_id)
 
         # STEPS
         # STEP 1. Get existing metadata
@@ -763,10 +753,8 @@ class Script(WMLResource):
                     ]
 
             if meta_patch_payload:
-                meta_patch_url = (
-                    self._client.service_instance._href_definitions.get_asset_href(
-                        script_id
-                    )
+                meta_patch_url = self._client._href_definitions.get_asset_href(
+                    script_id
                 )
 
                 response_patch = requests.patch(
@@ -782,9 +770,7 @@ class Script(WMLResource):
 
             if entity_patch_payload:
                 entity_patch_url = (
-                    self._client.service_instance._href_definitions.get_asset_href(
-                        script_id
-                    )
+                    self._client._href_definitions.get_asset_href(script_id)
                     + "/attributes/script"
                 )
 
@@ -814,7 +800,7 @@ class Script(WMLResource):
             self._update_msg(updated_details)
 
         # Have to fetch again to reflect updated asset and attachment ids
-        url = self._client.service_instance._href_definitions.get_asset_href(script_id)
+        url = self._client._href_definitions.get_asset_href(script_id)
 
         response = requests.get(
             url, params=self._client._params(), headers=self._client._get_headers()
@@ -883,7 +869,7 @@ class Script(WMLResource):
             )
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_asset_href(asset_id),
+            self._client._href_definitions.get_asset_href(asset_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )
@@ -961,10 +947,7 @@ class Script(WMLResource):
 
         Script._validate_type(script_id, "script_id", str, True)
 
-        url = (
-            self._client.service_instance._href_definitions.get_asset_href(script_id)
-            + "/revisions"
-        )
+        url = self._client._href_definitions.get_asset_href(script_id) + "/revisions"
 
         # /v2/assets/{asset_id}/revisions returns 'results' object
         script_resources = self._get_with_or_without_limit(
@@ -1031,7 +1014,7 @@ class Script(WMLResource):
         if rev_id is None:
             rev_id = "latest"
 
-        url = self._client.service_instance._href_definitions.get_asset_href(script_id)
+        url = self._client._href_definitions.get_asset_href(script_id)
 
         resources = self._get_with_or_without_limit(
             url,

@@ -25,51 +25,50 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from .core import (
-    require_version,
-    int2bytes,
-    bytes2int,
-    Version,
-    Tlv,
-    NotSupportedError,
-    BadResponseError,
-    InvalidPinError,
-)
-from .core.smartcard import (
-    SW,
-    AID,
-    ApduError,
-    SmartCardConnection,
-    SmartCardProtocol,
-    ScpKeyParams,
-)
+import gzip
+import logging
+import os
+import re
+import warnings
+from dataclasses import astuple, dataclass
+from datetime import date
+from enum import Enum, IntEnum, unique
+from typing import Optional, Union, cast, overload
 
 from cryptography import x509
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec, ed25519, rsa, x25519
+from cryptography.hazmat.primitives.asymmetric.padding import AsymmetricPadding
+from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.constant_time import bytes_eq
 from cryptography.hazmat.primitives.serialization import (
     Encoding,
-    PublicFormat,
-    PrivateFormat,
     NoEncryption,
+    PrivateFormat,
+    PublicFormat,
 )
-from cryptography.hazmat.primitives.asymmetric import rsa, ec, ed25519, x25519
-from cryptography.hazmat.primitives.asymmetric.padding import AsymmetricPadding
-from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
-from cryptography.hazmat.backends import default_backend
 
-from datetime import date
-from dataclasses import dataclass, astuple
-from enum import Enum, IntEnum, unique
-from typing import Optional, Union, Type, cast, overload
-
-import warnings
-import logging
-import gzip
-import os
-import re
-
+from .core import (
+    BadResponseError,
+    InvalidPinError,
+    NotSupportedError,
+    Tlv,
+    Version,
+    _override_version,
+    bytes2int,
+    int2bytes,
+    require_version,
+)
+from .core.smartcard import (
+    AID,
+    SW,
+    ApduError,
+    ScpKeyParams,
+    SmartCardConnection,
+    SmartCardProtocol,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -642,7 +641,7 @@ def _parse_device_public_key(key_type, encoded):
         return x25519.X25519PublicKey.from_public_bytes(data[0x86])
     else:
         if key_type == KEY_TYPE.ECCP256:
-            curve: Type[ec.EllipticCurve] = ec.SECP256R1
+            curve: type[ec.EllipticCurve] = ec.SECP256R1
         else:
             curve = ec.SECP384R1
 
@@ -664,8 +663,8 @@ class PivSession:
             self.protocol.init_scp(scp_key_params)
 
         logger.debug("Getting PIV version")
-        self._version = Version.from_bytes(
-            self.protocol.send_apdu(0, INS_GET_VERSION, 0, 0)
+        self._version = _override_version.patch(
+            Version.from_bytes(self.protocol.send_apdu(0, INS_GET_VERSION, 0, 0))
         )
         self.protocol.configure(self.version)
 
@@ -1121,7 +1120,7 @@ class PivSession:
         self,
         slot: SLOT,
         peer_public_key: Union[
-            ec.EllipticCurvePrivateKeyWithSerialization, x25519.X25519PublicKey
+            ec.EllipticCurvePublicKeyWithSerialization, x25519.X25519PublicKey
         ],
     ) -> bytes:
         """Calculate shared secret using ECDH.
@@ -1205,9 +1204,12 @@ class PivSession:
             raise BadResponseError("Malformed certificate data object")
 
         if cert_info == 1:
-            logger.debug("Certificate is compressed, decompressing...")
             # Compressed certificate
-            cert_data = gzip.decompress(cert_data)
+            logger.debug("Certificate is compressed, decompressing...")
+            try:
+                cert_data = gzip.decompress(cert_data)
+            except gzip.BadGzipFile:
+                raise BadResponseError("Unable to decompress certificate")
         elif cert_info != 0:
             raise NotSupportedError("Unsupported value in CertInfo")
 
@@ -1277,6 +1279,7 @@ class PivSession:
         self.check_key_support(key_type, pin_policy, touch_policy, False)
         ln = key_type.bit_len // 8
         if key_type.algorithm == ALGORITHM.RSA:
+            assert isinstance(private_key, rsa.RSAPrivateKey)  # nosec
             numbers = private_key.private_numbers()
             numbers = cast(rsa.RSAPrivateNumbers, numbers)
             if numbers.public_numbers.e != 65537:
@@ -1297,6 +1300,7 @@ class PivSession:
                 ),
             )
         else:
+            assert isinstance(private_key, ec.EllipticCurvePrivateKey)  # nosec
             numbers = private_key.private_numbers()
             numbers = cast(ec.EllipticCurvePrivateNumbers, numbers)
             data = Tlv(0x06, int2bytes(numbers.private_value, ln))

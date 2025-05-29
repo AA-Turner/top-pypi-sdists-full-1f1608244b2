@@ -371,17 +371,19 @@ class MetricConfigSeries(_message.Message):
     ) -> None: ...
 
 class MetricConfig(_message.Message):
-    __slots__ = ("name", "window_period", "series", "formulas", "trigger")
+    __slots__ = ("name", "window_period", "series", "formulas", "trigger", "graph_generated")
     NAME_FIELD_NUMBER: _ClassVar[int]
     WINDOW_PERIOD_FIELD_NUMBER: _ClassVar[int]
     SERIES_FIELD_NUMBER: _ClassVar[int]
     FORMULAS_FIELD_NUMBER: _ClassVar[int]
     TRIGGER_FIELD_NUMBER: _ClassVar[int]
+    GRAPH_GENERATED_FIELD_NUMBER: _ClassVar[int]
     name: str
     window_period: str
     series: _containers.RepeatedCompositeFieldContainer[MetricConfigSeries]
     formulas: _containers.RepeatedCompositeFieldContainer[MetricFormula]
     trigger: AlertTrigger
+    graph_generated: bool
     def __init__(
         self,
         name: _Optional[str] = ...,
@@ -389,22 +391,26 @@ class MetricConfig(_message.Message):
         series: _Optional[_Iterable[_Union[MetricConfigSeries, _Mapping]]] = ...,
         formulas: _Optional[_Iterable[_Union[MetricFormula, _Mapping]]] = ...,
         trigger: _Optional[_Union[AlertTrigger, _Mapping]] = ...,
+        graph_generated: bool = ...,
     ) -> None: ...
 
 class Chart(_message.Message):
-    __slots__ = ("id", "config", "entity_kind", "entity_id")
+    __slots__ = ("id", "config", "entity_kind", "entity_id", "graph_generated")
     ID_FIELD_NUMBER: _ClassVar[int]
     CONFIG_FIELD_NUMBER: _ClassVar[int]
     ENTITY_KIND_FIELD_NUMBER: _ClassVar[int]
     ENTITY_ID_FIELD_NUMBER: _ClassVar[int]
+    GRAPH_GENERATED_FIELD_NUMBER: _ClassVar[int]
     id: str
     config: MetricConfig
     entity_kind: ChartLinkKind
     entity_id: str
+    graph_generated: bool
     def __init__(
         self,
         id: _Optional[str] = ...,
         config: _Optional[_Union[MetricConfig, _Mapping]] = ...,
         entity_kind: _Optional[_Union[ChartLinkKind, str]] = ...,
         entity_id: _Optional[str] = ...,
+        graph_generated: bool = ...,
     ) -> None: ...

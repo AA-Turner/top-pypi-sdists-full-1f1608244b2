@@ -1082,7 +1082,7 @@ class SchedulerInput(_message.Message):
     def __init__(self, non_finalized_jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., nodes: _Optional[_Iterable[_Union[Node, _Mapping]]] = ..., clusters: _Optional[_Iterable[_Union[Cluster, _Mapping]]] = ..., retry_ancestors: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., workspaces: _Optional[_Iterable[_Union[Workspace, _Mapping]]] = ...) -> None: ...
 
 class SchedulerPassSummary(_message.Message):
-    __slots__ = ("candidate_job_id", "filtered_nodes", "scored_nodes", "assignment", "cancelations", "skip_reasons")
+    __slots__ = ("candidate_job_id", "filtered_nodes", "scored_nodes", "assignment", "cancelations", "skip_reasons", "future_job_estimation_attempts")
     class FilterSummary(_message.Message):
         __slots__ = ("node_id", "filter_names")
         NODE_ID_FIELD_NUMBER: _ClassVar[int]
@@ -1110,13 +1110,15 @@ class SchedulerPassSummary(_message.Message):
     ASSIGNMENT_FIELD_NUMBER: _ClassVar[int]
     CANCELATIONS_FIELD_NUMBER: _ClassVar[int]
     SKIP_REASONS_FIELD_NUMBER: _ClassVar[int]
+    FUTURE_JOB_ESTIMATION_ATTEMPTS_FIELD_NUMBER: _ClassVar[int]
     candidate_job_id: str
     filtered_nodes: _containers.RepeatedCompositeFieldContainer[SchedulerPassSummary.FilterSummary]
     scored_nodes: _containers.RepeatedCompositeFieldContainer[SchedulerPassSummary.ScoreSummary]
     assignment: JobAssignment
     cancelations: _containers.RepeatedCompositeFieldContainer[JobCancelation]
     skip_reasons: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, candidate_job_id: _Optional[str] = ..., filtered_nodes: _Optional[_Iterable[_Union[SchedulerPassSummary.FilterSummary, _Mapping]]] = ..., scored_nodes: _Optional[_Iterable[_Union[SchedulerPassSummary.ScoreSummary, _Mapping]]] = ..., assignment: _Optional[_Union[JobAssignment, _Mapping]] = ..., cancelations: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., skip_reasons: _Optional[_Iterable[str]] = ...) -> None: ...
+    future_job_estimation_attempts: int
+    def __init__(self, candidate_job_id: _Optional[str] = ..., filtered_nodes: _Optional[_Iterable[_Union[SchedulerPassSummary.FilterSummary, _Mapping]]] = ..., scored_nodes: _Optional[_Iterable[_Union[SchedulerPassSummary.ScoreSummary, _Mapping]]] = ..., assignment: _Optional[_Union[JobAssignment, _Mapping]] = ..., cancelations: _Optional[_Iterable[_Union[JobCancelation, _Mapping]]] = ..., skip_reasons: _Optional[_Iterable[str]] = ..., future_job_estimation_attempts: _Optional[int] = ...) -> None: ...
 
 class SchedulerSummary(_message.Message):
     __slots__ = ("timestamp", "job_cancelations", "sorted_unscheduled_job_ids", "passes", "total_assignment_count", "total_cancelation_count", "cluster_job_queues")

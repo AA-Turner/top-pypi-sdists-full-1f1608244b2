@@ -52,6 +52,7 @@ pub mod pyarrow_util;
 mod record_batch;
 pub mod sql;
 pub mod store;
+pub mod unparser;
 
 #[cfg(feature = "substrait")]
 pub mod substrait;
@@ -59,6 +60,7 @@ pub mod substrait;
 mod udaf;
 #[allow(clippy::borrow_deref_ref)]
 mod udf;
+pub mod udtf;
 mod udwf;
 pub mod utils;
 
@@ -87,6 +89,7 @@ fn _internal(py: Python, m: Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<udf::PyScalarUDF>()?;
     m.add_class::<udaf::PyAggregateUDF>()?;
     m.add_class::<udwf::PyWindowUDF>()?;
+    m.add_class::<udtf::PyTableFunction>()?;
     m.add_class::<config::PyConfig>()?;
     m.add_class::<sql::logical::PyLogicalPlan>()?;
     m.add_class::<physical_plan::PyExecutionPlan>()?;
@@ -102,6 +105,10 @@ fn _internal(py: Python, m: Bound<'_, PyModule>) -> PyResult<()> {
     let expr = PyModule::new(py, "expr")?;
     expr::init_module(&expr)?;
     m.add_submodule(&expr)?;
+
+    let unparser = PyModule::new(py, "unparser")?;
+    unparser::init_module(&unparser)?;
+    m.add_submodule(&unparser)?;
 
     // Register the functions as a submodule
     let funcs = PyModule::new(py, "functions")?;

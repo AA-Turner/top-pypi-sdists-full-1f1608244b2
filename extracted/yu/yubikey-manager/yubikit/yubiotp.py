@@ -25,32 +25,33 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from .core import (
-    TRANSPORT,
-    Version,
-    bytes2int,
-    require_version,
-    NotSupportedError,
-    BadResponseError,
-)
-from .core import ApplicationNotAvailableError
-from .core.otp import (
-    check_crc,
-    calculate_crc,
-    OtpConnection,
-    OtpProtocol,
-    CommandRejectedError,
-)
-from .core.smartcard import AID, SmartCardConnection, SmartCardProtocol, ScpKeyParams
-
 import abc
+import logging
 import struct
 import warnings
+from enum import IntEnum, IntFlag, unique
 from hashlib import sha1
 from threading import Event
-from enum import unique, IntEnum, IntFlag
-from typing import TypeVar, Optional, Union, Callable
-import logging
+from typing import Callable, Optional, TypeVar, Union
+
+from .core import (
+    TRANSPORT,
+    ApplicationNotAvailableError,
+    BadResponseError,
+    NotSupportedError,
+    Version,
+    _override_version,
+    bytes2int,
+    require_version,
+)
+from .core.otp import (
+    CommandRejectedError,
+    OtpConnection,
+    OtpProtocol,
+    calculate_crc,
+    check_crc,
+)
+from .core.smartcard import AID, ScpKeyParams, SmartCardConnection, SmartCardProtocol
 
 logger = logging.getLogger(__name__)
 
@@ -381,7 +382,7 @@ class HmacSha1SlotConfiguration(SlotConfiguration):
         self._update_flags(CFGFLAG.HMAC_LT64, True)
 
     def is_supported_by(self, version):
-        return version >= (2, 2, 0) or version[0] == 0
+        return version >= (2, 2, 0)
 
     def require_touch(self: Cfg, value: bool) -> Cfg:
         self._update_flags(CFGFLAG.CHAL_BTN_TRIG, value)
@@ -430,7 +431,7 @@ class HotpSlotConfiguration(KeyboardSlotConfiguration):
         self._update_flags(CFGFLAG.OATH_FIXED_MODHEX2, True)
 
     def is_supported_by(self, version):
-        return version >= (2, 2, 0) or version[0] == 0
+        return version >= (2, 2, 0)
 
     def digits8(self: Cfg, value: bool) -> Cfg:
         self._update_flags(CFGFLAG.OATH_HOTP8, value)
@@ -475,7 +476,7 @@ class StaticPasswordSlotConfiguration(KeyboardSlotConfiguration):
         self._update_flags(CFGFLAG.SHORT_TICKET, True)
 
     def is_supported_by(self, version):
-        return version >= (2, 2, 0) or version[0] == 0
+        return version >= (2, 2, 0)
 
 
 class YubiOtpSlotConfiguration(KeyboardSlotConfiguration):
@@ -561,7 +562,7 @@ class UpdateConfiguration(KeyboardSlotConfiguration):
         self._key = b"\0" * KEY_SIZE
 
     def is_supported_by(self, version):
-        return version >= (2, 2, 0) or version[0] == 0
+        return version >= (2, 2, 0)
 
     def _update_flags(self, flag, value):
         # NB: All EXT flags are allowed
@@ -573,7 +574,7 @@ class UpdateConfiguration(KeyboardSlotConfiguration):
                 raise ValueError("Unsupported CFG flag for update")
         super(UpdateConfiguration, self)._update_flags(flag, value)
 
-    def protect_slot2(self: Cfg, value):
+    def protect_slot2(self, value):
         raise ValueError("protect_slot2 cannot be applied to UpdateConfiguration")
 
     def tabs(
@@ -717,7 +718,7 @@ class YubiOtpSession:
                 raise ValueError("SCP can only be used with SmartCardConnection")
             otp_protocol = OtpProtocol(connection)
             self._status = otp_protocol.read_status()
-            self._version = otp_protocol.version
+            self._version = _override_version.patch(otp_protocol.version)
             self.backend: _Backend = _YubiOtpOtpBackend(otp_protocol)
         elif isinstance(connection, SmartCardConnection):
             card_protocol = SmartCardProtocol(connection)
@@ -737,7 +738,7 @@ class YubiOtpSession:
                 # NEO reports the highest of these two
                 self._version = max(mgmt_version, otp_version)
             else:
-                self._version = mgmt_version or otp_version
+                self._version = _override_version.patch(mgmt_version or otp_version)
             card_protocol.configure(self._version)
             if scp_key_params:
                 card_protocol.init_scp(scp_key_params)

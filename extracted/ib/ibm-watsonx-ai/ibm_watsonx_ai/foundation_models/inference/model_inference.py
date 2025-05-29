@@ -4,7 +4,14 @@
 #  -----------------------------------------------------------------------------------------
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generator, cast, overload, Literal, AsyncGenerator
+from typing import (
+    TYPE_CHECKING,
+    Generator,
+    cast,
+    overload,
+    Literal,
+    AsyncGenerator,
+)
 from enum import Enum
 from warnings import warn
 
@@ -20,7 +27,6 @@ from ibm_watsonx_ai._wrappers.requests import (
     _get_httpx_client,
     _get_async_client,
 )
-from ibm_watsonx_ai.messages.messages import Messages
 from ibm_watsonx_ai.foundation_models.schema import (
     TextChatParameters,
     TextGenParameters,
@@ -558,6 +564,7 @@ class ModelInference(BaseModelInference):
         concurrency_limit: int = ...,
         async_mode: Literal[False] = ...,
         validate_prompt_variables: bool = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> dict | list[dict]: ...
 
     @overload
@@ -571,6 +578,7 @@ class ModelInference(BaseModelInference):
         concurrency_limit: int,
         async_mode: Literal[True],
         validate_prompt_variables: bool,
+        guardrails_granite_guardian_params: dict | None,
     ) -> Generator: ...
 
     @overload
@@ -584,6 +592,7 @@ class ModelInference(BaseModelInference):
         concurrency_limit: int = ...,
         async_mode: bool = ...,
         validate_prompt_variables: bool = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> dict | list[dict] | Generator: ...
 
     def generate(
@@ -596,6 +605,7 @@ class ModelInference(BaseModelInference):
         concurrency_limit: int = BaseModelInference.DEFAULT_CONCURRENCY_LIMIT,
         async_mode: bool = False,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict | list[dict] | Generator:
         """Generates a completion text as generated_text after getting a text prompt as input and parameters for the
         selected model (model_id) or deployment (deployment_id). For prompt template deployment, `prompt` should be None.
@@ -625,6 +635,9 @@ class ModelInference(BaseModelInference):
         :param validate_prompt_variables: If True and `ModelInference` instance has been initialized with `validate=True`, prompt variables provided in `params` are validated with the ones in the Prompt Template Asset.
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool, optional
+
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
 
         :return: scoring result the contains the generated content
         :rtype: dict
@@ -670,6 +683,7 @@ class ModelInference(BaseModelInference):
             concurrency_limit=concurrency_limit,
             async_mode=async_mode,
             validate_prompt_variables=validate_prompt_variables,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     async def _agenerate_single(  # type: ignore[override]
@@ -679,6 +693,7 @@ class ModelInference(BaseModelInference):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         """
         Given a text prompt as input, and parameters the selected inference
@@ -692,6 +707,7 @@ class ModelInference(BaseModelInference):
             guardrails=guardrails,
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     async def agenerate_stream(
@@ -702,6 +718,7 @@ class ModelInference(BaseModelInference):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> AsyncGenerator:
         """Generates a stream as agenerate_stream after getting a text prompt as input and
         parameters for the selected model (model_id). For prompt template deployment, `prompt` should be None.
@@ -723,6 +740,9 @@ class ModelInference(BaseModelInference):
         :param validate_prompt_variables: If True, the prompt variables provided in `params` are validated with the ones in the Prompt Template Asset.
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool
+
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
 
         :return: scoring result that contains the generated content
         :rtype: AsyncGenerator
@@ -771,6 +791,7 @@ class ModelInference(BaseModelInference):
         guardrails_pii_params: dict | None = ...,
         concurrency_limit: int = ...,
         validate_prompt_variables: bool = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> str: ...
 
     @overload
@@ -784,6 +805,7 @@ class ModelInference(BaseModelInference):
         guardrails_pii_params: dict | None = ...,
         concurrency_limit: int = ...,
         validate_prompt_variables: bool = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> list[str]: ...
 
     @overload
@@ -797,6 +819,7 @@ class ModelInference(BaseModelInference):
         guardrails_pii_params: dict | None,
         concurrency_limit: int,
         validate_prompt_variables: bool,
+        guardrails_granite_guardian_params: dict | None,
     ) -> list[dict] | dict: ...
 
     @overload
@@ -810,6 +833,7 @@ class ModelInference(BaseModelInference):
         guardrails_pii_params: dict | None,
         concurrency_limit: int,
         validate_prompt_variables: bool,
+        guardrails_granite_guardian_params: dict | None,
     ) -> str | list | dict: ...
 
     def generate_text(
@@ -822,6 +846,7 @@ class ModelInference(BaseModelInference):
         guardrails_pii_params: dict | None = None,
         concurrency_limit: int = BaseModelInference.DEFAULT_CONCURRENCY_LIMIT,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> str | list | dict:
         """Generates a completion text as generated_text after getting a text prompt as input and
         parameters for the selected model (model_id). For prompt template deployment, `prompt` should be None.
@@ -849,6 +874,9 @@ class ModelInference(BaseModelInference):
         :param validate_prompt_variables: If True, the prompt variables provided in `params` are validated with the ones in the Prompt Template Asset.
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool
+
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
 
         :return: generated content
         :rtype: str | list | dict
@@ -882,6 +910,7 @@ class ModelInference(BaseModelInference):
             guardrails_pii_params=guardrails_pii_params,
             concurrency_limit=concurrency_limit,
             validate_prompt_variables=validate_prompt_variables,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
         if raw_response:
             return metadata
@@ -903,6 +932,7 @@ class ModelInference(BaseModelInference):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> Generator:
         """Generates a streamed text as generate_text_stream after getting a text prompt as input and
         parameters for the selected model (model_id). For prompt template deployment, `prompt` should be None.
@@ -927,6 +957,9 @@ class ModelInference(BaseModelInference):
         :param validate_prompt_variables: If True, the prompt variables provided in `params` are validated with the ones in the Prompt Template Asset.
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool
+
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
 
         :return: scoring result that contains the generated content
         :rtype: generator
@@ -962,6 +995,7 @@ class ModelInference(BaseModelInference):
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
             validate_prompt_variables=validate_prompt_variables,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def tokenize(self, prompt: str, return_tokens: bool = False) -> dict:
@@ -1098,6 +1132,7 @@ class ModelInference(BaseModelInference):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         """Generate a response in an asynchronous manner.
 
@@ -1119,6 +1154,9 @@ class ModelInference(BaseModelInference):
                                           This parameter is only applicable in a Prompt Template Asset deployment scenario and should not be changed for different cases, defaults to True
         :type validate_prompt_variables: bool, optional
 
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
+
         :return: raw response that contains the generated content
         :rtype: dict
         """
@@ -1130,6 +1168,7 @@ class ModelInference(BaseModelInference):
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
             validate_prompt_variables=validate_prompt_variables,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     async def aclose_persistent_connection(self) -> None:

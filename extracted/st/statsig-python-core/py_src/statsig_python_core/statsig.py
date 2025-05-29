@@ -1,28 +1,21 @@
-from statsig_python_core import StatsigBasePy, StatsigOptions
-from requests import request
-from typing import Optional, Dict, Tuple
+from statsig_python_core import StatsigBasePy, StatsigOptions, notify_python_shutdown
+from typing import Optional
 from .error_boundary import ErrorBoundary
+import atexit
 
 
-def network_func(
-    method: str, url: str, headers: dict, bytes: bytes, proxies: Optional[Dict[str, str]],
-) -> Tuple[int, Optional[bytes], Optional[str], Optional[Dict[str, str]]]:
-    try:
-        response = request(method=method, url=url, headers=headers, data=bytes, proxies=proxies)
-        status_code = response.status_code
-        data = response.content
-        headers = dict(response.headers)
+def handle_atexit():
+    notify_python_shutdown()
 
-        return (status_code, data, None, headers)
-    except Exception as e:
-        return (0, None, str(e), None)
+
+atexit.register(handle_atexit)
 
 
 class Statsig(StatsigBasePy):
     _statsig_shared_instance = None
 
     def __new__(cls, sdk_key: str, options: Optional[StatsigOptions] = None):
-        instance = super().__new__(cls, network_func, sdk_key, options)
+        instance = super().__new__(cls, sdk_key, options)
         ErrorBoundary.wrap(instance)
         return instance
 
@@ -48,9 +41,7 @@ class Statsig(StatsigBasePy):
                 "Statsig shared instance already exists. Call Statsig.remove_shared() before creating a new instance."
             )
 
-        cls._statsig_shared_instance = super().__new__(
-            cls, network_func, sdk_key, options
-        )
+        cls._statsig_shared_instance = super().__new__(cls, sdk_key, options)
         return cls._statsig_shared_instance
 
     @classmethod
@@ -67,6 +58,4 @@ class Statsig(StatsigBasePy):
 
 def create_statsig_error_instance(message: str) -> StatsigBasePy:
     print("Error: ", message)
-    return StatsigBasePy.__new__(
-        StatsigBasePy, network_func, "__STATSIG_ERROR_SDK_KEY__", None
-    )
+    return StatsigBasePy.__new__(StatsigBasePy, "__STATSIG_ERROR_SDK_KEY__", None)

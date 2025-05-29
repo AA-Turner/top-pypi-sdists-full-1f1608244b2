@@ -13,6 +13,7 @@ from ibm_watsonx_ai.foundation_models.extensions.rag.vector_stores.langchain_vec
 from ibm_watsonx_ai.wml_client_error import (
     MissingExtension,
     InvalidValue,
+    VectorStoreSerializationError,
 )
 from ibm_watsonx_ai.foundation_models.embeddings import BaseEmbeddings
 
@@ -221,6 +222,8 @@ class MilvusVectorStore(LangChainVectorStoreAdapter[Milvus]):
     ) -> None:
         self._connection_id = connection_id
         self._client = api_client
+
+        self._is_serializable = not bool(vector_store)
 
         # For backward compatibility
         distance_metric = kwargs.pop("distance_metric", None)
@@ -456,7 +459,14 @@ class MilvusVectorStore(LangChainVectorStoreAdapter[Milvus]):
 
         :return: dict for the from_dict initialization
         :rtype: dict
+
+        :raises VectorStoreSerializationError: when instance is not serializable
         """
+        if not self._is_serializable:
+            raise VectorStoreSerializationError(
+                "Serialization is not available when passing vector store instance in `MilvusVectorStore` constructor."
+            )
+
         if self._embedding_function is None:
             embedding_function: dict | list[dict] | None = None
         elif isinstance(self._embedding_function, list):
@@ -471,7 +481,7 @@ class MilvusVectorStore(LangChainVectorStoreAdapter[Milvus]):
                 ):
                     embedding_function.append(embed_func.to_dict())
                 else:
-                    raise ValueError(
+                    raise VectorStoreSerializationError(
                         "Serialization is only available when 'embedding_function' are the instances of `ibm_watsonx_ai.foundation_models.embeddings.BaseEmbeddings`"
                     )
         elif isinstance(
@@ -480,7 +490,7 @@ class MilvusVectorStore(LangChainVectorStoreAdapter[Milvus]):
         ):
             embedding_function = [self._embedding_function.to_dict()]
         else:
-            raise ValueError(
+            raise VectorStoreSerializationError(
                 "Serialization is only available when 'embedding_function' is an instance of `ibm_watsonx_ai.foundation_models.embeddings.BaseEmbeddings`"
             )
 
@@ -492,13 +502,13 @@ class MilvusVectorStore(LangChainVectorStoreAdapter[Milvus]):
                 if isinstance(embed_func, MilvusBM25BuiltinFunction):
                     builtin_function.append(embed_func.to_dict())
                 else:
-                    raise ValueError(
+                    raise VectorStoreSerializationError(
                         "Serialization is only available when each element of 'builtin_function' is an instance of `MilvusBM25BuiltinFunction`"
                     )
         elif isinstance(self._builtin_function, MilvusBM25BuiltinFunction):
             builtin_function = [self._builtin_function.to_dict()]
         else:
-            raise ValueError(
+            raise VectorStoreSerializationError(
                 "Serialization is only available when 'builtin_function' is an instance of `MilvusBM25BuiltinFunction`"
             )
 

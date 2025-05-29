@@ -1,5 +1,5 @@
 import sys
-from typing import Any, TypeAlias
+from typing import Any
 
 if sys.version_info >= (3, 13):
     from typing import TypeIs, TypeVar
@@ -10,6 +10,7 @@ import numpy as np
 
 from ._array import Array0D, Array1D, Array2D, Array3D, ArrayND
 from ._dtype import ToDType
+from ._shape import AnyShape, Shape
 
 __all__ = [
     "is_array_0d",
@@ -26,10 +27,9 @@ def __dir__() -> list[str]:
     return __all__
 
 
-Shape: TypeAlias = tuple[int, ...]
-ShapeT = TypeVar("ShapeT", bound=Shape, default=Shape)
+ShapeT = TypeVar("ShapeT", bound=Shape, default=AnyShape)
 DTypeT = TypeVar("DTypeT", bound=np.dtype[Any])
-ScalarT = TypeVar("ScalarT", bound=np.generic, default=np.generic)
+ScalarT = TypeVar("ScalarT", bound=np.generic, default=Any)
 
 
 def is_dtype(

@@ -974,7 +974,14 @@ def terminate(
         service_config_file=config_file,
         project_id=project_id,
     )
-    service_controller.terminate(service_id)
+    try:
+        anyscale.service.terminate(service_id)
+        log.info(f"Service {service_id} terminate initiated.")
+        log.info(
+            f'View the service in the UI at {get_endpoint(f"/services/{service_id}")}'
+        )
+    except Exception as e:  # noqa: BLE001
+        log.error(f"Error terminating service: {e}")
 
 
 @service_cli.command(

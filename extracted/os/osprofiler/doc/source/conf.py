@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (C) 2020 Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -135,6 +134,6 @@ texinfo_documents = [
 apidoc_output_dir = 'contributor/modules'
 apidoc_module_dir = '../../osprofiler'
 apidoc_excluded_paths = [
-  'hacking',
-  'tests',
+    'hacking',
+    'tests',
 ]

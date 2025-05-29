@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: weave
-Version: 0.51.48
+Version: 0.51.49
 Summary: A toolkit for building composable interactive data driven applications.
 Project-URL: Company, https://wandb.com
 Project-URL: Documentation, https://docs.wandb.com/
@@ -335,7 +335,7 @@ Provides-Extra: smolagents
 Requires-Dist: huggingface-hub>=0.28.1; extra == 'smolagents'
 Requires-Dist: litellm>=1.58; extra == 'smolagents'
 Requires-Dist: openai>=1.0.0; extra == 'smolagents'
-Requires-Dist: smolagents>=1.8.1; extra == 'smolagents'
+Requires-Dist: smolagents>=1.17.0; extra == 'smolagents'
 Requires-Dist: sqlalchemy>=2.0.38; extra == 'smolagents'
 Provides-Extra: test
 Requires-Dist: azure-storage-blob>=12.24.0; extra == 'test'

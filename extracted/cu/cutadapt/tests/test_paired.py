@@ -10,27 +10,6 @@ from utils import assert_files_equal, datapath, cutpath
 
 
 @pytest.fixture
-def run_paired(tmp_path):
-    def _run(params, in1, in2, expected1, expected2, cores):
-        if type(params) is str:
-            params = params.split()
-        params += ["--cores", str(cores), "--buffer-size=512"]
-        params += ["--json", os.fspath(tmp_path / "stats.cutadapt.json")]
-        (tmp_path / "r1").mkdir()
-        (tmp_path / "r2").mkdir()
-        path1 = os.fspath(tmp_path / "r1" / expected1)
-        path2 = os.fspath(tmp_path / "r2" / expected2)
-        params += ["-o", path1, "-p", path2]
-        params += [datapath(in1), datapath(in2)]
-        stats = main(params)
-        assert_files_equal(cutpath(expected1), path1)
-        assert_files_equal(cutpath(expected2), path2)
-        return stats
-
-    return _run
-
-
-@pytest.fixture
 def run_interleaved(tmp_path):
     """
     Interleaved input or output (or both)
@@ -158,7 +137,7 @@ def test_no_trimming_legacy():
 
 
 def test_no_trimming():
-    # make sure that this doesn"t divide by zero
+    # make sure that this doesn’t divide by zero
     main(
         [
             "-a",
@@ -203,7 +182,7 @@ def test_first_too_short(tmp_path, cores):
                 os.fspath(tmp_path / "out.fastq"),
                 "--cores",
                 str(cores),
-                str(trunc1),
+                trunc1,
                 datapath("paired.2.fastq"),
             ]
         )
@@ -227,7 +206,7 @@ def test_second_too_short(tmp_path, cores):
                 "--cores",
                 str(cores),
                 datapath("paired.1.fastq"),
-                str(trunc2),
+                trunc2,
             ]
         )
 
@@ -250,7 +229,7 @@ def test_unmatched_read_names(tmp_path, cores):
                 os.fspath(tmp_path / "out2.fastq"),
                 "--cores",
                 str(cores),
-                str(swapped),
+                swapped,
                 datapath("paired.2.fastq"),
             ]
         )
@@ -772,21 +751,6 @@ def test_combinatorial_demultiplexing(tmp_path, discarduntrimmed, cores):
                     "Output file should not exist",
                     name,
                 )
-
-
-def test_info_file(tmp_path):
-    info_path = os.fspath(tmp_path / "info.txt")
-    params = [
-        "--info-file",
-        info_path,
-        "-o",
-        os.fspath(tmp_path / "out.1.fastq"),
-        "-p",
-        os.fspath(tmp_path / "out.2.fastq"),
-        datapath("paired.1.fastq"),
-        datapath("paired.2.fastq"),
-    ]
-    main(params)
 
 
 def test_rename(run_paired, cores):

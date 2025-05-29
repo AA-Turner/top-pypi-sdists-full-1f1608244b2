@@ -81,8 +81,8 @@ impl StatsigLocalFileEventLoggingAdapter {
 
         for (request, result) in results {
             match result {
-                Ok(true) => (),
-                _ => failed_requests.push(request),
+                Ok(_) => (),
+                Err(_) => failed_requests.push(request),
             }
         }
 
@@ -188,7 +188,7 @@ fn create_merge_key(event: &StatsigEventInternal) -> String {
     format!(
         "{}|{}|{}",
         event.event_data.event_name,
-        event.user.data.create_hash(),
+        event.user.data.create_user_values_hash(),
         metadata_parts.concat()
     )
 }

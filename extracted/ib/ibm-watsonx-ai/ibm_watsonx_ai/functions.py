@@ -117,7 +117,7 @@ class Functions(WMLResource):
                 )
 
             response_post = requests.post(
-                self._client.service_instance._href_definitions.get_functions_href(),
+                self._client._href_definitions.get_functions_href(),
                 json=function_metadata,
                 params=self._client._params(skip_for_create=True),
                 headers=self._client._get_headers(),
@@ -131,7 +131,7 @@ class Functions(WMLResource):
             ##TODO_V4 Take care of this since the latest swagger endpoint is not working
 
             function_content_url = (
-                self._client.service_instance._href_definitions.get_function_href(
+                self._client._href_definitions.get_function_href(
                     details["metadata"]["id"]
                 )
                 + "/code"
@@ -204,9 +204,7 @@ class Functions(WMLResource):
             details, changes, with_validation=True
         )
 
-        url = self._client.service_instance._href_definitions.get_function_href(
-            function_id
-        )
+        url = self._client._href_definitions.get_function_href(function_id)
         headers = self._client._get_headers()
         response = requests.patch(
             url, json=patch_payload, params=self._client._params(), headers=headers
@@ -240,10 +238,7 @@ class Functions(WMLResource):
         )
         try:
             function_content_url = (
-                self._client.service_instance._href_definitions.get_function_href(
-                    function_id
-                )
-                + "/code"
+                self._client._href_definitions.get_function_href(function_id) + "/code"
             )
 
             put_header = self._client._get_headers(no_content_type=True)
@@ -312,17 +307,10 @@ class Functions(WMLResource):
         Functions._validate_type(function_id, "function_id", str, True)
         Functions._validate_type(filename, "filename", str, True)
 
-        artifact_url = (
-            self._client.service_instance._href_definitions.get_function_href(
-                function_id
-            )
-        )
+        artifact_url = self._client._href_definitions.get_function_href(function_id)
 
         artifact_content_url = (
-            self._client.service_instance._href_definitions.get_function_href(
-                function_id
-            )
-            + "/code"
+            self._client._href_definitions.get_function_href(function_id) + "/code"
         )
 
         try:
@@ -410,10 +398,8 @@ class Functions(WMLResource):
                 "Cannot delete function that has existing deployments. Please delete all associated deployments and try again"
             )
 
-        function_endpoint = (
-            self._client.service_instance._href_definitions.get_function_href(
-                function_id
-            )
+        function_endpoint = self._client._href_definitions.get_function_href(
+            function_id
         )
         self._logger.debug(
             "Deletion artifact function endpoint: {}".format(function_endpoint)
@@ -507,7 +493,7 @@ class Functions(WMLResource):
         self._client._check_if_either_is_set()
         Functions._validate_type(function_id, "function_id", str, False)
         Functions._validate_type(limit, "limit", int, False)
-        url = self._client.service_instance._href_definitions.get_functions_href()
+        url = self._client._href_definitions.get_functions_href()
 
         if function_id is None:
             if spec_state:
@@ -705,7 +691,7 @@ class Functions(WMLResource):
 
         Functions._validate_type(function_id, "function_id", str, False)
 
-        url = self._client.service_instance._href_definitions.get_functions_href()
+        url = self._client._href_definitions.get_functions_href()
         return self._create_revision_artifact(url, function_id, "functions")
 
     def get_revision_details(
@@ -740,9 +726,7 @@ class Functions(WMLResource):
         Functions._validate_type(function_id, "function_id", str, True)
         Functions._validate_type(rev_id, "rev_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_function_href(
-            function_id
-        )
+        url = self._client._href_definitions.get_function_href(function_id)
         return self._get_with_or_without_limit(
             url,
             limit=None,
@@ -779,9 +763,7 @@ class Functions(WMLResource):
 
         Functions._validate_type(function_id, "function_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_function_href(
-            function_id
-        )
+        url = self._client._href_definitions.get_function_href(function_id)
 
         # CP4D logic is wrong. By passing "revisions" in second param above for _get_artifact_details()
         # it won't even consider limit value and also GUID gives only rev number, not actual guid

@@ -17,6 +17,8 @@ from modin.config.envvars import (
     AsvDataSizeConfig,
     AsvImplementation,
     AsyncReadMode,
+    AutoSwitchBackend,
+    Backend,
     BenchmarkMode,
     CIAWSAccessKeyID,
     CIAWSSecretAccessKey,
@@ -26,6 +28,7 @@ from modin.config.envvars import (
     DynamicPartitioning,
     Engine,
     EnvironmentVariable,
+    Execution,
     GithubCI,
     GpuCount,
     IsDebug,
@@ -36,11 +39,13 @@ from modin.config.envvars import (
     LogMemoryInterval,
     LogMode,
     Memory,
+    MetricsMode,
     MinColumnPartitionSize,
     MinPartitionSize,
     MinRowPartitionSize,
     ModinNumpy,
-    NativeDataframeMode,
+    NativePandasMaxRows,
+    NativePandasTransferThreshold,
     NPartitions,
     PersistentPickle,
     ProgressBar,
@@ -70,7 +75,9 @@ __all__ = [
     "CpuCount",
     "GpuCount",
     "Memory",
-    "NativeDataframeMode",
+    "Backend",
+    "Execution",
+    "AutoSwitchBackend",
     # Ray specific
     "IsRayCluster",
     "RayRedisAddress",
@@ -80,6 +87,9 @@ __all__ = [
     "LazyExecution",
     # Dask specific
     "DaskThreadsPerWorker",
+    # Native Pandas Specific
+    "NativePandasMaxRows",
+    "NativePandasTransferThreshold",
     # Partitioning
     "NPartitions",
     "MinPartitionSize",
@@ -110,6 +120,7 @@ __all__ = [
     "LogMode",
     "LogMemoryInterval",
     "LogFileSize",
+    "MetricsMode",
     # Plugin settings
     "DocModule",
 ]

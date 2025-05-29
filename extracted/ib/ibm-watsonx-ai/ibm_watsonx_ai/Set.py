@@ -46,10 +46,8 @@ class Set(WMLResource):
             kwargs, space_id, "space", can_be_none=False
         )
 
-        space_endpoint = (
-            self._client.service_instance._href_definitions.get_platform_space_href(
-                space_id
-            )
+        space_endpoint = self._client._href_definitions.get_platform_space_href(
+            space_id
         )
 
         space_details = self._client._session.get(
@@ -122,10 +120,8 @@ class Set(WMLResource):
                 print("Unsetting the space_id ...")
             self._client.default_space_id = None
 
-            project_endpoint = (
-                self._client.service_instance._href_definitions.get_project_href(
-                    project_id
-                )
+            project_endpoint = self._client._href_definitions.get_project_href(
+                project_id
             )
             project_details = self._client._session.get(
                 project_endpoint, headers=self._client._get_headers()

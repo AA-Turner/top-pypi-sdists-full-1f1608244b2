@@ -1,11 +1,10 @@
 import sys
 import types
 from collections.abc import Callable, Iterable, Mapping
-from typing import Any, ClassVar, TypeAlias
+from typing import Any, ClassVar, LiteralString, TypeAlias
 
 if sys.version_info >= (3, 13):
     from typing import (
-        LiteralString,
         ParamSpec,
         Protocol,
         TypeVar,
@@ -15,7 +14,6 @@ if sys.version_info >= (3, 13):
     )
 else:
     from typing_extensions import (
-        LiteralString,
         ParamSpec,
         Protocol,
         TypeVar,
@@ -149,9 +147,11 @@ class HasQualname(Protocol[_NameT]):  # pyright: ignore[reportInvalidTypeVarUse]
 
 
 @runtime_checkable
-class HasNames(HasName[_NameT], HasQualname[_QualNameT], Protocol[_NameT, _QualNameT]):  # pyright: ignore[reportInvalidTypeVarUse]
-    __name__: _NameT
-    __qualname__: _QualNameT
+class HasNames(  # pyright: ignore[reportIncompatibleVariableOverride, reportInvalidTypeVarUse]
+    HasName[_NameT],
+    HasQualname[_QualNameT],
+    Protocol[_NameT, _QualNameT],
+): ...
 
 
 # docs and type hints

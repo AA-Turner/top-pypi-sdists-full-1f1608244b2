@@ -84,7 +84,7 @@ def parse_conda(
             })
 
     raw_conda["dependencies"] = deps
-    raw_conda["channels"] = list(set(raw_conda["channels"]))
+    raw_conda["channels"] = list(dict.fromkeys(raw_conda["channels"]))
     return packages, raw_conda, raw_pip
 
 
@@ -184,7 +184,7 @@ async def create_env_spec(
                 for line in spec["raw_pip"]
                 if not line.startswith("--index-url") and not line.startswith("--extra-index-url")
             ]
-            index_url, *extra_index_urls = list(set(index_urls + raw_index_urls))
+            index_url, *extra_index_urls = list(dict.fromkeys(index_urls + raw_index_urls))
             spec["raw_pip"] = [f"--index-url {index_url}"]
             for extra_index_url in extra_index_urls:
                 spec["raw_pip"].append(f"--extra-index-url {extra_index_url}")

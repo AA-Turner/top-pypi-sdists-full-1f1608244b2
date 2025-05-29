@@ -6,28 +6,22 @@
 
 namespace ntgcalls {
     CallInterface::CallInterface(rtc::Thread* updateThread): updateThread(updateThread) {
-        initNetThread();
         streamManager = std::make_shared<StreamManager>(updateThread);
     }
 
     void CallInterface::stop() {
-        isExiting = true;
-        std::weak_ptr weak(shared_from_this());
-        updateThread->BlockingCall([weak] {
-            const auto strong = weak.lock();
-            if (!strong) {
-                return;
-            }
-            strong->connectionChangeCallback = nullptr;
-            strong->streamManager->close();
-            strong->streamManager = nullptr;
-            if (strong->connection) {
-                strong->connection->close();
-                strong->connection = nullptr;
-            }
-            strong->updateThread = nullptr;
-            strong->cancelNetworkListener();
-        });
+        connectionChangeCallback = nullptr;
+        streamManager->close();
+        streamManager = nullptr;
+        if (connection) {
+            connection->close();
+            connection = nullptr;
+        }
+        updateThread = nullptr;
+    }
+
+    wrtc::ConnectionMode CallInterface::getConnectionMode() const {
+        return connection->getConnectionMode();
     }
 
     bool CallInterface::pause() const {
@@ -85,15 +79,8 @@ namespace ntgcalls {
         streamManager->sendExternalFrame(device, data, frameData);
     }
 
-    void CallInterface::cancelNetworkListener() {
-        if (networkThread) {
-            networkThread->Stop();
-            networkThread = nullptr;
-        }
-    }
-
     void CallInterface::setConnectionObserver(const std::shared_ptr<wrtc::NetworkInterface>& conn, NetworkInfo::Kind kind) {
-        RTC_LOG(LS_INFO) << "Connecting...";
+        RTC_LOG(LS_VERBOSE) << "Connecting...";
         (void) connectionChangeCallback({NetworkInfo::ConnectionState::Connecting, kind});
         std::weak_ptr weak(shared_from_this());
         conn->onConnectionChange([weak, kind, conn](const wrtc::ConnectionState state, bool wasConnected) {
@@ -106,18 +93,17 @@ namespace ntgcalls {
                 if (!strongUpdate) {
                     return;
                 }
-                if (strongUpdate->isExiting) return;
                 switch (state) {
                 case wrtc::ConnectionState::Connecting:
                     if (wasConnected) {
-                        RTC_LOG(LS_INFO) << "Reconnecting...";
+                        RTC_LOG(LS_VERBOSE) << "Reconnecting...";
                     }
                     return;
                 case wrtc::ConnectionState::Connected:
-                    RTC_LOG(LS_INFO) << "Connection established";
+                    RTC_LOG(LS_VERBOSE) << "Connection established";
                     if (!wasConnected && strongUpdate->streamManager) {
                         strongUpdate->streamManager->start();
-                        RTC_LOG(LS_INFO) << "Stream started";
+                        RTC_LOG(LS_VERBOSE) << "Stream started";
                         (void) strongUpdate->connectionChangeCallback({NetworkInfo::ConnectionState::Connected, kind});
                     }
                     break;
@@ -131,24 +117,23 @@ namespace ntgcalls {
                         RTC_LOG(LS_ERROR) << "Connection failed";
                         (void) strongUpdate->connectionChangeCallback({NetworkInfo::ConnectionState::Failed, kind});
                     } else {
-                        RTC_LOG(LS_INFO) << "Connection closed";
+                        RTC_LOG(LS_VERBOSE) << "Connection closed";
                         (void) strongUpdate->connectionChangeCallback({NetworkInfo::ConnectionState::Closed, kind});
                     }
                     break;
                 default:
                     break;
                 }
-                strongUpdate->cancelNetworkListener();
             });
         });
-        networkThread->PostDelayedTask([weak, kind, conn] {
-            const auto strongNetwork = weak.lock();
-            if (!strongNetwork) {
+        updateThread->PostDelayedTask([weak, kind, conn] {
+            const auto strong = weak.lock();
+            if (!strong) {
                 return;
             }
-            if (!conn->isConnected()) {
+            if (conn->getConnectionState() == wrtc::ConnectionState::Connecting) {
                 RTC_LOG(LS_ERROR) << "Connection timeout";
-                (void) strongNetwork->connectionChangeCallback({NetworkInfo::ConnectionState::Timeout, kind});
+                (void) strong->connectionChangeCallback({NetworkInfo::ConnectionState::Timeout, kind});
             }
         }, webrtc::TimeDelta::Seconds(10));
     }
@@ -163,10 +148,5 @@ namespace ntgcalls {
             return StreamManager::Status::Paused;
         }
         return StreamManager::Status::Idling;
-    }
-
-    void CallInterface::initNetThread() {
-        networkThread = rtc::Thread::Create();
-        networkThread->Start();
     }
 } // ntgcalls

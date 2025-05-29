@@ -147,11 +147,9 @@ class Training(WMLResource):
         Training._validate_type(training_id, "training_id", str, False)
 
         if _is_fine_tuning:
-            url = (
-                self._client.service_instance._href_definitions.get_fine_tunings_href()
-            )
+            url = self._client._href_definitions.get_fine_tunings_href()
         else:
-            url = self._client.service_instance._href_definitions.get_trainings_href()
+            url = self._client._href_definitions.get_trainings_href()
 
         if training_id is None:
             query_params: dict | None = {
@@ -454,13 +452,9 @@ class Training(WMLResource):
                 self.ConfigurationMetaNames.FEDERATED_LEARNING
             ]
         if _is_fine_tuning:
-            train_endpoint = (
-                self._client.service_instance._href_definitions.get_fine_tunings_href()
-            )
+            train_endpoint = self._client._href_definitions.get_fine_tunings_href()
         else:
-            train_endpoint = (
-                self._client.service_instance._href_definitions.get_trainings_href()
-            )
+            train_endpoint = self._client._href_definitions.get_trainings_href()
 
         params = self._client._params()
         if "space_id" in params.keys():
@@ -755,16 +749,12 @@ class Training(WMLResource):
 
         if _is_fine_tuning:
 
-            train_endpoint = (
-                self._client.service_instance._href_definitions.get_fine_tuning_href(
-                    training_id
-                )
+            train_endpoint = self._client._href_definitions.get_fine_tuning_href(
+                training_id
             )
         else:
-            train_endpoint = (
-                self._client.service_instance._href_definitions.get_training_href(
-                    training_id
-                )
+            train_endpoint = self._client._href_definitions.get_training_href(
+                training_id
             )
 
         response_delete = requests.delete(

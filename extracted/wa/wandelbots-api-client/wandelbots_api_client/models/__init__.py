@@ -105,6 +105,7 @@ from .get_trajectory_sample_response import GetTrajectorySampleResponse
 from .google_protobuf_any import GoogleProtobufAny
 from .http_exception_response import HTTPExceptionResponse
 from .http_validation_error import HTTPValidationError
+from .http_validation_error2 import HTTPValidationError2
 from .io import IO
 from .io_description import IODescription
 from .io_value import IOValue
@@ -294,6 +295,8 @@ from .update_program_metadata_request import UpdateProgramMetadataRequest
 from .update_recipe_metadata_request import UpdateRecipeMetadataRequest
 from .update_trigger_request import UpdateTriggerRequest
 from .validation_error import ValidationError
+from .validation_error2 import ValidationError2
+from .validation_error2_loc_inner import ValidationError2LocInner
 from .validation_error_loc_inner import ValidationErrorLocInner
 from .value import Value
 from .vector3d import Vector3d
@@ -395,6 +398,7 @@ __all__ = [
     "GoogleProtobufAny", 
     "HTTPExceptionResponse", 
     "HTTPValidationError", 
+    "HTTPValidationError2", 
     "IO", 
     "IODescription", 
     "IOValue", 
@@ -584,6 +588,8 @@ __all__ = [
     "UpdateRecipeMetadataRequest", 
     "UpdateTriggerRequest", 
     "ValidationError", 
+    "ValidationError2", 
+    "ValidationError2LocInner", 
     "ValidationErrorLocInner", 
     "Value", 
     "Vector3d", 

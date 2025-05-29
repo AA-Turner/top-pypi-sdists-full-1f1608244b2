@@ -176,6 +176,7 @@ class Model(ModelInference):
         guardrails_pii_params: dict | None = ...,
         concurrency_limit: int = ...,
         async_mode: Literal[False] = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> dict | list[dict]: ...
 
     @overload  # type: ignore[override]
@@ -188,6 +189,7 @@ class Model(ModelInference):
         guardrails_pii_params: dict | None,
         concurrency_limit: int,
         async_mode: Literal[True],
+        guardrails_granite_guardian_params: dict | None,
     ) -> Generator: ...
 
     @overload  # type: ignore[override]
@@ -200,6 +202,7 @@ class Model(ModelInference):
         guardrails_pii_params: dict | None = ...,
         concurrency_limit: int = ...,
         async_mode: bool = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> dict | list[dict] | Generator: ...
 
     def generate(  # type: ignore[override]
@@ -211,6 +214,7 @@ class Model(ModelInference):
         guardrails_pii_params: dict | None = None,
         concurrency_limit: int = ModelInference.DEFAULT_CONCURRENCY_LIMIT,
         async_mode: bool = False,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict | list[dict] | Generator:
         """Generates a completion text as generated_text after getting
         a text prompt as input and parameters for the selected model (model_id).
@@ -237,6 +241,9 @@ class Model(ModelInference):
                            to False
         :type async_mode: bool
 
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
+
         :return: scoring result that contains the generated content
         :rtype: dict
 
@@ -258,6 +265,7 @@ class Model(ModelInference):
             concurrency_limit=concurrency_limit,
             async_mode=async_mode,
             validate_prompt_variables=True,  # keep default value, changing not permitted
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     @overload  # type: ignore[override]
@@ -270,6 +278,7 @@ class Model(ModelInference):
         guardrails_hap_params: dict | None = ...,
         guardrails_pii_params: dict | None = ...,
         concurrency_limit: int = ...,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> str: ...
 
     @overload  # type: ignore[override]
@@ -282,6 +291,7 @@ class Model(ModelInference):
         guardrails_hap_params: dict | None = ...,
         guardrails_pii_params: dict | None = ...,
         concurrency_limit: int = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> list[str]: ...
 
     @overload  # type: ignore[override]
@@ -294,6 +304,7 @@ class Model(ModelInference):
         guardrails_hap_params: dict | None,
         guardrails_pii_params: dict | None,
         concurrency_limit: int,
+        guardrails_granite_guardian_params: dict | None,
     ) -> list[dict] | dict: ...
 
     @overload  # type: ignore[override]
@@ -306,6 +317,7 @@ class Model(ModelInference):
         guardrails_hap_params: dict | None,
         guardrails_pii_params: dict | None,
         concurrency_limit: int,
+        guardrails_granite_guardian_params: dict | None,
     ) -> str | list | dict: ...
 
     def generate_text(  # type: ignore[override]
@@ -317,6 +329,7 @@ class Model(ModelInference):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         concurrency_limit: int = ModelInference.DEFAULT_CONCURRENCY_LIMIT,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> str | list | dict:
         """Generates a completion text as generated_text after getting
         a text prompt as input and parameters for the selected model (model_id).
@@ -341,6 +354,9 @@ class Model(ModelInference):
                                       to view the list of MetaNames
         :type params: dict
 
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
+
         :return: generated content
         :rtype: str or dict
 
@@ -362,6 +378,7 @@ class Model(ModelInference):
             guardrails_pii_params=guardrails_pii_params,
             concurrency_limit=concurrency_limit,
             validate_prompt_variables=True,  # keep default value, changing not permitted in this scenario
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def generate_text_stream(  # type: ignore[override]
@@ -372,6 +389,7 @@ class Model(ModelInference):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> Generator:
         """Generates a streamed text as generate_text_stream after getting
         a text prompt as input and parameters for the selected model (model_id).
@@ -392,6 +410,9 @@ class Model(ModelInference):
         :param guardrails_hap_params: MetaProps for HAP moderations, use ``ibm_watsonx_ai.metanames.GenTextModerationsMetaNames().show()``
                                       to view the list of MetaNames
         :type params: dict
+
+        :param guardrails_granite_guardian_params: parameters for Granite Guardian moderations
+        :type guardrails_granite_guardian_params: dict, optional
 
         :return: scoring result that contains the generated content
         :rtype: generator
@@ -415,6 +436,7 @@ class Model(ModelInference):
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
             validate_prompt_variables=True,  # keep default value, changing not permitted in this scenario
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def tokenize(self, prompt: str, return_tokens: bool = False) -> dict:

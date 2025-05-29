@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: optype
-Version: 0.9.3
+Version: 0.10.0
 Summary: Building blocks for precise & flexible type hints
 Project-URL: Repository, https://github.com/jorenham/optype/
 Project-URL: Documentation, https://github.com/jorenham/optype/blob/master/README.md
@@ -12,18 +12,16 @@ License-Expression: BSD-3-Clause
 License-File: LICENSE
 Keywords: numpy,type hints,typing
 Classifier: Development Status :: 4 - Beta
-Classifier: License :: OSI Approved :: BSD License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Classifier: Typing :: Typed
-Requires-Python: >=3.10
+Requires-Python: >=3.11
 Requires-Dist: typing-extensions>=4.10; python_version < '3.13'
 Provides-Extra: numpy
-Requires-Dist: numpy>=1.23.5; extra == 'numpy'
+Requires-Dist: numpy>=1.25.2; extra == 'numpy'
 Description-Content-Type: text/markdown
 
 <h1 align="center">optype</h1>
@@ -147,7 +145,7 @@ With this, the `twice` function can written as:
 
 <table>
 <tr>
-<th width="415px">Python 3.10</th>
+<th width="415px">Python 3.11</th>
 <th width="415px">Python 3.12+</th>
 </tr>
 <tr>
@@ -193,7 +191,7 @@ Because the `optype.Can*` protocols are runtime-checkable, the revised
 
 <table>
 <tr>
-<th width="415px">Python 3.10</th>
+<th width="415px">Python 3.11</th>
 <th width="415px">Python 3.12+</th>
 </tr>
 <tr>
@@ -2603,11 +2601,11 @@ The signatures are almost identical to each other, and in the `0d` case it rough
 looks like this:
 
 ```py
-ST = TypeVar("ST", bound=np.generic, default=np.generic)
-_ToDType: TypeAlias = type[ST] | np.dtype[ST] | HasDType[np.dtype[ST]]
+_T = TypeVar("_T", bound=np.generic, default=Any)
+_ToDType: TypeAlias = type[_T] | np.dtype[_T] | HasDType[np.dtype[_T]]
 
 
-def is_array_0d(a, /, dtype: _ToDType[ST] | None = None) -> TypeIs[Array0D[ST]]: ...
+def is_array_0d(a, /, dtype: _ToDType[_T] | None = None) -> TypeIs[Array0D[_T]]: ...
 ```
 
 ##### Shape aliases
@@ -2640,188 +2638,93 @@ The names `AtLeast{N}D` and `AtMost{N}D` are pretty much as self-explanatory:
 The shape aliases are roughly defined as:
 
 <table>
-<tr>
-<th align="center" colspan="2"><code>AtLeast{N}D</code></th>
-<th align="center" colspan="2"><code>AtMost{N}D</code></th>
-</tr>
-<tr>
-<th>type signature</th>
-<th>alias type</th>
-<th>type signature</th>
-<th>type alias</th>
-</tr>
-<tr>
-<td colspan="4"></td>
-</tr>
-<tr>
-<td>
+<tr><th>
+    <code>N</code>
+</th><th>
+    <code>ndim >= N</code>
+</th><th>
+    <code>ndim <= N</code>
+</th></tr>
+<tr><td>
+0
+</td><td>
 
 ```python
-type AtLeast0D[
-    Ds: int = int,
-] = _
+type AtLeast0D = (int, ...)
 ```
 
-</td>
-<td>
+</td><td>
 
 ```python
-tuple[Ds, ...]
+type AtMost0D = ()
 ```
 
-</td>
-<td>
-
-```python
-type AtMost0D = _
-```
-
-</td>
-<td>
-
-```python
-tuple[()]
-```
-
-</td>
-</tr>
+</td></tr>
 <tr><td colspan="4"></td></tr>
-<tr>
-<td>
+<tr><td>
+1
+</td><td>
 
 ```python
-type AtLeast1D[
-    D0: int = int,
-    Ds: int = int,
-] = _
+type AtLeast1D = (int, *AtLeast0D)
 ```
 
-</td>
-<td>
+</td><td>
 
 ```python
-tuple[
-    D0,
-    *tuple[Ds, ...],
-]
+type AtMost1D = AtMost0D | (int,)
 ```
 
-</td>
-<td>
-
-```python
-type AtMost1D[
-    D0: int = int,
-] = _
-```
-
-</td>
-<td>
-
-```python
-tuple[D0] | AtMost0D
-```
-
-</td>
-</tr>
+</td></tr>
 <tr><td colspan="4"></td></tr>
-<tr>
-<td>
+<tr><td>
+2
+</td><td>
 
 ```python
-type AtLeast2D[
-    D0: int = int,
-    D1: int = int,
-    Ds: int = int,
-] = _
-```
-
-</td>
-<td>
-
-```python
-tuple[
-    D0,
-    D1,
-    *tuple[Ds, ...],
-]
-```
-
-</td>
-<td>
-
-```python
-type AtMost2D[
-    D0: int = int,
-    D1: int = int,
-] = _
-```
-
-</td>
-<td>
-
-<!-- blacken-docs:off -->
-```python
-(
-    tuple[D0, D1]
-    | AtMost1D[D0]
+type AtLeast2D = (
+    tuple[int, int]
+    | AtLeast3D[int]
 )
 ```
-<!-- blacken-docs:on -->
 
-</td>
-</tr>
+</td><td>
+
+```python
+type AtMost2D = AtMost1D | (int, int)
+```
+
+</td></tr>
 <tr><td colspan="4"></td></tr>
-<tr>
-<td>
+<tr><td>
+3
+</td><td>
 
 ```python
-type AtLeast3D[
-    D0: int = int,
-    D1: int = int,
-    D2: int = int,
-    Ds: int = int,
-] = _
-```
-
-</td>
-<td>
-
-```python
-tuple[
-    D0,
-    D1,
-    D2,
-    *tuple[Ds, ...],
-]
-```
-
-</td>
-<td>
-
-```python
-type AtMost3D[
-    D0: int = int,
-    D1: int = int,
-    D2: int = int,
-] = _
-```
-
-</td>
-<td>
-
-<!-- blacken-docs:off -->
-```python
-(
-    tuple[D0, D1, D2]
-    | AtMost2D[D0, D1]
+type AtLeast3D = (
+    tuple[int, int, int]
+    | tuple[int, int, int, int]
+    | tuple[int, int, int, int, int]
+    # etc...
 )
 ```
-<!-- blacken-docs:on -->
 
-</td>
-</tr>
+</td><td>
+
+```python
+type AtMost3D = AtMost2D | (int, int, int)
+```
+
+</td></tr>
 </table>
+
+The `AtLeast{}D` optionally accepts a type argument that can either be `int` (default),
+or `Any`. Passing `Any` turns it from a *gradual tuple type*, so that they can also be
+assigned to compatible bounded shape-types. So `AtLeast1D[Any]` is assignable to
+`tuple[int]`, whereas `AtLeast1D` (equiv. `AtLeast1D[int]`) is not.
+
+However, mypy currently has a [bug](https://github.com/python/mypy/issues/19109),
+causing it to falsely reject such gradual shape-type assignment for N=1 or up.
 
 #### Array-likes
 
@@ -3082,15 +2985,10 @@ Source code: [`optype/numpy/_to.py`][CODE-NP-TO]
 
 #### `compat` submodule
 
-Compatibility module for supporting a wide (currently `1.23` - `2.2`) range of numpy
-versions. It contains two kinds of things:
+Compatibility module for supporting a wide range of numpy versions (currently `>=1.25`).
+It contains the abstract numeric scalar types, with `numpy>=2.2`
+type-parameter defaults, which I explained in the [`release notes`][NP-REL22].
 
-- All [`numpy.exceptions`][NP-EXC], which didn't exist before `<1.25`, making it very
-difficult to use if you need to support those versions, especially within stubs.
-- The abstract numeric scalar types, with `numpy>=2.2` type-parameter defaults, which
-I explained in the [`release notes`][NP-REL22].
-
-[NP-EXC]: https://numpy.org/doc/stable/reference/routines.exceptions.html
 [NP-REL22]: https://numpy.org/doc/stable/release/2.2.0-notes.html#new-features
 
 #### `random` submodule

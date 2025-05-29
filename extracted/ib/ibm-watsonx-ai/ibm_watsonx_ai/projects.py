@@ -124,7 +124,7 @@ class Projects(WMLResource):
             project_meta["compute"] = [project_meta["compute"]]
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_transactional_projects_href(),
+            self._client._href_definitions.get_transactional_projects_href(),
             headers=self._client._get_headers(),
             json=project_meta,
         )
@@ -211,8 +211,8 @@ class Projects(WMLResource):
         """
         Projects._validate_type(project_id, "project_id", str, True)
 
-        project_endpoint = self._client.service_instance._href_definitions.get_transactional_project_href(
-            project_id
+        project_endpoint = (
+            self._client._href_definitions.get_transactional_project_href(project_id)
         )
 
         response_delete = requests.delete(
@@ -268,9 +268,7 @@ class Projects(WMLResource):
         """
         Projects._validate_type(project_id, "project_id", str, False)
 
-        href = self._client.service_instance._href_definitions.get_project_href(
-            project_id
-        )
+        href = self._client._href_definitions.get_project_href(project_id)
 
         if project_id is not None:
             response_get = requests.get(href, headers=self._client._get_headers())
@@ -281,7 +279,7 @@ class Projects(WMLResource):
             query_params = {"name": project_name} if project_name else None
 
             return self._get_with_or_without_limit(
-                self._client.service_instance._href_definitions.get_projects_href(),
+                self._client._href_definitions.get_projects_href(),
                 100 if not limit or limit > 100 else limit,
                 "projects",
                 summary=False,
@@ -324,7 +322,7 @@ class Projects(WMLResource):
         """
 
         Projects._validate_type(limit, "limit", int, False)
-        href = self._client.service_instance._href_definitions.get_projects_href()
+        href = self._client._href_definitions.get_projects_href()
 
         params: dict[str, Any] = {}
 
@@ -433,9 +431,7 @@ class Projects(WMLResource):
             if key in payload:
                 payload.pop(key)
 
-        href = self._client.service_instance._href_definitions.get_project_href(
-            project_id
-        )
+        href = self._client._href_definitions.get_project_href(project_id)
 
         response = requests.patch(
             href, json=payload, headers=self._client._get_headers()
@@ -513,9 +509,7 @@ class Projects(WMLResource):
         )
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_projects_members_href(
-                project_id
-            ),
+            self._client._href_definitions.get_projects_members_href(project_id),
             headers=self._client._get_headers(),
             json=project_meta,
         )
@@ -550,15 +544,13 @@ class Projects(WMLResource):
         Projects._validate_type(user_name, "member_id", str, False)
 
         if user_name:
-            href = self._client.service_instance._href_definitions.get_projects_member_href(
+            href = self._client._href_definitions.get_projects_member_href(
                 project_id, user_name
             )
             response_get = requests.get(href, headers=self._client._get_headers())
             return self._handle_response(200, "Get project member", response_get)
         else:
-            href = self._client.service_instance._href_definitions.get_projects_members_href(
-                project_id
-            )
+            href = self._client._href_definitions.get_projects_members_href(project_id)
             response_get = requests.get(href, headers=self._client._get_headers())
             return self._handle_response(200, "Get project members", response_get)
 
@@ -582,10 +574,8 @@ class Projects(WMLResource):
         Projects._validate_type(project_id, "project_id", str, True)
         Projects._validate_type(user_name, "user_name", str, False)
 
-        member_endpoint = (
-            self._client.service_instance._href_definitions.get_projects_member_href(
-                project_id, user_name
-            )
+        member_endpoint = self._client._href_definitions.get_projects_member_href(
+            project_id, user_name
         )
 
         response_delete = requests.delete(
@@ -635,9 +625,7 @@ class Projects(WMLResource):
 
         # patching is different here, you just pass updated members but without `state` and `type`
         response = requests.patch(
-            self._client.service_instance._href_definitions.get_projects_members_href(
-                project_id
-            ),
+            self._client._href_definitions.get_projects_members_href(project_id),
             json={"members": patch_request},
             headers=self._client._get_headers(),
         )
@@ -692,11 +680,7 @@ class Projects(WMLResource):
         if state is not None:
             params.update({"state": state})
 
-        href = (
-            self._client.service_instance._href_definitions.get_projects_members_href(
-                project_id
-            )
-        )
+        href = self._client._href_definitions.get_projects_members_href(project_id)
 
         member_resources = self._get_resources(href, "project members", params)[
             "resources"

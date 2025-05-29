@@ -1,28 +1,28 @@
-from .core import (
-    int2bytes,
-    bytes2int,
-    require_version,
-    Version,
-    Tlv,
-    BadResponseError,
-    NotSupportedError,
-)
-from .core.smartcard import AID, SmartCardConnection, SmartCardProtocol, ScpKeyParams
-
-from urllib.parse import unquote, urlparse, parse_qs
-from functools import total_ordering
-from enum import IntEnum, unique
-from dataclasses import dataclass
-from base64 import b64encode, b32decode
-from time import time
-from typing import Optional, List, Mapping
-
-import hmac
 import hashlib
-import struct
+import hmac
+import logging
 import os
 import re
-import logging
+import struct
+from base64 import b32decode, b64encode
+from dataclasses import dataclass
+from enum import IntEnum, unique
+from functools import total_ordering
+from time import time
+from typing import Mapping, Optional
+from urllib.parse import parse_qs, unquote, urlparse
+
+from .core import (
+    BadResponseError,
+    NotSupportedError,
+    Tlv,
+    Version,
+    _override_version,
+    bytes2int,
+    int2bytes,
+    require_version,
+)
+from .core.smartcard import AID, ScpKeyParams, SmartCardConnection, SmartCardProtocol
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +93,7 @@ def parse_b32_key(key: str):
 def _parse_select(response):
     data = Tlv.parse_dict(response)
     return (
-        Version.from_bytes(data[TAG_VERSION]),
+        _override_version.patch(Version.from_bytes(data[TAG_VERSION])),
         data.get(TAG_NAME),
         data.get(TAG_CHALLENGE),
     )
@@ -272,6 +272,7 @@ class OathSession:
         self._version, self._salt, self._challenge = _parse_select(
             self.protocol.select(AID.OATH)
         )
+        self.protocol.configure(self.version)
 
         if scp_key_params:
             if (5, 0, 0) <= self._version < (5, 6, 3):
@@ -281,7 +282,6 @@ class OathSession:
 
         self._has_key = self._challenge is not None
         self._device_id = _get_device_id(self._salt)
-        self.protocol.configure(self.version)
         self._neo_unlock_workaround = not scp_key_params and self.version < (3, 0, 0)
         logger.debug(
             f"OATH session initialized (version={self.version}, "
@@ -442,7 +442,7 @@ class OathSession:
         logger.info("Credential renamed")
         return new_id
 
-    def list_credentials(self) -> List[Credential]:
+    def list_credentials(self) -> list[Credential]:
         """List OATH credentials."""
         logger.debug("Listing OATH credentials...")
         creds = []

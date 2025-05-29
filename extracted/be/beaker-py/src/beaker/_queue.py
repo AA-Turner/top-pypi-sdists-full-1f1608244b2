@@ -29,7 +29,26 @@ from .utils import pb2_to_dict
 
 
 class QueueClient(ServiceClient):
+    """
+    Methods for interacting with Beaker `Queues <https://beaker-docs.apps.allenai.org/concept/queues.html>`_.
+    Accessed via the :data:`Beaker.queue <beaker.Beaker.queue>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, queue: str) -> pb2.Queue:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     queue = beaker.queue.get(queue_id)
+
+        :returns: A :class:`~beaker.types.BeakerQueue` protobuf object.
+
+        :raises ~beaker.exceptions.BeakerQueueNotFound: If the queue doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetQueueResponse](self.service.GetQueue),
             pb2.GetQueueRequest(queue_id=self.resolve_queue_id(queue)),
@@ -46,6 +65,11 @@ class QueueClient(ServiceClient):
         max_claimed_entries: int | None = None,
         wait_timeout_ms: int | None = 0,
     ) -> pb2.Queue:
+        """
+        Create a new queue.
+
+        :returns: A new :class:`~beaker.types.BeakerQueue` object.
+        """
         wait_timeout = None
         if wait_timeout_ms is not None:
             wait_timeout = Duration()
@@ -75,12 +99,20 @@ class QueueClient(ServiceClient):
         self,
         *queues: pb2.Queue,
     ):
+        """
+        Delete queues.
+        """
         self.rpc_request(
             RpcMethod[pb2.DeleteQueuesResponse](self.service.DeleteQueues),
             pb2.DeleteQueuesRequest(queue_ids=[self.resolve_queue_id(q) for q in queues]),
         )
 
     def create_worker(self, queue: pb2.Queue) -> pb2.QueueWorker:
+        """
+        Create a new queue worker.
+
+        :returns: A new :class:`~beaker.types.BeakerQueueWorker` object.
+        """
         return self.rpc_request(
             RpcMethod[pb2.CreateQueueWorkerResponse](self.service.CreateQueueWorker),
             pb2.CreateQueueWorkerRequest(queue_id=queue.id),
@@ -88,6 +120,11 @@ class QueueClient(ServiceClient):
         ).queue_worker
 
     def list_workers(self, queue: pb2.Queue, limit: int | None = None) -> Iterable[pb2.QueueWorker]:
+        """
+        List queue workers.
+
+        :returns: An iterator over :class:`~beaker.types.BeakerQueueWorker` objects.
+        """
         if limit is not None and limit <= 0:
             raise ValueError("'limit' must be a positive integer")
 
@@ -111,6 +148,13 @@ class QueueClient(ServiceClient):
                     return
 
     def get_entry(self, entry_id: str) -> pb2.QueueEntry:
+        """
+        Get a queue entry object.
+
+        :returns: A :class:`~beaker.types.BeakerQueueEntry` object.
+
+        :raises ~beaker.exceptions.BeakerQueueEntryNotFound: If the entry doesn't exist or has expired.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetQueueEntryResponse](self.service.GetQueueEntry),
             pb2.GetQueueEntryRequest(queue_entry_id=entry_id),
@@ -132,8 +176,10 @@ class QueueClient(ServiceClient):
         """
         Submit an entry to a queue and stream response events as they happen.
 
-        .. seealso::
-            :meth:`create_entry_async()`
+        .. important::
+            This method will block until the entry has been finalized. If you expect the entry
+            will take a while to process, you should use :meth:`create_entry_async()` instead
+            and periodically poll the entry status with :meth:`get_entry()`.
 
         :param input: The input data.
         :param expires_in_sec: Time until the entry expires (in seconds). Defaults to 24 hours.
@@ -173,6 +219,8 @@ class QueueClient(ServiceClient):
         """
         A convenience wrapper for :meth:`create_entry()` with ``block=False``. Returns the created
         entry right away.
+
+        :returns: A new :class:`~beaker.types.BeakerQueueEntry` object.
         """
         status_count = 0
         for status in self.create_entry(
@@ -186,6 +234,11 @@ class QueueClient(ServiceClient):
         )
 
     def list_entries(self, queue: pb2.Queue, limit: int | None = None) -> Iterable[pb2.QueueEntry]:
+        """
+        List entries within a queue.
+
+        :returns: An iterator over :class:`~beaker.types.BeakerQueueEntry` objects.
+        """
         if limit is not None and limit <= 0:
             raise ValueError("'limit' must be a positive integer")
 
@@ -225,6 +278,7 @@ class QueueClient(ServiceClient):
         ...     for batch in rx.recv(max_batches=2, time_limit=10.0):
         ...         for entry_id, entry_input in batch:
         ...             tx.send(entry_id, output=entry_input)
+        ...             tx.send(entry_id, done=True)
 
         """
         # NOTE: the extra indirection here is just to make the type hints on the public method
@@ -376,6 +430,11 @@ class QueueClient(ServiceClient):
         sort_field: Literal["created"] = "created",
         limit: int | None = None,
     ) -> Iterable[pb2.Queue]:
+        """
+        List queues.
+
+        :returns: An iterator over :class:`~beaker.types.BeakerQueue` objects.
+        """
         if limit is not None and limit <= 0:
             raise ValueError("'limit' must be a positive integer")
 
@@ -407,6 +466,13 @@ class QueueClient(ServiceClient):
 
 @dataclass
 class BeakerEntrySender:
+    """
+    Queue entry sender. Use this to respond to queue entries consumed by a worker.
+
+    .. warning::
+        Do not instantiated this class directly! Use :meth:`~QueueClient.worker_channel()` to create one.
+    """
+
     queue: pb2.Queue
     worker: pb2.QueueWorker
     tx: SimpleQueue[pb2.ProcessQueueEntriesRequest | None]
@@ -450,7 +516,8 @@ class BeakerEntrySender:
         Send output to an entry, reject, or mark the entry as done.
 
         .. important::
-            Only one of ``output``, ``rejection``, or ``done`` can be specified.
+            Only one of ``output``, ``rejection``, or ``done`` can be specified at a time, and you
+            should eventually set ``done=True`` (or ``rejection=...``) on every entry.
 
         :param entry_id: The ID of the entry.
         :param output: Worker response data for the entry. Mutually exclusive with the other keyword args.
@@ -472,7 +539,7 @@ class BeakerEntrySender:
             ),
         )
 
-        if output:
+        if output is not None:
             self.tx.put(request)
         elif rejection is not None:
             self.tx.put(request)
@@ -482,6 +549,13 @@ class BeakerEntrySender:
 
 @dataclass
 class BeakerEntryReceiver:
+    """
+    Queue entry receiver. Use this to consume queue entries as a worker.
+
+    .. warning::
+        Do not instantiated this class directly! Use :meth:`~QueueClient.worker_channel()` to create one.
+    """
+
     queue: pb2.Queue
     worker: pb2.QueueWorker
     rx: SimpleQueue[list[pb2.QueueWorkerInput] | None]
