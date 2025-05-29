@@ -17,28 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from wandelbots_api_client.v2.models.execution_result import ExecutionResult
+from wandelbots_api_client.v2.models.program_run_result import ProgramRunResult
 from wandelbots_api_client.v2.models.program_run_state import ProgramRunState
-from wandelbots_api_client.v2.models.store_value import StoreValue
 from typing import Optional, Set
 from typing_extensions import Self
 
 class ProgramRun(BaseModel):
     """
-    ProgramRun
+    Holds the state of a program run.
     """ # noqa: E501
-    id: StrictStr
-    state: ProgramRunState
-    logs: Optional[StrictStr] = ''
-    stdout: Optional[StrictStr] = ''
-    store: Optional[Dict[str, StoreValue]] = None
-    error: Optional[StrictStr] = None
-    traceback: Optional[StrictStr] = None
-    start_time: Optional[Union[StrictFloat, StrictInt]] = None
-    end_time: Optional[Union[StrictFloat, StrictInt]] = None
-    execution_results: Optional[List[ExecutionResult]] = None
+    id: StrictStr = Field(description="Unique identifier of the program run")
+    state: ProgramRunState = Field(description="State of the program run")
+    logs: Optional[StrictStr] = Field(default=None, description="Logs of the program run")
+    stdout: Optional[StrictStr] = Field(default=None, description="Stdout of the program run")
+    store: Optional[Dict[str, Any]] = Field(default=None, description="Stores runtime variables of the run")
+    error: Optional[StrictStr] = Field(default=None, description="Error message of the program run, if any")
+    traceback: Optional[StrictStr] = Field(default=None, description="Traceback of the program run, if any")
+    start_time: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Start time of the program run")
+    end_time: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="End time of the program run")
+    execution_results: Optional[List[ProgramRunResult]] = Field(default=None, description="Execution results of the program run")
     __properties: ClassVar[List[str]] = ["id", "state", "logs", "stdout", "store", "error", "traceback", "start_time", "end_time", "execution_results"]
 
     model_config = ConfigDict(
@@ -84,13 +83,6 @@ class ProgramRun(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each value in store (dict)
-        _field_dict = {}
-        if self.store:
-            for _key in self.store:
-                if self.store[_key]:
-                    _field_dict[_key] = self.store[_key].to_dict()
-            _dict['store'] = _field_dict
         # override the default output from pydantic by calling `to_dict()` of each item in execution_results (list)
         _items = []
         if self.execution_results:
@@ -101,26 +93,6 @@ class ProgramRun(BaseModel):
                     _items.append(_item.to_dict())
                 # <<< End modification
             _dict['execution_results'] = _items
-        # set to None if error (nullable) is None
-        # and model_fields_set contains the field
-        if self.error is None and "error" in self.model_fields_set:
-            _dict['error'] = None
-
-        # set to None if traceback (nullable) is None
-        # and model_fields_set contains the field
-        if self.traceback is None and "traceback" in self.model_fields_set:
-            _dict['traceback'] = None
-
-        # set to None if start_time (nullable) is None
-        # and model_fields_set contains the field
-        if self.start_time is None and "start_time" in self.model_fields_set:
-            _dict['start_time'] = None
-
-        # set to None if end_time (nullable) is None
-        # and model_fields_set contains the field
-        if self.end_time is None and "end_time" in self.model_fields_set:
-            _dict['end_time'] = None
-
         return _dict
 
     @classmethod
@@ -135,14 +107,9 @@ class ProgramRun(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "state": obj.get("state"),
-            "logs": obj.get("logs") if obj.get("logs") is not None else '',
-            "stdout": obj.get("stdout") if obj.get("stdout") is not None else '',
-            "store": dict(
-                (_k, StoreValue.from_dict(_v))
-                for _k, _v in obj["store"].items()
-            )
-            if obj.get("store") is not None
-            else None,
+            "logs": obj.get("logs"),
+            "stdout": obj.get("stdout"),
+            "store": obj.get("store"),
             "error": obj.get("error"),
             "traceback": obj.get("traceback"),
             "start_time": obj.get("start_time"),
@@ -150,7 +117,7 @@ class ProgramRun(BaseModel):
             "execution_results": [
                 # >>> Modified from https://github.com/OpenAPITools/openapi-generator/blob/v7.6.0/modules/openapi-generator/src/main/resources/python/model_generic.mustache
                 #     to allow dicts in lists
-                ExecutionResult.from_dict(_item) if hasattr(ExecutionResult, 'from_dict') else _item
+                ProgramRunResult.from_dict(_item) if hasattr(ProgramRunResult, 'from_dict') else _item
                 # <<< End modification
                 for _item in obj["execution_results"]
             ] if obj.get("execution_results") is not None else None

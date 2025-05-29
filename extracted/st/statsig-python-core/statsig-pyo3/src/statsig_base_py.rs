@@ -1,8 +1,11 @@
-use crate::net_provider_py::NetworkProviderPy;
 use crate::pyo_utils::{map_to_py_dict, py_dict_to_json_value_map};
+use crate::safe_gil::SafeGil;
 use crate::statsig_options_py::{safe_convert_to_statsig_options, StatsigOptionsPy};
 use crate::statsig_persistent_storage_override_adapter_py::convert_dict_to_user_persisted_values;
-use crate::statsig_types_py::{DynamicConfigPy, InitializeDetailsPy, LayerPy};
+use crate::statsig_types_py::{
+    DynamicConfigPy, InitializeDetailsPy, LayerPy, ParameterStoreEvaluationOptionsPy,
+    ParameterStorePy,
+};
 use crate::{
     statsig_types_py::{
         DynamicConfigEvaluationOptionsPy, ExperimentEvaluationOptionsPy, ExperimentPy,
@@ -12,71 +15,34 @@ use crate::{
 };
 use pyo3::{prelude::*, types::PyDict};
 use pyo3_stub_gen::derive::*;
-use statsig_rust::networking::providers::NetworkProviderGlobal;
-use statsig_rust::networking::NetworkProvider;
 use statsig_rust::{
     log_e, unwrap_or_return, ClientInitResponseOptions, DynamicConfigEvaluationOptions,
     ExperimentEvaluationOptions, FeatureGateEvaluationOptions, HashAlgorithm,
-    LayerEvaluationOptions, ObservabilityClient, Statsig,
+    LayerEvaluationOptions, ObservabilityClient, ParameterStoreEvaluationOptions, Statsig,
+    UserPersistedValues,
 };
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-
 const TAG: &str = stringify!(StatsigBasePy);
-
-macro_rules! process_user_persisted_values {
-    ($options:expr, $name:expr) => {
-        Python::with_gil(|py| match $options.and_then(|o| o.user_persisted_values) {
-            Some(user_persisted_value_py) => {
-                let a: Result<HashMap<String, statsig_rust::StickyValues>, PyErr> =
-                    convert_dict_to_user_persisted_values(py, user_persisted_value_py, $name);
-                match a {
-                    Ok(a_converted) => Some(a_converted),
-                    Err(e) => {
-                        log_e!(
-                            TAG,
-                            "Failed to convert persisted values from pydict to rust: {:?}",
-                            e
-                        );
-                        None
-                    }
-                }
-            }
-            None => None,
-        })
-    };
-}
 
 #[gen_stub_pyclass]
 #[pyclass(subclass)]
 pub struct StatsigBasePy {
     inner: Arc<Statsig>,
     observability_client: Mutex<Option<Arc<dyn ObservabilityClient>>>,
-    network_provider: Mutex<Option<Arc<dyn NetworkProvider>>>,
 }
 
 #[gen_stub_pymethods]
 #[pymethods]
 impl StatsigBasePy {
     #[new]
-    #[pyo3(signature = (network_func, sdk_key, options=None))]
-    pub fn new(
-        network_func: PyObject,
-        sdk_key: &str,
-        options: Option<StatsigOptionsPy>,
-        py: Python,
-    ) -> Self {
+    #[pyo3(signature = (sdk_key, options=None))]
+    pub fn new(sdk_key: &str, options: Option<StatsigOptionsPy>, py: Python) -> Self {
         let (opts, ob_client) = safe_convert_to_statsig_options(py, options);
-
-        let network_provider: Arc<dyn NetworkProvider> =
-            Arc::new(NetworkProviderPy { network_func });
-
-        NetworkProviderGlobal::set(&network_provider);
 
         Self {
             inner: Arc::new(Statsig::new(sdk_key, opts.map(Arc::new))),
             observability_client: Mutex::new(ob_client),
-            network_provider: Mutex::new(Some(network_provider)),
         }
     }
 
@@ -89,7 +55,12 @@ impl StatsigBasePy {
                 log_e!(TAG, "Failed to initialize Statsig: {}", e);
             }
 
-            Python::with_gil(|py| {
+            SafeGil::run(|py| {
+                let py = match py {
+                    Some(py) => py,
+                    None => return,
+                };
+
                 if let Err(e) = event_clone.call_method0(py, "set") {
                     log_e!(TAG, "Failed to set event: {}", e);
                 }
@@ -106,8 +77,13 @@ impl StatsigBasePy {
         self.inner.statsig_runtime.runtime_handle.spawn(async move {
             let result = inst.initialize_with_details().await;
 
-            Python::with_gil(|py| {
-                let _ = match result {
+            SafeGil::run(|py| {
+                let py = match py {
+                    Some(py) => py,
+                    None => return,
+                };
+
+                let call_result = match result {
                     Ok(details) => {
                         let py_details = InitializeDetailsPy::from(details);
                         future_clone.call_method1(py, "set_result", (py_details,))
@@ -120,6 +96,10 @@ impl StatsigBasePy {
                         future_clone.call_method1(py, "set_result", (error_details,))
                     }
                 };
+
+                if let Err(e) = call_result {
+                    log_e!(TAG, "Failed to set initialize result: {}", e);
+                }
             });
         });
 
@@ -143,7 +123,12 @@ impl StatsigBasePy {
         self.inner.statsig_runtime.runtime_handle.spawn(async move {
             inst.flush_events().await;
 
-            Python::with_gil(|py| {
+            SafeGil::run(|py| {
+                let py = match py {
+                    Some(py) => py,
+                    None => return,
+                };
+
                 if let Err(e) = event_clone.call_method0(py, "set") {
                     log_e!(TAG, "Failed to set event: {}", e);
                 }
@@ -158,10 +143,6 @@ impl StatsigBasePy {
 
         let inst = self.inner.clone();
         let rt = self.inner.statsig_runtime.clone();
-        let network_provider = match self.network_provider.lock() {
-            Ok(mut lock) => lock.take(),
-            _ => None,
-        };
         let obs_client = match self.observability_client.lock() {
             Ok(mut lock) => lock.take(),
             _ => None,
@@ -172,14 +153,18 @@ impl StatsigBasePy {
                 log_e!(TAG, "Failed to gracefully shutdown StatsigPy: {}", e);
             }
 
-            Python::with_gil(|py| {
+            SafeGil::run(|py| {
+                let py = match py {
+                    Some(py) => py,
+                    None => return,
+                };
+
                 if let Err(e) = event_clone.call_method0(py, "set") {
                     log_e!(TAG, "Failed to set event: {}", e);
                 }
             });
 
             // held until the shutdown is complete
-            drop(network_provider);
             drop(obs_client);
         });
 
@@ -302,7 +287,10 @@ impl StatsigBasePy {
         let mut options_actual = options
             .as_ref()
             .map_or(ExperimentEvaluationOptions::default(), |o| o.into());
-        options_actual.user_persisted_values = process_user_persisted_values!(options, name);
+
+        options_actual.user_persisted_values = options
+            .and_then(|o| o.user_persisted_values)
+            .and_then(|v| extract_user_persisted_values(py, name, v));
 
         let experiment = self
             .inner
@@ -341,7 +329,10 @@ impl StatsigBasePy {
         let mut options_actual = options
             .as_ref()
             .map_or(LayerEvaluationOptions::default(), |o| o.into());
-        options_actual.user_persisted_values = process_user_persisted_values!(options, name);
+
+        options_actual.user_persisted_values = options
+            .and_then(|o| o.user_persisted_values)
+            .and_then(|v| extract_user_persisted_values(py, name, v));
 
         let layer = self
             .inner
@@ -368,6 +359,23 @@ impl StatsigBasePy {
         self.inner
             .manually_log_layer_parameter_exposure(&user.inner, name, param_name);
         Ok(())
+    }
+
+    #[pyo3(signature = (user, name, options=None))]
+    pub fn get_parameter_store(
+        &self,
+        user: &StatsigUserPy,
+        name: &str,
+        options: Option<ParameterStoreEvaluationOptionsPy>,
+    ) -> ParameterStorePy {
+        let options_actual =
+            options.map_or(ParameterStoreEvaluationOptions::default(), |o| o.into());
+        ParameterStorePy {
+            name: name.to_string(),
+            inner_statsig: Arc::downgrade(&self.inner),
+            user: user.inner.clone(),
+            options: options_actual,
+        }
     }
 
     #[pyo3(signature = (user, hash=None, client_sdk_key=None, include_local_overrides=None))]
@@ -556,4 +564,23 @@ fn extract_event_metadata(metadata: Option<Bound<PyDict>>) -> Option<HashMap<Str
     }
 
     None
+}
+
+fn extract_user_persisted_values(
+    py: Python,
+    spec_name: &str,
+    values: Py<PyDict>,
+) -> Option<UserPersistedValues> {
+    match convert_dict_to_user_persisted_values(py, values, spec_name) {
+        Ok(persisted) => Some(persisted),
+        Err(e) => {
+            log_e!(
+                TAG,
+                "Failed to convert persisted values from pydict to rust: {} {:?}",
+                spec_name,
+                e
+            );
+            None
+        }
+    }
 }

@@ -108,7 +108,7 @@ class RAGEngine(WMLResource):
             vector_store_references=vector_store_references,
         )
 
-        url = self._client.service_instance._href_definitions.get_autoai_rag_href()
+        url = self._client._href_definitions.get_autoai_rag_href()
 
         response_train_post = requests.post(
             url=url,
@@ -186,7 +186,7 @@ class RAGEngine(WMLResource):
 
         self._client._check_if_either_is_set()
 
-        url = self._client.service_instance._href_definitions.get_autoai_rag_id_href(
+        url = self._client._href_definitions.get_autoai_rag_id_href(
             self._current_run_id
         )
         params = self._client._params()
@@ -228,7 +228,7 @@ class RAGEngine(WMLResource):
 
         self._client._check_if_either_is_set()
 
-        url = self._client.service_instance._href_definitions.get_autoai_rag_href()
+        url = self._client._href_definitions.get_autoai_rag_href()
 
         return self._get_artifact_details(
             base_url=url,
@@ -1155,7 +1155,7 @@ class RAGEngine(WMLResource):
 
     def _is_autoai_rag_endpoint_available(self) -> bool:
         try:
-            url = self._client.service_instance._href_definitions.get_autoai_rag_href()
+            url = self._client._href_definitions.get_autoai_rag_href()
 
             response_autoai_rag_api = self._client._session.get(
                 url=f"{url}?limit=1",

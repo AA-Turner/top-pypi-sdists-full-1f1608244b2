@@ -25,6 +25,7 @@ from botocore.response import StreamingBody
 from .literals import (
     CanaryRunStateReasonCodeType,
     CanaryRunStateType,
+    CanaryRunTestResultType,
     CanaryStateReasonCodeType,
     CanaryStateType,
     EncryptionModeType,
@@ -143,16 +144,19 @@ class CanaryRunConfigInputTypeDef(TypedDict):
     MemoryInMB: NotRequired[int]
     ActiveTracing: NotRequired[bool]
     EnvironmentVariables: NotRequired[Mapping[str, str]]
+    EphemeralStorage: NotRequired[int]
 
 class CanaryRunConfigOutputTypeDef(TypedDict):
     TimeoutInSeconds: NotRequired[int]
     MemoryInMB: NotRequired[int]
     ActiveTracing: NotRequired[bool]
+    EphemeralStorage: NotRequired[int]
 
 class CanaryRunStatusTypeDef(TypedDict):
     State: NotRequired[CanaryRunStateType]
     StateReason: NotRequired[str]
     StateReasonCode: NotRequired[CanaryRunStateReasonCodeType]
+    TestResult: NotRequired[CanaryRunTestResultType]
 
 class CanaryRunTimelineTypeDef(TypedDict):
     Started: NotRequired[datetime]

@@ -5,7 +5,7 @@ ghostscript - A Python interface for the Ghostscript interpreter C-API
 """
 #
 # This file is part of python-ghostscript.
-# Copyright 2010-2021 by Hartmut Goebel <h.goebel@crazy-compilers.com>
+# Copyright 2010-2023 by Hartmut Goebel <h.goebel@crazy-compilers.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@ ghostscript - A Python interface for the Ghostscript interpreter C-API
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
 __author__ = "Hartmut Goebel <h.goebel@crazy-compilers.com>"
-__copyright__ = "Copyright 2010-2021 by Hartmut Goebel <h.goebel@crazy-compilers.com>"
+__copyright__ = "Copyright 2010-2023 by Hartmut Goebel <h.goebel@crazy-compilers.com>"
 __licence__ = "GNU General Public License version 3 (GPL v3)"
 
 __all__ = ['Ghostscript', 'revision',
@@ -33,6 +33,7 @@ from . import _gsprint as gs
 __version__ = gs.__version__
 
 GhostscriptError = gs.GhostscriptError
+
 
 class PleaseDisplayUsage(Warning):
     """
@@ -68,27 +69,60 @@ class Ghostscript(object):
     @staticmethod
     def revision():
         return revision()
-    
-    def __init__(self, *args, stdin=None, stdout=None, stderr=None):
+
+    def __init__(self, progname, *args, stdin=None, stdout=None, stderr=None):
+        '''Initialize a Ghostscript interpreter instance
+
+        :param progname: Name of the executable.
+        :type progname: string
+        :param args: arguments to be passed to the Ghostscript interpreter
+        :type args: list of strings
+
+        :param stdin: stdin stream to be set for the Ghostscript interpreter
+        :type stdin: file-like object supporting the ``readline()`` method,
+                     optional.
+        :param stdout: stdout stream to be set for the Ghostscript interpreter
+        :type stdout: file-like object supporting the ``write()`` and
+                      ``flush()`` methods, optional.
+        :param stderr: stderr stream to be set for the Ghostscript interpreter
+        :type stderr: file-like object supporting the ``write()`` and
+                      ``flush()`` methods, optional.
+
+        Example::
+
+          Ghostscript("text2pdf", "-q", "-dNOPAUSE", "-dBATCH", "in.pdf",
+                      stdout=myIoStream).exit()
+        '''
         assert self.revision()['revision'] >= 908, \
             "high-level interface requires ghostscript >= 9.08"
         self._callbacks = None
+        # ensure attribute exists even if gs.new_instance() fails:
+        self._instance = None
         self._instance = gs.new_instance()
-        if not isinstance(args[0], str):
+        if not isinstance(progname, str):
             import warnings
             warnings.warn(
                 "Passing bytes-arguments to 'Ghostscript()' is deprecated",
                 DeprecationWarning, stacklevel=2)
+            args = [progname] + list(args)
         else:
             gs.set_arg_encoding(self._instance, gs.ARG_ENCODING_UTF8)
             args = [a.encode('utf-8') for a in args]
+            args.insert(0, progname.encode('utf-8'))
+        if args[0].startswith(b"-"):
+            import warnings
+            warnings.warn("First arguments must be the 'progname', "
+                          "but looks like an option",
+                          RuntimeWarning, stacklevel=2)
         try:
             self.set_stdio(stdin, stdout, stderr)
             rc = gs.init_with_args(self._instance, args)
             if rc == gs.e_Info:
                 raise PleaseDisplayUsage()
-            if rc == gs.e_Quit:
-                self.exit()
+        except gs.GhostscriptError as e:
+            self.exit()
+            if e.code != gs.e_Quit:
+                raise
         except:
             self.exit()
             raise
@@ -120,10 +154,10 @@ class Ghostscript(object):
             stderr and gs._wrap_stderr(stderr) or None,
             )
         gs.set_stdio(self._instance, *self._callbacks)
-        
+
     def __del__(self):
         self.exit()
-        
+
     def exit(self):
         if self._instance:
             try:
@@ -131,7 +165,7 @@ class Ghostscript(object):
                 gs.delete_instance(self._instance)
             finally:
                 self._instance = None
-    
+
     def run_string(self, str, user_errors=False):
         """
         Run the string ``str`` by Ghostscript
@@ -148,14 +182,12 @@ class Ghostscript(object):
                 gs.run_string_continue(instance,
                                        str[start:start+MAX_STRING_LENGTH])
             gs.run_string_end(instance)
-        
 
     def run_filename(self, filename, user_errors=False):
         """
         Run the file named by ``filename`` by Ghostscript
         """
         return gs.run_file(self._instance, filename, user_errors)
-
 
     def run_file(self, file, user_errors=False):
         """
@@ -175,4 +207,5 @@ class Ghostscript(object):
 
 
 def cleanup():
+    """Does nothing anymore. Deprecated."""
     pass

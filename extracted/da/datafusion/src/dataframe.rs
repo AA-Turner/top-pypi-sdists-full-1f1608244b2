@@ -23,7 +23,6 @@ use arrow::compute::can_cast_types;
 use arrow::error::ArrowError;
 use arrow::ffi::FFI_ArrowSchema;
 use arrow::ffi_stream::FFI_ArrowArrayStream;
-use arrow::util::display::{ArrayFormatter, FormatOptions};
 use datafusion::arrow::datatypes::Schema;
 use datafusion::arrow::pyarrow::{PyArrowType, ToPyArrow};
 use datafusion::arrow::util::pretty;
@@ -35,11 +34,12 @@ use datafusion::error::DataFusionError;
 use datafusion::execution::SendableRecordBatchStream;
 use datafusion::parquet::basic::{BrotliLevel, Compression, GzipLevel, ZstdLevel};
 use datafusion::prelude::*;
+use datafusion_ffi::table_provider::FFI_TableProvider;
 use futures::{StreamExt, TryStreamExt};
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::pybacked::PyBackedStr;
-use pyo3::types::{PyCapsule, PyTuple, PyTupleMethods};
+use pyo3::types::{PyCapsule, PyList, PyTuple, PyTupleMethods};
 use tokio::task::JoinHandle;
 
 use crate::catalog::PyTable;
@@ -48,7 +48,9 @@ use crate::expr::sort_expr::to_sort_expressions;
 use crate::physical_plan::PyExecutionPlan;
 use crate::record_batch::PyRecordBatchStream;
 use crate::sql::logical::PyLogicalPlan;
-use crate::utils::{get_tokio_runtime, validate_pycapsule, wait_for_future};
+use crate::utils::{
+    get_tokio_runtime, py_obj_to_scalar_value, validate_pycapsule, wait_for_future,
+};
 use crate::{
     errors::PyDataFusionResult,
     expr::{sort_expr::PySortExpr, PyExpr},
@@ -59,7 +61,7 @@ use crate::{
 // this is an interim implementation
 #[pyclass(name = "TableProvider", module = "datafusion")]
 pub struct PyTableProvider {
-    provider: Arc<dyn TableProvider>,
+    provider: Arc<dyn TableProvider + Send>,
 }
 
 impl PyTableProvider {
@@ -72,9 +74,116 @@ impl PyTableProvider {
         PyTable::new(table_provider)
     }
 }
-const MAX_TABLE_BYTES_TO_DISPLAY: usize = 2 * 1024 * 1024; // 2 MB
-const MIN_TABLE_ROWS_TO_DISPLAY: usize = 20;
-const MAX_LENGTH_CELL_WITHOUT_MINIMIZE: usize = 25;
+
+#[pymethods]
+impl PyTableProvider {
+    fn __datafusion_table_provider__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<Bound<'py, PyCapsule>> {
+        let name = CString::new("datafusion_table_provider").unwrap();
+
+        let runtime = get_tokio_runtime().0.handle().clone();
+        let provider = FFI_TableProvider::new(Arc::clone(&self.provider), false, Some(runtime));
+
+        PyCapsule::new(py, provider, Some(name.clone()))
+    }
+}
+
+/// Configuration for DataFrame display formatting
+#[derive(Debug, Clone)]
+pub struct FormatterConfig {
+    /// Maximum memory in bytes to use for display (default: 2MB)
+    pub max_bytes: usize,
+    /// Minimum number of rows to display (default: 20)
+    pub min_rows: usize,
+    /// Number of rows to include in __repr__ output (default: 10)
+    pub repr_rows: usize,
+}
+
+impl Default for FormatterConfig {
+    fn default() -> Self {
+        Self {
+            max_bytes: 2 * 1024 * 1024, // 2MB
+            min_rows: 20,
+            repr_rows: 10,
+        }
+    }
+}
+
+impl FormatterConfig {
+    /// Validates that all configuration values are positive integers.
+    ///
+    /// # Returns
+    ///
+    /// `Ok(())` if all values are valid, or an `Err` with a descriptive error message.
+    pub fn validate(&self) -> Result<(), String> {
+        if self.max_bytes == 0 {
+            return Err("max_bytes must be a positive integer".to_string());
+        }
+
+        if self.min_rows == 0 {
+            return Err("min_rows must be a positive integer".to_string());
+        }
+
+        if self.repr_rows == 0 {
+            return Err("repr_rows must be a positive integer".to_string());
+        }
+
+        Ok(())
+    }
+}
+
+/// Holds the Python formatter and its configuration
+struct PythonFormatter<'py> {
+    /// The Python formatter object
+    formatter: Bound<'py, PyAny>,
+    /// The formatter configuration
+    config: FormatterConfig,
+}
+
+/// Get the Python formatter and its configuration
+fn get_python_formatter_with_config(py: Python) -> PyResult<PythonFormatter> {
+    let formatter = import_python_formatter(py)?;
+    let config = build_formatter_config_from_python(&formatter)?;
+    Ok(PythonFormatter { formatter, config })
+}
+
+/// Get the Python formatter from the datafusion.html_formatter module
+fn import_python_formatter(py: Python) -> PyResult<Bound<'_, PyAny>> {
+    let formatter_module = py.import("datafusion.html_formatter")?;
+    let get_formatter = formatter_module.getattr("get_formatter")?;
+    get_formatter.call0()
+}
+
+// Helper function to extract attributes with fallback to default
+fn get_attr<'a, T>(py_object: &'a Bound<'a, PyAny>, attr_name: &str, default_value: T) -> T
+where
+    T: for<'py> pyo3::FromPyObject<'py> + Clone,
+{
+    py_object
+        .getattr(attr_name)
+        .and_then(|v| v.extract::<T>())
+        .unwrap_or_else(|_| default_value.clone())
+}
+
+/// Helper function to create a FormatterConfig from a Python formatter object
+fn build_formatter_config_from_python(formatter: &Bound<'_, PyAny>) -> PyResult<FormatterConfig> {
+    let default_config = FormatterConfig::default();
+    let max_bytes = get_attr(formatter, "max_memory_bytes", default_config.max_bytes);
+    let min_rows = get_attr(formatter, "min_rows_display", default_config.min_rows);
+    let repr_rows = get_attr(formatter, "repr_rows", default_config.repr_rows);
+
+    let config = FormatterConfig {
+        max_bytes,
+        min_rows,
+        repr_rows,
+    };
+
+    // Return the validated config, converting String error to PyErr
+    config.validate().map_err(PyValueError::new_err)?;
+    Ok(config)
+}
 
 /// A PyDataFrame is a representation of a logical plan and an API to compose statements.
 /// Use it to build a plan and `.collect()` to execute the plan and collect the result.
@@ -116,9 +225,14 @@ impl PyDataFrame {
     }
 
     fn __repr__(&self, py: Python) -> PyDataFusionResult<String> {
+        // Get the Python formatter config
+        let PythonFormatter {
+            formatter: _,
+            config,
+        } = get_python_formatter_with_config(py)?;
         let (batches, has_more) = wait_for_future(
             py,
-            collect_record_batches_to_display(self.df.as_ref().clone(), 10, 10),
+            collect_record_batches_to_display(self.df.as_ref().clone(), config),
         )?;
         if batches.is_empty() {
             // This should not be reached, but do it for safety since we index into the vector below
@@ -137,13 +251,11 @@ impl PyDataFrame {
     }
 
     fn _repr_html_(&self, py: Python) -> PyDataFusionResult<String> {
+        // Get the Python formatter and config
+        let PythonFormatter { formatter, config } = get_python_formatter_with_config(py)?;
         let (batches, has_more) = wait_for_future(
             py,
-            collect_record_batches_to_display(
-                self.df.as_ref().clone(),
-                MIN_TABLE_ROWS_TO_DISPLAY,
-                usize::MAX,
-            ),
+            collect_record_batches_to_display(self.df.as_ref().clone(), config),
         )?;
         if batches.is_empty() {
             // This should not be reached, but do it for safety since we index into the vector below
@@ -152,115 +264,23 @@ impl PyDataFrame {
 
         let table_uuid = uuid::Uuid::new_v4().to_string();
 
-        let mut html_str = "
-        <style>
-            .expandable-container {
-                display: inline-block;
-                max-width: 200px;
-            }
-            .expandable {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: block;
-            }
-            .full-text {
-                display: none;
-                white-space: normal;
-            }
-            .expand-btn {
-                cursor: pointer;
-                color: blue;
-                text-decoration: underline;
-                border: none;
-                background: none;
-                font-size: inherit;
-                display: block;
-                margin-top: 5px;
-            }
-        </style>
+        // Convert record batches to PyObject list
+        let py_batches = batches
+            .into_iter()
+            .map(|rb| rb.to_pyarrow(py))
+            .collect::<PyResult<Vec<PyObject>>>()?;
 
-        <div style=\"width: 100%; max-width: 1000px; max-height: 300px; overflow: auto; border: 1px solid #ccc;\">
-            <table style=\"border-collapse: collapse; min-width: 100%\">
-                <thead>\n".to_string();
+        let py_schema = self.schema().into_pyobject(py)?;
 
-        let schema = batches[0].schema();
+        let kwargs = pyo3::types::PyDict::new(py);
+        let py_batches_list = PyList::new(py, py_batches.as_slice())?;
+        kwargs.set_item("batches", py_batches_list)?;
+        kwargs.set_item("schema", py_schema)?;
+        kwargs.set_item("has_more", has_more)?;
+        kwargs.set_item("table_uuid", table_uuid)?;
 
-        let mut header = Vec::new();
-        for field in schema.fields() {
-            header.push(format!("<th style='border: 1px solid black; padding: 8px; text-align: left; background-color: #f2f2f2; white-space: nowrap; min-width: fit-content; max-width: fit-content;'>{}</th>", field.name()));
-        }
-        let header_str = header.join("");
-        html_str.push_str(&format!("<tr>{}</tr></thead><tbody>\n", header_str));
-
-        let batch_formatters = batches
-            .iter()
-            .map(|batch| {
-                batch
-                    .columns()
-                    .iter()
-                    .map(|c| ArrayFormatter::try_new(c.as_ref(), &FormatOptions::default()))
-                    .map(|c| {
-                        c.map_err(|e| PyValueError::new_err(format!("Error: {:?}", e.to_string())))
-                    })
-                    .collect::<Result<Vec<_>, _>>()
-            })
-            .collect::<Result<Vec<_>, _>>()?;
-
-        let rows_per_batch = batches.iter().map(|batch| batch.num_rows());
-
-        // We need to build up row by row for html
-        let mut table_row = 0;
-        for (batch_formatter, num_rows_in_batch) in batch_formatters.iter().zip(rows_per_batch) {
-            for batch_row in 0..num_rows_in_batch {
-                table_row += 1;
-                let mut cells = Vec::new();
-                for (col, formatter) in batch_formatter.iter().enumerate() {
-                    let cell_data = formatter.value(batch_row).to_string();
-                    // From testing, primitive data types do not typically get larger than 21 characters
-                    if cell_data.len() > MAX_LENGTH_CELL_WITHOUT_MINIMIZE {
-                        let short_cell_data = &cell_data[0..MAX_LENGTH_CELL_WITHOUT_MINIMIZE];
-                        cells.push(format!("
-                            <td style='border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;'>
-                                <div class=\"expandable-container\">
-                                    <span class=\"expandable\" id=\"{table_uuid}-min-text-{table_row}-{col}\">{short_cell_data}</span>
-                                    <span class=\"full-text\" id=\"{table_uuid}-full-text-{table_row}-{col}\">{cell_data}</span>
-                                    <button class=\"expand-btn\" onclick=\"toggleDataFrameCellText('{table_uuid}',{table_row},{col})\">...</button>
-                                </div>
-                            </td>"));
-                    } else {
-                        cells.push(format!("<td style='border: 1px solid black; padding: 8px; text-align: left; white-space: nowrap;'>{}</td>", formatter.value(batch_row)));
-                    }
-                }
-                let row_str = cells.join("");
-                html_str.push_str(&format!("<tr>{}</tr>\n", row_str));
-            }
-        }
-        html_str.push_str("</tbody></table></div>\n");
-
-        html_str.push_str("
-            <script>
-            function toggleDataFrameCellText(table_uuid, row, col) {
-                var shortText = document.getElementById(table_uuid + \"-min-text-\" + row + \"-\" + col);
-                var fullText = document.getElementById(table_uuid + \"-full-text-\" + row + \"-\" + col);
-                var button = event.target;
-
-                if (fullText.style.display === \"none\") {
-                    shortText.style.display = \"none\";
-                    fullText.style.display = \"inline\";
-                    button.textContent = \"(less)\";
-                } else {
-                    shortText.style.display = \"inline\";
-                    fullText.style.display = \"none\";
-                    button.textContent = \"...\";
-                }
-            }
-            </script>
-        ");
-
-        if has_more {
-            html_str.push_str("Data truncated due to size.");
-        }
+        let html_result = formatter.call_method("format_html", (), Some(&kwargs))?;
+        let html_str: String = html_result.extract()?;
 
         Ok(html_str)
     }
@@ -304,7 +324,7 @@ impl PyDataFrame {
 
     #[pyo3(signature = (*args))]
     fn select(&self, args: Vec<PyExpr>) -> PyDataFusionResult<Self> {
-        let expr = args.into_iter().map(|e| e.into()).collect();
+        let expr: Vec<Expr> = args.into_iter().map(|e| e.into()).collect();
         let df = self.df.as_ref().clone().select(expr)?;
         Ok(Self::new(df))
     }
@@ -797,6 +817,25 @@ impl PyDataFrame {
     fn count(&self, py: Python) -> PyDataFusionResult<usize> {
         Ok(wait_for_future(py, self.df.as_ref().clone().count())?)
     }
+
+    /// Fill null values with a specified value for specific columns
+    #[pyo3(signature = (value, columns=None))]
+    fn fill_null(
+        &self,
+        value: PyObject,
+        columns: Option<Vec<PyBackedStr>>,
+        py: Python,
+    ) -> PyDataFusionResult<Self> {
+        let scalar_value = py_obj_to_scalar_value(py, value)?;
+
+        let cols = match columns {
+            Some(col_names) => col_names.iter().map(|c| c.to_string()).collect(),
+            None => Vec::new(), // Empty vector means fill null for all columns
+        };
+
+        let df = self.df.as_ref().clone().fill_null(scalar_value, cols)?;
+        Ok(Self::new(df))
+    }
 }
 
 /// Print DataFrame
@@ -835,7 +874,7 @@ fn record_batch_into_schema(
 ) -> Result<RecordBatch, ArrowError> {
     let schema = Arc::new(schema.clone());
     let base_schema = record_batch.schema();
-    if base_schema.fields().len() == 0 {
+    if base_schema.fields().is_empty() {
         // Nothing to project
         return Ok(RecordBatch::new_empty(schema));
     }
@@ -884,9 +923,14 @@ fn record_batch_into_schema(
 /// rows, set min_rows == max_rows.
 async fn collect_record_batches_to_display(
     df: DataFrame,
-    min_rows: usize,
-    max_rows: usize,
+    config: FormatterConfig,
 ) -> Result<(Vec<RecordBatch>, bool), DataFusionError> {
+    let FormatterConfig {
+        max_bytes,
+        min_rows,
+        repr_rows,
+    } = config;
+
     let partitioned_stream = df.execute_stream_partitioned().await?;
     let mut stream = futures::stream::iter(partitioned_stream).flatten();
     let mut size_estimate_so_far = 0;
@@ -894,9 +938,8 @@ async fn collect_record_batches_to_display(
     let mut record_batches = Vec::default();
     let mut has_more = false;
 
-    while (size_estimate_so_far < MAX_TABLE_BYTES_TO_DISPLAY && rows_so_far < max_rows)
-        || rows_so_far < min_rows
-    {
+    // ensure minimum rows even if memory/row limits are hit
+    while (size_estimate_so_far < max_bytes && rows_so_far < repr_rows) || rows_so_far < min_rows {
         let mut rb = match stream.next().await {
             None => {
                 break;
@@ -909,8 +952,8 @@ async fn collect_record_batches_to_display(
         if rows_in_rb > 0 {
             size_estimate_so_far += rb.get_array_memory_size();
 
-            if size_estimate_so_far > MAX_TABLE_BYTES_TO_DISPLAY {
-                let ratio = MAX_TABLE_BYTES_TO_DISPLAY as f32 / size_estimate_so_far as f32;
+            if size_estimate_so_far > max_bytes {
+                let ratio = max_bytes as f32 / size_estimate_so_far as f32;
                 let total_rows = rows_in_rb + rows_so_far;
 
                 let mut reduced_row_num = (total_rows as f32 * ratio).round() as usize;
@@ -926,8 +969,8 @@ async fn collect_record_batches_to_display(
                 }
             }
 
-            if rows_in_rb + rows_so_far > max_rows {
-                rb = rb.slice(0, max_rows - rows_so_far);
+            if rows_in_rb + rows_so_far > repr_rows {
+                rb = rb.slice(0, repr_rows - rows_so_far);
                 has_more = true;
             }
 

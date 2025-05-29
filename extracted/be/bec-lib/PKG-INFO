@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: bec_lib
-Version: 3.35.7
+Version: 3.35.11
 Summary: BEC library
-Project-URL: Bug Tracker, https://gitlab.psi.ch/bec/bec/issues
-Project-URL: Homepage, https://gitlab.psi.ch/bec/bec
+Project-URL: Bug Tracker, https://github.com/bec-project/bec/issues
+Project-URL: Homepage, https://github.com/bec-project/bec
 Classifier: Development Status :: 3 - Alpha
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering

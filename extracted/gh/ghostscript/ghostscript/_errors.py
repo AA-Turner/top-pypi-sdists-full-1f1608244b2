@@ -19,11 +19,11 @@ Definition of Ghostscript error codes
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
 __author__ = "Hartmut Goebel <h.goebel@crazy-compilers.com>"
-__copyright__ = "Copyright 2010-2021 by Hartmut Goebel <h.goebel@crazy-compilers.com>"
+__copyright__ = "Copyright 2010-2023 by Hartmut Goebel <h.goebel@crazy-compilers.com>"
 __licence__ = "GNU General Public License version 3 (GPL v3)"
 
 #
@@ -93,11 +93,13 @@ _PSEUDO_ERRORS = ['Fatal', 'Quit', 'InterpreterExit', 'RemapColor',
                   'ExecStackUnderflow', 'VMreclaim', 'NeedInput',
                   'NeedStdin', 'NeedStdout', 'NeedStderr', 'Info']
 
+
 def error2name(ecode):
     if ecode <= e_Fatal:
         return _PSEUDO_ERRORS[-ecode-100]
     else:
         return ERROR_NAMES[-ecode-1]
+
 
 # ------ Pseudo-errors used internally ------
 
@@ -168,11 +170,13 @@ e_NeedStderr = -109
 #
 e_Info = -110
 
+
 #
 # Define which error codes require re-executing the current object.
 #
 def ERROR_IS_INTERRUPT(ecode):
     return ecode == e_interrupt or ecode == e_timeout
+
 
 if __name__ == '__main__':
     print(error2name(e_unknownerror) == "unknownerror")

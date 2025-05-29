@@ -1,13 +1,12 @@
 Metadata-Version: 2.4
 Name: Scrapy
-Version: 2.13.0
+Version: 2.13.1
 Summary: A high-level Web Crawling and Web Scraping framework
 Project-URL: Homepage, https://scrapy.org/
 Project-URL: Documentation, https://docs.scrapy.org/
 Project-URL: Source, https://github.com/scrapy/scrapy
 Project-URL: Tracker, https://github.com/scrapy/scrapy/issues
-Project-URL: Changelog, https://github.com/scrapy/scrapy/commits/master/
-Project-URL: releasenotes, https://docs.scrapy.org/en/latest/news.html
+Project-URL: Release notes, https://docs.scrapy.org/en/latest/news.html
 Author-email: Scrapy developers <pablo@pablohoffman.com>
 Maintainer-email: Pablo Hoffman <pablo@pablohoffman.com>
 License-Expression: BSD-3-Clause
@@ -70,18 +69,13 @@ Scrapy
    :target: https://github.com/scrapy/scrapy/actions?query=workflow%3AUbuntu
    :alt: Ubuntu
 
-.. .. image:: https://github.com/scrapy/scrapy/workflows/macOS/badge.svg
-   .. :target: https://github.com/scrapy/scrapy/actions?query=workflow%3AmacOS
-   .. :alt: macOS
-
+.. image:: https://github.com/scrapy/scrapy/workflows/macOS/badge.svg
+   :target: https://github.com/scrapy/scrapy/actions?query=workflow%3AmacOS
+   :alt: macOS
 
 .. image:: https://github.com/scrapy/scrapy/workflows/Windows/badge.svg
    :target: https://github.com/scrapy/scrapy/actions?query=workflow%3AWindows
    :alt: Windows
-
-.. image:: https://img.shields.io/badge/wheel-yes-brightgreen.svg
-   :target: https://pypi.org/pypi/Scrapy
-   :alt: Wheel Status
 
 .. image:: https://img.shields.io/codecov/c/github/scrapy/scrapy/master.svg
    :target: https://codecov.io/github/scrapy/scrapy?branch=master
@@ -90,6 +84,10 @@ Scrapy
 .. image:: https://anaconda.org/conda-forge/scrapy/badges/version.svg
    :target: https://anaconda.org/conda-forge/scrapy
    :alt: Conda Version
+
+.. image:: https://deepwiki.com/badge.svg
+   :target: https://deepwiki.com/scrapy/scrapy
+   :alt: Ask DeepWiki
 
 
 Overview

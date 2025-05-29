@@ -25,47 +25,49 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from fido2.ctap import CtapError
+import csv as _csv
+import io
+import logging
+from time import sleep
+from typing import Optional, Sequence
+
+import click
+from fido2.ctap import STATUS, CtapError
 from fido2.ctap1 import ApduError
 from fido2.ctap2 import (
-    Ctap2,
-    ClientPin,
-    CredentialManagement,
-    FPBioEnrollment,
     CaptureError,
+    ClientPin,
     Config,
+    CredentialManagement,
+    Ctap2,
+    FPBioEnrollment,
 )
-from fido2.pcsc import CtapPcscDevice
-from yubikit.management import CAPABILITY
+from smartcard.Exceptions import CardConnectionException, NoCardException
+
 from yubikit.core import TRANSPORT
-from yubikit.core.fido import FidoConnection
-from yubikit.core.smartcard import SW
-from time import sleep
+from yubikit.core.fido import FidoConnection, SmartCardCtapDevice
+from yubikit.core.smartcard import SW, SmartCardConnection
+from yubikit.management import CAPABILITY
+
+from ..fido import fips_change_pin, fips_reset, fips_verify_pin, is_in_fips_mode
+from ..hid import list_ctap_devices
+from ..pcsc import ScardYubiKeyDevice
 from .util import (
-    click_postpone_execution,
-    click_prompt,
+    CliFail,
     click_force_option,
     click_group,
-    prompt_timeout,
+    click_postpone_execution,
+    click_prompt,
     is_yk4_fips,
     pretty_print,
+    prompt_for_touch,
+    prompt_timeout,
 )
-from .util import CliFail
-from ..fido import is_in_fips_mode, fips_reset, fips_change_pin, fips_verify_pin
-from ..hid import list_ctap_devices
-from ..pcsc import list_devices as list_ccid
-from smartcard.Exceptions import NoCardException, CardConnectionException
-from typing import Optional, Sequence, List, Dict
-
-import io
-import csv as _csv
-import click
-import logging
 
 logger = logging.getLogger(__name__)
 
 
-@click_group(connections=[FidoConnection])
+@click_group(connections=[FidoConnection, SmartCardConnection])
 @click.pass_context
 @click_postpone_execution
 def fido(ctx):
@@ -84,7 +86,14 @@ def fido(ctx):
 
     """
     dev = ctx.obj["device"]
-    conn = dev.open_connection(FidoConnection)
+    resolve_scp = ctx.obj.get("scp")
+    if resolve_scp:
+        s_conn = dev.open_connection(SmartCardConnection)
+        scp_params = resolve_scp(s_conn)
+        conn = SmartCardCtapDevice(s_conn, scp_params)
+    else:
+        conn = dev.open_connection(FidoConnection)
+
     ctx.call_on_close(conn.close)
     ctx.obj["conn"] = conn
     try:
@@ -102,8 +111,8 @@ def info(ctx):
     info = ctx.obj["info"]
     ctap2 = ctx.obj.get("ctap2")
 
-    data: Dict = {}
-    lines: List = [data]
+    data: dict = {}
+    lines: list = [data]
 
     if CAPABILITY.FIDO2 in info.fips_capable:
         data["FIPS approved"] = CAPABILITY.FIDO2 in info.fips_approved
@@ -182,13 +191,12 @@ def reset(ctx, force):
             "use 'ykman config reset' for full factory reset."
         )
 
+    dev = ctx.obj["device"]
     conn = ctx.obj["conn"]
-    if isinstance(conn, CtapPcscDevice):  # NFC
-        readers = list_ccid(conn._name)
-        if not readers or readers[0].reader.name != conn._name:
-            raise CliFail("Unable to isolate NFC reader.")
-        dev = readers[0]
+    if isinstance(dev, ScardYubiKeyDevice):  # NFC
         is_fips = False
+
+        conn.close()
 
         def prompt_re_insert():
             click.echo(
@@ -254,11 +262,16 @@ def reset(ctx, force):
         conn = prompt_re_insert()
 
     try:
-        with prompt_timeout():
-            if is_fips:
+        if is_fips:
+            with prompt_timeout():
                 fips_reset(conn)
-            else:
-                Ctap2(conn).reset()
+        else:
+
+            def on_keepalive(status):
+                if status == STATUS.UPNEEDED:
+                    prompt_for_touch()
+
+            Ctap2(conn).reset(on_keepalive=on_keepalive)
         click.echo("FIDO application data reset.")
     except CtapError as e:
         if e.code == CtapError.ERR.ACTION_TIMEOUT:
@@ -289,8 +302,7 @@ def _fail_pin_error(ctx, e, other="%s"):
         raise CliFail("Wrong PIN.")
     elif e.code == CtapError.ERR.PIN_AUTH_BLOCKED:
         raise CliFail(
-            "PIN authentication is currently blocked. "
-            "Remove and re-insert the YubiKey."
+            "PIN authentication is currently blocked. Remove and re-insert the YubiKey."
         )
     elif e.code == CtapError.ERR.PIN_BLOCKED:
         raise CliFail("PIN is blocked.")
@@ -589,7 +601,7 @@ def _gen_creds(credman):
             )
 
 
-def _format_table(headings: Sequence[str], rows: List[Sequence[str]]) -> str:
+def _format_table(headings: Sequence[str], rows: list[Sequence[str]]) -> str:
     all_rows = [headings] + rows
     padded_rows = [["" for cell in row] for row in all_rows]
 

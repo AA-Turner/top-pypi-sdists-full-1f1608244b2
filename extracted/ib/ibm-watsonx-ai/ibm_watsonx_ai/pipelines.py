@@ -203,7 +203,7 @@ class Pipelines(WMLResource):
             pass
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_pipelines_href(),
+            self._client._href_definitions.get_pipelines_href(),
             headers=self._client._get_headers(),
             params=self._client._params(skip_for_create=True),
             json=pipeline_meta,
@@ -235,7 +235,7 @@ class Pipelines(WMLResource):
 
         Pipelines._validate_type(pipeline_id, "pipeline_id", str, False)
 
-        url = self._client.service_instance._href_definitions.get_pipelines_href()
+        url = self._client._href_definitions.get_pipelines_href()
         return self._create_revision_artifact(url, pipeline_id, "pipelines")
 
     def update(
@@ -283,9 +283,7 @@ class Pipelines(WMLResource):
             details, changes, with_validation=True
         )
 
-        url = self._client.service_instance._href_definitions.get_pipeline_href(
-            pipeline_id
-        )
+        url = self._client._href_definitions.get_pipeline_href(pipeline_id)
 
         response = requests.patch(
             url,
@@ -323,10 +321,8 @@ class Pipelines(WMLResource):
 
         Pipelines._validate_type(pipeline_id, "pipeline_id", str, True)
 
-        pipeline_endpoint = (
-            self._client.service_instance._href_definitions.get_pipeline_href(
-                pipeline_id
-            )
+        pipeline_endpoint = self._client._href_definitions.get_pipeline_href(
+            pipeline_id
         )
 
         response_delete = requests.delete(
@@ -387,7 +383,7 @@ class Pipelines(WMLResource):
 
         Pipelines._validate_type(pipeline_id, "pipeline_id", str, False)
         Pipelines._validate_type(limit, "limit", int, False)
-        url = self._client.service_instance._href_definitions.get_pipelines_href()
+        url = self._client._href_definitions.get_pipelines_href()
 
         if pipeline_id is None:
             filter_func = (
@@ -439,9 +435,7 @@ class Pipelines(WMLResource):
         Pipelines._validate_type(pipeline_id, "pipeline_id", str, True)
         Pipelines._validate_type(rev_id, "rev_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_pipeline_href(
-            pipeline_id
-        )
+        url = self._client._href_definitions.get_pipeline_href(pipeline_id)
 
         return self._get_with_or_without_limit(
             url,
@@ -590,9 +584,7 @@ class Pipelines(WMLResource):
 
         Pipelines._validate_type(pipeline_id, "pipeline_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_pipeline_href(
-            pipeline_id
-        )
+        url = self._client._href_definitions.get_pipeline_href(pipeline_id)
 
         pipeline_resources = self._get_artifact_details(
             url,

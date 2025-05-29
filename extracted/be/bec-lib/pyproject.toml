@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "bec_lib"
-version = "3.35.7"
+version = "3.35.11"
 description = "BEC library"
 requires-python = ">=3.10"
 classifiers = [
@@ -60,8 +60,8 @@ bec-log-monitor = "bec_lib.channel_monitor:log_monitor_launch"
 bec_lib_fixtures = "bec_lib.tests.fixtures"
 
 [project.urls]
-"Bug Tracker" = "https://gitlab.psi.ch/bec/bec/issues"
-Homepage = "https://gitlab.psi.ch/bec/bec"
+"Bug Tracker" = "https://github.com/bec-project/bec/issues"
+Homepage = "https://github.com/bec-project/bec"
 
 [tool.hatch.build.targets.wheel]
 include = ["*"]

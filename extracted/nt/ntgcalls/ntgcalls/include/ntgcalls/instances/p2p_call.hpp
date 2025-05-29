@@ -28,10 +28,6 @@ namespace ntgcalls {
 
         void processSignalingData(const bytes::binary& buffer);
 
-        void sendLocalDescription();
-
-        void applyRemoteSdp(webrtc::SdpType sdpType, const std::string& sdp);
-
         void applyPendingIceCandidates();
 
         void sendMediaState(MediaState mediaState) const;
@@ -45,7 +41,7 @@ namespace ntgcalls {
 
         void stop() override;
 
-        void init(const MediaDescription &media) const;
+        void init() const;
 
         bytes::vector initExchange(const DhConfig &dhConfig, const std::optional<bytes::vector> &g_a_hash);
 

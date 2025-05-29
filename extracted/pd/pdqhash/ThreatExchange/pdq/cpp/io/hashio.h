@@ -1,9 +1,11 @@
 // ================================================================
-// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+// Copyright (c) Meta Platforms, Inc. and affiliates.
 // ================================================================
 
 #ifndef HASHIO_H
 #define HASHIO_H
+
+#include <istream>
 
 #include <pdq/cpp/common/pdqhashtypes.h>
 
@@ -54,20 +56,20 @@ namespace io {
 // hash=a5f0...b0fa,norm=128,delta=124,quality=100,filename=file8.jpg
 
 bool loadHashAndMetadataFromStream(
-    FILE* fp,
+    std::istream& in,
     facebook::pdq::hashing::Hash256& hash,
     std::string& metadata,
     // Used in case metadata is absent. Please pass in an incremented counter:
     int counter);
 
 void loadHashesAndMetadataFromStream(
-    FILE* fp,
+    std::istream& in,
     std::vector<std::pair<facebook::pdq::hashing::Hash256, std::string>>&
         vector_of_pairs);
 
 // On file-read error, returns false.
 bool loadHashesAndMetadataFromFile(
-    char* filename,
+    const char* filename,
     std::vector<std::pair<facebook::pdq::hashing::Hash256, std::string>>&
         vector_of_pairs);
 
@@ -93,16 +95,13 @@ void loadHashesFromFilesOrDie(
     std::vector<facebook::pdq::hashing::Hash256>& hashes);
 
 void loadHashesFromFileOrDie(
-    char* filename,
-    std::vector<facebook::pdq::hashing::Hash256>& hashes);
+    const char* filename, std::vector<facebook::pdq::hashing::Hash256>& hashes);
 
 bool loadHashesFromFile(
-    char* filename,
-    std::vector<facebook::pdq::hashing::Hash256>& hashes);
+    const char* filename, std::vector<facebook::pdq::hashing::Hash256>& hashes);
 
 void loadHashesFromStream(
-    FILE* fp,
-    std::vector<facebook::pdq::hashing::Hash256>& hashes);
+    std::istream& in, std::vector<facebook::pdq::hashing::Hash256>& hashes);
 
 } // namespace io
 } // namespace pdq

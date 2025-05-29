@@ -123,7 +123,7 @@ class ModelDefinition(WMLResource):
         paramvalue = self._client._params()
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_model_definition_assets_href(),
+            self._client._href_definitions.get_model_definition_assets_href(),
             params=paramvalue,
             headers=self._client._get_headers(),
             json=document,
@@ -138,13 +138,13 @@ class ModelDefinition(WMLResource):
 
         if self._client.CLOUD_PLATFORM_SPACES:
             model_definition_attachment_url = (
-                self._client.service_instance._href_definitions.get_attachments_href(
+                self._client._href_definitions.get_attachments_href(
                     model_definition_details["metadata"]["asset_id"]
                 )
             )
         else:
             model_definition_attachment_url = (
-                self._client.service_instance._href_definitions.get_model_definition_assets_href()
+                self._client._href_definitions.get_model_definition_assets_href()
                 + "/"
                 + model_definition_details["metadata"]["asset_id"]
                 + "/attachments"
@@ -191,7 +191,7 @@ class ModelDefinition(WMLResource):
                 )
 
             complete_response = requests.post(
-                self._client.service_instance._href_definitions.get_attachment_complete_href(
+                self._client._href_definitions.get_attachment_complete_href(
                     model_definition_id, attachment_id
                 ),
                 params=paramvalue,
@@ -326,14 +326,12 @@ class ModelDefinition(WMLResource):
             params.update({"revision_id": rev_id})
 
         attachment_id = self._get_attachment_id(model_definition_id)
-        artifact_content_url = (
-            self._client.service_instance._href_definitions.get_attachment_href(
-                model_definition_id, attachment_id
-            )
+        artifact_content_url = self._client._href_definitions.get_attachment_href(
+            model_definition_id, attachment_id
         )
         if not self._ICP_PLATFORM_SPACES:
             response = requests.get(
-                self._client.service_instance._href_definitions.get_attachment_href(
+                self._client._href_definitions.get_attachment_href(
                     model_definition_id, attachment_id
                 ),
                 params=self._client._params(),
@@ -403,7 +401,7 @@ class ModelDefinition(WMLResource):
         paramvalue = self._client._params()
 
         model_definition_endpoint = (
-            self._client.service_instance._href_definitions.get_model_definition_assets_href()
+            self._client._href_definitions.get_model_definition_assets_href()
             + "/"
             + model_definition_id
         )
@@ -439,7 +437,7 @@ class ModelDefinition(WMLResource):
                     "entity": response_data["entity"],
                 }
                 href = (
-                    self._client.service_instance._href_definitions.get_base_asset_with_type_href(
+                    self._client._href_definitions.get_base_asset_with_type_href(
                         response_data["metadata"]["asset_type"],
                         response_data["metadata"]["asset_id"],
                     )
@@ -463,7 +461,7 @@ class ModelDefinition(WMLResource):
                 }
 
                 href = (
-                    self._client.service_instance._href_definitions.get_base_asset_with_type_href(
+                    self._client._href_definitions.get_base_asset_with_type_href(
                         response_data["metadata"]["asset_type"],
                         response_data["metadata"]["asset_id"],
                     )
@@ -528,7 +526,7 @@ class ModelDefinition(WMLResource):
 
         op_name = "getting attachment id "
         url = (
-            self._client.service_instance._href_definitions.get_model_definition_assets_href()
+            self._client._href_definitions.get_model_definition_assets_href()
             + "/"
             + model_definition_id
         )
@@ -568,9 +566,7 @@ class ModelDefinition(WMLResource):
         """
         ##For CP4D, check if either spce or project ID is set
         self._client._check_if_either_is_set()
-        href = (
-            self._client.service_instance._href_definitions.get_model_definition_search_asset_href()
-        )
+        href = self._client._href_definitions.get_model_definition_search_asset_href()
         if limit is None:
             data: dict[str, Any] = {"query": "*:*"}
         else:
@@ -730,9 +726,7 @@ class ModelDefinition(WMLResource):
 
         updated_details = None
 
-        url = self._client.service_instance._href_definitions.get_asset_href(
-            model_definition_id
-        )
+        url = self._client._href_definitions.get_asset_href(model_definition_id)
 
         # STEPS
         # STEP 1. Get existing metadata
@@ -796,10 +790,8 @@ class ModelDefinition(WMLResource):
             )
 
             if meta_patch_payload:
-                meta_patch_url = (
-                    self._client.service_instance._href_definitions.get_asset_href(
-                        model_definition_id
-                    )
+                meta_patch_url = self._client._href_definitions.get_asset_href(
+                    model_definition_id
                 )
 
                 response_patch = requests.patch(
@@ -815,9 +807,7 @@ class ModelDefinition(WMLResource):
 
             if entity_patch_payload:
                 entity_patch_url = (
-                    self._client.service_instance._href_definitions.get_asset_href(
-                        model_definition_id
-                    )
+                    self._client._href_definitions.get_asset_href(model_definition_id)
                     + "/attributes/wml_model_definition"
                 )
 
@@ -850,9 +840,7 @@ class ModelDefinition(WMLResource):
             self._update_msg(updated_details)
 
         # Have to fetch again to reflect updated asset and attachment ids
-        url = self._client.service_instance._href_definitions.get_asset_href(
-            model_definition_id
-        )
+        url = self._client._href_definitions.get_asset_href(model_definition_id)
 
         response = requests.get(
             url, params=self._client._params(), headers=self._client._get_headers()
@@ -975,7 +963,7 @@ class ModelDefinition(WMLResource):
         )
 
         url = (
-            self._client.service_instance._href_definitions.get_model_definition_assets_href()
+            self._client._href_definitions.get_model_definition_assets_href()
             + "/"
             + model_definition_id
         )
@@ -1038,7 +1026,7 @@ class ModelDefinition(WMLResource):
         ##For CP4D, check if either spce or project ID is set
         self._client._check_if_either_is_set()
         href = (
-            self._client.service_instance._href_definitions.get_model_definition_assets_href()
+            self._client._href_definitions.get_model_definition_assets_href()
             + "/"
             + model_definition_id
             + "/revisions"

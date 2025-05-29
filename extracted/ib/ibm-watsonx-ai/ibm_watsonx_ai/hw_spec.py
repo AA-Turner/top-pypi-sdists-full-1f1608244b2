@@ -53,9 +53,7 @@ class HwSpec(WMLResource):
         HwSpec._validate_type(hw_spec_id, "hw_spec_id", str, True)
 
         response = requests.get(
-            self._client.service_instance._href_definitions.get_hw_spec_href(
-                hw_spec_id
-            ),
+            self._client._href_definitions.get_hw_spec_href(hw_spec_id),
             params=self._client._params(skip_space_project_chk=True),
             headers=self._client._get_headers(),
         )
@@ -101,7 +99,7 @@ class HwSpec(WMLResource):
         )
 
         hw_spec_meta_json = json.dumps(hw_spec_meta)
-        href = self._client.service_instance._href_definitions.get_hw_specs_href()
+        href = self._client._href_definitions.get_hw_specs_href()
 
         creation_response = requests.post(
             href,
@@ -142,7 +140,7 @@ class HwSpec(WMLResource):
             params.update({"name": name})
 
         # Todo provide api to return
-        href = self._client.service_instance._href_definitions.get_hw_specs_href()
+        href = self._client._href_definitions.get_hw_specs_href()
 
         response = requests.get(href, params, headers=self._client._get_headers())
 
@@ -255,7 +253,7 @@ class HwSpec(WMLResource):
         parameters.update(name=hw_spec_name)
 
         response = requests.get(
-            self._client.service_instance._href_definitions.get_hw_specs_href(),
+            self._client._href_definitions.get_hw_specs_href(),
             params=parameters,
             headers=self._client._get_headers(),
         )
@@ -310,9 +308,7 @@ class HwSpec(WMLResource):
         HwSpec._validate_type(hw_spec_id, "hw_spec_id", str, True)
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_hw_spec_href(
-                hw_spec_id
-            ),
+            self._client._href_definitions.get_hw_spec_href(hw_spec_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )

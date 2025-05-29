@@ -936,14 +936,20 @@ class JoinType(betterproto.Enum):
 
 class CustomRuleType(betterproto.Enum):
     CUSTOM_RULE_TYPE_UNSPECIFIED = 0
-    CUSTOM_RULE_TYPE_VIRTUAL_TABLE = 1
-    CUSTOM_RULE_TYPE_CROSS_JOIN = 2
+    CUSTOM_RULE_TYPE_SQL_RULE = 1
+    CUSTOM_RULE_TYPE_JOIN_RULE = 2
 
 
 class CustomRulesThresholdType(betterproto.Enum):
     CUSTOM_RULES_THRESHOLD_TYPE_UNSPECIFIED = 0
     CUSTOM_RULES_THRESHOLD_TYPE_COUNT = 1
     CUSTOM_RULES_THRESHOLD_TYPE_VALUE = 2
+    CUSTOM_RULES_THRESHOLD_TYPE_PERCENT_MATCH = 3
+
+
+class CustomRuleListSortField(betterproto.Enum):
+    CUSTOM_RULE_LIST_SORT_FIELD_UNSPECIFIED = 0
+    CUSTOM_RULE_LIST_SORT_FIELD_FAVORITE = 1
 
 
 class SystemSearchType(betterproto.Enum):
@@ -2537,6 +2543,7 @@ class TableColumn(betterproto.Message):
     data_node_id: int = betterproto.int32_field(11)
     is_nullable: bool = betterproto.bool_field(12)
     tags: List["Tag"] = betterproto.message_field(13)
+    is_key_in_join: bool = betterproto.bool_field(14)
 
 
 @dataclass
@@ -5404,6 +5411,20 @@ class CustomRuleBulkRequest(betterproto.Message):
 
 
 @dataclass
+class GetCustomRuleListRequest(betterproto.Message):
+    search: str = betterproto.string_field(1)
+    sort_field: "CustomRuleListSortField" = betterproto.enum_field(2)
+    sort_direction: "SortDirection" = betterproto.enum_field(3)
+    page_size: int = betterproto.int32_field(4)
+    page_cursor: str = betterproto.string_field(5)
+    source_id: int = betterproto.int32_field(6)
+    schema_id: int = betterproto.int32_field(7)
+    table_id: int = betterproto.int32_field(8)
+    column_id: int = betterproto.int32_field(9)
+    collection_id: int = betterproto.int32_field(10)
+
+
+@dataclass
 class GetCustomRuleListResponse(betterproto.Message):
     custom_rules: List["CustomRuleInfo"] = betterproto.message_field(1)
     pagination_info: "PaginationInfo" = betterproto.message_field(2)
@@ -5444,8 +5465,10 @@ class MessageObservedColumnListResponse(betterproto.Message):
 
 @dataclass
 class JoinColumnPairing(betterproto.Message):
-    left_column: "TableColumn" = betterproto.message_field(1)
-    right_column: "TableColumn" = betterproto.message_field(2)
+    id: int = betterproto.int32_field(1)
+    left_column: "TableColumn" = betterproto.message_field(2)
+    right_column: "TableColumn" = betterproto.message_field(3)
+    entity_info: "EntityInfo" = betterproto.message_field(4)
 
 
 @dataclass
@@ -5454,8 +5477,25 @@ class Join(betterproto.Message):
     left_table: "Table" = betterproto.message_field(2)
     right_table: "Table" = betterproto.message_field(3)
     key_columns: List["JoinColumnPairing"] = betterproto.message_field(4)
-    named_schedule: "IdAndDisplayName" = betterproto.message_field(5)
-    entity_info: "EntityInfo" = betterproto.message_field(6)
+    entity_info: "EntityInfo" = betterproto.message_field(5)
+
+
+@dataclass
+class JoinColumnIdPairing(betterproto.Message):
+    left_column_id: int = betterproto.int32_field(1)
+    right_column_id: int = betterproto.int32_field(2)
+
+
+@dataclass
+class CreateOrUpdateJoinRequest(betterproto.Message):
+    left_table_id: int = betterproto.int32_field(1)
+    right_table_id: int = betterproto.int32_field(2)
+    key_columns: List["JoinColumnIdPairing"] = betterproto.message_field(4)
+
+
+@dataclass
+class CreateOrUpdateJoinResponse(betterproto.Message):
+    join: "Join" = betterproto.message_field(1)
 
 
 @dataclass

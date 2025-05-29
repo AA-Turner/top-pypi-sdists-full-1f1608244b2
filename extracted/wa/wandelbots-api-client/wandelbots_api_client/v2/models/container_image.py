@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from wandelbots_api_client.v2.models.container_image_secrets_inner import ContainerImageSecretsInner
 from wandelbots_api_client.v2.models.image_credentials import ImageCredentials
 from typing import Optional, Set
@@ -28,7 +29,7 @@ class ContainerImage(BaseModel):
     """
     A user provided, custom container image and the required credentials to pull it from a registry. 
     """ # noqa: E501
-    image: StrictStr = Field(description="The location of a container image in the form of `<registry>/<image>:<tag>`.")
+    image: Annotated[str, Field(min_length=1, strict=True)] = Field(description="The location of a container image in the form of `<registry>/<image>:<tag>`.")
     credentials: Optional[ImageCredentials] = None
     secrets: Optional[List[ContainerImageSecretsInner]] = Field(default=None, description="Known secrets for authentication with the container registry.")
     __properties: ClassVar[List[str]] = ["image", "credentials", "secrets"]

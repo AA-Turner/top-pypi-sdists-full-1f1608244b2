@@ -2305,7 +2305,7 @@ def check_slurm_job_id() -> None:
         slurm_job_id = os.environ.get('SLURM_JOB_ID')
         if slurm_job_id is not None and not slurm_job_id.isdigit():
             print_red("Not a valid SLURM_JOB_ID.")
-        elif slurm_job_id is None:
+        elif slurm_job_id is None and len(args.calculate_pareto_front_of_job) == 0:
             print_red(
                 "You are on a system that has SLURM available, but you are not running the main-script in a SLURM-Environment. "
                 "This may cause the system to slow down for all other users. It is recommended you run the main script in a SLURM-job."
@@ -8280,12 +8280,6 @@ def plot_pareto_frontier_sixel(data: Any, x_metric: str, y_metric: str) -> None:
     plt.close(fig)
 
 @beartype
-def convert_to_serializable(obj: np.ndarray) -> Union[str, list]:
-    if isinstance(obj, np.ndarray):
-        return obj.tolist()
-    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
-
-@beartype
 def pareto_front_general(
     x: np.ndarray,
     y: np.ndarray,
@@ -8645,29 +8639,9 @@ def get_result_minimize_flag(path_to_calculate: str, resname: str) -> bool:
     return minmax[index] == "min"
 
 @beartype
-def rename_pareto_file_with_old_cleanup():
-    folder = get_current_run_folder()
-    original_file = os.path.join(folder, "pareto_front_table.txt")
-    old_file = original_file + "_OLD"
-
-    try:
-        # Delete the old backup file if it exists
-        if os.path.exists(old_file):
-            os.remove(old_file)
-
-        # Rename the original file to the backup name if it exists
-        if os.path.exists(original_file):
-            os.rename(original_file, old_file)
-    except Exception as e:
-        print_debug(f"Error while processing file: {e}")
-
-@beartype
-def show_pareto_frontier_data(path_to_calculate: str, res_names: list, disable_sixel_and_table: bool = False) -> None:
-    if len(res_names) <= 1:
-        print_debug(f"--result_names (has {len(res_names)} entries) must be at least 2.")
-        return
-
+def get_pareto_front_data(path_to_calculate: str, res_names: list) -> dict:
     pareto_front_data: dict = {}
+
     all_combinations = list(combinations(range(len(arg_result_names)), 2))
 
     skip = False
@@ -8691,10 +8665,22 @@ def show_pareto_frontier_data(path_to_calculate: str, res_names: list, disable_s
                 print_red("Calculating pareto-fronts was cancelled by pressing CTRL-c")
                 skip = True
 
-    if pareto_front_data.keys():
-        rename_pareto_file_with_old_cleanup()
+    return pareto_front_data
+
+@beartype
+def show_pareto_frontier_data(path_to_calculate: str, res_names: list, disable_sixel_and_table: bool = False) -> None:
+    if len(res_names) <= 1:
+        print_debug(f"--result_names (has {len(res_names)} entries) must be at least 2.")
+        return
+
+    pareto_front_data: dict = get_pareto_front_data(path_to_calculate, res_names)
+
+    pareto_points = {}
 
     for metric_x in pareto_front_data.keys():
+        if metric_x not in pareto_points:
+            pareto_points[metric_x] = {}
+
         for metric_y in pareto_front_data[metric_x].keys():
             calculated_frontier = pareto_front_data[metric_x][metric_y]
 
@@ -8706,12 +8692,8 @@ def show_pareto_frontier_data(path_to_calculate: str, res_names: list, disable_s
                 else:
                     print(f"Not showing pareto-front-sixel for {path_to_calculate}")
 
-            pareto_front_data[metric_x][metric_y] = {
-                "param_dicts": calculated_frontier[metric_x][metric_y]["param_dicts"],
-                "means": calculated_frontier[metric_x][metric_y]["means"],
-                "absolute_metrics": arg_result_names,
-                "idxs": calculated_frontier[metric_x][metric_y]["idxs"]
-            }
+            if len(calculated_frontier[metric_x][metric_y]["idxs"]):
+                pareto_points[metric_x][metric_y] = sorted(calculated_frontier[metric_x][metric_y]["idxs"])
 
             rich_table = pareto_front_as_rich_table(
                 calculated_frontier[metric_x][metric_y]["idxs"],
@@ -8731,8 +8713,8 @@ def show_pareto_frontier_data(path_to_calculate: str, res_names: list, disable_s
                         console.print(rich_table)
                     text_file.write(capture.get())
 
-    with open(f"{get_current_run_folder()}/pareto_front_data.json", mode="w", encoding="utf-8") as pareto_front_json_handle:
-        json.dump(pareto_front_data, pareto_front_json_handle, default=convert_to_serializable)
+    with open(f"{get_current_run_folder()}/pareto_idxs.json", mode="w", encoding="utf-8") as pareto_idxs_json_handle:
+        json.dump(pareto_points, pareto_idxs_json_handle)
 
     live_share_after_pareto()
 
@@ -9053,6 +9035,8 @@ def post_job_calculate_pareto_front() -> None:
 
 @beartype
 def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: bool = False) -> bool:
+    pf_start_time = time.time()
+
     # Returns true if it fails
     if not path_to_calculate:
         return True
@@ -9120,6 +9104,10 @@ def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: 
         return True
 
     show_pareto_or_error_msg(path_to_calculate, res_names, disable_sixel_and_table)
+
+    pf_end_time = time.time()
+
+    print_debug(f"Calculating the pareto-front took {pf_end_time - pf_start_time} seconds")
 
     return False
 

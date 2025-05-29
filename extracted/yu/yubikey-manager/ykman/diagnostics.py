@@ -1,36 +1,38 @@
-from . import __version__ as ykman_version
-from .util import get_windows_version
-from .pcsc import list_readers, list_devices as list_ccid_devices
-from .hid import list_otp_devices, list_ctap_devices
-from .piv import get_piv_info
-from .openpgp import get_openpgp_info
-from .hsmauth import get_hsmauth_info
-
-from yubikit.core import Tlv
-from yubikit.core.smartcard import SmartCardConnection
-from yubikit.core.fido import FidoConnection
-from yubikit.core.otp import OtpConnection
-from yubikit.management import ManagementSession
-from yubikit.yubiotp import YubiOtpSession
-from yubikit.piv import PivSession
-from yubikit.oath import OathSession
-from yubikit.openpgp import OpenPgpSession
-from yubikit.hsmauth import HsmAuthSession
-from yubikit.support import read_info, get_name
-from fido2.ctap import CtapError
-from fido2.ctap2 import Ctap2, ClientPin
-
+import ctypes
+import os
+import platform
+import sys
 from dataclasses import asdict
 from datetime import datetime
-from typing import List, Dict, Any
-import platform
-import ctypes
-import sys
-import os
+from typing import Any
+
+from fido2.ctap import CtapError
+from fido2.ctap2 import ClientPin, Ctap2
+
+from yubikit.core import Tlv
+from yubikit.core.fido import FidoConnection
+from yubikit.core.otp import OtpConnection
+from yubikit.core.smartcard import SmartCardConnection
+from yubikit.hsmauth import HsmAuthSession
+from yubikit.management import ManagementSession
+from yubikit.oath import OathSession
+from yubikit.openpgp import OpenPgpSession
+from yubikit.piv import PivSession
+from yubikit.support import get_name, read_info
+from yubikit.yubiotp import YubiOtpSession
+
+from . import __version__ as ykman_version
+from .hid import list_ctap_devices, list_otp_devices
+from .hsmauth import get_hsmauth_info
+from .openpgp import get_openpgp_info
+from .pcsc import list_devices as list_ccid_devices
+from .pcsc import list_readers
+from .piv import get_piv_info
+from .util import get_windows_version
 
 
 def sys_info():
-    info: Dict[str, Any] = {
+    info: dict[str, Any] = {
         "ykman": ykman_version,
         "Python": sys.version,
         "Platform": sys.platform,
@@ -50,7 +52,7 @@ def sys_info():
 
 
 def mgmt_info(pid, conn):
-    data: List[Any] = []
+    data: list[Any] = []
     try:
         m = ManagementSession(conn)
         raw_info = m.backend.read_config()
@@ -121,12 +123,14 @@ def ccid_info():
                 c = reader.createConnection()
                 c.connect()
                 c.disconnect()
+                if hasattr(c, "release"):
+                    c.release()
                 result = "Success"
             except Exception as e:
                 result = f"<{e.__class__.__name__}>"
             readers[reader.name] = result
 
-        yubikeys: Dict[str, Any] = {}
+        yubikeys: dict[str, Any] = {}
         for dev in list_ccid_devices():
             try:
                 with dev.open_connection(SmartCardConnection) as conn:
@@ -150,7 +154,7 @@ def ccid_info():
 
 def otp_info():
     try:
-        yubikeys: Dict[str, Any] = {}
+        yubikeys: dict[str, Any] = {}
         for dev in list_otp_devices():
             try:
                 dev_info = []
@@ -179,10 +183,10 @@ def otp_info():
 
 def fido_info():
     try:
-        yubikeys: Dict[str, Any] = {}
+        yubikeys: dict[str, Any] = {}
         for dev in list_ctap_devices():
             try:
-                dev_info: List[Any] = []
+                dev_info: list[Any] = []
                 with dev.open_connection(FidoConnection) as conn:
                     dev_info.append(
                         {
@@ -194,7 +198,7 @@ def fido_info():
                     )
                     try:
                         ctap2 = Ctap2(conn)
-                        ctap_data: Dict[str, Any] = {"Ctap2Info": asdict(ctap2.info)}
+                        ctap_data: dict[str, Any] = {"Ctap2Info": asdict(ctap2.info)}
                         if ctap2.info.options.get("clientPin"):
                             client_pin = ClientPin(ctap2)
                             ctap_data["PIN retries"] = client_pin.get_pin_retries()

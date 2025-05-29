@@ -19,7 +19,7 @@ import warnings
 from collections.abc import Iterable
 from functools import cached_property
 from types import BuiltinFunctionType
-from typing import TYPE_CHECKING, Hashable, Union
+from typing import TYPE_CHECKING, Any, Hashable, Optional, Union
 
 import numpy as np
 import pandas
@@ -35,9 +35,15 @@ from pandas.core.dtypes.common import (
     is_numeric_dtype,
 )
 from pandas.errors import SpecificationError
+from typing_extensions import Self
 
 from modin.core.dataframe.algebra.default2pandas.groupby import GroupBy
 from modin.core.storage_formats.base.query_compiler import BaseQueryCompiler
+from modin.core.storage_formats.pandas.query_compiler_caster import (
+    EXTENSION_DICT_TYPE,
+    EXTENSION_NO_LOOKUP,
+    QueryCompilerCaster,
+)
 from modin.error_message import ErrorMessage
 from modin.logging import ClassLogger, disable_logging
 from modin.pandas.utils import cast_function_modin2pandas
@@ -45,6 +51,7 @@ from modin.utils import (
     MODIN_UNNAMED_SERIES_LABEL,
     _inherit_docstrings,
     hashable,
+    sentinel,
     try_cast_to_pandas,
     wrap_into_list,
     wrap_udf_function,
@@ -57,7 +64,7 @@ from .window import RollingGroupby
 if TYPE_CHECKING:
     from modin.pandas import DataFrame
 
-_DEFAULT_BEHAVIOUR = {
+_DEFAULT_BEHAVIOUR = EXTENSION_NO_LOOKUP | {
     "__class__",
     "__getitem__",
     "__init__",
@@ -84,13 +91,29 @@ _DEFAULT_BEHAVIOUR = {
     "_wrap_aggregation",
 }
 
+GROUPBY_EXTENSION_NO_LOOKUP = EXTENSION_NO_LOOKUP | {
+    "_axis",
+    "_idx_name",
+    "_df",
+    "_query_compiler",
+    "_columns",
+    "_by",
+    "_drop",
+    "_return_tuple_when_iterating",
+    "_is_multi_by",
+    "_level",
+    "_kwargs",
+    "_get_query_compiler",
+}
+
 
 @_inherit_docstrings(pandas.core.groupby.DataFrameGroupBy)
-class DataFrameGroupBy(ClassLogger):  # noqa: GL08
+class DataFrameGroupBy(ClassLogger, QueryCompilerCaster):  # noqa: GL08
     _pandas_class = pandas.core.groupby.DataFrameGroupBy
     _return_tuple_when_iterating = False
     _df: Union[DataFrame, Series]
     _query_compiler: BaseQueryCompiler
+    _extensions: EXTENSION_DICT_TYPE = EXTENSION_DICT_TYPE(dict)
 
     def __init__(
         self,
@@ -148,6 +171,52 @@ class DataFrameGroupBy(ClassLogger):  # noqa: GL08
         }
         self._kwargs.update(kwargs)
 
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster._get_query_compiler)
+    def _get_query_compiler(self) -> Optional[BaseQueryCompiler]:
+        if hasattr(self, "_df"):
+            return self._df._query_compiler
+        return None
+
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster.get_backend)
+    def get_backend(self) -> str:
+        return self._df.get_backend()
+
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster.set_backend)
+    def set_backend(
+        self,
+        backend: str,
+        inplace: bool = False,
+        *,
+        switch_operation: Optional[str] = None,
+    ) -> Optional[Self]:
+        # TODO(https://github.com/modin-project/modin/issues/7544): implement
+        # this method to support automatic pre-operation backend switch for
+        # groupby methods.
+        ErrorMessage.not_implemented()
+
+    @_inherit_docstrings(QueryCompilerCaster.is_backend_pinned)
+    def is_backend_pinned(self) -> bool:
+        return False
+
+    @_inherit_docstrings(QueryCompilerCaster._set_backend_pinned)
+    def _set_backend_pinned(self, pinned: bool, inplace: bool) -> Optional[Self]:
+        ErrorMessage.not_implemented()
+
+    @_inherit_docstrings(QueryCompilerCaster.pin_backend)
+    def pin_backend(self, inplace: bool = False) -> Optional[Self]:
+        ErrorMessage.not_implemented()
+
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster._get_query_compiler)
+    def _copy_into(self, other: Self) -> None:
+        # TODO(https://github.com/modin-project/modin/issues/7544): implement
+        # this method to support automatic pre-operation backend switch for
+        # groupby methods.
+        ErrorMessage.not_implemented()
+
     def _override(self, **kwargs):
         """
         Override groupby parameters.
@@ -188,13 +257,42 @@ class DataFrameGroupBy(ClassLogger):  # noqa: GL08
         The value of the attribute.
         """
         try:
-            return object.__getattribute__(self, key)
+            return self._getattr__from_extension_impl(
+                key=key,
+                default_behavior_attributes=GROUPBY_EXTENSION_NO_LOOKUP,
+                extensions=__class__._extensions,
+            )
         except AttributeError as err:
-            if key in self._columns:
+            if key != "_columns" and key in self._columns:
                 return self.__getitem__(key)
             raise err
 
-    def __getattribute__(self, item):
+    @disable_logging
+    def __getattribute__(self, item: str) -> Any:
+        """
+        Override __getattribute__, which python calls to access any attribute of an object of this class.
+
+        We override this method
+            1) to default to pandas for empty dataframes on non-lazy engines.
+            2) to get non-method extensions (e.g. properties)
+
+        Parameters
+        ----------
+        item : str
+            The name of the attribute to access.
+
+        Returns
+        -------
+        Any
+            The value of the attribute.
+        """
+        if item not in GROUPBY_EXTENSION_NO_LOOKUP:
+            extensions_result = self._getattribute__from_extension_impl(
+                item, __class__._extensions
+            )
+            if extensions_result is not sentinel:
+                return extensions_result
+
         attr = super().__getattribute__(item)
         if item not in _DEFAULT_BEHAVIOUR and not self._query_compiler.lazy_shape:
             # We default to pandas on empty DataFrames. This avoids a large amount of
@@ -207,6 +305,52 @@ class DataFrameGroupBy(ClassLogger):  # noqa: GL08
 
                 return default_handler
         return attr
+
+    @disable_logging
+    def __setattr__(self, key: str, value) -> None:
+        """
+        Set an attribute on the object.
+
+        We override this method to set extension properties.
+
+        Parameters
+        ----------
+        key : str
+            The name of the attribute to set.
+        value : Any
+            The value to set the attribute to.
+
+        Returns
+        -------
+        None
+        """
+        # An extension property is only accessible if the backend supports it.
+        extension = self._get_extension(key, __class__._extensions)
+        if extension is not sentinel and hasattr(extension, "__set__"):
+            return extension.__set__(self, value)
+        return super().__setattr__(key, value)
+
+    @disable_logging
+    def __delattr__(self, name: str) -> None:
+        """
+        Delete an attribute on the object.
+
+        We override this method to delete extension properties.
+
+        Parameters
+        ----------
+        name : str
+            The name of the attribute to delete.
+
+        Returns
+        -------
+        None
+        """
+        # An extension property is only accessible if the backend supports it.
+        extension = self._get_extension(name, __class__._extensions)
+        if extension is not sentinel and hasattr(extension, "__delete__"):
+            return extension.__delete__(self)
+        return super().__delattr__(name)
 
     @property
     def ngroups(self):  # noqa: GL08
@@ -1730,6 +1874,88 @@ class DataFrameGroupBy(ClassLogger):  # noqa: GL08
 @_inherit_docstrings(pandas.core.groupby.SeriesGroupBy)
 class SeriesGroupBy(DataFrameGroupBy):  # noqa: GL08
     _pandas_class = pandas.core.groupby.SeriesGroupBy
+    _extensions: EXTENSION_DICT_TYPE = EXTENSION_DICT_TYPE(dict)
+
+    @disable_logging
+    def __getattribute__(self, item: str) -> Any:
+        """
+        Get an attribute of the object.
+
+        Python calls this method for every attribute access. We override it to
+        get extension attributes.
+
+        Parameters
+        ----------
+        item : str
+            Attribute name.
+
+        Returns
+        -------
+        Any
+            The value of the attribute.
+        """
+        if item not in GROUPBY_EXTENSION_NO_LOOKUP:
+            extensions_result = self._getattribute__from_extension_impl(
+                item, __class__._extensions
+            )
+            if extensions_result is not sentinel:
+                return extensions_result
+
+        return super().__getattribute__(item)
+
+    @_inherit_docstrings(QueryCompilerCaster._getattr__from_extension_impl)
+    def __getattr__(self, key: str) -> Any:
+        return self._getattr__from_extension_impl(
+            key=key,
+            default_behavior_attributes=GROUPBY_EXTENSION_NO_LOOKUP,
+            extensions=__class__._extensions,
+        )
+
+    @disable_logging
+    def __setattr__(self, key: str, value: Any) -> None:
+        """
+        Set an attribute of the object.
+
+        We override this method to support settable extension attributes.
+
+        Parameters
+        ----------
+        key : str
+            Attribute name.
+        value : Any
+            Value to set the attribute to.
+
+        Returns
+        -------
+        None
+        """
+        # An extension property is only accessible if the backend supports it.
+        extension = self._get_extension(key, __class__._extensions)
+        if extension is not sentinel and hasattr(extension, "__set__"):
+            return extension.__set__(self, value)
+        return super().__setattr__(key, value)
+
+    @disable_logging
+    def __delattr__(self, name: str) -> None:
+        """
+        Delete an attribute of the object.
+
+        We override this method to support deletable extension attributes.
+
+        Parameters
+        ----------
+        name : str
+            Attribute name.
+
+        Returns
+        -------
+        None
+        """
+        # An extension property is only accessible if the backend supports it.
+        extension = self._get_extension(name, __class__._extensions)
+        if extension is not sentinel and hasattr(extension, "__delete__"):
+            return extension.__delete__(self)
+        return super().__delattr__(name)
 
     @property
     def ndim(self):

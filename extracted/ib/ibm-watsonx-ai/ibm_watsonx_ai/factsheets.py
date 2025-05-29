@@ -105,11 +105,7 @@ class Factsheets(WMLResource):
         else:
             raise WrongMetaProps(reason=reason)
 
-        url = (
-            self._client.service_instance._href_definitions.get_wkc_model_register_href(
-                model_id
-            )
-        )
+        url = self._client._href_definitions.get_wkc_model_register_href(model_id)
 
         response = requests.post(
             url,
@@ -152,14 +148,12 @@ class Factsheets(WMLResource):
         """
         if catalog_id is not None:
             Factsheets._validate_type(catalog_id, "catalog_id", str, True)
-            url = self._client.service_instance._href_definitions.get_wkc_model_list_from_catalog_href(
+            url = self._client._href_definitions.get_wkc_model_list_from_catalog_href(
                 catalog_id
             )
 
         else:
-            url = (
-                self._client.service_instance._href_definitions.get_wkc_model_list_all_href()
-            )
+            url = self._client._href_definitions.get_wkc_model_list_all_href()
 
         response = requests.get(
             url,
@@ -208,9 +202,7 @@ class Factsheets(WMLResource):
         """
         Factsheets._validate_type(asset_id, "asset_id", str, True)
         Factsheets._validate_type(catalog_id, "catalog_id", str, False)
-        url = self._client.service_instance._href_definitions.get_wkc_model_delete_href(
-            asset_id
-        )
+        url = self._client._href_definitions.get_wkc_model_delete_href(asset_id)
 
         params = self._client._params()
         if catalog_id is not None:

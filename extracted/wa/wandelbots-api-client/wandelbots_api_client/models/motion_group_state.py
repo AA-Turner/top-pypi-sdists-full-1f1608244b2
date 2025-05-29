@@ -43,7 +43,8 @@ class MotionGroupState(BaseModel):
     force: Optional[ForceVector] = Field(default=None, description="Current Force at TCP in [N]. Is only available if the robot controller supports it, e.g. available for UR Controllers. The velocity is relative to the response_coordinate_system specified in the request. ")
     joint_limit_reached: MotionGroupStateJointLimitReached = Field(description="Indicates whether the joint is in a limit for all joints of the motion group. ")
     joint_current: Optional[Joints] = Field(default=None, description="Current Current at TCP in [A]. Is only available if the robot controller supports it, e.g. available for UR Controllers. ")
-    __properties: ClassVar[List[str]] = ["motion_group", "controller", "joint_position", "joint_velocity", "joint_torque", "flange_pose", "tcp_pose", "velocity", "force", "joint_limit_reached", "joint_current"]
+    sequence_number: StrictStr = Field(description="Sequence number of the controller state. It starts with 0 upon establishing the connection with a physical controller. The sequence number is reset when the connection to the physical controller is closed and re-established. It is of type string to represent uint64 values, which is not supported by OpenAPI. ")
+    __properties: ClassVar[List[str]] = ["motion_group", "controller", "joint_position", "joint_velocity", "joint_torque", "flange_pose", "tcp_pose", "velocity", "force", "joint_limit_reached", "joint_current", "sequence_number"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -137,7 +138,8 @@ class MotionGroupState(BaseModel):
             "velocity": MotionVector.from_dict(obj["velocity"]) if obj.get("velocity") is not None else None,
             "force": ForceVector.from_dict(obj["force"]) if obj.get("force") is not None else None,
             "joint_limit_reached": MotionGroupStateJointLimitReached.from_dict(obj["joint_limit_reached"]) if obj.get("joint_limit_reached") is not None else None,
-            "joint_current": Joints.from_dict(obj["joint_current"]) if obj.get("joint_current") is not None else None
+            "joint_current": Joints.from_dict(obj["joint_current"]) if obj.get("joint_current") is not None else None,
+            "sequence_number": obj.get("sequence_number")
         })
         return _obj
 

@@ -54,14 +54,29 @@ BinaryExpr = expr_internal.BinaryExpr
 Case = expr_internal.Case
 Cast = expr_internal.Cast
 Column = expr_internal.Column
+CopyTo = expr_internal.CopyTo
+CreateCatalog = expr_internal.CreateCatalog
+CreateCatalogSchema = expr_internal.CreateCatalogSchema
+CreateExternalTable = expr_internal.CreateExternalTable
+CreateFunction = expr_internal.CreateFunction
+CreateFunctionBody = expr_internal.CreateFunctionBody
+CreateIndex = expr_internal.CreateIndex
 CreateMemoryTable = expr_internal.CreateMemoryTable
 CreateView = expr_internal.CreateView
+Deallocate = expr_internal.Deallocate
+DescribeTable = expr_internal.DescribeTable
 Distinct = expr_internal.Distinct
+DmlStatement = expr_internal.DmlStatement
+DropCatalogSchema = expr_internal.DropCatalogSchema
+DropFunction = expr_internal.DropFunction
 DropTable = expr_internal.DropTable
+DropView = expr_internal.DropView
 EmptyRelation = expr_internal.EmptyRelation
+Execute = expr_internal.Execute
 Exists = expr_internal.Exists
 Explain = expr_internal.Explain
 Extension = expr_internal.Extension
+FileType = expr_internal.FileType
 Filter = expr_internal.Filter
 GroupingSet = expr_internal.GroupingSet
 Join = expr_internal.Join
@@ -83,21 +98,31 @@ Limit = expr_internal.Limit
 Literal = expr_internal.Literal
 Negative = expr_internal.Negative
 Not = expr_internal.Not
+OperateFunctionArg = expr_internal.OperateFunctionArg
 Partitioning = expr_internal.Partitioning
 Placeholder = expr_internal.Placeholder
+Prepare = expr_internal.Prepare
 Projection = expr_internal.Projection
+RecursiveQuery = expr_internal.RecursiveQuery
 Repartition = expr_internal.Repartition
 ScalarSubquery = expr_internal.ScalarSubquery
 ScalarVariable = expr_internal.ScalarVariable
+SetVariable = expr_internal.SetVariable
 SimilarTo = expr_internal.SimilarTo
 Sort = expr_internal.Sort
 Subquery = expr_internal.Subquery
 SubqueryAlias = expr_internal.SubqueryAlias
 TableScan = expr_internal.TableScan
+TransactionAccessMode = expr_internal.TransactionAccessMode
+TransactionConclusion = expr_internal.TransactionConclusion
+TransactionEnd = expr_internal.TransactionEnd
+TransactionIsolationLevel = expr_internal.TransactionIsolationLevel
+TransactionStart = expr_internal.TransactionStart
 TryCast = expr_internal.TryCast
 Union = expr_internal.Union
 Unnest = expr_internal.Unnest
 UnnestExpr = expr_internal.UnnestExpr
+Values = expr_internal.Values
 WindowExpr = expr_internal.WindowExpr
 
 __all__ = [
@@ -111,15 +136,30 @@ __all__ = [
     "CaseBuilder",
     "Cast",
     "Column",
+    "CopyTo",
+    "CreateCatalog",
+    "CreateCatalogSchema",
+    "CreateExternalTable",
+    "CreateFunction",
+    "CreateFunctionBody",
+    "CreateIndex",
     "CreateMemoryTable",
     "CreateView",
+    "Deallocate",
+    "DescribeTable",
     "Distinct",
+    "DmlStatement",
+    "DropCatalogSchema",
+    "DropFunction",
     "DropTable",
+    "DropView",
     "EmptyRelation",
+    "Execute",
     "Exists",
     "Explain",
     "Expr",
     "Extension",
+    "FileType",
     "Filter",
     "GroupingSet",
     "ILike",
@@ -142,22 +182,32 @@ __all__ = [
     "Literal",
     "Negative",
     "Not",
+    "OperateFunctionArg",
     "Partitioning",
     "Placeholder",
+    "Prepare",
     "Projection",
+    "RecursiveQuery",
     "Repartition",
     "ScalarSubquery",
     "ScalarVariable",
+    "SetVariable",
     "SimilarTo",
     "Sort",
     "SortExpr",
     "Subquery",
     "SubqueryAlias",
     "TableScan",
+    "TransactionAccessMode",
+    "TransactionConclusion",
+    "TransactionEnd",
+    "TransactionIsolationLevel",
+    "TransactionStart",
     "TryCast",
     "Union",
     "Unnest",
     "UnnestExpr",
+    "Values",
     "Window",
     "WindowExpr",
     "WindowFrame",
@@ -406,9 +456,17 @@ class Expr:
         """Creates a new expression representing a column."""
         return Expr(expr_internal.RawExpr.column(value))
 
-    def alias(self, name: str) -> Expr:
-        """Assign a name to the expression."""
-        return Expr(self.expr.alias(name))
+    def alias(self, name: str, metadata: Optional[dict[str, str]] = None) -> Expr:
+        """Assign a name to the expression.
+
+        Args:
+            name: The name to assign to the expression.
+            metadata: Optional metadata to attach to the expression.
+
+        Returns:
+            A new expression with the assigned name.
+        """
+        return Expr(self.expr.alias(name, metadata))
 
     def sort(self, ascending: bool = True, nulls_first: bool = True) -> SortExpr:
         """Creates a sort :py:class:`Expr` from an existing :py:class:`Expr`.
@@ -602,6 +660,424 @@ class Expr:
                 null_treatment=null_treatment_raw,
             )
         )
+
+    def asin(self) -> Expr:
+        """Returns the arc sine or inverse sine of a number."""
+        from . import functions as F
+
+        return F.asin(self)
+
+    def array_pop_back(self) -> Expr:
+        """Returns the array without the last element."""
+        from . import functions as F
+
+        return F.array_pop_back(self)
+
+    def reverse(self) -> Expr:
+        """Reverse the string argument."""
+        from . import functions as F
+
+        return F.reverse(self)
+
+    def bit_length(self) -> Expr:
+        """Returns the number of bits in the string argument."""
+        from . import functions as F
+
+        return F.bit_length(self)
+
+    def array_length(self) -> Expr:
+        """Returns the length of the array."""
+        from . import functions as F
+
+        return F.array_length(self)
+
+    def array_ndims(self) -> Expr:
+        """Returns the number of dimensions of the array."""
+        from . import functions as F
+
+        return F.array_ndims(self)
+
+    def to_hex(self) -> Expr:
+        """Converts an integer to a hexadecimal string."""
+        from . import functions as F
+
+        return F.to_hex(self)
+
+    def array_dims(self) -> Expr:
+        """Returns an array of the array's dimensions."""
+        from . import functions as F
+
+        return F.array_dims(self)
+
+    def from_unixtime(self) -> Expr:
+        """Converts an integer to RFC3339 timestamp format string."""
+        from . import functions as F
+
+        return F.from_unixtime(self)
+
+    def array_empty(self) -> Expr:
+        """Returns a boolean indicating whether the array is empty."""
+        from . import functions as F
+
+        return F.array_empty(self)
+
+    def sin(self) -> Expr:
+        """Returns the sine of the argument."""
+        from . import functions as F
+
+        return F.sin(self)
+
+    def log10(self) -> Expr:
+        """Base 10 logarithm of the argument."""
+        from . import functions as F
+
+        return F.log10(self)
+
+    def initcap(self) -> Expr:
+        """Set the initial letter of each word to capital.
+
+        Converts the first letter of each word in ``string`` to uppercase and the
+        remaining characters to lowercase.
+        """
+        from . import functions as F
+
+        return F.initcap(self)
+
+    def list_distinct(self) -> Expr:
+        """Returns distinct values from the array after removing duplicates.
+
+        This is an alias for :py:func:`array_distinct`.
+        """
+        from . import functions as F
+
+        return F.list_distinct(self)
+
+    def iszero(self) -> Expr:
+        """Returns true if a given number is +0.0 or -0.0 otherwise returns false."""
+        from . import functions as F
+
+        return F.iszero(self)
+
+    def array_distinct(self) -> Expr:
+        """Returns distinct values from the array after removing duplicates."""
+        from . import functions as F
+
+        return F.array_distinct(self)
+
+    def arrow_typeof(self) -> Expr:
+        """Returns the Arrow type of the expression."""
+        from . import functions as F
+
+        return F.arrow_typeof(self)
+
+    def length(self) -> Expr:
+        """The number of characters in the ``string``."""
+        from . import functions as F
+
+        return F.length(self)
+
+    def lower(self) -> Expr:
+        """Converts a string to lowercase."""
+        from . import functions as F
+
+        return F.lower(self)
+
+    def acos(self) -> Expr:
+        """Returns the arc cosine or inverse cosine of a number.
+
+        Returns:
+        --------
+        Expr
+            A new expression representing the arc cosine of the input expression.
+        """
+        from . import functions as F
+
+        return F.acos(self)
+
+    def ascii(self) -> Expr:
+        """Returns the numeric code of the first character of the argument."""
+        from . import functions as F
+
+        return F.ascii(self)
+
+    def sha384(self) -> Expr:
+        """Computes the SHA-384 hash of a binary string."""
+        from . import functions as F
+
+        return F.sha384(self)
+
+    def isnan(self) -> Expr:
+        """Returns true if a given number is +NaN or -NaN otherwise returns false."""
+        from . import functions as F
+
+        return F.isnan(self)
+
+    def degrees(self) -> Expr:
+        """Converts the argument from radians to degrees."""
+        from . import functions as F
+
+        return F.degrees(self)
+
+    def cardinality(self) -> Expr:
+        """Returns the total number of elements in the array."""
+        from . import functions as F
+
+        return F.cardinality(self)
+
+    def sha224(self) -> Expr:
+        """Computes the SHA-224 hash of a binary string."""
+        from . import functions as F
+
+        return F.sha224(self)
+
+    def asinh(self) -> Expr:
+        """Returns inverse hyperbolic sine."""
+        from . import functions as F
+
+        return F.asinh(self)
+
+    def flatten(self) -> Expr:
+        """Flattens an array of arrays into a single array."""
+        from . import functions as F
+
+        return F.flatten(self)
+
+    def exp(self) -> Expr:
+        """Returns the exponential of the argument."""
+        from . import functions as F
+
+        return F.exp(self)
+
+    def abs(self) -> Expr:
+        """Return the absolute value of a given number.
+
+        Returns:
+        --------
+        Expr
+            A new expression representing the absolute value of the input expression.
+        """
+        from . import functions as F
+
+        return F.abs(self)
+
+    def btrim(self) -> Expr:
+        """Removes all characters, spaces by default, from both sides of a string."""
+        from . import functions as F
+
+        return F.btrim(self)
+
+    def md5(self) -> Expr:
+        """Computes an MD5 128-bit checksum for a string expression."""
+        from . import functions as F
+
+        return F.md5(self)
+
+    def octet_length(self) -> Expr:
+        """Returns the number of bytes of a string."""
+        from . import functions as F
+
+        return F.octet_length(self)
+
+    def cosh(self) -> Expr:
+        """Returns the hyperbolic cosine of the argument."""
+        from . import functions as F
+
+        return F.cosh(self)
+
+    def radians(self) -> Expr:
+        """Converts the argument from degrees to radians."""
+        from . import functions as F
+
+        return F.radians(self)
+
+    def sqrt(self) -> Expr:
+        """Returns the square root of the argument."""
+        from . import functions as F
+
+        return F.sqrt(self)
+
+    def character_length(self) -> Expr:
+        """Returns the number of characters in the argument."""
+        from . import functions as F
+
+        return F.character_length(self)
+
+    def tanh(self) -> Expr:
+        """Returns the hyperbolic tangent of the argument."""
+        from . import functions as F
+
+        return F.tanh(self)
+
+    def atan(self) -> Expr:
+        """Returns inverse tangent of a number."""
+        from . import functions as F
+
+        return F.atan(self)
+
+    def rtrim(self) -> Expr:
+        """Removes all characters, spaces by default, from the end of a string."""
+        from . import functions as F
+
+        return F.rtrim(self)
+
+    def atanh(self) -> Expr:
+        """Returns inverse hyperbolic tangent."""
+        from . import functions as F
+
+        return F.atanh(self)
+
+    def list_dims(self) -> Expr:
+        """Returns an array of the array's dimensions.
+
+        This is an alias for :py:func:`array_dims`.
+        """
+        from . import functions as F
+
+        return F.list_dims(self)
+
+    def sha256(self) -> Expr:
+        """Computes the SHA-256 hash of a binary string."""
+        from . import functions as F
+
+        return F.sha256(self)
+
+    def factorial(self) -> Expr:
+        """Returns the factorial of the argument."""
+        from . import functions as F
+
+        return F.factorial(self)
+
+    def acosh(self) -> Expr:
+        """Returns inverse hyperbolic cosine."""
+        from . import functions as F
+
+        return F.acosh(self)
+
+    def floor(self) -> Expr:
+        """Returns the nearest integer less than or equal to the argument."""
+        from . import functions as F
+
+        return F.floor(self)
+
+    def ceil(self) -> Expr:
+        """Returns the nearest integer greater than or equal to argument."""
+        from . import functions as F
+
+        return F.ceil(self)
+
+    def list_length(self) -> Expr:
+        """Returns the length of the array.
+
+        This is an alias for :py:func:`array_length`.
+        """
+        from . import functions as F
+
+        return F.list_length(self)
+
+    def upper(self) -> Expr:
+        """Converts a string to uppercase."""
+        from . import functions as F
+
+        return F.upper(self)
+
+    def chr(self) -> Expr:
+        """Converts the Unicode code point to a UTF8 character."""
+        from . import functions as F
+
+        return F.chr(self)
+
+    def ln(self) -> Expr:
+        """Returns the natural logarithm (base e) of the argument."""
+        from . import functions as F
+
+        return F.ln(self)
+
+    def tan(self) -> Expr:
+        """Returns the tangent of the argument."""
+        from . import functions as F
+
+        return F.tan(self)
+
+    def array_pop_front(self) -> Expr:
+        """Returns the array without the first element."""
+        from . import functions as F
+
+        return F.array_pop_front(self)
+
+    def cbrt(self) -> Expr:
+        """Returns the cube root of a number."""
+        from . import functions as F
+
+        return F.cbrt(self)
+
+    def sha512(self) -> Expr:
+        """Computes the SHA-512 hash of a binary string."""
+        from . import functions as F
+
+        return F.sha512(self)
+
+    def char_length(self) -> Expr:
+        """The number of characters in the ``string``."""
+        from . import functions as F
+
+        return F.char_length(self)
+
+    def list_ndims(self) -> Expr:
+        """Returns the number of dimensions of the array.
+
+        This is an alias for :py:func:`array_ndims`.
+        """
+        from . import functions as F
+
+        return F.list_ndims(self)
+
+    def trim(self) -> Expr:
+        """Removes all characters, spaces by default, from both sides of a string."""
+        from . import functions as F
+
+        return F.trim(self)
+
+    def cos(self) -> Expr:
+        """Returns the cosine of the argument."""
+        from . import functions as F
+
+        return F.cos(self)
+
+    def sinh(self) -> Expr:
+        """Returns the hyperbolic sine of the argument."""
+        from . import functions as F
+
+        return F.sinh(self)
+
+    def empty(self) -> Expr:
+        """This is an alias for :py:func:`array_empty`."""
+        from . import functions as F
+
+        return F.empty(self)
+
+    def ltrim(self) -> Expr:
+        """Removes all characters, spaces by default, from the beginning of a string."""
+        from . import functions as F
+
+        return F.ltrim(self)
+
+    def signum(self) -> Expr:
+        """Returns the sign of the argument (-1, 0, +1)."""
+        from . import functions as F
+
+        return F.signum(self)
+
+    def log2(self) -> Expr:
+        """Base 2 logarithm of the argument."""
+        from . import functions as F
+
+        return F.log2(self)
+
+    def cot(self) -> Expr:
+        """Returns the cotangent of the argument."""
+        from . import functions as F
+
+        return F.cot(self)
 
 
 class ExprFuncBuilder:

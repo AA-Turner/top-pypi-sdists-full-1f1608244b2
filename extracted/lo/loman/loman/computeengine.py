@@ -17,10 +17,9 @@ import pandas as pd
 
 from .compat import get_signature
 from .consts import NodeAttributes, EdgeAttributes, SystemTags, States, NodeTransformations
-from .exception import MapException, LoopDetectedException, NonExistentNodeException, NodeAlreadyExistsException, \
-    ComputationException, CannotInsertToPlaceholderNodeException
-from .path_parser import to_path, Path, PathType
-from .structs import node_keys_to_names, InputName, NodeKey, InputNames, Names, Name, names_to_node_keys
+from .exception import (MapException, LoopDetectedException, NonExistentNodeException, NodeAlreadyExistsException,
+                        ComputationException, CannotInsertToPlaceholderNodeException)
+from .nodekey import node_keys_to_names, NodeKey, Names, Name, names_to_node_keys, to_nodekey
 from .util import AttributeView, apply_n, apply1, as_iterable, value_eq
 from .visualization import NodeFormatter, GraphView
 
@@ -229,16 +228,38 @@ class Computation:
         else:
             self.executor_map = executor_map
         self.dag = nx.DiGraph()
-        self.v = AttributeView(self.nodes, self.value, self.value)
-        self.s = AttributeView(self.nodes, self.state, self.state)
-        self.i = AttributeView(self.nodes, self.get_inputs, self.get_inputs)
-        self.o = AttributeView(self.nodes, self.get_outputs, self.get_outputs)
-        self.t = AttributeView(self.nodes, self.tags, self.tags)
-        self.style = AttributeView(self.nodes, self.styles, self.styles)
-        self.tim = AttributeView(self.nodes, self.get_timing, self.get_timing)
-        self.x = AttributeView(self.nodes, self.compute_and_get_value)
+        self.v = self.get_attribute_view_for_path(NodeKey.root(), self._value_one, self.value)
+        self.s = self.get_attribute_view_for_path(NodeKey.root(), self._state_one, self.state)
+        self.i = self.get_attribute_view_for_path(NodeKey.root(), self._get_inputs_one_names, self.get_inputs)
+        self.o = self.get_attribute_view_for_path(NodeKey.root(), self._get_outputs_one, self.get_outputs)
+        self.t = self.get_attribute_view_for_path(NodeKey.root(), self._tag_one, self.tags)
+        self.style = self.get_attribute_view_for_path(NodeKey.root(), self._style_one, self.styles)
+        self.tim = self.get_attribute_view_for_path(NodeKey.root(), self._get_timing_one, self.get_timing)
+        self.x = self.get_attribute_view_for_path(NodeKey.root(), self.compute_and_get_value, self.compute_and_get_value)
         self._tag_map = defaultdict(set)
         self._state_map = {state: set() for state in States}
+
+    def get_attribute_view_for_path(self, nodekey: NodeKey, get_one_func: callable, get_many_func: callable):
+        def node_func():
+            return self.get_tree_list_children(nodekey)
+
+        def get_one_func_for_path(name: Name):
+            nk = to_nodekey(name)
+            new_nk = nk.prepend(nodekey)
+            if self.has_node(new_nk):
+                return get_one_func(new_nk)
+            elif self.tree_has_path(new_nk):
+                return self.get_attribute_view_for_path(new_nk, get_one_func, get_many_func)
+            else:
+                raise KeyError(f"Path {new_nk} does not exist")
+
+        def get_many_func_for_path(name: Union[Name, Names]):
+            if isinstance(name, list):
+                return [get_one_func_for_path(n) for n in name]
+            else:
+                return get_one_func_for_path(name)
+
+        return AttributeView(node_func, get_one_func_for_path, get_many_func_for_path)
 
     def _get_names_for_state(self, state: States):
         return set(node_keys_to_names(self._state_map[state]))
@@ -246,7 +267,7 @@ class Computation:
     def _get_tags_for_state(self, tag: str):
         return set(node_keys_to_names(self._tag_map[tag]))
 
-    def add_node(self, name: InputName, func=None, *, args=None, kwds=None, value=_MISSING_VALUE_SENTINEL, converter=None,
+    def add_node(self, name: Name, func=None, *, args=None, kwds=None, value=_MISSING_VALUE_SENTINEL, converter=None,
                  serialize=True, inspect=True, group=None, tags=None, style=None, executor=None):
         """
         Adds or updates a node in a computation
@@ -273,7 +294,7 @@ class Computation:
         :param executor: Name of executor to run node on
         :type executor: string
         """
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         LOG.debug(f'Adding node {node_key}')
         has_value = value is not _MISSING_VALUE_SENTINEL
         if value is _MISSING_VALUE_SENTINEL:
@@ -307,7 +328,7 @@ class Computation:
                         node[NodeAttributes.ARGS][i] = arg.value
                     else:
                         input_vertex_name = arg
-                        input_vertex_node_key = NodeKey.from_name(input_vertex_name)
+                        input_vertex_node_key = to_nodekey(input_vertex_name)
                         if not self.dag.has_node(input_vertex_node_key):
                             self.dag.add_node(input_vertex_node_key, **{NodeAttributes.STATE: States.PLACEHOLDER})
                             self._state_map[States.PLACEHOLDER].add(input_vertex_node_key)
@@ -320,7 +341,7 @@ class Computation:
                         if kwds is not None and param_name in kwds:
                             param_source = kwds[param_name]
                         else:
-                            param_source = node_key.group_path.join(param_name)
+                            param_source = node_key.parent.join_parts(param_name)
                         param_map[param_name] = param_source
                 if signature.has_var_kwds and kwds is not None:
                     for param_name, param_source in kwds.items():
@@ -336,7 +357,7 @@ class Computation:
                     node[NodeAttributes.KWDS][param_name] = param_source.value
                 else:
                     in_node_name = param_source
-                    in_node_key = NodeKey.from_name(in_node_name)
+                    in_node_key = to_nodekey(in_node_name)
                     if not self.dag.has_node(in_node_key):
                         if param_name in default_names:
                             continue
@@ -365,12 +386,12 @@ class Computation:
             for tag in tags:
                 self._tag_map[tag].add(node_key)
 
-    def _set_tag_one(self, name: InputName, tag):
-        node_key = NodeKey.from_name(name)
+    def _set_tag_one(self, name: Name, tag):
+        node_key = to_nodekey(name)
         self.dag.nodes[node_key][NodeAttributes.TAG].add(tag)
         self._tag_map[tag].add(node_key)
 
-    def set_tag(self, name: InputNames, tag):
+    def set_tag(self, name: Names, tag):
         """
         Set tags on a node or nodes. Ignored if tags are already set.
         
@@ -379,12 +400,12 @@ class Computation:
         """
         apply_n(self._set_tag_one, name, tag)
 
-    def _clear_tag_one(self, name: InputName, tag):
-        node_key = NodeKey.from_name(name)
+    def _clear_tag_one(self, name: Name, tag):
+        node_key = to_nodekey(name)
         self.dag.nodes[node_key][NodeAttributes.TAG].discard(tag)
         self._tag_map[tag].discard(node_key)
 
-    def clear_tag(self, name: InputNames, tag):
+    def clear_tag(self, name: Names, tag):
         """
         Clear tag on a node or nodes. Ignored if tags are not set.
 
@@ -393,11 +414,11 @@ class Computation:
         """
         apply_n(self._clear_tag_one, name, tag)
 
-    def _set_style_one(self, name: InputName, style):
-        node_key = NodeKey.from_name(name)
+    def _set_style_one(self, name: Name, style):
+        node_key = to_nodekey(name)
         self.dag.nodes[node_key][NodeAttributes.STYLE] = style
 
-    def set_style(self, name: InputNames, style):
+    def set_style(self, name: Names, style):
         """
         Set styles on a node or nodes.
 
@@ -407,7 +428,7 @@ class Computation:
         apply_n(self._set_style_one, name, style)
 
     def _clear_style_one(self, name):
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         self.dag.nodes[node_key][NodeAttributes.STYLE] = None
 
     def clear_style(self, name):
@@ -426,7 +447,7 @@ class Computation:
 
         :param name: Name of the node to delete. If the node does not exist, a ``NonExistentNodeException`` will be raised.
         """
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         LOG.debug(f'Deleting node {node_key}')
 
         if not self.dag.has_node(node_key):
@@ -443,7 +464,7 @@ class Computation:
         else:
             self._set_state(node_key, States.PLACEHOLDER)
 
-    def rename_node(self, old_name: Union[InputName, Mapping[InputName, InputName]], new_name: Optional[InputName] = None):
+    def rename_node(self, old_name: Union[Name, Mapping[Name, Name]], new_name: Optional[Name] = None):
         """
         Rename a node in a computation
         :param old_name: Node to rename, or a dictionary of nodes to rename, with existing names as keys, and new names as values
@@ -458,20 +479,20 @@ class Computation:
                 name_mapping = old_name
         else:
             LOG.debug(f'Renaming node {old_name} to {new_name}')
-            old_node_key = NodeKey.from_name(old_name)
+            old_node_key = to_nodekey(old_name)
             if not self.dag.has_node(old_node_key):
                 raise NonExistentNodeException(f'Node {old_name} does not exist')
-            new_node_key = NodeKey.from_name(new_name)
+            new_node_key = to_nodekey(new_name)
             if self.dag.has_node(new_node_key):
                 raise NodeAlreadyExistsException(f'Node {new_name} already exists')
             name_mapping = {old_name: new_name}
 
-        node_key_mapping = {NodeKey.from_name(old_name): NodeKey.from_name(new_name) for old_name, new_name in name_mapping.items()}
+        node_key_mapping = {to_nodekey(old_name): to_nodekey(new_name) for old_name, new_name in name_mapping.items()}
         nx.relabel_nodes(self.dag, node_key_mapping, copy=False)
 
         self._refresh_maps()
 
-    def repoint(self, old_name: InputName, new_name: InputName):
+    def repoint(self, old_name: Name, new_name: Name):
         """
         Changes all nodes that use old_name as an input to use new_name instead.
 
@@ -484,8 +505,8 @@ class Computation:
         :param new_name:
         :return:
         """
-        old_node_key = NodeKey.from_name(old_name)
-        new_node_key = NodeKey.from_name(new_name)
+        old_node_key = to_nodekey(old_name)
+        new_node_key = to_nodekey(new_name)
         if old_node_key == new_node_key:
             return
 
@@ -505,7 +526,7 @@ class Computation:
         for name in changed_names:
             self.set_stale(name)
 
-    def insert(self, name: InputName, value, force=False):
+    def insert(self, name: Name, value, force=False):
         """
         Insert a value into a node of a computation
 
@@ -517,7 +538,7 @@ class Computation:
         :param value: The value to be inserted into the node.
         :param force: Whether to force recalculation of descendents if node value and state would not be changed
         """
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         LOG.debug(f'Inserting value into node {node_key}')
 
         if not self.dag.has_node(node_key):
@@ -538,7 +559,7 @@ class Computation:
         for n in self.dag.successors(node_key):
             self._try_set_computable(n)
 
-    def insert_many(self, name_value_pairs: Iterable[Tuple[InputName, object]]):
+    def insert_many(self, name_value_pairs: Iterable[Tuple[Name, object]]):
         """
         Insert values into many nodes of a computation simultaneously
 
@@ -549,7 +570,7 @@ class Computation:
         :param name_value_pairs: Each tuple should be a pair (name, value), where name is the name of the node to insert the value into.
         :type name_value_pairs: List of tuples
         """
-        node_key_value_pairs = [(NodeKey.from_name(name), value) for name, value in name_value_pairs]
+        node_key_value_pairs = [(to_nodekey(name), value) for name, value in name_value_pairs]
         LOG.debug(f'Inserting value into nodes {", ".join(str(name) for name, value in node_key_value_pairs)}')
 
         for name, value in node_key_value_pairs:
@@ -570,7 +591,7 @@ class Computation:
         for name in computable:
             self._try_set_computable(name)
 
-    def insert_from(self, other, nodes: Optional[Iterable[InputName]] = None):
+    def insert_from(self, other, nodes: Optional[Iterable[Name]] = None):
         """
         Insert values into another Computation object into this Computation object
 
@@ -627,19 +648,19 @@ class Computation:
             node[NodeAttributes.STATE] = state
         self._state_map[state].update(node_keys)
 
-    def set_stale(self, name: InputName):
+    def set_stale(self, name: Name):
         """
         Set the state of a node and all its dependencies to STALE
 
         :param name: Name of the node to set as STALE.
         """
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         node_keys = [node_key]
         node_keys.extend(nx.dag.descendants(self.dag, node_key))
         self._set_states(node_keys, States.STALE)
         self._try_set_computable(node_key)
 
-    def pin(self, name: InputName, value=None):
+    def pin(self, name: Name, value=None):
         """
         Set the state of a node to PINNED
         
@@ -647,7 +668,7 @@ class Computation:
         :param value: Value to pin to the node, if provided.
         :type value: default None
         """
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         if value is not None:
             self.insert(node_key, value)
         self._set_states([node_key], States.PINNED)
@@ -658,7 +679,7 @@ class Computation:
 
         :param name: Name of the node to set as PINNED.
         """
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         self.set_stale(node_key)
 
     def _get_descendents(self, node_key: NodeKey, stop_states: Optional[Set[States]] = None) -> Set[NodeKey]:
@@ -737,10 +758,10 @@ class Computation:
                 raise Exception(f"Unexpected param type: {param.type}")
         return f, executor_name, args, kwds
 
-    def get_definition_args_kwds(self, name: InputName) -> tuple[list, dict]:
+    def get_definition_args_kwds(self, name: Name) -> tuple[list, dict]:
         res_args = []
         res_kwds = {}
-        node_key = NodeKey.from_name(name)
+        node_key = to_nodekey(name)
         node_data = self.dag.nodes[node_key]
         if NodeAttributes.ARGS in node_data:
             for idx, value in node_data[NodeAttributes.ARGS].items():
@@ -833,12 +854,12 @@ class Computation:
         nodes_sorted = nx.topological_sort(g)
         return [n for n in nodes_sorted if n in ancestors]
 
-    def _get_calc_node_names(self, name: InputName) -> Names:
-        node_key = NodeKey.from_name(name)
+    def _get_calc_node_names(self, name: Name) -> Names:
+        node_key = to_nodekey(name)
         return node_keys_to_names(self._get_calc_node_keys(node_key))
 
 
-    def compute(self, name: Union[InputName, Iterable[InputName]], raise_exceptions=False):
+    def compute(self, name: Union[Name, Iterable[Name]], raise_exceptions=False):
         """
         Compute a node and all necessary predecessors
 
@@ -854,11 +875,11 @@ class Computation:
         if isinstance(name, (types.GeneratorType, list)):
             calc_nodes = set()
             for name0 in name:
-                node_key = NodeKey.from_name(name0)
+                node_key = to_nodekey(name0)
                 for n in self._get_calc_node_keys(node_key):
                     calc_nodes.add(n)
         else:
-            node_key = NodeKey.from_name(name)
+            node_key = to_nodekey(name)
             calc_nodes = self._get_calc_node_keys(node_key)
         self._compute_nodes(calc_nodes, raise_exceptions=raise_exceptions)
 
@@ -888,11 +909,56 @@ class Computation:
         """
         return list(n.name for n in self.dag.nodes)
 
-    def _state_one(self, name: InputName):
-        node_key = NodeKey.from_name(name)
+    def get_tree_list_children(self, name: Name) -> Set[Name]:
+        """
+        Get a list of nodes in this computation
+        :return: List of nodes
+        """
+        node_key = to_nodekey(name)
+        idx = len(node_key.parts)
+        result = set()
+        for n in self.dag.nodes:
+            if n.is_descendent_of(node_key):
+                result.add(n.parts[idx])
+        return result
+
+    def has_node(self, name: Name):
+        node_key = to_nodekey(name)
+        return node_key in self.dag.nodes
+
+    def tree_has_path(self, name: Name):
+        node_key = to_nodekey(name)
+        if self.has_node(node_key):
+            return True
+        for n in self.dag.nodes:
+            if n.is_descendent_of(node_key):
+                return True
+        return False
+
+    def get_tree_descendents(self, name: Optional[Name] = None) -> Set[Name]:
+        """
+        Get a list of descendent blocks and nodes.
+
+        Returns blocks and nodes that are descendents of the input node,
+        e.g. for node 'foo', might return ['foo/bar', 'foo/baz'].
+
+        :param name: Name of node to get descendents for
+        :return: List of descendent node names
+        """
+        node_key = NodeKey.root() if name is None else to_nodekey(name)
+        result = set()
+        for n in self.dag.nodes:
+            if n.is_descendent_of(node_key):
+                for n2 in n.ancestors():
+                    if n2.is_descendent_of(node_key):
+                        result.add(n2.name)
+        return result
+
+    def _state_one(self, name: Name):
+        node_key = to_nodekey(name)
         return self.dag.nodes[node_key][NodeAttributes.STATE]
 
-    def state(self, name: Union[InputName, InputNames]):
+    def state(self, name: Union[Name, Names]):
         """
         Get the state of a node
 
@@ -906,15 +972,15 @@ class Computation:
             <States.UPTODATE: 4>
 
         :param name: Name or names of the node to get state for
-        :type name: InputName or InputNames
+        :type name: Name or Names
         """
         return apply1(self._state_one, name)
 
-    def _value_one(self, name: InputName):
-        node_key = NodeKey.from_name(name)
+    def _value_one(self, name: Name):
+        node_key = to_nodekey(name)
         return self.dag.nodes[node_key][NodeAttributes.VALUE]
 
-    def value(self, name: Union[InputName, InputNames]):
+    def value(self, name: Union[Name, Names]):
         """
         Get the current value of a node
 
@@ -928,11 +994,11 @@ class Computation:
             1
 
         :param name: Name or names of the node to get the value of
-        :type name: InputName or InputNames
+        :type name: Name or Names
         """
         return apply1(self._value_one, name)
 
-    def compute_and_get_value(self, name: InputName):
+    def compute_and_get_value(self, name: Name):
         """
         Get the current value of a node
 
@@ -947,9 +1013,9 @@ class Computation:
             2
 
         :param name: Name or names of the node to get the value of
-        :type name: InputName
+        :type name: Name
         """
-        name = NodeKey.from_name(name)
+        name = to_nodekey(name)
         if self.state(name) == States.UPTODATE:
             return self.value(name)
         self.compute(name, raise_exceptions=True)
@@ -957,12 +1023,12 @@ class Computation:
             return self.value(name)
         raise ComputationException(f"Unable to compute node {name}")
 
-    def _tag_one(self, name: InputName):
-        node_key = NodeKey.from_name(name)
+    def _tag_one(self, name: Name):
+        node_key = to_nodekey(name)
         node = self.dag.nodes[node_key]
         return node[NodeAttributes.TAG]
 
-    def tags(self, name: Union[InputName, InputNames]):
+    def tags(self, name: Union[Name, Names]):
         """
         Get the tags associated with a node
         
@@ -989,12 +1055,12 @@ class Computation:
                 nodes.update(nodes1)
         return set(n.name for n in nodes)
 
-    def _style_one(self, name: InputName):
-        node_key = NodeKey.from_name(name)
+    def _style_one(self, name: Name):
+        node_key = to_nodekey(name)
         node = self.dag.nodes[node_key]
         return node[NodeAttributes.STYLE]
 
-    def styles(self, name: Union[InputName, InputNames]):
+    def styles(self, name: Union[Name, Names]):
         """
         Get the tags associated with a node
 
@@ -1007,12 +1073,12 @@ class Computation:
         """
         return apply1(self._style_one, name)
 
-    def _get_item_one(self, name: InputName):
-        node_key = NodeKey.from_name(name)
+    def _get_item_one(self, name: Name):
+        node_key = to_nodekey(name)
         node = self.dag.nodes[node_key]
         return NodeData(node[NodeAttributes.STATE], node[NodeAttributes.VALUE])
 
-    def __getitem__(self, name: Union[InputName, InputNames]):
+    def __getitem__(self, name: Union[Name, Names]):
         """
         Get the state and current value of a node
 
@@ -1020,12 +1086,12 @@ class Computation:
         """
         return apply1(self._get_item_one, name)
 
-    def _get_timing_one(self, name: InputName):
-        node_key = NodeKey.from_name(name)
+    def _get_timing_one(self, name: Name):
+        node_key = to_nodekey(name)
         node = self.dag.nodes[node_key]
         return node.get(NodeAttributes.TIMING, None)
 
-    def get_timing(self, name: Union[InputName, InputNames]):
+    def get_timing(self, name: Union[Name, Names]):
         """
         Get the timing information for a node
         
@@ -1091,11 +1157,11 @@ class Computation:
         else:
             return kwds
 
-    def _get_inputs_one_names(self, name: InputName) -> Names:
-        node_key = NodeKey.from_name(name)
+    def _get_inputs_one_names(self, name: Name) -> Names:
+        node_key = to_nodekey(name)
         return node_keys_to_names(self._get_inputs_one_node_keys(node_key))
 
-    def get_inputs(self, name: Union[InputName, InputNames]) -> List[Names]:
+    def get_inputs(self, name: Union[Name, Names]) -> List[Names]:
         """
         Get a list of the inputs for a node or set of nodes
         
@@ -1113,7 +1179,7 @@ class Computation:
                 ancestors.add(ancestor)
         return ancestors
 
-    def get_ancestors(self, names: Union[InputName, InputNames], include_self=True) -> Names:
+    def get_ancestors(self, names: Union[Name, Names], include_self=True) -> Names:
         node_keys = names_to_node_keys(names)
         ancestor_node_keys = self._get_ancestors_node_keys(node_keys, include_self)
         return node_keys_to_names(ancestor_node_keys)
@@ -1125,7 +1191,7 @@ class Computation:
             node_keys = self._get_ancestors_node_keys(node_keys)
         return [n for n in node_keys if self.dag.nodes[n].get(NodeAttributes.FUNC) is None]
 
-    def get_original_inputs(self, names: Optional[Union[InputName, InputNames]] = None) -> Names:
+    def get_original_inputs(self, names: Optional[Union[Name, Names]] = None) -> Names:
         """
         Get a list of the original non-computed inputs for a node or set of nodes
 
@@ -1141,12 +1207,12 @@ class Computation:
 
         return node_keys_to_names(node_keys)
 
-    def _get_outputs_one(self, name: InputName) -> Names:
-        node_key = NodeKey.from_name(name)
+    def _get_outputs_one(self, name: Name) -> Names:
+        node_key = to_nodekey(name)
         output_node_keys = list(self.dag.successors(node_key))
         return node_keys_to_names(output_node_keys)
 
-    def get_outputs(self, name: Union[InputName, InputNames]) -> Union[Names, List[Names]]:
+    def get_outputs(self, name: Union[Name, Names]) -> Union[Names, List[Names]]:
         """
         Get a list of the outputs for a node or set of nodes
 
@@ -1165,12 +1231,12 @@ class Computation:
                 ancestor_node_keys.add(ancestor)
         return ancestor_node_keys
 
-    def get_descendents(self, names: Union[InputName, InputNames], include_self: bool = True) -> Names:
+    def get_descendents(self, names: Union[Name, Names], include_self: bool = True) -> Names:
         node_keys = names_to_node_keys(names)
         descendent_node_keys = self._get_descendents_node_keys(node_keys, include_self)
         return node_keys_to_names(descendent_node_keys)
 
-    def get_final_outputs(self, names: Optional[Union[InputName, InputNames]] = None):
+    def get_final_outputs(self, names: Optional[Union[Name, Names]] = None):
         if names is None:
             node_keys = self._node_keys()
         else:
@@ -1179,7 +1245,7 @@ class Computation:
         output_node_keys = [n for n in node_keys if len(nx.descendants(self.dag, n))==0]
         return node_keys_to_names(output_node_keys)
 
-    def restrict(self, output_names: Union[InputName, InputNames], input_names: Optional[Union[InputName, InputNames]] = None):
+    def restrict(self, output_names: Union[Name, Names], input_names: Optional[Union[Name, Names]] = None):
         """
         Restrict a computation to the ancestors of a set of output nodes, excluding ancestors of a set of input nodes
 
@@ -1193,7 +1259,7 @@ class Computation:
             for name in input_names:
                 nodedata = self._get_item_one(name)
                 self.add_node(name)
-                self._set_state_and_literal_value(NodeKey.from_name(name), nodedata.state, nodedata.value)
+                self._set_state_and_literal_value(to_nodekey(name), nodedata.state, nodedata.value)
         output_node_keys = names_to_node_keys(output_names)
         ancestor_node_keys = self._get_ancestors_node_keys(output_node_keys)
         self.dag.remove_nodes_from([n for n in self.dag if n not in ancestor_node_keys])
@@ -1350,16 +1416,16 @@ class Computation:
             return results
         self.add_node(result_node, f, kwds={'xs': input_node})
 
-    def prepend_path(self, path, prefix_path: Path):
+    def prepend_path(self, path, prefix_path: NodeKey):
         if isinstance(path, ConstantValue):
             return path
-        path = to_path(path)
+        path = to_nodekey(path)
         return prefix_path.join(path)
 
-    def add_block(self, base_path: PathType, block: 'Computation', *, keep_values: Optional[bool] = True, links: Optional[dict] = None):
-        base_path = to_path(base_path)
+    def add_block(self, base_path: Name, block: 'Computation', *, keep_values: Optional[bool] = True, links: Optional[dict] = None):
+        base_path = to_nodekey(base_path)
         for node_name in block.nodes():
-            node_key = NodeKey.from_name(node_name)
+            node_key = to_nodekey(node_name)
             node_data = block.dag.nodes[node_key]
             tags = node_data.get(NodeAttributes.TAG, None)
             style = node_data.get(NodeAttributes.STYLE, None)
@@ -1373,15 +1439,15 @@ class Computation:
             new_node_name = self.prepend_path(node_name, base_path)
             self.add_node(new_node_name, func, args=args, kwds=kwds, converter=converter, serialize=False, inspect=False, group=group, tags=tags, style=style, executor=executor)
             if keep_values:
-                new_node_key = NodeKey.from_name(new_node_name)
+                new_node_key = to_nodekey(new_node_name)
                 self._set_state_and_literal_value(new_node_key, node_data[NodeAttributes.STATE], node_data[NodeAttributes.VALUE])
         if links is not None:
             for target, source in links.items():
-                self.link(base_path.join(target), source)
+                self.link(base_path.join_parts(target), source)
 
-    def link(self, target: InputName, source: InputName):
-        target = NodeKey.from_name(target)
-        source = NodeKey.from_name(source)
+    def link(self, target: Name, source: Name):
+        target = to_nodekey(target)
+        source = to_nodekey(source)
         if target == source:
             return
         self.add_node(target, identity_function, kwds={'x': source})
@@ -1389,11 +1455,11 @@ class Computation:
     def _repr_svg_(self):
         return GraphView(self).svg()
 
-    def draw(self, root: Optional[PathType] = None, *,
+    def draw(self, root: Optional[NodeKey] = None, *,
              node_transformations: Optional[dict] = None,
              cmap=None, colors='state', shapes=None,
              graph_attr=None, node_attr=None, edge_attr=None,
-             show_expansion=False):
+             show_expansion=False, collapse_all=True):
         """
         Draw a computation's current state using the GraphViz utility
 
@@ -1404,7 +1470,7 @@ class Computation:
         :param graph_attr: Mapping of (attribute, value) pairs for the graph. For example ``graph_attr={'size': '"10,8"'}`` can control the size of the output graph
         :param node_attr: Mapping of (attribute, value) pairs set for all nodes.
         :param edge_attr: Mapping of (attribute, value) pairs set for all edges.
-        :param show_expansion: Whether to show expansion nodes (i.e. named tuple expansion nodes) if they are not referenced by other nodes
+        :param collapse_all: Whether to collapse all blocks that aren't explicitly expanded.
         """
         node_formatter = NodeFormatter.create(cmap, colors, shapes)
         node_transformations = node_transformations.copy() if node_transformations is not None else {}
@@ -1413,7 +1479,7 @@ class Computation:
                 node_transformations[nodekey] = NodeTransformations.CONTRACT
         v = GraphView(self, root=root, node_formatter=node_formatter,
                       graph_attr=graph_attr, node_attr=node_attr, edge_attr=edge_attr,
-                      node_transformations=node_transformations)
+                      node_transformations=node_transformations, collapse_all=collapse_all)
         return v
 
     def view(self, cmap=None, colors='state', shapes=None):

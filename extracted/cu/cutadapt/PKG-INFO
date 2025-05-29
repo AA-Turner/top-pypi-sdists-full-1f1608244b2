@@ -1,16 +1,15 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: cutadapt
-Version: 5.0
+Version: 5.1
 Summary: Adapter trimming and other preprocessing of high-throughput sequencing reads
 Author-email: Marcel Martin <marcel.martin@scilifelab.se>
-License: MIT
+License-Expression: MIT
 Project-URL: Homepage, https://cutadapt.readthedocs.io/
 Project-URL: Changelog, https://cutadapt.readthedocs.io/en/stable/changes.html
 Project-URL: Repository, https://github.com/marcelm/cutadapt/
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Cython
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
@@ -27,6 +26,7 @@ Requires-Dist: pytest-mock; extra == "dev"
 Requires-Dist: sphinx; extra == "dev"
 Requires-Dist: sphinx_issues; extra == "dev"
 Requires-Dist: sphinx_better_subsection; extra == "dev"
+Dynamic: license-file
 
 .. image:: https://github.com/marcelm/cutadapt/workflows/CI/badge.svg
     :alt:

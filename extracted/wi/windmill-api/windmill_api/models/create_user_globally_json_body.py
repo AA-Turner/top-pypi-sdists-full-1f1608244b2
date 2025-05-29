@@ -17,6 +17,7 @@ class CreateUserGloballyJsonBody:
         super_admin (bool):
         name (Union[Unset, str]):
         company (Union[Unset, str]):
+        skip_email (Union[Unset, bool]): Skip sending email notifications to the user
     """
 
     email: str
@@ -24,6 +25,7 @@ class CreateUserGloballyJsonBody:
     super_admin: bool
     name: Union[Unset, str] = UNSET
     company: Union[Unset, str] = UNSET
+    skip_email: Union[Unset, bool] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -32,6 +34,7 @@ class CreateUserGloballyJsonBody:
         super_admin = self.super_admin
         name = self.name
         company = self.company
+        skip_email = self.skip_email
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -46,6 +49,8 @@ class CreateUserGloballyJsonBody:
             field_dict["name"] = name
         if company is not UNSET:
             field_dict["company"] = company
+        if skip_email is not UNSET:
+            field_dict["skip_email"] = skip_email
 
         return field_dict
 
@@ -62,12 +67,15 @@ class CreateUserGloballyJsonBody:
 
         company = d.pop("company", UNSET)
 
+        skip_email = d.pop("skip_email", UNSET)
+
         create_user_globally_json_body = cls(
             email=email,
             password=password,
             super_admin=super_admin,
             name=name,
             company=company,
+            skip_email=skip_email,
         )
 
         create_user_globally_json_body.additional_properties = d

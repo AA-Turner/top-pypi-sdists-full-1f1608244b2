@@ -166,8 +166,16 @@ class MeshHandler:
 
         # try to copy data directly from mesh
         if isinstance(mesh, Mesh):
-            if mesh.m_Use16BitIndices is False:
-                self.m_Use16BitIndices = False
+            if mesh.m_Use16BitIndices is not None:
+                self.m_Use16BitIndices = bool(mesh.m_Use16BitIndices)
+            elif (
+                self.version >= (2017, 4)
+                or
+                # version == (2017, 3, 1) & patched - px string
+                self.version[:2] == (2017, 3)
+                and mesh.m_MeshCompression == 0
+            ):
+                self.m_Use16BitIndices = mesh.m_IndexFormat == 0
             self.copy_from_mesh()
         elif isinstance(mesh, SpriteRenderData):
             self.copy_from_spriterenderdata()
@@ -575,7 +583,7 @@ class MeshHandler:
         # Tangent
         if m_CompressedMesh.m_Tangents.m_NumItems > 0:
             tangentData = unpack_floats(m_CompressedMesh.m_Tangents, shape=(2,))
-            signs = unpack_ints(m_CompressedMesh.m_TangentSigns)
+            signs = unpack_ints(m_CompressedMesh.m_TangentSigns, shape=(2,))
             self.m_Tangents = zeros((self.m_VertexCount, 4))
             for srcTan, (sign_z, sign_w), dstTan in zip(
                 tangentData, signs, self.m_Tangents

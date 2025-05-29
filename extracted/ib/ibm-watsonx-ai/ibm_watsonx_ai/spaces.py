@@ -88,9 +88,7 @@ class Spaces(WMLResource):
 
         :raises WMLClientError: raised when connection is unauthorized
         """
-        href = (
-            self._client.service_instance._href_definitions.get_platform_spaces_href()
-        )
+        href = self._client._href_definitions.get_platform_spaces_href()
         response_get = self._client._session.get(
             href, headers=self._client._get_headers(), params={"limit": 1}
         )
@@ -176,7 +174,7 @@ class Spaces(WMLResource):
             space_meta["compute"] = payload_compute
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_platform_spaces_href(),
+            self._client._href_definitions.get_platform_spaces_href(),
             headers=self._client._get_headers(),
             json=space_meta,
         )
@@ -331,10 +329,8 @@ class Spaces(WMLResource):
         """
         Spaces._validate_type(space_id, "space_id", str, True)
 
-        space_endpoint = (
-            self._client.service_instance._href_definitions.get_platform_space_href(
-                space_id
-            )
+        space_endpoint = self._client._href_definitions.get_platform_space_href(
+            space_id
         )
 
         response_delete = requests.delete(
@@ -388,9 +384,7 @@ class Spaces(WMLResource):
         """
         Spaces._validate_type(space_id, "space_id", str, False)
 
-        href = self._client.service_instance._href_definitions.get_platform_space_href(
-            space_id
-        )
+        href = self._client._href_definitions.get_platform_space_href(space_id)
 
         if space_id is not None:
             response_get = requests.get(href, headers=self._client._get_headers())
@@ -401,7 +395,7 @@ class Spaces(WMLResource):
             query_params = {"name": space_name} if space_name else None
 
             return self._get_with_or_without_limit(
-                self._client.service_instance._href_definitions.get_platform_spaces_href(),
+                self._client._href_definitions.get_platform_spaces_href(),
                 limit,
                 "spaces",
                 summary=False,
@@ -444,9 +438,7 @@ class Spaces(WMLResource):
         """
 
         Spaces._validate_type(limit, "limit", int, False)
-        href = (
-            self._client.service_instance._href_definitions.get_platform_spaces_href()
-        )
+        href = self._client._href_definitions.get_platform_spaces_href()
 
         params: dict[str, Any] = {}
 
@@ -540,9 +532,7 @@ class Spaces(WMLResource):
             details["entity"], changes
         )
 
-        href = self._client.service_instance._href_definitions.get_platform_space_href(
-            space_id
-        )
+        href = self._client._href_definitions.get_platform_space_href(space_id)
 
         response = requests.patch(
             href, json=patch_payload, headers=self._client._get_headers()
@@ -623,9 +613,7 @@ class Spaces(WMLResource):
         )
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_platform_spaces_members_href(
-                space_id
-            ),
+            self._client._href_definitions.get_platform_spaces_members_href(space_id),
             headers=self._client._get_headers(),
             json=space_meta,
         )
@@ -658,7 +646,7 @@ class Spaces(WMLResource):
 
         Spaces._validate_type(member_id, "member_id", str, True)
 
-        href = self._client.service_instance._href_definitions.get_platform_spaces_member_href(
+        href = self._client._href_definitions.get_platform_spaces_member_href(
             space_id, member_id
         )
 
@@ -686,8 +674,10 @@ class Spaces(WMLResource):
         Spaces._validate_type(space_id, "space_id", str, True)
         Spaces._validate_type(member_id, "member_id", str, True)
 
-        member_endpoint = self._client.service_instance._href_definitions.get_platform_spaces_member_href(
-            space_id, member_id
+        member_endpoint = (
+            self._client._href_definitions.get_platform_spaces_member_href(
+                space_id, member_id
+            )
         )
 
         response_delete = requests.delete(
@@ -757,7 +747,7 @@ class Spaces(WMLResource):
         if state_str:
             patch_payload.append(state_str)
 
-        href = self._client.service_instance._href_definitions.get_platform_spaces_member_href(
+        href = self._client._href_definitions.get_platform_spaces_member_href(
             space_id, member_id
         )
 
@@ -815,9 +805,7 @@ class Spaces(WMLResource):
         if state is not None:
             params.update({"state": state})
 
-        href = self._client.service_instance._href_definitions.get_platform_spaces_members_href(
-            space_id
-        )
+        href = self._client._href_definitions.get_platform_spaces_members_href(space_id)
 
         member_resources = self._get_resources(href, "space members", params)[
             "resources"
@@ -878,9 +866,7 @@ class Spaces(WMLResource):
         if rev_id:
             promote_payload["revisionId"] = rev_id
 
-        promote_href = (
-            self._client.service_instance._href_definitions.promote_asset_href(asset_id)
-        )
+        promote_href = self._client._href_definitions.promote_asset_href(asset_id)
         response = requests.post(
             promote_href, headers=self._client._get_headers(), json=promote_payload
         )

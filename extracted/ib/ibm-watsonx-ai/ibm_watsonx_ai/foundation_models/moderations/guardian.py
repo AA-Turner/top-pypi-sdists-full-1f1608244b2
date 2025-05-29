@@ -115,7 +115,7 @@ class Guardian(WMLResource):
             payload["space_id"] = self._client.default_space_id
 
         response = self._client.httpx_client.post(
-            url=self._client.service_instance._href_definitions.get_text_detection_href(),
+            url=self._client._href_definitions.get_text_detection_href(),
             json=payload,
             params=self._client._params(skip_for_create=True, skip_userfs=True),
             headers=self._client._get_headers(),

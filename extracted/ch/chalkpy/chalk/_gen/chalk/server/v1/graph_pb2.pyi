@@ -1,3 +1,4 @@
+from chalk._gen.chalk.arrow.v1 import arrow_pb2 as _arrow_pb2
 from chalk._gen.chalk.artifacts.v1 import export_pb2 as _export_pb2
 from chalk._gen.chalk.auth.v1 import permissions_pb2 as _permissions_pb2
 from chalk._gen.chalk.common.v1 import chalk_error_pb2 as _chalk_error_pb2
@@ -99,7 +100,17 @@ class GetFeatureSQLRequest(_message.Message):
     def __init__(self, deployment_id: _Optional[str] = ...) -> None: ...
 
 class FeatureMetadata(_message.Message):
-    __slots__ = ("fqn", "name", "namespace", "description", "owner", "tags", "max_staleness", "etl_offline_to_online")
+    __slots__ = (
+        "fqn",
+        "name",
+        "namespace",
+        "description",
+        "owner",
+        "tags",
+        "max_staleness",
+        "etl_offline_to_online",
+        "pa_dtype",
+    )
     FQN_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     NAMESPACE_FIELD_NUMBER: _ClassVar[int]
@@ -108,6 +119,7 @@ class FeatureMetadata(_message.Message):
     TAGS_FIELD_NUMBER: _ClassVar[int]
     MAX_STALENESS_FIELD_NUMBER: _ClassVar[int]
     ETL_OFFLINE_TO_ONLINE_FIELD_NUMBER: _ClassVar[int]
+    PA_DTYPE_FIELD_NUMBER: _ClassVar[int]
     fqn: str
     name: str
     namespace: str
@@ -116,6 +128,7 @@ class FeatureMetadata(_message.Message):
     tags: _containers.RepeatedScalarFieldContainer[str]
     max_staleness: str
     etl_offline_to_online: bool
+    pa_dtype: _arrow_pb2.ArrowType
     def __init__(
         self,
         fqn: _Optional[str] = ...,
@@ -126,6 +139,7 @@ class FeatureMetadata(_message.Message):
         tags: _Optional[_Iterable[str]] = ...,
         max_staleness: _Optional[str] = ...,
         etl_offline_to_online: bool = ...,
+        pa_dtype: _Optional[_Union[_arrow_pb2.ArrowType, _Mapping]] = ...,
     ) -> None: ...
 
 class GetFeaturesMetadataResponse(_message.Message):
@@ -144,8 +158,10 @@ class GetFeaturesMetadataResponse(_message.Message):
     ) -> None: ...
 
 class GetFeaturesMetadataRequest(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
+    __slots__ = ("fqns_filter",)
+    FQNS_FILTER_FIELD_NUMBER: _ClassVar[int]
+    fqns_filter: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, fqns_filter: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class UpdateGraphRequest(_message.Message):
     __slots__ = ("deployment_id", "graph", "chalkpy_version", "tag", "export")

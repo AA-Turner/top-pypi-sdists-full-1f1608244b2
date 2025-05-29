@@ -113,7 +113,7 @@ class Connections(WMLResource):
         if connection_id:
             with self.requests_retry_session() as sess:
                 response = sess.get(
-                    self._client.service_instance._href_definitions.get_connection_by_id_href(
+                    self._client._href_definitions.get_connection_by_id_href(
                         connection_id
                     ),
                     params=self._client._params(),
@@ -131,9 +131,7 @@ class Connections(WMLResource):
         else:
             with self.requests_retry_session() as sess:
                 response = sess.post(
-                    self._client.service_instance._href_definitions.get_asset_search_href(
-                        "connection"
-                    ),
+                    self._client._href_definitions.get_asset_search_href("connection"),
                     json={"query": "*:*", "include": "entity"},
                     params=self._client._params(),
                     headers=header_param,
@@ -271,7 +269,7 @@ class Connections(WMLResource):
         print(Messages.get_message(message_id="creating_connections"))
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_connections_href(),
+            self._client._href_definitions.get_connections_href(),
             headers=self._client._get_headers(),
             json=connection_meta,
             params=self._client._params(),
@@ -332,10 +330,8 @@ class Connections(WMLResource):
 
         Connections._validate_type(connection_id, "connection_id", str, True)
 
-        connection_endpoint = (
-            self._client.service_instance._href_definitions.get_connection_by_id_href(
-                connection_id
-            )
+        connection_endpoint = self._client._href_definitions.get_connection_by_id_href(
+            connection_id
         )
         response_delete = requests.delete(
             connection_endpoint,
@@ -420,7 +416,7 @@ class Connections(WMLResource):
             return res, response.json().get("next", {}).get("href")
 
         res, url = get_res(
-            self._client.service_instance._href_definitions.get_connection_data_types_href()
+            self._client._href_definitions.get_connection_data_types_href()
         )
         datasource_details.extend(res)
 
@@ -514,7 +510,7 @@ class Connections(WMLResource):
             table = self._list_uploaded_db_drivers_new_api()
         except:
             response = requests.get(
-                self._client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                self._client._href_definitions.get_wsd_model_attachment_href()
                 + "dbdrivers",
                 headers=self._client._get_headers(no_content_type=True),
                 params=self._client._params(),
@@ -546,7 +542,7 @@ class Connections(WMLResource):
             )
 
         response = requests.get(
-            self._client.service_instance._href_definitions.get_connections_files_href(),
+            self._client._href_definitions.get_connections_files_href(),
             headers=self._client._get_headers(no_content_type=True),
         )
         result = self._handle_response(
@@ -600,7 +596,7 @@ class Connections(WMLResource):
 
         with self.requests_retry_session() as sess:
             response = sess.get(
-                self._client.service_instance._href_definitions.get_connection_data_type_by_id_href(
+                self._client._href_definitions.get_connection_data_type_by_id_href(
                     datasource_type_id
                 ),
                 params=params,
@@ -675,7 +671,7 @@ class Connections(WMLResource):
 
         with self.requests_retry_session() as sess:
             response = sess.get(
-                self._client.service_instance._href_definitions.get_connection_data_type_by_id_href(
+                self._client._href_definitions.get_connection_data_type_by_id_href(
                     datasource_type
                 ),
                 params=params,
@@ -717,7 +713,7 @@ class Connections(WMLResource):
 
             with open(path, "rb") as fdata:
                 content_upload_url = (
-                    self._client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                    self._client._href_definitions.get_wsd_model_attachment_href()
                     + "dbdrivers/"
                     + quote(driver_file_name, safe="")
                 )
@@ -763,8 +759,10 @@ class Connections(WMLResource):
         driver_file_name = path.split("/")[-1]
 
         with open(path, "rb") as fdata:
-            content_upload_url = self._client.service_instance._href_definitions.get_connections_file_href(
-                quote(driver_file_name, safe="")
+            content_upload_url = (
+                self._client._href_definitions.get_connections_file_href(
+                    quote(driver_file_name, safe="")
+                )
             )
             response = requests.post(
                 content_upload_url,
@@ -842,7 +840,7 @@ class Connections(WMLResource):
                 )
 
             signed_url = (
-                self._client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                self._client._href_definitions.get_wsd_model_attachment_href()
                 + quote("dbdrivers/" + jar_name, safe="")
                 + "/signed"
             )

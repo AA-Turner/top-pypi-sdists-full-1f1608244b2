@@ -25,31 +25,28 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from ..util import parse_certificates
-from yubikit.core import (
-    TRANSPORT,
-    Version,
-    require_version,
-    NotSupportedError,
-    ApplicationNotAvailableError,
-)
-from yubikit.core.smartcard import SmartCardConnection, ApduError
-from yubikit.core.smartcard.scp import ScpKid, KeyRef, ScpKeyParams, Scp11KeyParams
-from yubikit.management import DeviceInfo, CAPABILITY
-from yubikit.oath import parse_b32_key
-from yubikit.securitydomain import SecurityDomainSession
+import functools
+import logging
+import sys
 from collections import OrderedDict
 from collections.abc import MutableMapping
-from cryptography.hazmat.primitives import serialization
-from cryptography import x509
 from contextlib import contextmanager
-from threading import Timer
 from enum import Enum
-from typing import Optional, Sequence, Tuple, List
-import functools
+from threading import Timer
+from typing import Optional, Sequence
+
 import click
-import sys
-import logging
+from cryptography import x509
+from cryptography.hazmat.primitives import serialization
+
+from yubikit.core import TRANSPORT, ApplicationNotAvailableError
+from yubikit.core.smartcard import ApduError, SmartCardConnection
+from yubikit.core.smartcard.scp import KeyRef, Scp11KeyParams, ScpKeyParams, ScpKid
+from yubikit.management import CAPABILITY, DeviceInfo
+from yubikit.oath import parse_b32_key
+from yubikit.securitydomain import SecurityDomainSession
+
+from ..util import parse_certificates
 
 logger = logging.getLogger(__name__)
 
@@ -302,7 +299,7 @@ def pretty_print(value, level: int = 0) -> Sequence[str]:
     Returns a list of strings which can be printed as lines.
     """
     indent = "  " * level
-    lines: List[str] = []
+    lines: list[str] = []
     if isinstance(value, list):
         for v in value:
             lines.extend(pretty_print(v, level))
@@ -334,14 +331,6 @@ def pretty_print(value, level: int = 0) -> Sequence[str]:
     return lines
 
 
-def check_version(version: Version, req: Tuple[int, int, int]) -> bool:
-    try:
-        require_version(version, req)
-        return True
-    except NotSupportedError:
-        return False
-
-
 def is_yk4_fips(info: DeviceInfo) -> bool:
     return info.version[0] == 4 and info.is_fips
 
@@ -369,14 +358,27 @@ def find_scp11_params(
     except ApplicationNotAvailableError:
         raise ValueError("Security Domain application not available")
 
+    if ca:
+        root_ca = parse_certificates(ca, None)[0]
+        try:
+            ski = root_ca.extensions.get_extension_for_class(x509.SubjectKeyIdentifier)
+        except x509.ExtensionNotFound:
+            ski = None
+    else:
+        root_ca = None
+        ski = None
+
     if not kvn:
-        if ca:
+        if ski:
             # Find by CA
+            ca_ski = ski.value.digest
             for ref, ca_check in scp.get_supported_ca_identifiers(klcc=True).items():
-                if ca_check == ca:
+                if ca_check == ca_ski:
                     if not kid or ref.kid == kid:
                         kid, kvn = ref
                         break
+            else:
+                raise ValueError(f"No CA identifier found matching SKI: {ca_ski.hex()}")
         # Find any matching KID
         for ref in scp.get_key_information().keys():
             if ref.kid == kid:
@@ -389,9 +391,9 @@ def find_scp11_params(
         chain = scp.get_certificate_bundle(ref)
         if not chain:
             raise ValueError(f"No certificate chain stored for {ref}")
-        if ca:
+        if root_ca:
             logger.debug("Validating KLCC CA using supplied file")
-            parent = parse_certificates(ca, None)[0]
+            parent = root_ca
             for cert in chain:
                 # Requires cryptography >= 40
                 cert.verify_directly_issued_by(parent)
@@ -430,7 +432,7 @@ def get_scp_params(
 
 def organize_scp11_certificates(
     certificates: Sequence[x509.Certificate],
-) -> Tuple[
+) -> tuple[
     Optional[x509.Certificate], Sequence[x509.Certificate], Optional[x509.Certificate]
 ]:
     if not certificates:

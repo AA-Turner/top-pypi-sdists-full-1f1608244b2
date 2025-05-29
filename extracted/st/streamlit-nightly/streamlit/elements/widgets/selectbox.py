@@ -495,7 +495,7 @@ class SelectboxMixin:
 
         if not isinstance(index, int) and index is not None:
             raise StreamlitAPIException(
-                "Selectbox Value has invalid type: %s" % type(index).__name__
+                f"Selectbox Value has invalid type: {type(index).__name__}"
             )
 
         if index is not None and len(opt) > 0 and not 0 <= index < len(opt):
@@ -519,6 +519,7 @@ class SelectboxMixin:
             "selectbox",
             user_key=key,
             form_id=current_form_id(self.dg),
+            dg=self.dg,
             label=label,
             options=formatted_options,
             index=index,

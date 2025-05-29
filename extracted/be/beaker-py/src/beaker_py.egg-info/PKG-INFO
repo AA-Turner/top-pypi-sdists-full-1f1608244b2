@@ -1,11 +1,12 @@
 Metadata-Version: 2.4
 Name: beaker-py
-Version: 2.4.1
+Version: 2.4.2
 Summary: A Python Beaker client
 Author-email: Allen Institute for Artificial Intelligence <contact@allenai.org>, Pete Walsh <petew@allenai.org>
 Project-URL: Homepage, https://github.com/allenai/beaker
 Project-URL: Repository, https://github.com/allenai/beaker
 Project-URL: Changelog, https://github.com/allenai/beaker/blob/main/bindings/python/CHANGELOG.md
+Project-URL: Documentation, https://beaker-py-docs.allen.ai
 Classifier: Intended Audience :: Science/Research
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
@@ -41,6 +42,16 @@ Requires-Dist: beaker-py[dev,docker]; extra == "all"
 # Beaker-py [![](https://img.shields.io/pypi/v/beaker-py)](https://pypi.org/project/beaker-py/)
 
 A lightweight pure-Python client for Beaker.
+
+## Quick Links
+
+- 📝 Docs and examples:
+  - [API docs](https://beaker-py-docs.allen.ai/)
+  - [Integration test examples](https://github.com/allenai/beaker/tree/main/bindings/python/src/integration_tests)
+  - [v1 → v2 migration guide](https://github.com/allenai/beaker/blob/main/bindings/python/MIGRATION_GUIDE.md)
+- 🌍 Ecosystem:
+  - [beaker-gantry](https://github.com/allenai/beaker-gantry)
+  - [beaker-run-action](https://github.com/allenai/beaker-run-action)
 
 ## Installing
 

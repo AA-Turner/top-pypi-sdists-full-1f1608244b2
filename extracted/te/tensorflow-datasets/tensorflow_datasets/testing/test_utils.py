@@ -724,6 +724,7 @@ def dummy_croissant_file(
     raw_data_filename: epath.PathLike = 'raw_data.jsonl',
     croissant_filename: epath.PathLike = 'croissant.json',
     split_names: Sequence[str] | None = None,
+    version: str = '1.2.0',
 ) -> Iterator[epath.Path]:
   """Yields temporary path to a dummy Croissant file.
 
@@ -746,6 +747,7 @@ def dummy_croissant_file(
       If None, the function will create a split record set with the default
       split names `train` and `test`. If `split_names` is defined, the `split`
       key in the entries must match one of the split names.
+    version: The version of the dataset. Defaults to `1.2.0`.
   """
   if entries is None:
     entries = [
@@ -844,7 +846,7 @@ def dummy_croissant_file(
               id='raw_data',
               name='raw_data',
               description='Files with the data.',
-              encoding_format='application/jsonlines',
+              encoding_formats=['application/jsonlines'],
               includes=f'data/{file_name}*.{extension}',
           ),
       ]
@@ -859,7 +861,7 @@ def dummy_croissant_file(
               id='raw_data',
               name='raw_data',
               description='File with the data.',
-              encoding_format='application/jsonlines',
+              encoding_formats=['application/jsonlines'],
               content_url=f'data/{raw_data_filename}',
               sha256=sha256,
           ),
@@ -874,7 +876,7 @@ def dummy_croissant_file(
         url='https://dummy_url',
         distribution=distribution,
         record_sets=record_sets,
-        version='1.2.0',
+        version=version,
         license='Public',
     )
     # Write Croissant JSON-LD to tempdir.

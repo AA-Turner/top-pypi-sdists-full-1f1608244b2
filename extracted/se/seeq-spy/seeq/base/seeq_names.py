@@ -217,6 +217,7 @@ class SeeqNames:
             path = 'path'
             path_search = 'pathSearch'
             numeric_scalar_creator = 'numericScalarCreator'
+            search_ancestor = 'searchAncestor'
             set_item_property = 'setItemProperty'
             string_scalar_creator = 'stringScalarCreator'
             text_extractor = 'textExtractor'

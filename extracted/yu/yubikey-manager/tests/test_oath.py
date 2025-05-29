@@ -1,14 +1,15 @@
 #  vim: set fileencoding=utf-8 :
 
-from yubikit.oath import (
-    CredentialData,
-    OATH_TYPE,
-    HASH_ALGORITHM,
-    _derive_key,
-    _parse_cred_id,
-    _format_cred_id,
-)
 import unittest
+
+from yubikit.oath import (
+    HASH_ALGORITHM,
+    OATH_TYPE,
+    CredentialData,
+    _derive_key,
+    _format_cred_id,
+    _parse_cred_id,
+)
 
 
 class TestOathFunctions(unittest.TestCase):
@@ -73,21 +74,19 @@ class TestOathFunctions(unittest.TestCase):
         )
 
     def test_parse_uri_issuer(self):
-        no_issuer = CredentialData.parse_uri("otpauth://totp/account" "?secret=abba")
+        no_issuer = CredentialData.parse_uri("otpauth://totp/account?secret=abba")
         self.assertIsNone(no_issuer.issuer)
 
         from_param = CredentialData.parse_uri(
-            "otpauth://totp/account" "?secret=abba&issuer=Test"
+            "otpauth://totp/account?secret=abba&issuer=Test"
         )
         self.assertEqual("Test", from_param.issuer)
 
-        from_name = CredentialData.parse_uri(
-            "otpauth://totp/Test:account" "?secret=abba"
-        )
+        from_name = CredentialData.parse_uri("otpauth://totp/Test:account?secret=abba")
         self.assertEqual("Test", from_name.issuer)
 
         with_both = CredentialData.parse_uri(
-            "otpauth://totp/TestA:account" "?secret=abba&issuer=TestB"
+            "otpauth://totp/TestA:account?secret=abba&issuer=TestB"
         )
         self.assertEqual("TestB", with_both.issuer)
 

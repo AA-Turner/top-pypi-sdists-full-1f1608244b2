@@ -29,6 +29,7 @@ class GoogleCloudStorage(GoogleClientManager):
         if self._bucket is None:
             self._client.close()
             raise ValueError(f"Bucket '{self._bucket_name}' does not exist.")
+        self._root_location = service_key
         self._logger.info("Client manager initialized successfully")
 
     @property
@@ -46,7 +47,50 @@ class GoogleCloudStorage(GoogleClientManager):
             self._client = None
             self._logger.info("Client manager disposed successfully")
 
-    def generate_signed_url(self, location:str) -> str:
+    def upload(
+        self,
+        content:bytes,
+        location:str,
+        content_type:Optional[str]=None,
+        make_public:bool=False,
+        expiration:timedelta=timedelta(minutes=15),
+        root_location_override:BaseTypes.OptionalString=None
+    ) -> str:
+        """
+        Upload a file to Google Cloud Storage.
+
+        Args:
+            content (bytes): The file content as bytes.
+            location (str): The path inside the bucket to save the file.
+            content_type (Optional[str]): MIME type (e.g., 'image/png').
+            make_public (bool): Whether to make the file publicly accessible.
+
+        Returns:
+            str: The public URL or blob path depending on `make_public`.
+        """
+        if root_location_override is None or (isinstance(root_location_override, str) and len(root_location_override) <= 0):
+            blob = self._bucket.blob(f"{self._root_location}/{location}")
+        else:
+            blob = self._bucket.blob(f"{root_location_override}/{location}")
+        blob.upload_from_string(content, content_type=content_type)
+
+        if make_public:
+            blob.make_public()
+            url = blob.public_url
+        else:
+            url = blob.generate_signed_url(
+                version="v4",
+                expiration=expiration,
+                method="GET"
+            )
+        return url
+
+    def generate_signed_url(
+        self,
+        location:str,
+        expiration:timedelta=timedelta(minutes=15),
+        root_location_override:BaseTypes.OptionalString=None
+    ) -> str:
         """
         generate signed URL of a file in the bucket based on its location.
 
@@ -60,13 +104,16 @@ class GoogleCloudStorage(GoogleClientManager):
         Raises:
             ValueError: If the file does not exist
         """
-        blob = self._bucket.blob(blob_name=location)
+        if root_location_override is None or (isinstance(root_location_override, str) and len(root_location_override) <= 0):
+            blob = self._bucket.blob(blob_name=f"{self._root_location}/{location}")
+        else:
+            blob = self._bucket.blob(blob_name=f"{root_location_override}/{location}")
         if not blob.exists():
             raise ValueError(f"File '{location}' did not exists.")
 
         url = blob.generate_signed_url(
             version="v4",
-            expiration=timedelta(minutes=15),
+            expiration=expiration,
             method="GET"
         )
         return url

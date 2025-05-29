@@ -6,28 +6,25 @@ build-backend = "hatchling.build"
 [project]
 name = "optype"
 description = "Building blocks for precise & flexible type hints"
-version = "0.9.3"
+version = "0.10.0"
 authors = [{name = "Joren Hammudoglu", email = "jhammudoglu@gmail.com"}]
 license = "BSD-3-Clause"
 readme = "README.md"
 keywords = ["typing", "type hints", "numpy"]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
-# https://scientific-python.org/specs/spec-0000/
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = ["typing-extensions>=4.10; python_version<'3.13'"]
 
     [project.optional-dependencies]
-    numpy = ["numpy>=1.23.5"]
+    numpy = ["numpy>=1.25.2"]
 
     [project.urls]
     Repository = "https://github.com/jorenham/optype/"
@@ -40,15 +37,15 @@ dependencies = ["typing-extensions>=4.10; python_version<'3.13'"]
 [dependency-groups]
 extra = ["optype[numpy]"]
 lint = [
-    "ruff>=0.11.2",
-    "sp-repo-review[cli]>=2025.1.22",
+    "ruff>=0.11.11",
+    "sp-repo-review[cli]>=2025.5.2",
 ]
 type = [
     "basedmypy[faster-cache]>=2.10.0",
-    "basedpyright>=1.28.4",
+    "basedpyright>=1.29.2",
 ]
 test = [
-    "beartype>=0.20.2",
+    "beartype>=0.21.0",
     "pytest>=8.3.5",
 ]
 dev = [
@@ -56,7 +53,7 @@ dev = [
     {include-group = "lint"},
     {include-group = "type"},
     {include-group = "test"},
-    "tox>=4.25.0",
+    "tox>=4.26.0",
 ]
 
 
@@ -136,15 +133,11 @@ reportUnusedImport = false                # dupe of F401
 reportUnusedVariable = false              # dupe of F841
 
     [tool.basedpyright.defineConstant]
-    NP123 = true
-    NP124 = true
     NP125 = true
-    NP126 = true
     NP20 = true
     NP21 = true
     NP22 = true
     NP23 = false
-    NP30 = false
 
 
 [tool.pytest.ini_options]
@@ -344,7 +337,7 @@ force-exclude = true
 
 [tool.tox]
 isolated_build = true
-env_list = ["repo-review", "3.10", "3.11", "3.12", "3.13"]
+env_list = ["repo-review", "3.11", "3.12", "3.13"]
 
     [tool.tox.env_run_base]
     description = "test with {base_python}"

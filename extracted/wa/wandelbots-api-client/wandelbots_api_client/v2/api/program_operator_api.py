@@ -26,11 +26,11 @@ from urllib.parse import quote
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from wandelbots_api_client.v2.models.create_program_run200_response import CreateProgramRun200Response
-from wandelbots_api_client.v2.models.create_program_run_request import CreateProgramRunRequest
+from wandelbots_api_client.v2.models.create_program_operator_run200_response import CreateProgramOperatorRun200Response
+from wandelbots_api_client.v2.models.create_program_operator_run_request import CreateProgramOperatorRunRequest
 from wandelbots_api_client.v2.models.create_trigger200_response import CreateTrigger200Response
 from wandelbots_api_client.v2.models.create_trigger_request import CreateTriggerRequest
-from wandelbots_api_client.v2.models.get_all_program_runs200_response import GetAllProgramRuns200Response
+from wandelbots_api_client.v2.models.get_all_program_operator_runs200_response import GetAllProgramOperatorRuns200Response
 from wandelbots_api_client.v2.models.get_all_triggers200_response import GetAllTriggers200Response
 from wandelbots_api_client.v2.models.program_run_object import ProgramRunObject
 from wandelbots_api_client.v2.models.trigger_object import TriggerObject
@@ -53,10 +53,10 @@ class ProgramOperatorApi:
         self.api_client = api_client
 
     @validate_call
-    async def create_program_run(
+    async def create_program_operator_run(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        create_program_run_request: CreateProgramRunRequest,
+        create_program_operator_run_request: CreateProgramOperatorRunRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,15 +69,15 @@ class ProgramOperatorApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateProgramRun200Response:
+    ) -> CreateProgramOperatorRun200Response:
         """Run Program from Library
 
-        <!-- theme: danger --> > **Experimental** This endpoint initiates the execution of a program stored in the program library. A program is started with the a specific program id that exists in the program library. 
+        <!-- theme: danger -->  > **Experimental**  This endpoint initiates the execution of a program stored in the program library. A program is started with the a specific program identifier that exists in the program library. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param create_program_run_request: (required)
-        :type create_program_run_request: CreateProgramRunRequest
+        :param create_program_operator_run_request: (required)
+        :type create_program_operator_run_request: CreateProgramOperatorRunRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -100,9 +100,9 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_program_run_serialize(
+        _param = self._create_program_operator_run_serialize(
             cell=cell,
-            create_program_run_request=create_program_run_request,
+            create_program_operator_run_request=create_program_operator_run_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -110,7 +110,7 @@ class ProgramOperatorApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateProgramRun200Response",
+            '200': "CreateProgramOperatorRun200Response",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -124,10 +124,10 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def create_program_run_with_http_info(
+    async def create_program_operator_run_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        create_program_run_request: CreateProgramRunRequest,
+        create_program_operator_run_request: CreateProgramOperatorRunRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -140,15 +140,15 @@ class ProgramOperatorApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateProgramRun200Response]:
+    ) -> ApiResponse[CreateProgramOperatorRun200Response]:
         """Run Program from Library
 
-        <!-- theme: danger --> > **Experimental** This endpoint initiates the execution of a program stored in the program library. A program is started with the a specific program id that exists in the program library. 
+        <!-- theme: danger -->  > **Experimental**  This endpoint initiates the execution of a program stored in the program library. A program is started with the a specific program identifier that exists in the program library. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param create_program_run_request: (required)
-        :type create_program_run_request: CreateProgramRunRequest
+        :param create_program_operator_run_request: (required)
+        :type create_program_operator_run_request: CreateProgramOperatorRunRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -171,9 +171,9 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_program_run_serialize(
+        _param = self._create_program_operator_run_serialize(
             cell=cell,
-            create_program_run_request=create_program_run_request,
+            create_program_operator_run_request=create_program_operator_run_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -181,7 +181,7 @@ class ProgramOperatorApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateProgramRun200Response",
+            '200': "CreateProgramOperatorRun200Response",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -195,10 +195,10 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def create_program_run_without_preload_content(
+    async def create_program_operator_run_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        create_program_run_request: CreateProgramRunRequest,
+        create_program_operator_run_request: CreateProgramOperatorRunRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -214,12 +214,12 @@ class ProgramOperatorApi:
     ) -> RESTResponseType:
         """Run Program from Library
 
-        <!-- theme: danger --> > **Experimental** This endpoint initiates the execution of a program stored in the program library. A program is started with the a specific program id that exists in the program library. 
+        <!-- theme: danger -->  > **Experimental**  This endpoint initiates the execution of a program stored in the program library. A program is started with the a specific program identifier that exists in the program library. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param create_program_run_request: (required)
-        :type create_program_run_request: CreateProgramRunRequest
+        :param create_program_operator_run_request: (required)
+        :type create_program_operator_run_request: CreateProgramOperatorRunRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -242,9 +242,9 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_program_run_serialize(
+        _param = self._create_program_operator_run_serialize(
             cell=cell,
-            create_program_run_request=create_program_run_request,
+            create_program_operator_run_request=create_program_operator_run_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -252,7 +252,7 @@ class ProgramOperatorApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateProgramRun200Response",
+            '200': "CreateProgramOperatorRun200Response",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -261,10 +261,10 @@ class ProgramOperatorApi:
         return response_data.response
 
 
-    def _create_program_run_serialize(
+    def _create_program_operator_run_serialize(
         self,
         cell,
-        create_program_run_request,
+        create_program_operator_run_request,
         _request_auth,
         _content_type,
         _headers,
@@ -290,8 +290,8 @@ class ProgramOperatorApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_program_run_request is not None:
-            _body_params = create_program_run_request
+        if create_program_operator_run_request is not None:
+            _body_params = create_program_operator_run_request
 
 
         # set the HTTP header `Accept`
@@ -895,7 +895,7 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def get_all_program_runs(
+    async def get_all_program_operator_runs(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         state: Optional[StrictStr] = None,
@@ -911,10 +911,10 @@ class ProgramOperatorApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetAllProgramRuns200Response:
+    ) -> GetAllProgramOperatorRuns200Response:
         """Get All Program Runs
 
-        <!-- theme: danger --> > **Experimental** Retrieves all program runs, including past and current executions. Use the optional `state` parameter to filter the results by their status. 
+        <!-- theme: danger -->  > **Experimental**  Retrieves all program runs, including past and current executions. Use the optional `state` parameter to filter the results by their status. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -942,7 +942,7 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_all_program_runs_serialize(
+        _param = self._get_all_program_operator_runs_serialize(
             cell=cell,
             state=state,
             _request_auth=_request_auth,
@@ -952,7 +952,7 @@ class ProgramOperatorApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAllProgramRuns200Response",
+            '200': "GetAllProgramOperatorRuns200Response",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -966,7 +966,7 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def get_all_program_runs_with_http_info(
+    async def get_all_program_operator_runs_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         state: Optional[StrictStr] = None,
@@ -982,10 +982,10 @@ class ProgramOperatorApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetAllProgramRuns200Response]:
+    ) -> ApiResponse[GetAllProgramOperatorRuns200Response]:
         """Get All Program Runs
 
-        <!-- theme: danger --> > **Experimental** Retrieves all program runs, including past and current executions. Use the optional `state` parameter to filter the results by their status. 
+        <!-- theme: danger -->  > **Experimental**  Retrieves all program runs, including past and current executions. Use the optional `state` parameter to filter the results by their status. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -1013,7 +1013,7 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_all_program_runs_serialize(
+        _param = self._get_all_program_operator_runs_serialize(
             cell=cell,
             state=state,
             _request_auth=_request_auth,
@@ -1023,7 +1023,7 @@ class ProgramOperatorApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAllProgramRuns200Response",
+            '200': "GetAllProgramOperatorRuns200Response",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1037,7 +1037,7 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def get_all_program_runs_without_preload_content(
+    async def get_all_program_operator_runs_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         state: Optional[StrictStr] = None,
@@ -1056,7 +1056,7 @@ class ProgramOperatorApi:
     ) -> RESTResponseType:
         """Get All Program Runs
 
-        <!-- theme: danger --> > **Experimental** Retrieves all program runs, including past and current executions. Use the optional `state` parameter to filter the results by their status. 
+        <!-- theme: danger -->  > **Experimental**  Retrieves all program runs, including past and current executions. Use the optional `state` parameter to filter the results by their status. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -1084,7 +1084,7 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_all_program_runs_serialize(
+        _param = self._get_all_program_operator_runs_serialize(
             cell=cell,
             state=state,
             _request_auth=_request_auth,
@@ -1094,7 +1094,7 @@ class ProgramOperatorApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAllProgramRuns200Response",
+            '200': "GetAllProgramOperatorRuns200Response",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1103,7 +1103,7 @@ class ProgramOperatorApi:
         return response_data.response
 
 
-    def _get_all_program_runs_serialize(
+    def _get_all_program_operator_runs_serialize(
         self,
         cell,
         state,
@@ -1188,7 +1188,7 @@ class ProgramOperatorApi:
     ) -> GetAllTriggers200Response:
         """Get All Triggers
 
-        <!-- theme: danger --> > **Experimental** Returns all triggers in the system with the program runs caused by each trigger. You can use the program run id to get more details about a specific program run. 
+        <!-- theme: danger --> > **Experimental** Returns all triggers in the system with the program runs caused by each trigger. You can use the program run identifier to get more details about a specific program run. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -1255,7 +1255,7 @@ class ProgramOperatorApi:
     ) -> ApiResponse[GetAllTriggers200Response]:
         """Get All Triggers
 
-        <!-- theme: danger --> > **Experimental** Returns all triggers in the system with the program runs caused by each trigger. You can use the program run id to get more details about a specific program run. 
+        <!-- theme: danger --> > **Experimental** Returns all triggers in the system with the program runs caused by each trigger. You can use the program run identifier to get more details about a specific program run. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -1322,7 +1322,7 @@ class ProgramOperatorApi:
     ) -> RESTResponseType:
         """Get All Triggers
 
-        <!-- theme: danger --> > **Experimental** Returns all triggers in the system with the program runs caused by each trigger. You can use the program run id to get more details about a specific program run. 
+        <!-- theme: danger --> > **Experimental** Returns all triggers in the system with the program runs caused by each trigger. You can use the program run identifier to get more details about a specific program run. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -1428,7 +1428,7 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def get_program_run(
+    async def get_program_operator_run(
         self,
         run: StrictStr,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
@@ -1447,7 +1447,7 @@ class ProgramOperatorApi:
     ) -> ProgramRunObject:
         """Get Program Run
 
-        <!-- theme: danger --> > **Experimental** Retrieves detailed information about a specific program run. 
+        <!-- theme: danger -->  > **Experimental**  Retrieves detailed information about a specific program run. 
 
         :param run: (required)
         :type run: str
@@ -1475,7 +1475,7 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_program_run_serialize(
+        _param = self._get_program_operator_run_serialize(
             run=run,
             cell=cell,
             _request_auth=_request_auth,
@@ -1499,7 +1499,7 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def get_program_run_with_http_info(
+    async def get_program_operator_run_with_http_info(
         self,
         run: StrictStr,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
@@ -1518,7 +1518,7 @@ class ProgramOperatorApi:
     ) -> ApiResponse[ProgramRunObject]:
         """Get Program Run
 
-        <!-- theme: danger --> > **Experimental** Retrieves detailed information about a specific program run. 
+        <!-- theme: danger -->  > **Experimental**  Retrieves detailed information about a specific program run. 
 
         :param run: (required)
         :type run: str
@@ -1546,7 +1546,7 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_program_run_serialize(
+        _param = self._get_program_operator_run_serialize(
             run=run,
             cell=cell,
             _request_auth=_request_auth,
@@ -1570,7 +1570,7 @@ class ProgramOperatorApi:
 
 
     @validate_call
-    async def get_program_run_without_preload_content(
+    async def get_program_operator_run_without_preload_content(
         self,
         run: StrictStr,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
@@ -1589,7 +1589,7 @@ class ProgramOperatorApi:
     ) -> RESTResponseType:
         """Get Program Run
 
-        <!-- theme: danger --> > **Experimental** Retrieves detailed information about a specific program run. 
+        <!-- theme: danger -->  > **Experimental**  Retrieves detailed information about a specific program run. 
 
         :param run: (required)
         :type run: str
@@ -1617,7 +1617,7 @@ class ProgramOperatorApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_program_run_serialize(
+        _param = self._get_program_operator_run_serialize(
             run=run,
             cell=cell,
             _request_auth=_request_auth,
@@ -1636,7 +1636,7 @@ class ProgramOperatorApi:
         return response_data.response
 
 
-    def _get_program_run_serialize(
+    def _get_program_operator_run_serialize(
         self,
         run,
         cell,
@@ -1979,7 +1979,7 @@ class ProgramOperatorApi:
     @validate_call
     async def update_trigger(
         self,
-        trigger: Annotated[StrictStr, Field(description="the id of the trigger")],
+        trigger: Annotated[StrictStr, Field(description="The identifier of the trigger.")],
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         update_trigger_request: UpdateTriggerRequest,
         _request_timeout: Union[
@@ -1999,7 +1999,7 @@ class ProgramOperatorApi:
 
         <!-- theme: danger --> > **Experimental** Updates the details of an existing trigger The exact behavior of switching a trigger from active to inactive or vice versa is not defined yet. 
 
-        :param trigger: the id of the trigger (required)
+        :param trigger: The identifier of the trigger. (required)
         :type trigger: str
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -2054,7 +2054,7 @@ class ProgramOperatorApi:
     @validate_call
     async def update_trigger_with_http_info(
         self,
-        trigger: Annotated[StrictStr, Field(description="the id of the trigger")],
+        trigger: Annotated[StrictStr, Field(description="The identifier of the trigger.")],
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         update_trigger_request: UpdateTriggerRequest,
         _request_timeout: Union[
@@ -2074,7 +2074,7 @@ class ProgramOperatorApi:
 
         <!-- theme: danger --> > **Experimental** Updates the details of an existing trigger The exact behavior of switching a trigger from active to inactive or vice versa is not defined yet. 
 
-        :param trigger: the id of the trigger (required)
+        :param trigger: The identifier of the trigger. (required)
         :type trigger: str
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -2129,7 +2129,7 @@ class ProgramOperatorApi:
     @validate_call
     async def update_trigger_without_preload_content(
         self,
-        trigger: Annotated[StrictStr, Field(description="the id of the trigger")],
+        trigger: Annotated[StrictStr, Field(description="The identifier of the trigger.")],
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         update_trigger_request: UpdateTriggerRequest,
         _request_timeout: Union[
@@ -2149,7 +2149,7 @@ class ProgramOperatorApi:
 
         <!-- theme: danger --> > **Experimental** Updates the details of an existing trigger The exact behavior of switching a trigger from active to inactive or vice versa is not defined yet. 
 
-        :param trigger: the id of the trigger (required)
+        :param trigger: The identifier of the trigger. (required)
         :type trigger: str
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str

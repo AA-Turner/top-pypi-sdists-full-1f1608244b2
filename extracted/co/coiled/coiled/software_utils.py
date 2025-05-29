@@ -18,7 +18,7 @@ from pathlib import Path
 from sys import executable
 from threading import Lock
 from typing import Dict, List, TextIO, Tuple, Union, cast
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 import dask.config
 import toml
@@ -578,6 +578,7 @@ def get_mamba_auth_dict(home_dir: Path | None = None) -> dict[str, tuple[str, st
                 elif auth_type == "BasicHTTPAuthentication":
                     domain_auth[domain] = (
                         auth.get("user") or "",
+                        # Mamba stores passwords as base64 encoded strings
                         b64decode(auth.get("password") or "").decode("utf-8"),
                     )
                 else:
@@ -606,7 +607,8 @@ def set_auth_for_url(url: Url | str) -> str:
     username = None
     password = None
     if parsed_url.auth:
-        auth_parts = parsed_url.auth.split(":", 1)
+        # parse_url quotes the auth part, so we need to unquote it
+        auth_parts = unquote(parsed_url.auth).split(":", 1)
         if len(auth_parts) < 2:
             auth_parts += [None]
         username, password = auth_parts

@@ -43,6 +43,9 @@ class Beaker:
     A client for interacting with `Beaker <https://beaker.org>`_. This should be used as a context
     manager to ensure connections are properly closed on exit.
 
+    .. tip::
+        Use :meth:`from_env()` to create a client instance.
+
     :param config: The Beaker :class:`Config`.
     :param check_for_upgrades: Automatically check that beaker-py is up-to-date. You'll see
         a warning if it isn't.
@@ -145,13 +148,18 @@ class Beaker:
         """
         Initialize client from a config file and/or environment variables.
 
+        :examples:
+
+        >>> with Beaker.from_env(default_workspace="ai2/my-workspace") as beaker:
+        ...     print(beaker.user_name)
+
         :param check_for_upgrades: Automatically check that beaker-py is up-to-date. You'll see
             a warning if it isn't.
         :param user_agent: Override the "User-Agent" header used in requests to the Beaker server.
         :param overrides: Fields in the :class:`Config` to override.
 
         .. note::
-            This will use the same config file that the `Beaker command-line client
+            This will use the same config file that the Beaker command-line client
             creates and uses, which is usually located at ``$HOME/.beaker/config.yml``.
 
             If you haven't configured the command-line client, then you can alternately just
@@ -325,6 +333,10 @@ class Beaker:
         return False
 
     def close(self):
+        """
+        Close down RPC channels and HTTP sessions. This will be called automatically when using
+        the client as a context manager.
+        """
         # Close RPC channel.
         if self._channel is not None:
             self._channel.close()

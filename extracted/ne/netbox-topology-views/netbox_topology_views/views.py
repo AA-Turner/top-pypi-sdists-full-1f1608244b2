@@ -251,6 +251,7 @@ def create_node(
     node["shape"] = "image"
     node["href"] = device.get_absolute_url()
     node["image"] = get_image_for_entity(device)
+    node["label_num_lines"] = len(label_items)
 
     return node
 
@@ -443,14 +444,14 @@ def get_topology_data(
                 termination_b = create_circuit_termination(
                     circuit_termination.cable.b_terminations[0]
                 )
-            elif circuit_termination.provider_network is not None:
+            elif circuit_termination.termination is not None:
                 if (
-                    circuit_termination.provider_network_id
+                    circuit_termination.termination_id
                     not in nodes_provider_networks
                 ):
                     nodes_provider_networks[
-                        circuit_termination.provider_network.pk
-                    ] = circuit_termination.provider_network
+                        circuit_termination.termination.pk
+                    ] = circuit_termination.termination
 
             if bool(termination_a) and bool(termination_b):
                 circuit_model = {

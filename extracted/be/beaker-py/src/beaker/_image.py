@@ -9,7 +9,26 @@ from .types import *
 
 
 class ImageClient(ServiceClient):
+    """
+    Methods for interacting with Beaker `Images <https://beaker-docs.apps.allenai.org/concept/images.html>`_.
+    Accessed via the :data:`Beaker.image <beaker.Beaker.image>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, image: str) -> pb2.Image:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     image = beaker.image.get(image_id)
+
+        :returns: A :class:`~beaker.types.BeakerImage` protobuf object.
+
+        :raises ~beaker.exceptions.BeakerImageNotFound: If the image doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetImageResponse](self.service.GetImage),
             pb2.GetImageRequest(image_id=self.resolve_image_id(image)),

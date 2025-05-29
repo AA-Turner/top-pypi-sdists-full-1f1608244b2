@@ -24,13 +24,11 @@ from typing_extensions import Annotated
 from urllib.parse import quote
 
 from pydantic import Field, StrictStr
-from typing import Any, List, Optional
+from typing import List
 from typing_extensions import Annotated
-from wandelbots_api_client.v2.models.code_with_arguments import CodeWithArguments
+from wandelbots_api_client.v2.models.program_request import ProgramRequest
 from wandelbots_api_client.v2.models.program_run import ProgramRun
-from wandelbots_api_client.v2.models.program_runner_reference import ProgramRunnerReference
-from wandelbots_api_client.v2.models.request import Request
-from wandelbots_api_client.v2.models.request1 import Request1
+from wandelbots_api_client.v2.models.program_run_reference import ProgramRunReference
 
 from wandelbots_api_client.v2.api_client import ApiClient, RequestSerialized
 from wandelbots_api_client.v2.api_response import ApiResponse
@@ -49,10 +47,10 @@ class ProgramApi:
         self.api_client = api_client
 
     @validate_call
-    async def create_program_runner(
+    async def create_program_run(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request: Request,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -65,15 +63,15 @@ class ProgramApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ProgramRunnerReference:
-        """Create Program Runner
+    ) -> ProgramRunReference:
+        """Create program run
 
-        This endpoint accepts a program written in Wandelscript and if desired, initial arguments (in the form of a dict). It will then execute this Wandelscript asynchronously. It returns a program runner reference which can be used to query the state of the program runner.  ## Parameters See the **Schema** tab for information about the request body.  ## Returns A program runner reference which can be used to query the state of the program runner.  ## Receiving state updates Receive state updates of the program runner via polling the `/programs/runners/{runner_id}/`  ### Via polling You can receive updates about the state of the program runner by polling the `/programs/runners/{runner_id}/` endpoint. ```
+        This endpoint accepts a program and if desired, initial arguments (in the form of a dict).  The program will be executed asynchronously.  It returns a program run reference which can be used to query the state of the program run.  ## Receiving state updates Receive state updates of the program run via polling the `/programs/runs/{run_id}/`  ### Via polling You can receive updates about the state of the program run by polling the `/programs/runs/{run_id}/` endpoint. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param request: (required)
-        :type request: Request
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -96,9 +94,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_program_runner_serialize(
+        _param = self._create_program_run_serialize(
             cell=cell,
-            request=request,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -106,11 +104,11 @@ class ProgramApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ProgramRunnerReference",
+            '200': "ProgramRunReference",
             '400': None,
             '404': None,
             '406': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -126,10 +124,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def create_program_runner_with_http_info(
+    async def create_program_run_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request: Request,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -142,15 +140,15 @@ class ProgramApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ProgramRunnerReference]:
-        """Create Program Runner
+    ) -> ApiResponse[ProgramRunReference]:
+        """Create program run
 
-        This endpoint accepts a program written in Wandelscript and if desired, initial arguments (in the form of a dict). It will then execute this Wandelscript asynchronously. It returns a program runner reference which can be used to query the state of the program runner.  ## Parameters See the **Schema** tab for information about the request body.  ## Returns A program runner reference which can be used to query the state of the program runner.  ## Receiving state updates Receive state updates of the program runner via polling the `/programs/runners/{runner_id}/`  ### Via polling You can receive updates about the state of the program runner by polling the `/programs/runners/{runner_id}/` endpoint. ```
+        This endpoint accepts a program and if desired, initial arguments (in the form of a dict).  The program will be executed asynchronously.  It returns a program run reference which can be used to query the state of the program run.  ## Receiving state updates Receive state updates of the program run via polling the `/programs/runs/{run_id}/`  ### Via polling You can receive updates about the state of the program run by polling the `/programs/runs/{run_id}/` endpoint. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param request: (required)
-        :type request: Request
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -173,9 +171,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_program_runner_serialize(
+        _param = self._create_program_run_serialize(
             cell=cell,
-            request=request,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -183,11 +181,11 @@ class ProgramApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ProgramRunnerReference",
+            '200': "ProgramRunReference",
             '400': None,
             '404': None,
             '406': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -203,10 +201,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def create_program_runner_without_preload_content(
+    async def create_program_run_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request: Request,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -220,14 +218,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Create Program Runner
+        """Create program run
 
-        This endpoint accepts a program written in Wandelscript and if desired, initial arguments (in the form of a dict). It will then execute this Wandelscript asynchronously. It returns a program runner reference which can be used to query the state of the program runner.  ## Parameters See the **Schema** tab for information about the request body.  ## Returns A program runner reference which can be used to query the state of the program runner.  ## Receiving state updates Receive state updates of the program runner via polling the `/programs/runners/{runner_id}/`  ### Via polling You can receive updates about the state of the program runner by polling the `/programs/runners/{runner_id}/` endpoint. ```
+        This endpoint accepts a program and if desired, initial arguments (in the form of a dict).  The program will be executed asynchronously.  It returns a program run reference which can be used to query the state of the program run.  ## Receiving state updates Receive state updates of the program run via polling the `/programs/runs/{run_id}/`  ### Via polling You can receive updates about the state of the program run by polling the `/programs/runs/{run_id}/` endpoint. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param request: (required)
-        :type request: Request
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -250,9 +248,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._create_program_runner_serialize(
+        _param = self._create_program_run_serialize(
             cell=cell,
-            request=request,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -260,11 +258,11 @@ class ProgramApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ProgramRunnerReference",
+            '200': "ProgramRunReference",
             '400': None,
             '404': None,
             '406': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -275,10 +273,10 @@ class ProgramApi:
         return response_data.response
 
 
-    def _create_program_runner_serialize(
+    def _create_program_run_serialize(
         self,
         cell,
-        request,
+        program_request,
         _request_auth,
         _content_type,
         _headers,
@@ -304,8 +302,8 @@ class ProgramApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if request is not None:
-            _body_params = request
+        if program_request is not None:
+            _body_params = program_request
 
 
         # set the HTTP header `Accept`
@@ -322,7 +320,7 @@ class ProgramApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'text/plain'
+                        'application/json'
                     ]
                 )
             )
@@ -337,7 +335,7 @@ class ProgramApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/cells/{cell}/programs/runners',
+            resource_path='/cells/{cell}/programs/runs',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -356,7 +354,7 @@ class ProgramApi:
     async def execute_program(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        code_with_arguments: CodeWithArguments,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -370,14 +368,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ProgramRun:
-        """Execute Program
+        """Execute program
 
-        Execute a program in Wandelscript. The Wandelscript can also move multiple robots by using the 'do with' syntax.  The execute operation will be started from the current joint configuration of any addressed robot(s).  Addressed robots have to be in control mode for the execute operation to succeed.  A request to this endpoint will block this endpoint until the program has been executed, or until an error occurs.  The executed movement is returned in case of a succesful execution. Otherwise an error (e.g. out of reach, singularity), is returned.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  * [WandelEngine & Wandelscript Documentation](/docs/docs/wandelscript) 
+        Execute a program synchronously.  The execute operation will be started from the current joint configuration of any addressed robot(s).  Addressed robots have to be in control mode for the execute operation to succeed.  A request to this endpoint will block this endpoint until the program has been executed, or until an error occurs.  The executed movement is returned in case of a successful execution.  Otherwise an error (e.g. out of reach, singularity), is returned. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param code_with_arguments: (required)
-        :type code_with_arguments: CodeWithArguments
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -402,7 +400,7 @@ class ProgramApi:
 
         _param = self._execute_program_serialize(
             cell=cell,
-            code_with_arguments=code_with_arguments,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -413,7 +411,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -432,7 +430,7 @@ class ProgramApi:
     async def execute_program_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        code_with_arguments: CodeWithArguments,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -446,14 +444,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ProgramRun]:
-        """Execute Program
+        """Execute program
 
-        Execute a program in Wandelscript. The Wandelscript can also move multiple robots by using the 'do with' syntax.  The execute operation will be started from the current joint configuration of any addressed robot(s).  Addressed robots have to be in control mode for the execute operation to succeed.  A request to this endpoint will block this endpoint until the program has been executed, or until an error occurs.  The executed movement is returned in case of a succesful execution. Otherwise an error (e.g. out of reach, singularity), is returned.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  * [WandelEngine & Wandelscript Documentation](/docs/docs/wandelscript) 
+        Execute a program synchronously.  The execute operation will be started from the current joint configuration of any addressed robot(s).  Addressed robots have to be in control mode for the execute operation to succeed.  A request to this endpoint will block this endpoint until the program has been executed, or until an error occurs.  The executed movement is returned in case of a successful execution.  Otherwise an error (e.g. out of reach, singularity), is returned. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param code_with_arguments: (required)
-        :type code_with_arguments: CodeWithArguments
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -478,7 +476,7 @@ class ProgramApi:
 
         _param = self._execute_program_serialize(
             cell=cell,
-            code_with_arguments=code_with_arguments,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -489,7 +487,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -508,7 +506,7 @@ class ProgramApi:
     async def execute_program_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        code_with_arguments: CodeWithArguments,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -522,14 +520,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Execute Program
+        """Execute program
 
-        Execute a program in Wandelscript. The Wandelscript can also move multiple robots by using the 'do with' syntax.  The execute operation will be started from the current joint configuration of any addressed robot(s).  Addressed robots have to be in control mode for the execute operation to succeed.  A request to this endpoint will block this endpoint until the program has been executed, or until an error occurs.  The executed movement is returned in case of a succesful execution. Otherwise an error (e.g. out of reach, singularity), is returned.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  * [WandelEngine & Wandelscript Documentation](/docs/docs/wandelscript) 
+        Execute a program synchronously.  The execute operation will be started from the current joint configuration of any addressed robot(s).  Addressed robots have to be in control mode for the execute operation to succeed.  A request to this endpoint will block this endpoint until the program has been executed, or until an error occurs.  The executed movement is returned in case of a successful execution.  Otherwise an error (e.g. out of reach, singularity), is returned. 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param code_with_arguments: (required)
-        :type code_with_arguments: CodeWithArguments
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -554,7 +552,7 @@ class ProgramApi:
 
         _param = self._execute_program_serialize(
             cell=cell,
-            code_with_arguments=code_with_arguments,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -565,7 +563,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -579,7 +577,7 @@ class ProgramApi:
     def _execute_program_serialize(
         self,
         cell,
-        code_with_arguments,
+        program_request,
         _request_auth,
         _content_type,
         _headers,
@@ -605,8 +603,8 @@ class ProgramApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if code_with_arguments is not None:
-            _body_params = code_with_arguments
+        if program_request is not None:
+            _body_params = program_request
 
 
         # set the HTTP header `Accept`
@@ -623,8 +621,7 @@ class ProgramApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'application/json', 
-                        'text/plain'
+                        'application/json'
                     ]
                 )
             )
@@ -655,10 +652,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def get_program_runner(
+    async def get_program_run(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        runner: StrictStr,
+        run: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -672,14 +669,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ProgramRun:
-        """Get Program Runner
+        """Get program run
 
-        Returns information about a program currently executed.  When a program is finished: Program response, result, collected Wandelscript logs, etc.  When a program is running: Running status, current executed line, etc.  ## Parameters - **runner_id**: The identifier of the program runner 
+        Returns information about a program currently executed. When a program is finished: Program response, result, collected logs, .. When a program is running: Running status, current executed line, ... 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param runner: (required)
-        :type runner: str
+        :param run: (required)
+        :type run: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -702,9 +699,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_program_runner_serialize(
+        _param = self._get_program_run_serialize(
             cell=cell,
-            runner=runner,
+            run=run,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -713,10 +710,7 @@ class ProgramApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramRun",
-            '400': None,
             '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -731,10 +725,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def get_program_runner_with_http_info(
+    async def get_program_run_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        runner: StrictStr,
+        run: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -748,14 +742,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ProgramRun]:
-        """Get Program Runner
+        """Get program run
 
-        Returns information about a program currently executed.  When a program is finished: Program response, result, collected Wandelscript logs, etc.  When a program is running: Running status, current executed line, etc.  ## Parameters - **runner_id**: The identifier of the program runner 
+        Returns information about a program currently executed. When a program is finished: Program response, result, collected logs, .. When a program is running: Running status, current executed line, ... 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param runner: (required)
-        :type runner: str
+        :param run: (required)
+        :type run: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -778,9 +772,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_program_runner_serialize(
+        _param = self._get_program_run_serialize(
             cell=cell,
-            runner=runner,
+            run=run,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -789,10 +783,7 @@ class ProgramApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramRun",
-            '400': None,
             '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -807,10 +798,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def get_program_runner_without_preload_content(
+    async def get_program_run_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        runner: StrictStr,
+        run: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -824,14 +815,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get Program Runner
+        """Get program run
 
-        Returns information about a program currently executed.  When a program is finished: Program response, result, collected Wandelscript logs, etc.  When a program is running: Running status, current executed line, etc.  ## Parameters - **runner_id**: The identifier of the program runner 
+        Returns information about a program currently executed. When a program is finished: Program response, result, collected logs, .. When a program is running: Running status, current executed line, ... 
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param runner: (required)
-        :type runner: str
+        :param run: (required)
+        :type run: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -854,9 +845,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_program_runner_serialize(
+        _param = self._get_program_run_serialize(
             cell=cell,
-            runner=runner,
+            run=run,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -865,10 +856,7 @@ class ProgramApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ProgramRun",
-            '400': None,
             '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -878,10 +866,10 @@ class ProgramApi:
         return response_data.response
 
 
-    def _get_program_runner_serialize(
+    def _get_program_run_serialize(
         self,
         cell,
-        runner,
+        run,
         _request_auth,
         _content_type,
         _headers,
@@ -903,8 +891,8 @@ class ProgramApi:
         # process the path parameters
         if cell is not None:
             _path_params['cell'] = cell
-        if runner is not None:
-            _path_params['runner'] = runner
+        if run is not None:
+            _path_params['run'] = run
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -927,7 +915,7 @@ class ProgramApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/cells/{cell}/programs/runners/{runner}',
+            resource_path='/cells/{cell}/programs/runs/{run}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -943,7 +931,7 @@ class ProgramApi:
 
 
     @validate_call
-    async def list_program_runners(
+    async def get_program_runs(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         _request_timeout: Union[
@@ -958,10 +946,10 @@ class ProgramApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[ProgramRunnerReference]:
-        """List Program Runners
+    ) -> List[ProgramRunReference]:
+        """List programs
 
-        Get details about all existing program runners.
+        Get details about all existing runs
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -987,7 +975,7 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._list_program_runners_serialize(
+        _param = self._get_program_runs_serialize(
             cell=cell,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -996,10 +984,7 @@ class ProgramApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ProgramRunnerReference]",
-            '400': None,
-            '404': None,
-            '452': None,
+            '200': "List[ProgramRunReference]",
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -1014,7 +999,7 @@ class ProgramApi:
 
 
     @validate_call
-    async def list_program_runners_with_http_info(
+    async def get_program_runs_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         _request_timeout: Union[
@@ -1029,10 +1014,10 @@ class ProgramApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[ProgramRunnerReference]]:
-        """List Program Runners
+    ) -> ApiResponse[List[ProgramRunReference]]:
+        """List programs
 
-        Get details about all existing program runners.
+        Get details about all existing runs
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -1058,7 +1043,7 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._list_program_runners_serialize(
+        _param = self._get_program_runs_serialize(
             cell=cell,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1067,10 +1052,7 @@ class ProgramApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ProgramRunnerReference]",
-            '400': None,
-            '404': None,
-            '452': None,
+            '200': "List[ProgramRunReference]",
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -1085,7 +1067,7 @@ class ProgramApi:
 
 
     @validate_call
-    async def list_program_runners_without_preload_content(
+    async def get_program_runs_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
         _request_timeout: Union[
@@ -1101,9 +1083,9 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """List Program Runners
+        """List programs
 
-        Get details about all existing program runners.
+        Get details about all existing runs
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
@@ -1129,7 +1111,7 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._list_program_runners_serialize(
+        _param = self._get_program_runs_serialize(
             cell=cell,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1138,10 +1120,7 @@ class ProgramApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ProgramRunnerReference]",
-            '400': None,
-            '404': None,
-            '452': None,
+            '200': "List[ProgramRunReference]",
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -1151,7 +1130,7 @@ class ProgramApi:
         return response_data.response
 
 
-    def _list_program_runners_serialize(
+    def _get_program_runs_serialize(
         self,
         cell,
         _request_auth,
@@ -1197,7 +1176,7 @@ class ProgramApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/cells/{cell}/programs/runners',
+            resource_path='/cells/{cell}/programs/runs',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1213,313 +1192,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def migrate_program(
+    async def simulate_program(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request1: Request1,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> str:
-        """Migrate Program
-
-        Migrate a program  ## Parameters See the **Schema** tab for information about the request body
-
-        :param cell: Unique identifier addressing a cell in all API calls.  (required)
-        :type cell: str
-        :param request1: (required)
-        :type request1: Request1
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._migrate_program_serialize(
-            cell=cell,
-            request1=request1,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
-            '400': None,
-            '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
-            '500': None,
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def migrate_program_with_http_info(
-        self,
-        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request1: Request1,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[str]:
-        """Migrate Program
-
-        Migrate a program  ## Parameters See the **Schema** tab for information about the request body
-
-        :param cell: Unique identifier addressing a cell in all API calls.  (required)
-        :type cell: str
-        :param request1: (required)
-        :type request1: Request1
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._migrate_program_serialize(
-            cell=cell,
-            request1=request1,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
-            '400': None,
-            '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
-            '500': None,
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def migrate_program_without_preload_content(
-        self,
-        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request1: Request1,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Migrate Program
-
-        Migrate a program  ## Parameters See the **Schema** tab for information about the request body
-
-        :param cell: Unique identifier addressing a cell in all API calls.  (required)
-        :type cell: str
-        :param request1: (required)
-        :type request1: Request1
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._migrate_program_serialize(
-            cell=cell,
-            request1=request1,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
-            '400': None,
-            '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
-            '500': None,
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _migrate_program_serialize(
-        self,
-        cell,
-        request1,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if cell is not None:
-            _path_params['cell'] = cell
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if request1 is not None:
-            _body_params = request1
-
-
-        # set the HTTP header `Accept`
-        _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'text/plain', 
-                'application/json'
-            ]
-        )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'text/plain'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'BasicAuth', 
-            'BearerAuth'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/cells/{cell}/programs/migrate',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-    @validate_call
-    async def plan_program(
-        self,
-        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request: Request,
-        identifier: Optional[StrictStr] = None,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1533,16 +1209,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ProgramRun:
-        """Plan Program
+        """Simulate program
 
-        Plan a program based on the specified robot type.  The plan operation can be used to check if a Wandelscript is executable, given the current joint configuration of the robot.  If the Wandelscript is executable, the result contains the motion path. If the Wandelscript is not executable, e.g. points that are out of reach, or the joints encounter a singularity, the reason is returned.  The plan operation can be used in other operating modes besides control mode.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  The plan operation can be used in other operating modes besides control mode.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as Content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  * [WandelEngine & Wandelscript Documentation](/docs/docs/wandelscript) 
+        Simulate a program given as text/plain
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param request: (required)
-        :type request: Request
-        :param identifier:
-        :type identifier: str
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1565,10 +1239,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._plan_program_serialize(
+        _param = self._simulate_program_serialize(
             cell=cell,
-            request=request,
-            identifier=identifier,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1579,7 +1252,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1595,11 +1268,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def plan_program_with_http_info(
+    async def simulate_program_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request: Request,
-        identifier: Optional[StrictStr] = None,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1613,16 +1285,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ProgramRun]:
-        """Plan Program
+        """Simulate program
 
-        Plan a program based on the specified robot type.  The plan operation can be used to check if a Wandelscript is executable, given the current joint configuration of the robot.  If the Wandelscript is executable, the result contains the motion path. If the Wandelscript is not executable, e.g. points that are out of reach, or the joints encounter a singularity, the reason is returned.  The plan operation can be used in other operating modes besides control mode.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  The plan operation can be used in other operating modes besides control mode.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as Content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  * [WandelEngine & Wandelscript Documentation](/docs/docs/wandelscript) 
+        Simulate a program given as text/plain
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param request: (required)
-        :type request: Request
-        :param identifier:
-        :type identifier: str
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1645,10 +1315,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._plan_program_serialize(
+        _param = self._simulate_program_serialize(
             cell=cell,
-            request=request,
-            identifier=identifier,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1659,7 +1328,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1675,11 +1344,10 @@ class ProgramApi:
 
 
     @validate_call
-    async def plan_program_without_preload_content(
+    async def simulate_program_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        request: Request,
-        identifier: Optional[StrictStr] = None,
+        program_request: ProgramRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1693,16 +1361,14 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Plan Program
+        """Simulate program
 
-        Plan a program based on the specified robot type.  The plan operation can be used to check if a Wandelscript is executable, given the current joint configuration of the robot.  If the Wandelscript is executable, the result contains the motion path. If the Wandelscript is not executable, e.g. points that are out of reach, or the joints encounter a singularity, the reason is returned.  The plan operation can be used in other operating modes besides control mode.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  The plan operation can be used in other operating modes besides control mode.  The Wandelscript can either be submitted as is, using Content-type text/plain, or as Content-type application/json with the Wandelscript under \"code\" alongside a set of values provided under \"initial_state\".  * [WandelEngine & Wandelscript Documentation](/docs/docs/wandelscript) 
+        Simulate a program given as text/plain
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param request: (required)
-        :type request: Request
-        :param identifier:
-        :type identifier: str
+        :param program_request: (required)
+        :type program_request: ProgramRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1725,10 +1391,9 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._plan_program_serialize(
+        _param = self._simulate_program_serialize(
             cell=cell,
-            request=request,
-            identifier=identifier,
+            program_request=program_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1739,7 +1404,7 @@ class ProgramApi:
             '200': "ProgramRun",
             '400': None,
             '404': None,
-            '422': "HTTPValidationError",
+            '422': "HTTPValidationError2",
             '452': None,
             '500': None,
         }
@@ -1750,11 +1415,10 @@ class ProgramApi:
         return response_data.response
 
 
-    def _plan_program_serialize(
+    def _simulate_program_serialize(
         self,
         cell,
-        request,
-        identifier,
+        program_request,
         _request_auth,
         _content_type,
         _headers,
@@ -1777,15 +1441,11 @@ class ProgramApi:
         if cell is not None:
             _path_params['cell'] = cell
         # process the query parameters
-        if identifier is not None:
-            
-            _query_params.append(('identifier', identifier))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if request is not None:
-            _body_params = request
+        if program_request is not None:
+            _body_params = program_request
 
 
         # set the HTTP header `Accept`
@@ -1802,7 +1462,7 @@ class ProgramApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'text/plain'
+                        'application/json'
                     ]
                 )
             )
@@ -1817,7 +1477,7 @@ class ProgramApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/cells/{cell}/programs/plan',
+            resource_path='/cells/{cell}/programs/simulate',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1833,280 +1493,9 @@ class ProgramApi:
 
 
     @validate_call
-    async def stop_all_program_runner(
+    async def stop_all_programs(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
-        """Stop All Program Runners
-
-        Stop all runners.
-
-        :param cell: Unique identifier addressing a cell in all API calls.  (required)
-        :type cell: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._stop_all_program_runner_serialize(
-            cell=cell,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-            '400': None,
-            '404': None,
-            '452': None,
-            '500': None,
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def stop_all_program_runner_with_http_info(
-        self,
-        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
-        """Stop All Program Runners
-
-        Stop all runners.
-
-        :param cell: Unique identifier addressing a cell in all API calls.  (required)
-        :type cell: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._stop_all_program_runner_serialize(
-            cell=cell,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-            '400': None,
-            '404': None,
-            '452': None,
-            '500': None,
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def stop_all_program_runner_without_preload_content(
-        self,
-        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Stop All Program Runners
-
-        Stop all runners.
-
-        :param cell: Unique identifier addressing a cell in all API calls.  (required)
-        :type cell: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._stop_all_program_runner_serialize(
-            cell=cell,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-            '400': None,
-            '404': None,
-            '452': None,
-            '500': None,
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _stop_all_program_runner_serialize(
-        self,
-        cell,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[str, Union[str, bytes]] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if cell is not None:
-            _path_params['cell'] = cell
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
-        )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'BasicAuth', 
-            'BearerAuth'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/cells/{cell}/programs/runners/stop',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-    @validate_call
-    async def stop_program_runner(
-        self,
-        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        runner: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2120,14 +1509,12 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Stop Program Runner
+        """Stop all programs
 
-        Stop a specific program runner. If the indicated runner was not running, an error will be returned. ## Parameters - **runner_id**: The identifier of the program runner
+        Stop all runs
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param runner: (required)
-        :type runner: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2150,9 +1537,8 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._stop_program_runner_serialize(
+        _param = self._stop_all_programs_serialize(
             cell=cell,
-            runner=runner,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2161,10 +1547,6 @@ class ProgramApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': None,
-            '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -2179,10 +1561,9 @@ class ProgramApi:
 
 
     @validate_call
-    async def stop_program_runner_with_http_info(
+    async def stop_all_programs_with_http_info(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        runner: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2196,14 +1577,12 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Stop Program Runner
+        """Stop all programs
 
-        Stop a specific program runner. If the indicated runner was not running, an error will be returned. ## Parameters - **runner_id**: The identifier of the program runner
+        Stop all runs
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param runner: (required)
-        :type runner: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2226,9 +1605,8 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._stop_program_runner_serialize(
+        _param = self._stop_all_programs_serialize(
             cell=cell,
-            runner=runner,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2237,10 +1615,6 @@ class ProgramApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': None,
-            '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -2255,10 +1629,9 @@ class ProgramApi:
 
 
     @validate_call
-    async def stop_program_runner_without_preload_content(
+    async def stop_all_programs_without_preload_content(
         self,
         cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
-        runner: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2272,14 +1645,12 @@ class ProgramApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Stop Program Runner
+        """Stop all programs
 
-        Stop a specific program runner. If the indicated runner was not running, an error will be returned. ## Parameters - **runner_id**: The identifier of the program runner
+        Stop all runs
 
         :param cell: Unique identifier addressing a cell in all API calls.  (required)
         :type cell: str
-        :param runner: (required)
-        :type runner: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2302,9 +1673,8 @@ class ProgramApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._stop_program_runner_serialize(
+        _param = self._stop_all_programs_serialize(
             cell=cell,
-            runner=runner,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2313,10 +1683,6 @@ class ProgramApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '204': None,
-            '400': None,
-            '404': None,
-            '422': "HTTPValidationError",
-            '452': None,
             '500': None,
         }
         response_data = await self.api_client.call_api(
@@ -2326,10 +1692,9 @@ class ProgramApi:
         return response_data.response
 
 
-    def _stop_program_runner_serialize(
+    def _stop_all_programs_serialize(
         self,
         cell,
-        runner,
         _request_auth,
         _content_type,
         _headers,
@@ -2351,20 +1716,12 @@ class ProgramApi:
         # process the path parameters
         if cell is not None:
             _path_params['cell'] = cell
-        if runner is not None:
-            _path_params['runner'] = runner
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
 
 
-        # set the HTTP header `Accept`
-        _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
-        )
 
 
         # authentication setting
@@ -2375,7 +1732,575 @@ class ProgramApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/cells/{cell}/programs/runners/{runner}/stop',
+            resource_path='/cells/{cell}/programs/runs/stop',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+    @validate_call
+    async def stop_program_run(
+        self,
+        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
+        run: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Stop program run
+
+        Stop a specific program run.
+
+        :param cell: Unique identifier addressing a cell in all API calls.  (required)
+        :type cell: str
+        :param run: (required)
+        :type run: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._stop_program_run_serialize(
+            cell=cell,
+            run=run,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '404': None,
+            '500': None,
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def stop_program_run_with_http_info(
+        self,
+        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
+        run: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Stop program run
+
+        Stop a specific program run.
+
+        :param cell: Unique identifier addressing a cell in all API calls.  (required)
+        :type cell: str
+        :param run: (required)
+        :type run: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._stop_program_run_serialize(
+            cell=cell,
+            run=run,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '404': None,
+            '500': None,
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    async def stop_program_run_without_preload_content(
+        self,
+        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
+        run: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Stop program run
+
+        Stop a specific program run.
+
+        :param cell: Unique identifier addressing a cell in all API calls.  (required)
+        :type cell: str
+        :param run: (required)
+        :type run: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._stop_program_run_serialize(
+            cell=cell,
+            run=run,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '404': None,
+            '500': None,
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _stop_program_run_serialize(
+        self,
+        cell,
+        run,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, Union[str, bytes]] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if cell is not None:
+            _path_params['cell'] = cell
+        if run is not None:
+            _path_params['run'] = run
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'BasicAuth', 
+            'BearerAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/cells/{cell}/programs/runs/{run}/stop',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+    @validate_call
+    async def validate_program(
+        self,
+        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
+        program_request: ProgramRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Validate program
+
+        Validate a program
+
+        :param cell: Unique identifier addressing a cell in all API calls.  (required)
+        :type cell: str
+        :param program_request: (required)
+        :type program_request: ProgramRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validate_program_serialize(
+            cell=cell,
+            program_request=program_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': None,
+            '422': "HTTPValidationError2",
+            '500': None,
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def validate_program_with_http_info(
+        self,
+        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
+        program_request: ProgramRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Validate program
+
+        Validate a program
+
+        :param cell: Unique identifier addressing a cell in all API calls.  (required)
+        :type cell: str
+        :param program_request: (required)
+        :type program_request: ProgramRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validate_program_serialize(
+            cell=cell,
+            program_request=program_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': None,
+            '422': "HTTPValidationError2",
+            '500': None,
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    async def validate_program_without_preload_content(
+        self,
+        cell: Annotated[StrictStr, Field(description="Unique identifier addressing a cell in all API calls. ")],
+        program_request: ProgramRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Validate program
+
+        Validate a program
+
+        :param cell: Unique identifier addressing a cell in all API calls.  (required)
+        :type cell: str
+        :param program_request: (required)
+        :type program_request: ProgramRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validate_program_serialize(
+            cell=cell,
+            program_request=program_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': None,
+            '422': "HTTPValidationError2",
+            '500': None,
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validate_program_serialize(
+        self,
+        cell,
+        program_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, Union[str, bytes]] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if cell is not None:
+            _path_params['cell'] = cell
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if program_request is not None:
+            _body_params = program_request
+
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            [
+                'application/json'
+            ]
+        )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'BasicAuth', 
+            'BearerAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/cells/{cell}/programs/validate',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

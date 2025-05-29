@@ -827,6 +827,9 @@ class ToProtoConverter:
             raise ValueError("Should not be called on features with `path`")
 
         wmp = f.window_materialization_parsed
+        rich_type_info = pb.FeatureRichTypeInfo(
+            rich_type_is_same_as_primitive_type=not f.converter.has_nontrivial_rich_type(),
+        )
         res = pb.FeatureType(
             scalar=pb.ScalarFeatureType(
                 name=f.name,
@@ -911,6 +914,7 @@ class ToProtoConverter:
                 cache_strategy=ToProtoConverter._cache_strategy_to_proto[f.cache_strategy],
                 store_online=f.store_online,
                 store_offline=f.store_offline,
+                rich_type_info=rich_type_info,
             )
         )
         return res

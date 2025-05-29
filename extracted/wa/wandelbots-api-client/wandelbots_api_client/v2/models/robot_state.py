@@ -19,15 +19,15 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from wandelbots_api_client.v2.models.pyjectory_datatypes_core_pose import PyjectoryDatatypesCorePose
+from wandelbots_api_client.v2.models.pose import Pose
 from typing import Optional, Set
 from typing_extensions import Self
 
 class RobotState(BaseModel):
     """
-    Collection of information on the current state of the robot
+    Collection of information on the current state of the robot.
     """ # noqa: E501
-    pose: PyjectoryDatatypesCorePose
+    pose: Pose
     joints: Optional[List[Union[StrictFloat, StrictInt]]] = None
     __properties: ClassVar[List[str]] = ["pose", "joints"]
 
@@ -77,11 +77,6 @@ class RobotState(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of pose
         if self.pose:
             _dict['pose'] = self.pose.to_dict()
-        # set to None if joints (nullable) is None
-        # and model_fields_set contains the field
-        if self.joints is None and "joints" in self.model_fields_set:
-            _dict['joints'] = None
-
         return _dict
 
     @classmethod
@@ -94,7 +89,7 @@ class RobotState(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "pose": PyjectoryDatatypesCorePose.from_dict(obj["pose"]) if obj.get("pose") is not None else None,
+            "pose": Pose.from_dict(obj["pose"]) if obj.get("pose") is not None else None,
             "joints": obj.get("joints")
         })
         return _obj

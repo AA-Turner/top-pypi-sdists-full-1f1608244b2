@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from wandelbots_api_client.models.container_environment_inner import ContainerEnvironmentInner
 from wandelbots_api_client.models.container_image import ContainerImage
 from wandelbots_api_client.models.container_resources import ContainerResources
@@ -30,14 +31,21 @@ class App(BaseModel):
     """
     An App is defined by a webserver, packed inside a container, serving a web-application. 
     """ # noqa: E501
-    name: StrictStr = Field(description="The name of the provided application. The name must be unique within the cell and is used as a identifier for addressing the application in all API calls , e.g. when updating the application.  It also defines where the application is reachable (/$cell/$name). ")
-    app_icon: StrictStr = Field(description="The path of the icon for the App (/$cell/$name/$appIcon).", alias="appIcon")
+    name: Annotated[str, Field(min_length=1, strict=True)] = Field(description="The name of the provided application. The name must be unique within the cell and is used as a identifier for addressing the application in all API calls , e.g. when updating the application.  It also defines where the application is reachable (/$cell/$name).  It must be a valid k8s label name as defined by [RFC 1035](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names). ")
+    app_icon: Annotated[str, Field(min_length=1, strict=True)] = Field(description="The path of the icon for the App (/$cell/$name/$appIcon).", alias="appIcon")
     container_image: ContainerImage = Field(alias="containerImage")
     port: Optional[StrictInt] = Field(default=8080, description="The port the containerized webserver is listening on.")
     environment: Optional[List[ContainerEnvironmentInner]] = Field(default=None, description="A list of environment variables with name and their value. These can be used to configure the containerized application, and turn features on or off. ")
     storage: Optional[ContainerStorage] = None
     resources: Optional[ContainerResources] = None
     __properties: ClassVar[List[str]] = ["name", "appIcon", "containerImage", "port", "environment", "storage", "resources"]
+
+    @field_validator('name')
+    def name_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"^[a-z][a-z0-9-]{0,61}[a-z0-9]$", value):
+            raise ValueError(r"must validate the regular expression /^[a-z][a-z0-9-]{0,61}[a-z0-9]$/")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

@@ -1,17 +1,35 @@
 from __future__ import annotations
 
 import json
+import types
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 from io import BytesIO
-from typing import Any, Generic, Iterable, Optional, Protocol, Sequence, Type, TypeVar, Union, cast, final, overload
+from typing import (
+    Any,
+    Dict,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    Protocol,
+    Sequence,
+    Set,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    final,
+    overload,
+)
 
 import dateutil.tz
 import numpy as np
 import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.feather as pf
-from typing_extensions import Final
+from typing_extensions import Final, FrozenSet, get_args, get_origin
 
 from chalk._gen.chalk.arrow.v1 import arrow_pb2 as pb
 from chalk.features._encoding.json import (
@@ -1048,6 +1066,49 @@ def _decode_json(s: str) -> JSON:
     return cast(JSON, json.loads(s))
 
 
+def _to_old_style_type(origin: object):
+    if origin is list:
+        return List
+    elif origin is tuple:
+        return Tuple
+    elif origin is set:
+        return Set
+    elif origin is frozenset:
+        return FrozenSet
+    elif origin is dict:
+        return Dict
+    elif hasattr(types, "UnionType"):
+        # Only available in python >=3.10
+        if origin is getattr(types, "UnionType"):
+            return Union
+    return origin
+
+
+def _canonicalize_typ(x: object):
+    """Canonicalize a type annotation for equality checking.
+    New-style types are replaced with old-style types, and
+    annotated markers are ignored. Specifically:
+
+    - typing.Annotated -> unwrapped
+    - list             -> typing.List
+    - tuple            -> typing.Tuple
+    - set              -> typing.Set
+    - frozenset        -> typing.Frozenset
+    - dict             -> typing.Dict
+    - union            -> typing.Union
+    """
+
+    if x is None:
+        x = type(None)
+    x = unwrap_annotated_if_needed(x)
+    origin, args = get_origin(x), get_args(x)
+    if origin is None:
+        return _to_old_style_type(x)
+    origin = _to_old_style_type(origin)
+    args = tuple(_canonicalize_typ(x) for x in args)
+    return origin[args]  # type: ignore -- pyright doesn't understand metaprogramming
+
+
 @final
 class JSONCodec:
     encode: TEncoder[str, JSON] = _encode_json
@@ -1282,3 +1343,8 @@ class FeatureConverter(PrimitiveFeatureConverter[_TPrim], Generic[_TPrim, _TRich
     def from_json_to_rich(self, value: TJSON) -> _TRich:
         prim_val = self.from_json_to_primitive(value)
         return self.from_primitive_to_rich(prim_val)
+
+    def has_nontrivial_rich_type(self) -> bool:
+        if self._encoder is not None or self._decoder is not None:
+            return True
+        return _canonicalize_typ(self.primitive_type) != _canonicalize_typ(self.rich_type)

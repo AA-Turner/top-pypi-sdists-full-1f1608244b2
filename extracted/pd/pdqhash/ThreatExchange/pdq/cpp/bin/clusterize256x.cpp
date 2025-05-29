@@ -1,17 +1,20 @@
 // ================================================================
-// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+// Copyright (c) Meta Platforms, Inc. and affiliates.
 // ================================================================
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
 
-#include <pdq/cpp/io/hashio.h>
-#include <pdq/cpp/index/mih.h>
+#include <fstream>
+#include <iostream>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pdq/cpp/index/mih.h>
+#include <pdq/cpp/io/hashio.h>
+
 #include <set>
 
 // ================================================================
@@ -47,7 +50,7 @@ const int DEFAULT_PDQ_DISTANCE_THRESHOLD = 31;
 
 // ----------------------------------------------------------------
 static void handle_fp(
-    FILE* fp,
+    std::istream& in,
     MIH256<std::string>& mih,
     std::map<Hash256, int>& centersToIndices,
     int distanceThreshold,
@@ -131,7 +134,7 @@ int main(int argc, char** argv) {
   int counter = 0;
   if (argi == argc) {
     handle_fp(
-        stdin,
+        std::cin,
         mih,
         centersToIndices,
         distanceThreshold,
@@ -143,15 +146,15 @@ int main(int argc, char** argv) {
   } else {
     for (; argi < argc; argi++) {
       char* filename = argv[argi];
-      FILE* fp = fopen(filename, "r");
-      if (fp == nullptr) {
+      std::ifstream in(filename);
+      if (!in) {
         perror("fopen");
         fprintf(stderr, "Could not open \"%s\" for read.\n", filename);
         exit(1);
       }
 
       handle_fp(
-          fp,
+          in,
           mih,
           centersToIndices,
           distanceThreshold,
@@ -161,7 +164,7 @@ int main(int argc, char** argv) {
           traceCount,
           doBruteForceQuery);
 
-      fclose(fp);
+      in.close();
     }
   }
 
@@ -170,7 +173,7 @@ int main(int argc, char** argv) {
 
 // ----------------------------------------------------------------
 static void handle_fp(
-    FILE* fp,
+    std::istream& in,
     MIH256<std::string>& mih,
     std::map<Hash256, int>& centersToIndices,
     int distanceThreshold,
@@ -183,7 +186,7 @@ static void handle_fp(
   std::string metadata;
 
   while (facebook::pdq::io::loadHashAndMetadataFromStream(
-      fp, hash, metadata, counter)) {
+      in, hash, metadata, counter)) {
     if (traceCount > 0) {
       if ((counter % traceCount) == 0) {
         fprintf(stderr, "-- %d\n", counter);

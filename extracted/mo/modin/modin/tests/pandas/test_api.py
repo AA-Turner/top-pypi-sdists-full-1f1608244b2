@@ -19,6 +19,21 @@ import pytest
 
 import modin.pandas as pd
 
+_MODIN_EXTRA_ATTRIBUTES = (
+    # modin - namespace for accessing additional Modin functions that are not available in Pandas
+    "modin",
+    # get_backend - get storage and engine backend for the current DataFrame
+    "get_backend",
+    # set_backend - set storage and engine backend for the current DataFrame
+    "set_backend",
+    # move_to - set storage and engine backend for the current DataFrame
+    "move_to",
+    # is_backend_pinned, pin_backend, unpin_backend - change automatic switching behavior
+    "is_backend_pinned",
+    "pin_backend",
+    "unpin_backend",
+)
+
 
 def test_top_level_api_equality():
     modin_dir = [obj for obj in dir(pd) if obj[0] != "_"]
@@ -150,7 +165,6 @@ def test_dataframe_api_equality():
 
     ignore_in_pandas = ["timetuple"]
     # modin - namespace for accessing additional Modin functions that are not available in Pandas
-    ignore_in_modin = ["modin"]
     missing_from_modin = set(pandas_dir) - set(modin_dir)
     assert not len(
         missing_from_modin - set(ignore_in_pandas)
@@ -158,13 +172,14 @@ def test_dataframe_api_equality():
         len(missing_from_modin - set(ignore_in_pandas))
     )
     assert not len(
-        set(modin_dir) - set(ignore_in_modin) - set(pandas_dir)
+        set(modin_dir) - set(_MODIN_EXTRA_ATTRIBUTES) - set(pandas_dir)
     ), "Differences found in API: {}".format(set(modin_dir) - set(pandas_dir))
 
-    # These have to be checked manually
-    allowed_different = ["modin"]
-
-    assert_parameters_eq((pandas.DataFrame, pd.DataFrame), modin_dir, allowed_different)
+    assert_parameters_eq(
+        (pandas.DataFrame, pd.DataFrame),
+        modin_dir,
+        allowed_different=_MODIN_EXTRA_ATTRIBUTES,
+    )
 
 
 def test_series_str_api_equality():
@@ -245,9 +260,11 @@ def test_groupby_api_equality(obj):
     )
     # FIXME: wrong inheritance
     ignore = (
-        ["boxplot", "corrwith", "dtypes"] if obj == "SeriesGroupBy" else ["boxplot"]
+        {"boxplot", "corrwith", "dtypes"} if obj == "SeriesGroupBy" else {"boxplot"}
+    ) | set(_MODIN_EXTRA_ATTRIBUTES)
+    extra_in_modin = (
+        set(modin_dir) - set(pandas_dir) - set(ignore) - set(_MODIN_EXTRA_ATTRIBUTES)
     )
-    extra_in_modin = set(modin_dir) - set(pandas_dir) - set(ignore)
     assert not len(extra_in_modin), "Differences found in API: {}".format(
         extra_in_modin
     )
@@ -265,17 +282,15 @@ def test_series_api_equality():
     assert not len(missing_from_modin), "Differences found in API: {}".format(
         missing_from_modin
     )
-    # modin - namespace for accessing additional Modin functions that are not available in Pandas
-    ignore_in_modin = ["modin"]
-    extra_in_modin = set(modin_dir) - set(ignore_in_modin) - set(pandas_dir)
+
+    extra_in_modin = set(modin_dir) - set(_MODIN_EXTRA_ATTRIBUTES) - set(pandas_dir)
     assert not len(extra_in_modin), "Differences found in API: {}".format(
         extra_in_modin
     )
 
-    # These have to be checked manually
-    allowed_different = ["modin"]
-
-    assert_parameters_eq((pandas.Series, pd.Series), modin_dir, allowed_different)
+    assert_parameters_eq(
+        (pandas.Series, pd.Series), modin_dir, allowed_different=_MODIN_EXTRA_ATTRIBUTES
+    )
 
 
 def assert_parameters_eq(objects, attributes, allowed_different):

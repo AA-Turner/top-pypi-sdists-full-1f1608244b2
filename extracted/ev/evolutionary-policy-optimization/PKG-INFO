@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: evolutionary-policy-optimization
-Version: 0.2.9
+Version: 0.2.10
 Summary: EPO - Pytorch
 Project-URL: Homepage, https://pypi.org/project/evolutionary-policy-optimization/
 Project-URL: Repository, https://github.com/lucidrains/evolutionary-policy-optimization
@@ -275,6 +275,17 @@ That's it
     journal = {CoRR},
     volume  = {abs/1912.04958},
     year    = {2019},
+}
+```
+
+```bibtex
+@article{Chebykin2023ShrinkPerturbIA,
+    title   = {Shrink-Perturb Improves Architecture Mixing during Population Based Training for Neural Architecture Search},
+    author  = {Alexander Chebykin and Arkadiy Dushatskiy and Tanja Alderliesten and Peter A. N. Bosman},
+    journal = {ArXiv},
+    year    = {2023},
+    volume  = {abs/2307.15621},
+    url     = {https://api.semanticscholar.org/CorpusID:260316291}
 }
 ```
 

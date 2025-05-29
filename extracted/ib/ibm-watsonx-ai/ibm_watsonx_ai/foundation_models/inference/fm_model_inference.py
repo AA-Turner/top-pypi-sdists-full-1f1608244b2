@@ -142,9 +142,7 @@ class FMModelInference(BaseModelInference):
         context: str | None = None,
     ) -> dict:
 
-        text_chat_url = (
-            self._client.service_instance._href_definitions.get_fm_chat_href("chat")
-        )
+        text_chat_url = self._client._href_definitions.get_fm_chat_href("chat")
 
         return self._send_chat_payload(
             messages=messages,
@@ -165,10 +163,8 @@ class FMModelInference(BaseModelInference):
         context: str | None = None,
     ) -> Generator:
 
-        text_chat_stream_url = (
-            self._client.service_instance._href_definitions.get_fm_chat_href(
-                "chat_stream"
-            )
+        text_chat_stream_url = self._client._href_definitions.get_fm_chat_href(
+            "chat_stream"
         )
 
         return self._generate_chat_stream_with_url(
@@ -190,9 +186,7 @@ class FMModelInference(BaseModelInference):
         context: str | None = None,
     ) -> dict:
 
-        text_chat_url = (
-            self._client.service_instance._href_definitions.get_fm_chat_href("chat")
-        )
+        text_chat_url = self._client._href_definitions.get_fm_chat_href("chat")
 
         payload = self._prepare_chat_payload(
             messages,
@@ -222,10 +216,8 @@ class FMModelInference(BaseModelInference):
         context: str | None = None,
     ) -> AsyncGenerator:
 
-        text_chat_stream_url = (
-            self._client.service_instance._href_definitions.get_fm_chat_href(
-                "chat_stream"
-            )
+        text_chat_stream_url = self._client._href_definitions.get_fm_chat_href(
+            "chat_stream"
         )
 
         return self._agenerate_chat_stream_with_url(
@@ -248,6 +240,7 @@ class FMModelInference(BaseModelInference):
         concurrency_limit: int = ...,
         async_mode: Literal[False] = ...,
         validate_prompt_variables: bool = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> dict | list[dict]: ...
 
     @overload
@@ -261,6 +254,7 @@ class FMModelInference(BaseModelInference):
         concurrency_limit: int,
         async_mode: Literal[True],
         validate_prompt_variables: bool,
+        guardrails_granite_guardian_params: dict | None,
     ) -> Generator: ...
 
     @overload
@@ -274,6 +268,7 @@ class FMModelInference(BaseModelInference):
         concurrency_limit: int = ...,
         async_mode: bool = ...,
         validate_prompt_variables: bool = ...,
+        guardrails_granite_guardian_params: dict | None = ...,
     ) -> dict | list[dict] | Generator: ...
 
     def generate(
@@ -286,6 +281,7 @@ class FMModelInference(BaseModelInference):
         concurrency_limit: int = BaseModelInference.DEFAULT_CONCURRENCY_LIMIT,
         async_mode: bool = False,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict | list[dict] | Generator:
         """
         Given a text prompt as input, and parameters the selected inference
@@ -305,11 +301,15 @@ class FMModelInference(BaseModelInference):
         self._validate_type(
             guardrails_pii_params, "guardrails_pii_params", dict, mandatory=False
         )
+        self._validate_type(
+            guardrails_granite_guardian_params,
+            "guardrails_granite_guardian_params",
+            dict,
+            mandatory=False,
+        )
 
-        generate_text_url = (
-            self._client.service_instance._href_definitions.get_fm_generation_href(
-                "text"
-            )
+        generate_text_url = self._client._href_definitions.get_fm_generation_href(
+            "text"
         )
         prompt = cast(str | list, prompt)
         if async_mode:
@@ -322,6 +322,7 @@ class FMModelInference(BaseModelInference):
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
                 concurrency_limit=concurrency_limit,
             )
 
@@ -333,6 +334,7 @@ class FMModelInference(BaseModelInference):
                 guardrails=guardrails,
                 guardrails_hap_params=guardrails_hap_params,
                 guardrails_pii_params=guardrails_pii_params,
+                guardrails_granite_guardian_params=guardrails_granite_guardian_params,
                 concurrency_limit=concurrency_limit,
             )
 
@@ -343,6 +345,7 @@ class FMModelInference(BaseModelInference):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
         validate_prompt_variables: bool = True,
     ) -> dict:
 
@@ -358,10 +361,14 @@ class FMModelInference(BaseModelInference):
         self._validate_type(
             guardrails_pii_params, "guardrails_pii_params", dict, mandatory=False
         )
-        generate_text_url = (
-            self._client.service_instance._href_definitions.get_fm_generation_href(
-                "text"
-            )
+        self._validate_type(
+            guardrails_granite_guardian_params,
+            "guardrails_granite_guardian_params",
+            dict,
+            mandatory=False,
+        )
+        generate_text_url = self._client._href_definitions.get_fm_generation_href(
+            "text"
         )
 
         async_params = params or self.params or {}
@@ -370,12 +377,13 @@ class FMModelInference(BaseModelInference):
             async_params = async_params.to_dict()
 
         return await self._asend_inference_payload(
-            prompt,
-            async_params,
-            generate_text_url,
-            guardrails,
-            guardrails_hap_params,
-            guardrails_pii_params,
+            prompt=prompt,
+            params=async_params,
+            generate_url=generate_text_url,
+            guardrails=guardrails,
+            guardrails_hap_params=guardrails_hap_params,
+            guardrails_pii_params=guardrails_pii_params,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     async def agenerate_stream(
@@ -386,6 +394,7 @@ class FMModelInference(BaseModelInference):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> AsyncGenerator:
         """
         Given a text prompt as input, and parameters the selected inference
@@ -403,11 +412,17 @@ class FMModelInference(BaseModelInference):
         self._validate_type(
             guardrails_pii_params, "guardrails_pii_params", dict, mandatory=False
         )
+        self._validate_type(
+            guardrails_granite_guardian_params,
+            "guardrails_granite_guardian_params",
+            dict,
+            mandatory=False,
+        )
 
         self._validate_type(prompt, "prompt", str, True)
 
         generate_text_url = (
-            self._client.service_instance._href_definitions.get_fm_generation_stream_href()
+            self._client._href_definitions.get_fm_generation_stream_href()
         )
 
         async_params = params or self.params or {}
@@ -416,12 +431,13 @@ class FMModelInference(BaseModelInference):
             async_params = async_params.to_dict()
 
         return self._agenerate_stream_with_url(
-            prompt,
-            async_params,
-            generate_text_url,
-            guardrails,
-            guardrails_hap_params,
-            guardrails_pii_params,
+            prompt=prompt,
+            params=async_params,
+            generate_url=generate_text_url,
+            guardrails=guardrails,
+            guardrails_hap_params=guardrails_hap_params,
+            guardrails_pii_params=guardrails_pii_params,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def generate_text_stream(
@@ -433,6 +449,7 @@ class FMModelInference(BaseModelInference):
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
         validate_prompt_variables: bool = True,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> Generator:
         """
         Given a text prompt as input, and parameters the selected inference
@@ -446,13 +463,11 @@ class FMModelInference(BaseModelInference):
         self._validate_type(prompt, "prompt", str, True)
         if self._client._use_fm_ga_api:
             generate_text_stream_url = (
-                self._client.service_instance._href_definitions.get_fm_generation_stream_href()
+                self._client._href_definitions.get_fm_generation_stream_href()
             )
         else:
             generate_text_stream_url = (
-                self._client.service_instance._href_definitions.get_fm_generation_href(
-                    f"text_stream"
-                )
+                self._client._href_definitions.get_fm_generation_href(f"text_stream")
             )  # Remove on CPD 5.0 release
         prompt = cast(str, prompt)
         return self._generate_stream_with_url(
@@ -463,6 +478,7 @@ class FMModelInference(BaseModelInference):
             guardrails=guardrails,
             guardrails_hap_params=guardrails_hap_params,
             guardrails_pii_params=guardrails_pii_params,
+            guardrails_granite_guardian_params=guardrails_granite_guardian_params,
         )
 
     def tokenize(self, prompt: str, return_tokens: bool = False) -> dict:
@@ -470,9 +486,7 @@ class FMModelInference(BaseModelInference):
         Given a text prompt as input, and return_tokens parameter will return tokenized input text.
         """
         self._validate_type(prompt, "prompt", str, True)
-        generate_tokenize_url = (
-            self._client.service_instance._href_definitions.get_fm_tokenize_href()
-        )
+        generate_tokenize_url = self._client._href_definitions.get_fm_tokenize_href()
 
         return self._tokenize_with_url(
             prompt=prompt,
@@ -501,19 +515,28 @@ class FMModelInference(BaseModelInference):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         payload: dict = {
             "model_id": self.model_id,
             "input": prompt,
         }
         if guardrails:
-            if guardrails_hap_params is None:
+            if (
+                guardrails_hap_params is None
+                and guardrails_granite_guardian_params is None
+            ):
                 guardrails_hap_params = dict(
                     input=True, output=True
                 )  # HAP enabled if guardrails = True
 
             for guardrail_type, guardrails_params in zip(
-                ("hap", "pii"), (guardrails_hap_params, guardrails_pii_params)
+                ("hap", "pii", "granite_guardian"),
+                (
+                    guardrails_hap_params,
+                    guardrails_pii_params,
+                    guardrails_granite_guardian_params,
+                ),
             ):
                 if guardrails_params is not None:
                     if "moderations" not in payload:
@@ -641,6 +664,7 @@ class FMModelInference(BaseModelInference):
         guardrails: bool = False,
         guardrails_hap_params: dict | None = None,
         guardrails_pii_params: dict | None = None,
+        guardrails_granite_guardian_params: dict | None = None,
     ) -> dict:
         payload: dict = {
             "model_id": self.model_id,
@@ -660,6 +684,10 @@ class FMModelInference(BaseModelInference):
 
             if guardrails_pii_params is not None:
                 payload["moderations"].update({"pii": guardrails_pii_params})
+            if guardrails_granite_guardian_params is not None:
+                payload["moderations"].update(
+                    {"granite_guardian": guardrails_granite_guardian_params}
+                )
 
         if params is not None:
             parameters = params

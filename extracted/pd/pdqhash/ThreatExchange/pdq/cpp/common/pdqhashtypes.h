@@ -1,5 +1,5 @@
 // ================================================================
-// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+// Copyright (c) Meta Platforms, Inc. and affiliates.
 // ================================================================
 
 #ifndef PDQHASHTYPES_H
@@ -10,8 +10,9 @@
 // ================================================================
 
 #include <pdq/cpp/common/pdqbasetypes.h>
+#include <pdq/cpp/common/pdqhamming.h>
 
-#include <stdio.h>
+#include <cstdint>
 #include <string>
 
 namespace facebook {
@@ -30,11 +31,12 @@ using Hash256Text = char[HASH256_TEXT_LENGTH];
 
 // ================================================================
 struct Hash256 {
-  Hash16 w[HASH256_NUM_WORDS];
+  // align to 64-bit boundary for faster scalar popcnt
+  // (compiler can optimize without peeling to natural word size)
+  // index/flat.h also relies on this assumption, do not remove.
+  alignas(8) Hash16 w[HASH256_NUM_WORDS];
 
-  int getNumWords() const {
-    return HASH256_NUM_WORDS;
-  }
+  int getNumWords() const { return HASH256_NUM_WORDS; }
 
   Hash256() {
     for (int i = 0; i < HASH256_NUM_WORDS; i++) {
@@ -75,33 +77,29 @@ struct Hash256 {
   int hammingNorm() {
     int n = 0;
     for (int i = 0; i < HASH256_NUM_WORDS; i++) {
-      n += __builtin_popcount(this->w[i]);
+      n += hammingNorm16(this->w[i]);
     }
     return n;
   }
+
   int hammingDistance(const Hash256& that) const {
-    int n = 0;
-    for (int i = 0; i < HASH256_NUM_WORDS; i++) {
-      n += __builtin_popcount(this->w[i] ^ that.w[i]);
-    }
-    return n;
+    static_assert(alignof(Hash256) == 8, "Hash256 should be 8 bytes aligned");
+
+    const uint64_t* this_words = reinterpret_cast<const uint64_t*>(this->w);
+    const uint64_t* that_words = reinterpret_cast<const uint64_t*>(that.w);
+    return hammingDistance64(this_words[0], that_words[0]) +
+        hammingDistance64(this_words[1], that_words[1]) +
+        hammingDistance64(this_words[2], that_words[2]) +
+        hammingDistance64(this_words[3], that_words[3]);
   }
 
-  int getBit(int k) const {
-    return (this->w[(k & 255) >> 4] >> (k & 15)) & 1;
-  }
+  int getBit(int k) const { return (this->w[(k & 255) >> 4] >> (k & 15)) & 1; }
 
-  void setBit(int k) {
-    this->w[(k & 255) >> 4] |= 1 << (k & 15);
-  }
+  void setBit(int k) { this->w[(k & 255) >> 4] |= 1 << (k & 15); }
 
-  void clearBit(int k) {
-    this->w[(k & 255) >> 4] &= ~(1 << (k & 15));
-  }
+  void clearBit(int k) { this->w[(k & 255) >> 4] &= ~(1 << (k & 15)); }
 
-  void flipBit(int k) {
-    this->w[(k & 255) >> 4] ^= 1 << (k & 15);
-  }
+  void flipBit(int k) { this->w[(k & 255) >> 4] ^= 1 << (k & 15); }
 
   Hash256 operator^(const Hash256& that) const {
     Hash256 rv;
@@ -142,13 +140,11 @@ struct Hash256 {
   bool operator>=(const Hash256& that) const;
   bool operator==(const Hash256& that) const;
 
-  static Hash256 fromLineOrDie(char* line, int linelen);
-  static Hash256 fromStringOrDie(char* string);
+  static Hash256 fromLineOrDie(std::string& line);
+  static Hash256 fromStringOrDie(const std::string& string);
 
   std::string format() const;
-  void dump() {
-    printf("%s", this->format().c_str());
-  }
+  void dump() { printf("%s", this->format().c_str()); }
 
   // Flips some number of bits randomly, with replacement.  (I.e. not all
   // flipped bits are guaranteed to be in different positions; if you pass
@@ -182,6 +178,11 @@ struct Hash256 {
     printf("\n");
   }
 };
+
+static_assert(sizeof(Hash256) == 32, "Hash256 should be exactly 32 bytes");
+
+int hammingDistance(const Hash256& hash1, const Hash256& hash2);
+std::string hashToString(const Hash256& hash);
 
 } // namespace hashing
 } // namespace pdq

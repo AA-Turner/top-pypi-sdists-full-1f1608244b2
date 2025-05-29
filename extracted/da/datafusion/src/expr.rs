@@ -22,6 +22,7 @@ use datafusion::logical_expr::{
 };
 use pyo3::IntoPyObjectExt;
 use pyo3::{basic::CompareOp, prelude::*};
+use std::collections::HashMap;
 use std::convert::{From, Into};
 use std::sync::Arc;
 use window::PyWindowFrame;
@@ -36,9 +37,7 @@ use datafusion::logical_expr::{
 };
 
 use crate::common::data_type::{DataTypeMap, NullTreatment, PyScalarValue, RexType};
-use crate::errors::{
-    py_runtime_err, py_type_err, py_unsupported_variant_err, PyDataFusionError, PyDataFusionResult,
-};
+use crate::errors::{py_runtime_err, py_type_err, py_unsupported_variant_err, PyDataFusionResult};
 use crate::expr::aggregate_expr::PyAggregateFunction;
 use crate::expr::binary_expr::PyBinaryExpr;
 use crate::expr::column::PyColumn;
@@ -66,10 +65,21 @@ pub mod case;
 pub mod cast;
 pub mod column;
 pub mod conditional_expr;
+pub mod copy_to;
+pub mod create_catalog;
+pub mod create_catalog_schema;
+pub mod create_external_table;
+pub mod create_function;
+pub mod create_index;
 pub mod create_memory_table;
 pub mod create_view;
+pub mod describe_table;
 pub mod distinct;
+pub mod dml;
+pub mod drop_catalog_schema;
+pub mod drop_function;
 pub mod drop_table;
+pub mod drop_view;
 pub mod empty_relation;
 pub mod exists;
 pub mod explain;
@@ -85,18 +95,21 @@ pub mod literal;
 pub mod logical_node;
 pub mod placeholder;
 pub mod projection;
+pub mod recursive_query;
 pub mod repartition;
 pub mod scalar_subquery;
 pub mod scalar_variable;
 pub mod signature;
 pub mod sort;
 pub mod sort_expr;
+pub mod statement;
 pub mod subquery;
 pub mod subquery_alias;
 pub mod table_scan;
 pub mod union;
 pub mod unnest;
 pub mod unnest_expr;
+pub mod values;
 pub mod window;
 
 use sort_expr::{to_sort_expressions, PySortExpr};
@@ -275,8 +288,9 @@ impl PyExpr {
     }
 
     /// assign a name to the PyExpr
-    pub fn alias(&self, name: &str) -> PyExpr {
-        self.expr.clone().alias(name).into()
+    #[pyo3(signature = (name, metadata=None))]
+    pub fn alias(&self, name: &str, metadata: Option<HashMap<String, String>>) -> PyExpr {
+        self.expr.clone().alias_with_metadata(name, metadata).into()
     }
 
     /// Create a sort PyExpr from an existing PyExpr.
@@ -606,11 +620,11 @@ impl PyExpr {
                 order_by,
                 null_treatment,
             ),
-            _ => Err(
-                PyDataFusionError::ExecutionError(datafusion::error::DataFusionError::Plan(
-                    format!("Using {} with `over` is not allowed. Must use an aggregate or window function.", self.expr.variant_name()),
-                ))
-            ),
+            _ => Err(datafusion::error::DataFusionError::Plan(format!(
+                "Using {} with `over` is not allowed. Must use an aggregate or window function.",
+                self.expr.variant_name()
+            ))
+            .into()),
         }
     }
 }
@@ -714,9 +728,19 @@ impl PyExpr {
                 | Operator::BitwiseXor
                 | Operator::BitwiseAnd
                 | Operator::BitwiseOr => DataTypeMap::map_from_arrow_type(&DataType::Binary),
-                Operator::AtArrow | Operator::ArrowAt => {
-                    Err(py_type_err(format!("Unsupported expr: ${op}")))
-                }
+                Operator::AtArrow
+                | Operator::ArrowAt
+                | Operator::Arrow
+                | Operator::LongArrow
+                | Operator::HashArrow
+                | Operator::HashLongArrow
+                | Operator::AtAt
+                | Operator::IntegerDivide
+                | Operator::HashMinus
+                | Operator::AtQuestion
+                | Operator::Question
+                | Operator::QuestionAnd
+                | Operator::QuestionPipe => Err(py_type_err(format!("Unsupported expr: ${op}"))),
             },
             Expr::Cast(Cast { expr: _, data_type }) => DataTypeMap::map_from_arrow_type(data_type),
             Expr::Literal(scalar_value) => DataTypeMap::map_from_scalar_value(scalar_value),
@@ -790,5 +814,32 @@ pub(crate) fn init_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<window::PyWindowExpr>()?;
     m.add_class::<window::PyWindowFrame>()?;
     m.add_class::<window::PyWindowFrameBound>()?;
+    m.add_class::<copy_to::PyCopyTo>()?;
+    m.add_class::<copy_to::PyFileType>()?;
+    m.add_class::<create_catalog::PyCreateCatalog>()?;
+    m.add_class::<create_catalog_schema::PyCreateCatalogSchema>()?;
+    m.add_class::<create_external_table::PyCreateExternalTable>()?;
+    m.add_class::<create_function::PyCreateFunction>()?;
+    m.add_class::<create_function::PyOperateFunctionArg>()?;
+    m.add_class::<create_function::PyCreateFunctionBody>()?;
+    m.add_class::<create_index::PyCreateIndex>()?;
+    m.add_class::<describe_table::PyDescribeTable>()?;
+    m.add_class::<dml::PyDmlStatement>()?;
+    m.add_class::<drop_catalog_schema::PyDropCatalogSchema>()?;
+    m.add_class::<drop_function::PyDropFunction>()?;
+    m.add_class::<drop_view::PyDropView>()?;
+    m.add_class::<recursive_query::PyRecursiveQuery>()?;
+
+    m.add_class::<statement::PyTransactionStart>()?;
+    m.add_class::<statement::PyTransactionEnd>()?;
+    m.add_class::<statement::PySetVariable>()?;
+    m.add_class::<statement::PyPrepare>()?;
+    m.add_class::<statement::PyExecute>()?;
+    m.add_class::<statement::PyDeallocate>()?;
+    m.add_class::<values::PyValues>()?;
+    m.add_class::<statement::PyTransactionAccessMode>()?;
+    m.add_class::<statement::PyTransactionConclusion>()?;
+    m.add_class::<statement::PyTransactionIsolationLevel>()?;
+
     Ok(())
 }

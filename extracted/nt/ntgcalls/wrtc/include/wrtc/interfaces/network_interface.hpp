@@ -8,7 +8,7 @@
 #include <wrtc/enums.hpp>
 #include <wrtc/models/ice_candidate.hpp>
 #include <wrtc/utils/binary.hpp>
-#include <wrtc/utils/syncronized_callback.hpp>
+#include <wrtc/utils/synchronized_callback.hpp>
 #include <wrtc/interfaces/media/remote_audio_sink.hpp>
 #include <wrtc/interfaces/media/remote_video_sink.hpp>
 
@@ -21,6 +21,7 @@ namespace wrtc {
         synchronized_callback<IceCandidate> iceCandidateCallback;
         synchronized_callback<ConnectionState, bool> connectionChangeCallback;
         synchronized_callback<bytes::binary> dataChannelMessageCallback;
+        ConnectionState currentState = ConnectionState::New;
         bool dataChannelOpen = false;
         bool alreadyConnected = false;
         bool audioIncoming = false, cameraIncoming = false, screenIncoming = false;
@@ -62,9 +63,11 @@ namespace wrtc {
 
         virtual void addIncomingVideoTrack(const std::weak_ptr<RemoteVideoSink>& sink, bool isScreenCast) = 0;
 
+        virtual ConnectionMode getConnectionMode() const = 0;
+
         bool isDataChannelOpen() const;
 
-        bool isConnected() const;
+        ConnectionState getConnectionState() const;
 
         virtual void enableAudioIncoming(bool enable);
 

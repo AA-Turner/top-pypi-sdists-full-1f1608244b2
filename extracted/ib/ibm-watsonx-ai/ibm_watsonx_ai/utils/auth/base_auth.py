@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import timedelta, datetime
 from typing import TYPE_CHECKING, Callable
 
-from ibm_watsonx_ai.href_definitions import HrefDefinitions
+from ibm_watsonx_ai.utils.autoai.errors import TokenRemovedDuringClientCopy
 from ibm_watsonx_ai.wml_resource import WMLResource
 
 if TYPE_CHECKING:
@@ -76,12 +76,7 @@ class RefreshableTokenAuth(BaseAuth, ABC):
     ) -> None:
         self._session = api_client._session
         self._credentials = api_client.credentials
-        self._href_definitions = HrefDefinitions(
-            api_client,
-            api_client.CLOUD_PLATFORM_SPACES,
-            api_client.PLATFORM_URL,
-            api_client.ICP_PLATFORM_SPACES,
-        )
+        self._href_definitions = api_client._href_definitions
         self._on_token_creation = on_token_creation
         self._on_token_refresh = on_token_refresh
         self._expiration_timedelta = expiration_timedelta
@@ -225,6 +220,17 @@ class TokenAuth(BaseAuth):
         self._token = token
         if self._on_token_set:
             self._on_token_set()
+
+
+class TokenRemovedDuringClientCopyPlaceholder(BaseAuth):
+    """Placeholder which indicates that no auth is currently available until `APIClient.set_token(token)` is used."""
+
+    def __init__(self) -> None:
+        BaseAuth.__init__(self)
+
+    def get_token(self) -> str:
+        """Raise an error when `get_token()` is called."""
+        raise TokenRemovedDuringClientCopy()
 
 
 def get_auth_method(

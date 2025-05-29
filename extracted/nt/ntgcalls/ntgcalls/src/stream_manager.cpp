@@ -5,6 +5,7 @@
 #include <ranges>
 #include <ntgcalls/exceptions.hpp>
 #include <ntgcalls/stream_manager.hpp>
+#include <ntgcalls/io/threaded_reader.hpp>
 #include <ntgcalls/media/audio_receiver.hpp>
 #include <ntgcalls/media/audio_sink.hpp>
 #include <ntgcalls/media/audio_streamer.hpp>
@@ -16,33 +17,30 @@
 #include <rtc_base/logging.h>
 
 namespace ntgcalls {
-
     StreamManager::StreamManager(rtc::Thread* workerThread): workerThread(workerThread) {}
 
     void StreamManager::close() {
-        workerThread->BlockingCall([this] {
-            std::lock_guard lock(mutex);
-            syncReaders.clear();
-            syncCV.notify_all();
-            onEOF = nullptr;
-            framesCallback = nullptr;
-            onChangeStatus = nullptr;
-            for (const auto& reader : readers | std::views::values) {
-                reader->onData(nullptr);
-                reader->onEof(nullptr);
+        std::lock_guard lock(mutex);
+        syncReaders.clear();
+        syncCV.notify_all();
+        onEOF = nullptr;
+        framesCallback = nullptr;
+        onChangeStatus = nullptr;
+        for (const auto& reader : readers | std::views::values) {
+            reader->onData(nullptr);
+            reader->onEof(nullptr);
+        }
+        readers.clear();
+        writers.clear();
+        for (const auto& stream : streams | std::views::values) {
+            if (const auto audioReceiver = dynamic_cast<AudioReceiver*>(stream.get())) {
+                audioReceiver->onFrames(nullptr);
+            } else if (const auto videoReceiver = dynamic_cast<VideoReceiver*>(stream.get())) {
+                videoReceiver->onFrame(nullptr);
             }
-            readers.clear();
-            writers.clear();
-            for (const auto& stream : streams | std::views::values) {
-                if (const auto audioReceiver = dynamic_cast<AudioReceiver*>(stream.get())) {
-                    audioReceiver->onFrames(nullptr);
-                } else if (const auto videoReceiver = dynamic_cast<VideoReceiver*>(stream.get())) {
-                    videoReceiver->onFrame(nullptr);
-                }
-            }
-            streams.clear();
-            tracks.clear();
-        });
+        }
+        streams.clear();
+        tracks.clear();
         workerThread = nullptr;
     }
 
@@ -51,17 +49,17 @@ namespace ntgcalls {
     }
 
     void StreamManager::setStreamSources(const Mode mode, const MediaDescription& desc) {
-        RTC_LOG(LS_INFO) << "Setting Configuration, Acquiring lock";
+        RTC_LOG(LS_VERBOSE) << "Setting Configuration, Acquiring lock";
         std::lock_guard lock(mutex);
-        RTC_LOG(LS_INFO) << "Setting Configuration, Lock acquired";
+        RTC_LOG(LS_VERBOSE) << "Setting Configuration, Lock acquired";
 
         const bool wasIdling = isPaused();
 
         setConfig<AudioSink, AudioDescription>(mode, Microphone, desc.microphone);
         setConfig<AudioSink, AudioDescription>(mode, Speaker, desc.speaker);
 
-        const bool wasCamera = hasDevice(mode, Camera);
-        const bool wasScreen = hasDevice(mode, Screen);
+        const bool wasCamera = hasDeviceInternal(mode, Camera);
+        const bool wasScreen = hasDeviceInternal(mode, Screen);
 
         if (!videoSimulcast && desc.camera && desc.screen && mode == Capture) {
             throw InvalidParams("Cannot mix camera and screen sources");
@@ -70,23 +68,20 @@ namespace ntgcalls {
         setConfig<VideoSink, VideoDescription>(mode, Camera, desc.camera);
         setConfig<VideoSink, VideoDescription>(mode, Screen, desc.screen);
 
-        if (mode == Capture && (wasCamera != hasDevice(mode, Camera) || wasScreen != hasDevice(mode, Screen) || wasIdling) && initialized) {
+        if (mode == Capture && (wasCamera != hasDeviceInternal(mode, Camera) || wasScreen != hasDeviceInternal(mode, Screen) || wasIdling) && initialized) {
             checkUpgrade();
-        }
-
-        if (!initialized && mode == Capture) {
-            initialized = true;
         }
     }
 
-    void StreamManager::optimizeSources(wrtc::NetworkInterface* pc) const {
+    void StreamManager::optimizeSources(wrtc::NetworkInterface* pc) {
         pc->enableAudioIncoming(writers.contains(Microphone) || externalWriters.contains(Microphone));
         pc->enableVideoIncoming(writers.contains(Camera) || externalWriters.contains(Camera), false);
         pc->enableVideoIncoming(writers.contains(Screen) || externalWriters.contains(Screen), true);
+        initialized = pc->getConnectionMode() != wrtc::ConnectionMode::None;
     }
 
     MediaState StreamManager::getState() {
-        std::shared_lock lock(mutex);
+        std::lock_guard lock(mutex);
         bool muted = false;
         for (const auto& [key, track] : tracks) {
             if (key.first != Capture) {
@@ -101,7 +96,7 @@ namespace ntgcalls {
         return MediaState{
             muted,
             (paused || muted),
-            !hasDevice(Capture, Camera) && !hasDevice(Capture, Screen),
+            !hasDeviceInternal(Capture, Camera),
             (paused || muted),
         };
     }
@@ -123,7 +118,7 @@ namespace ntgcalls {
     }
 
     uint64_t StreamManager::time(const Mode mode) {
-        std::shared_lock lock(mutex);
+        std::lock_guard lock(mutex);
         uint64_t averageTime = 0;
         int count = 0;
         for (const auto& [key, stream] : streams) {
@@ -140,7 +135,7 @@ namespace ntgcalls {
     }
 
     StreamManager::Status StreamManager::status(const Mode mode) {
-        std::shared_lock lock(mutex);
+        std::lock_guard lock(mutex);
         if (mode == Capture) {
             return readers.empty() ? Idling : isPaused() ? Paused : Active;
         }
@@ -178,11 +173,14 @@ namespace ntgcalls {
         }
     }
 
-    bool StreamManager::hasDevice(const Mode mode, const Device device) const {
-        if (mode == Capture) {
-            return readers.contains(device);
-        }
-        return false;
+    bool StreamManager::hasDevice(const Mode mode, const Device device) {
+        std::lock_guard lock(mutex);
+        return hasDeviceInternal(mode, device);
+    }
+
+    bool StreamManager::hasReaders() {
+        std::lock_guard lock(mutex);
+        return !readers.empty();
     }
 
     void StreamManager::onFrames(const std::function<void(Mode, Device, const std::vector<wrtc::Frame>&)>& callback) {
@@ -197,7 +195,7 @@ namespace ntgcalls {
         if (const auto stream = dynamic_cast<BaseStreamer*>(streams[id].get())) {
             const auto uniqueData = bytes::make_unique_binary(data.size());
             memcpy(uniqueData.get(), data.data(), data.size());
-            stream->sendData(uniqueData.get(), frameData);
+            stream->sendData(uniqueData.get(), data.size(), frameData);
         }
     }
 
@@ -208,10 +206,7 @@ namespace ntgcalls {
             if (key.first == Playback || key.second == Camera || key.second == Screen) {
                 continue;
             }
-            if (!track->enabled() != isMuted) {
-                track->set_enabled(!isMuted);
-                changed = true;
-            }
+            changed |= track->set_enabled(!isMuted);
         }
         if (changed) {
             checkUpgrade();
@@ -221,16 +216,22 @@ namespace ntgcalls {
 
     bool StreamManager::updatePause(const bool isPaused) {
         std::lock_guard lock(mutex);
-        auto res = false;
+        auto changed = false;
+        const auto now = std::chrono::steady_clock::now();
         for (const auto& reader : readers | std::views::values) {
-            if (reader->set_enabled(!isPaused)) {
-                res = true;
-            }
+            changed |= reader->set_enabled(!isPaused);
         }
-        if (res) {
+        if (changed) {
+            if (!isPaused) {
+                for (const auto& reader : readers | std::views::values) {
+                    if (const auto threadedReader = dynamic_cast<wrtc::SyncHelper*>(reader.get())) {
+                        threadedReader->synchronizeTime(now);
+                    }
+                }
+            }
             checkUpgrade();
         }
-        return res;
+        return changed;
     }
 
     bool StreamManager::isPaused() {
@@ -241,6 +242,13 @@ namespace ntgcalls {
             }
         }
         return res;
+    }
+
+    bool StreamManager::hasDeviceInternal(const Mode mode, const Device device) const {
+        if (mode == Capture) {
+            return readers.contains(device) || externalReaders.contains(device);
+        }
+        return writers.contains(device) || externalWriters.contains(device);
     }
 
     StreamManager::Type StreamManager::getStreamType(const Device device) {
@@ -257,9 +265,31 @@ namespace ntgcalls {
         }
     }
 
+    void StreamManager::removeReader(const Device device) {
+        if (syncReaders.contains(device)) {
+            syncReaders.erase(device);
+            cancelSyncReaders.insert(device);
+            syncCV.notify_all();
+        }
+        if (readers.contains(device)) {
+            readers[device]->onData(nullptr);
+            readers[device]->onEof(nullptr);
+        }
+        readers.erase(device);
+        externalReaders.erase(device);
+        if (cancelSyncReaders.contains(device)) {
+            cancelSyncReaders.erase(device);
+        }
+    }
+
     void StreamManager::checkUpgrade() {
-        workerThread->PostTask([&] {
-            (void) onChangeStatus(getState());
+        std::weak_ptr weak(shared_from_this());
+        workerThread->PostTask([weak] {
+            const auto strong = weak.lock();
+            if (!strong) {
+                return;
+            }
+           (void) strong->onChangeStatus(strong->getState());
         });
     }
 
@@ -293,16 +323,7 @@ namespace ntgcalls {
             if (sink && sink->setConfig(desc) || !readers.contains(device) || !writers.contains(device) || !externalWriters.contains(device) && desc.value().mediaSource == DescriptionType::MediaSource::External) {
                 if (mode == Capture) {
                     const bool isShared = desc.value().mediaSource == DescriptionType::MediaSource::Device;
-                    if (readers.contains(device)) {
-                        cancelSyncReaders.insert(device);
-                        syncCV.notify_all();
-                        readers[device]->onData(nullptr);
-                        readers[device]->onEof(nullptr);
-                    }
-                    readers.erase(device);
-                    if (cancelSyncReaders.contains(device)) {
-                        cancelSyncReaders.erase(device);
-                    }
+                    removeReader(device);
                     if (desc.value().mediaSource == DescriptionType::MediaSource::External) {
                         externalReaders.insert(device);
                         syncReaders.insert(device);
@@ -327,8 +348,12 @@ namespace ntgcalls {
                                 strong->cancelSyncReaders.erase(id.second);
                                 return;
                             }
+                            if (const auto threadedReader = dynamic_cast<wrtc::SyncHelper*>(strong->readers[id.second].get())) {
+                                threadedReader->synchronizeTime();
+                            }
                         }
                         if (strong->streams.contains(id)) {
+                            const auto frameSize = strong->streams[id]->frameSize();
                             if (const auto stream = dynamic_cast<BaseStreamer*>(strong->streams[id].get())) {
                                 frameData.absoluteCaptureTimestampMs = rtc::TimeMillis();
                                 if (streamType == Video && isShared) {
@@ -338,13 +363,13 @@ namespace ntgcalls {
                                         {
                                             {
                                                 0,
-                                                {data.get(), data.get() + strong->streams[id]->frameSize()},
+                                                {data.get(), data.get() + frameSize},
                                                 frameData
                                             }
                                         }
                                     );
                                 }
-                                stream->sendData(data.get(), frameData);
+                                stream->sendData(data.get(), frameSize, frameData);
                             }
                         }
                     });
@@ -358,16 +383,14 @@ namespace ntgcalls {
                             if (!strongThread) {
                                 return;
                             }
-                            if (strongThread->syncReaders.contains(device)) {
-                                strongThread->syncReaders.erase(device);
-                                strongThread->syncCV.notify_all();
-                            }
+                            std::lock_guard lock(strongThread->mutex);
+                            strongThread->removeReader(device);
                             (void) strongThread->onEOF(getStreamType(device), device);
                         });
                     });
                     if (initialized) {
                         readers[device]->open();
-                        RTC_LOG(LS_INFO) << "Reader opened";
+                        RTC_LOG(LS_VERBOSE) << "Reader opened";
                     }
                 } else {
                     const bool isExternal = desc.value().mediaSource == DescriptionType::MediaSource::External;
@@ -441,16 +464,7 @@ namespace ntgcalls {
                 }
             }
         } else if (mode == Capture) {
-            if (syncReaders.contains(device)) {
-                syncReaders.erase(device);
-                syncCV.notify_all();
-            }
-            if (readers.contains(device)) {
-                readers[device]->onData(nullptr);
-                readers[device]->onEof(nullptr);
-            }
-            readers.erase(device);
-            externalReaders.erase(device);
+            removeReader(device);
         } else {
             writers.erase(device);
             externalWriters.erase(device);

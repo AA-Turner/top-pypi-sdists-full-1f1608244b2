@@ -49,7 +49,7 @@ class Volume(WMLResource):
         Volume._validate_type(volume_id, "volume_id", str, True)
 
         response = requests.get(
-            self._client.service_instance._href_definitions.volume_href(volume_id),
+            self._client._href_definitions.volume_href(volume_id),
             headers=self._client._get_headers(zen=True),
         )
 
@@ -169,14 +169,14 @@ class Volume(WMLResource):
         try:
             if self._client.CLOUD_PLATFORM_SPACES:
                 creation_response = requests.post(
-                    self._client.service_instance._href_definitions.volumes_href(),
+                    self._client._href_definitions.volumes_href(),
                     headers=self._client._get_headers(zen=True),
                     json=input_meta,
                 )
 
             else:
                 creation_response = requests.post(
-                    self._client.service_instance._href_definitions.volumes_href(),
+                    self._client._href_definitions.volumes_href(),
                     headers=self._client._get_headers(zen=True),
                     json=input_meta,
                 )
@@ -225,9 +225,7 @@ class Volume(WMLResource):
                 "Invalid name to start volume. Correct volume name format: `<namespace>::<name>`. Retrieve the correct name using `client.volumes.get_name(client.volumes.get_details(volume_id))` command."
             )
 
-        start_url = self._client.service_instance._href_definitions.volume_service_href(
-            name
-        )
+        start_url = self._client._href_definitions.volume_service_href(name)
         # Start the volume  service
         start_data: dict = {}
         try:
@@ -289,9 +287,7 @@ class Volume(WMLResource):
                 "Invalid name to start volume. Correct volume name format: `<namespace>::<name>`. Retrieve the correct name using `client.volumes.get_name(client.volumes.get_details(volume_id))` command."
             )
 
-        monitor_url = (
-            self._client.service_instance._href_definitions.volume_monitor_href(name)
-        )
+        monitor_url = self._client._href_definitions.volume_monitor_href(name)
         try:
             monitor_response = requests.get(
                 monitor_url, headers=self._client._get_headers(zen=True)
@@ -331,8 +327,7 @@ class Volume(WMLResource):
 
         filename_to_upload = file_path.split("/")[-1]
         upload_url_file = (
-            self._client.service_instance._href_definitions.volume_upload_href(name)
-            + filename_to_upload
+            self._client._href_definitions.volume_upload_href(name) + filename_to_upload
         )
         cmd_str = (
             'curl -k  -X PUT "'
@@ -381,7 +376,7 @@ class Volume(WMLResource):
             client.volumes.list()
         """
 
-        href = self._client.service_instance._href_definitions.volumes_href()
+        href = self._client._href_definitions.volumes_href()
         params = {}
         params.update({"addon_type": "volumes"})
 
@@ -485,7 +480,7 @@ class Volume(WMLResource):
         Volume._validate_type(volume_id, "volume_id", str, True)
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.volume_href(volume_id),
+            self._client._href_definitions.volume_href(volume_id),
             headers=self._client._get_headers(zen=True),
         )
 
@@ -516,9 +511,7 @@ class Volume(WMLResource):
         Volume._validate_type(volume_name, "volume_name", str, True)
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.volume_service_href(
-                volume_name
-            ),
+            self._client._href_definitions.volume_service_href(volume_name),
             headers=self._client._get_headers(zen=True),
         )
 

@@ -25,36 +25,37 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import abc
+import logging
+import struct
+import warnings
+from dataclasses import dataclass, field
+from enum import IntEnum, IntFlag, unique
+from typing import Mapping, Optional, Union
+
+from fido2.hid import CAPABILITY as CTAP_CAPABILITY
+
 from .core import (
+    TRANSPORT,
+    USB_INTERFACE,
+    ApplicationNotAvailableError,
+    BadResponseError,
+    NotSupportedError,
+    Tlv,
+    Version,
     bytes2int,
     int2bytes,
     require_version,
-    Version,
-    Tlv,
-    TRANSPORT,
-    USB_INTERFACE,
-    NotSupportedError,
-    BadResponseError,
-    ApplicationNotAvailableError,
-)
-from .core.otp import (
-    check_crc,
-    OtpConnection,
-    OtpProtocol,
-    STATUS_OFFSET_PROG_SEQ,
-    CommandRejectedError,
 )
 from .core.fido import FidoConnection
-from .core.smartcard import AID, SmartCardConnection, SmartCardProtocol, ScpKeyParams
-from fido2.hid import CAPABILITY as CTAP_CAPABILITY
-
-from enum import IntEnum, IntFlag, unique
-from dataclasses import dataclass, field
-from typing import Optional, Union, Mapping
-import abc
-import struct
-import warnings
-import logging
+from .core.otp import (
+    STATUS_OFFSET_PROG_SEQ,
+    CommandRejectedError,
+    OtpConnection,
+    OtpProtocol,
+    check_crc,
+)
+from .core.smartcard import AID, ScpKeyParams, SmartCardConnection, SmartCardProtocol
 
 logger = logging.getLogger(__name__)
 
@@ -190,6 +191,18 @@ class DEVICE_FLAG(IntFlag):
     EJECT = 0x80
 
 
+@unique
+class RELEASE_TYPE(IntEnum):
+    """YubiKey release type."""
+
+    ALPHA = 0
+    BETA = 1
+    FINAL = 2
+
+    def __str__(self):
+        return self.name.lower()
+
+
 TAG_USB_SUPPORTED = 0x01
 TAG_SERIAL = 0x02
 TAG_USB_ENABLED = 0x03
@@ -214,6 +227,7 @@ TAG_FIPS_APPROVED = 0x15
 TAG_PIN_COMPLEXITY = 0x16
 TAG_NFC_RESTRICTED = 0x17
 TAG_RESET_BLOCKED = 0x18
+TAG_VERSION_QUALIFIER = 0x19
 TAG_FPS_VERSION = 0x20
 TAG_STM_VERSION = 0x21
 
@@ -222,7 +236,7 @@ TAG_STM_VERSION = 0x21
 class DeviceConfig:
     """Management settings for YubiKey which can be configured by the user."""
 
-    enabled_capabilities: Mapping[TRANSPORT, CAPABILITY] = field(default_factory=dict)
+    enabled_capabilities: dict[TRANSPORT, CAPABILITY] = field(default_factory=dict)
     auto_eject_timeout: Optional[int] = None
     challenge_response_timeout: Optional[int] = None
     device_flags: Optional[DEVICE_FLAG] = None
@@ -260,6 +274,21 @@ class DeviceConfig:
         return int2bytes(len(buf)) + buf
 
 
+@dataclass(frozen=True)
+class VersionQualifier:
+    """Fully qualified YubiKey version"""
+
+    version: Version
+    type: RELEASE_TYPE = RELEASE_TYPE.FINAL
+    iteration: int = 0
+
+    def __str__(self):
+        return f"{self.version}.{self.type}.{self.iteration}"
+
+
+_DUMMY_VQ = VersionQualifier(Version(0, 0, 0))
+
+
 @dataclass
 class DeviceInfo:
     """Information about a YubiKey readable using the ManagementSession."""
@@ -279,6 +308,7 @@ class DeviceInfo:
     reset_blocked: CAPABILITY = CAPABILITY(0)
     fps_version: Optional[Version] = None
     stm_version: Optional[Version] = None
+    version_qualifier: VersionQualifier = _DUMMY_VQ
 
     @property
     def _is_bio(self) -> bool:
@@ -286,6 +316,17 @@ class DeviceInfo:
 
     def has_transport(self, transport: TRANSPORT) -> bool:
         return transport in self.supported_capabilities
+
+    @property
+    def version_name(self) -> str:
+        """The version of the YubiKey as a string."""
+        return (
+            str(self.version_qualifier)
+            if self.version_qualifier.type != RELEASE_TYPE.FINAL
+            else str(self.version)
+            if self.version
+            else "unknown"
+        )
 
     @classmethod
     def parse(cls, encoded: bytes, default_version: Version) -> "DeviceInfo":
@@ -337,6 +378,21 @@ class DeviceInfo:
         )
         pin_complexity = data.get(TAG_PIN_COMPLEXITY, b"\0") == b"\1"
         reset_blocked = CAPABILITY(bytes2int(data.get(TAG_RESET_BLOCKED, b"\0")))
+        vq = data.get(TAG_VERSION_QUALIFIER)
+        if vq:
+            vq_data = Tlv.parse_dict(vq)
+            version_qualifier = VersionQualifier(
+                Version.from_bytes(vq_data[0x01]),
+                RELEASE_TYPE(bytes2int(vq_data[0x02])),
+                bytes2int(vq_data[0x03]),
+            )
+            if version_qualifier.type != RELEASE_TYPE.FINAL:
+                logger.info(
+                    f"Overriding behavioral version with {version_qualifier.version}"
+                )
+                version = version_qualifier.version
+        else:
+            version_qualifier = VersionQualifier(version, RELEASE_TYPE.FINAL, 0)
         fps_version = Version.from_bytes(data.get(TAG_FPS_VERSION, b"\0\0\0"))
         stm_version = Version.from_bytes(data.get(TAG_STM_VERSION, b"\0\0\0"))
 
@@ -356,6 +412,7 @@ class DeviceInfo:
             reset_blocked,
             fps_version or None,
             stm_version or None,
+            version_qualifier,
         )
 
 
@@ -461,10 +518,7 @@ class _ManagementSmartCardBackend(_Backend):
         self.protocol = SmartCardProtocol(smartcard_connection)
         try:
             select_bytes = self.protocol.select(AID.MANAGEMENT)
-
-            if scp_key_params:
-                self.protocol.init_scp(scp_key_params)
-            elif select_bytes[-2:] == b"\x90\x00":
+            if select_bytes[-2:] == b"\x90\x00":
                 # YubiKey Edge incorrectly appends SW twice.
                 select_bytes = select_bytes[:-2]
 
@@ -474,15 +528,20 @@ class _ManagementSmartCardBackend(_Backend):
             if self.version[0] == 3:
                 # Workaround to "de-select" on NEO, otherwise it gets stuck.
                 smartcard_connection.send_and_receive(b"\xa4\x04\x00\x08")
+                if scp_key_params:
+                    raise ValueError("SCP is not supported")
                 self.protocol.select(AID.OTP)
+
         except ApplicationNotAvailableError:
-            if smartcard_connection.transport == TRANSPORT.NFC:
+            if smartcard_connection.transport == TRANSPORT.NFC and not scp_key_params:
                 # Probably NEO over NFC
                 status = self.protocol.select(AID.OTP)
                 self.version = Version.from_bytes(status[:3])
             else:
                 raise
         self.protocol.configure(self.version)
+        if scp_key_params:
+            self.protocol.init_scp(scp_key_params)
 
     def close(self):
         self.protocol.close()
@@ -551,6 +610,11 @@ class ManagementSession:
             self.backend = _ManagementCtapBackend(connection)
         else:
             raise TypeError("Unsupported connection type")
+
+        if self.backend.version == (0, 0, 1):
+            logger.debug("Overriding development version...")
+            self.backend.version = self._do_read_device_info().version_qualifier.version
+
         logger.debug(
             "Management session initialized for "
             f"connection={type(connection).__name__}, version={self.version}"
@@ -575,6 +639,9 @@ class ManagementSession:
     def read_device_info(self) -> DeviceInfo:
         """Get detailed information about the YubiKey."""
         require_version(self.version, (4, 1, 0))
+        return self._do_read_device_info()
+
+    def _do_read_device_info(self) -> DeviceInfo:
         more_data = True
         tlvs = {}
         page = 0

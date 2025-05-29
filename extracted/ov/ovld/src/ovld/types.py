@@ -10,14 +10,9 @@ from .codegen import Code
 from .mro import Order, TypeRelationship, subclasscheck, typeorder
 from .recode import generate_checking_code
 from .typemap import TypeMap
-from .utils import UnionType, UnionTypes, UsageError, clsstring
+from .utils import UnionType, UnionTypes, UsageError, clsstring, get_args
 
-
-def get_args(tp):
-    args = getattr(tp, "__args__", None)
-    if not isinstance(args, tuple):
-        args = ()
-    return args
+NoneType = type(None)
 
 
 def eval_annotation(t, ctx, locals, catch=False):
@@ -90,6 +85,8 @@ class TypeNormalizer:
             raise UsageError(
                 f"Dependent type {t} has not been given a type bound. Please use Dependent[<bound>, {t}] instead."
             )
+        elif t is None:
+            return NoneType
         else:
             return t
 
@@ -103,6 +100,8 @@ def _(self, t, fn):
 
 
 class MetaMC(type):
+    __dependent__ = False
+
     def __new__(T, name, handler):
         return super().__new__(T, name, (), {"_handler": handler})
 

@@ -4324,18 +4324,21 @@ class datasource_api_GetTagValuesForDataSourceRequest(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'tag_keys': ConjureFieldDefinition('tagKeys', List[api_TagName]),
+            'tag_keys': ConjureFieldDefinition('tagKeys', OptionalTypeWrapper[List[api_TagName]]),
             'range': ConjureFieldDefinition('range', OptionalTypeWrapper[api_Range])
         }
 
     __slots__: List[str] = ['_tag_keys', '_range']
 
-    def __init__(self, tag_keys: List[str], range: Optional["api_Range"] = None) -> None:
+    def __init__(self, range: Optional["api_Range"] = None, tag_keys: Optional[List[str]] = None) -> None:
         self._tag_keys = tag_keys
         self._range = range
 
     @builtins.property
-    def tag_keys(self) -> List[str]:
+    def tag_keys(self) -> Optional[List[str]]:
+        """
+        If empty, returns all available tag keys.
+        """
         return self._tag_keys
 
     @builtins.property
@@ -6266,6 +6269,38 @@ The Event Service is responsible for creating and retrieving events for a partic
         _decoder = ConjureDecoder()
         return _decoder.decode(_response.json(), event_SearchEventsResponse, self._return_none_for_unknown_union_types)
 
+    def get_events_histogram(self, auth_header: str, request: "event_EventsHistogramRequest") -> "event_EventsHistogramResponse":
+        """
+        Gets a histogram of events that match the given filters.
+        """
+
+        _headers: Dict[str, Any] = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': auth_header,
+        }
+
+        _params: Dict[str, Any] = {
+        }
+
+        _path_params: Dict[str, Any] = {
+        }
+
+        _json: Any = ConjureEncoder().default(request)
+
+        _path = '/event/v1/histogram'
+        _path = _path.format(**_path_params)
+
+        _response: Response = self._request(
+            'POST',
+            self._uri + _path,
+            params=_params,
+            headers=_headers,
+            json=_json)
+
+        _decoder = ConjureDecoder()
+        return _decoder.decode(_response.json(), event_EventsHistogramResponse, self._return_none_for_unknown_union_types)
+
 
 event_EventService.__name__ = "EventService"
 event_EventService.__qualname__ = "EventService"
@@ -6294,6 +6329,132 @@ event_EventType.__qualname__ = "EventType"
 event_EventType.__module__ = "nominal_api.event"
 
 
+class event_EventsHistogramBucket(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'start_inclusive': ConjureFieldDefinition('startInclusive', api_Timestamp),
+            'end_exclusive': ConjureFieldDefinition('endExclusive', api_Timestamp),
+            'count': ConjureFieldDefinition('count', int)
+        }
+
+    __slots__: List[str] = ['_start_inclusive', '_end_exclusive', '_count']
+
+    def __init__(self, count: int, end_exclusive: "api_Timestamp", start_inclusive: "api_Timestamp") -> None:
+        self._start_inclusive = start_inclusive
+        self._end_exclusive = end_exclusive
+        self._count = count
+
+    @builtins.property
+    def start_inclusive(self) -> "api_Timestamp":
+        return self._start_inclusive
+
+    @builtins.property
+    def end_exclusive(self) -> "api_Timestamp":
+        return self._end_exclusive
+
+    @builtins.property
+    def count(self) -> int:
+        return self._count
+
+
+event_EventsHistogramBucket.__name__ = "EventsHistogramBucket"
+event_EventsHistogramBucket.__qualname__ = "EventsHistogramBucket"
+event_EventsHistogramBucket.__module__ = "nominal_api.event"
+
+
+class event_EventsHistogramRequest(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'start_inclusive': ConjureFieldDefinition('startInclusive', api_Timestamp),
+            'end_exclusive': ConjureFieldDefinition('endExclusive', api_Timestamp),
+            'filter_query': ConjureFieldDefinition('filterQuery', OptionalTypeWrapper[event_HistogramFilterQuery]),
+            'archived_statuses': ConjureFieldDefinition('archivedStatuses', OptionalTypeWrapper[List[api_ArchivedStatus]]),
+            'num_bins': ConjureFieldDefinition('numBins', OptionalTypeWrapper[int]),
+            'event_limit': ConjureFieldDefinition('eventLimit', OptionalTypeWrapper[int])
+        }
+
+    __slots__: List[str] = ['_start_inclusive', '_end_exclusive', '_filter_query', '_archived_statuses', '_num_bins', '_event_limit']
+
+    def __init__(self, end_exclusive: "api_Timestamp", start_inclusive: "api_Timestamp", archived_statuses: Optional[List["api_ArchivedStatus"]] = None, event_limit: Optional[int] = None, filter_query: Optional["event_HistogramFilterQuery"] = None, num_bins: Optional[int] = None) -> None:
+        self._start_inclusive = start_inclusive
+        self._end_exclusive = end_exclusive
+        self._filter_query = filter_query
+        self._archived_statuses = archived_statuses
+        self._num_bins = num_bins
+        self._event_limit = event_limit
+
+    @builtins.property
+    def start_inclusive(self) -> "api_Timestamp":
+        return self._start_inclusive
+
+    @builtins.property
+    def end_exclusive(self) -> "api_Timestamp":
+        return self._end_exclusive
+
+    @builtins.property
+    def filter_query(self) -> Optional["event_HistogramFilterQuery"]:
+        """
+        The query to filter the events to be included in the histogram.
+        """
+        return self._filter_query
+
+    @builtins.property
+    def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
+        """
+        Filters search on check alerts based on the archived statuses provided. 
+Default is NOT_ARCHIVED only if none are provided.
+        """
+        return self._archived_statuses
+
+    @builtins.property
+    def num_bins(self) -> Optional[int]:
+        """
+        Defaults to 100. Throws if larger than 1_000.
+The resulting histogram may have fewer bins than requested if the requested time window is too small.
+        """
+        return self._num_bins
+
+    @builtins.property
+    def event_limit(self) -> Optional[int]:
+        """
+        Limits the number of events to be included in the histogram.
+Defaults to 1_000. Throws if larger than 10_000.
+        """
+        return self._event_limit
+
+
+event_EventsHistogramRequest.__name__ = "EventsHistogramRequest"
+event_EventsHistogramRequest.__qualname__ = "EventsHistogramRequest"
+event_EventsHistogramRequest.__module__ = "nominal_api.event"
+
+
+class event_EventsHistogramResponse(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'buckets': ConjureFieldDefinition('buckets', List[event_EventsHistogramBucket])
+        }
+
+    __slots__: List[str] = ['_buckets']
+
+    def __init__(self, buckets: List["event_EventsHistogramBucket"]) -> None:
+        self._buckets = buckets
+
+    @builtins.property
+    def buckets(self) -> List["event_EventsHistogramBucket"]:
+        return self._buckets
+
+
+event_EventsHistogramResponse.__name__ = "EventsHistogramResponse"
+event_EventsHistogramResponse.__qualname__ = "EventsHistogramResponse"
+event_EventsHistogramResponse.__module__ = "nominal_api.event"
+
+
 class event_GetEvents(ConjureBeanType):
 
     @builtins.classmethod
@@ -6315,6 +6476,377 @@ class event_GetEvents(ConjureBeanType):
 event_GetEvents.__name__ = "GetEvents"
 event_GetEvents.__qualname__ = "GetEvents"
 event_GetEvents.__module__ = "nominal_api.event"
+
+
+class event_HistogramFilterQuery(ConjureUnionType):
+    _search_text: Optional[str] = None
+    _asset: Optional[str] = None
+    _template: Optional[str] = None
+    _workbook: Optional[str] = None
+    _data_review: Optional[str] = None
+    _origin_type: Optional["event_SearchEventOriginType"] = None
+    _data_review_check: Optional[str] = None
+    _disposition_status: Optional["event_EventDispositionStatus"] = None
+    _priority: Optional["scout_api_Priority"] = None
+    _assignee: Optional[str] = None
+    _event_type: Optional["event_EventType"] = None
+    _label: Optional[str] = None
+    _property: Optional["api_Property"] = None
+    _and_: Optional[List["event_HistogramFilterQuery"]] = None
+    _or_: Optional[List["event_HistogramFilterQuery"]] = None
+    _workspace: Optional[str] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'search_text': ConjureFieldDefinition('searchText', str),
+            'asset': ConjureFieldDefinition('asset', scout_rids_api_AssetRid),
+            'template': ConjureFieldDefinition('template', scout_rids_api_TemplateRid),
+            'workbook': ConjureFieldDefinition('workbook', scout_rids_api_NotebookRid),
+            'data_review': ConjureFieldDefinition('dataReview', scout_rids_api_DataReviewRid),
+            'origin_type': ConjureFieldDefinition('originType', event_SearchEventOriginType),
+            'data_review_check': ConjureFieldDefinition('dataReviewCheck', scout_rids_api_CheckRid),
+            'disposition_status': ConjureFieldDefinition('dispositionStatus', event_EventDispositionStatus),
+            'priority': ConjureFieldDefinition('priority', scout_api_Priority),
+            'assignee': ConjureFieldDefinition('assignee', scout_rids_api_UserRid),
+            'event_type': ConjureFieldDefinition('eventType', event_EventType),
+            'label': ConjureFieldDefinition('label', api_Label),
+            'property': ConjureFieldDefinition('property', api_Property),
+            'and_': ConjureFieldDefinition('and', List[event_HistogramFilterQuery]),
+            'or_': ConjureFieldDefinition('or', List[event_HistogramFilterQuery]),
+            'workspace': ConjureFieldDefinition('workspace', api_rids_WorkspaceRid)
+        }
+
+    def __init__(
+            self,
+            search_text: Optional[str] = None,
+            asset: Optional[str] = None,
+            template: Optional[str] = None,
+            workbook: Optional[str] = None,
+            data_review: Optional[str] = None,
+            origin_type: Optional["event_SearchEventOriginType"] = None,
+            data_review_check: Optional[str] = None,
+            disposition_status: Optional["event_EventDispositionStatus"] = None,
+            priority: Optional["scout_api_Priority"] = None,
+            assignee: Optional[str] = None,
+            event_type: Optional["event_EventType"] = None,
+            label: Optional[str] = None,
+            property: Optional["api_Property"] = None,
+            and_: Optional[List["event_HistogramFilterQuery"]] = None,
+            or_: Optional[List["event_HistogramFilterQuery"]] = None,
+            workspace: Optional[str] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (search_text is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (workspace is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if search_text is not None:
+                self._search_text = search_text
+                self._type = 'searchText'
+            if asset is not None:
+                self._asset = asset
+                self._type = 'asset'
+            if template is not None:
+                self._template = template
+                self._type = 'template'
+            if workbook is not None:
+                self._workbook = workbook
+                self._type = 'workbook'
+            if data_review is not None:
+                self._data_review = data_review
+                self._type = 'dataReview'
+            if origin_type is not None:
+                self._origin_type = origin_type
+                self._type = 'originType'
+            if data_review_check is not None:
+                self._data_review_check = data_review_check
+                self._type = 'dataReviewCheck'
+            if disposition_status is not None:
+                self._disposition_status = disposition_status
+                self._type = 'dispositionStatus'
+            if priority is not None:
+                self._priority = priority
+                self._type = 'priority'
+            if assignee is not None:
+                self._assignee = assignee
+                self._type = 'assignee'
+            if event_type is not None:
+                self._event_type = event_type
+                self._type = 'eventType'
+            if label is not None:
+                self._label = label
+                self._type = 'label'
+            if property is not None:
+                self._property = property
+                self._type = 'property'
+            if and_ is not None:
+                self._and_ = and_
+                self._type = 'and'
+            if or_ is not None:
+                self._or_ = or_
+                self._type = 'or'
+            if workspace is not None:
+                self._workspace = workspace
+                self._type = 'workspace'
+
+        elif type_of_union == 'searchText':
+            if search_text is None:
+                raise ValueError('a union value must not be None')
+            self._search_text = search_text
+            self._type = 'searchText'
+        elif type_of_union == 'asset':
+            if asset is None:
+                raise ValueError('a union value must not be None')
+            self._asset = asset
+            self._type = 'asset'
+        elif type_of_union == 'template':
+            if template is None:
+                raise ValueError('a union value must not be None')
+            self._template = template
+            self._type = 'template'
+        elif type_of_union == 'workbook':
+            if workbook is None:
+                raise ValueError('a union value must not be None')
+            self._workbook = workbook
+            self._type = 'workbook'
+        elif type_of_union == 'dataReview':
+            if data_review is None:
+                raise ValueError('a union value must not be None')
+            self._data_review = data_review
+            self._type = 'dataReview'
+        elif type_of_union == 'originType':
+            if origin_type is None:
+                raise ValueError('a union value must not be None')
+            self._origin_type = origin_type
+            self._type = 'originType'
+        elif type_of_union == 'dataReviewCheck':
+            if data_review_check is None:
+                raise ValueError('a union value must not be None')
+            self._data_review_check = data_review_check
+            self._type = 'dataReviewCheck'
+        elif type_of_union == 'dispositionStatus':
+            if disposition_status is None:
+                raise ValueError('a union value must not be None')
+            self._disposition_status = disposition_status
+            self._type = 'dispositionStatus'
+        elif type_of_union == 'priority':
+            if priority is None:
+                raise ValueError('a union value must not be None')
+            self._priority = priority
+            self._type = 'priority'
+        elif type_of_union == 'assignee':
+            if assignee is None:
+                raise ValueError('a union value must not be None')
+            self._assignee = assignee
+            self._type = 'assignee'
+        elif type_of_union == 'eventType':
+            if event_type is None:
+                raise ValueError('a union value must not be None')
+            self._event_type = event_type
+            self._type = 'eventType'
+        elif type_of_union == 'label':
+            if label is None:
+                raise ValueError('a union value must not be None')
+            self._label = label
+            self._type = 'label'
+        elif type_of_union == 'property':
+            if property is None:
+                raise ValueError('a union value must not be None')
+            self._property = property
+            self._type = 'property'
+        elif type_of_union == 'and':
+            if and_ is None:
+                raise ValueError('a union value must not be None')
+            self._and_ = and_
+            self._type = 'and'
+        elif type_of_union == 'or':
+            if or_ is None:
+                raise ValueError('a union value must not be None')
+            self._or_ = or_
+            self._type = 'or'
+        elif type_of_union == 'workspace':
+            if workspace is None:
+                raise ValueError('a union value must not be None')
+            self._workspace = workspace
+            self._type = 'workspace'
+
+    @builtins.property
+    def search_text(self) -> Optional[str]:
+        return self._search_text
+
+    @builtins.property
+    def asset(self) -> Optional[str]:
+        return self._asset
+
+    @builtins.property
+    def template(self) -> Optional[str]:
+        return self._template
+
+    @builtins.property
+    def workbook(self) -> Optional[str]:
+        return self._workbook
+
+    @builtins.property
+    def data_review(self) -> Optional[str]:
+        return self._data_review
+
+    @builtins.property
+    def origin_type(self) -> Optional["event_SearchEventOriginType"]:
+        return self._origin_type
+
+    @builtins.property
+    def data_review_check(self) -> Optional[str]:
+        return self._data_review_check
+
+    @builtins.property
+    def disposition_status(self) -> Optional["event_EventDispositionStatus"]:
+        return self._disposition_status
+
+    @builtins.property
+    def priority(self) -> Optional["scout_api_Priority"]:
+        return self._priority
+
+    @builtins.property
+    def assignee(self) -> Optional[str]:
+        return self._assignee
+
+    @builtins.property
+    def event_type(self) -> Optional["event_EventType"]:
+        return self._event_type
+
+    @builtins.property
+    def label(self) -> Optional[str]:
+        return self._label
+
+    @builtins.property
+    def property(self) -> Optional["api_Property"]:
+        return self._property
+
+    @builtins.property
+    def and_(self) -> Optional[List["event_HistogramFilterQuery"]]:
+        return self._and_
+
+    @builtins.property
+    def or_(self) -> Optional[List["event_HistogramFilterQuery"]]:
+        return self._or_
+
+    @builtins.property
+    def workspace(self) -> Optional[str]:
+        return self._workspace
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, event_HistogramFilterQueryVisitor):
+            raise ValueError('{} is not an instance of event_HistogramFilterQueryVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'searchText' and self.search_text is not None:
+            return visitor._search_text(self.search_text)
+        if self._type == 'asset' and self.asset is not None:
+            return visitor._asset(self.asset)
+        if self._type == 'template' and self.template is not None:
+            return visitor._template(self.template)
+        if self._type == 'workbook' and self.workbook is not None:
+            return visitor._workbook(self.workbook)
+        if self._type == 'dataReview' and self.data_review is not None:
+            return visitor._data_review(self.data_review)
+        if self._type == 'originType' and self.origin_type is not None:
+            return visitor._origin_type(self.origin_type)
+        if self._type == 'dataReviewCheck' and self.data_review_check is not None:
+            return visitor._data_review_check(self.data_review_check)
+        if self._type == 'dispositionStatus' and self.disposition_status is not None:
+            return visitor._disposition_status(self.disposition_status)
+        if self._type == 'priority' and self.priority is not None:
+            return visitor._priority(self.priority)
+        if self._type == 'assignee' and self.assignee is not None:
+            return visitor._assignee(self.assignee)
+        if self._type == 'eventType' and self.event_type is not None:
+            return visitor._event_type(self.event_type)
+        if self._type == 'label' and self.label is not None:
+            return visitor._label(self.label)
+        if self._type == 'property' and self.property is not None:
+            return visitor._property(self.property)
+        if self._type == 'and' and self.and_ is not None:
+            return visitor._and(self.and_)
+        if self._type == 'or' and self.or_ is not None:
+            return visitor._or(self.or_)
+        if self._type == 'workspace' and self.workspace is not None:
+            return visitor._workspace(self.workspace)
+
+
+event_HistogramFilterQuery.__name__ = "HistogramFilterQuery"
+event_HistogramFilterQuery.__qualname__ = "HistogramFilterQuery"
+event_HistogramFilterQuery.__module__ = "nominal_api.event"
+
+
+class event_HistogramFilterQueryVisitor:
+
+    @abstractmethod
+    def _search_text(self, search_text: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _asset(self, asset: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _template(self, template: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _workbook(self, workbook: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _data_review(self, data_review: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _origin_type(self, origin_type: "event_SearchEventOriginType") -> Any:
+        pass
+
+    @abstractmethod
+    def _data_review_check(self, data_review_check: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _disposition_status(self, disposition_status: "event_EventDispositionStatus") -> Any:
+        pass
+
+    @abstractmethod
+    def _priority(self, priority: "scout_api_Priority") -> Any:
+        pass
+
+    @abstractmethod
+    def _assignee(self, assignee: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _event_type(self, event_type: "event_EventType") -> Any:
+        pass
+
+    @abstractmethod
+    def _label(self, label: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _property(self, property: "api_Property") -> Any:
+        pass
+
+    @abstractmethod
+    def _and(self, and_: List["event_HistogramFilterQuery"]) -> Any:
+        pass
+
+    @abstractmethod
+    def _or(self, or_: List["event_HistogramFilterQuery"]) -> Any:
+        pass
+
+    @abstractmethod
+    def _workspace(self, workspace: str) -> Any:
+        pass
+
+
+event_HistogramFilterQueryVisitor.__name__ = "HistogramFilterQueryVisitor"
+event_HistogramFilterQueryVisitor.__qualname__ = "HistogramFilterQueryVisitor"
+event_HistogramFilterQueryVisitor.__module__ = "nominal_api.event"
 
 
 class event_SearchEventOriginType(ConjureEnumType):
@@ -76253,7 +76785,7 @@ class storage_deletion_api_DeleteDataRequest(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'data_source_rid': ConjureFieldDefinition('dataSourceRid', api_rids_NominalDataSourceRid),
+            'data_source_rid': ConjureFieldDefinition('dataSourceRid', api_rids_NominalDataSourceOrDatasetRid),
             'time_range': ConjureFieldDefinition('timeRange', OptionalTypeWrapper[storage_deletion_api_TimeRange]),
             'tags': ConjureFieldDefinition('tags', OptionalTypeWrapper[Dict[api_TagName, api_TagValue]])
         }

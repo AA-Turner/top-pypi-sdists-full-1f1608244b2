@@ -20,7 +20,6 @@ import json
 import os
 import uuid
 
-from oslo_utils import secretutils
 from oslo_utils import uuidutils
 
 
@@ -32,7 +31,8 @@ def split(text, strip=True):
     if isinstance(text, (tuple, list)):
         return text
     if not isinstance(text, str):
-        raise TypeError("Unknown how to split '%s': %s" % (text, type(text)))
+        raise TypeError(
+            "Unknown how to split '{}': {}".format(text, type(text)))
     if strip:
         return [t.strip() for t in text.split(",") if t.strip()]
     else:
@@ -107,7 +107,7 @@ def signed_unpack(data, hmac_data, hmac_keys):
         except Exception:  # nosec
             pass
         else:
-            if secretutils.constant_time_compare(hmac_data, user_hmac_data):
+            if hmac.compare_digest(hmac_data, user_hmac_data):
                 try:
                     contents = json.loads(
                         binary_decode(base64.urlsafe_b64decode(data)))
@@ -146,7 +146,7 @@ def import_modules_from_package(package):
             if filename.startswith("__") or not filename.endswith(".py"):
                 continue
             new_package = ".".join(root.split(os.sep)).split("....")[1]
-            module_name = "%s.%s" % (new_package, filename[:-3])
+            module_name = "{}.{}".format(new_package, filename[:-3])
             __import__(module_name)
 
 

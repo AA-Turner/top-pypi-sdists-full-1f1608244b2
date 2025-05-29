@@ -55,9 +55,7 @@ class PkgExtn(WMLResource):
         PkgExtn._validate_type(pkg_extn_id, "pkg_extn_id", str, True)
 
         response = requests.get(
-            self._client.service_instance._href_definitions.get_pkg_extn_href(
-                pkg_extn_id
-            ),
+            self._client._href_definitions.get_pkg_extn_href(pkg_extn_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )
@@ -111,7 +109,7 @@ class PkgExtn(WMLResource):
         PkgExtn._validate_type(file_path, "file_path", str, True)
         # Step1  : Create an asset
         print("Creating package extensions")
-        href = self._client.service_instance._href_definitions.get_pkg_extns_href()
+        href = self._client._href_definitions.get_pkg_extns_href()
 
         creation_response = requests.post(
             href,
@@ -166,7 +164,7 @@ class PkgExtn(WMLResource):
                         )
                 except Exception as e:
                     deletion_response = requests.delete(
-                        self._client.service_instance._href_definitions.get_pkg_extn_href(
+                        self._client._href_definitions.get_pkg_extn_href(
                             pkg_extn_asset_id
                         ),
                         params=self._client._params(),
@@ -206,9 +204,7 @@ class PkgExtn(WMLResource):
                         )
             except Exception as e:
                 deletion_response = requests.delete(
-                    self._client.service_instance._href_definitions.get_pkg_extn_href(
-                        pkg_extn_asset_id
-                    ),
+                    self._client._href_definitions.get_pkg_extn_href(pkg_extn_asset_id),
                     params=self._client._params(),
                     headers=self._client._get_headers(),
                 )
@@ -218,9 +214,7 @@ class PkgExtn(WMLResource):
             if put_response.status_code == 201 or put_response.status_code == 200:
                 # Step3: Mark the upload complete
                 complete_response = requests.post(
-                    self._client.service_instance._href_definitions.get_pkg_extn_href(
-                        pkg_extn_asset_id
-                    )
+                    self._client._href_definitions.get_pkg_extn_href(pkg_extn_asset_id)
                     + "/upload_complete",
                     headers=self._client._get_headers(),
                     params=self._client._params(),
@@ -262,7 +256,7 @@ class PkgExtn(WMLResource):
 
         """
 
-        href = self._client.service_instance._href_definitions.get_pkg_extns_href()
+        href = self._client._href_definitions.get_pkg_extns_href()
 
         response = requests.get(
             href, params=self._client._params(), headers=self._client._get_headers()
@@ -333,7 +327,7 @@ class PkgExtn(WMLResource):
         parameters.update(name=pkg_extn_name)
 
         response = requests.get(
-            self._client.service_instance._href_definitions.get_pkg_extns_href(),
+            self._client._href_definitions.get_pkg_extns_href(),
             params=parameters,
             headers=self._client._get_headers(),
         )
@@ -395,9 +389,7 @@ class PkgExtn(WMLResource):
         PkgExtn._validate_type(pkg_extn_id, "pkg_extn_id", str, True)
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_pkg_extn_href(
-                pkg_extn_id
-            ),
+            self._client._href_definitions.get_pkg_extn_href(pkg_extn_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )
@@ -464,9 +456,7 @@ class PkgExtn(WMLResource):
         PkgExtn._validate_type(pkg_extn_id, "pkg_extn_id", str, True)
 
         pkg_extn_response = requests.get(
-            self._client.service_instance._href_definitions.get_pkg_extn_href(
-                pkg_extn_id
-            ),
+            self._client._href_definitions.get_pkg_extn_href(pkg_extn_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )

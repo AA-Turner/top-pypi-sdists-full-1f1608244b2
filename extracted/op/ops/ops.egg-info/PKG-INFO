@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: ops
-Version: 2.21.1
+Version: 2.22.0
 Summary: The Python library behind great charms
 Author: The Charm Tech team at Canonical Ltd.
-Project-URL: Homepage, https://juju.is/docs/sdk
+Project-URL: Homepage, https://ops.readthedocs.io/en/latest/
 Project-URL: Repository, https://github.com/canonical/operator
 Project-URL: Issues, https://github.com/canonical/operator/issues
 Project-URL: Documentation, https://ops.readthedocs.io
@@ -37,9 +37,9 @@ Requires-Dist: sphinx-tabs; extra == "docs"
 Requires-Dist: sphinxcontrib-jquery; extra == "docs"
 Requires-Dist: sphinxext-opengraph; extra == "docs"
 Provides-Extra: testing
-Requires-Dist: ops-scenario==7.21.1; extra == "testing"
+Requires-Dist: ops-scenario==7.22.0; extra == "testing"
 Provides-Extra: tracing
-Requires-Dist: ops-tracing==2.21.1; extra == "tracing"
+Requires-Dist: ops-tracing==2.22.0; extra == "tracing"
 Provides-Extra: harness
 Dynamic: license-file
 
@@ -51,6 +51,7 @@ The `ops` library is a Python framework for developing and testing Kubernetes an
 
 > - `ops` is  [available on PyPI](https://pypi.org/project/ops/).
 > - The latest version of `ops` requires Python 3.8 or above.
+> - Read our [docs](https://ops.readthedocs.io/en/latest/) for tutorials, how-to guides, the library reference, and more.
 
 ## Give it a try
 
@@ -116,7 +117,8 @@ class OpsExampleCharm(ops.CharmBase):
         Change this example to suit your needs. You'll need to specify the right entrypoint and
         environment configuration for your specific workload.
 
-        Learn more about interacting with Pebble at at https://juju.is/docs/sdk/pebble.
+        Learn more about interacting with Pebble at
+            https://ops.readthedocs.io/en/latest/reference/pebble.html
         """
         # Get a reference the container attribute on the PebbleReadyEvent
         container = event.workload
@@ -124,8 +126,8 @@ class OpsExampleCharm(ops.CharmBase):
         container.add_layer("httpbin", self._pebble_layer, combine=True)
         # Make Pebble reevaluate its plan, ensuring any services are started if enabled.
         container.replan()
-        # Learn more about statuses in the SDK docs:
-        # https://juju.is/docs/sdk/constructs#heading--statuses
+        # Learn more about statuses at
+        # https://documentation.ubuntu.com/juju/3.6/reference/status/
         self.unit.status = ops.ActiveStatus()
 ```
 

@@ -66,6 +66,7 @@ from scope_client.api_bindings.models.alert_check_job_spec import AlertCheckJobS
 from scope_client.api_bindings.models.alert_rule import AlertRule
 from scope_client.api_bindings.models.alert_rule_interval import AlertRuleInterval
 from scope_client.api_bindings.models.alert_rule_notification_webhook import AlertRuleNotificationWebhook
+from scope_client.api_bindings.models.alert_rule_sql_validation_resp import AlertRuleSQLValidationResp
 from scope_client.api_bindings.models.alert_rule_sort import AlertRuleSort
 from scope_client.api_bindings.models.alert_sort import AlertSort
 from scope_client.api_bindings.models.alert_webhook_called import AlertWebhookCalled
@@ -322,6 +323,7 @@ from scope_client.api_bindings.models.user_credentials import UserCredentials
 from scope_client.api_bindings.models.user_service_account_credentials import UserServiceAccountCredentials
 from scope_client.api_bindings.models.user_sort import UserSort
 from scope_client.api_bindings.models.user_type import UserType
+from scope_client.api_bindings.models.validate_alert_rule_query_req import ValidateAlertRuleQueryReq
 from scope_client.api_bindings.models.validation_error import ValidationError
 from scope_client.api_bindings.models.validation_error_loc_inner import ValidationErrorLocInner
 from scope_client.api_bindings.models.webhook import Webhook

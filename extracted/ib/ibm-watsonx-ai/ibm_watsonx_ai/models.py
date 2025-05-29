@@ -174,10 +174,8 @@ class Models(WMLResource):
         return metadata
 
     def _tf2x_load_model_instance(self, model_id: str) -> Any:
-        artifact_url = (
-            self._client.service_instance._href_definitions.get_model_last_version_href(
-                model_id
-            )
+        artifact_url = self._client._href_definitions.get_model_last_version_href(
+            model_id
         )
         params = self._client._params()
         id_length = 20
@@ -1229,9 +1227,7 @@ class Models(WMLResource):
             meta_props, self.ConfigurationMetaNames.NAME, str, True
         )
 
-        url = (
-            self._client.service_instance._href_definitions.get_published_models_href()
-        )
+        url = self._client._href_definitions.get_published_models_href()
         payload = self._create_cloud_model_payload(
             meta_props,
             feature_names=feature_names,
@@ -1266,9 +1262,7 @@ class Models(WMLResource):
                 )
 
         url = (
-            self._client.service_instance._href_definitions.get_published_model_href(
-                model_id
-            )
+            self._client._href_definitions.get_published_model_href(model_id)
             + "/content"
         )
         with open(path_to_archive, "rb") as f:
@@ -1340,7 +1334,7 @@ class Models(WMLResource):
         )
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_published_models_href(),
+            self._client._href_definitions.get_published_models_href(),
             headers=self._client._get_headers(),
             params=self._client._params(),
             json=model_payload,
@@ -1749,7 +1743,7 @@ class Models(WMLResource):
                 model_request_json.update(meta_props)
 
             creation_response = requests.post(
-                self._client.service_instance._href_definitions.get_published_models_href(),
+                self._client._href_definitions.get_published_models_href(),
                 headers=self._client._get_headers(),
                 params=self._client._params(),
                 json=model_request_json,
@@ -2083,9 +2077,7 @@ class Models(WMLResource):
             # raise WMLClientError('Meta_props update unsupported.')
             self._validate_type(meta_props, "meta_props", dict, True)
 
-            url = self._client.service_instance._href_definitions.get_published_model_href(
-                model_id
-            )
+            url = self._client._href_definitions.get_published_model_href(model_id)
 
             response = requests.get(
                 url, params=self._client._params(), headers=self._client._get_headers()
@@ -2235,16 +2227,12 @@ class Models(WMLResource):
         else:
             is_json = False
 
-        artifact_url = (
-            self._client.service_instance._href_definitions.get_model_last_version_href(
-                model_id
-            )
+        artifact_url = self._client._href_definitions.get_model_last_version_href(
+            model_id
         )
         params = self._client._params()
         try:
-            url = self._client.service_instance._href_definitions.get_published_model_href(
-                model_id
-            )
+            url = self._client._href_definitions.get_published_model_href(model_id)
             model_get_response = requests.get(
                 url, params=self._client._params(), headers=self._client._get_headers()
             )
@@ -2350,10 +2338,8 @@ class Models(WMLResource):
         model_id = _get_id_from_deprecated_uid(kwargs, model_id, "model")
         Models._validate_type(model_id, "model_id", str, False)
 
-        model_endpoint = (
-            self._client.service_instance._href_definitions.get_published_model_href(
-                model_id
-            )
+        model_endpoint = self._client._href_definitions.get_published_model_href(
+            model_id
         )
 
         self._logger.debug(
@@ -2471,9 +2457,7 @@ class Models(WMLResource):
         Models._validate_type(model_id, "model_id", str, False)
         Models._validate_type(limit, "limit", int, False)
 
-        url = (
-            self._client.service_instance._href_definitions.get_published_models_href()
-        )
+        url = self._client._href_definitions.get_published_models_href()
 
         if model_id is None:
             if spec_state:
@@ -2678,9 +2662,7 @@ class Models(WMLResource):
         self._client._check_if_either_is_set()
         Models._validate_type(model_id, "model_id", str, False)
 
-        url = (
-            self._client.service_instance._href_definitions.get_published_models_href()
-        )
+        url = self._client._href_definitions.get_published_models_href()
         return self._create_revision_artifact(url, model_id, "models")
 
     def list_revisions(
@@ -2710,9 +2692,7 @@ class Models(WMLResource):
         Models._validate_type(model_id, "model_id", str, True)
 
         url = (
-            self._client.service_instance._href_definitions.get_published_models_href()
-            + "/"
-            + model_id
+            self._client._href_definitions.get_published_models_href() + "/" + model_id
         )
 
         model_resources = self._get_artifact_details(
@@ -2765,9 +2745,7 @@ class Models(WMLResource):
         Models._validate_type(rev_id, "rev_id", str, True)
 
         url = (
-            self._client.service_instance._href_definitions.get_published_models_href()
-            + "/"
-            + model_id
+            self._client._href_definitions.get_published_models_href() + "/" + model_id
         )
         return self._get_with_or_without_limit(
             url,
@@ -2879,9 +2857,7 @@ class Models(WMLResource):
                 )
 
             url = (
-                self._client.service_instance._href_definitions.get_published_model_href(
-                    model_id
-                )
+                self._client._href_definitions.get_published_model_href(model_id)
                 + "/content"
             )
             with open(path_to_archive, "rb") as f:
@@ -3362,9 +3338,7 @@ class Models(WMLResource):
         # Model type is
         import tensorflow as tf
 
-        url = (
-            self._client.service_instance._href_definitions.get_published_models_href()
-        )
+        url = self._client._href_definitions.get_published_models_href()
         id_length = 20
         gen_id = uid_generate(id_length)
 
@@ -3452,9 +3426,7 @@ class Models(WMLResource):
         )
 
         url = (
-            self._client.service_instance._href_definitions.get_published_model_href(
-                model_id
-            )
+            self._client._href_definitions.get_published_model_href(model_id)
             + "/content"
         )
         with open(path_to_archive, "rb") as f:
@@ -3491,7 +3463,7 @@ class Models(WMLResource):
         payload = self._create_custom_model_payload(model=model, meta_props=meta_props)
 
         creation_response = requests.post(
-            url=self._client.service_instance._href_definitions.get_published_models_href(),
+            url=self._client._href_definitions.get_published_models_href(),
             params=self._client._params(skip_for_create=True),
             headers=self._client._get_headers(),
             json=payload,
@@ -3538,7 +3510,7 @@ class Models(WMLResource):
         )
 
         creation_response = requests.post(
-            url=self._client.service_instance._href_definitions.get_published_models_href(),
+            url=self._client._href_definitions.get_published_models_href(),
             params=self._client._params(skip_for_create=True),
             headers=self._client._get_headers(),
             json=payload,

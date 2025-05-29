@@ -106,7 +106,7 @@ class BaseDataConnection(ABC):
 
         if self.type == DataConnectionTypes.FS:
             csv_url = (
-                self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                self._api_client._href_definitions.get_wsd_model_attachment_href()
                 + f"/auto_ml/{path.split('/auto_ml/')[-1]}"
             )
 
@@ -186,17 +186,17 @@ class BaseDataConnection(ABC):
         elif self.type == DataConnectionTypes.FS:
             if tuning_type == "prompt_tuning":
                 json_url = (
-                    self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                    self._api_client._href_definitions.get_wsd_model_attachment_href()
                     + f"wx_prompt_tune/{path.split('/wx_prompt_tune/')[-1]}"
                 )
             elif tuning_type == "fine_tuning":
                 json_url = (
-                    self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                    self._api_client._href_definitions.get_wsd_model_attachment_href()
                     + path
                 )
             else:
                 json_url = (
-                    self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                    self._api_client._href_definitions.get_wsd_model_attachment_href()
                     + f"/auto_ml/{path.split('/auto_ml/')[-1]}"
                 )
 
@@ -256,9 +256,7 @@ class BaseDataConnection(ABC):
 
     def _get_attachment_details(self, data_asset_id: str):
         response = requests.get(
-            self._api_client.service_instance._href_definitions.get_data_asset_href(
-                data_asset_id
-            ),
+            self._api_client._href_definitions.get_data_asset_href(data_asset_id),
             params=self._api_client._params(),
             headers=self._api_client._get_headers(),
         )
@@ -277,7 +275,7 @@ class BaseDataConnection(ABC):
             attachment_id = attachments_data_asset_details.get("id")
             if not self._api_client.ICP_PLATFORM_SPACES:
                 response = requests.get(
-                    self._api_client.service_instance._href_definitions.get_attachment_href(
+                    self._api_client._href_definitions.get_attachment_href(
                         data_asset_id, attachment_id
                     ),
                     params=self._api_client._params(),
@@ -285,7 +283,7 @@ class BaseDataConnection(ABC):
                 )
             else:
                 response = requests.get(
-                    self._api_client.service_instance._href_definitions.get_attachment_href(
+                    self._api_client._href_definitions.get_attachment_href(
                         data_asset_id, attachment_id
                     ),
                     params=self._api_client._params(),
@@ -652,9 +650,7 @@ class BaseDataConnection(ABC):
 
             # note: download data asset details
             asset_response = requests.get(
-                self._api_client.service_instance._href_definitions.get_data_asset_href(
-                    asset_id
-                ),
+                self._api_client._href_definitions.get_data_asset_href(asset_id),
                 params=self._api_client._params(),
                 headers=self._api_client._get_headers(),
             )
@@ -665,7 +661,7 @@ class BaseDataConnection(ABC):
 
             attachment_id = asset_details["attachments"][0]["id"]
             response = requests.get(
-                self._api_client.service_instance._href_definitions.get_attachment_href(
+                self._api_client._href_definitions.get_attachment_href(
                     asset_id, attachment_id
                 ),
                 params=self._api_client.data_assets._client._params(),
@@ -725,7 +721,7 @@ class BaseDataConnection(ABC):
 
                 # note: make the whole url pointing out the csv
                 artifact_content_url = (
-                    f"{self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()}"
+                    f"{self._api_client._href_definitions.get_wsd_model_attachment_href()}"
                     f"{attachment_url}"
                 )
 
@@ -826,7 +822,7 @@ class BaseDataConnection(ABC):
 
         try:
             url = (
-                self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                self._api_client._href_definitions.get_wsd_model_attachment_href()
                 + f"/{self.location.path.split('/assets/')[-1]}"
             )
             # note: stream the whole CSV file
@@ -874,7 +870,7 @@ class BaseDataConnection(ABC):
 
         try:
             url = (
-                self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                self._api_client._href_definitions.get_wsd_model_attachment_href()
                 + f"/{location_path.split('/assets/')[-1]}"
             )
             # note: stream the whole CSV file
@@ -954,8 +950,10 @@ class BaseDataConnection(ABC):
                 raise conn_error
 
         if buffer is None:
-            href = self._api_client.volumes._client.service_instance._href_definitions.volume_upload_href(
-                connection_details["entity"]["properties"]["volume"]
+            href = (
+                self._api_client.volumes._client._href_definitions.volume_upload_href(
+                    connection_details["entity"]["properties"]["volume"]
+                )
             )
             full_href = f"{href[:-1]}{connection_path}"
 
@@ -1343,7 +1341,7 @@ class BaseDataConnection(ABC):
             asset_path = asset_path.replace("//", "/")
 
         content_upload_url = (
-            self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+            self._api_client._href_definitions.get_wsd_model_attachment_href()
             + asset_path
         )
 
