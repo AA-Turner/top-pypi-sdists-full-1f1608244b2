@@ -24,10 +24,6 @@ from .add_trajectory_response import AddTrajectoryResponse
 from .all_joint_positions_request import AllJointPositionsRequest
 from .all_joint_positions_response import AllJointPositionsResponse
 from .app import App
-from .array_input import ArrayInput
-from .array_input_array_inner import ArrayInputArrayInner
-from .array_output import ArrayOutput
-from .array_output_array_inner import ArrayOutputArrayInner
 from .behavior import Behavior
 from .blending_auto import BlendingAuto
 from .blending_position import BlendingPosition
@@ -36,9 +32,7 @@ from .box import Box
 from .box2 import Box2
 from .capsule import Capsule
 from .capsule2 import Capsule2
-from .capture import Capture
 from .cell import Cell
-from .code_with_arguments import CodeWithArguments
 from .collider import Collider
 from .collider_shape import ColliderShape
 from .collision import Collision
@@ -62,11 +56,10 @@ from .convex_hull import ConvexHull
 from .convex_hull2 import ConvexHull2
 from .coordinate_system import CoordinateSystem
 from .coordinate_systems import CoordinateSystems
-from .create_program_run200_response import CreateProgramRun200Response
-from .create_program_run_request import CreateProgramRunRequest
+from .create_program_operator_run200_response import CreateProgramOperatorRun200Response
+from .create_program_operator_run_request import CreateProgramOperatorRunRequest
 from .create_trigger200_response import CreateTrigger200Response
 from .create_trigger_request import CreateTriggerRequest
-from .create_trigger_request_config import CreateTriggerRequestConfig
 from .cubic_spline_parameter import CubicSplineParameter
 from .cycle_time import CycleTime
 from .cylinder import Cylinder
@@ -79,7 +72,6 @@ from .execute_jogging_request import ExecuteJoggingRequest
 from .execute_jogging_response import ExecuteJoggingResponse
 from .execute_trajectory_request import ExecuteTrajectoryRequest
 from .execute_trajectory_response import ExecuteTrajectoryResponse
-from .execution_result import ExecutionResult
 from .external_joint_stream_datapoint import ExternalJointStreamDatapoint
 from .external_joint_stream_datapoint_value import ExternalJointStreamDatapointValue
 from .fanuc_controller import FanucController
@@ -91,11 +83,11 @@ from .flag import Flag
 from .float_value import FloatValue
 from .force_vector import ForceVector
 from .geometry import Geometry
-from .get_all_program_runs200_response import GetAllProgramRuns200Response
+from .get_all_program_operator_runs200_response import GetAllProgramOperatorRuns200Response
 from .get_all_triggers200_response import GetAllTriggers200Response
 from .get_mode_response import GetModeResponse
-from .http_exception_response import HTTPExceptionResponse
 from .http_validation_error import HTTPValidationError
+from .http_validation_error2 import HTTPValidationError2
 from .io_boolean_value import IOBooleanValue
 from .io_description import IODescription
 from .io_description_min import IODescriptionMin
@@ -117,6 +109,8 @@ from .initialize_movement_response_init_response import InitializeMovementRespon
 from .integer_value import IntegerValue
 from .invalid_dof import InvalidDof
 from .invalid_dof_invalid_dof import InvalidDofInvalidDof
+from .inverse_kinematics_request import InverseKinematicsRequest
+from .inverse_kinematics_response import InverseKinematicsResponse
 from .jogging_error_response import JoggingErrorResponse
 from .jogging_error_response_error import JoggingErrorResponseError
 from .jogging_paused_collision import JoggingPausedCollision
@@ -148,7 +142,6 @@ from .limits_override import LimitsOverride
 from .list_io_descriptions_response import ListIODescriptionsResponse
 from .list_io_values_response import ListIOValuesResponse
 from .list_payloads_response import ListPayloadsResponse
-from .list_program_metadata_response import ListProgramMetadataResponse
 from .list_response import ListResponse
 from .list_tcps_response import ListTcpsResponse
 from .list_trajectories_response import ListTrajectoriesResponse
@@ -184,7 +177,6 @@ from .operating_state import OperatingState
 from .operation_mode import OperationMode
 from .optimizer_setup import OptimizerSetup
 from .orientation_type import OrientationType
-from .path import Path
 from .path_cartesian_ptp import PathCartesianPTP
 from .path_circle import PathCircle
 from .path_cubic_spline import PathCubicSpline
@@ -207,25 +199,19 @@ from .planning_limits_limit_range import PlanningLimitsLimitRange
 from .playback_speed_request import PlaybackSpeedRequest
 from .playback_speed_response import PlaybackSpeedResponse
 from .playback_speed_response_playback_speed_response import PlaybackSpeedResponsePlaybackSpeedResponse
-from .point_cloud import PointCloud
 from .pose import Pose
 from .pose_in_coordinate_system import PoseInCoordinateSystem
-from .program_metadata import ProgramMetadata
+from .program_request import ProgramRequest
 from .program_run import ProgramRun
 from .program_run_object import ProgramRunObject
+from .program_run_reference import ProgramRunReference
+from .program_run_result import ProgramRunResult
 from .program_run_state import ProgramRunState
-from .program_runner_reference import ProgramRunnerReference
-from .pyjectory_datatypes_core_pose import PyjectoryDatatypesCorePose
-from .pyjectory_datatypes_serializer_orientation import PyjectoryDatatypesSerializerOrientation
-from .pyjectory_datatypes_serializer_pose import PyjectoryDatatypesSerializerPose
-from .pyjectory_datatypes_serializer_position import PyjectoryDatatypesSerializerPosition
 from .rectangle import Rectangle
 from .rectangle2 import Rectangle2
 from .rectangular_capsule import RectangularCapsule
 from .rectangular_capsule2 import RectangularCapsule2
 from .release_channel import ReleaseChannel
-from .request import Request
-from .request1 import Request1
 from .robot_controller import RobotController
 from .robot_controller_configuration import RobotControllerConfiguration
 from .robot_controller_state import RobotControllerState
@@ -242,6 +228,7 @@ from .safety_state_type import SafetyStateType
 from .safety_type import SafetyType
 from .safety_zone import SafetyZone
 from .safety_zone_limits import SafetyZoneLimits
+from .service_group import ServiceGroup
 from .service_status import ServiceStatus
 from .service_status_phase import ServiceStatusPhase
 from .service_status_response import ServiceStatusResponse
@@ -259,7 +246,6 @@ from .standstill_reason import StandstillReason
 from .standstill_standstill import StandstillStandstill
 from .start_movement_request import StartMovementRequest
 from .start_on_io import StartOnIO
-from .store_value import StoreValue
 from .tcp_pose import TcpPose
 from .tcp_pose_request import TcpPoseRequest
 from .tcp_required import TcpRequired
@@ -274,9 +260,9 @@ from .trigger_type import TriggerType
 from .unit_type import UnitType
 from .universalrobots_controller import UniversalrobotsController
 from .update_nova_version_request import UpdateNovaVersionRequest
-from .update_program_metadata_request import UpdateProgramMetadataRequest
 from .update_trigger_request import UpdateTriggerRequest
 from .validation_error import ValidationError
+from .validation_error2 import ValidationError2
 from .validation_error_loc_inner import ValidationErrorLocInner
 from .version_number import VersionNumber
 from .vertex import Vertex
@@ -297,10 +283,6 @@ __all__ = [
     "AllJointPositionsRequest", 
     "AllJointPositionsResponse", 
     "App", 
-    "ArrayInput", 
-    "ArrayInputArrayInner", 
-    "ArrayOutput", 
-    "ArrayOutputArrayInner", 
     "Behavior", 
     "BlendingAuto", 
     "BlendingPosition", 
@@ -309,9 +291,7 @@ __all__ = [
     "Box2", 
     "Capsule", 
     "Capsule2", 
-    "Capture", 
     "Cell", 
-    "CodeWithArguments", 
     "Collider", 
     "ColliderShape", 
     "Collision", 
@@ -335,11 +315,10 @@ __all__ = [
     "ConvexHull2", 
     "CoordinateSystem", 
     "CoordinateSystems", 
-    "CreateProgramRun200Response", 
-    "CreateProgramRunRequest", 
+    "CreateProgramOperatorRun200Response", 
+    "CreateProgramOperatorRunRequest", 
     "CreateTrigger200Response", 
     "CreateTriggerRequest", 
-    "CreateTriggerRequestConfig", 
     "CubicSplineParameter", 
     "CycleTime", 
     "Cylinder", 
@@ -352,7 +331,6 @@ __all__ = [
     "ExecuteJoggingResponse", 
     "ExecuteTrajectoryRequest", 
     "ExecuteTrajectoryResponse", 
-    "ExecutionResult", 
     "ExternalJointStreamDatapoint", 
     "ExternalJointStreamDatapointValue", 
     "FanucController", 
@@ -364,11 +342,11 @@ __all__ = [
     "FloatValue", 
     "ForceVector", 
     "Geometry", 
-    "GetAllProgramRuns200Response", 
+    "GetAllProgramOperatorRuns200Response", 
     "GetAllTriggers200Response", 
     "GetModeResponse", 
-    "HTTPExceptionResponse", 
     "HTTPValidationError", 
+    "HTTPValidationError2", 
     "IOBooleanValue", 
     "IODescription", 
     "IODescriptionMin", 
@@ -390,6 +368,8 @@ __all__ = [
     "IntegerValue", 
     "InvalidDof", 
     "InvalidDofInvalidDof", 
+    "InverseKinematicsRequest", 
+    "InverseKinematicsResponse", 
     "JoggingErrorResponse", 
     "JoggingErrorResponseError", 
     "JoggingPausedCollision", 
@@ -421,7 +401,6 @@ __all__ = [
     "ListIODescriptionsResponse", 
     "ListIOValuesResponse", 
     "ListPayloadsResponse", 
-    "ListProgramMetadataResponse", 
     "ListResponse", 
     "ListTcpsResponse", 
     "ListTrajectoriesResponse", 
@@ -457,7 +436,6 @@ __all__ = [
     "OperationMode", 
     "OptimizerSetup", 
     "OrientationType", 
-    "Path", 
     "PathCartesianPTP", 
     "PathCircle", 
     "PathCubicSpline", 
@@ -480,25 +458,19 @@ __all__ = [
     "PlaybackSpeedRequest", 
     "PlaybackSpeedResponse", 
     "PlaybackSpeedResponsePlaybackSpeedResponse", 
-    "PointCloud", 
     "Pose", 
     "PoseInCoordinateSystem", 
-    "ProgramMetadata", 
+    "ProgramRequest", 
     "ProgramRun", 
     "ProgramRunObject", 
+    "ProgramRunReference", 
+    "ProgramRunResult", 
     "ProgramRunState", 
-    "ProgramRunnerReference", 
-    "PyjectoryDatatypesCorePose", 
-    "PyjectoryDatatypesSerializerOrientation", 
-    "PyjectoryDatatypesSerializerPose", 
-    "PyjectoryDatatypesSerializerPosition", 
     "Rectangle", 
     "Rectangle2", 
     "RectangularCapsule", 
     "RectangularCapsule2", 
     "ReleaseChannel", 
-    "Request", 
-    "Request1", 
     "RobotController", 
     "RobotControllerConfiguration", 
     "RobotControllerState", 
@@ -515,6 +487,7 @@ __all__ = [
     "SafetyType", 
     "SafetyZone", 
     "SafetyZoneLimits", 
+    "ServiceGroup", 
     "ServiceStatus", 
     "ServiceStatusPhase", 
     "ServiceStatusResponse", 
@@ -532,7 +505,6 @@ __all__ = [
     "StandstillStandstill", 
     "StartMovementRequest", 
     "StartOnIO", 
-    "StoreValue", 
     "TcpPose", 
     "TcpPoseRequest", 
     "TcpRequired", 
@@ -547,9 +519,9 @@ __all__ = [
     "UnitType", 
     "UniversalrobotsController", 
     "UpdateNovaVersionRequest", 
-    "UpdateProgramMetadataRequest", 
     "UpdateTriggerRequest", 
     "ValidationError", 
+    "ValidationError2", 
     "ValidationErrorLocInner", 
     "VersionNumber", 
     "Vertex", 

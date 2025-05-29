@@ -40,6 +40,7 @@ from warnings import warn
 from ibm_watsonx_ai import package_name, __version__ as package_version
 import ibm_watsonx_ai._wrappers.requests as requests
 from ibm_watsonx_ai._wrappers.requests import HTTPX_DEFAULT_TIMEOUT, HTTPX_DEFAULT_LIMIT
+from ibm_watsonx_ai.href_definitions import HrefDefinitions
 from ibm_watsonx_ai.wml_client_error import (
     WMLClientError,
     CannotInstallLibrary,
@@ -1090,6 +1091,20 @@ def _get_default_args(func: Callable) -> dict[str, Any]:
         for k, v in signature.parameters.items()
         if v.default is not inspect.Parameter.empty
     }
+
+
+def _create_href_definitions(client: APIClient) -> HrefDefinitions:
+    return HrefDefinitions(
+        url=client.credentials.url,
+        instance_id=client.credentials.instance_id,
+        version=client.credentials.version,
+        bedrock_url=client.credentials.bedrock_url,
+        cloud_platform_spaces=client.CLOUD_PLATFORM_SPACES,
+        cp4d_platform_spaces=client.ICP_PLATFORM_SPACES,
+        platform_url=client.PLATFORM_URL,
+        project_type=client.project_type,
+        _use_fm_ga_api=client._use_fm_ga_api,
+    )
 
 
 def _handle_fl_removal(client: APIClient):

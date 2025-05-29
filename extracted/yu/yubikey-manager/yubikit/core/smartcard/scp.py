@@ -25,21 +25,22 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from .. import Tlv, BadResponseError
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import cmac, hashes, serialization, constant_time
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives.kdf.x963kdf import X963KDF
+import abc
+import logging
+import os
+import struct
 from dataclasses import dataclass, field
 from enum import IntEnum, unique
-from typing import NamedTuple, Tuple, Optional, Callable, Sequence, Union
+from typing import Callable, NamedTuple, Optional, Sequence, Union
 
-import os
-import abc
-import struct
-import logging
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import cmac, constant_time, hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.kdf.x963kdf import X963KDF
+
+from .. import BadResponseError, Tlv
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +71,7 @@ def _derive(key: bytes, t: int, context: bytes, L: int = 0x80) -> bytes:
     return c.finalize()[: L // 8]
 
 
-def _calculate_mac(key: bytes, chain: bytes, message: bytes) -> Tuple[bytes, bytes]:
+def _calculate_mac(key: bytes, chain: bytes, message: bytes) -> tuple[bytes, bytes]:
     c = cmac.CMAC(algorithms.AES(key), backend=default_backend())
     c.update(chain)
     c.update(message)
@@ -80,7 +81,9 @@ def _calculate_mac(key: bytes, chain: bytes, message: bytes) -> Tuple[bytes, byt
 
 def _init_cipher(key: bytes, counter: int, response=False) -> Cipher:
     encryptor = Cipher(
-        algorithms.AES(key), modes.ECB(), backend=default_backend()  # nosec ECB
+        algorithms.AES(key),
+        modes.ECB(),  # nosec ECB
+        backend=default_backend(),
     ).encryptor()
     iv_data = (b"\x80" if response else b"\x00") + int.to_bytes(counter, 15, "big")
     iv = encryptor.update(iv_data) + encryptor.finalize()
@@ -246,15 +249,15 @@ class ScpState:
         key_params: Scp03KeyParams,
         *,
         host_challenge: Optional[bytes] = None,
-    ) -> Tuple["ScpState", bytes]:
+    ) -> tuple["ScpState", bytes]:
         logger.debug("Initializing SCP03 handshake")
         host_challenge = host_challenge or os.urandom(8)
         resp = send_apdu(
             0x80, INS_INITIALIZE_UPDATE, key_params.ref.kvn, 0x00, host_challenge
         )
 
-        diversification_data = resp[:10]  # noqa: unused
-        key_info = resp[10:13]  # noqa: unused
+        diversification_data = resp[:10]  # noqa: F841
+        key_info = resp[10:13]  # noqa: F841
         card_challenge = resp[13:21]
         card_cryptogram = resp[21:29]
 

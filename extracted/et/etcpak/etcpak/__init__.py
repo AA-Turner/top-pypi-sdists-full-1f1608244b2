@@ -2,7 +2,7 @@ from archspec.cpu import host
 
 local_host = host()
 
-__version__ = "0.9.13"
+__version__ = "0.9.14"
 
 try:
     # pypi wheels won't have these for now
@@ -58,6 +58,7 @@ __all__ = (
     "compress_bc1",
     "compress_bc1_dither",
     "compress_bc3",
+    "compress_bc4",
     "compress_bc5",
     "compress_bc7",
     "compress_etc1_rgb",

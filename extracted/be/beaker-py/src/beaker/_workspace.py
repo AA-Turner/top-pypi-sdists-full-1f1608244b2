@@ -9,7 +9,26 @@ from .types import *
 
 
 class WorkspaceClient(ServiceClient):
+    """
+    Methods for interacting with Beaker `Workspaces <https://beaker-docs.apps.allenai.org/concept/workspaces.html>`_.
+    Accessed via the :data:`Beaker.workspace <beaker.Beaker.workspace>` property.
+
+    .. warning::
+        Do not instantiate this class directly! The :class:`~beaker.Beaker` client will create
+        one automatically which you can access through the corresponding property.
+    """
+
     def get(self, workspace: str | None = None) -> pb2.Workspace:
+        """
+        :examples:
+
+        >>> with Beaker.from_env() as beaker:
+        ...     workspace = beaker.workspace.get(workspace_name)
+
+        :returns: A :class:`~beaker.types.BeakerWorkspace` protobuf object.
+
+        :raises: :class:`~beaker.exceptions.BeakerWorkspaceNotFound` if the workspace doesn't exist.
+        """
         return self.rpc_request(
             RpcMethod[pb2.GetWorkspaceResponse](self.service.GetWorkspace),
             pb2.GetWorkspaceRequest(workspace_id=self.resolve_workspace_id(workspace)),

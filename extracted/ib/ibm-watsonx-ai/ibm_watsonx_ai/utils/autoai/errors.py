@@ -70,6 +70,7 @@ __all__ = [
     "InvalidLocationInDataConnection",
     "DirectoryHasNoFilename",
     "CannotGetFilename",
+    "TokenRemovedDuringClientCopy",
 ]
 
 
@@ -603,4 +604,13 @@ class CannotGetFilename(WMLClientError, ValueError):
     def __init__(self):
         WMLClientError.__init__(
             self, f"Unsupported connection type for extracting file name."
+        )
+
+
+class TokenRemovedDuringClientCopy(WMLClientError):
+    def __init__(self):
+        WMLClientError.__init__(
+            self,
+            f"APIClient had authentication data removed during `APIClient.get_copy()` operation."
+            f"Use `APIClient.set_token(token)` to setup authentication in client copy.",
         )

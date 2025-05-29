@@ -130,7 +130,9 @@ from bigeye_sdk.generated.com.bigeye.models.generated import (
     ListAgentApiKeyResponse, GetWorkspaceAccessorsResponse, CreateLineageNodeV2Request, LineageNodeV2,
     LineageSearchResponse, LineageSearchRequest, GetDebugQueriesResponse, ConfigValueType, SourceMetadataOverrides,
     WarehouseType, BulkChangeGroupGrantsRequest, Grant, RoleV2, IdAndDisplayName, BulkChangeGroupGrantsResponse,
-    IssuePriorityChangeEvent, TableLineageV2Response, CreateLineageNodeV2BulkRequest, CreateLineageEdgeV2BulkRequest
+    IssuePriorityChangeEvent, TableLineageV2Response, CreateLineageNodeV2BulkRequest, CreateLineageEdgeV2BulkRequest,
+    GetMetricObservedColumnBulkRequest, MessageObservedColumnListResponse, MetricObservedColumnRequest,
+    MetricObservedColumnResponse
 )
 
 # create logger
@@ -1723,3 +1725,33 @@ class GeneratedDatawatchClient(abc.ABC):
         request = CreateLineageEdgeV2BulkRequest()
         request.edges = edges
         return self._call_datawatch(Method.POST, url=url, body=request.to_json())
+
+    def get_bulk_metric_observed_column(
+            self, *, metric_ids: List[int] = [], column_ids: List[int] = []
+    ) -> MessageObservedColumnListResponse:
+        url = "/api/v1/metric-observed-column/bulk-list"
+        request = GetMetricObservedColumnBulkRequest(metric_ids=metric_ids, column_ids=column_ids)
+        return MessageObservedColumnListResponse().from_dict(
+            self._call_datawatch(method=Method.POST, url=url, body=request.to_json())
+        )
+
+    def create_metric_observed_column(
+            self, *, column_id: int, metric_id: int, comments: Optional[str] = None
+    ) -> MetricObservedColumnResponse:
+        url = "/api/v1/metric-observed-column"
+        request = MetricObservedColumnRequest(column_id=column_id, metric_id=metric_id, comments=comments)
+        return MetricObservedColumnResponse().from_dict(
+            self._call_datawatch(method=Method.POST, url=url, body=request.to_json())
+        )
+
+    def get_metric_observed_column_for_metric(self, *, metric_id: int) -> MessageObservedColumnListResponse:
+        url = f"/api/v1/metric-observed-column/metric/{metric_id}"
+        return MessageObservedColumnListResponse().from_dict(
+            self._call_datawatch(method=Method.GET, url=url)
+        )
+
+    def get_metric_observed_column_for_column(self, *, column_id: int) -> MessageObservedColumnListResponse:
+        url = f"/api/v1/metric-observed-column/column/{column_id}"
+        return MessageObservedColumnListResponse().from_dict(
+            self._call_datawatch(method=Method.GET, url=url)
+        )

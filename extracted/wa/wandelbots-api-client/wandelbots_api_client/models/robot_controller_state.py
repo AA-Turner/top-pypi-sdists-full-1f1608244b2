@@ -34,7 +34,8 @@ class RobotControllerState(BaseModel):
     timestamp: datetime = Field(description="Timestamp indicating when the represented information was received from the robot controller.")
     velocity_override: Optional[StrictInt] = Field(default=None, description="If made available by the robot controller, returns the current velocity override in [percentage] for movements adjusted on robot control panel. Valid value range: 1 - 100. ")
     motion_groups: List[MotionGroupState] = Field(description="State of indicated motion groups. In case of state request via controller all configured motion groups are returned. In case of executing a motion only the affected motion groups are returned.")
-    __properties: ClassVar[List[str]] = ["controller", "operation_mode", "safety_state", "timestamp", "velocity_override", "motion_groups"]
+    sequence_number: StrictStr = Field(description="Sequence number of the controller state. It starts with 0 upon establishing the connection with a physical controller. The sequence number is reset when the connection to the physical controller is closed and re-established. It is of type string to represent uint64 values, which is not supported by OpenAPI. ")
+    __properties: ClassVar[List[str]] = ["controller", "operation_mode", "safety_state", "timestamp", "velocity_override", "motion_groups", "sequence_number"]
 
     @field_validator('operation_mode')
     def operation_mode_validate_enum(cls, value):
@@ -126,7 +127,8 @@ class RobotControllerState(BaseModel):
                 MotionGroupState.from_dict(_item) if hasattr(MotionGroupState, 'from_dict') else _item
                 # <<< End modification
                 for _item in obj["motion_groups"]
-            ] if obj.get("motion_groups") is not None else None
+            ] if obj.get("motion_groups") is not None else None,
+            "sequence_number": obj.get("sequence_number")
         })
         return _obj
 

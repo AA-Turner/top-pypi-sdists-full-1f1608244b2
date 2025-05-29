@@ -1061,9 +1061,7 @@ class WMLEngine(BaseEngine):
             wml_pipeline_details = self.get_params()
             number_of_estimators = wml_pipeline_details.get("max_num_daub_ensembles", 2)
 
-            base_url = (
-                self._wml_client.service_instance._href_definitions.get_trainings_href()
-            )
+            base_url = self._wml_client._href_definitions.get_trainings_href()
             url = f"{base_url.replace('https', 'wss')}/{self._current_run_id}"
 
             params = self._wml_client._params()

@@ -1,12 +1,12 @@
 [project]
 name = "yubikey-manager"
-version = "5.6.1"
+version = "5.7.0"
 description = "Library and CLI for managing your YubiKey configuration."
 authors = [
   { name = "Dain Nilsson", email = "<dain@yubico.com>" }
 ]
 readme = "README.adoc"
-requires-python = ">=3.8, <4"
+requires-python = ">=3.9, <4"
 license = { file = "COPYING" }
 keywords = ["yubikey", "yubiotp", "piv", "fido"]
 classifiers = [
@@ -18,7 +18,7 @@ classifiers = [
 dependencies = [
   "cryptography (>=3.0, <47)",
   "pyscard (>=2.0, <3)",
-  "fido2 (>=1.0, <=2.0.0b1)",
+  "fido2 (>=1.0, <3)",
   "click (>=8.0, <9)",
   "keyring (>=23.4, <26)",
   "pywin32 (>=223) ; sys_platform == 'win32'",
@@ -48,10 +48,10 @@ packages = [
 pytest = "^8.0"
 makefun = "^1.9.5"
 pyinstaller = { version = "^6.10", python = "<3.14" }
-Sphinx = { version = "^7.2", python = ">=3.9" }
-sphinx-rtd-theme = "^1.2.2"
-sphinx-autodoc-typehints = "^2"
-fido2 = {version = "2.0.0b1", python = "^3.10"}
+sphinx = "^7.4"
+sphinx-rtd-theme = "^3"
+sphinx-autoapi = "^3.3.3"
+pyright = "^1.1"
 
 [build-system]
 requires = ["poetry-core>=2.0"]
@@ -59,3 +59,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff.lint]
+select = ["I"]

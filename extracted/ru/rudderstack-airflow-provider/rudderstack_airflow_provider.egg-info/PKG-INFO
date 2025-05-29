@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: rudderstack-airflow-provider
-Version: 2.4.0
+Version: 2.4.1
 Summary: Apache airflow provider for managing Reverse ETL syncs and Profiles runs in RudderStack.
 License: MIT License
         
@@ -30,7 +30,8 @@ Classifier: Framework :: Apache Airflow :: Provider
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: apache-airflow<=2.10.5,>=2.10.0
+Requires-Dist: apache-airflow>=2.10.0
+Requires-Dist: apache-airflow-providers-http>=5.0.0
 Requires-Dist: pytest>=7.3.1
 Requires-Dist: requests>=2.32.3
 Requires-Dist: responses>=0.25.0

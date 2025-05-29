@@ -1854,9 +1854,7 @@ class DataConnection(BaseDataConnection):
                 error_msg="Can't list asset files from this DataConnection.",
                 reason="Location must be: `FSLocation` or `ContainerLocation`, only on IBM Cloud Pak for Data.",
             )
-        url = (
-            self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
-        )
+        url = self._api_client._href_definitions.get_wsd_model_attachment_href()
         params = self._api_client._params()
         if flat:
             params["flat"] = "true"
@@ -2224,7 +2222,7 @@ class FSLocation(BaseLocation):
         try:
             # note: try to get file size from remote server
             url = (
-                workspace.api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+                workspace.api_client._href_definitions.get_wsd_model_attachment_href()
                 + f"/{self.path.split('/assets/')[-1]}"
             )
             path_info_response = requests.head(
@@ -2307,9 +2305,7 @@ class AssetLocation(BaseLocation):
         else:
             attachment_id = asset_details["attachments"][0]["id"]
 
-        attachment_url = client.service_instance._href_definitions.get_data_asset_href(
-            self.id
-        )
+        attachment_url = client._href_definitions.get_data_asset_href(self.id)
         attachment_url = f"{attachment_url}/attachments/{attachment_id}"
 
         if client.ICP_PLATFORM_SPACES:
@@ -2344,9 +2340,7 @@ class AssetLocation(BaseLocation):
 
     def _get_file_size(self, workspace: "WorkSpace", *args) -> "int":
         asset_info_response = requests.get(
-            workspace.api_client.service_instance._href_definitions.get_data_asset_href(
-                self.id
-            ),
+            workspace.api_client._href_definitions.get_data_asset_href(self.id),
             params=workspace.api_client._params(),
             headers=workspace.api_client._get_headers(),
         )
@@ -2401,7 +2395,7 @@ class AssetLocation(BaseLocation):
         self.__api_client = var
 
         if self.__api_client:
-            self.href = self.__api_client.service_instance._href_definitions.get_base_asset_href(
+            self.href = self.__api_client._href_definitions.get_base_asset_href(
                 self._initial_asset_id
             )
         else:

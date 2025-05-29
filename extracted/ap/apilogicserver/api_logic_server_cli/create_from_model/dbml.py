@@ -209,7 +209,6 @@ class DBMLCreator(object):
         
         docs_path = Path(self.mod_gen.project_directory).joinpath('docs')
         docs_path.mkdir(parents=True, exist_ok=True)
-        # mcp_learning_src = Path(create_utils.get_api_logic_server_dir()).joinpath('prototypes/manager/system/genai/mcp_learning')
         mcp_learning_src = genai_svcs.get_manager_path(use_env=True).joinpath('system/genai/mcp_learning')
         mcp_learning_dst = Path(self.mod_gen.project_directory).joinpath('docs/mcp_learning')
         if mcp_learning_dst.exists():
@@ -243,6 +242,9 @@ def create(model_creation_services: create_from_model.ModelCreationServices):
     """ called by ApiLogicServer CLI -- creates ui/admin application (ui/admin folder, admin.yaml)
     """
     dbml_creator = DBMLCreator(model_creation_services)
-    dbml_creator.create_docs_dbml_file()
-    dbml_creator.create_docs_mcp()
+    if dbml_creator.mod_gen.project.add_auth_in_progress == False:
+        dbml_creator.create_docs_dbml_file()
+        dbml_creator.create_docs_mcp()
+    else:
+        pass  # 
 

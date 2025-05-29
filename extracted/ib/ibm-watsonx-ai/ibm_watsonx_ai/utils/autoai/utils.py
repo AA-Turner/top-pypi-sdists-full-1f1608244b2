@@ -632,10 +632,7 @@ def load_file_from_file_system(
     file_path = file_path.split("/assets/", 1)[-1]
     # --- end note
 
-    url = (
-        api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
-        + file_path
-    )
+    url = api_client._href_definitions.get_wsd_model_attachment_href() + file_path
     response_with_model = requests.get(
         url=url,
         headers=api_client._get_headers(),
@@ -699,7 +696,7 @@ def load_file_from_file_system_nonautoai(
     buffer = io.BytesIO()
 
     response_with_model = requests.get(
-        url=f"{api_client.service_instance._href_definitions.get_wsd_model_attachment_href()}{file_path}",
+        url=f"{api_client._href_definitions.get_wsd_model_attachment_href()}{file_path}",
         headers=api_client._get_headers(),
         params=api_client._params(),
         stream=stream,

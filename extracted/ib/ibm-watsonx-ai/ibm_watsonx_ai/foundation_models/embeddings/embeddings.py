@@ -83,10 +83,10 @@ class Embeddings(BaseEmbeddings, WMLResource):
                                   To close the connection, run `embeddings.close_persistent_connection()`, defaults to True. Added in 1.1.2.
     :type persistent_connection: bool, optional
 
-    :param batch_size: Number of elements to be embedded sending in one call, defaults to 1000
+    :param batch_size: Number of elements to be embedded sending in one call (used only for sync methods), defaults to 1000
     :type batch_size: int, optional
 
-    :param concurrency_limit: number of requests to be sent in parallel when generating embedding vectors, max is 10, defaults to 5
+    :param concurrency_limit: number of requests to be sent in parallel when generating embedding vectors (used only for sync methods), max is 10, defaults to 5
     :type concurrency_limit: int, optional
 
     :param max_retries: number of retries performed when request was not successful and status code is in retry_status_codes, defaults to 10
@@ -212,6 +212,7 @@ class Embeddings(BaseEmbeddings, WMLResource):
                 "`persistent_connection` is deprecated and will be removed in future. "
             )
             warn(persistent_connection_warn, category=DeprecationWarning)
+        self._async_http_client = self._client.async_httpx_client
 
         # Set initially 8 requests per second as it is default for prod instances
         # if header "x-requests-limit-rate" is different capacity will be updated
@@ -240,6 +241,26 @@ class Embeddings(BaseEmbeddings, WMLResource):
 
         return self._post(_http_client, **post_params)
 
+    async def _agenerate_raw_response(
+        self,
+        generate_url: str,
+        inputs: list[str],
+        params: ParamsType | None = None,
+        _async_http_client: httpx.AsyncClient | None = None,
+    ) -> httpx.Response:
+        """Send request with post and return service response in an asynchronous manner."""
+
+        payload = self._prepare_payload(inputs, params)
+
+        post_params: dict[str, Any] = dict(
+            url=generate_url,
+            json=payload,
+            params=self._client._params(skip_for_create=True, skip_userfs=True),
+            headers=self._client._get_headers(),
+        )
+
+        return await self._apost(_async_http_client, **post_params)
+
     def generate(
         self,
         inputs: list[str],
@@ -259,9 +280,7 @@ class Embeddings(BaseEmbeddings, WMLResource):
         :rtype: dict
         """
         self._validate_type(inputs, "inputs", list, True)
-        generate_url = (
-            self._client.service_instance._href_definitions.get_fm_embeddings_href()
-        )
+        generate_url = self._client._href_definitions.get_fm_embeddings_href()
         if concurrency_limit is not DEFAULT_CONCURRENCY_LIMIT and (
             concurrency_limit > 10 or concurrency_limit < 1
         ):
@@ -344,6 +363,31 @@ class Embeddings(BaseEmbeddings, WMLResource):
             results = self._generate(generate_url, inputs, params)
         return results
 
+    async def agenerate(
+        self,
+        inputs: list[str],
+        params: ParamsType | None = None,
+    ) -> dict:
+        """Generate embeddings vectors for the given input with the given
+        parameters in an asynchronous manner. Returns a REST API response.
+
+        :param inputs: list of texts for which embedding vectors will be generated, max length is determined by API (for more information, please refer to the documentation: https://cloud.ibm.com/apidocs/watsonx-ai#text-embeddings)
+        :type inputs: list[str]
+        :param params: MetaProps for the embedding generation, use ``ibm_watsonx_ai.metanames.EmbedTextParamsMetaNames().show()`` to view the list of MetaNames, defaults to None
+        :type params: ParamsType | None, optional
+
+        :return: scoring results containing generated embeddings vectors
+        :rtype: dict
+        """
+        self._validate_type(inputs, "inputs", list, True)
+        generate_url = (
+            self._client.service_instance._href_definitions.get_fm_embeddings_href()
+        )
+
+        results = await self._agenerate(generate_url, inputs, params)
+
+        return results
+
     def embed_documents(
         self,
         texts: list[str],
@@ -381,6 +425,37 @@ class Embeddings(BaseEmbeddings, WMLResource):
             ).get("results", [{}])
         ]
 
+    async def aembed_documents(
+        self,
+        texts: list[str],
+        params: ParamsType | None = None,
+    ) -> list[list[float]]:
+        """Returns list of embedding vectors for provided texts in an asynchronous manner.
+
+        :param texts: list of texts for which embedding vectors will be generated, max length is determined by API (for more information, please refer to the documentation: https://cloud.ibm.com/apidocs/watsonx-ai#text-embeddings)
+        :type texts: list[str]
+        :param params: MetaProps for the embedding generation, use ``ibm_watsonx_ai.metanames.EmbedTextParamsMetaNames().show()`` to view the list of MetaNames, defaults to None
+        :type params: ParamsType | None, optional
+
+        :return: list of embedding vectors
+        :rtype: list[list[float]]
+
+        **Example:**
+
+        .. code-block:: python
+
+            q = [
+                "What is a Generative AI?",
+                "Generative AI refers to a type of artificial intelligence that can original content."
+                ]
+
+            embedding_vectors = await embedding.aembed_documents(texts=q)
+            print(embedding_vectors)
+        """
+        response = await self.agenerate(inputs=texts, params=params)
+
+        return [vector.get("embedding") for vector in response.get("results", [{}])]
+
     def embed_query(self, text: str, params: ParamsType | None = None) -> list[float]:
         """Returns an embedding vector for a provided text.
 
@@ -404,6 +479,30 @@ class Embeddings(BaseEmbeddings, WMLResource):
             .get("results", [{}])[0]
             .get("embedding")
         )
+
+    async def aembed_query(
+        self, text: str, params: ParamsType | None = None
+    ) -> list[float]:
+        """Returns an embedding vector for a provided text in an asynchronous manner.
+
+        :param text: text for which embedding vector will be generated
+        :type text: str
+        :param params: MetaProps for the embedding generation, use ``ibm_watsonx_ai.metanames.EmbedTextParamsMetaNames().show()`` to view the list of MetaNames, defaults to None
+        :type params: ParamsType | None, optional
+        :return: embedding vector
+        :rtype: list[float]
+
+        **Example:**
+
+        .. code-block:: python
+
+            q = "What is a Generative AI?"
+            embedding_vector = await embedding.aembed_query(text=q)
+            print(embedding_vector)
+        """
+        response = await self.agenerate(inputs=[text], params=params)
+
+        return response.get("results", [{}])[0].get("embedding")
 
     def _prepare_payload(
         self, inputs: list[str], params: ParamsType | None = None
@@ -438,6 +537,28 @@ class Embeddings(BaseEmbeddings, WMLResource):
             inputs=inputs,
             params=params,
             _http_client=http_client,
+        )
+
+        return self._handle_response(
+            200,
+            "generate",
+            response_scoring,
+            _field_to_hide="embedding",
+        )
+
+    async def _agenerate(
+        self,
+        generate_url: str,
+        inputs: list[str],
+        params: ParamsType | None = None,
+    ) -> dict:
+        """Send request with post and return service response in an asynchronous manner."""
+
+        response_scoring = await self._agenerate_raw_response(
+            generate_url=generate_url,
+            inputs=inputs,
+            params=params,
+            _async_http_client=self._async_http_client,
         )
 
         return self._handle_response(
@@ -489,3 +610,9 @@ class Embeddings(BaseEmbeddings, WMLResource):
         self, http_client: Any, *args: Any, **kwargs: Any
     ) -> httpx.Response | _requests.Response:
         return http_client.post(*args, **kwargs)
+
+    @requests._with_async_retry(retry_status_codes=_RETRY_STATUS_CODES)
+    async def _apost(
+        self, async_http_client: httpx.AsyncClient, *args: Any, **kwargs: Any
+    ) -> httpx.Response:
+        return await async_http_client.post(*args, **kwargs)

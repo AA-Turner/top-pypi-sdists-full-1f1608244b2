@@ -1,16 +1,11 @@
 import sys
 from collections.abc import Sequence as Seq
-from typing import Literal, TypeAlias
-
-if sys.version_info >= (3, 12):
-    from typing import TypeAliasType
-else:
-    from typing_extensions import TypeAliasType
+from typing import Any, Literal, TypeAlias
 
 if sys.version_info >= (3, 13):
-    from typing import TypeVar
+    from typing import TypeAliasType, TypeVar
 else:
-    from typing_extensions import TypeVar
+    from typing_extensions import TypeAliasType, TypeVar
 
 import numpy as np
 
@@ -41,6 +36,12 @@ __all__ = [  # noqa: RUF022
     "ToInt2D", "ToJustInt2D", "ToIntStrict2D", "ToJustIntStrict2D",
     "ToInt3D", "ToJustInt3D", "ToIntStrict3D", "ToJustIntStrict3D",
     "ToIntND", "ToJustIntND",
+
+    "ToJustInt64",
+    "ToJustInt64_1D", "ToJustInt64Strict1D",
+    "ToJustInt64_2D", "ToJustInt64Strict2D",
+    "ToJustInt64_3D", "ToJustInt64Strict3D",
+    "ToJustInt64_ND",
 
     "ToFloat64", "ToJustFloat64",
     "ToFloat64_1D", "ToJustFloat64_1D", "ToFloat64Strict1D", "ToJustFloat64Strict1D",
@@ -82,9 +83,7 @@ _PyBool: TypeAlias = bool | Literal[0, 1]  # 0 and 1 are sometimes used as bool 
 _PyScalar: TypeAlias = complex | bytes | str  # `complex` equivs `complex | float | int`
 
 T = TypeVar("T", default=_PyScalar)
-
-# https://github.com/KotlinIsland/basedmypy/issues/861
-SCT = TypeVar("SCT", bound=np.generic, default=np.generic)
+SCT = TypeVar("SCT", bound=np.generic, default=Any)
 
 _To0D = TypeAliasType("_To0D", T | SCT | CanArray0D[SCT], type_params=(T, SCT))
 _To1D = TypeAliasType(
@@ -214,6 +213,12 @@ ToJustBool2D: TypeAlias = _To2D[bool, np.bool_]
 ToJustBool3D: TypeAlias = _To3D[bool, np.bool_]
 ToJustBoolND: TypeAlias = _ToND[bool, np.bool_]
 
+ToJustInt64: TypeAlias = JustInt | np.intp
+ToJustInt64_1D: TypeAlias = _To1D[JustInt, np.intp]
+ToJustInt64_2D: TypeAlias = _To2D[JustInt, np.intp]
+ToJustInt64_3D: TypeAlias = _To3D[JustInt, np.intp]
+ToJustInt64_ND: TypeAlias = _ToND[JustInt, np.intp]
+
 ToJustInt: TypeAlias = JustInt | npc.integer
 ToJustInt1D: TypeAlias = _To1D[JustInt, npc.integer]
 ToJustInt2D: TypeAlias = _To2D[JustInt, npc.integer]
@@ -279,6 +284,10 @@ ToComplexStrict3D: TypeAlias = _ToStrict3D[complex, complexfloating_co]
 ToJustBoolStrict1D: TypeAlias = _ToStrict1D[bool, np.bool_]
 ToJustBoolStrict2D: TypeAlias = _ToStrict2D[bool, np.bool_]
 ToJustBoolStrict3D: TypeAlias = _ToStrict3D[bool, np.bool_]
+
+ToJustInt64Strict1D: TypeAlias = _ToStrict1D[JustInt, np.int64]
+ToJustInt64Strict2D: TypeAlias = _ToStrict2D[JustInt, np.int64]
+ToJustInt64Strict3D: TypeAlias = _ToStrict3D[JustInt, np.int64]
 
 ToJustIntStrict1D: TypeAlias = _ToStrict1D[JustInt, npc.integer]
 ToJustIntStrict2D: TypeAlias = _ToStrict2D[JustInt, npc.integer]

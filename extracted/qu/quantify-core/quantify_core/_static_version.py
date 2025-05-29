@@ -1,2 +1,2 @@
 # This file has been created by setup.py.
-version = '0.8.1'
+version = '0.8.2'

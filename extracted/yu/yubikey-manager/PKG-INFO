@@ -1,8 +1,7 @@
 Metadata-Version: 2.3
 Name: yubikey-manager
-Version: 5.6.1
+Version: 5.7.0
 Summary: Library and CLI for managing your YubiKey configuration.
-Home-page: https://github.com/Yubico/yubikey-manager
 License: Copyright (c) 2015 Yubico AB
          All rights reserved.
          
@@ -32,17 +31,18 @@ License: Copyright (c) 2015 Yubico AB
 Keywords: yubikey,yubiotp,piv,fido
 Author: Dain Nilsson
 Author-email: <dain@yubico.com>
-Requires-Python: >=3.8, <4
+Requires-Python: >=3.9, <4
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: End Users/Desktop
 Classifier: Topic :: Security :: Cryptography
 Classifier: Topic :: Utilities
 Requires-Dist: click (>=8.0,<9)
 Requires-Dist: cryptography (>=3.0,<47)
-Requires-Dist: fido2 (>=1.0,<=2.0.0b1)
+Requires-Dist: fido2 (>=1.0,<3)
 Requires-Dist: keyring (>=23.4,<26)
 Requires-Dist: pyscard (>=2.0,<3)
 Requires-Dist: pywin32 (>=223) ; sys_platform == "win32"
+Project-URL: Homepage, https://github.com/Yubico/yubikey-manager
 Description-Content-Type: text/plain
 
 == YubiKey Manager CLI

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: markitdown
-Version: 0.1.1
+Version: 0.1.2
 Summary: Utility tool for converting various files to Markdown
 Project-URL: Documentation, https://github.com/microsoft/markitdown#readme
 Project-URL: Issues, https://github.com/microsoft/markitdown/issues
@@ -18,12 +18,14 @@ Classifier: Programming Language :: Python :: Implementation :: PyPy
 Requires-Python: >=3.10
 Requires-Dist: beautifulsoup4
 Requires-Dist: charset-normalizer
+Requires-Dist: defusedxml
 Requires-Dist: magika~=0.6.1
 Requires-Dist: markdownify
 Requires-Dist: requests
 Provides-Extra: all
 Requires-Dist: azure-ai-documentintelligence; extra == 'all'
 Requires-Dist: azure-identity; extra == 'all'
+Requires-Dist: lxml; extra == 'all'
 Requires-Dist: mammoth; extra == 'all'
 Requires-Dist: olefile; extra == 'all'
 Requires-Dist: openpyxl; extra == 'all'
@@ -41,6 +43,7 @@ Provides-Extra: az-doc-intel
 Requires-Dist: azure-ai-documentintelligence; extra == 'az-doc-intel'
 Requires-Dist: azure-identity; extra == 'az-doc-intel'
 Provides-Extra: docx
+Requires-Dist: lxml; extra == 'docx'
 Requires-Dist: mammoth; extra == 'docx'
 Provides-Extra: outlook
 Requires-Dist: olefile; extra == 'outlook'

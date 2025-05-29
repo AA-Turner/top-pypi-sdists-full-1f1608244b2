@@ -77,19 +77,17 @@ class ParameterSets(WMLResource):
 
         if parameter_set_id:
             try:  # TODO remove when get_parameter_sets_href() available
-                href = self._client.service_instance._href_definitions.get_parameter_set_href(
+                href = self._client._href_definitions.get_parameter_set_href(
                     parameter_set_id
                 )
             except AttributeError:
-                href = f"{self._client.service_instance._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets/{parameter_set_id}"
+                href = f"{self._client._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets/{parameter_set_id}"
 
         else:
             try:  # TODO remove when get_parameter_sets_href() available
-                href = (
-                    self._client.service_instance._href_definitions.get_parameter_sets_href()
-                )
+                href = self._client._href_definitions.get_parameter_sets_href()
             except AttributeError:
-                href = f"{self._client.service_instance._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets"
+                href = f"{self._client._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets"
 
         response = requests.get(
             url=href, params=self._client._params(), headers=self._client._get_headers()
@@ -158,11 +156,9 @@ class ParameterSets(WMLResource):
         payload = self._prepare_parameter_sets_payload(parameter_sets_meta_data)
 
         try:  # TODO remove when get_parameter_sets_href() available
-            href = (
-                self._client.service_instance._href_definitions.get_parameter_sets_href()
-            )
+            href = self._client._href_definitions.get_parameter_sets_href()
         except AttributeError:
-            href = f"{self._client.service_instance._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets"
+            href = f"{self._client._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets"
 
         creation_response = requests.post(
             url=href,
@@ -194,11 +190,9 @@ class ParameterSets(WMLResource):
         """
 
         try:  # TODO remove when get_parameter_sets_href() available
-            href = (
-                self._client.service_instance._href_definitions.get_parameter_sets_href()
-            )
+            href = self._client._href_definitions.get_parameter_sets_href()
         except AttributeError:
-            href = f"{self._client.service_instance._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets"
+            href = f"{self._client._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets"
 
         response = requests.get(
             url=href, params=self._client._params(), headers=self._client._get_headers()
@@ -244,13 +238,11 @@ class ParameterSets(WMLResource):
         ParameterSets._validate_type(parameter_set_id, "parameter_set_id", str, True)
 
         try:  # TODO remove when get_parameter_sets_href() available
-            href = (
-                self._client.service_instance._href_definitions.get_parameter_set_href(
-                    parameter_set_id
-                )
+            href = self._client._href_definitions.get_parameter_set_href(
+                parameter_set_id
             )
         except AttributeError:
-            href = f"{self._client.service_instance._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets/{parameter_set_id}"
+            href = f"{self._client._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets/{parameter_set_id}"
 
         response = requests.delete(
             url=href, params=self._client._params(), headers=self._client._get_headers()
@@ -362,13 +354,11 @@ class ParameterSets(WMLResource):
         ParameterSets._validate_type(new_data, "new_data", [ListType, str], True)
 
         try:  # TODO remove when get_parameter_sets_href() available
-            href = (
-                self._client.service_instance._href_definitions.get_parameter_set_href(
-                    parameter_set_id
-                )
+            href = self._client._href_definitions.get_parameter_set_href(
+                parameter_set_id
             )
         except AttributeError:
-            href = f"{self._client.service_instance._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets/{parameter_set_id}"
+            href = f"{self._client._href_definitions._get_platform_url_if_exists()}/v2/parameter_sets/{parameter_set_id}"
 
         payload = self._prepare_parameter_sets_payload_to_update(
             meta_data=new_data, path=file_path

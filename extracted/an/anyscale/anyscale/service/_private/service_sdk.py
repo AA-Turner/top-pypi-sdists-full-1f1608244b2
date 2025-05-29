@@ -411,7 +411,7 @@ class PrivateServiceSDK(WorkloadSDK):
             tracing_config=tracing_config,
         )
 
-    def deploy(
+    def deploy(  # noqa: PLR0912
         self,
         config: ServiceConfig,
         *,
@@ -446,6 +446,17 @@ class PrivateServiceSDK(WorkloadSDK):
             self.logger.info(f"Restarting existing service '{name}'.")
         else:
             self.logger.info(f"Updating existing service '{name}'.")
+
+        # passed canary_percent is ignored when creating or restarting a service
+        is_new_or_restarting = (
+            existing_service is None
+            or existing_service.current_state == ServiceEventCurrentState.TERMINATED
+        )
+        if canary_percent is not None and is_new_or_restarting:
+            canary_percent = None
+            self.logger.warning(
+                "canary_percent is ignored when creating or restarting a service."
+            )
 
         if in_place:
             model = self._build_apply_service_model_for_in_place_update(

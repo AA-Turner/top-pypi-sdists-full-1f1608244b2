@@ -589,6 +589,30 @@ def rule_nl_kvk_3_4_1_5 (
         DISCLOSURE_SYSTEM_NL_INLINE_2024
     ],
 )
+def rule_nl_kvk_3_4_2_1 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.4.2.1: Review if xml:base and <base> elements are present in the Inline XBRL document.
+    """
+    baseElements = pluginData.getBaseElements(val.modelXbrl)
+    if len(baseElements) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.4.2.1.htmlOrXmlBaseUsed',
+            msg=_('The HTML <base> elements and xml:base attributes MUST NOT be used in the Inline XBRL document'),
+            modelObject=baseElements
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
 def rule_nl_kvk_3_5_2_1(
         pluginData: PluginValidationDataExtension,
         val: ValidateXbrl,
@@ -673,6 +697,31 @@ def rule_nl_kvk_3_5_2_3(
             badLangsUsed=', '.join(badLangsUsed),
             msg=_('The lang attribute should use one of the following: \'nl\' or \'en\' or \'de\' or \'fr\'. '
                   'The following languages are used incorrectly: %(badLangsUsed)s'),
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_5_4_1 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.5.4.1: Where CSS is used to format the reports, transformations MUST NOT be used to hide information by making it not visible
+    e.g. by applying display:none style on any tagged facts.
+    """
+    facts = pluginData.getCssHiddenFacts(val.modelXbrl)
+    if len(facts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.5.4.1.displayNoneUsedToHideTaggedFacts',
+            msg=_('Display:none has been used to hide tagged facts. This is not allowed.'),
+            modelObject=facts
         )
 
 

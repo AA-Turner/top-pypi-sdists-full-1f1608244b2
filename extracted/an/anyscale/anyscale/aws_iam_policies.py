@@ -237,6 +237,7 @@ ANYSCALE_IAM_PERMISSIONS_SERVICE_STEADY_STATE = {
                 "elasticloadbalancing:DescribeTargetGroupAttributes",
                 "elasticloadbalancing:DescribeTargetHealth",
                 "elasticloadbalancing:DescribeListenerCertificates",
+                "elasticloadbalancing:DescribeTags",
             ],
             "Resource": "*",
         },

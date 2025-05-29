@@ -21,6 +21,7 @@ Usage::
         ListRuleGroupsPaginator,
         ListTLSInspectionConfigurationsPaginator,
         ListTagsForResourcePaginator,
+        ListVpcEndpointAssociationsPaginator,
     )
 
     session = Session()
@@ -35,6 +36,7 @@ Usage::
     list_rule_groups_paginator: ListRuleGroupsPaginator = client.get_paginator("list_rule_groups")
     list_tls_inspection_configurations_paginator: ListTLSInspectionConfigurationsPaginator = client.get_paginator("list_tls_inspection_configurations")
     list_tags_for_resource_paginator: ListTagsForResourcePaginator = client.get_paginator("list_tags_for_resource")
+    list_vpc_endpoint_associations_paginator: ListVpcEndpointAssociationsPaginator = client.get_paginator("list_vpc_endpoint_associations")
     ```
 """
 
@@ -64,6 +66,8 @@ from .type_defs import (
     ListTagsForResourceResponseTypeDef,
     ListTLSInspectionConfigurationsRequestPaginateTypeDef,
     ListTLSInspectionConfigurationsResponseTypeDef,
+    ListVpcEndpointAssociationsRequestPaginateTypeDef,
+    ListVpcEndpointAssociationsResponseTypeDef,
 )
 
 if sys.version_info >= (3, 12):
@@ -82,6 +86,7 @@ __all__ = (
     "ListRuleGroupsPaginator",
     "ListTLSInspectionConfigurationsPaginator",
     "ListTagsForResourcePaginator",
+    "ListVpcEndpointAssociationsPaginator",
 )
 
 
@@ -273,4 +278,27 @@ class ListTagsForResourcePaginator(_ListTagsForResourcePaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListTagsForResource.html#NetworkFirewall.Paginator.ListTagsForResource.paginate)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_network_firewall/paginators/#listtagsforresourcepaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListVpcEndpointAssociationsPaginatorBase = Paginator[
+        ListVpcEndpointAssociationsResponseTypeDef
+    ]
+else:
+    _ListVpcEndpointAssociationsPaginatorBase = Paginator  # type: ignore[assignment]
+
+
+class ListVpcEndpointAssociationsPaginator(_ListVpcEndpointAssociationsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListVpcEndpointAssociations.html#NetworkFirewall.Paginator.ListVpcEndpointAssociations)
+    [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_network_firewall/paginators/#listvpcendpointassociationspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListVpcEndpointAssociationsRequestPaginateTypeDef]
+    ) -> PageIterator[ListVpcEndpointAssociationsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListVpcEndpointAssociations.html#NetworkFirewall.Paginator.ListVpcEndpointAssociations.paginate)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_network_firewall/paginators/#listvpcendpointassociationspaginator)
         """

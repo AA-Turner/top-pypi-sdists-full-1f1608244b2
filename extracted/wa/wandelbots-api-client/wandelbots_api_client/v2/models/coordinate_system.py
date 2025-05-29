@@ -30,11 +30,11 @@ class CoordinateSystem(BaseModel):
     """ # noqa: E501
     coordinate_system: StrictStr = Field(description="Unique identifier of the coordinate system.")
     name: Optional[StrictStr] = Field(default=None, description="Human readable name of this coordinate system.")
-    reference_uid: Optional[StrictStr] = Field(default=None, description="The identifier of the reference coordinate system. Empty if world is used.")
+    reference_coordinate_system: Optional[StrictStr] = Field(default=None, description="The identifier of the reference coordinate system. Empty if world is used.")
     position: Optional[Annotated[List[Union[StrictFloat, StrictInt]], Field(min_length=3, max_length=3)]] = Field(default=None, description="A three-dimensional vector [x, y, z] with double precision. ")
     orientation: Optional[Annotated[List[Union[StrictFloat, StrictInt]], Field(min_length=3, max_length=4)]] = Field(default=None, description="Describes an orientation in 3D space. A tree-to-four-dimensional vector [x, y, z, w] with double precision. ")
     orientation_type: Optional[OrientationType] = OrientationType.ROTATION_VECTOR
-    __properties: ClassVar[List[str]] = ["coordinate_system", "name", "reference_uid", "position", "orientation", "orientation_type"]
+    __properties: ClassVar[List[str]] = ["coordinate_system", "name", "reference_coordinate_system", "position", "orientation", "orientation_type"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,7 +93,7 @@ class CoordinateSystem(BaseModel):
         _obj = cls.model_validate({
             "coordinate_system": obj.get("coordinate_system"),
             "name": obj.get("name"),
-            "reference_uid": obj.get("reference_uid"),
+            "reference_coordinate_system": obj.get("reference_coordinate_system"),
             "position": obj.get("position"),
             "orientation": obj.get("orientation"),
             "orientation_type": obj.get("orientation_type")

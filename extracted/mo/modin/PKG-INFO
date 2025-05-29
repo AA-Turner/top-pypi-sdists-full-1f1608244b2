@@ -1,38 +1,21 @@
 Metadata-Version: 2.1
 Name: modin
-Version: 0.32.0
+Version: 0.33.1
 Summary: Modin: Make your pandas code run faster by changing one line of code.
 Home-page: https://github.com/modin-project/modin
 License: Apache 2
+Platform: UNKNOWN
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+Provides-Extra: dask
+Provides-Extra: ray
+Provides-Extra: mpi
+Provides-Extra: consortium-standard
+Provides-Extra: spreadsheet
+Provides-Extra: all
 License-File: LICENSE
 License-File: LICENSE_HEADER
 License-File: NOTICE
-Requires-Dist: pandas<2.3,>=2.2
-Requires-Dist: packaging>=21.0
-Requires-Dist: numpy>=1.22.4
-Requires-Dist: fsspec>=2022.11.0
-Requires-Dist: psutil>=5.8.0
-Provides-Extra: dask
-Requires-Dist: dask>=2.22.0; extra == "dask"
-Requires-Dist: distributed>=2.22.0; extra == "dask"
-Provides-Extra: ray
-Requires-Dist: ray!=2.5.0,>=2.1.0; extra == "ray"
-Requires-Dist: pyarrow>=10.0.1; extra == "ray"
-Provides-Extra: mpi
-Requires-Dist: unidist[mpi]>=0.2.1; extra == "mpi"
-Provides-Extra: consortium-standard
-Requires-Dist: dataframe-api-compat>=0.2.7; extra == "consortium-standard"
-Provides-Extra: spreadsheet
-Requires-Dist: modin-spreadsheet>=0.1.0; extra == "spreadsheet"
-Provides-Extra: all
-Requires-Dist: dask>=2.22.0; extra == "all"
-Requires-Dist: distributed>=2.22.0; extra == "all"
-Requires-Dist: ray!=2.5.0,>=2.1.0; extra == "all"
-Requires-Dist: pyarrow>=10.0.1; extra == "all"
-Requires-Dist: modin-spreadsheet>=0.1.0; extra == "all"
-Requires-Dist: dataframe-api-compat>=0.2.7; extra == "all"
 
 <p align="center"><a href="https://modin.readthedocs.io"><img width=77% alt="" src="https://github.com/modin-project/modin/raw/7c009c747caa90554607e30b9ac2bd1b190b8c7d/docs/img/MODIN_ver2_hrz.png?raw=true"></a></p>
 <h2 align="center">Scale your pandas workflows by changing one line of code</h2>
@@ -41,7 +24,7 @@ Requires-Dist: dataframe-api-compat>=0.2.7; extra == "all"
 
 | <h3>Dev Community & Support</h3> | <h3>Forums</h3> | <h3>Socials</h3> | <h3>Docs</h3> |
 |:---: | :---: | :---: | :---: |
-| [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/modin-project/shared_invite/zt-yvk5hr3b-f08p_ulbuRWsAfg9rMY3uA) | [![Stack Overflow](https://img.shields.io/badge/-Stackoverflow-FE7A16?style=for-the-badge&logo=stack-overflow&logoColor=white)](https://stackoverflow.com/questions/tagged/modin) | <a href="https://twitter.com/modin_project"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/modin_project?style=social" height=28 align="center"></a> | <a href="https://modin.readthedocs.io/en/latest/?badge=latest"><img alt="" src="https://readthedocs.org/projects/modin/badge/?version=latest" height=28 align="center"></a> |
+| [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/modin-project/shared_invite/zt-yvk5hr3b-f08p_ulbuRWsAfg9rMY3uA) | [![Stack Overflow](https://img.shields.io/badge/-Stackoverflow-FE7A16?style=for-the-badge&logo=stack-overflow&logoColor=white)](https://stackoverflow.com/questions/tagged/modin) | <a href="https://twitter.com/modin_project"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/modin_project?style=social" height=28 align="center"></a> | <a href="https://modin.readthedocs.io/en/0.33.1/?badge=0.33.1"><img alt="" src="https://readthedocs.org/projects/modin/badge/?version=0.33.1" height=28 align="center"></a> |
 
 </div>
 
@@ -50,7 +33,7 @@ Requires-Dist: dataframe-api-compat>=0.2.7; extra == "all"
 <a href="https://codecov.io/gh/modin-project/modin"><img src="https://codecov.io/gh/modin-project/modin/branch/main/graph/badge.svg" align="center"/></a>
 <a href="https://github.com/modin-project/modin/actions/workflows/push-to-main.yml?query=event%3Apush"><img src="https://github.com/modin-project/modin/actions/workflows/push-to-main.yml/badge.svg?branch=main" align="center"></a>
 <a href="https://github.com/modin-project/modin/actions/workflows/ci.yml?query=event%3Apush"><img src="https://github.com/modin-project/modin/actions/workflows/ci.yml/badge.svg?branch=main" align="center"></a>
-<a href="https://pypi.org/project/modin/"><img src="https://badge.fury.io/py/modin.svg" alt="PyPI version" align="center"></a>
+<a href="https://pypi.org/project/modin/0.33.1"><img src="https://img.shields.io/badge/pypi-0.33.1-blue.svg" alt="PyPI version" align="center"></a>
 <a href="https://modin.org/modin-bench/#/"><img src="https://img.shields.io/badge/benchmarked%20by-asv-blue.svg" align="center"></a>
 </p>
 
@@ -315,3 +298,5 @@ For more information on how to contribute to Modin, check out the
 ### License
 
 [Apache License 2.0](LICENSE)
+
+

@@ -816,15 +816,21 @@ class AnalysisWorkstep(Workstep):
                             value = value if value > 0 else 1
                         elif column == 'Axis Align':
                             value = self._workstep_rightAxis_user_to_workstep[value]
+                        elif column == 'Axis Type':
+                            value = self._workstep_yAxisType_user_to_workstep[value]
                         elif column == 'Overlay':
                             if item['Type'] == 'Condition':
                                 value = int(value)
                             else:
                                 value = np.nan
                         store_items[-1][self._workstep_display_user_to_workstep[column]] = value
-                    if column in axis_limit_keys and isinstance(value, (float, int)):
-                        current_limits = \
-                            [_common.get(store_items[-1], 'yAxisMin'), _common.get(store_items[-1], 'yAxisMax')]
+                    if column in axis_limit_keys:
+                        current_min = _common.get(item, 'Axis Min')
+                        current_max = _common.get(item, 'Axis Max')
+                        value = _common.safe_to_numeric(value)
+                        if not value:
+                            continue
+                        current_limits = [_common.safe_to_numeric(current_min), _common.safe_to_numeric(current_max)]
                         which = 'lower' if column == 'Axis Min' else 'upper'
                         value = self._determine_axis_limits(value, which, current_limits)
                         store_items[-1]['yAxisMin'] = value[0]
@@ -908,6 +914,9 @@ class AnalysisWorkstep(Workstep):
                         elif k == 'rightAxis':
                             output_item[self._workstep_display_workstep_to_user[k]] = \
                                 self._workstep_rightAxis_workstep_to_user[value]
+                        elif k == 'yAxisType':
+                            output_item[self._workstep_display_workstep_to_user[k]] = \
+                                self._workstep_yAxisType_workstep_to_user[value]
                         else:
                             output_item[self._workstep_display_workstep_to_user[k]] = value
 
@@ -1081,6 +1090,7 @@ class AnalysisWorkstep(Workstep):
         'Axis Show': 'axisVisibility',
         'Axis Max': 'yAxisMax',
         'Axis Min': 'yAxisMin',
+        'Axis Type': 'yAxisType',
         'Stack': 'stack',
         'Selected': 'selected',
         'Values': 'showDataLabels',
@@ -1119,6 +1129,13 @@ class AnalysisWorkstep(Workstep):
     }
 
     _workstep_rightAxis_workstep_to_user = dict((v, k) for k, v in _workstep_rightAxis_user_to_workstep.items())
+
+    _workstep_yAxisType_user_to_workstep = {
+        'Linear': 'linear',
+        'Logarithmic': 'logarithmic',
+    }
+
+    _workstep_yAxisType_workstep_to_user = dict((v, k) for k, v in _workstep_yAxisType_user_to_workstep.items())
 
     @staticmethod
     def _determine_axis_limits(value: Union[int, float], which: str, current_limits: list) -> list:

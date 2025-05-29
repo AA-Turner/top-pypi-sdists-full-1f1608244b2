@@ -1,15 +1,11 @@
 Metadata-Version: 2.4
 Name: text2num
-Version: 2.5.2
-Summary: Parse and convert numbers written in French, Spanish, English, Portuguese, German, Catalan or Russion into their digit representation.
-Home-page: https://github.com/allo-media/text2num
-Author: Allo-Media
-Author-email: contact@allo-media.fr
-License: MIT
-Keywords: French Spanish English Portuguese German Catalan Russion NLP words-to-numbers
+Version: 3.0.0
+Classifier: Programming Language :: Rust
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3.6
 Classifier: Topic :: Text Processing :: Linguistic
 Classifier: Topic :: Text Processing :: Filters
 Classifier: Natural Language :: French
@@ -17,64 +13,81 @@ Classifier: Natural Language :: English
 Classifier: Natural Language :: Spanish
 Classifier: Natural Language :: Portuguese
 Classifier: Natural Language :: German
-Classifier: Natural Language :: Catalan
-Classifier: Natural Language :: Russian
-Requires-Python: >=3.6
+Classifier: Natural Language :: Dutch
+Classifier: Natural Language :: Italian
 License-File: LICENSE
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: home-page
-Dynamic: keywords
-Dynamic: license
-Dynamic: license-file
-Dynamic: requires-python
-Dynamic: summary
+Summary: Parse and convert numbers written in French, Spanish, English, Portuguese, German, Dutch or Italian into their digit representation.
+Keywords: French,Spanish,English,Portuguese,German,Italian,Dutch,NLP,words-to-numbers
+Author-email: Allo-Media <contact@allo-media.fr>
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
+Project-URL: Homepage, https://github.com/allo-media/text2num
+Project-URL: Documentation, https://text2num.readthedocs.io
+Project-URL: Repository, https://github.com/allo-media/text2num
+Project-URL: Issues, https://github.com/allo-media/text2num/issues
+Project-URL: Changelog, https://github.com/allo-media/text2num/releases
 
-text2num
-========
+# text2num
 
-|docs|
+A fast and robust text2num converter library a library for recognizing, parsing and transcribing into digits (base 10) numbers expressed in natural language. It works on strings as well as on custom token lists.
+
+No IA involved: it is low on resources (and energy!) consumption and the latency is very small.
+
+[![Documentation status](https://readthedocs.org/projects/text2num/badge/?version=latest)](https://text2num.readthedocs.io/en/latest/?badge=latest)
+
+`text2num` is a python package that provides functions and parser classes for:
+
+- Parsing numbers expressed as natural language words and converting them to integer values.
+- Detection of ordinal, cardinal and decimal numbers in a stream of natural language words and get their decimal digit representations.
+
+Supported natural languages (in alphabetical order):
+
+* Dutch;
+* English;
+* French;
+* German;
+* Italian;
+* Portuguese (Brazilian and European);
+* Spanish.
+
+## Versions 3.X vs 2.X
+
+This new generation of `text2num` relies on a [new and improved algorithm implemented in Rust](https://crates.io/crates/text2num) whereas the 2.X branch
+is in pure python and uses a less capable algorithm and has now been retired.
+
+**You don't need Rust to install and run text2num!** as we provide precompiled wheels.
+
+### Backward incompatible changes:
+
+- dropped support for signed numbers — the feature was broken anyway;
+- parsing mode is relaxed by default (i.e. "_greedy_") — you can use punctuation (e.g. commas) to separate groups in text, or voice pauses if processing Speech-to-Text token streams;
+- the `threshold` optional parameter to `alpha2digits` now applies to both ordinals and cardinals.
+  As a consequence the signature of `alpha2digits` has changed.
+- the Russian and Catalan languages have not been ported yet.
 
 
-``text2num`` is a python package that provides functions and parser classes for:
+## Installation
 
-- Parsing of numbers expressed as words in French, English, Spanish, Portuguese, German and Catalan and convert them to integer values.
-- Detection of ordinal, cardinal and decimal numbers in a stream of French, English, Spanish and Portuguese words and get their decimal digit representations. NOTE: Spanish does not support ordinal numbers yet.
-- Detection of ordinal, cardinal and decimal numbers in a German text (BETA). NOTE: No support for 'relaxed=False' yet (behaves like 'True' by default).
+We provide pre-compiled wheels for Linux, MacOS and Windows and for python 3.8 up to and including 3.13.
 
-Compatibility
--------------
+So all you need to do is this:
 
-Tested on python 3.7. Requires Python >= 3.6.
+```
+pip install text2num
+# or, if using an `uv` project:
+uv add text2num
+```
 
-License
--------
+## Quickstart by example
 
-This sofware is distributed under the MIT license of which you should have received a copy (see LICENSE file in this repository).
+Not every supported language is covered in these examples, but it gives you an idea.
 
-Installation
-------------
-
-``text2num`` does not depend on any other third party package.
-
-To install text2num in your (virtual) environment::
-
-    pip install text2num
-
-That's all folks!
-
-Usage examples
---------------
-
-Parse and convert
-~~~~~~~~~~~~~~~~~
-
+### Parse and convert
 
 French examples:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import text2num
     >>> text2num('quatre-vingt-quinze', "fr")
@@ -93,12 +106,15 @@ French examples:
     51578302
 
     >>> text2num('mille mille deux cents', "fr")
-    ValueError: invalid literal for text2num: 'mille mille deux cent'
+    Traceback (most recent call last):
+        ...
+    ValueError: invalid literal for text2num: 'mille mille deux cents'
 
+```
 
 English examples:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import text2num
 
@@ -108,29 +124,11 @@ English examples:
     >>> text2num("eighty-one", "en")
     81
 
-
-Russian examples:
-
-.. code-block:: python
-
-    >>> from text_to_num import text2num
-
-    >>> text2num("пятьдесят один миллион пятьсот семьдесят восемь тысяч триста два", "ru")
-    51578302
-
-    >>> text2num("миллиард миллион тысяча один", "ru")
-    1001001001
-
-    >>> text2num("один миллиард один миллион одна тысяча один", "ru")
-    1001001001
-
-    >>> text2num("восемьдесят один", "ru")
-    81
-
+```
 
 Spanish examples:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import text2num
     >>> text2num("ochenta y uno", "es")
@@ -142,10 +140,11 @@ Spanish examples:
     >>> text2num("cincuenta y tres millones doscientos cuarenta y tres mil setecientos veinticuatro", "es")
     53243724
 
+```
 
 Portuguese examples:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import text2num
     >>> text2num("trinta e dois", "pt")
@@ -157,10 +156,11 @@ Portuguese examples:
     >>> text2num("vinte e quatro milhões duzentos mil quarenta e sete", "pt")
     24200047
 
+```
 
 German examples:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import text2num
 
@@ -170,36 +170,15 @@ German examples:
     >>> text2num("ein und achtzig", "de")
     81
 
+```
 
-Catalan examples:
-
-.. code-block:: python
-
-    >>> from text_to_num import text2num
-    >>> text2num('noranta-cinc', "ca")
-    95
-
-    >>> text2num('huitanta-u', "ca")
-    81
-
-    >>> text2num('mil nou-cents noranta-nou', "ca")
-    1999
-
-    >>> text2num("cinquanta-un milions cinc-cents setanta-vuit mil tres-cents dos", "ca")
-    51578302
-
-    >>> text2num('mil mil dos-cents', "ca")
-    ValueError: invalid literal for text2num: 'mil mil dos-cents'
-
-
-Find and transcribe
-~~~~~~~~~~~~~~~~~~~
+### Find and transcribe
 
 Any numbers, even ordinals.
 
 French:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import alpha2digit
     >>> sentence = (
@@ -207,88 +186,79 @@ French:
     ...     "douze mille six cent quatre-vingt-dix-huit clous.\n"
     ...     "Quatre-vingt-quinze vaut nonante-cinq. On tolère l'absence de tirets avant les unités : "
     ...     "soixante seize vaut septante six.\n"
-    ...     "Nombres en série : douze quinze zéro zéro quatre vingt cinquante-deux cent trois cinquante deux "
+    ...     "Nombres en série : douze, quinze, zéro zéro quatre, vingt, cinquante-deux, cent trois, cinquante deux, "
     ...     "trente et un.\n"
     ...     "Ordinaux: cinquième troisième vingt et unième centième mille deux cent trentième.\n"
     ...     "Décimaux: douze virgule quatre-vingt dix-neuf, cent vingt virgule zéro cinq ; "
     ...     "mais soixante zéro deux."
     ... )
-    >>> print(alpha2digit(sentence, "fr", ordinal_threshold=0))
+    >>> print(alpha2digit(sentence, "fr"))
     842 pommes, 25 chiens, 1003 chevaux, 12698 clous.
     95 vaut 95. On tolère l'absence de tirets avant les unités : 76 vaut 76.
-    Nombres en série : 12 15 004 20 52 103 52 31.
+    Nombres en série : 12, 15, 004, 20, 52, 103, 52, 31.
     Ordinaux: 5ème 3ème 21ème 100ème 1230ème.
     Décimaux: 12,99, 120,05 ; mais 60 02.
 
-    >>> sentence = "Cinquième premier second troisième vingt et unième centième mille deux cent trentième."
-    >>> print(alpha2digit(sentence, "fr", ordinal_threshold=3))
-    5ème premier second troisième 21ème 100ème 1230ème.
+    >>> sentence = "Cinquième premier deuxième troisième vingt et unième centième mille deux cent trentième."
+    >>> print(alpha2digit(sentence, "fr"))
+    5ème 1er 2ème 3ème 21ème 100ème 1230ème.
 
+```
 
 English:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import alpha2digit
 
-    >>> text = "On May twenty-third, I bought twenty-five cows, twelve chickens and one hundred twenty five point forty kg of potatoes."
+    >>> text = "On May twenty-third, I bought twenty-five cows, twelve chickens and one hundred twenty five point four zero kg of potatoes."
     >>> alpha2digit(text, "en")
     'On May 23rd, I bought 25 cows, 12 chickens and 125.40 kg of potatoes.'
 
+    >>> alpha2digit("I finished the race in the twelfth position!", "en")
+    'I finished the race in the 12th position!'
 
-Russian:
+```
 
-.. code-block:: python
+Spanish:
 
-    >>> from text_to_num import alpha2digit
-
-    >>> # дробная часть не обрабатывает уточнения вроде "пять десятых", "двенадцать сотых", "сколько-то стотысячных" и т.п., поэтому их лучше опускать
-    >>> text = "Двадцать пять коров, двенадцать сотен цыплят и сто двадцать пять точка сорок кг картофеля."
-    >>> alpha2digit(text, "ru")
-    '25 коров, 1200 цыплят и 125.40 кг картофеля.'
-
-    >>> text = "каждый пятый на первый второй расчитайсь!"
-    >>> alpha2digit(text, 'ru', ordinal_threshold=0)
-    'каждый 5ый на 1ый 2ой расчитайсь!'
-
-
-Spanish (ordinals not supported yet):
-
-.. code-block:: python
+```python
 
     >>> from text_to_num import alpha2digit
 
     >>> text = "Compramos veinticinco vacas, doce gallinas y ciento veinticinco coma cuarenta kg de patatas."
     >>> alpha2digit(text, "es")
+    'Compramos 25 vacas, 12 gallinas y 125,40 kg de patatas.'
+
+    >>> text = "Compramos veinticinco vacas, doce gallinas y ciento veinticinco punto cuarenta kg de patatas."
+    >>> alpha2digit(text, "es")
     'Compramos 25 vacas, 12 gallinas y 125.40 kg de patatas.'
 
-    >>> text = "Tenemos mas veinte grados dentro y menos quince fuera."
-    >>> alpha2digit(text, "es")
-    'Tenemos +20 grados dentro y -15 fuera.'
+    >>> text = "Ella ha quedado tercera"
+    >>> alpha2digit(text, "es", threshold=0)
+    'Ella ha quedado 3ª'
 
+```
 
 Portuguese:
 
-.. code-block:: python
+```python
 
     >>> from text_to_num import alpha2digit
 
-    >>> text = "Comprámos vinte e cinco vacas, doze galinhas e cento vinte e cinco vírgula quarenta kg de batatas."
+    >>> text = "Comprámos vinte e cinco vacas, doze galinhas e cento e vinte e cinco vírgula quarenta kg de batatas."
     >>> alpha2digit(text, "pt")
     'Comprámos 25 vacas, 12 galinhas e 125,40 kg de batatas.'
 
-    >>> text = "Temos mais vinte graus dentro e menos quinze fora."
+    >>> text = "Ordinais: quinto, terceiro, vigésima, vigésimo primeiro, centésimo quarto"
     >>> alpha2digit(text, "pt")
-    'Temos +20 graus dentro e -15 fora.'
+    'Ordinais: 5º, 3º, 20ª, 21º, 104º'
 
-    >>> text = "Ordinais: quinto, terceiro, vigésimo, vigésimo primeiro, centésimo quarto"
-    >>> alpha2digit(text, "pt")
-    'Ordinais: 5º, terceiro, 20ª, 21º, 104º'
+```
 
+German:
 
-German (BETA, Note: 'relaxed' parameter is not supported yet and 'True' by default):
-
-.. code-block:: python
+```python
 
     >>> from text_to_num import alpha2digit
 
@@ -296,61 +266,80 @@ German (BETA, Note: 'relaxed' parameter is not supported yet and 'True' by defau
     >>> alpha2digit(text, "de")
     'Ich habe 25 Kühe, 12 Hühner und 125 kg Kartoffeln gekauft.'
 
-    >>> text = "Die Temperatur beträgt minus fünfzehn Grad."
+    >>> text = "Die Telefonnummer lautet dreiunddreißig neun sechzig null sechs zwölf einundzwanzig."
     >>> alpha2digit(text, "de")
-    'Die Temperatur beträgt -15 Grad.'
-
-    >>> text = "Die Telefonnummer lautet plus dreiunddreißig neun sechzig null sechs zwölf einundzwanzig."
-    >>> alpha2digit(text, "de")
-    'Die Telefonnummer lautet +33 9 60 0 6 12 21.'
+    'Die Telefonnummer lautet 33 9 60 06 12 21.'
 
     >>> text = "Der zweiundzwanzigste Januar zweitausendzweiundzwanzig."
     >>> alpha2digit(text, "de")
-    '22. Januar 2022'
+    'Der 22. Januar 2022.'
 
     >>> text = "Es ist ein Buch mit dreitausend Seiten aber nicht das erste."
-    >>> alpha2digit(text, "de", ordinal_threshold=0)
-    'Es ist ein Buch mit 3000 Seiten aber nicht das 1..'
+    >>> alpha2digit(text, "de", threshold=0)
+    'Es ist 1 Buch mit 3000 Seiten aber nicht das 1..'
 
     >>> text = "Pi ist drei Komma eins vier und so weiter, aber nicht drei Komma vierzehn :-p"
-    >>> alpha2digit(text, "de", ordinal_threshold=0)
+    >>> alpha2digit(text, "de", threshold=0)
     'Pi ist 3,14 und so weiter, aber nicht 3 Komma 14 :-p'
 
+```
 
-Catalan:
+### Working with tokens
 
-.. code-block:: python
+Imagine that we have an ASR application that returns a transcript as a list of tokens (text, start timestamp, end timestamp)
+where the timestamps are integers representing milliseconds relative to the beginning of the speech.
 
-    >>> from text_to_num import alpha2digit
-    >>> text = ("Huit-centes quaranta-dos pomes, vint-i-cinc gossos, mil tres cavalls, dotze mil sis-cents noranta-huit claus.\n Vuitanta-u és igual a huitanta-u.\n Nombres en sèrie: dotze quinze zero zero quatre vint cinquanta-dos cent tres cinquanta-dos trenta-u.\n Ordinals: cinquè tercera vint-i-uena centè mil dos-cents trentena.\n Decimals: dotze coma noranta-nou, cent vint coma zero cinc; però seixanta zero dos.")
-    >>> print(alpha2digit(text, "ca", ordinal_threshold=0))
-    842 pomes, 25 gossos, 1003 cavalls, 12698 claus.
-    81 és igual a 81.
-    Nombres en sèrie: 12 15 004 20 52 103 52 31.
-    Ordinals: 5è 3a 21a 100è 1230a.
-    Decimals: 12,99, 120,05; però 60 02.
+```python
 
-    >>> text = "Cinqué primera segona tercer vint-i-ué centena mil dos-cents trenté."
-    >>> print(alpha2digit(text, "ca", ordinal_threshold=3))
-    5é primera segona tercer 21é 100a 1230é.
-
-    >>> text = "Compràrem vint-i-cinc vaques, dotze gallines i cent vint-i-cinc coma quaranta kg de creïlles."
-    >>> alpha2digit(text, "ca")
-    'Compràrem 25 vaques, 12 gallines i 125,40 kg de creïlles.'
-
-    >>> text = "Fa més vint graus dins i menys quinze fora."
-    >>> alpha2digit(text, "ca")
-    'Fa +20 graus dins i -15 fora.'
+from text_to_num import (Token, find_numbers)
 
 
-Read the complete documentation on `ReadTheDocs <http://text2num.readthedocs.io/>`_.
+class DecodedWord(Token):
+    def __init__(self, text, start, end):
+        self._text = text
+        self.start = start
+        self.end = end
 
-Contribute
-----------
+    def text(self):
+        return self._text
+
+    def nt_separated(self, previous):
+        # we consider a voice gap of more that 100 ms as significant
+        return self.start - previous.end > 100
+
+
+# Let's simulate ASR output
+
+stream = [
+    DecodedWord("We", 0, 100),
+    DecodedWord("have", 100, 200),
+    DecodedWord("respectively", 200, 400),
+    DecodedWord("twenty", 400, 500),
+    DecodedWord("nine", 610, 700),
+    DecodedWord("and", 700, 800),
+    DecodedWord("thirty", 800, 900),
+    DecodedWord("four", 950, 1000),
+    DecodedWord("dollars", 1010, 1410)
+]
+
+occurences = find_numbers(stream, "en")
+
+for num in occurences:
+    print(f"found number {num.text} ({num.value}) at range [{num.start}, {num.end}] in the stream")
+```
+
+When executed, that code snippet prints::
+
+```
+found number 20 (20.0) at range [3, 4] in the stream
+found number 9 (9.0) at range [4, 5] in the stream
+found number 34 (34.0) at range [6, 8] in the stream
+```
+
+
+Read the complete documentation on [ReadTheDocs](http://text2num.readthedocs.io/).
+
+## Contribute
 
 Join us on https://github.com/allo-media/text2num
 
-
-.. |docs| image:: https://readthedocs.org/projects/text2num/badge/?version=latest
-    :target: https://text2num.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status

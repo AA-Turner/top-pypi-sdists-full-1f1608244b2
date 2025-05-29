@@ -27,7 +27,7 @@ class DocumentExtraction:
     def __init__(self, name: str, api_client: APIClient):
         self.name = name
         self._client = api_client
-        self._href_definitions = self._client.service_instance._href_definitions
+        self._href_definitions = self._client._href_definitions
 
     def get_run_details(self) -> dict:
         """Get document extraction details
@@ -94,9 +94,7 @@ class DocumentExtractionsRuns(BaseRuns):
     """Class of InstructLab document extraction runs."""
 
     def __init__(self, api_client: APIClient):
-        url = (
-            api_client.service_instance._href_definitions.get_document_extractions_href()
-        )
+        url = api_client._href_definitions.get_document_extractions_href()
 
         BaseRuns.__init__(self, __name__, api_client, url)
 
@@ -128,7 +126,7 @@ class DocumentExtractions(WMLResource):
         WMLResource.__init__(self, "document extractions", api_client)
         self.ilab_tuner_name = ilab_tuner_name
         self._client = api_client
-        self._href_definitions = self._client.service_instance._href_definitions
+        self._href_definitions = self._client._href_definitions
 
     def extract(
         self,

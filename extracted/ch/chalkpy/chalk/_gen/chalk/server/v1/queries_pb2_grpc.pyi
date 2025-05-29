@@ -12,6 +12,8 @@ from chalk._gen.chalk.server.v1.queries_pb2 import (
     GetQueryErrorsChartResponse,
     GetQueryPerformanceSummaryRequest,
     GetQueryPerformanceSummaryResponse,
+    GetQueryPlanRequest,
+    GetQueryPlanResponse,
     ListQueryErrorsRequest,
     ListQueryErrorsResponse,
 )
@@ -36,6 +38,10 @@ class QueriesServiceStub:
         GetQueryErrorsChartRequest,
         GetQueryErrorsChartResponse,
     ]
+    GetQueryPlan: UnaryUnaryMultiCallable[
+        GetQueryPlanRequest,
+        GetQueryPlanResponse,
+    ]
 
 class QueriesServiceServicer(metaclass=ABCMeta):
     @abstractmethod
@@ -56,5 +62,11 @@ class QueriesServiceServicer(metaclass=ABCMeta):
         request: GetQueryErrorsChartRequest,
         context: ServicerContext,
     ) -> GetQueryErrorsChartResponse: ...
+    @abstractmethod
+    def GetQueryPlan(
+        self,
+        request: GetQueryPlanRequest,
+        context: ServicerContext,
+    ) -> GetQueryPlanResponse: ...
 
 def add_QueriesServiceServicer_to_server(servicer: QueriesServiceServicer, server: Server) -> None: ...

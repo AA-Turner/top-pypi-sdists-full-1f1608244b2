@@ -22,8 +22,9 @@ from osprofiler.tests import test
 class ElasticsearchTestCase(test.TestCase):
 
     def setUp(self):
-        super(ElasticsearchTestCase, self).setUp()
-        self.elasticsearch = ElasticsearchDriver("elasticsearch://localhost")
+        super().setUp()
+        self.elasticsearch = ElasticsearchDriver(
+            "elasticsearch://localhost:9001/")
         self.elasticsearch.project = "project"
         self.elasticsearch.service = "service"
 

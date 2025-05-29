@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: cyclonedds-nightly
-Version: 2025.4.30
+Version: 2025.5.29
 Summary: Eclipse Cyclone DDS Python binding
 Home-page: https://cyclonedds.io
 Author: Eclipse Cyclone DDS Committers
@@ -17,16 +17,45 @@ Platform: Mac OS-X
 Platform: Unix
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved :: Eclipse Public License 2.0 (EPL-2.0)
-Classifier: Programming Language :: Python :: 3.7
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Operating System :: OS Independent
-Requires-Python: >=3.7
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
-Provides-Extra: dev
-Provides-Extra: docs
 License-File: LICENSE
+Requires-Dist: typing-inspect>=0.6; python_version < "3.7"
+Requires-Dist: typing-extensions>=3.7; python_version < "3.9"
+Requires-Dist: rich-click
+Provides-Extra: dev
+Requires-Dist: pytest>=6.2; extra == "dev"
+Requires-Dist: pytest-asyncio; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: pytest-mock; extra == "dev"
+Requires-Dist: flake8; extra == "dev"
+Requires-Dist: flake8-bugbear; extra == "dev"
+Requires-Dist: twine; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: Sphinx>=4.0.0; extra == "docs"
+Requires-Dist: piccolo_theme>=0.12.0; extra == "docs"
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: platform
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 [![License](https://img.shields.io/badge/License-EPL%202.0-blue)](https://choosealicense.com/licenses/epl-2.0/)
 [![License](https://img.shields.io/badge/License-EDL%201.0-blue)](https://choosealicense.com/licenses/edl-1.0/)
@@ -213,5 +242,3 @@ $ cd /path/to/git/clone
 $ pip3 install --user pyoxidizer
 $ pyoxidizer build
 ```
-
-

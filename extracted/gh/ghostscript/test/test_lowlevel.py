@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of python-ghostscript.
-# Copyright 2010-2021 by Hartmut Goebel <h.goebel@crazy-compilers.com>
+# Copyright 2010-2023 by Hartmut Goebel <h.goebel@crazy-compilers.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,41 +14,41 @@
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
 __author__ = "Hartmut Goebel <h.goebel@crazy-compilers.com>"
-__copyright__ = "Copyright 2010-2021 by Hartmut Goebel <h.goebel@crazy-compilers.com>"
+__copyright__ = "Copyright 2010-2023 by Hartmut Goebel <h.goebel@crazy-compilers.com>"
 __licence__ = "GNU General Public License version 3 (GPL v3)"
 
 import io
-import sys, os
-import locale # required to encode file paths
+import locale # required to encode arguments
 import binascii
+import pathlib
 
-import py
+import pytest
 
 import ghostscript._gsprint as gs
 
-postscript_img = b"""
-    /Helvetica findfont 12 scalefont setfont
-    0 0 moveto
-    (Hello World) show
-    showpage
-    """
 
 HELLO_WORLD = ''.join(('%x' % ord(c) for c in 'Hello World'))
 #HELLO_WORLD = binascii.hexlify('Hello World')
 postscript_doc = ('<%s> = flush' % HELLO_WORLD).encode('ascii')
 
+# For the low-level interface arguments have to be bytes. Encode them
+# using local encoding to save calling set_arg_encoding().
 STDARGS = [b'test.py', b'-dNOPAUSE', b'-dBATCH', b'-dSAFER', b'-q',
-           b'-sDEVICE=bmp16', b'-g80x12']
+           b'-sDEVICE=bmp16', b'-g80x20']
 
-TEST_PIC_FILENAME = os.path.join(os.path.dirname(__file__), 'hello_world.bmp')
-TEST_PIC_DATA = py.path.local(TEST_PIC_FILENAME).read('rb')
+POSTSCRIPT_FILE = pathlib.Path(__file__).with_name('testimage.ps')
+POSTSCRIPT_DATA = POSTSCRIPT_FILE.read_bytes()
+TEST_PIC = POSTSCRIPT_FILE.with_suffix('.bmp')
+TEST_PIC_DATA = TEST_PIC.read_bytes()
 
 
 def _encode(*args):
+    # For the low-level interface arguments have to be bytes. Encode
+    # them using local encoding to save calling set_arg_encoding().
     encoding = locale.getpreferredencoding()
     return [a.encode(encoding) for a in args]
 
@@ -70,8 +70,8 @@ def test_run_string(tmpdir):
     instance = gs.new_instance()
 
     try:
-        gs.init_with_args(instance, args)
-        gs.run_string(instance, postscript_img)
+        assert gs.init_with_args(instance, args) == 0
+        assert gs.run_string(instance, POSTSCRIPT_DATA) == 0
     finally:
         gs.exit(instance)
         gs.delete_instance(instance)
@@ -80,17 +80,33 @@ def test_run_string(tmpdir):
     assert data == TEST_PIC_DATA
 
 
+def test_run_bugyy_string(tmpdir):
+    """
+    Test whether the program flow (try/finally, gs.exit,
+    gs.delete_instance) is correct if executing fails.
+    """
+    args = STDARGS
+    instance = gs.new_instance()
+    try:
+        assert gs.init_with_args(instance, args) == 0
+        with pytest.raises(gs.GhostscriptError):
+            gs.run_string(instance, b"invalid postscript code")
+    finally:
+        gs.exit(instance)
+        gs.delete_instance(instance)
+
+
 def test_simple(tmpdir):
     """Let ghostscript read from a file and write to a file"""
     infile = tmpdir.join('in.ps')
-    infile.write(postscript_img)
+    infile.write(POSTSCRIPT_DATA)
     outfile = tmpdir.join('out.bmp')
 
     args = STDARGS + _encode('-sOutputFile=%s' % outfile, str(infile))
 
     instance = gs.new_instance()
     try:
-        gs.init_with_args(instance, args)
+        assert gs.init_with_args(instance, args) == 0
     finally:
         gs.exit(instance)
         gs.delete_instance(instance)
@@ -103,14 +119,17 @@ def _gs_stdio(args, stdin=None, stdout=None, stderr=None):
     instance = gs.new_instance()
 
     # wrappers like in
-    # http://ghostscript.com/doc/8.54/API.htm#Example_usage
+    # https://ghostscript.readthedocs.io/en/gs10.0.0/API.html#Example_usage
     if stdin  is not None: stdin  = gs._wrap_stdin(stdin)
     if stdout is not None: stdout = gs._wrap_stdout(stdout)
     if stderr is not None: stderr = gs._wrap_stderr(stderr)
 
     gs.set_stdio(instance, stdin, stdout, stderr)
     try:
-        gs.init_with_args(instance, args)
+        assert gs.init_with_args(instance, args) in (0, gs.e_Info)
+    except gs.GhostscriptError as e:
+        if e.code != gs.e_Quit:
+            raise
     finally:
         gs.exit(instance)
         gs.delete_instance(instance)
@@ -122,7 +141,7 @@ def test_stdin(tmpdir):
 
     args = STDARGS + _encode('-sOutputFile=%s' % outfile, '-')
 
-    _gs_stdio(args, stdin=io.BytesIO(postscript_img))
+    _gs_stdio(args, stdin=io.BytesIO(POSTSCRIPT_DATA))
 
     data = outfile.read('rb')
     assert data == TEST_PIC_DATA
@@ -164,12 +183,10 @@ def test_stderr(tmpdir):
 
     stderr = io.BytesIO() # buffer for collecting stderr
 
-    try:
+    with pytest.raises(gs.GhostscriptError):
         # this call is expected to fail due to the intended error in
         # the postscript code
         _gs_stdio(args, stdin=io.BytesIO(b'foobar'), stderr=stderr)
-    except gs.GhostscriptError:
-        pass
 
     data = stderr.getvalue()
     assert b'Unrecoverable error' in data
@@ -185,13 +202,11 @@ def test_stdout_stderr(tmpdir):
     stdout = io.BytesIO() # buffer for collecting the output
     stderr = io.BytesIO() # buffer for collecting stderr
 
-    try:
+    with pytest.raises(gs.GhostscriptError):
         # this call is expected to fail due to the intended error in
         # the postscript code
         _gs_stdio(args,
                   stdin=io.BytesIO(b'foobar'), stdout=stdout, stderr=stderr)
-    except gs.GhostscriptError:
-        pass
 
     data = stdout.getvalue()
     assert b'Error: /undefined in foobar' in data
@@ -206,10 +221,10 @@ def generate_test_picture():
     Use command line ghostscript to generate the image used in testing
     """
     import subprocess
-    outfile = TEST_PIC_FILENAME
+    args = ['gs'] + STDARGS[1:] + _encode('-sOutputFile=%s' % TEST_PIC,
+                                          str(POSTSCRIPT_FILE))
+    subprocess.Popen(args).wait()
 
-    args = ['gs'] + STDARGS[1:] + _encode('-sOutputFile=%s' % outfile, '-')
-    subprocess.Popen(args).communicate(postscript_doc)    
 
 if __name__ ==  '__main__':
     generate_test_picture()

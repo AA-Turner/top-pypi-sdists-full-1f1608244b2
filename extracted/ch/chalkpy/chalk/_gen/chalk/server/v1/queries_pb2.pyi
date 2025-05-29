@@ -188,3 +188,36 @@ class GetQueryErrorsChartResponse(_message.Message):
     def __init__(
         self, chart: _Optional[_Union[_densetimeserieschart_pb2.DenseTimeSeriesChart, _Mapping]] = ...
     ) -> None: ...
+
+class GetQueryPlanRequest(_message.Message):
+    __slots__ = ("query_plan_id",)
+    QUERY_PLAN_ID_FIELD_NUMBER: _ClassVar[int]
+    query_plan_id: str
+    def __init__(self, query_plan_id: _Optional[str] = ...) -> None: ...
+
+class QueryPlan(_message.Message):
+    __slots__ = ("id", "environment_id", "deployment_id", "query_plan", "created_at")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    ENVIRONMENT_ID_FIELD_NUMBER: _ClassVar[int]
+    DEPLOYMENT_ID_FIELD_NUMBER: _ClassVar[int]
+    QUERY_PLAN_FIELD_NUMBER: _ClassVar[int]
+    CREATED_AT_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    environment_id: str
+    deployment_id: str
+    query_plan: str
+    created_at: _timestamp_pb2.Timestamp
+    def __init__(
+        self,
+        id: _Optional[str] = ...,
+        environment_id: _Optional[str] = ...,
+        deployment_id: _Optional[str] = ...,
+        query_plan: _Optional[str] = ...,
+        created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...,
+    ) -> None: ...
+
+class GetQueryPlanResponse(_message.Message):
+    __slots__ = ("query_plan",)
+    QUERY_PLAN_FIELD_NUMBER: _ClassVar[int]
+    query_plan: QueryPlan
+    def __init__(self, query_plan: _Optional[_Union[QueryPlan, _Mapping]] = ...) -> None: ...

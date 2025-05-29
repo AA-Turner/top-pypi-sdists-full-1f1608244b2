@@ -590,16 +590,18 @@ class AnalysisWorksheet(Worksheet):
                               shown                               Si, Sc, M
             Axis Auto Scale   Boolean if the axis should auto
                               scale                               Si, Sc, M
-            Axis Limits       A dict of {'min': float,
-                              'max': float} to specify the axis
-                              limits. Ignored if Auto Axis Scale
-                              is True.                            Si, Sc, M
+            Axis Min          Minimum axis limit. Ignored is Auto Si, Sc, M
+                              Axis Scale is True
+            Axis Max          Maximum axis limit. Ignored if Auto Si, Sc, M
+                              Axis Scale is True
             Axis Group        An identifier to specify shared
                               axes                                Si, Sc, M
             Lane              The lane a trend is plotted in      Si, Sc, M
             Axis Align        Specify the side of the plot for
                               the y-axis. 'Left' (default) or
                               'Right'.                            Si, Sc, M
+            Axis Type         The type of axis scale. Options
+                              are 'Linear' and 'Logarithmic'      Si, Sc, M
             Line Style        The trend line style. Options are
                               'Solid', 'Dot', 'Short Dash',
                               'Long Dash', 'Short Dash-Dot',
@@ -614,6 +616,10 @@ class AnalysisWorksheet(Worksheet):
                               be selected                         All
             Stack             Boolean indicating if bars should
                               be stacked                          T
+            Values            Boolean indicating if value
+                              labels should be shown on samples   Si, Sc, M
+            Overlay           Order conditions should be          C
+                              overlaid in condition-only lanes
             ================= =================================== =============
 
         Returns

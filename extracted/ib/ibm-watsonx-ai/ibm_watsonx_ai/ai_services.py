@@ -159,7 +159,7 @@ class AIServices(WMLResource):
                 ai_service_metadata["project_id"] = self._client.default_project_id
 
             response_post = requests.post(
-                self._client.service_instance._href_definitions.get_ai_services_href(),
+                self._client._href_definitions.get_ai_services_href(),
                 json=ai_service_metadata,
                 params=self._client._params(skip_for_create=True),
                 headers=self._client._get_headers(),
@@ -173,7 +173,7 @@ class AIServices(WMLResource):
 
             # uploading code
             ai_service_content_url = (
-                self._client.service_instance._href_definitions.get_ai_service_href(
+                self._client._href_definitions.get_ai_service_href(
                     details["metadata"]["id"]
                 )
                 + "/code"
@@ -249,9 +249,7 @@ class AIServices(WMLResource):
             details, changes, with_validation=True
         )
 
-        url = self._client.service_instance._href_definitions.get_ai_service_href(
-            ai_service_id
-        )
+        url = self._client._href_definitions.get_ai_service_href(ai_service_id)
         response = requests.patch(
             url,
             json=patch_payload,
@@ -283,9 +281,7 @@ class AIServices(WMLResource):
         )
         try:
             function_content_url = (
-                self._client.service_instance._href_definitions.get_ai_service_href(
-                    ai_service_id
-                )
+                self._client._href_definitions.get_ai_service_href(ai_service_id)
                 + "/code"
             )
 
@@ -349,10 +345,7 @@ class AIServices(WMLResource):
         AIServices._validate_type(filename, "filename", str, True)
 
         artifact_content_url = (
-            self._client.service_instance._href_definitions.get_ai_service_href(
-                ai_service_id
-            )
-            + "/code"
+            self._client._href_definitions.get_ai_service_href(ai_service_id) + "/code"
         )
 
         try:
@@ -426,10 +419,8 @@ class AIServices(WMLResource):
                 "Cannot delete AI service that has existing deployments. Please delete all associated deployments and try again"
             )
 
-        ai_service_endpoint = (
-            self._client.service_instance._href_definitions.get_ai_service_href(
-                ai_service_id
-            )
+        ai_service_endpoint = self._client._href_definitions.get_ai_service_href(
+            ai_service_id
         )
         self._logger.debug(
             "Deletion artifact AI service endpoint: {}".format(ai_service_endpoint)
@@ -508,7 +499,7 @@ class AIServices(WMLResource):
             warn(spec_state_setting_warning)
 
         self._client._check_if_either_is_set()
-        url = self._client.service_instance._href_definitions.get_ai_services_href()
+        url = self._client._href_definitions.get_ai_services_href()
 
         if ai_service_id is None:
             if spec_state:
@@ -617,7 +608,7 @@ class AIServices(WMLResource):
 
         AIServices._validate_type(ai_service_id, "ai_service_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_ai_services_href()
+        url = self._client._href_definitions.get_ai_services_href()
         return self._create_revision_artifact(url, ai_service_id, "ai_service_id")
 
     def get_revision_details(
@@ -648,9 +639,7 @@ class AIServices(WMLResource):
         AIServices._validate_type(ai_service_id, "ai_service_id", str, True)
         AIServices._validate_type(rev_id, "rev_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_ai_service_href(
-            ai_service_id
-        )
+        url = self._client._href_definitions.get_ai_service_href(ai_service_id)
         return self._get_with_or_without_limit(
             url,
             limit=None,
@@ -686,9 +675,7 @@ class AIServices(WMLResource):
 
         AIServices._validate_type(ai_service_id, "ai_service_id", str, True)
 
-        url = self._client.service_instance._href_definitions.get_ai_service_href(
-            ai_service_id
-        )
+        url = self._client._href_definitions.get_ai_service_href(ai_service_id)
 
         ai_services_resources = self._get_artifact_details(
             url + "/revisions",

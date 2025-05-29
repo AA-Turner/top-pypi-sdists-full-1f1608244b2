@@ -671,6 +671,9 @@ class HAPDetectionWarning(UserWarning): ...
 class PIIDetectionWarning(UserWarning): ...
 
 
+class GraniteGuardianDetectionWarning(UserWarning): ...
+
+
 class LifecycleWarning(UserWarning): ...
 
 
@@ -728,7 +731,7 @@ def _copy_function(func: Callable) -> Callable:
 def _is_fine_tuning_endpoint_available(api_client: APIClient) -> bool:
 
     try:
-        url = api_client.service_instance._href_definitions.get_fine_tunings_href()
+        url = api_client._href_definitions.get_fine_tunings_href()
 
         response_fine_tuning_api = api_client._session.get(
             url=f"{url}?limit=1",

@@ -1,15 +1,20 @@
 // ================================================================
-// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+// Copyright (c) Meta Platforms, Inc. and affiliates.
 // ================================================================
 
 #ifndef PDQHAMMING_H
 #define PDQHAMMING_H
 
+#include <bitset>
+
 #include <pdq/cpp/common/pdqbasetypes.h>
 
-// If your compiler doesn't support __builtin_popcount then feel free to
-// undefine this. (Experiments have shown that using builtin popcount helps
-// performance by a few percent -- worth using but OK to live without.)
+// NOTICE:
+// USE_BUILTIN_POPCOUNT controls how the popcount is calculated.
+// If it is not defined, the popcount will be calculated with lookup tables.
+// If it is defined, it calculates popcount using bitset. This generally is
+// generally faster because it compile directly to popcount instruction on some
+// architectures, e.g., x86-64 and aarch64.
 #define USE_BUILTIN_POPCOUNT
 
 namespace facebook {
@@ -17,19 +22,43 @@ namespace pdq {
 namespace hashing {
 
 #ifdef USE_BUILTIN_POPCOUNT
-// Inlined right here
+
+/**
+ * @brief Returns the number of bits set.
+ *
+ * @param T An unsigned integer type.
+ */
+template <typename T>
+int popcount(const T x) {
+  return static_cast<int>(std::bitset<sizeof(T) * 8U>(x).count());
+}
+
+/**
+ * @brief Returns the number of different bits between two numbers.
+ *
+ * @param T An unsigned integer type.
+ */
+template <typename T>
+int hammingDistance(const T a, const T b) {
+  return popcount(a ^ b);
+}
+
 inline int hammingNorm8(Hash8 h) {
-  return __builtin_popcount((unsigned)h);
+  return popcount<Hash8>(h);
 }
 inline int hammingNorm16(Hash16 h) {
-  return __builtin_popcount((unsigned)h);
+  return popcount<Hash16>(h);
 }
 inline int hammingDistance8(Hash8 a, Hash8 b) {
-  return __builtin_popcount((unsigned)(a^b));
+  return hammingDistance<Hash8>(a, b);
 }
 inline int hammingDistance16(Hash16 a, Hash16 b) {
-  return __builtin_popcount((unsigned)(a^b));
+  return hammingDistance<Hash16>(a, b);
 }
+inline int hammingDistance64(Hash64 a, Hash64 b) {
+  return hammingDistance<Hash64>(a, b);
+}
+
 #else
 // Implemented in pdqhamming.cpp with lookup tables.
 int hammingNorm8(Hash8 h);

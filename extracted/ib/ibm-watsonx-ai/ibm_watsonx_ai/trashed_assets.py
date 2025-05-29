@@ -47,7 +47,7 @@ class TrashedAssets(WMLResource):
         TrashedAssets._validate_type(asset_id, "asset_id", str, False)
         TrashedAssets._validate_type(limit, "limit", int, False)
 
-        href = self._client.service_instance._href_definitions.get_trashed_assets_href()
+        href = self._client._href_definitions.get_trashed_assets_href()
 
         if asset_id is None:
             return self._get_artifact_details(
@@ -83,7 +83,7 @@ class TrashedAssets(WMLResource):
 
     def _remove_attachment(self, attachment_path):
         response = self._client._session.delete(
-            self._client.service_instance._href_definitions.get_wsd_model_attachment_href()
+            self._client._href_definitions.get_wsd_model_attachment_href()
             + f"/{attachment_path}",
             headers=self._client._get_headers(),
             params=self._client._params(),
@@ -146,9 +146,7 @@ class TrashedAssets(WMLResource):
             asset_details = client.trashed_assets.restore(asset_id)
         """
         response = self._client._session.post(
-            self._client.service_instance._href_definitions.get_trashed_asset_restore_href(
-                asset_id
-            ),
+            self._client._href_definitions.get_trashed_asset_restore_href(asset_id),
             headers=self._client._get_headers(),
             params=self._client._params(),
         )
@@ -172,7 +170,7 @@ class TrashedAssets(WMLResource):
             client.trashed_assets.purge_all()
         """
         response = self._client._session.delete(
-            self._client.service_instance._href_definitions.get_trashed_assets_purge_all_href(),
+            self._client._href_definitions.get_trashed_assets_purge_all_href(),
             headers=self._client._get_headers(),
             params=self._client._params(),
         )
@@ -200,9 +198,7 @@ class TrashedAssets(WMLResource):
             client.trashed_assets.delete(asset_id)
         """
         response = self._client._session.delete(
-            self._client.service_instance._href_definitions.get_trashed_asset_href(
-                asset_id
-            ),
+            self._client._href_definitions.get_trashed_asset_href(asset_id),
             headers=self._client._get_headers(),
             params=self._client._params(),
         )

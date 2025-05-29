@@ -21,11 +21,13 @@ from typing import Optional, Union
 from typing_extensions import Annotated
 from scope_client.api_bindings.models.alert_bound import AlertBound
 from scope_client.api_bindings.models.alert_rule import AlertRule
+from scope_client.api_bindings.models.alert_rule_sql_validation_resp import AlertRuleSQLValidationResp
 from scope_client.api_bindings.models.alert_rule_sort import AlertRuleSort
 from scope_client.api_bindings.models.patch_alert_rule import PatchAlertRule
 from scope_client.api_bindings.models.post_alert_rule import PostAlertRule
 from scope_client.api_bindings.models.resource_list_alert_rule import ResourceListAlertRule
 from scope_client.api_bindings.models.sort_order import SortOrder
+from scope_client.api_bindings.models.validate_alert_rule_query_req import ValidateAlertRuleQueryReq
 
 from scope_client.api_bindings.api_client import ApiClient, RequestSerialized
 from scope_client.api_bindings.api_response import ApiResponse
@@ -1311,6 +1313,307 @@ class AlertRulesV1Api:
         return self.api_client.param_serialize(
             method='PATCH',
             resource_path='/api/v1/alert_rules/{alert_rule_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def post_alert_rule_query_validation(
+        self,
+        model_id: StrictStr,
+        validate_alert_rule_query_req: ValidateAlertRuleQueryReq,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> AlertRuleSQLValidationResp:
+        """Validate A Model Alert Rule Query
+
+        Validates an alert rule query. Requires model_create_alert_rule permission.
+
+        :param model_id: (required)
+        :type model_id: str
+        :param validate_alert_rule_query_req: (required)
+        :type validate_alert_rule_query_req: ValidateAlertRuleQueryReq
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._post_alert_rule_query_validation_serialize(
+            model_id=model_id,
+            validate_alert_rule_query_req=validate_alert_rule_query_req,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AlertRuleSQLValidationResp",
+            '500': "InternalServerError",
+            '404': "NotFoundError",
+            '400': "BadRequestError",
+            '422': "HTTPValidationError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def post_alert_rule_query_validation_with_http_info(
+        self,
+        model_id: StrictStr,
+        validate_alert_rule_query_req: ValidateAlertRuleQueryReq,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[AlertRuleSQLValidationResp]:
+        """Validate A Model Alert Rule Query
+
+        Validates an alert rule query. Requires model_create_alert_rule permission.
+
+        :param model_id: (required)
+        :type model_id: str
+        :param validate_alert_rule_query_req: (required)
+        :type validate_alert_rule_query_req: ValidateAlertRuleQueryReq
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._post_alert_rule_query_validation_serialize(
+            model_id=model_id,
+            validate_alert_rule_query_req=validate_alert_rule_query_req,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AlertRuleSQLValidationResp",
+            '500': "InternalServerError",
+            '404': "NotFoundError",
+            '400': "BadRequestError",
+            '422': "HTTPValidationError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def post_alert_rule_query_validation_without_preload_content(
+        self,
+        model_id: StrictStr,
+        validate_alert_rule_query_req: ValidateAlertRuleQueryReq,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Validate A Model Alert Rule Query
+
+        Validates an alert rule query. Requires model_create_alert_rule permission.
+
+        :param model_id: (required)
+        :type model_id: str
+        :param validate_alert_rule_query_req: (required)
+        :type validate_alert_rule_query_req: ValidateAlertRuleQueryReq
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._post_alert_rule_query_validation_serialize(
+            model_id=model_id,
+            validate_alert_rule_query_req=validate_alert_rule_query_req,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AlertRuleSQLValidationResp",
+            '500': "InternalServerError",
+            '404': "NotFoundError",
+            '400': "BadRequestError",
+            '422': "HTTPValidationError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _post_alert_rule_query_validation_serialize(
+        self,
+        model_id,
+        validate_alert_rule_query_req,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if model_id is not None:
+            _path_params['model_id'] = model_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if validate_alert_rule_query_req is not None:
+            _body_params = validate_alert_rule_query_req
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2AuthorizationCode'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/api/v1/models/{model_id}/alert_rule_query_validation',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

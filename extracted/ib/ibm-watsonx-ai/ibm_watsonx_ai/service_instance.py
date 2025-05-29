@@ -5,14 +5,10 @@
 
 from __future__ import annotations
 
-import json
-import base64
 import logging
 from typing import TYPE_CHECKING
 from warnings import warn
 
-from ibm_watsonx_ai.href_definitions import HrefDefinitions
-from ibm_watsonx_ai.utils.auth import get_auth_method
 from ibm_watsonx_ai.wml_client_error import (
     WMLClientError,
     ApiRequestFailure,
@@ -29,21 +25,16 @@ class ServiceInstance:
     def __init__(self, client: APIClient) -> None:
         self._logger = logging.getLogger(__name__)
         self._client = client
-        self._credentials = client.credentials
 
         self._instance_id = self._client.credentials.instance_id
-
-        # This is used in connections.py
-        self._href_definitions = HrefDefinitions(
-            self._client,
-            self._client.CLOUD_PLATFORM_SPACES,
-            self._client.PLATFORM_URL,
-            self._client.ICP_PLATFORM_SPACES,
-        )
 
         # ml_repository_client is initialized in repo
         self._details = None
         self._refresh_details = False
+
+    @property
+    def _credentials(self):
+        return self._client.credentials
 
     def _get_token(self) -> str:
         """Get token.
@@ -57,6 +48,10 @@ class ServiceInstance:
         )
         warn(get_token_method_deprecated_warning, category=DeprecationWarning)
         return self._client.token
+
+    @property
+    def _href_definitions(self):
+        return self._client._href_definitions
 
     @property
     def instance_id(self):

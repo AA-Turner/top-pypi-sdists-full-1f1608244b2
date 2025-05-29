@@ -230,6 +230,9 @@ class Cluster(DistributedCluster, Generic[IsAsynchronous]):
         this allows you to skip the step of explicitly creating a Coiled software environment
         from that image. Specifying this argument will disable package sync, and it
         cannot be combined with ``software``.
+    ignore_container_entrypoint
+        Ignore entrypoint for specified Docker container (like ``docker run --entrypoint``);
+        default is to use the entrypoint (if any) set on the image.
     worker_class
         Worker class to use. Defaults to :class:`distributed.nanny.Nanny`.
     worker_options
@@ -463,6 +466,7 @@ class Cluster(DistributedCluster, Generic[IsAsynchronous]):
         *,
         software: str | None = None,
         container: str | None = None,
+        ignore_container_entrypoint: bool | None = None,
         n_workers: Union[int, List[int]] | None = None,
         worker_class: str | None = None,
         worker_options: dict | None = None,
@@ -592,12 +596,21 @@ class Cluster(DistributedCluster, Generic[IsAsynchronous]):
         self.init_time = datetime.datetime.now(tz=datetime.timezone.utc)
         type(self)._instances.add(self)
 
-        senv_kwargs = {"package_sync": package_sync, "software": software, "container": container}
+        senv_kwargs = {
+            "package_sync": package_sync,
+            "software": software,
+            "container": container,
+        }
         set_senv_kwargs = [name for name, value in senv_kwargs.items() if value]
         if len(set_senv_kwargs) > 1:
             raise ValueError(
                 f"Multiple software environment parameters are set: {', '.join(set_senv_kwargs)}. "
                 "You must use only one of these."
+            )
+        if not container and ignore_container_entrypoint is not None:
+            raise ValueError(
+                "`ignore_container_entrypoint` must be used together with the `container` keyword; "
+                "it is not compatible with `package_sync` or `software`"
             )
         self._software_environment_name = ""
         self._package_sync_use_uv_installer = package_sync_use_uv_installer
@@ -609,7 +622,6 @@ class Cluster(DistributedCluster, Generic[IsAsynchronous]):
                 category=FutureWarning,
                 stacklevel=2,
             )
-
         self.package_sync = bool(package_sync)
         self.package_sync_ignore = package_sync_ignore
         self.package_sync_conda_extras = package_sync_conda_extras
@@ -728,6 +740,7 @@ class Cluster(DistributedCluster, Generic[IsAsynchronous]):
 
         self.software_environment = software or dask.config.get("coiled.software")
         self.software_container = container
+        self.software_use_entrypoint = not ignore_container_entrypoint
         if not container and not self.software_environment and not package_sync:
             self.package_sync = True
 
@@ -1482,6 +1495,7 @@ class Cluster(DistributedCluster, Generic[IsAsynchronous]):
                         workspace=self.workspace,
                         architecture=self.arch,
                         region_name=self.backend_options.get("region_name") if self.backend_options else None,
+                        use_entrypoint=self.software_use_entrypoint,
                     )
                     self.software_environment = container_senv_name
 

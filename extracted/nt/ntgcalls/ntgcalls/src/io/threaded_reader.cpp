@@ -6,7 +6,7 @@
 #include <ntgcalls/io/threaded_reader.hpp>
 
 namespace ntgcalls {
-    ThreadedReader::ThreadedReader(BaseSink *sink, const size_t threadCount): BaseReader(sink) {
+    ThreadedReader::ThreadedReader(BaseSink *sink, const size_t threadCount): BaseReader(sink), SyncHelper(sink->frameTime()) {
         bufferThreads.reserve(threadCount);
     }
 
@@ -27,11 +27,12 @@ namespace ntgcalls {
         if (running) return;
         const auto bufferCount = bufferThreads.capacity();
         running = true;
-        auto frameTime = sink->frameTime();
+        synchronizeTime();
+        const auto frameTime = sink->frameTime();
         for (size_t i = 0; i < bufferCount; ++i) {
             bufferThreads.push_back(
                 rtc::PlatformThread::SpawnJoinable(
-                    [this, i, bufferCount, frequencyFrames = getFrameFrequency(), frameSize = sink->frameSize(), maxBufferSize = std::chrono::seconds(1) / frameTime / 10, frameTime, readCallback] {
+                    [this, i, bufferCount, frameSize = sink->frameSize(), maxBufferSize = std::chrono::seconds(1) / frameTime / 10, readCallback] {
                         activeBufferCount++;
                         std::vector<bytes::unique_binary> frames;
                         frames.reserve(maxBufferSize);
@@ -56,19 +57,14 @@ namespace ntgcalls {
                             {
                                 std::unique_lock lock(mtx);
                                 cv.wait(lock, [this, i] {
-                                    return !running || (activeBuffer == i && enabled);
+                                    return !running || (activeBuffer == i && status);
                                 });
                             }
                             if (!running) break;
                             for (auto& chunk : frames) {
                                 if (!running) break;
                                 dataCallback(std::move(chunk), {});
-                                auto additionalTime = std::chrono::nanoseconds(0);
-                                if (frequencyFrames > 0 && std::fmod(frameSent, frequencyFrames) < 1) {
-                                    additionalTime = std::chrono::milliseconds(1);
-                                }
-                                std::this_thread::sleep_for(frameTime + additionalTime);
-                                frameSent++;
+                                waitNextFrame();
                             }
                             activeBuffer = (activeBuffer + 1) % bufferCount;
                             cv.notify_all();
@@ -86,18 +82,9 @@ namespace ntgcalls {
         }
     }
 
-    bool ThreadedReader::set_enabled(const bool status) {
-        const auto res = BaseReader::set_enabled(status);
+    bool ThreadedReader::set_enabled(const bool enable) {
+        const auto res = BaseReader::set_enabled(enable);
         cv.notify_all();
         return res;
-    }
-
-    double_t ThreadedReader::getFrameFrequency() const {
-        const auto missingMS  = std::chrono::milliseconds(1000) - std::chrono::duration_cast<std::chrono::milliseconds>(sink->frameTime()) * sink -> frameRate();
-        double_t frequencyFrames = 0;
-        if (missingMS.count() > 0) {
-            frequencyFrames = sink -> frameRate() / static_cast<double_t>(missingMS.count());
-        }
-        return frequencyFrames;
     }
 } // ntgcalls

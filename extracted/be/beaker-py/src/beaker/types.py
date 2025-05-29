@@ -11,28 +11,9 @@ from . import beaker_pb2 as pb2
 from .common import to_lower_camel, to_nanoseconds, to_snake_case
 
 __all__ = [
-    "PathOrStr",
-    "BeakerSortOrder",
-    "BeakerAuthRole",
-    "BeakerJobPriority",
-    "BeakerWorkloadType",
-    "BeakerWorkloadStatus",
-    "BeakerDatasetFileAlgorithmType",
-    "BeakerCancelationCode",
-    "BeakerGpuType",
-    "BeakerImageSource",
-    "BeakerEnvVar",
-    "BeakerDataSource",
-    "BeakerDataMount",
-    "BeakerResultSpec",
-    "BeakerTaskResources",
-    "BeakerTaskContext",
-    "BeakerTaskSpec",
-    "BeakerSpecVersion",
-    "BeakerRetrySpec",
-    "BeakerExperimentSpec",
-    "BeakerConstraints",
     "BeakerJob",
+    "BeakerJobLog",
+    "BeakerSummarizedJobEvent",
     "BeakerWorkload",
     "BeakerExperiment",
     "BeakerTask",
@@ -40,6 +21,7 @@ __all__ = [
     "BeakerCluster",
     "BeakerNode",
     "BeakerDataset",
+    "BeakerDatasetFile",
     "BeakerGroup",
     "BeakerSecret",
     "BeakerOrganization",
@@ -49,28 +31,135 @@ __all__ = [
     "BeakerQueue",
     "BeakerQueueWorker",
     "BeakerQueueEntry",
+    "BeakerSortOrder",
+    "BeakerAuthRole",
+    "BeakerJobPriority",
+    "BeakerWorkloadType",
+    "BeakerWorkloadStatus",
+    "BeakerDatasetFileAlgorithmType",
+    "BeakerCancelationCode",
+    "BeakerGpuType",
+    "BeakerQueueEntryState",
+    "BeakerExperimentSpec",
+    "BeakerTaskSpec",
+    "BeakerImageSource",
+    "BeakerEnvVar",
+    "BeakerDataSource",
+    "BeakerDataMount",
+    "BeakerResultSpec",
+    "BeakerTaskResources",
+    "BeakerTaskContext",
+    "BeakerRetrySpec",
+    "BeakerConstraints",
+    "BeakerSpecVersion",
+    "PathOrStr",
 ]
 
 
 PathOrStr = os.PathLike | str
+"""
+A path-like object or string representing a path.
+"""
 
 BeakerJob = pb2.Job
+"""
+A type alias for the auto-generated protobuf `Job <https://beaker-docs.apps.allenai.org/grpc.html#job>`_ type.
+"""
+
+BeakerJobLog = pb2.JobLog
+"""
+A type alias for the auto-generated protobuf `JobLog <https://beaker-docs.apps.allenai.org/grpc.html#joblog>`_ type.
+"""
+
+BeakerSummarizedJobEvent = pb2.SummarizedJobEvent
+"""
+A type alias for the auto-generated protobuf `SummarizedJobEvent <https://beaker-docs.apps.allenai.org/grpc.html#summarizedjobevent>`_ type.
+"""
+
 BeakerWorkload = pb2.Workload
+"""
+A type alias for the auto-generated protobuf `Workload <https://beaker-docs.apps.allenai.org/grpc.html#workload>`_ type.
+"""
+
 BeakerExperiment = pb2.Experiment
+"""
+A type alias for the auto-generated protobuf `Experiment <https://beaker-docs.apps.allenai.org/grpc.html#experiment>`_ type.
+"""
+
 BeakerTask = pb2.Task
+"""
+A type alias for the auto-generated protobuf `Task <https://beaker-docs.apps.allenai.org/grpc.html#task>`_ type.
+"""
+
 BeakerImage = pb2.Image
+"""
+A type alias for the auto-generated protobuf `Image <https://beaker-docs.apps.allenai.org/grpc.html#image>`_ type.
+"""
+
 BeakerCluster = pb2.Cluster
+"""
+A type alias for the auto-generated protobuf `Cluster <https://beaker-docs.apps.allenai.org/grpc.html#cluster>`_ type.
+"""
+
 BeakerNode = pb2.Node
+"""
+A type alias for the auto-generated protobuf `Node <https://beaker-docs.apps.allenai.org/grpc.html#node>`_ type.
+"""
+
 BeakerDataset = pb2.Dataset
+"""
+A type alias for the auto-generated protobuf `Dataset <https://beaker-docs.apps.allenai.org/grpc.html#dataset>`_ type.
+"""
+
+BeakerDatasetFile = pb2.DatasetFile
+"""
+A type alias for the auto-generated protobuf `DatasetFile <https://beaker-docs.apps.allenai.org/grpc.html#datasetfile>`_ type.
+"""
+
 BeakerGroup = pb2.Group
+"""
+A type alias for the auto-generated protobuf `Group <https://beaker-docs.apps.allenai.org/grpc.html#group>`_ type.
+"""
+
 BeakerSecret = pb2.Secret
+"""
+A type alias for the auto-generated protobuf `Secret <https://beaker-docs.apps.allenai.org/grpc.html#secret>`_ type.
+"""
+
 BeakerOrganization = pb2.Organization
+"""
+A type alias for the auto-generated protobuf `Organization <https://beaker-docs.apps.allenai.org/grpc.html#organization>`_ type.
+"""
+
 BeakerUser = pb2.User
+"""
+A type alias for the auto-generated protobuf `User <https://beaker-docs.apps.allenai.org/grpc.html#user>`_ type.
+"""
+
 BeakerEnvironment = pb2.Environment
+"""
+A type alias for the auto-generated protobuf `Environment <https://beaker-docs.apps.allenai.org/grpc.html#environment>`_ type.
+"""
+
 BeakerWorkspace = pb2.Workspace
+"""
+A type alias for the auto-generated protobuf `Workspace <https://beaker-docs.apps.allenai.org/grpc.html#workspace>`_ type.
+"""
+
 BeakerQueue = pb2.Queue
+"""
+A type alias for the auto-generated protobuf `Queue <https://beaker-docs.apps.allenai.org/grpc.html#queue>`_ type.
+"""
+
 BeakerQueueWorker = pb2.QueueWorker
+"""
+A type alias for the auto-generated protobuf `QueueWorker <https://beaker-docs.apps.allenai.org/grpc.html#queueworker>`_ type.
+"""
+
 BeakerQueueEntry = pb2.QueueEntry
+"""
+A type alias for the auto-generated protobuf `QueueEntry <https://beaker-docs.apps.allenai.org/grpc.html#queueentry>`_ type.
+"""
 
 
 class BaseEnum(Enum):
@@ -96,11 +185,19 @@ class StrEnum(str, BaseEnum):
 
 
 class BeakerSortOrder(IntEnum):
+    """
+    Defines the sort order for list operations.
+    """
+
     descending = pb2.SortOrder.SORT_ORDER_DESCENDING
     ascending = pb2.SortOrder.SORT_ORDER_ASCENDING
 
 
 class BeakerAuthRole(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `AuthRole <https://beaker-docs.apps.allenai.org/grpc.html#authrole>`_ values.
+    """
+
     deactivated = pb2.AuthRole.AUTH_ROLE_DEACTIVATED
     scientist = pb2.AuthRole.AUTH_ROLE_SCIENTIST
     system = pb2.AuthRole.AUTH_ROLE_SYSTEM
@@ -108,6 +205,10 @@ class BeakerAuthRole(IntEnum):
 
 
 class BeakerJobPriority(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `JobPriority <https://beaker-docs.apps.allenai.org/grpc.html#jobpriority>`_ values.
+    """
+
     low = pb2.JobPriority.JOB_PRIORITY_LOW
     normal = pb2.JobPriority.JOB_PRIORITY_NORMAL
     high = pb2.JobPriority.JOB_PRIORITY_HIGH
@@ -115,11 +216,19 @@ class BeakerJobPriority(IntEnum):
 
 
 class BeakerWorkloadType(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `WorkloadType <https://beaker-docs.apps.allenai.org/grpc.html#workloadtype>`_ values.
+    """
+
     experiment = pb2.WorkloadType.WORKLOAD_TYPE_EXPERIMENT
     environment = pb2.WorkloadType.WORKLOAD_TYPE_ENVIRONMENT
 
 
 class BeakerWorkloadStatus(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `WorkloadStatus <https://beaker-docs.apps.allenai.org/grpc.html#workloadstatus>`_ values.
+    """
+
     submitted = pb2.WorkloadStatus.STATUS_SUBMITTED
     queued = pb2.WorkloadStatus.STATUS_QUEUED
     initializing = pb2.WorkloadStatus.STATUS_INITIALIZING
@@ -133,6 +242,10 @@ class BeakerWorkloadStatus(IntEnum):
 
 
 class BeakerDatasetFileAlgorithmType(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `DatasetFile <https://beaker-docs.apps.allenai.org/grpc.html#datasetfile>`_ algorithm type values.
+    """
+
     SHA256 = pb2.DatasetFile.ALGORITHM_TYPE_SHA256
     CRC32C = pb2.DatasetFile.ALGORITHM_TYPE_CRC32C
 
@@ -153,6 +266,10 @@ class BeakerDatasetFileAlgorithmType(IntEnum):
 
 
 class BeakerCancelationCode(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `CancelationCode <https://beaker-docs.apps.allenai.org/grpc.html#cancelationcode>`_ values.
+    """
+
     system_preemption = pb2.CancelationCode.CANCELATION_CODE_SYSTEM_PREEMPTION
     user_preemption = pb2.CancelationCode.CANCELATION_CODE_USER_PREEMPTION
     idle = pb2.CancelationCode.CANCELATION_CODE_IDLE
@@ -166,7 +283,24 @@ class BeakerCancelationCode(IntEnum):
     sibling_task_retry = pb2.CancelationCode.CANCELATION_CODE_SIBLING_TASK_RETRY
 
 
+class BeakerQueueEntryState(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `QueueEntryState <https://beaker-docs.apps.allenai.org/grpc.html#queueentrystate>`_ values.
+    """
+
+    pending = pb2.QueueEntryState.QUEUE_ENTRY_STATE_PENDING
+    claimed = pb2.QueueEntryState.QUEUE_ENTRY_STATE_CLAIMED
+    canceled = pb2.QueueEntryState.QUEUE_ENTRY_STATE_CANCELED
+    completed = pb2.QueueEntryState.QUEUE_ENTRY_STATE_COMPLETED
+    rejected = pb2.QueueEntryState.QUEUE_ENTRY_STATE_REJECTED
+    failed = pb2.QueueEntryState.QUEUE_ENTRY_STATE_FAILED
+
+
 class BeakerGpuType(IntEnum):
+    """
+    An enumeration of the corresponding auto-generated protobuf `GpuType <https://beaker-docs.apps.allenai.org/grpc.html#gputype>`_ values.
+    """
+
     NVIDIA_H100 = pb2.GpuType.GPU_TYPE_NVIDIA_H100
     NVIDIA_A100_80GB = pb2.GpuType.GPU_TYPE_NVIDIA_A100_80GB
     NVIDIA_A100_40GB = pb2.GpuType.GPU_TYPE_NVIDIA_A100_40GB
@@ -225,12 +359,22 @@ class _BeakerSpecBase:
 
 @dataclass
 class BeakerImageSource(_BeakerSpecBase):
+    """
+    See the `ImageSource spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#imagesource>`_
+    for an explanation of the fields.
+    """
+
     beaker: str | None = None
     docker: str | None = None
 
 
 @dataclass
 class BeakerEnvVar(_BeakerSpecBase):
+    """
+    See the `EnvVar spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#envvar>`_
+    for an explanation of the fields.
+    """
+
     name: str
     value: str | None = None
     secret: str | None = None
@@ -238,6 +382,11 @@ class BeakerEnvVar(_BeakerSpecBase):
 
 @dataclass
 class BeakerDataSource(_BeakerSpecBase):
+    """
+    See the `DataSource spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#datasource>`_
+    for an explanation of the fields.
+    """
+
     beaker: str | None = None
     host_path: str | None = None
     weka: str | None = None
@@ -247,6 +396,11 @@ class BeakerDataSource(_BeakerSpecBase):
 
 @dataclass
 class BeakerDataMount(_BeakerSpecBase):
+    """
+    See the `DataMount spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#datamount>`_
+    for an explanation of the fields.
+    """
+
     source: BeakerDataSource
     mount_path: str
     sub_path: str | None = None
@@ -277,11 +431,21 @@ class BeakerDataMount(_BeakerSpecBase):
 
 @dataclass
 class BeakerResultSpec(_BeakerSpecBase):
+    """
+    See the `ResultSpec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#resultspec>`_
+    for an explanation of the fields.
+    """
+
     path: str
 
 
 @dataclass
 class BeakerTaskResources(_BeakerSpecBase):
+    """
+    See the `TaskResources spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#taskresources>`_
+    for an explanation of the fields.
+    """
+
     cpu_count: float | None = None
     gpu_count: int | None = None
     memory: str | None = None
@@ -290,6 +454,11 @@ class BeakerTaskResources(_BeakerSpecBase):
 
 @dataclass
 class BeakerTaskContext(_BeakerSpecBase):
+    """
+    See the `Context spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#context>`_
+    for an explanation of the fields.
+    """
+
     cluster: str | None = None
     priority: BeakerJobPriority | None = None
     preemptible: bool | None = None
@@ -297,12 +466,22 @@ class BeakerTaskContext(_BeakerSpecBase):
 
 @dataclass
 class BeakerConstraints(_BeakerSpecBase):
+    """
+    See the `Constraints spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#constraints>`_
+    for an explanation of the fields.
+    """
+
     cluster: list[str] | None = None
     hostname: list[str] | None = None
 
 
 @dataclass
 class BeakerTaskSpec(_BeakerSpecBase):
+    """
+    See the `Task spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#task>`_
+    for an explanation of the fields.
+    """
+
     image: BeakerImageSource
     context: BeakerTaskContext
     result: BeakerResultSpec | None
@@ -445,11 +624,24 @@ class BeakerSpecVersion(StrEnum):
 
 @dataclass
 class BeakerRetrySpec(_BeakerSpecBase):
+    """
+    See the `Retry spec docs <https://beaker-docs.apps.allenai.org/concept/experiments.html#retry>`_
+    for an explanation of the fields.
+    """
+
     allowed_task_retries: int | None = None
 
 
 @dataclass
 class BeakerExperimentSpec(_BeakerSpecBase):
+    """
+    Defines an experiment workload.
+
+    .. tip::
+       See the `spec format <https://beaker-docs.apps.allenai.org/concept/experiments.html#spec-format>`_
+       for an explanation of the fields.
+    """
+
     version: BeakerSpecVersion = BeakerSpecVersion.v2
     description: str | None = None
     tasks: list[BeakerTaskSpec] = dataclasses.field(default_factory=list)
@@ -459,7 +651,7 @@ class BeakerExperimentSpec(_BeakerSpecBase):
     @classmethod
     def from_file(cls, path: PathOrStr) -> BeakerExperimentSpec:
         """
-        Load an :class:`ExperimentSpec` from a YAML file.
+        Load a :class:`BeakerExperimentSpec` from a YAML file.
         """
         import yaml
 
@@ -469,6 +661,9 @@ class BeakerExperimentSpec(_BeakerSpecBase):
 
     @classmethod
     def from_json(cls, data: dict[str, Any]) -> BeakerExperimentSpec:
+        """
+        Load a :class:`BeakerExperimentSpec` from a JSON-compatible dictionary.
+        """
         data = deepcopy(data)
         kwargs: dict[str, Any] = dict(
             tasks=[BeakerTaskSpec.from_json(t) for t in data.pop("tasks", [])]
@@ -493,6 +688,9 @@ class BeakerExperimentSpec(_BeakerSpecBase):
         priority: BeakerJobPriority | str | None = None,
         **kwargs,
     ) -> BeakerExperimentSpec:
+        """
+        A convenience method for quickly creating a new :class:`BeakerExperimentSpec`.
+        """
         return cls(
             budget=budget,
             description=description,
@@ -520,6 +718,9 @@ class BeakerExperimentSpec(_BeakerSpecBase):
             yaml.dump(raw_spec, spec_file, Dumper=yaml.SafeDumper)
 
     def with_task(self, task: BeakerTaskSpec) -> BeakerExperimentSpec:
+        """
+        Returns a new spec with an additional task.
+        """
         if task.name is not None:
             for other_task in self.tasks:
                 if task.name == other_task.name:
@@ -530,9 +731,15 @@ class BeakerExperimentSpec(_BeakerSpecBase):
         )
 
     def with_description(self, description: str) -> BeakerExperimentSpec:
+        """
+        Returns a new spec with the given description.
+        """
         return dataclasses.replace(self, description=description)
 
     def with_retries(self, allowed_task_retries: int) -> BeakerExperimentSpec:
+        """
+        Returns a new spec with the given retries.
+        """
         return dataclasses.replace(
             self, retry=BeakerRetrySpec(allowed_task_retries=allowed_task_retries)
         )

@@ -67,7 +67,10 @@ class WMLResource:
         if not client.ICP_PLATFORM_SPACES:
             WMLResource._validate_type(client.token, "token", str, True)
         self._client = client
-        self._credentials = client.service_instance._credentials
+
+    @property
+    def _credentials(self):
+        return self._client.credentials
 
     @overload
     def _handle_response(
@@ -207,9 +210,7 @@ class WMLResource:
 
         if asset_id:
             response = requests.get(
-                self._client.service_instance._href_definitions.get_data_asset_href(
-                    asset_id
-                ),
+                self._client._href_definitions.get_data_asset_href(asset_id),
                 params=self._client._params(),
                 headers=self._client._get_headers(),
             )
@@ -219,11 +220,7 @@ class WMLResource:
             )
 
         else:
-            href = (
-                self._client.service_instance._href_definitions.get_asset_search_href(
-                    asset_type
-                )
-            )
+            href = self._client._href_definitions.get_asset_search_href(asset_type)
 
             def get_chunk(data):
                 response = requests.post(
@@ -548,7 +545,7 @@ class WMLResource:
     def _if_deployment_exist_for_asset(self, asset_id: str) -> bool:
 
         deployment_href = (
-            self._client.service_instance._href_definitions.get_deployments_href()
+            self._client._href_definitions.get_deployments_href()
             + "?asset_id="
             + asset_id
         )
@@ -616,10 +613,7 @@ class WMLResource:
     ) -> dict | str:
         op_name = "Creation revision for {}".format(resource_name)
 
-        url = (
-            self._client.service_instance._href_definitions.get_asset_href(id)
-            + "/revisions"
-        )
+        url = self._client._href_definitions.get_asset_href(id) + "/revisions"
         commit_message = "Revision creation for " + resource_name + " " + id
 
         payload_json = {"commit_message": commit_message}
@@ -653,7 +647,7 @@ class WMLResource:
         if current_attachment_id is not None:
             # Delete existing attachment to upload new attachment
             attachments_id_url = (
-                self._client.service_instance._href_definitions.get_asset_href(asset_id)
+                self._client._href_definitions.get_asset_href(asset_id)
                 + "/attachments/"
                 + current_attachment_id
             )
@@ -674,8 +668,7 @@ class WMLResource:
             }
 
             attachments_url = (
-                self._client.service_instance._href_definitions.get_asset_href(asset_id)
-                + "/attachments"
+                self._client._href_definitions.get_asset_href(asset_id) + "/attachments"
             )
 
             # STEP 3b.
@@ -718,7 +711,7 @@ class WMLResource:
                     # STEP 3d.
                     # Mark attachment complete
                     complete_response = requests.post(
-                        self._client.service_instance._href_definitions.get_attachment_complete_href(
+                        self._client._href_definitions.get_attachment_complete_href(
                             asset_id, attachment_id
                         ),
                         headers=self._client._get_headers(),

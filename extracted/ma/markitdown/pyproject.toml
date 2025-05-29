@@ -29,6 +29,7 @@ dependencies = [
   "markdownify",
   "magika~=0.6.1",
   "charset-normalizer",
+  "defusedxml",
 ]
 
 [project.optional-dependencies]
@@ -38,6 +39,7 @@ all = [
   "pandas",
   "openpyxl",
   "xlrd",
+  "lxml",
   "pdfminer.six",
   "olefile",
   "pydub",
@@ -47,7 +49,7 @@ all = [
   "azure-identity"
 ]
 pptx = ["python-pptx"]
-docx = ["mammoth"]
+docx = ["mammoth", "lxml"]
 xlsx = ["pandas", "openpyxl"]
 xls = ["pandas", "xlrd"]
 pdf = ["pdfminer.six"]

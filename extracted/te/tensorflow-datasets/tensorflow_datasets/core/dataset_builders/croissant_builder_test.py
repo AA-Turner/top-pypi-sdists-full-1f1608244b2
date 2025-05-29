@@ -102,6 +102,14 @@ DUMMY_ENTRIES_WITH_CONVERTED_NONE_VALUES = [
         ),
         (
             mlc.Field(
+                data_types=mlc.DataType.UINT16, description="Uint16 feature"
+            ),
+            np.uint16,
+            None,
+            np.uint16,
+        ),
+        (
+            mlc.Field(
                 data_types=mlc.DataType.BOOL, description="Boolean feature"
             ),
             np.bool_,
@@ -239,6 +247,17 @@ def test_sequence_feature_datatype_converter():
   actual_feature = croissant_builder.datatype_converter(field)
   assert isinstance(actual_feature, sequence_feature.Sequence)
   assert isinstance(actual_feature.feature, text_feature.Text)
+
+
+def test_version_converter(tmp_path):
+  with testing.dummy_croissant_file(version="1.0") as croissant_file:
+    builder = croissant_builder.CroissantBuilder(
+        jsonld=croissant_file,
+        file_format=FileFormat.ARRAY_RECORD,
+        disable_shuffling=True,
+        data_dir=tmp_path,
+    )
+    assert builder.version == "1.0.0"
 
 
 @pytest.fixture(name="crs_builder")

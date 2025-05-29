@@ -73,6 +73,7 @@ PROD_SVT_URL = [
     "https://eu-de.ml.cloud.ibm.com",
     "https://jp-tok.ml.cloud.ibm.com",
     "https://au-syd.ml.cloud.ibm.com",
+    "https://ap-south-1.aws.wxai.ibm.com",
     "https://ibm-watson-ml.mybluemix.net",
     "https://ibm-watson-ml.eu-gb.bluemix.net",
     "https://private.us-south.ml.cloud.ibm.com",
@@ -80,6 +81,7 @@ PROD_SVT_URL = [
     "https://private.eu-de.ml.cloud.ibm.com",
     "https://private.jp-tok.ml.cloud.ibm.com",
     "https://private.au-syd.ml.cloud.ibm.com",
+    "https://private.ap-south-1.aws.wxai.ibm.com",
     "https://yp-qa.ml.cloud.ibm.com",
     "https://private.yp-qa.ml.cloud.ibm.com",
     "https://yp-cr.ml.cloud.ibm.com",
@@ -257,175 +259,156 @@ def is_id(s: str) -> bool:
 class HrefDefinitions:
     def __init__(
         self,
-        client: APIClient,
-        cloud_platform_spaces: bool = False,
-        platform_url: str | None = None,
-        cp4d_platform_spaces: bool = False,
+        url: str,
+        instance_id: str,
+        version: float | None,
+        bedrock_url: str | None,
+        cloud_platform_spaces: bool,
+        cp4d_platform_spaces: bool,
+        platform_url: str,
+        project_type: str,
+        _use_fm_ga_api: bool,
     ):
-        self._credentials = client.credentials
-        self._client = client
+        self.url = url
+        self.instance_id = instance_id
+        self.version = version
+        self.bedrock_url = bedrock_url
         self.cloud_platform_spaces = cloud_platform_spaces
         self.cp4d_platform_spaces = cp4d_platform_spaces
         self.platform_url = platform_url
+        self.project_type = project_type
+        self._use_fm_ga_api = _use_fm_ga_api
         self.prepend = "/ml"
 
     def _is_git_based_project(self) -> bool:
-        return self._client.project_type == "local_git_storage"
+        return self.project_type == "local_git_storage"
 
     def _get_platform_url_if_exists(self) -> str:
-        return self.platform_url if self.platform_url else self._credentials.url
+        return self.platform_url if self.platform_url else self.url
 
     def get_training_href(self, model_id: str) -> str:
-        return TRAINING_MODEL_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, model_id
-        )
+        return TRAINING_MODEL_HREF_PATTERN.format(self.url + self.prepend, model_id)
 
     def get_trainings_href(self) -> str:
-        return TRAINING_MODELS_HREF_PATTERN.format(self._credentials.url + self.prepend)
+        return TRAINING_MODELS_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_repo_models_frameworks_href(self) -> str:
-        return REPO_MODELS_FRAMEWORKS_HREF_PATTERN.format(
-            self._credentials.url + self.prepend
-        )
+        return REPO_MODELS_FRAMEWORKS_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_instance_endpoint_href(self) -> str:
-        return INSTANCE_ENDPOINT_HREF_PATTERN.format(self._credentials.url)
+        return INSTANCE_ENDPOINT_HREF_PATTERN.format(self.url)
 
     def get_instance_by_id_endpoint_href(self) -> str:
-        return INSTANCE_BY_ID_ENDPOINT_HREF_PATTERN.format(
-            self._credentials.url, self._credentials.instance_id
-        )
+        return INSTANCE_BY_ID_ENDPOINT_HREF_PATTERN.format(self.url, self.instance_id)
 
     def get_token_endpoint_href(self) -> str:
-        return TOKEN_ENDPOINT_HREF_PATTERN.format(self._credentials.url)
+        return TOKEN_ENDPOINT_HREF_PATTERN.format(self.url)
 
     def get_cpd_token_endpoint_href(self) -> str:
         return CPD_TOKEN_ENDPOINT_HREF_PATTERN.format(
-            self._credentials.url.replace(":31002", ":31843")
+            self.url.replace(":31002", ":31843")
         )
 
     def get_cpd_bedrock_token_endpoint_href(self) -> str:
-        return CPD_BEDROCK_TOKEN_ENDPOINT_HREF_PATTERN.format(
-            self._credentials.bedrock_url
-        )
+        return CPD_BEDROCK_TOKEN_ENDPOINT_HREF_PATTERN.format(self.bedrock_url)
 
     def get_cpd_validation_token_endpoint_href(self) -> str:
-        return CPD_VALIDATION_TOKEN_ENDPOINT_HREF_PATTERN.format(self._credentials.url)
+        return CPD_VALIDATION_TOKEN_ENDPOINT_HREF_PATTERN.format(self.url)
 
     def get_published_model_href(self, model_id: str) -> str:
-        return PUBLISHED_MODEL_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, model_id
-        )
+        return PUBLISHED_MODEL_HREF_PATTERN.format(self.url + self.prepend, model_id)
 
     def get_published_models_href(self) -> str:
-        return PUBLISHED_MODELS_HREF_PATTERN.format(
-            self._credentials.url + self.prepend
-        )
+        return PUBLISHED_MODELS_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_learning_configuration_href(self, model_id: str) -> str:
         return LEARNING_CONFIGURATION_HREF_PATTERN.format(
-            self._credentials.url, self._credentials.instance_id, model_id
+            self.url, self.instance_id, model_id
         )
 
     def get_learning_iterations_href(self, model_id: str) -> str:
         return LEARNING_ITERATIONS_HREF_PATTERN.format(
-            self._credentials.url, self._credentials.instance_id, model_id
+            self.url, self.instance_id, model_id
         )
 
     def get_learning_iteration_href(self, model_id: str, iteration_id: str) -> str:
         return LEARNING_ITERATION_HREF_PATTERN.format(
-            self._credentials.url,
-            self._credentials.instance_id,
+            self.url,
+            self.instance_id,
             model_id,
             iteration_id,
         )
 
     def get_evaluation_metrics_href(self, model_id: str) -> str:
         return EVALUATION_METRICS_HREF_PATTERN.format(
-            self._credentials.url, self._credentials.instance_id, model_id
+            self.url, self.instance_id, model_id
         )
 
     def get_feedback_href(self, model_id: str) -> str:
-        return FEEDBACK_HREF_PATTERN.format(
-            self._credentials.url, self._credentials.instance_id, model_id
-        )
+        return FEEDBACK_HREF_PATTERN.format(self.url, self.instance_id, model_id)
 
     def get_model_last_version_href(self, artifact_id: str) -> str:
         return MODEL_LAST_VERSION_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, artifact_id
+            self.url + self.prepend, artifact_id
         )
 
     def get_deployments_href(self) -> str:
-        return DEPLOYMENTS_HREF_PATTERN.format(self._credentials.url + self.prepend)
+        return DEPLOYMENTS_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_experiments_href(self) -> str:
-        return EXPERIMENTS_HREF_PATTERN.format(self._credentials.url + self.prepend)
+        return EXPERIMENTS_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_experiment_href(self, experiment_id: str) -> str:
-        return EXPERIMENT_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, experiment_id
-        )
+        return EXPERIMENT_HREF_PATTERN.format(self.url + self.prepend, experiment_id)
 
     def get_experiment_runs_href(self, experiment_id: str) -> str:
-        return EXPERIMENT_RUNS_HREF_PATTERN.format(self._credentials.url, experiment_id)
+        return EXPERIMENT_RUNS_HREF_PATTERN.format(self.url, experiment_id)
 
     def get_experiment_run_href(
         self, experiment_id: str, experiment_run_id: str
     ) -> str:
         return EXPERIMENT_RUN_HREF_PATTERN.format(
-            self._credentials.url, experiment_id, experiment_run_id
+            self.url, experiment_id, experiment_run_id
         )
 
     def get_deployment_href(self, deployment_id: str) -> str:
-        return DEPLOYMENT_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, deployment_id
-        )
+        return DEPLOYMENT_HREF_PATTERN.format(self.url + self.prepend, deployment_id)
 
     def get_definition_href(self, definition_id: str) -> str:
-        return DEFINITION_HREF_PATTERN.format(self._credentials.url, definition_id)
+        return DEFINITION_HREF_PATTERN.format(self.url, definition_id)
 
     def get_definitions_href(self) -> str:
-        return DEFINITIONS_HREF_PATTERN.format(self._credentials.url)
+        return DEFINITIONS_HREF_PATTERN.format(self.url)
 
     def get_function_href(self, ai_function_id: str) -> str:
-        return FUNCTION_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, ai_function_id
-        )
+        return FUNCTION_HREF_PATTERN.format(self.url + self.prepend, ai_function_id)
 
     def get_function_latest_revision_content_href(self, ai_function_id: str) -> str:
-        return FUNCTION_LATEST_CONTENT_HREF_PATTERN.format(
-            self._credentials.url, ai_function_id
-        )
+        return FUNCTION_LATEST_CONTENT_HREF_PATTERN.format(self.url, ai_function_id)
 
     def get_functions_href(self) -> str:
-        return FUNCTIONS_HREF_PATTERN.format(self._credentials.url + self.prepend)
+        return FUNCTIONS_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_ai_service_href(self, ai_service_id: str) -> str:
-        return AI_SERVICE_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, ai_service_id
-        )
+        return AI_SERVICE_HREF_PATTERN.format(self.url + self.prepend, ai_service_id)
 
     def get_ai_services_latest_revision_content_href(self, ai_service_id: str) -> str:
-        return AI_SERVICES_LATEST_CONTENT_HREF_PATTERN.format(
-            self._credentials.url, ai_service_id
-        )
+        return AI_SERVICES_LATEST_CONTENT_HREF_PATTERN.format(self.url, ai_service_id)
 
     def get_ai_services_href(self) -> str:
-        return AI_SERVICES_HREF_PATTERN.format(self._credentials.url + self.prepend)
+        return AI_SERVICES_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_pipeline_href(self, pipeline_id: str) -> str:
-        return PIPELINE_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, pipeline_id
-        )
+        return PIPELINE_HREF_PATTERN.format(self.url + self.prepend, pipeline_id)
 
     def get_pipelines_href(self) -> str:
-        return PIPELINES_HREF_PATTERN.format(self._credentials.url + self.prepend)
+        return PIPELINES_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_space_href(self, spaces_id: str) -> str:
-        return SPACE_HREF_PATTERN.format(self._credentials.url, spaces_id)
+        return SPACE_HREF_PATTERN.format(self.url, spaces_id)
 
     def get_spaces_href(self) -> str:
-        return SPACES_HREF_PATTERN.format(self._credentials.url)
+        return SPACES_HREF_PATTERN.format(self.url)
 
     def get_platform_space_href(self, spaces_id: str) -> str:
         return SPACE_PLATFORM_HREF_PATTERN.format(
@@ -456,37 +439,35 @@ class HrefDefinitions:
         )
 
     def get_v4_instance_id_href(self, instance_id: str) -> str:
-        return V4_INSTANCE_ID_HREF_PATTERN.format(self._credentials.url, instance_id)
+        return V4_INSTANCE_ID_HREF_PATTERN.format(self.url, instance_id)
 
     def get_async_deployment_job_href(self) -> str:
-        return DEPLOYMENT_JOB_HREF_PATTERN.format(self._credentials.url + self.prepend)
+        return DEPLOYMENT_JOB_HREF_PATTERN.format(self.url + self.prepend)
 
     def get_async_deployment_jobs_href(self, job_id: str) -> str:
-        return DEPLOYMENT_JOBS_HREF_PATTERN.format(
-            self._credentials.url + self.prepend, job_id
-        )
+        return DEPLOYMENT_JOBS_HREF_PATTERN.format(self.url + self.prepend, job_id)
 
-    def get_iam_token_api(self) -> str:
-        return IAM_TOKEN_API.format(self._credentials.api_key)
+    def get_iam_token_api(self, apikey) -> str:
+        return IAM_TOKEN_API.format(apikey)
 
     def get_aws_token_url(self) -> str:
         return AWS_TOKEN_HREF.format(
-            "https://iam.cloud.ibm.com"
-            if self._credentials.url in PROD_SVT_URL
+            "https://account-iam.platform.saas.ibm.com"
+            if self.url in PROD_SVT_URL
             else "https://account-iam.platform.test.saas.ibm.com"
         )
 
     def get_iam_token_url(self) -> str:
-        if self._credentials.url in PROD_SVT_URL:
+        if self.url in PROD_SVT_URL:
             return IAM_TOKEN_URL.format("https://iam.cloud.ibm.com")
         else:
             return IAM_TOKEN_URL.format("https://iam.test.cloud.ibm.com")
 
     def get_member_href(self, spaces_id: str, member_id: str) -> str:
-        return MEMBER_HREF_PATTERN.format(self._credentials.url, spaces_id, member_id)
+        return MEMBER_HREF_PATTERN.format(self.url, spaces_id, member_id)
 
     def get_members_href(self, spaces_id: str) -> str:
-        return MEMBERS_HREF_PATTERN.format(self._credentials.url, spaces_id)
+        return MEMBERS_HREF_PATTERN.format(self.url, spaces_id)
 
     def get_data_asset_href(self, asset_id: str) -> str:
         return (
@@ -587,7 +568,7 @@ class HrefDefinitions:
             ASSET_FILES
             if not self._is_git_based_project()
             else GIT_BASED_PROJECT_ASSET_FILES
-        ).format(self._credentials.url)
+        ).format(self.url)
 
     def get_asset_search_href(self, asset_type: str) -> str:
         return (
@@ -601,19 +582,19 @@ class HrefDefinitions:
             ASSET_TYPE
             if not self._is_git_based_project()
             else GIT_BASED_PROJECT_ASSET_TYPE
-        ).format(self._credentials.url)
+        ).format(self.url)
 
     def get_trashed_assets_href(self) -> str:
-        return TRASHED_ASSETS.format(self._credentials.url)
+        return TRASHED_ASSETS.format(self.url)
 
     def get_trashed_assets_purge_all_href(self) -> str:
-        return TRASHED_ASSETS_PURGE_ALL.format(self._credentials.url)
+        return TRASHED_ASSETS_PURGE_ALL.format(self.url)
 
     def get_trashed_asset_href(self, asset_id: str) -> str:
-        return TRASHED_ASSET.format(self._credentials.url, asset_id)
+        return TRASHED_ASSET.format(self.url, asset_id)
 
     def get_trashed_asset_restore_href(self, asset_id: str) -> str:
-        return TRASHED_ASSET_RESTORE.format(self._credentials.url, asset_id)
+        return TRASHED_ASSET_RESTORE.format(self.url, asset_id)
 
     def get_connections_href(self) -> str:
         return CONNECTION_ASSET.format(self._get_platform_url_if_exists())
@@ -674,10 +655,10 @@ class HrefDefinitions:
         return TRANSACTIONAL_PROJECTS.format(self._get_platform_url_if_exists())
 
     def v4ga_cloud_migration_href(self) -> str:
-        return V4GA_CLOUD_MIGRATION.format(self._credentials.url)
+        return V4GA_CLOUD_MIGRATION.format(self.url)
 
     def v4ga_cloud_migration_id_href(self, migration_id: str) -> str:
-        return V4GA_CLOUD_MIGRATION_ID.format(self._credentials.url, migration_id)
+        return V4GA_CLOUD_MIGRATION_ID.format(self.url, migration_id)
 
     def exports_href(self) -> str:
         return EXPORTS.format(self._get_platform_url_if_exists())
@@ -695,37 +676,37 @@ class HrefDefinitions:
         return IMPORT_ID.format(self._get_platform_url_if_exists(), export_id)
 
     def remote_training_systems_href(self) -> str:
-        return REMOTE_TRAINING_SYSTEM.format(self._credentials.url + self.prepend)
+        return REMOTE_TRAINING_SYSTEM.format(self.url + self.prepend)
 
     def remote_training_system_href(self, remote_training_systems_id: str) -> str:
         return REMOTE_TRAINING_SYSTEM_ID.format(
-            self._credentials.url + self.prepend, remote_training_systems_id
+            self.url + self.prepend, remote_training_systems_id
         )
 
     def volumes_href(self) -> str:
-        return VOLUMES.format(self._credentials.url)
+        return VOLUMES.format(self.url)
 
     def volume_href(self, volume_id: str) -> str:
-        return VOLUME_ID.format(self._credentials.url, volume_id)
+        return VOLUME_ID.format(self.url, volume_id)
 
     def volume_service_href(self, volume_name: str) -> str:
-        return VOLUME_SERVICE.format(self._credentials.url, volume_name)
+        return VOLUME_SERVICE.format(self.url, volume_name)
 
     def volume_upload_href(self, volume_name: str) -> str:
-        return VOLUME_SERVICE_FILE_UPLOAD.format(self._credentials.url, volume_name)
+        return VOLUME_SERVICE_FILE_UPLOAD.format(self.url, volume_name)
 
     def volume_monitor_href(self, volume_name: str) -> str:
-        return VOLUME_MONITOR.format(self._credentials.url, volume_name)
+        return VOLUME_MONITOR.format(self.url, volume_name)
 
     def promote_asset_href(self, asset_id: str) -> str:
         if self.cloud_platform_spaces:
-            data_platform_url = self._client.PLATFORM_URL.replace("api.", "")
+            data_platform_url = self.platform_url.replace("api.", "")
             return PROMOTE_ASSET.format(data_platform_url, asset_id)
         else:
-            promote_href = PROMOTE_ASSET.format(self._credentials.url, asset_id)
+            promote_href = PROMOTE_ASSET.format(self.url, asset_id)
             try:
                 # note: For CPD older than 4.0 we need to roll back to older endpoint.
-                if float(self._credentials.version) < 4.0:
+                if float(self.version) < 4.0:
                     promote_href = promote_href.replace("/projects", "")
                 # --- end note
             finally:
@@ -754,75 +735,65 @@ class HrefDefinitions:
         return TASK_CREDENTIALS_ALL.format(self._get_platform_url_if_exists())
 
     def get_fm_specifications_href(self) -> str:
-        if self._client._use_fm_ga_api:
-            return FM_GET_SPECS.format(self._credentials.url)
+        if self._use_fm_ga_api:
+            return FM_GET_SPECS.format(self.url)
         else:
-            return FM_GET_SPECS_BETA.format(
-                self._credentials.url
-            )  # Remove on CPD 5.0 release
+            return FM_GET_SPECS_BETA.format(self.url)  # Remove on CPD 5.0 release
 
     def get_fm_custom_foundation_models_href(self) -> str:
-        return FM_GET_CUSTOM_FOUNDATION_MODELS.format(self._credentials.url)
+        return FM_GET_CUSTOM_FOUNDATION_MODELS.format(self.url)
 
     def get_fm_tasks_href(self, limit: str) -> str:
-        return FM_GET_TASKS.format(self._credentials.url, limit)
+        return FM_GET_TASKS.format(self.url, limit)
 
     def get_fm_chat_href(self, item: str) -> str:
-        return FM_CHAT.format(self._credentials.url, item)
+        return FM_CHAT.format(self.url, item)
 
     def get_fm_generation_href(self, item: str | None = None) -> str:
-        if self._client._use_fm_ga_api:
-            return FM_GENERATION.format(self._credentials.url)
+        if self._use_fm_ga_api:
+            return FM_GENERATION.format(self.url)
         else:
             return FM_GENERATION_BETA.format(
-                self._credentials.url, item
+                self.url, item
             )  # Remove on CPD 5.0 release
 
     def get_fm_generation_stream_href(self) -> str:
-        return FM_GENERATION_STREAM.format(self._credentials.url)
+        return FM_GENERATION_STREAM.format(self.url)
 
     def get_fm_tokenize_href(self) -> str:
-        if self._client._use_fm_ga_api:
-            return FM_TOKENIZE.format(self._credentials.url)
+        if self._use_fm_ga_api:
+            return FM_TOKENIZE.format(self.url)
         else:
-            return FM_TOKENIZE_BETA.format(
-                self._credentials.url
-            )  # Remove on CPD 5.0 release
+            return FM_TOKENIZE_BETA.format(self.url)  # Remove on CPD 5.0 release
 
     def get_fm_deployment_generation_href(
         self, deployment_id: str, item: str | None = None
     ) -> str:
-        if self._client._use_fm_ga_api:
-            return FM_DEPLOYMENT_GENERATION.format(self._credentials.url, deployment_id)
+        if self._use_fm_ga_api:
+            return FM_DEPLOYMENT_GENERATION.format(self.url, deployment_id)
         else:
             return FM_DEPLOYMENT_GENERATION_BETA.format(
-                self._credentials.url, deployment_id, item
+                self.url, deployment_id, item
             )  # Remove on CPD 5.0 release
 
     def get_fm_deployment_generation_stream_href(self, deployment_id: str) -> str:
-        return FM_DEPLOYMENT_GENERATION_STREAM.format(
-            self._credentials.url, deployment_id
-        )
+        return FM_DEPLOYMENT_GENERATION_STREAM.format(self.url, deployment_id)
 
     def get_fm_deployment_chat_href(self, deployment_id: str) -> str:
-        return FM_DEPLOYMENT_CHAT.format(self._credentials.url, deployment_id)
+        return FM_DEPLOYMENT_CHAT.format(self.url, deployment_id)
 
     def get_fm_deployment_chat_stream_href(self, deployment_id: str) -> str:
-        return FM_DEPLOYMENT_CHAT_STREAM.format(self._credentials.url, deployment_id)
+        return FM_DEPLOYMENT_CHAT_STREAM.format(self.url, deployment_id)
 
     def get_ai_services_deployment_generation_href(
         self, deployment_id: str, item: str | None = None
     ) -> str:
-        return AI_SERVICES_DEPLOYMENT_GENERATION.format(
-            self._credentials.url, deployment_id
-        )
+        return AI_SERVICES_DEPLOYMENT_GENERATION.format(self.url, deployment_id)
 
     def get_ai_services_deployment_generation_stream_href(
         self, deployment_id: str, item: str | None = None
     ) -> str:
-        return AI_SERVICES_DEPLOYMENT_GENERATION_STREAM.format(
-            self._credentials.url, deployment_id
-        )
+        return AI_SERVICES_DEPLOYMENT_GENERATION_STREAM.format(self.url, deployment_id)
 
     def get_prompts_href(self, ga_api: bool = True) -> str:
         return (GA_PROMPTS if ga_api else PROMPTS).format(
@@ -830,16 +801,16 @@ class HrefDefinitions:
         )
 
     def get_text_detection_href(self) -> str:
-        return TEXT_DETECTION.format(self._credentials.url)
+        return TEXT_DETECTION.format(self.url)
 
     def get_text_extractions_href(self) -> str:
-        return TEXT_EXTRACTIONS.format(self._credentials.url)
+        return TEXT_EXTRACTIONS.format(self.url)
 
     def get_text_extraction_href(self, text_extraction_id: str) -> str:
-        return TEXT_EXTRACTION.format(self._credentials.url, text_extraction_id)
+        return TEXT_EXTRACTION.format(self.url, text_extraction_id)
 
     def get_rerank_href(self) -> str:
-        return RERANK.format(self._credentials.url)
+        return RERANK.format(self.url)
 
     def get_prompts_all_href(self) -> str:
         return PROMPTS_GET_ALL.format(self._get_platform_url_if_exists())
@@ -853,46 +824,46 @@ class HrefDefinitions:
         return PARAMETER_SETS.format(self._get_platform_url_if_exists())
 
     def get_fm_embeddings_href(self):
-        return FM_EMBEDDINGS.format(self._credentials.url)
+        return FM_EMBEDDINGS.format(self.url)
 
     def get_fine_tuning_href(self, tuning_id: str):
-        return FM_FINE_TUNING.format(self._credentials.url, tuning_id)
+        return FM_FINE_TUNING.format(self.url, tuning_id)
 
     def get_fine_tunings_href(self):
-        return FM_FINE_TUNINGS.format(self._credentials.url)
+        return FM_FINE_TUNINGS.format(self.url)
 
     def get_autoai_rag_href(self):
-        return AUTOAI_RAG.format(self._credentials.url)
+        return AUTOAI_RAG.format(self.url)
 
     def get_autoai_rag_id_href(self, rag_id):
-        return AUTOAI_RAG_ID.format(self._credentials.url, rag_id)
+        return AUTOAI_RAG_ID.format(self.url, rag_id)
 
     def get_time_series_href(self) -> str:
-        return FM_TIME_SERIES.format(self._credentials.url)
+        return FM_TIME_SERIES.format(self.url)
 
     def get_deployment_time_series_href(self, deployment_id: str) -> str:
-        return FM_DEPLOYMENT_TIME_SERIES.format(self._credentials.url, deployment_id)
+        return FM_DEPLOYMENT_TIME_SERIES.format(self.url, deployment_id)
 
     def get_taxonomy_href(self, taxonomy_id: str) -> str:
-        return TAXONOMY.format(self._credentials.url, taxonomy_id)
+        return TAXONOMY.format(self.url, taxonomy_id)
 
     def get_taxonomies_imports_href(self) -> str:
-        return TAXONOMIES_IMPORTS.format(self._credentials.url)
+        return TAXONOMIES_IMPORTS.format(self.url)
 
     def get_taxonomies_import_href(self, taxonomy_import_id: str):
-        return TAXONOMIES_IMPORT.format(self._credentials.url, taxonomy_import_id)
+        return TAXONOMIES_IMPORT.format(self.url, taxonomy_import_id)
 
     def get_document_extractions_href(self):
-        return DOCUMENT_EXTRACTIONS.format(self._credentials.url)
+        return DOCUMENT_EXTRACTIONS.format(self.url)
 
     def get_document_extraction_href(self, document_extraction_id: str):
-        return DOCUMENT_EXTRACTION.format(self._credentials.url, document_extraction_id)
+        return DOCUMENT_EXTRACTION.format(self.url, document_extraction_id)
 
     def get_synthetic_data_generations_href(self):
-        return SYNTHETIC_DATA_GENERATIONS.format(self._credentials.url)
+        return SYNTHETIC_DATA_GENERATIONS.format(self.url)
 
     def get_synthetic_data_generation_href(self, sdg_id: str):
-        return SYNTHETIC_DATA_GENERATION.format(self._credentials.url, sdg_id)
+        return SYNTHETIC_DATA_GENERATION.format(self.url, sdg_id)
 
     def get_utility_agent_tools_href(self):
         return UTILITY_AGENT_TOOLS_BETA.format(self._get_platform_url_if_exists())

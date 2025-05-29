@@ -34,6 +34,7 @@ __all__ = (
     "MemberAccountDiscountVisibilityType",
     "OrderType",
     "PaginatorName",
+    "PaymentOptionType",
     "RegionName",
     "ResourceServiceName",
     "ResourceTypeType",
@@ -41,6 +42,7 @@ __all__ = (
     "ServiceName",
     "SourceType",
     "SummaryMetricsType",
+    "TermType",
 )
 
 ActionTypeType = Literal[
@@ -62,6 +64,7 @@ ListRecommendationSummariesPaginatorName = Literal["list_recommendation_summarie
 ListRecommendationsPaginatorName = Literal["list_recommendations"]
 MemberAccountDiscountVisibilityType = Literal["All", "None"]
 OrderType = Literal["Asc", "Desc"]
+PaymentOptionType = Literal["AllUpfront", "NoUpfront", "PartialUpfront"]
 ResourceTypeType = Literal[
     "ComputeSavingsPlans",
     "DynamoDbReservedCapacity",
@@ -84,6 +87,7 @@ ResourceTypeType = Literal[
 SavingsEstimationModeType = Literal["AfterDiscounts", "BeforeDiscounts"]
 SourceType = Literal["ComputeOptimizer", "CostExplorer"]
 SummaryMetricsType = Literal["SavingsPercentage"]
+TermType = Literal["OneYear", "ThreeYears"]
 CostOptimizationHubServiceName = Literal["cost-optimization-hub"]
 ServiceName = Literal[
     "accessanalyzer",

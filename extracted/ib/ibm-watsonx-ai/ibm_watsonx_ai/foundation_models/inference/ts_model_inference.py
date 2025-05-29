@@ -116,15 +116,16 @@ class TSModelInference(WMLResource):
                 reason="None of the arguments were provided.",
             )
 
-        if space_id:
-            self._client.set.default_space(space_id)
-        elif project_id:
-            self._client.set.default_project(project_id)
-        elif not api_client:
-            raise InvalidMultipleArguments(
-                params_names_list=["space_id", "project_id"],
-                reason="None of the arguments were provided.",
-            )
+        if not self.deployment_id:
+            if space_id:
+                self._client.set.default_space(space_id)
+            elif project_id:
+                self._client.set.default_project(project_id)
+            elif not api_client:
+                raise InvalidMultipleArguments(
+                    params_names_list=["space_id", "project_id"],
+                    reason="None of the arguments were provided.",
+                )
 
         WMLResource.__init__(self, __name__, self._client)
 
@@ -236,17 +237,18 @@ class TSModelInference(WMLResource):
 
                 payload["future_data"] = future_data
 
-        if self._client.default_project_id:
-            payload["project_id"] = self._client.default_project_id
-        elif self._client.default_space_id:
-            payload["space_id"] = self._client.default_space_id
+        if not self.deployment_id:
+            if self._client.default_project_id:
+                payload["project_id"] = self._client.default_project_id
+            elif self._client.default_space_id:
+                payload["space_id"] = self._client.default_space_id
 
         url = (
-            self._client.service_instance._href_definitions.get_deployment_time_series_href(
+            self._client._href_definitions.get_deployment_time_series_href(
                 deployment_id=self.deployment_id
             )
             if self.deployment_id
-            else self._client.service_instance._href_definitions.get_time_series_href()
+            else self._client._href_definitions.get_time_series_href()
         )
 
         response = self._client.httpx_client.post(

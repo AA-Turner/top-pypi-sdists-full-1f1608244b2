@@ -1,12 +1,12 @@
 Metadata-Version: 2.1
 Name: requests_ntlm2
-Version: 6.5.3
+Version: 6.6.0
 Summary: The HTTP NTLM proxy and/or server authentication library.
 Home-page: https://github.com/dopstar/requests-ntlm2
 Author: Mkhanyisi Madlavana
 Author-email: mmadlavana@gmail.com
 License: ISC
-Download-URL: https://github.com/dopstar/requests-ntlm2/archive/6.5.3.tar.gz
+Download-URL: https://github.com/dopstar/requests-ntlm2/archive/6.6.0.tar.gz
 Project-URL: Documentation, https://dopstar.github.io/requests-ntlm2
 Project-URL: Source, https://github.com/dopstar/requests-ntlm2
 Project-URL: Tracker, https://github.com/dopstar/requests-ntlm2/issues
@@ -146,13 +146,14 @@ Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: Natural Language :: English
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 2.7
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: License :: OSI Approved :: ISC License (ISCL)
 Classifier: Operating System :: MacOS
 Classifier: Operating System :: POSIX :: Linux

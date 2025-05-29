@@ -211,7 +211,7 @@ class Shiny(WMLResource):
         print("Creating Shiny asset...")
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_data_assets_href(),
+            self._client._href_definitions.get_data_assets_href(),
             headers=self._client._get_headers(),
             params=self._client._params(),
             json=asset_meta,
@@ -229,9 +229,7 @@ class Shiny(WMLResource):
             }
 
             attachment_response = requests.post(
-                self._client.service_instance._href_definitions.get_attachments_href(
-                    asset_id
-                ),
+                self._client._href_definitions.get_attachments_href(asset_id),
                 headers=self._client._get_headers(),
                 params=self._client._params(),
                 json=attachment_meta,
@@ -258,9 +256,7 @@ class Shiny(WMLResource):
                             )
                 except Exception as e:
                     deletion_response = requests.delete(
-                        self._client.service_instance._href_definitions.get_data_asset_href(
-                            asset_id
-                        ),
+                        self._client._href_definitions.get_data_asset_href(asset_id),
                         params=self._client._params(),
                         headers=self._client._get_headers(),
                     )
@@ -270,7 +266,7 @@ class Shiny(WMLResource):
                 if put_response.status_code == 201 or put_response.status_code == 200:
                     # Step4: Complete attachment
                     complete_response = requests.post(
-                        self._client.service_instance._href_definitions.get_attachment_complete_href(
+                        self._client._href_definitions.get_attachment_complete_href(
                             asset_id, attachment_id
                         ),
                         headers=self._client._get_headers(),
@@ -319,7 +315,7 @@ class Shiny(WMLResource):
         """
 
         Shiny._validate_type(limit, "limit", int, False)
-        href = self._client.service_instance._href_definitions.get_search_shiny_href()
+        href = self._client._href_definitions.get_search_shiny_href()
 
         data: dict[str, Any] = {"query": "*:*"}
         if limit is not None:
@@ -396,9 +392,7 @@ class Shiny(WMLResource):
             params.update({"revision_id": rev_id})
 
         asset_response = requests.get(
-            self._client.service_instance._href_definitions.get_data_asset_href(
-                shiny_id
-            ),
+            self._client._href_definitions.get_data_asset_href(shiny_id),
             params=params,
             headers=self._client._get_headers(),
         )
@@ -406,9 +400,7 @@ class Shiny(WMLResource):
 
         attachment_id = shiny_details["attachments"][0]["id"]
         response = requests.get(
-            self._client.service_instance._href_definitions.get_attachment_href(
-                shiny_id, attachment_id
-            ),
+            self._client._href_definitions.get_attachment_href(shiny_id, attachment_id),
             params=params,
             headers=self._client._get_headers(),
         )
@@ -558,7 +550,7 @@ class Shiny(WMLResource):
 
         updated_details = None
 
-        url = self._client.service_instance._href_definitions.get_asset_href(shiny_id)
+        url = self._client._href_definitions.get_asset_href(shiny_id)
 
         # STEPS
         # STEP 1. Get existing metadata
@@ -612,11 +604,7 @@ class Shiny(WMLResource):
                     )
                 )
             if meta_patch_payload:
-                meta_patch_url = (
-                    self._client.service_instance._href_definitions.get_asset_href(
-                        shiny_id
-                    )
-                )
+                meta_patch_url = self._client._href_definitions.get_asset_href(shiny_id)
 
                 response_patch = requests.patch(
                     meta_patch_url,
@@ -644,7 +632,7 @@ class Shiny(WMLResource):
             self._update_msg(updated_details)
 
         # Have to fetch again to reflect updated asset and attachment ids
-        url = self._client.service_instance._href_definitions.get_asset_href(shiny_id)
+        url = self._client._href_definitions.get_asset_href(shiny_id)
 
         response = requests.get(
             url, params=self._client._params(), headers=self._client._get_headers()
@@ -706,7 +694,7 @@ class Shiny(WMLResource):
             )
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_asset_href(shiny_id),
+            self._client._href_definitions.get_asset_href(shiny_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )
@@ -777,10 +765,7 @@ class Shiny(WMLResource):
 
         Shiny._validate_type(shiny_id, "shiny_id", str, True)
 
-        url = (
-            self._client.service_instance._href_definitions.get_asset_href(shiny_id)
-            + "/revisions"
-        )
+        url = self._client._href_definitions.get_asset_href(shiny_id) + "/revisions"
 
         # /v2/assets/{asset_id}/revisions returns 'results' object
         shiny_resources = self._get_with_or_without_limit(
@@ -849,7 +834,7 @@ class Shiny(WMLResource):
         if rev_id is None:
             rev_id = "latest"
 
-        url = self._client.service_instance._href_definitions.get_asset_href(shiny_id)
+        url = self._client._href_definitions.get_asset_href(shiny_id)
         resources = self._get_with_or_without_limit(
             url,
             limit=None,

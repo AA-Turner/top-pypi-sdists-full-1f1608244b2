@@ -146,7 +146,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_model_specs(model_id="google/flan-ul2")
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available foundation models",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             filters=(
@@ -197,7 +197,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_chat_model_specs(model_id="ibm/granite-13b-chat-v2")
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available chat models",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             model_id=model_id,
@@ -243,7 +243,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_chat_function_calling_model_specs(model_id="meta-llama/llama-3-1-70b-instruct")
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available chat function calling models",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             model_id=model_id,
@@ -303,7 +303,7 @@ class FoundationModelsManager(WMLResource):
         warn(model_usage_warning)
 
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_custom_foundation_models_href(),
+            url=self._client._href_definitions.get_fm_custom_foundation_models_href(),
             operation_name="Get custom model specs",
             error_msg_id="custom_models_no_model_specs",
             model_id=model_id,
@@ -345,7 +345,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_embeddings_model_specs('ibm/slate-125m-english-rtrvr')
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available embedding models",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             model_id=model_id,
@@ -388,7 +388,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_time_series_model_specs('ibm/granite-ttm-1536-96-r2')
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available time series models",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             model_id=model_id,
@@ -432,7 +432,7 @@ class FoundationModelsManager(WMLResource):
 
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available rerank models",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             model_id=model_id,
@@ -476,7 +476,7 @@ class FoundationModelsManager(WMLResource):
 
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available base foundation model deployable",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             model_id=model_id,
@@ -537,7 +537,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_model_specs_with_prompt_tuning_support('google/flan-t5-xl')
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available foundation models",
             error_msg_id="fm_prompt_tuning_no_model_specs",
             model_id=model_id,
@@ -580,7 +580,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_model_specs_with_fine_tuning_support('bigscience/bloom')
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available foundation models with fine tuning support",
             error_msg_id="fm_fine_tuning_no_model_specs",
             model_id=model_id,
@@ -623,7 +623,7 @@ class FoundationModelsManager(WMLResource):
             client.foundation_models.get_model_specs_with_lora_fine_tuning_support('bigscience/bloom')
         """
         return self._get_spec(
-            url=self._client.service_instance._href_definitions.get_fm_specifications_href(),
+            url=self._client._href_definitions.get_fm_specifications_href(),
             operation_name="Get available foundation models with lora fine tuning support",
             error_msg_id="fm_fine_tuning_no_model_specs",
             model_id=model_id,

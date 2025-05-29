@@ -245,7 +245,7 @@ class Assets(WMLResource):
         print(Messages.get_message(message_id="creating_data_asset"))
 
         creation_response = requests.post(
-            self._client.service_instance._href_definitions.get_data_assets_href(),
+            self._client._href_definitions.get_data_assets_href(),
             headers=self._client._get_headers(),
             params=params,
             json=asset_meta,
@@ -273,9 +273,7 @@ class Assets(WMLResource):
                 )
 
             attachment_response = requests.post(
-                self._client.service_instance._href_definitions.get_attachments_href(
-                    asset_id
-                ),
+                self._client._href_definitions.get_attachments_href(asset_id),
                 headers=self._client._get_headers(),
                 params=self._client._params(),
                 json=attachment_meta,
@@ -299,7 +297,7 @@ class Assets(WMLResource):
                                 )
                     except Exception as e:
                         deletion_response = requests.delete(
-                            self._client.service_instance._href_definitions.get_data_asset_href(
+                            self._client._href_definitions.get_data_asset_href(
                                 asset_id
                             ),
                             params=self._client._params(),
@@ -320,7 +318,7 @@ class Assets(WMLResource):
                         # Step4: Complete attachment
 
                         complete_response = requests.post(
-                            self._client.service_instance._href_definitions.get_attachment_complete_href(
+                            self._client._href_definitions.get_attachment_complete_href(
                                 asset_id, attachment_id
                             ),
                             headers=self._client._get_headers(),
@@ -387,7 +385,7 @@ class Assets(WMLResource):
         """
 
         Assets._validate_type(limit, "limit", int, False)
-        href = self._client.service_instance._href_definitions.get_search_asset_href()
+        href = self._client._href_definitions.get_search_asset_href()
 
         data: dict[str, Any] = {"query": "*:*"}
         if limit is not None:
@@ -487,9 +485,7 @@ class Assets(WMLResource):
         import urllib
 
         asset_response = requests.get(
-            self._client.service_instance._href_definitions.get_data_asset_href(
-                asset_id
-            ),
+            self._client._href_definitions.get_data_asset_href(asset_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )
@@ -497,9 +493,7 @@ class Assets(WMLResource):
 
         attachment_id = asset_details["attachments"][0]["id"]
         response = requests.get(
-            self._client.service_instance._href_definitions.get_attachment_href(
-                asset_id, attachment_id
-            ),
+            self._client._href_definitions.get_attachment_href(asset_id, attachment_id),
             params=self._client._params(),
             headers=self._client._get_headers(),
         )
@@ -637,7 +631,7 @@ class Assets(WMLResource):
             params["purge_on_delete"] = True
 
         response = requests.delete(
-            self._client.service_instance._href_definitions.get_asset_href(asset_id),
+            self._client._href_definitions.get_asset_href(asset_id),
             params=params,
             headers=self._client._get_headers(),
         )

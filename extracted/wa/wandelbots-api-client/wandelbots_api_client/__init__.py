@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "25.4.1"
+__version__ = "25.5.0"
 
 from . import models
 from . import api

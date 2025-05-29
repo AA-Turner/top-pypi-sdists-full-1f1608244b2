@@ -24,6 +24,7 @@ else:
 __all__ = (
     "CanaryRunStateReasonCodeType",
     "CanaryRunStateType",
+    "CanaryRunTestResultType",
     "CanaryStateReasonCodeType",
     "CanaryStateType",
     "EncryptionModeType",
@@ -38,6 +39,7 @@ __all__ = (
 
 CanaryRunStateReasonCodeType = Literal["CANARY_FAILURE", "EXECUTION_FAILURE"]
 CanaryRunStateType = Literal["FAILED", "PASSED", "RUNNING"]
+CanaryRunTestResultType = Literal["FAILED", "PASSED", "UNKNOWN"]
 CanaryStateReasonCodeType = Literal[
     "CREATE_FAILED",
     "CREATE_IN_PROGRESS",

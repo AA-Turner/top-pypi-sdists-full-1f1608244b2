@@ -25,39 +25,40 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import logging
+from typing import Any
+
+import click
+
 from yubikit.core import TRANSPORT
-from yubikit.core.smartcard import ApduError, SW, SmartCardConnection
-from yubikit.oath import (
-    OathSession,
-    CredentialData,
-    OATH_TYPE,
-    HASH_ALGORITHM,
-    parse_b32_key,
-    _format_cred_id,
-)
+from yubikit.core.smartcard import SW, ApduError, SmartCardConnection
 from yubikit.management import CAPABILITY
+from yubikit.oath import (
+    HASH_ALGORITHM,
+    OATH_TYPE,
+    CredentialData,
+    OathSession,
+    _format_cred_id,
+    parse_b32_key,
+)
+
+from ..oath import calculate_steam, delete_broken_credential, is_hidden, is_steam
+from ..settings import AppData
 from .util import (
     CliFail,
-    click_force_option,
-    click_postpone_execution,
+    EnumChoice,
     click_callback,
-    click_parse_b32_key,
-    click_prompt,
+    click_force_option,
     click_group,
+    click_parse_b32_key,
+    click_postpone_execution,
+    click_prompt,
+    get_scp_params,
+    is_yk4_fips,
+    pretty_print,
     prompt_for_touch,
     prompt_timeout,
-    EnumChoice,
-    is_yk4_fips,
-    check_version,
-    pretty_print,
-    get_scp_params,
 )
-from ..oath import is_steam, calculate_steam, is_hidden, delete_broken_credential
-from ..settings import AppData
-
-from typing import Dict, List, Any
-import click
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -107,8 +108,8 @@ def info(ctx):
     """
     session = ctx.obj["session"]
     info = ctx.obj["info"]
-    data: Dict[str, Any] = {"OATH version": "%d.%d.%d" % session.version}
-    lines: List[Any] = [data]
+    data: dict[str, Any] = {"OATH version": "%d.%d.%d" % session.version}
+    lines: list[Any] = [data]
 
     if CAPABILITY.OATH in info.fips_capable:
         # This is a bit ugly as it makes assumptions about the structure of data
@@ -570,14 +571,14 @@ def _add_cred(ctx, data, touch, force):
     if len(data.secret) < 2:
         raise CliFail("Secret must be at least 2 bytes.")
 
-    if touch and not check_version(version, (4, 2, 6)):
+    if touch and not version >= (4, 2, 6):
         raise CliFail("Require touch is not supported on this YubiKey.")
 
     if data.counter and data.oath_type != OATH_TYPE.HOTP:
         raise CliFail("Counter only supported for HOTP accounts.")
 
     if data.hash_algorithm == HASH_ALGORITHM.SHA512 and (
-        not check_version(version, (4, 3, 1)) or is_yk4_fips(ctx.obj["info"])
+        not version >= (4, 3, 1) or is_yk4_fips(ctx.obj["info"])
     ):
         raise CliFail("Algorithm SHA512 not supported on this YubiKey.")
 
@@ -612,14 +613,14 @@ def _add_cred(ctx, data, touch, force):
         _fail_scp(ctx, e)
 
 
-@accounts.command()
+@accounts.command("list")
 @click_show_hidden_option
 @click.pass_context
 @click.option("-o", "--oath-type", is_flag=True, help="display the OATH type")
 @click.option("-P", "--period", is_flag=True, help="display the period")
 @click_password_option
 @click_remember_option
-def list(ctx, show_hidden, oath_type, period, password, remember):
+def list_creds(ctx, show_hidden, oath_type, period, password, remember):
     """
     List all accounts.
 

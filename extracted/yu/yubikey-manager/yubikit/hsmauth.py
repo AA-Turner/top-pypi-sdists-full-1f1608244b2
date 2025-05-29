@@ -25,36 +25,35 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from .core import (
-    int2bytes,
-    bytes2int,
-    require_version,
-    Version,
-    Tlv,
-    InvalidPinError,
-)
-from .core.smartcard import (
-    AID,
-    SmartCardConnection,
-    SmartCardProtocol,
-    ApduError,
-    SW,
-    ScpKeyParams,
-)
+import logging
+import struct
+from dataclasses import dataclass
+from enum import IntEnum, unique
+from functools import total_ordering
+from typing import NamedTuple, Optional, Union
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-
-from functools import total_ordering
-from enum import IntEnum, unique
-from dataclasses import dataclass
-from typing import Optional, List, Union, Tuple, NamedTuple
-import struct
-
-import logging
+from .core import (
+    InvalidPinError,
+    Tlv,
+    Version,
+    _override_version,
+    bytes2int,
+    int2bytes,
+    require_version,
+)
+from .core.smartcard import (
+    AID,
+    SW,
+    ApduError,
+    ScpKeyParams,
+    SmartCardConnection,
+    SmartCardProtocol,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -107,11 +106,12 @@ class ALGORITHM(IntEnum):
     EC_P256_YUBICO_AUTHENTICATION = 39
 
     @property
-    def key_len(self):
+    def key_len(self) -> int:
         if self.name.startswith("AES128"):
             return 16
         elif self.name.startswith("EC_P256"):
             return 32
+        raise ValueError("Unknown algorithm")
 
     @property
     def pubkey_len(self):
@@ -151,7 +151,7 @@ def _parse_select(response):
     return Version.from_bytes(data)
 
 
-def _password_to_key(password: str) -> Tuple[bytes, bytes]:
+def _password_to_key(password: str) -> tuple[bytes, bytes]:
     """Derive encryption and MAC key from a password.
 
     :return: A tuple containing the encryption key, and MAC key.
@@ -226,11 +226,13 @@ class HsmAuthSession:
         scp_key_params: Optional[ScpKeyParams] = None,
     ) -> None:
         self.protocol = SmartCardProtocol(connection)
-        self._version = _parse_select(self.protocol.select(AID.HSMAUTH))
+        self._version = _override_version.patch(
+            _parse_select(self.protocol.select(AID.HSMAUTH))
+        )
 
+        self.protocol.configure(self._version)
         if scp_key_params:
             self.protocol.init_scp(scp_key_params)
-        self.protocol.configure(self._version)
 
     @property
     def version(self) -> Version:
@@ -242,7 +244,7 @@ class HsmAuthSession:
         self.protocol.send_apdu(0, INS_RESET, 0xDE, 0xAD)
         logger.info("YubiHSM Auth application data reset performed")
 
-    def list_credentials(self) -> List[Credential]:
+    def list_credentials(self) -> list[Credential]:
         """List YubiHSM Auth credentials on YubiKey"""
 
         creds = []

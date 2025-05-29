@@ -370,8 +370,8 @@ def _apply_row_additions(
         # Row cannot be added -> skip it and log a warning.
         _LOGGER.warning(
             "Cannot automatically add row for the index "
-            f"of type {type(df.index).__name__} without an explicit index value. "
-            "Row addition skipped."
+            "of type %s without an explicit index value. Row addition skipped.",
+            type(df.index).__name__,
         )
 
 
@@ -933,6 +933,7 @@ class DataEditorMixin:
             "data_editor",
             user_key=key,
             form_id=current_form_id(self.dg),
+            dg=self.dg,
             data=arrow_bytes,
             width=width,
             height=height,

@@ -27,7 +27,7 @@ class SyntheticDataGeneration:
     def __init__(self, name: str, api_client: APIClient) -> None:
         self.name = name
         self._client = api_client
-        self._href_definitions = self._client.service_instance._href_definitions
+        self._href_definitions = self._client._href_definitions
 
     def get_results_reference(self) -> DataConnection:
         """Get results reference to generated synthetic data.
@@ -107,9 +107,7 @@ class SDGRuns(BaseRuns):
     """Class of InstructLab synthetic generation runs."""
 
     def __init__(self, api_client: APIClient) -> None:
-        url = (
-            api_client.service_instance._href_definitions.get_synthetic_data_generations_href()
-        )
+        url = api_client._href_definitions.get_synthetic_data_generations_href()
 
         BaseRuns.__init__(self, __name__, api_client, url)
 
@@ -139,7 +137,7 @@ class SyntheticData(WMLResource):
         WMLResource.__init__(self, "synthetic data generation", api_client)
         self.ilab_tuner_name = ilab_tuner_name
         self._client = api_client
-        self._href_definitions = self._client.service_instance._href_definitions
+        self._href_definitions = self._client._href_definitions
 
     def generate(
         self,

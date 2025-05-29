@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: netbox-topology-views
-Version: 4.2.1
+Version: 4.3.0
 Summary: An NetBox plugin to create Topology maps
 Home-page: https://github.com/mattieserver/netbox-topology-views
 Author: Mattijs Vanhaverbeke
@@ -39,36 +39,40 @@ Options to export to xml (for draw.io/diagrams.net) or png.
 
 ## Install
 
-**_NOTE:_** For docker please see: [Docker install](https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins)
+**_NOTE:_** For Docker please see: [Docker install](https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins)
 
-**_NOTE:_** Add `RUN mkdir -p /opt/netbox/netbox/static/netbox_topology_views/img` to the Dockerfile-Plugins file to create the image folder
+**_NOTE:_** Add `RUN mkdir -p /opt/netbox/netbox/static/netbox_topology_views/img` to the Dockerfile-Plugins file to create the image folder.
 
 The plugin is available as a Python package and can be installed with pip.
 
-Run `pip install netbox-topology-views` in your virtual env.
-
-To ensure NetBox Topology Views plugin is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the NetBox root directory (alongside `requirements.txt`) and list the `netbox-topology-views` package:
-
-```no-highlight
-# echo netbox-topology-views >> local_requirements.txt
-```
-
-Once installed, the plugin needs to be enabled in your `configuration.py`
-
-```python
-# In your configuration.py
-PLUGINS = ["netbox_topology_views"]
-```
-
 First run `source /opt/netbox/venv/bin/activate` to enter the Python virtual environment.
 
-
-Then run 
+Then run:
 ```bash
 cd /opt/netbox/netbox
 pip3 install netbox-topology-views
 python3 manage.py migrate netbox_topology_views
 python3 manage.py collectstatic --no-input
+```
+
+To ensure NetBox Topology Views plugin is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the NetBox root directory (alongside `requirements.txt`) and list the `netbox-topology-views` package:
+
+```no-highlight
+echo netbox-topology-views >> /opt/netbox/local_requirements.txt
+```
+
+Once installed, the plugin needs to be enabled in your `configuration.py`:
+```no-highlight
+vim /opt/netbox/netbox/netbox/configuration.py
+```
+
+```python
+PLUGINS = ["netbox_topology_views"]
+```
+
+Finally, restart NetBox:
+```no-highlight
+systemctl restart netbox
 ```
 
 ### Versions
@@ -78,6 +82,8 @@ python3 manage.py collectstatic --no-input
 
 | netbox version | netbox-topology-views version |
 | -------------- | ----------------------------- |
+| = 4.3.X        | = v4.3.0                      |
+| = 4.2.1        | = v4.2.1                      |
 | = 4.2.0        | = v4.2.0                      |
 | = 4.1.X        | = v4.1.0                      |
 | = 4.0.X        | = v4.0.0                      |

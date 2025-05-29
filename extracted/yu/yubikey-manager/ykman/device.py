@@ -25,45 +25,39 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from yubikit.core import Connection, PID, TRANSPORT, YUBIKEY
-from yubikit.core.otp import OtpConnection
-from yubikit.core.fido import FidoConnection
-from yubikit.core.smartcard import SmartCardConnection
-from yubikit.management import (
-    DeviceInfo,
-    USB_INTERFACE,
-)
-from yubikit.support import read_info
-from .base import YkmanDevice
-from .hid import (
-    list_otp_devices as _list_otp_devices,
-    list_ctap_devices as _list_ctap_devices,
-)
-from .pcsc import list_devices as _list_ccid_devices
-from smartcard.pcsc.PCSCExceptions import EstablishContextException
-from smartcard.Exceptions import NoCardException
-
-from time import sleep, time
-from collections import Counter
-from typing import (
-    Dict,
-    Mapping,
-    List,
-    Tuple,
-    Iterable,
-    Type,
-    Hashable,
-    Set,
-)
-import sys
 import ctypes
 import logging
+import sys
+from collections import Counter
+from time import sleep, time
+from typing import Hashable, Iterable, Mapping
+
+from smartcard.pcsc.PCSCExceptions import EstablishContextException
+
+from yubikit.core import PID, TRANSPORT, YUBIKEY, Connection
+from yubikit.core.fido import FidoConnection
+from yubikit.core.otp import OtpConnection
+from yubikit.core.smartcard import SmartCardConnection
+from yubikit.management import (
+    USB_INTERFACE,
+    DeviceInfo,
+)
+from yubikit.support import read_info
+
+from .base import YkmanDevice
+from .hid import (
+    list_ctap_devices as _list_ctap_devices,
+)
+from .hid import (
+    list_otp_devices as _list_otp_devices,
+)
+from .pcsc import list_devices as _list_ccid_devices
 
 logger = logging.getLogger(__name__)
 
 
 def _warn_once(message, e_type=Exception):
-    warned: List[bool] = []
+    warned: list[bool] = []
 
     def outer(f):
         def inner():
@@ -108,14 +102,14 @@ _CONNECTION_LIST_MAPPING = {
 }
 
 
-def scan_devices() -> Tuple[Mapping[PID, int], int]:
+def scan_devices() -> tuple[Mapping[PID, int], int]:
     """Scan USB for attached YubiKeys, without opening any connections.
 
     :return: A dict mapping PID to device count, and a state object which can be used to
         detect changes in attached devices.
     """
     fingerprints = set()
-    merged: Dict[PID, int] = {}
+    merged: dict[PID, int] = {}
     for list_devs in _CONNECTION_LIST_MAPPING.values():
         try:
             devs = list_devs()
@@ -142,11 +136,11 @@ def scan_devices() -> Tuple[Mapping[PID, int], int]:
 class _PidGroup:
     def __init__(self, pid):
         self._pid = pid
-        self._infos: Dict[Hashable, DeviceInfo] = {}
-        self._resolved: Dict[Hashable, Dict[USB_INTERFACE, YkmanDevice]] = {}
-        self._unresolved: Dict[USB_INTERFACE, List[YkmanDevice]] = {}
-        self._devcount: Dict[USB_INTERFACE, int] = Counter()
-        self._fingerprints: Set[Hashable] = set()
+        self._infos: dict[Hashable, DeviceInfo] = {}
+        self._resolved: dict[Hashable, dict[USB_INTERFACE, YkmanDevice]] = {}
+        self._unresolved: dict[USB_INTERFACE, list[YkmanDevice]] = {}
+        self._devcount: dict[USB_INTERFACE, int] = Counter()
+        self._fingerprints: set[Hashable] = set()
         self._ctime = time()
 
     def _key(self, info):
@@ -255,30 +249,18 @@ class _UsbCompositeDevice(YkmanDevice):
     def open_connection(self, connection_type):
         if not self.supports_connection(connection_type):
             raise ValueError("Unsupported Connection type")
-
-        # Allow for ~3s reclaim time on NEO for CCID
-        assert self.pid  # nosec
-        if self.pid.yubikey_type == YUBIKEY.NEO and issubclass(
-            connection_type, SmartCardConnection
-        ):
-            for _ in range(6):
-                try:
-                    return self._group.connect(self._key, connection_type)
-                except (NoCardException, ValueError):
-                    sleep(0.5)
-
         return self._group.connect(self._key, connection_type)
 
 
 def list_all_devices(
-    connection_types: Iterable[Type[Connection]] = _CONNECTION_LIST_MAPPING.keys(),
-) -> List[Tuple[YkmanDevice, DeviceInfo]]:
+    connection_types: Iterable[type[Connection]] = _CONNECTION_LIST_MAPPING.keys(),
+) -> list[tuple[YkmanDevice, DeviceInfo]]:
     """Connect to all attached YubiKeys and read device info from them.
 
     :param connection_types: An iterable of YubiKey connection types.
     :return: A list of (device, info) tuples for each connected device.
     """
-    groups: Dict[PID, _PidGroup] = {}
+    groups: dict[PID, _PidGroup] = {}
 
     for connection_type in connection_types:
         for base_type in _CONNECTION_LIST_MAPPING:

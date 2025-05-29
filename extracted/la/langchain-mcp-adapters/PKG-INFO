@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: langchain-mcp-adapters
-Version: 0.1.1
+Version: 0.1.2
 Summary: Make Anthropic Model Context Protocol (MCP) tools compatible with LangChain and LangGraph agents.
 Author-Email: Vadym Barda <19161700+vbarda@users.noreply.github.com>
 License-Expression: MIT
@@ -299,4 +299,27 @@ In your [`langgraph.json`](https://langchain-ai.github.io/langgraph/cloud/refere
     "agent": "./graph.py:make_graph"
   }
 }
+```
+
+## Add LangChain tools to a FastMCP server
+
+Use `convert_langchain_tool_to_fastmcp_tool` to convert LangChain tools to FastMCP, and then add them to the `FastMCP` server via the initializer:
+
+> [!NOTE]
+> `tools` argument is only available in FastMCP as of `mcp >= 1.9.1`
+
+```python
+from langchain_mcp_adapters.tools import convert_langchain_tool_to_fastmcp_tool
+from langchain_core.tools import tool
+from mcp.server.fastmcp import FastMCP
+
+@tool
+def add(a: int, b: int) -> int:
+    """Add two numbers"""
+    return a + b
+
+fastmcp_tool = convert_langchain_tool_to_fastmcp_tool(add)
+
+mcp = FastMCP("Math", tools=[fastmcp_tool])
+mcp.run(transport="stdio")
 ```

@@ -1,13 +1,17 @@
 Metadata-Version: 2.4
 Name: bio-grumpy
-Version: 0.2.5
-Classifier: Development Status :: 2 - Pre-Alpha
+Version: 0.2.7
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Programming Language :: Rust
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Healthcare Industry
+Classifier: License :: Other/Proprietary License
 License-File: LICENSE
 Summary: gumpy re-implemented in Rust
 Author-email: Jeremy Westhead <jeremy.westhead@ndm.ox.ac.uk>
+License: University of Oxford, see license file for details.
 Requires-Python: >=3.8, <3.13
 Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
 Project-URL: Source, https://github.com/oxfordmmm/grumpy

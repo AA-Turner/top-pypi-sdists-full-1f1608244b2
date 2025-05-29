@@ -72,9 +72,7 @@ class RemoteTrainingSystem(WMLResource):
         elif self._client.default_project_id is not None:
             meta["project_id"] = self._client.default_project_id
 
-        href = (
-            self._client.service_instance._href_definitions.remote_training_systems_href()
-        )
+        href = self._client._href_definitions.remote_training_systems_href()
 
         creation_response = requests.post(
             href,
@@ -133,10 +131,8 @@ class RemoteTrainingSystem(WMLResource):
             remote_training_systems_id, "remote_training_systems_id", str, True
         )
 
-        href = (
-            self._client.service_instance._href_definitions.remote_training_system_href(
-                remote_training_systems_id
-            )
+        href = self._client._href_definitions.remote_training_system_href(
+            remote_training_systems_id
         )
 
         delete_response = requests.delete(
@@ -200,9 +196,7 @@ class RemoteTrainingSystem(WMLResource):
         )
         RemoteTrainingSystem._validate_type(limit, "limit", int, False)
 
-        href = (
-            self._client.service_instance._href_definitions.remote_training_systems_href()
-        )
+        href = self._client._href_definitions.remote_training_systems_href()
 
         if remote_training_system_id is None:
             return self._get_artifact_details(
@@ -315,10 +309,8 @@ class RemoteTrainingSystem(WMLResource):
             details["entity"], changes, with_validation=True
         )
 
-        href = (
-            self._client.service_instance._href_definitions.remote_training_system_href(
-                remote_training_system_id
-            )
+        href = self._client._href_definitions.remote_training_system_href(
+            remote_training_system_id
         )
 
         response = requests.patch(
@@ -355,9 +347,7 @@ class RemoteTrainingSystem(WMLResource):
             remote_training_system_id, "remote_training_system_id", str, False
         )
 
-        href = (
-            self._client.service_instance._href_definitions.remote_training_systems_href()
-        )
+        href = self._client._href_definitions.remote_training_systems_href()
         return self._create_revision_artifact(
             href, remote_training_system_id, "remote training system"
         )
@@ -389,10 +379,8 @@ class RemoteTrainingSystem(WMLResource):
         )
         RemoteTrainingSystem._validate_type(rev_id, "rev_id", str, True)
 
-        href = (
-            self._client.service_instance._href_definitions.remote_training_system_href(
-                remote_training_system_id
-            )
+        href = self._client._href_definitions.remote_training_system_href(
+            remote_training_system_id
         )
         return self._get_with_or_without_limit(
             href,
@@ -431,7 +419,7 @@ class RemoteTrainingSystem(WMLResource):
             remote_training_system_id, "remote_training_system_id", str, True
         )
 
-        href = self._client.service_instance._href_definitions.get_function_href(
+        href = self._client._href_definitions.get_function_href(
             remote_training_system_id
         )
 
