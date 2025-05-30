@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: open-webui
-Version: 0.6.12
+Version: 0.6.13
 Summary: Open WebUI
 Author-email: Timothy Jaeryang Baek <tim@openwebui.com>
 License: Copyright (c) 2023-2025 Timothy Jaeryang Baek (Open WebUI)
@@ -230,7 +230,7 @@ Want to learn more about Open WebUI's features? Check out our [Open WebUI docume
       </a>
     </td>
     <td>
-      Wrap • The intelligent terminal for developers
+      <a href="https://warp.dev/open-webui">Warp</a> • The intelligent terminal for developers
     </td>
   </tr>
 </table>

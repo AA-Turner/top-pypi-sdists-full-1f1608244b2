@@ -78,6 +78,7 @@ class Instancedriver:
     def initialize_options(self):
 
         if self.nav.lower() in ["firefox", "fox", "fire", "mozila", "mozila firefox"]:
+            self.nav = "firefox"
             self.options = webdriver.FirefoxOptions()
             self.options.add_argument("--disable-blink-features=AutomationControlled")
             self.options.add_argument("--no-sandbox")
@@ -91,7 +92,8 @@ class Instancedriver:
             self.options.add_argument("--disable-blink-features=AutomationControlled")
             self.options.add_argument("start-maximized")
 
-        elif self.nav.lower() == "chrome":
+        elif self.nav.lower() in ["chrome", "google", "chromium", "chrome browser", "browser chrome", "browser_chrome", "browser-chrome"]:
+            self.nav = "chrome"
             self.options = webdriver.ChromeOptions()
             self.options.add_argument("--disable-blink-features=AutomationControlled")
 
@@ -344,19 +346,36 @@ class Instancedriver:
         service = IEService(executable_path=self.driver_path)
         self.driver = webdriver.Ie(service=service, options=options)
 
-    def add_extension(self, extension_folder: str,
+    def add_extensions(self, extension_folder: str,
         config: Optional[bool] = False,
-        key: Optional[str|int] = None
+        key: Optional[str|int] = None,
         ):
-        """ Inicia o navegador com uma extensão, o 'config' ele identifica o nome da pasta e se for uma conhecida (capmonster, twocaptcha) configura automaticamente
-
-        - OBS: Caso a extensão precise de alguma KEY, declare ela também na variavel "key"
-
-        - Exemplo: add_extension("capmonster", config=True)"""
+        """
+        **PARAMETROS**:
+            - **extension_folder**: folder or CRX of you extension (auto detection)
+            - **config**: if was a capmonster you can turn to True to config
+            - **key**: Pass a APIKEY if you needed and want to auto config
+        """
         try:
+
+            crx_xpi = extension_folder.lower().endswith((".crx", ".xpi"))
             extensao_caminho = self.__resource_path(extension_folder)
             if not os.path.exists(extensao_caminho): extensao_caminho = os.path.abspath(extension_folder)
-            self.arguments.add_new_argument(f'--load-extension={extensao_caminho}')
+
+            if self.nav == "chrome":
+                if crx_xpi:
+                    self.options.add_extension(extensao_caminho)
+                else:
+                    self.arguments.add_new_argument(f'--load-extension={extensao_caminho}')
+
+            else:
+                if crx_xpi:
+                    self.options.add_extension(extensao_caminho)
+                else:
+                    from . import mostrar_mensagem
+                    mostrar_mensagem(f"Use .CRX (ou .XPI) para o navegador {self.nav}.\n")
+                    raise RuntimeError("Extensão inválida para esse navegador")
+
         except Exception as e:
             logging.error("Erro ao verificar pasta da extensão", exc_info=True)
             raise SystemError("Verificar pasta da extensão") from e
@@ -364,7 +383,7 @@ class Instancedriver:
         if key:
             key = str(key) ; cap_monster_names = ["capmonster", "captchamonster", "monster", "cap-monster", "captcha monster", "captcha-monster", "cmonster", "cap monster"]
             for name in cap_monster_names:
-                if name in extension_folder.lower(): self._config_capmonster(key)
+                if name in extension_folder.lower() and config: self._config_capmonster(key)
 
     def _get_chrome_version(self) -> int:
         """Get major Chrome version"""

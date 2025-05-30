@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: prefect-client
-Version: 3.4.3
+Version: 3.4.4
 Summary: Workflow orchestration and management.
 Project-URL: Changelog, https://github.com/PrefectHQ/prefect/releases
 Project-URL: Documentation, https://docs.prefect.io
@@ -23,7 +23,7 @@ Classifier: Topic :: Software Development :: Libraries
 Requires-Python: <3.14,>=3.9
 Requires-Dist: anyio<5.0.0,>=4.4.0
 Requires-Dist: asgi-lifespan<3.0,>=1.0
-Requires-Dist: cachetools<6.0,>=5.3
+Requires-Dist: cachetools<7.0,>=5.3
 Requires-Dist: cloudpickle<4.0,>=2.0
 Requires-Dist: coolname<3.0.0,>=1.0.4
 Requires-Dist: dateparser<2.0.0,>=1.1.1

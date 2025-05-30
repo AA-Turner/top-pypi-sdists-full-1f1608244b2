@@ -93,20 +93,18 @@ class BaseSqlExecutor:
 
     def execute_string(self, query: str, **kwargs) -> Iterable[SnowflakeCursor]:
         """Executes a single SQL query and returns the results"""
-        return self._execute_string(query, **kwargs)
+        return self._execute_string(dedent(query), **kwargs)
 
     def execute_query(self, query: str, **kwargs) -> SnowflakeCursor:
         """Executes a single SQL query and returns the last result"""
-        *_, last_result = list(self.execute_string(dedent(query), **kwargs))
+        *_, last_result = list(self.execute_string(query, **kwargs))
         return last_result
 
     def execute_queries(self, queries: str, **kwargs):
         """Executes multiple SQL queries (passed as one string) and returns the results as a list"""
 
         # Without remove_comments=True, connectors might throw an error if there is a comment at the end of the file
-        return list(
-            self.execute_string(dedent(queries), remove_comments=True, **kwargs)
-        )
+        return list(self.execute_string(queries, remove_comments=True, **kwargs))
 
 
 class SqlExecutor(BaseSqlExecutor):
@@ -126,8 +124,10 @@ class SqlExecutor(BaseSqlExecutor):
             # Rewrite the error to make the message more useful.
             raise CouldNotUseObjectError(object_type=object_type, name=name) from err
 
-    def current_role(self) -> str:
-        return to_identifier(self.execute_query(f"select current_role()").fetchone()[0])
+    def current_role(self) -> Optional[str]:
+        if result := self.execute_query(f"select current_role()").fetchone()[0]:
+            return to_identifier(result)
+        return None
 
     @contextmanager
     def use_role(self, new_role: str):
@@ -137,14 +137,17 @@ class SqlExecutor(BaseSqlExecutor):
         """
         new_role = to_identifier(new_role)
         prev_role = self.current_role()
-        is_different_role = new_role.lower() != prev_role.lower()
+        if prev_role:
+            is_different_role = new_role.lower() != prev_role.lower()
+        else:
+            is_different_role = True
         if is_different_role:
             self._log.debug("Assuming different role: %s", new_role)
             self.execute_query(f"use role {new_role}")
         try:
             yield
         finally:
-            if is_different_role:
+            if is_different_role and prev_role:
                 self.execute_query(f"use role {prev_role}")
 
     def session_has_warehouse(self) -> bool:

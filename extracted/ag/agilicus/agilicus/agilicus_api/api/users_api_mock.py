@@ -40,6 +40,7 @@ class UsersApiMock:
         self.mock_list_ssh_access_info = MagicMock()
         self.mock_list_support_requests = MagicMock()
         self.mock_list_upstream_user_identities = MagicMock()
+        self.mock_list_user_access_info = MagicMock()
         self.mock_list_user_application_access_info = MagicMock()
         self.mock_list_user_file_share_access_info = MagicMock()
         self.mock_list_user_guid_mapping = MagicMock()
@@ -283,6 +284,12 @@ class UsersApiMock:
         This method mocks the original api UsersApi.list_upstream_user_identities with MagicMock.
         """
         return self.mock_list_upstream_user_identities(self, *args, **kwargs)
+
+    def list_user_access_info(self, *args, **kwargs):
+        """
+        This method mocks the original api UsersApi.list_user_access_info with MagicMock.
+        """
+        return self.mock_list_user_access_info(self, *args, **kwargs)
 
     def list_user_application_access_info(self, *args, **kwargs):
         """

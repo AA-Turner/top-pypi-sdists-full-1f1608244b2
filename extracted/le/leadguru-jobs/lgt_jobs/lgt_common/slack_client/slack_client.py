@@ -4,6 +4,7 @@ import requests
 import json
 import io
 from urllib import parse
+from pyppeteer import launch
 from requests import Response
 from websockets.client import WebSocketClientProtocol
 from lgt_jobs.lgt_common.slack_client.methods import SlackMethods
@@ -212,7 +213,40 @@ class SlackClient:
         payload = {'email': email, 'locale': locale}
         headers = {'User-Agent': user_agent}
         response = requests.post(f"{self.base_url}{SlackMethods.confirm_email}", data=payload, headers=headers)
-        return response.json()['ok'] if response.status_code == 200 else False
+        result = response.json()['ok'] if response.status_code == 200 else False
+
+        print(f"Result is {result}")
+        if not result:
+            print("Start pyppeteer")
+            try:
+                async def send_code():
+                    print("Launch browser")
+                    browser = await launch(headless=True)
+                    page = await browser.newPage()
+
+                    print("Go to Slack")
+                    await page.goto('https://slack.com/signin', waitUntil='networkidle2')
+
+                    print("Type email")
+                    await page.waitForSelector('input#signup_email')
+                    await page.type('input#signup_email', email)
+                    await asyncio.sleep(1.324)
+
+                    print("Press the button to submit")
+                    button = await page.querySelector('button#submit_btn')
+                    await button.tap()
+
+                    print("Wait for the next page")
+                    await page.waitForSelector('input[aria-label="digit 1 of 6"]')
+
+                    print("Close the browser")
+                    await browser.close()
+
+                asyncio.run(send_code())
+                return True
+            except:
+                return False
+        return result
 
     def confirm_code(self, email: str, code: str, user_agent: str) -> requests.Response:
         payload = {'email': email, 'code': code}

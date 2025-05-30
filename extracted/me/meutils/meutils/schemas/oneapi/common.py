@@ -49,8 +49,8 @@ MODEL_PRICE = {
     "kling_effects": 1,
 
     "kling_video": 1.2,
-    "kling_extend": 1.2,
-    "kling_lip_sync": 1.2,
+    "kling_extend": 1,
+    "kling_lip_sync": 1,
 
     "minimax_files_retrieve": 0.01,
 
@@ -65,6 +65,16 @@ MODEL_PRICE = {
 
     "minimax_video-01": MINIMAX_VIDEO,
     "minimax_video-01-live2d": MINIMAX_VIDEO,
+
+    # 火山
+    "api-volcengine-high_aes_general_v30l_zt2i": 0.05,
+    "api-volcengine-byteedit_v2.0": 0.05,
+
+    # videos
+    "api-videos-wan-ai/wan2.1-t2v-14b": 1.2,
+    "api-videos-wan-ai/wan2.1-t2v-14b-turbo": 1.2,
+    "api-videos-wan-ai/wan2.1-i2v-14b-720p": 1.2,
+    "api-videos-wan-ai/wan2.1-i2v-14b-720p-turbo": 1.2,
 
     # chatfire
     "ppu-0001": 0.0001,
@@ -297,7 +307,15 @@ MODEL_PRICE = {
     "net-gpt-4": 0.1,
     "perplexity": 0.01,
     "net-claude": 0.015,
+
+    # 秘塔
     "meta-search": 0.02,
+    "meta-deepsearch": 0.05,
+    "meta-deepresearch": 0.1,
+
+    "meta-search:scholar": 0.02,
+    "meta-deepsearch:scholar": 0.05,
+    "meta-deepresearch:scholar": 0.1,
 
     # 逆向
     "cogview-3": 0.01,
@@ -580,6 +598,7 @@ MODEL_RATIO = {
     "deepseek-v3": 1,
     "deepseek-v3-0324": 1,
     "deepseek-v3-250324": 1,
+    "deepseek-v3-fast": 1,
 
     "deepseek-v3-8k": 0.5,
     "deepseek-v3-128k": 5,
@@ -597,6 +616,7 @@ MODEL_RATIO = {
     'deepseek-reasoner': 2,
     'deepseek-reasoner-8k': 1,
     "deepseek-r1-250120": 2,
+    "deepseek-r1-0528": 2,
 
     "deepseek-search": 1,
     'deepseek-r1-search': 2,
@@ -1205,11 +1225,13 @@ COMPLETION_RATIO = {
     "deepseek-v3-0324": 4,
     "deepseek-v3-250324": 4,
     "deepseek-chat": 4,
+    "deepseek-v3-fast": 4,
 
     'deepseek-r1': 4,
     'deepseek-reasoner': 4,
     "deepseek-reasoner-164k": 8,
     "deepseek-r1-250120": 4,
+    "deepseek-r1-0528": 4,
 
     "deepseek-chat:function": 4,
 

@@ -108,7 +108,7 @@ VOICE_MAPPING = {
 @retrying()
 async def create_tts(request: TTSRequest):  # audio.speech.create
 
-    effect_id = VOICE_MAPPING.get(request.voice, request.voice)
+    effect_id = VOICE_MAPPING.get(request.voice, "7382552865023201819")
 
     loki_info = {"effect_id": effect_id, "model_names": "", "effect_type": 0}
 

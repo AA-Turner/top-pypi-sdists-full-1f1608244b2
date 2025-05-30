@@ -31,12 +31,14 @@ class SendMailJob(BaseBackgroundJob, ABC):
         body_image = {}
         for image in data.images:
             body_image[f'IMAGE_{ImageName(image.value).name}'] = f'lgt_jobs/assets/images/{image.value}'
-
-        gmail.send(
-            sender=f"Leadguru <{data.sender}>",
-            receivers=[data.recipient],
-            subject=data.subject,
-            html=data.html,
-            body_images=body_image
-        )
+        with gmail:
+            if not gmail.is_alive:
+                gmail.connect()
+            gmail.send(
+                sender=f"Leadguru <{data.sender}>",
+                receivers=[data.recipient],
+                subject=data.subject,
+                html=data.html,
+                body_images=body_image
+            )
         log.info('email message has been sent')

@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: kedro-telemetry
-Version: 0.6.2
+Version: 0.6.3
 Summary: Kedro-Telemetry
 Author: Kedro
 License: Apache Software License (Apache 2.0)
@@ -22,9 +22,9 @@ Requires-Dist: wheel; extra == "test"
 Provides-Extra: lint
 Requires-Dist: bandit<2.0,>=1.6.2; extra == "lint"
 Requires-Dist: black~=22.0; extra == "lint"
+Requires-Dist: detect-secrets~=1.5.0; extra == "lint"
 Requires-Dist: mypy~=1.0; extra == "lint"
 Requires-Dist: pre-commit>=2.9.2; extra == "lint"
-Requires-Dist: trufflehog<3.0,>=2.1.0; extra == "lint"
 Requires-Dist: ruff~=0.0.290; extra == "lint"
 Requires-Dist: types-requests; extra == "lint"
 Requires-Dist: types-PyYAML; extra == "lint"

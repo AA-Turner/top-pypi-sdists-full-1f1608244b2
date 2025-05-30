@@ -26,6 +26,7 @@ from snowflake.cli._plugins.project.project_entity_model import (
 from snowflake.cli.api.cli_global_context import get_cli_context
 from snowflake.cli.api.commands.decorators import with_project_definition
 from snowflake.cli.api.commands.flags import (
+    IfNotExistsOption,
     OverrideableOption,
     PruneOption,
     entity_argument,
@@ -57,6 +58,12 @@ version_flag = typer.Option(
 variables_flag = variables_option(
     'Variables for the execution context; for example: `-D "<key>=<value>"`.'
 )
+configuration_flag = typer.Option(
+    None,
+    "--configuration",
+    help="Configuration of the project to use. If not specified default configuration is used.",
+    show_default=False,
+)
 from_option = OverrideableOption(
     None,
     "--from",
@@ -82,13 +89,17 @@ def execute(
     identifier: FQN = project_identifier,
     version: Optional[str] = version_flag,
     variables: Optional[List[str]] = variables_flag,
+    configuration: Optional[str] = configuration_flag,
     **options,
 ):
     """
     Executes a project.
     """
     result = ProjectManager().execute(
-        project_name=identifier, version=version, variables=variables
+        project_name=identifier,
+        configuration=configuration,
+        version=version,
+        variables=variables,
     )
     return SingleQueryResult(result)
 
@@ -98,13 +109,18 @@ def dry_run(
     identifier: FQN = project_identifier,
     version: Optional[str] = version_flag,
     variables: Optional[List[str]] = variables_flag,
+    configuration: Optional[str] = configuration_flag,
     **options,
 ):
     """
     Validates a project.
     """
     result = ProjectManager().execute(
-        project_name=identifier, version=version, dry_run=True, variables=variables
+        project_name=identifier,
+        configuration=configuration,
+        version=version,
+        dry_run=True,
+        variables=variables,
     )
     return SingleQueryResult(result)
 
@@ -117,6 +133,9 @@ def create(
         False,
         "--no-version",
         help="Do not initialize project with a new version, only create the snowflake object.",
+    ),
+    if_not_exists: bool = IfNotExistsOption(
+        help="Do nothing if the project already exists."
     ),
     **options,
 ):
@@ -133,7 +152,11 @@ def create(
     )
     om = ObjectManager()
     if om.object_exists(object_type="project", fqn=project.fqn):
-        raise CliError(f"Project '{project.fqn}' already exists.")
+        message = f"Project '{project.fqn}' already exists."
+        if if_not_exists:
+            return MessageResult(message)
+        raise CliError(message)
+
     if not no_version and om.object_exists(
         object_type="stage", fqn=FQN.from_stage(project.stage)
     ):

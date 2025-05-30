@@ -394,6 +394,7 @@ __all__ = (
     "TargetPlatformArchType",
     "TargetPlatformOsType",
     "ThroughputModeType",
+    "TrackingServerMaintenanceStatusType",
     "TrackingServerSizeType",
     "TrackingServerStatusType",
     "TrafficRoutingConfigTypeType",
@@ -2010,6 +2011,9 @@ TargetPlatformAcceleratorType = Literal["INTEL_GRAPHICS", "MALI", "NNA", "NVIDIA
 TargetPlatformArchType = Literal["ARM64", "ARM_EABI", "ARM_EABIHF", "X86", "X86_64"]
 TargetPlatformOsType = Literal["ANDROID", "LINUX"]
 ThroughputModeType = Literal["OnDemand", "Provisioned"]
+TrackingServerMaintenanceStatusType = Literal[
+    "MaintenanceComplete", "MaintenanceFailed", "MaintenanceInProgress"
+]
 TrackingServerSizeType = Literal["Large", "Medium", "Small"]
 TrackingServerStatusType = Literal[
     "CreateFailed",
@@ -2569,7 +2573,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",

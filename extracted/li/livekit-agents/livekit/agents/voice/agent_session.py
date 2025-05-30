@@ -45,6 +45,7 @@ class VoiceOptions:
     min_endpointing_delay: float
     max_endpointing_delay: float
     max_tool_steps: int
+    user_away_timeout: float | None
 
 
 Userdata_T = TypeVar("Userdata_T")
@@ -116,6 +117,7 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
         max_endpointing_delay: float = 6.0,
         max_tool_steps: int = 3,
         video_sampler: NotGivenOr[_VideoSampler | None] = NOT_GIVEN,
+        user_away_timeout: float | None = 15.0,
         loop: asyncio.AbstractEventLoop | None = None,
     ) -> None:
         """`AgentSession` is the LiveKit Agents runtime that glues together
@@ -170,6 +172,9 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
                 :class:`VoiceActivityVideoSampler` when *NOT_GIVEN*; that sampler
                 captures video at ~1 fps while the user is speaking and ~0.3 fps
                 when silent by default.
+            user_away_timeout (float, optional): If set, set the user state as
+                "away" after this amount of time after user and agent are silent.
+                Default ``15.0`` s, set to ``None`` to disable.
             loop (asyncio.AbstractEventLoop, optional): Event loop to bind the
                 session to. Falls back to :pyfunc:`asyncio.get_event_loop()`.
         """
@@ -191,6 +196,7 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
             min_endpointing_delay=min_endpointing_delay,
             max_endpointing_delay=max_endpointing_delay,
             max_tool_steps=max_tool_steps,
+            user_away_timeout=user_away_timeout,
         )
         self._started = False
         self._turn_detection = turn_detection or None
@@ -208,8 +214,8 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
             self._on_text_output_changed,
         )
 
-        self._forward_audio_atask: asyncio.Task | None = None
-        self._update_activity_atask: asyncio.Task | None = None
+        self._forward_audio_atask: asyncio.Task[None] | None = None
+        self._update_activity_atask: asyncio.Task[None] | None = None
         self._activity_lock = asyncio.Lock()
         self._lock = asyncio.Lock()
 
@@ -219,11 +225,13 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
 
         self._agent: Agent | None = None
         self._activity: AgentActivity | None = None
+        self._next_activity: AgentActivity | None = None
         self._user_state: UserState = "listening"
         self._agent_state: AgentState = "initializing"
+        self._user_away_timer: asyncio.TimerHandle | None = None
 
         self._userdata: Userdata_T | None = userdata if is_given(userdata) else None
-        self._closing_task: asyncio.Task | None = None
+        self._closing_task: asyncio.Task[None] | None = None
 
     @property
     def userdata(self) -> Userdata_T:
@@ -239,22 +247,6 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
     @property
     def turn_detection(self) -> TurnDetectionMode | None:
         return self._turn_detection
-
-    @property
-    def stt(self) -> stt.STT | None:
-        return self._stt
-
-    @property
-    def llm(self) -> llm.LLM | llm.RealtimeModel | None:
-        return self._llm
-
-    @property
-    def tts(self) -> tts.TTS | None:
-        return self._tts
-
-    @property
-    def vad(self) -> vad.VAD | None:
-        return self._vad
 
     @property
     def mcp_servers(self) -> list[mcp.MCPServer] | None:
@@ -420,7 +412,7 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
     async def _aclose_impl(
         self,
         *,
-        error: llm.LLMError | stt.STTError | tts.TTSError | None = None,
+        error: llm.LLMError | stt.STTError | tts.TTSError | llm.RealtimeModelError | None = None,
     ) -> None:
         async with self._lock:
             if not self._started:
@@ -527,7 +519,7 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
             allow_interruptions=allow_interruptions,
         )
 
-    def interrupt(self) -> asyncio.Future:
+    def interrupt(self) -> asyncio.Future[None]:
         """Interrupt the current speech generation.
 
         Returns:
@@ -579,7 +571,7 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
             await self.drain()
             await self._aclose_impl(error=error)
 
-        def on_close_done(_: asyncio.Task) -> None:
+        def on_close_done(_: asyncio.Task[None]) -> None:
             self._closing_task = None
 
         self._closing_task = asyncio.create_task(drain_and_close())
@@ -621,9 +613,28 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
 
                 self._activity.push_video(frame)
 
+    def _set_user_away_timer(self) -> None:
+        self._cancel_user_away_timer()
+        if self._opts.user_away_timeout is None:
+            return
+
+        self._user_away_timer = self._loop.call_later(
+            self._opts.user_away_timeout, self._update_user_state, "away"
+        )
+
+    def _cancel_user_away_timer(self) -> None:
+        if self._user_away_timer is not None:
+            self._user_away_timer.cancel()
+            self._user_away_timer = None
+
     def _update_agent_state(self, state: AgentState) -> None:
         if self._agent_state == state:
             return
+
+        if state == "listening" and self._user_state == "listening":
+            self._set_user_away_timer()
+        else:
+            self._cancel_user_away_timer()
 
         old_state = self._agent_state
         self._agent_state = state
@@ -635,13 +646,35 @@ class AgentSession(rtc.EventEmitter[EventTypes], Generic[Userdata_T]):
         if self._user_state == state:
             return
 
+        if state == "listening" and self._agent_state == "listening":
+            self._set_user_away_timer()
+        else:
+            self._cancel_user_away_timer()
+
         old_state = self._user_state
         self._user_state = state
         self.emit("user_state_changed", UserStateChangedEvent(old_state=old_state, new_state=state))
 
     def _conversation_item_added(self, message: llm.ChatMessage) -> None:
-        self._chat_ctx.items.append(message)
+        self._chat_ctx.insert(message)
         self.emit("conversation_item_added", ConversationItemAddedEvent(item=message))
+
+    # move them to the end to avoid shadowing the same named modules for mypy
+    @property
+    def stt(self) -> stt.STT | None:
+        return self._stt
+
+    @property
+    def llm(self) -> llm.LLM | llm.RealtimeModel | None:
+        return self._llm
+
+    @property
+    def tts(self) -> tts.TTS | None:
+        return self._tts
+
+    @property
+    def vad(self) -> vad.VAD | None:
+        return self._vad
 
     # -- User changed input/output streams/sinks --
 

@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-aws",
-    "version": "19.64.0",
+    "version": "19.65.0",
     "description": "Prebuilt aws Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-aws.git",
@@ -1583,6 +1583,11 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.networkmanager_vpc_attachment",
         "cdktf_cdktf_provider_aws.networkmonitor_monitor",
         "cdktf_cdktf_provider_aws.networkmonitor_probe",
+        "cdktf_cdktf_provider_aws.notifications_channel_association",
+        "cdktf_cdktf_provider_aws.notifications_event_rule",
+        "cdktf_cdktf_provider_aws.notifications_notification_configuration",
+        "cdktf_cdktf_provider_aws.notifications_notification_hub",
+        "cdktf_cdktf_provider_aws.notificationscontacts_email_contact",
         "cdktf_cdktf_provider_aws.oam_link",
         "cdktf_cdktf_provider_aws.oam_sink",
         "cdktf_cdktf_provider_aws.oam_sink_policy",
@@ -1654,6 +1659,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.qbusiness_application",
         "cdktf_cdktf_provider_aws.qldb_ledger",
         "cdktf_cdktf_provider_aws.qldb_stream",
+        "cdktf_cdktf_provider_aws.quicksight_account_settings",
         "cdktf_cdktf_provider_aws.quicksight_account_subscription",
         "cdktf_cdktf_provider_aws.quicksight_analysis",
         "cdktf_cdktf_provider_aws.quicksight_dashboard",
@@ -2133,6 +2139,9 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.workspaces_directory",
         "cdktf_cdktf_provider_aws.workspaces_ip_group",
         "cdktf_cdktf_provider_aws.workspaces_workspace",
+        "cdktf_cdktf_provider_aws.workspacesweb_browser_settings",
+        "cdktf_cdktf_provider_aws.workspacesweb_network_settings",
+        "cdktf_cdktf_provider_aws.workspacesweb_user_settings",
         "cdktf_cdktf_provider_aws.xray_encryption_config",
         "cdktf_cdktf_provider_aws.xray_group",
         "cdktf_cdktf_provider_aws.xray_resource_policy",
@@ -2140,7 +2149,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_aws._jsii": [
-            "provider-aws@19.64.0.jsii.tgz"
+            "provider-aws@19.65.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_aws": [
             "py.typed"

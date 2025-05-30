@@ -30,6 +30,7 @@ __all__ = (
     "IngestProtocolType",
     "IvsrealtimeServiceName",
     "ListIngestConfigurationsPaginatorName",
+    "ListParticipantReplicasPaginatorName",
     "ListPublicKeysPaginatorName",
     "PaginatorName",
     "ParticipantProtocolType",
@@ -42,6 +43,8 @@ __all__ = (
     "PipPositionType",
     "RecordingConfigurationFormatType",
     "RegionName",
+    "ReplicationStateType",
+    "ReplicationTypeType",
     "ResourceServiceName",
     "ServiceName",
     "ThumbnailRecordingModeType",
@@ -77,6 +80,8 @@ EventNameType = Literal[
     "PUBLISH_ERROR",
     "PUBLISH_STARTED",
     "PUBLISH_STOPPED",
+    "REPLICATION_STARTED",
+    "REPLICATION_STOPPED",
     "SUBSCRIBE_ERROR",
     "SUBSCRIBE_STARTED",
     "SUBSCRIBE_STOPPED",
@@ -84,6 +89,7 @@ EventNameType = Literal[
 IngestConfigurationStateType = Literal["ACTIVE", "INACTIVE"]
 IngestProtocolType = Literal["RTMP", "RTMPS"]
 ListIngestConfigurationsPaginatorName = Literal["list_ingest_configurations"]
+ListParticipantReplicasPaginatorName = Literal["list_participant_replicas"]
 ListPublicKeysPaginatorName = Literal["list_public_keys"]
 ParticipantProtocolType = Literal["RTMP", "RTMPS", "UNKNOWN", "WHIP"]
 ParticipantRecordingFilterByRecordingStateType = Literal[
@@ -98,6 +104,8 @@ ParticipantTokenCapabilityType = Literal["PUBLISH", "SUBSCRIBE"]
 PipBehaviorType = Literal["DYNAMIC", "STATIC"]
 PipPositionType = Literal["BOTTOM_LEFT", "BOTTOM_RIGHT", "TOP_LEFT", "TOP_RIGHT"]
 RecordingConfigurationFormatType = Literal["HLS"]
+ReplicationStateType = Literal["ACTIVE", "STOPPED"]
+ReplicationTypeType = Literal["NONE", "REPLICA", "SOURCE"]
 ThumbnailRecordingModeType = Literal["DISABLED", "INTERVAL"]
 ThumbnailStorageTypeType = Literal["LATEST", "SEQUENTIAL"]
 VideoAspectRatioType = Literal["AUTO", "PORTRAIT", "SQUARE", "VIDEO"]
@@ -400,7 +408,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -461,7 +468,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -469,6 +475,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -521,7 +528,9 @@ ResourceServiceName = Literal[
     "sns",
     "sqs",
 ]
-PaginatorName = Literal["list_ingest_configurations", "list_public_keys"]
+PaginatorName = Literal[
+    "list_ingest_configurations", "list_participant_replicas", "list_public_keys"
+]
 RegionName = Literal[
     "ap-northeast-1",
     "ap-northeast-2",

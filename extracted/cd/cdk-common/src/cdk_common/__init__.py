@@ -1584,10 +1584,6 @@ class AWSManagedPolicies(enum.Enum):
     '''
     :stability: experimental
     '''
-    AWSMARKETPLACE_IMAGE_BUILD_FULL_ACCESS = "AWSMARKETPLACE_IMAGE_BUILD_FULL_ACCESS"
-    '''
-    :stability: experimental
-    '''
     AWSDISCOVERY_CONTINUOUS_EXPORT_FIREHOSE_POLICY = "AWSDISCOVERY_CONTINUOUS_EXPORT_FIREHOSE_POLICY"
     '''
     :stability: experimental
@@ -3925,14 +3921,6 @@ class AWSManagedPolicies(enum.Enum):
     :stability: experimental
     '''
     AMAZON_EKS_LOCAL_OUTPOST_CLUSTER_POLICY = "AMAZON_EKS_LOCAL_OUTPOST_CLUSTER_POLICY"
-    '''
-    :stability: experimental
-    '''
-    GROUND_TRUTH_SYNTHETIC_CONSOLE_READ_ONLY_ACCESS = "GROUND_TRUTH_SYNTHETIC_CONSOLE_READ_ONLY_ACCESS"
-    '''
-    :stability: experimental
-    '''
-    GROUND_TRUTH_SYNTHETIC_CONSOLE_FULL_ACCESS = "GROUND_TRUTH_SYNTHETIC_CONSOLE_FULL_ACCESS"
     '''
     :stability: experimental
     '''

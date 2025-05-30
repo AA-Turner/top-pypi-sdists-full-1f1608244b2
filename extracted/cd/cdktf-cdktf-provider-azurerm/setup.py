@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-azurerm",
-    "version": "13.29.0",
+    "version": "13.30.0",
     "description": "Prebuilt azurerm Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-azurerm.git",
@@ -358,6 +358,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_azurerm.data_azurerm_databricks_workspace_private_endpoint_connection",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dedicated_host",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dedicated_host_group",
+        "cdktf_cdktf_provider_azurerm.data_azurerm_dev_center",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dev_test_lab",
         "cdktf_cdktf_provider_azurerm.data_azurerm_dev_test_virtual_network",
         "cdktf_cdktf_provider_azurerm.data_azurerm_digital_twins_instance",
@@ -1071,6 +1072,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_azurerm.network_manager_ipam_pool",
         "cdktf_cdktf_provider_azurerm.network_manager_management_group_connection",
         "cdktf_cdktf_provider_azurerm.network_manager_network_group",
+        "cdktf_cdktf_provider_azurerm.network_manager_routing_configuration",
         "cdktf_cdktf_provider_azurerm.network_manager_scope_connection",
         "cdktf_cdktf_provider_azurerm.network_manager_security_admin_configuration",
         "cdktf_cdktf_provider_azurerm.network_manager_static_member",
@@ -1495,7 +1497,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_azurerm._jsii": [
-            "provider-azurerm@13.29.0.jsii.tgz"
+            "provider-azurerm@13.30.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_azurerm": [
             "py.typed"

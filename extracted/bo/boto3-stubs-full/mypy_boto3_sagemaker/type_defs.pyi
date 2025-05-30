@@ -285,6 +285,7 @@ from .literals import (
     TargetPlatformArchType,
     TargetPlatformOsType,
     ThroughputModeType,
+    TrackingServerMaintenanceStatusType,
     TrackingServerSizeType,
     TrackingServerStatusType,
     TrafficRoutingConfigTypeType,
@@ -9309,6 +9310,7 @@ class DescribeMlflowTrackingServerResponseTypeDef(TypedDict):
     MlflowVersion: str
     RoleArn: str
     TrackingServerStatus: TrackingServerStatusType
+    TrackingServerMaintenanceStatus: TrackingServerMaintenanceStatusType
     IsActive: IsTrackingServerActiveType
     TrackingServerUrl: str
     WeeklyMaintenanceWindowStart: str

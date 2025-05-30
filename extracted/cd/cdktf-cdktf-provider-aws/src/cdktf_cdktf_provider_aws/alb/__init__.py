@@ -1,7 +1,7 @@
 r'''
 # `aws_alb`
 
-Refer to the Terraform Registry for docs: [`aws_alb`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb).
+Refer to the Terraform Registry for docs: [`aws_alb`](https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Alb(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.alb.Alb",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb aws_alb}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb aws_alb}.'''
 
     def __init__(
         self,
@@ -72,6 +72,7 @@ class Alb(
         ip_address_type: typing.Optional[builtins.str] = None,
         ipam_pools: typing.Optional[typing.Union["AlbIpamPools", typing.Dict[builtins.str, typing.Any]]] = None,
         load_balancer_type: typing.Optional[builtins.str] = None,
+        minimum_load_balancer_capacity: typing.Optional[typing.Union["AlbMinimumLoadBalancerCapacity", typing.Dict[builtins.str, typing.Any]]] = None,
         name: typing.Optional[builtins.str] = None,
         name_prefix: typing.Optional[builtins.str] = None,
         preserve_host_header: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
@@ -90,41 +91,42 @@ class Alb(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb aws_alb} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb aws_alb} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param access_logs: access_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#access_logs Alb#access_logs}
-        :param client_keep_alive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#client_keep_alive Alb#client_keep_alive}.
-        :param connection_logs: connection_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#connection_logs Alb#connection_logs}
-        :param customer_owned_ipv4_pool: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#customer_owned_ipv4_pool Alb#customer_owned_ipv4_pool}.
-        :param desync_mitigation_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#desync_mitigation_mode Alb#desync_mitigation_mode}.
-        :param dns_record_client_routing_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#dns_record_client_routing_policy Alb#dns_record_client_routing_policy}.
-        :param drop_invalid_header_fields: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#drop_invalid_header_fields Alb#drop_invalid_header_fields}.
-        :param enable_cross_zone_load_balancing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_cross_zone_load_balancing Alb#enable_cross_zone_load_balancing}.
-        :param enable_deletion_protection: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_deletion_protection Alb#enable_deletion_protection}.
-        :param enable_http2: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_http2 Alb#enable_http2}.
-        :param enable_tls_version_and_cipher_suite_headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_tls_version_and_cipher_suite_headers Alb#enable_tls_version_and_cipher_suite_headers}.
-        :param enable_waf_fail_open: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_waf_fail_open Alb#enable_waf_fail_open}.
-        :param enable_xff_client_port: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_xff_client_port Alb#enable_xff_client_port}.
-        :param enable_zonal_shift: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_zonal_shift Alb#enable_zonal_shift}.
-        :param enforce_security_group_inbound_rules_on_private_link_traffic: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enforce_security_group_inbound_rules_on_private_link_traffic Alb#enforce_security_group_inbound_rules_on_private_link_traffic}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#id Alb#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param idle_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#idle_timeout Alb#idle_timeout}.
-        :param internal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#internal Alb#internal}.
-        :param ip_address_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ip_address_type Alb#ip_address_type}.
-        :param ipam_pools: ipam_pools block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipam_pools Alb#ipam_pools}
-        :param load_balancer_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#load_balancer_type Alb#load_balancer_type}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#name Alb#name}.
-        :param name_prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#name_prefix Alb#name_prefix}.
-        :param preserve_host_header: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#preserve_host_header Alb#preserve_host_header}.
-        :param security_groups: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#security_groups Alb#security_groups}.
-        :param subnet_mapping: subnet_mapping block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnet_mapping Alb#subnet_mapping}
-        :param subnets: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnets Alb#subnets}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#tags Alb#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#tags_all Alb#tags_all}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#timeouts Alb#timeouts}
-        :param xff_header_processing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#xff_header_processing_mode Alb#xff_header_processing_mode}.
+        :param access_logs: access_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#access_logs Alb#access_logs}
+        :param client_keep_alive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#client_keep_alive Alb#client_keep_alive}.
+        :param connection_logs: connection_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#connection_logs Alb#connection_logs}
+        :param customer_owned_ipv4_pool: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#customer_owned_ipv4_pool Alb#customer_owned_ipv4_pool}.
+        :param desync_mitigation_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#desync_mitigation_mode Alb#desync_mitigation_mode}.
+        :param dns_record_client_routing_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#dns_record_client_routing_policy Alb#dns_record_client_routing_policy}.
+        :param drop_invalid_header_fields: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#drop_invalid_header_fields Alb#drop_invalid_header_fields}.
+        :param enable_cross_zone_load_balancing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_cross_zone_load_balancing Alb#enable_cross_zone_load_balancing}.
+        :param enable_deletion_protection: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_deletion_protection Alb#enable_deletion_protection}.
+        :param enable_http2: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_http2 Alb#enable_http2}.
+        :param enable_tls_version_and_cipher_suite_headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_tls_version_and_cipher_suite_headers Alb#enable_tls_version_and_cipher_suite_headers}.
+        :param enable_waf_fail_open: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_waf_fail_open Alb#enable_waf_fail_open}.
+        :param enable_xff_client_port: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_xff_client_port Alb#enable_xff_client_port}.
+        :param enable_zonal_shift: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_zonal_shift Alb#enable_zonal_shift}.
+        :param enforce_security_group_inbound_rules_on_private_link_traffic: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enforce_security_group_inbound_rules_on_private_link_traffic Alb#enforce_security_group_inbound_rules_on_private_link_traffic}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#id Alb#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param idle_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#idle_timeout Alb#idle_timeout}.
+        :param internal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#internal Alb#internal}.
+        :param ip_address_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ip_address_type Alb#ip_address_type}.
+        :param ipam_pools: ipam_pools block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipam_pools Alb#ipam_pools}
+        :param load_balancer_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#load_balancer_type Alb#load_balancer_type}.
+        :param minimum_load_balancer_capacity: minimum_load_balancer_capacity block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#minimum_load_balancer_capacity Alb#minimum_load_balancer_capacity}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#name Alb#name}.
+        :param name_prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#name_prefix Alb#name_prefix}.
+        :param preserve_host_header: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#preserve_host_header Alb#preserve_host_header}.
+        :param security_groups: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#security_groups Alb#security_groups}.
+        :param subnet_mapping: subnet_mapping block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnet_mapping Alb#subnet_mapping}
+        :param subnets: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnets Alb#subnets}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#tags Alb#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#tags_all Alb#tags_all}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#timeouts Alb#timeouts}
+        :param xff_header_processing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#xff_header_processing_mode Alb#xff_header_processing_mode}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -159,6 +161,7 @@ class Alb(
             ip_address_type=ip_address_type,
             ipam_pools=ipam_pools,
             load_balancer_type=load_balancer_type,
+            minimum_load_balancer_capacity=minimum_load_balancer_capacity,
             name=name,
             name_prefix=name_prefix,
             preserve_host_header=preserve_host_header,
@@ -193,7 +196,7 @@ class Alb(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Alb to import.
-        :param import_from_id: The id of the existing Alb that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Alb that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Alb to import is found.
         '''
         if __debug__:
@@ -213,9 +216,9 @@ class Alb(
         prefix: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#bucket Alb#bucket}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enabled Alb#enabled}.
-        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#prefix Alb#prefix}.
+        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#bucket Alb#bucket}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enabled Alb#enabled}.
+        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#prefix Alb#prefix}.
         '''
         value = AlbAccessLogs(bucket=bucket, enabled=enabled, prefix=prefix)
 
@@ -230,9 +233,9 @@ class Alb(
         prefix: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#bucket Alb#bucket}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enabled Alb#enabled}.
-        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#prefix Alb#prefix}.
+        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#bucket Alb#bucket}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enabled Alb#enabled}.
+        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#prefix Alb#prefix}.
         '''
         value = AlbConnectionLogs(bucket=bucket, enabled=enabled, prefix=prefix)
 
@@ -241,11 +244,24 @@ class Alb(
     @jsii.member(jsii_name="putIpamPools")
     def put_ipam_pools(self, *, ipv4_ipam_pool_id: builtins.str) -> None:
         '''
-        :param ipv4_ipam_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipv4_ipam_pool_id Alb#ipv4_ipam_pool_id}.
+        :param ipv4_ipam_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipv4_ipam_pool_id Alb#ipv4_ipam_pool_id}.
         '''
         value = AlbIpamPools(ipv4_ipam_pool_id=ipv4_ipam_pool_id)
 
         return typing.cast(None, jsii.invoke(self, "putIpamPools", [value]))
+
+    @jsii.member(jsii_name="putMinimumLoadBalancerCapacity")
+    def put_minimum_load_balancer_capacity(
+        self,
+        *,
+        capacity_units: jsii.Number,
+    ) -> None:
+        '''
+        :param capacity_units: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#capacity_units Alb#capacity_units}.
+        '''
+        value = AlbMinimumLoadBalancerCapacity(capacity_units=capacity_units)
+
+        return typing.cast(None, jsii.invoke(self, "putMinimumLoadBalancerCapacity", [value]))
 
     @jsii.member(jsii_name="putSubnetMapping")
     def put_subnet_mapping(
@@ -269,9 +285,9 @@ class Alb(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#create Alb#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#delete Alb#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#update Alb#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#create Alb#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#delete Alb#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#update Alb#update}.
         '''
         value = AlbTimeouts(create=create, delete=delete, update=update)
 
@@ -363,6 +379,10 @@ class Alb(
     def reset_load_balancer_type(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetLoadBalancerType", []))
 
+    @jsii.member(jsii_name="resetMinimumLoadBalancerCapacity")
+    def reset_minimum_load_balancer_capacity(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetMinimumLoadBalancerCapacity", []))
+
     @jsii.member(jsii_name="resetName")
     def reset_name(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetName", []))
@@ -445,6 +465,13 @@ class Alb(
     @jsii.member(jsii_name="ipamPools")
     def ipam_pools(self) -> "AlbIpamPoolsOutputReference":
         return typing.cast("AlbIpamPoolsOutputReference", jsii.get(self, "ipamPools"))
+
+    @builtins.property
+    @jsii.member(jsii_name="minimumLoadBalancerCapacity")
+    def minimum_load_balancer_capacity(
+        self,
+    ) -> "AlbMinimumLoadBalancerCapacityOutputReference":
+        return typing.cast("AlbMinimumLoadBalancerCapacityOutputReference", jsii.get(self, "minimumLoadBalancerCapacity"))
 
     @builtins.property
     @jsii.member(jsii_name="subnetMapping")
@@ -590,6 +617,13 @@ class Alb(
     @jsii.member(jsii_name="loadBalancerTypeInput")
     def load_balancer_type_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "loadBalancerTypeInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="minimumLoadBalancerCapacityInput")
+    def minimum_load_balancer_capacity_input(
+        self,
+    ) -> typing.Optional["AlbMinimumLoadBalancerCapacity"]:
+        return typing.cast(typing.Optional["AlbMinimumLoadBalancerCapacity"], jsii.get(self, "minimumLoadBalancerCapacityInput"))
 
     @builtins.property
     @jsii.member(jsii_name="nameInput")
@@ -1027,9 +1061,9 @@ class AlbAccessLogs:
         prefix: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#bucket Alb#bucket}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enabled Alb#enabled}.
-        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#prefix Alb#prefix}.
+        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#bucket Alb#bucket}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enabled Alb#enabled}.
+        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#prefix Alb#prefix}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c0f9c53d58d630de6e67c3a3ac535aded92b8a97952e8730a12fa534acd50e8f)
@@ -1046,7 +1080,7 @@ class AlbAccessLogs:
 
     @builtins.property
     def bucket(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#bucket Alb#bucket}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#bucket Alb#bucket}.'''
         result = self._values.get("bucket")
         assert result is not None, "Required property 'bucket' is missing"
         return typing.cast(builtins.str, result)
@@ -1055,13 +1089,13 @@ class AlbAccessLogs:
     def enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enabled Alb#enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enabled Alb#enabled}.'''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def prefix(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#prefix Alb#prefix}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#prefix Alb#prefix}.'''
         result = self._values.get("prefix")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1206,6 +1240,7 @@ class AlbAccessLogsOutputReference(
         "ip_address_type": "ipAddressType",
         "ipam_pools": "ipamPools",
         "load_balancer_type": "loadBalancerType",
+        "minimum_load_balancer_capacity": "minimumLoadBalancerCapacity",
         "name": "name",
         "name_prefix": "namePrefix",
         "preserve_host_header": "preserveHostHeader",
@@ -1250,6 +1285,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         ip_address_type: typing.Optional[builtins.str] = None,
         ipam_pools: typing.Optional[typing.Union["AlbIpamPools", typing.Dict[builtins.str, typing.Any]]] = None,
         load_balancer_type: typing.Optional[builtins.str] = None,
+        minimum_load_balancer_capacity: typing.Optional[typing.Union["AlbMinimumLoadBalancerCapacity", typing.Dict[builtins.str, typing.Any]]] = None,
         name: typing.Optional[builtins.str] = None,
         name_prefix: typing.Optional[builtins.str] = None,
         preserve_host_header: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
@@ -1269,37 +1305,38 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param access_logs: access_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#access_logs Alb#access_logs}
-        :param client_keep_alive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#client_keep_alive Alb#client_keep_alive}.
-        :param connection_logs: connection_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#connection_logs Alb#connection_logs}
-        :param customer_owned_ipv4_pool: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#customer_owned_ipv4_pool Alb#customer_owned_ipv4_pool}.
-        :param desync_mitigation_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#desync_mitigation_mode Alb#desync_mitigation_mode}.
-        :param dns_record_client_routing_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#dns_record_client_routing_policy Alb#dns_record_client_routing_policy}.
-        :param drop_invalid_header_fields: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#drop_invalid_header_fields Alb#drop_invalid_header_fields}.
-        :param enable_cross_zone_load_balancing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_cross_zone_load_balancing Alb#enable_cross_zone_load_balancing}.
-        :param enable_deletion_protection: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_deletion_protection Alb#enable_deletion_protection}.
-        :param enable_http2: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_http2 Alb#enable_http2}.
-        :param enable_tls_version_and_cipher_suite_headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_tls_version_and_cipher_suite_headers Alb#enable_tls_version_and_cipher_suite_headers}.
-        :param enable_waf_fail_open: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_waf_fail_open Alb#enable_waf_fail_open}.
-        :param enable_xff_client_port: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_xff_client_port Alb#enable_xff_client_port}.
-        :param enable_zonal_shift: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_zonal_shift Alb#enable_zonal_shift}.
-        :param enforce_security_group_inbound_rules_on_private_link_traffic: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enforce_security_group_inbound_rules_on_private_link_traffic Alb#enforce_security_group_inbound_rules_on_private_link_traffic}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#id Alb#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param idle_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#idle_timeout Alb#idle_timeout}.
-        :param internal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#internal Alb#internal}.
-        :param ip_address_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ip_address_type Alb#ip_address_type}.
-        :param ipam_pools: ipam_pools block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipam_pools Alb#ipam_pools}
-        :param load_balancer_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#load_balancer_type Alb#load_balancer_type}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#name Alb#name}.
-        :param name_prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#name_prefix Alb#name_prefix}.
-        :param preserve_host_header: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#preserve_host_header Alb#preserve_host_header}.
-        :param security_groups: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#security_groups Alb#security_groups}.
-        :param subnet_mapping: subnet_mapping block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnet_mapping Alb#subnet_mapping}
-        :param subnets: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnets Alb#subnets}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#tags Alb#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#tags_all Alb#tags_all}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#timeouts Alb#timeouts}
-        :param xff_header_processing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#xff_header_processing_mode Alb#xff_header_processing_mode}.
+        :param access_logs: access_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#access_logs Alb#access_logs}
+        :param client_keep_alive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#client_keep_alive Alb#client_keep_alive}.
+        :param connection_logs: connection_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#connection_logs Alb#connection_logs}
+        :param customer_owned_ipv4_pool: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#customer_owned_ipv4_pool Alb#customer_owned_ipv4_pool}.
+        :param desync_mitigation_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#desync_mitigation_mode Alb#desync_mitigation_mode}.
+        :param dns_record_client_routing_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#dns_record_client_routing_policy Alb#dns_record_client_routing_policy}.
+        :param drop_invalid_header_fields: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#drop_invalid_header_fields Alb#drop_invalid_header_fields}.
+        :param enable_cross_zone_load_balancing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_cross_zone_load_balancing Alb#enable_cross_zone_load_balancing}.
+        :param enable_deletion_protection: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_deletion_protection Alb#enable_deletion_protection}.
+        :param enable_http2: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_http2 Alb#enable_http2}.
+        :param enable_tls_version_and_cipher_suite_headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_tls_version_and_cipher_suite_headers Alb#enable_tls_version_and_cipher_suite_headers}.
+        :param enable_waf_fail_open: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_waf_fail_open Alb#enable_waf_fail_open}.
+        :param enable_xff_client_port: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_xff_client_port Alb#enable_xff_client_port}.
+        :param enable_zonal_shift: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_zonal_shift Alb#enable_zonal_shift}.
+        :param enforce_security_group_inbound_rules_on_private_link_traffic: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enforce_security_group_inbound_rules_on_private_link_traffic Alb#enforce_security_group_inbound_rules_on_private_link_traffic}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#id Alb#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param idle_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#idle_timeout Alb#idle_timeout}.
+        :param internal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#internal Alb#internal}.
+        :param ip_address_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ip_address_type Alb#ip_address_type}.
+        :param ipam_pools: ipam_pools block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipam_pools Alb#ipam_pools}
+        :param load_balancer_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#load_balancer_type Alb#load_balancer_type}.
+        :param minimum_load_balancer_capacity: minimum_load_balancer_capacity block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#minimum_load_balancer_capacity Alb#minimum_load_balancer_capacity}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#name Alb#name}.
+        :param name_prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#name_prefix Alb#name_prefix}.
+        :param preserve_host_header: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#preserve_host_header Alb#preserve_host_header}.
+        :param security_groups: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#security_groups Alb#security_groups}.
+        :param subnet_mapping: subnet_mapping block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnet_mapping Alb#subnet_mapping}
+        :param subnets: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnets Alb#subnets}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#tags Alb#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#tags_all Alb#tags_all}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#timeouts Alb#timeouts}
+        :param xff_header_processing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#xff_header_processing_mode Alb#xff_header_processing_mode}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1309,6 +1346,8 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             connection_logs = AlbConnectionLogs(**connection_logs)
         if isinstance(ipam_pools, dict):
             ipam_pools = AlbIpamPools(**ipam_pools)
+        if isinstance(minimum_load_balancer_capacity, dict):
+            minimum_load_balancer_capacity = AlbMinimumLoadBalancerCapacity(**minimum_load_balancer_capacity)
         if isinstance(timeouts, dict):
             timeouts = AlbTimeouts(**timeouts)
         if __debug__:
@@ -1341,6 +1380,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument ip_address_type", value=ip_address_type, expected_type=type_hints["ip_address_type"])
             check_type(argname="argument ipam_pools", value=ipam_pools, expected_type=type_hints["ipam_pools"])
             check_type(argname="argument load_balancer_type", value=load_balancer_type, expected_type=type_hints["load_balancer_type"])
+            check_type(argname="argument minimum_load_balancer_capacity", value=minimum_load_balancer_capacity, expected_type=type_hints["minimum_load_balancer_capacity"])
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument name_prefix", value=name_prefix, expected_type=type_hints["name_prefix"])
             check_type(argname="argument preserve_host_header", value=preserve_host_header, expected_type=type_hints["preserve_host_header"])
@@ -1408,6 +1448,8 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["ipam_pools"] = ipam_pools
         if load_balancer_type is not None:
             self._values["load_balancer_type"] = load_balancer_type
+        if minimum_load_balancer_capacity is not None:
+            self._values["minimum_load_balancer_capacity"] = minimum_load_balancer_capacity
         if name is not None:
             self._values["name"] = name
         if name_prefix is not None:
@@ -1497,14 +1539,14 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def access_logs(self) -> typing.Optional[AlbAccessLogs]:
         '''access_logs block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#access_logs Alb#access_logs}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#access_logs Alb#access_logs}
         '''
         result = self._values.get("access_logs")
         return typing.cast(typing.Optional[AlbAccessLogs], result)
 
     @builtins.property
     def client_keep_alive(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#client_keep_alive Alb#client_keep_alive}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#client_keep_alive Alb#client_keep_alive}.'''
         result = self._values.get("client_keep_alive")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -1512,26 +1554,26 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def connection_logs(self) -> typing.Optional["AlbConnectionLogs"]:
         '''connection_logs block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#connection_logs Alb#connection_logs}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#connection_logs Alb#connection_logs}
         '''
         result = self._values.get("connection_logs")
         return typing.cast(typing.Optional["AlbConnectionLogs"], result)
 
     @builtins.property
     def customer_owned_ipv4_pool(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#customer_owned_ipv4_pool Alb#customer_owned_ipv4_pool}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#customer_owned_ipv4_pool Alb#customer_owned_ipv4_pool}.'''
         result = self._values.get("customer_owned_ipv4_pool")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def desync_mitigation_mode(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#desync_mitigation_mode Alb#desync_mitigation_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#desync_mitigation_mode Alb#desync_mitigation_mode}.'''
         result = self._values.get("desync_mitigation_mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def dns_record_client_routing_policy(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#dns_record_client_routing_policy Alb#dns_record_client_routing_policy}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#dns_record_client_routing_policy Alb#dns_record_client_routing_policy}.'''
         result = self._values.get("dns_record_client_routing_policy")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1539,7 +1581,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def drop_invalid_header_fields(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#drop_invalid_header_fields Alb#drop_invalid_header_fields}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#drop_invalid_header_fields Alb#drop_invalid_header_fields}.'''
         result = self._values.get("drop_invalid_header_fields")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1547,7 +1589,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_cross_zone_load_balancing(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_cross_zone_load_balancing Alb#enable_cross_zone_load_balancing}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_cross_zone_load_balancing Alb#enable_cross_zone_load_balancing}.'''
         result = self._values.get("enable_cross_zone_load_balancing")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1555,7 +1597,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_deletion_protection(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_deletion_protection Alb#enable_deletion_protection}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_deletion_protection Alb#enable_deletion_protection}.'''
         result = self._values.get("enable_deletion_protection")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1563,7 +1605,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_http2(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_http2 Alb#enable_http2}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_http2 Alb#enable_http2}.'''
         result = self._values.get("enable_http2")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1571,7 +1613,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_tls_version_and_cipher_suite_headers(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_tls_version_and_cipher_suite_headers Alb#enable_tls_version_and_cipher_suite_headers}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_tls_version_and_cipher_suite_headers Alb#enable_tls_version_and_cipher_suite_headers}.'''
         result = self._values.get("enable_tls_version_and_cipher_suite_headers")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1579,7 +1621,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_waf_fail_open(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_waf_fail_open Alb#enable_waf_fail_open}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_waf_fail_open Alb#enable_waf_fail_open}.'''
         result = self._values.get("enable_waf_fail_open")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1587,7 +1629,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_xff_client_port(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_xff_client_port Alb#enable_xff_client_port}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_xff_client_port Alb#enable_xff_client_port}.'''
         result = self._values.get("enable_xff_client_port")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1595,7 +1637,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_zonal_shift(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enable_zonal_shift Alb#enable_zonal_shift}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enable_zonal_shift Alb#enable_zonal_shift}.'''
         result = self._values.get("enable_zonal_shift")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1603,13 +1645,13 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enforce_security_group_inbound_rules_on_private_link_traffic(
         self,
     ) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enforce_security_group_inbound_rules_on_private_link_traffic Alb#enforce_security_group_inbound_rules_on_private_link_traffic}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enforce_security_group_inbound_rules_on_private_link_traffic Alb#enforce_security_group_inbound_rules_on_private_link_traffic}.'''
         result = self._values.get("enforce_security_group_inbound_rules_on_private_link_traffic")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#id Alb#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#id Alb#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1619,7 +1661,7 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def idle_timeout(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#idle_timeout Alb#idle_timeout}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#idle_timeout Alb#idle_timeout}.'''
         result = self._values.get("idle_timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -1627,13 +1669,13 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def internal(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#internal Alb#internal}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#internal Alb#internal}.'''
         result = self._values.get("internal")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def ip_address_type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ip_address_type Alb#ip_address_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ip_address_type Alb#ip_address_type}.'''
         result = self._values.get("ip_address_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1641,26 +1683,37 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def ipam_pools(self) -> typing.Optional["AlbIpamPools"]:
         '''ipam_pools block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipam_pools Alb#ipam_pools}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipam_pools Alb#ipam_pools}
         '''
         result = self._values.get("ipam_pools")
         return typing.cast(typing.Optional["AlbIpamPools"], result)
 
     @builtins.property
     def load_balancer_type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#load_balancer_type Alb#load_balancer_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#load_balancer_type Alb#load_balancer_type}.'''
         result = self._values.get("load_balancer_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
+    def minimum_load_balancer_capacity(
+        self,
+    ) -> typing.Optional["AlbMinimumLoadBalancerCapacity"]:
+        '''minimum_load_balancer_capacity block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#minimum_load_balancer_capacity Alb#minimum_load_balancer_capacity}
+        '''
+        result = self._values.get("minimum_load_balancer_capacity")
+        return typing.cast(typing.Optional["AlbMinimumLoadBalancerCapacity"], result)
+
+    @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#name Alb#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#name Alb#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def name_prefix(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#name_prefix Alb#name_prefix}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#name_prefix Alb#name_prefix}.'''
         result = self._values.get("name_prefix")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1668,13 +1721,13 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def preserve_host_header(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#preserve_host_header Alb#preserve_host_header}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#preserve_host_header Alb#preserve_host_header}.'''
         result = self._values.get("preserve_host_header")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def security_groups(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#security_groups Alb#security_groups}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#security_groups Alb#security_groups}.'''
         result = self._values.get("security_groups")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -1684,26 +1737,26 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["AlbSubnetMapping"]]]:
         '''subnet_mapping block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnet_mapping Alb#subnet_mapping}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnet_mapping Alb#subnet_mapping}
         '''
         result = self._values.get("subnet_mapping")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["AlbSubnetMapping"]]], result)
 
     @builtins.property
     def subnets(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnets Alb#subnets}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnets Alb#subnets}.'''
         result = self._values.get("subnets")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#tags Alb#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#tags Alb#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def tags_all(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#tags_all Alb#tags_all}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#tags_all Alb#tags_all}.'''
         result = self._values.get("tags_all")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1711,14 +1764,14 @@ class AlbConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AlbTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#timeouts Alb#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#timeouts Alb#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AlbTimeouts"], result)
 
     @builtins.property
     def xff_header_processing_mode(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#xff_header_processing_mode Alb#xff_header_processing_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#xff_header_processing_mode Alb#xff_header_processing_mode}.'''
         result = self._values.get("xff_header_processing_mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1748,9 +1801,9 @@ class AlbConnectionLogs:
         prefix: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#bucket Alb#bucket}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enabled Alb#enabled}.
-        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#prefix Alb#prefix}.
+        :param bucket: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#bucket Alb#bucket}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enabled Alb#enabled}.
+        :param prefix: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#prefix Alb#prefix}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__73f6ab5fe2739a1b0405af7208cde2089f7d456a5194c0dc7763781e4ef5be57)
@@ -1767,7 +1820,7 @@ class AlbConnectionLogs:
 
     @builtins.property
     def bucket(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#bucket Alb#bucket}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#bucket Alb#bucket}.'''
         result = self._values.get("bucket")
         assert result is not None, "Required property 'bucket' is missing"
         return typing.cast(builtins.str, result)
@@ -1776,13 +1829,13 @@ class AlbConnectionLogs:
     def enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#enabled Alb#enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#enabled Alb#enabled}.'''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def prefix(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#prefix Alb#prefix}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#prefix Alb#prefix}.'''
         result = self._values.get("prefix")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1903,7 +1956,7 @@ class AlbConnectionLogsOutputReference(
 class AlbIpamPools:
     def __init__(self, *, ipv4_ipam_pool_id: builtins.str) -> None:
         '''
-        :param ipv4_ipam_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipv4_ipam_pool_id Alb#ipv4_ipam_pool_id}.
+        :param ipv4_ipam_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipv4_ipam_pool_id Alb#ipv4_ipam_pool_id}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__2161f6dbda0276f81fbd43de4d408d048e621b8c9d46b4d28e06d8af7777adec)
@@ -1914,7 +1967,7 @@ class AlbIpamPools:
 
     @builtins.property
     def ipv4_ipam_pool_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipv4_ipam_pool_id Alb#ipv4_ipam_pool_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipv4_ipam_pool_id Alb#ipv4_ipam_pool_id}.'''
         result = self._values.get("ipv4_ipam_pool_id")
         assert result is not None, "Required property 'ipv4_ipam_pool_id' is missing"
         return typing.cast(builtins.str, result)
@@ -1982,6 +2035,95 @@ class AlbIpamPoolsOutputReference(
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-aws.alb.AlbMinimumLoadBalancerCapacity",
+    jsii_struct_bases=[],
+    name_mapping={"capacity_units": "capacityUnits"},
+)
+class AlbMinimumLoadBalancerCapacity:
+    def __init__(self, *, capacity_units: jsii.Number) -> None:
+        '''
+        :param capacity_units: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#capacity_units Alb#capacity_units}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a7365c06a7f384e986f3ee01d320806d8fec05fb04697494e9060d5401df7caf)
+            check_type(argname="argument capacity_units", value=capacity_units, expected_type=type_hints["capacity_units"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "capacity_units": capacity_units,
+        }
+
+    @builtins.property
+    def capacity_units(self) -> jsii.Number:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#capacity_units Alb#capacity_units}.'''
+        result = self._values.get("capacity_units")
+        assert result is not None, "Required property 'capacity_units' is missing"
+        return typing.cast(jsii.Number, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "AlbMinimumLoadBalancerCapacity(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class AlbMinimumLoadBalancerCapacityOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.alb.AlbMinimumLoadBalancerCapacityOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4584f90eb238b43ec12e76c98a87beef1f3465097e63e76e34653666d625d2be)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @builtins.property
+    @jsii.member(jsii_name="capacityUnitsInput")
+    def capacity_units_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "capacityUnitsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="capacityUnits")
+    def capacity_units(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "capacityUnits"))
+
+    @capacity_units.setter
+    def capacity_units(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__16d8fdad7f489eb680584e37301bbf47701e5e6417a623c1649ee9c311cbc7da)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "capacityUnits", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(self) -> typing.Optional[AlbMinimumLoadBalancerCapacity]:
+        return typing.cast(typing.Optional[AlbMinimumLoadBalancerCapacity], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[AlbMinimumLoadBalancerCapacity],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__86b4ccc48910e96d6f6b7f832aa3bdd621cb6a1c5c0a52b7729cd38a1a965bf6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-aws.alb.AlbSubnetMapping",
     jsii_struct_bases=[],
     name_mapping={
@@ -2001,10 +2143,10 @@ class AlbSubnetMapping:
         private_ipv4_address: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnet_id Alb#subnet_id}.
-        :param allocation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#allocation_id Alb#allocation_id}.
-        :param ipv6_address: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipv6_address Alb#ipv6_address}.
-        :param private_ipv4_address: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#private_ipv4_address Alb#private_ipv4_address}.
+        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnet_id Alb#subnet_id}.
+        :param allocation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#allocation_id Alb#allocation_id}.
+        :param ipv6_address: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipv6_address Alb#ipv6_address}.
+        :param private_ipv4_address: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#private_ipv4_address Alb#private_ipv4_address}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__10159c5751b0ea732b27b5134eee57b557452902fddb76ba1c45736eb205ed08)
@@ -2024,26 +2166,26 @@ class AlbSubnetMapping:
 
     @builtins.property
     def subnet_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#subnet_id Alb#subnet_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#subnet_id Alb#subnet_id}.'''
         result = self._values.get("subnet_id")
         assert result is not None, "Required property 'subnet_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def allocation_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#allocation_id Alb#allocation_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#allocation_id Alb#allocation_id}.'''
         result = self._values.get("allocation_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def ipv6_address(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#ipv6_address Alb#ipv6_address}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#ipv6_address Alb#ipv6_address}.'''
         result = self._values.get("ipv6_address")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def private_ipv4_address(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#private_ipv4_address Alb#private_ipv4_address}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#private_ipv4_address Alb#private_ipv4_address}.'''
         result = self._values.get("private_ipv4_address")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2292,9 +2434,9 @@ class AlbTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#create Alb#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#delete Alb#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#update Alb#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#create Alb#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#delete Alb#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#update Alb#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a5be489e1b97a99486e1380fad53a3c8d45e1a19aa7f94b9795af96652edbcae)
@@ -2311,19 +2453,19 @@ class AlbTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#create Alb#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#create Alb#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#delete Alb#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#delete Alb#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/alb#update Alb#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/alb#update Alb#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2449,6 +2591,8 @@ __all__ = [
     "AlbConnectionLogsOutputReference",
     "AlbIpamPools",
     "AlbIpamPoolsOutputReference",
+    "AlbMinimumLoadBalancerCapacity",
+    "AlbMinimumLoadBalancerCapacityOutputReference",
     "AlbSubnetMapping",
     "AlbSubnetMappingList",
     "AlbSubnetMappingOutputReference",
@@ -2483,6 +2627,7 @@ def _typecheckingstub__6d3fa764b0a4f96df115a96ae2aa92b95a5923e89b7b665c9cd0d6c48
     ip_address_type: typing.Optional[builtins.str] = None,
     ipam_pools: typing.Optional[typing.Union[AlbIpamPools, typing.Dict[builtins.str, typing.Any]]] = None,
     load_balancer_type: typing.Optional[builtins.str] = None,
+    minimum_load_balancer_capacity: typing.Optional[typing.Union[AlbMinimumLoadBalancerCapacity, typing.Dict[builtins.str, typing.Any]]] = None,
     name: typing.Optional[builtins.str] = None,
     name_prefix: typing.Optional[builtins.str] = None,
     preserve_host_header: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
@@ -2745,6 +2890,7 @@ def _typecheckingstub__f60097bad1ad84a4fb34c902f2ae93c4ef4ff9ac803d6c0bbde57a046
     ip_address_type: typing.Optional[builtins.str] = None,
     ipam_pools: typing.Optional[typing.Union[AlbIpamPools, typing.Dict[builtins.str, typing.Any]]] = None,
     load_balancer_type: typing.Optional[builtins.str] = None,
+    minimum_load_balancer_capacity: typing.Optional[typing.Union[AlbMinimumLoadBalancerCapacity, typing.Dict[builtins.str, typing.Any]]] = None,
     name: typing.Optional[builtins.str] = None,
     name_prefix: typing.Optional[builtins.str] = None,
     preserve_host_header: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
@@ -2821,6 +2967,32 @@ def _typecheckingstub__8b14a4c8a9c6859969dc85a64f749b3fc3f60746a8eb11f4929cd66da
 
 def _typecheckingstub__e8cfb514ed7369c7768617f05c9cfc6ed7e20d5c6c8f496accb876e053056953(
     value: typing.Optional[AlbIpamPools],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a7365c06a7f384e986f3ee01d320806d8fec05fb04697494e9060d5401df7caf(
+    *,
+    capacity_units: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4584f90eb238b43ec12e76c98a87beef1f3465097e63e76e34653666d625d2be(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__16d8fdad7f489eb680584e37301bbf47701e5e6417a623c1649ee9c311cbc7da(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__86b4ccc48910e96d6f6b7f832aa3bdd621cb6a1c5c0a52b7729cd38a1a965bf6(
+    value: typing.Optional[AlbMinimumLoadBalancerCapacity],
 ) -> None:
     """Type checking stubs"""
     pass

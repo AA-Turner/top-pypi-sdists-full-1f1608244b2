@@ -15,10 +15,14 @@
 #   limitations under the License
 #
 
-from flask import redirect, request
+from airflow.plugins_manager import AirflowPlugin
+from airflow.security import permissions
+from airflow.www import auth
+from flask import Blueprint, redirect, request
 from flask_appbuilder import BaseView, expose
 
-from airflow_code_editor.code_editor_view import AbstractCodeEditorView
+from airflow_code_editor.api import api
+from airflow_code_editor.api.flask_endpoints import api_blueprint
 from airflow_code_editor.commons import (
     API_REFERENCE_LABEL,
     API_REFERENCE_MENU_CATEGORY,
@@ -26,171 +30,99 @@ from airflow_code_editor.commons import (
     MENU_CATEGORY,
     MENU_LABEL,
     ROUTE,
+    STATIC,
     VERSION,
 )
+from airflow_code_editor.utils import is_enabled
 
-__all__ = ["appbuilder_view", "api_reference_menu"]
+__all__ = [
+    "appbuilder_view",
+    "api_reference_menu",
+    "api_blueprint",
+    "flask_blueprints",
+    "CodeEditorPlugin",
+]
 
-try:
-    from airflow.security import permissions
-    from airflow.www import auth
+PERMISSIONS = [
+    (permissions.ACTION_CAN_READ, permissions.RESOURCE_WEBSITE),
+]
 
-    PERMISSIONS = [
-        (permissions.ACTION_CAN_READ, permissions.RESOURCE_WEBSITE),
-    ]
+# ############################################################################
+# AppBuilder (Airflow 2.x)
 
-    # ############################################################################
-    # AppBuilder (Airflow >= 2.0)
 
-    class AppBuilderCodeEditorView(BaseView, AbstractCodeEditorView):
-        route_base = ROUTE
-        base_permissions = ["can_list", "can_create", "menu_acccess"]
+class AppBuilderCodeEditorView(BaseView):
+    route_base = ROUTE
+    base_permissions = ["can_list", "can_create", "menu_acccess"]
 
-        @expose("/")
-        @auth.has_access(PERMISSIONS)
-        def list(self):
-            return self._index()
+    @expose("/")
+    @auth.has_access(PERMISSIONS)
+    def list(self):
+        return self.render_template(
+            "index_appbuilder.html",
+            airflow_major_version=2,  # Airflow 2
+            js_files=JS_FILES,
+            version=VERSION,
+        )
 
-        @expose("/api/")
-        @auth.has_access(PERMISSIONS)
-        def api(self):
-            return redirect(request.path + "/ui")
+    @expose("/api/")
+    @auth.has_access(PERMISSIONS)
+    def api(self):
+        return redirect(request.path + "/ui")
 
-        @expose("/repo", methods=["POST"])
-        @auth.has_access(PERMISSIONS)
-        def repo_base(self):
-            return self._execute_git_command()
+    @expose("/repo", methods=["POST"])
+    @auth.has_access(PERMISSIONS)
+    def repo_base(self):
+        git_args = request.json.get("args", [])
+        return api.execute_git_command(git_args)
 
-        @expose("/files/<path:path>", methods=["POST"])
-        @auth.has_access(PERMISSIONS)
-        def save(self, path=None):
-            return self._save(path)
+    @expose("/files/<path:path>", methods=["POST"])
+    @auth.has_access(PERMISSIONS)
+    def save(self, path=None):
+        mime_type = request.headers.get("Content-Type", "text/plain")
+        data = request.get_data()
+        return api.save(path=path, data=data, mime_type=mime_type)
 
-        @expose("/files/<path:path>", methods=["GET"])
-        @auth.has_access(PERMISSIONS)
-        def load(self, path=None):
-            return self._load(path)
+    @expose("/files/<path:path>", methods=["GET"])
+    @auth.has_access(PERMISSIONS)
+    def load(self, path=None):
+        return api.load(path)
 
-        @expose("/files/<path:path>", methods=["DELETE"])
-        @auth.has_access(PERMISSIONS)
-        def delete(self, path=None):
-            return self._delete(path)
+    @expose("/files/<path:path>", methods=["DELETE"])
+    @auth.has_access(PERMISSIONS)
+    def delete(self, path=None):
+        return api.delete(path)
 
-        @expose("/format", methods=["POST"])
-        @auth.has_access(PERMISSIONS)
-        def format(self):
-            return self._format()
+    @expose("/format", methods=["POST"])
+    @auth.has_access(PERMISSIONS)
+    def format(self):
+        data = request.get_data(as_text=True)
+        return api.format(data)
 
-        @expose("/tree", methods=["GET", "HEAD"])
-        @auth.has_access(PERMISSIONS)
-        def tree_base(self, path=None):
-            return self._tree(path, args=request.args, method=request.method)
+    @expose("/tree", methods=["GET", "HEAD"])
+    @auth.has_access(PERMISSIONS)
+    def tree_base(self, path=None):
+        return api.tree(path, args=request.args, method=request.method)
 
-        @expose("/tree/<path:path>", methods=["GET", "HEAD"])
-        @auth.has_access(PERMISSIONS)
-        def tree(self, path=None):
-            return self._tree(path, args=request.args, method=request.method)
+    @expose("/tree/<path:path>", methods=["GET", "HEAD"])
+    @auth.has_access(PERMISSIONS)
+    def tree(self, path=None):
+        return api.tree(path, args=request.args, method=request.method)
 
-        @expose("/search", methods=["GET"])
-        @auth.has_access(PERMISSIONS)
-        def search(self):
-            return self._search(args=request.args)
+    @expose("/search", methods=["GET"])
+    @auth.has_access(PERMISSIONS)
+    def search(self):
+        return api.search(args=request.args)
 
-        @expose("/version", methods=["GET"])
-        @auth.has_access(PERMISSIONS)
-        def get_version(self):
-            return self._get_version()
+    @expose("/version", methods=["GET"])
+    @auth.has_access(PERMISSIONS)
+    def get_version(self):
+        return api.get_version()
 
-        @expose("/ping", methods=["GET"])
-        @auth.has_access(PERMISSIONS)
-        def ping(self):
-            return self._ping()
-
-        def _render(self, template, *args, **kargs):
-            return self.render_template(
-                template + "_appbuilder.html",
-                airflow_major_version=self.airflow_major_version,
-                js_files=JS_FILES,
-                version=VERSION,
-                *args,
-                **kargs
-            )
-
-except (ImportError, ModuleNotFoundError):
-    from airflow.www_rbac.decorators import has_dag_access
-
-    from airflow_code_editor.auth import has_access
-
-    # ############################################################################
-    # AppBuilder (Airflow >= 1.10 < 2.0 and rbac = True)
-
-    class AppBuilderCodeEditorView(BaseView, AbstractCodeEditorView):
-        route_base = ROUTE
-        base_permissions = ["can_list"]
-
-        @expose("/")
-        @has_dag_access(can_dag_edit=True)
-        @has_access
-        def list(self):
-            return self._index()
-
-        @expose("/repo", methods=["POST"])
-        @has_dag_access(can_dag_edit=True)
-        def repo_base(self):
-            return self._execute_git_command()
-
-        @expose("/files/<path:path>", methods=["POST"])
-        @has_dag_access(can_dag_edit=True)
-        def save(self, path=None):
-            return self._save(path)
-
-        @expose("/files/<path:path>", methods=["GET"])
-        @has_dag_access(can_dag_edit=True)
-        def load(self, path=None):
-            return self._load(path)
-
-        @expose("/files/<path:path>", methods=["DELETE"])
-        @has_dag_access(can_dag_edit=True)
-        def delete(self, path=None):
-            return self._delete(path)
-
-        @expose("/format", methods=["POST"])
-        @has_dag_access(can_dag_edit=True)
-        def format(self):
-            return self._format()
-
-        @expose("/tree", methods=["GET"])
-        @has_dag_access(can_dag_edit=True)
-        def tree_base(self, path=None):
-            return self._tree(path, args=request.args, method=request.method)
-
-        @expose("/tree/<path:path>", methods=["GET"])
-        @has_dag_access(can_dag_edit=True)
-        def tree(self, path=None):
-            return self._tree(path, args=request.args, method=request.method)
-
-        @expose("/search", methods=["GET"])
-        @has_dag_access(can_dag_edit=True)
-        def search(self):
-            return self._search(args=request.args)
-
-        @expose("/version", methods=["GET"])
-        def get_version(self):
-            return self._get_version()
-
-        @expose("/ping", methods=["GET"])
-        def ping(self):
-            return self._ping()
-
-        def _render(self, template, *args, **kargs):
-            return self.render_template(
-                template + "_appbuilder.html",
-                airflow_major_version=self.airflow_major_version,
-                js_files=JS_FILES,
-                version=VERSION,
-                *args,
-                **kargs
-            )
+    @expose("/ping", methods=["GET"])
+    @auth.has_access(PERMISSIONS)
+    def ping(self):
+        return api.ping()
 
 
 appbuilder_code_editor_view = AppBuilderCodeEditorView()
@@ -204,3 +136,20 @@ api_reference_menu = {
     "category": API_REFERENCE_MENU_CATEGORY,
     "href": ROUTE + "/api/",
 }
+code_editor_plugin_blueprint = Blueprint(
+    'code_editor_plugin_blueprint',
+    __name__,
+    template_folder='templates',
+    static_folder='static',
+    static_url_path=STATIC,
+)
+flask_blueprints = [code_editor_plugin_blueprint, api_blueprint]
+
+
+# Plugin
+class CodeEditorPlugin(AirflowPlugin):
+    name = 'editor_plugin'
+    flask_blueprints = flask_blueprints
+    appbuilder_menu_items = [api_reference_menu] if (is_enabled() and api_blueprint is not None) else []
+    appbuilder_views = [appbuilder_view] if is_enabled() else []
+    fastapi_apps = []

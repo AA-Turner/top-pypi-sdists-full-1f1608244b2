@@ -263,6 +263,67 @@ class ExampleAPI(ls.LitAPI):
 ```
 """
 
+ASYNC_LITAPI_VALIDATION_MSG = """LitAPI.decode_request, LitAPI.predict, and LitAPI.encode_response must all be async
+coroutines (use 'async def') while using the OpenAISpec with async enabled in LitAPI.
+
+Additionally, LitAPI.predict and LitAPI.encode_response must be async generators (use 'yield' or 'yield from' inside
+ an 'async def' function).
+
+Error: {}
+
+Please follow the examples below for guidance on how to use the spec in async mode:
+
+If your current code looks like this:
+
+```
+import litserve as ls
+from litserve.specs.openai import ChatMessage
+
+class ExampleAPI(ls.LitAPI):
+    ...
+    def predict(self, x):
+        return "This is a generated output"
+
+    def encode_response(self, output: dict):
+        return ChatMessage(role="assistant", content="This is a custom encoded output")
+```
+You should modify it to:
+
+```
+import litserve as ls
+from litserve.specs.openai import ChatMessage
+
+class ExampleAPI(ls.LitAPI):
+    ...
+    async def decode_request(self, request):
+        # process request here
+        return request.messages
+
+    async def predict(self, x):
+        yield "This is a generated output"
+
+    async def encode_response(self, output):
+        yield ChatMessage(role="assistant", content="This is a custom encoded output")
+```
+You can also yield responses in chunks. LitServe will handle the streaming for you:
+
+```
+class ExampleAPI(ls.LitAPI):
+    ...
+    async def decode_request(self, request):
+        # process request here
+        return request.messages
+
+    async def predict(self, x):
+        async for out in self.model(x):
+            yield out
+
+    async def encode_response(self, output):
+        async for out in output:
+            yield ChatMessage(role="assistant", content=out)
+```
+"""
+
 
 class OpenAISpec(LitSpec):
     def __init__(
@@ -270,6 +331,7 @@ class OpenAISpec(LitSpec):
     ):
         super().__init__()
         # register the endpoint
+        self.api_path = "/v1/chat/completions"  # default api path
         self.add_endpoint("/v1/chat/completions", self.chat_completion, ["POST"])
         self.add_endpoint("/v1/chat/completions", self.options_chat_completions, ["OPTIONS"])
 
@@ -280,12 +342,33 @@ class OpenAISpec(LitSpec):
     def pre_setup(self, lit_api: "LitAPI"):
         from litserve import LitAPI
 
-        if not inspect.isgeneratorfunction(lit_api.predict):
-            raise ValueError(LITAPI_VALIDATION_MSG.format("predict is not a generator"))
-
         is_encode_response_original = lit_api.encode_response.__code__ is LitAPI.encode_response.__code__
-        if not is_encode_response_original and not inspect.isgeneratorfunction(lit_api.encode_response):
-            raise ValueError(LITAPI_VALIDATION_MSG.format("encode_response is not a generator"))
+
+        if lit_api.enable_async:
+            if not asyncio.iscoroutinefunction(lit_api.decode_request):
+                raise ValueError(ASYNC_LITAPI_VALIDATION_MSG.format("decode_request is not a coroutine"))
+
+            if not inspect.isasyncgenfunction(lit_api.predict):
+                raise ValueError(ASYNC_LITAPI_VALIDATION_MSG.format("predict is not a generator"))
+
+            if not inspect.isasyncgenfunction(lit_api.encode_response):
+                raise ValueError(ASYNC_LITAPI_VALIDATION_MSG.format("encode_response is not a generator"))
+
+        else:
+            for method in ["decode_request", "predict", "encode_response"]:
+                method_obj = getattr(lit_api, method)
+                if asyncio.iscoroutinefunction(method_obj) or inspect.isasyncgenfunction(method_obj):
+                    raise ValueError(
+                        f"'{method}' is defined as async/coroutine, but 'enable_async' is not set in LitAPI. "
+                        "Please set 'enable_async=True' in your LitAPI class or "
+                        "use synchronous (non-async) methods instead."
+                    )
+
+            if not inspect.isgeneratorfunction(lit_api.predict):
+                raise ValueError(LITAPI_VALIDATION_MSG.format("predict is not a generator"))
+
+            if not is_encode_response_original and not inspect.isgeneratorfunction(lit_api.encode_response):
+                raise ValueError(LITAPI_VALIDATION_MSG.format("encode_response is not a generator"))
 
     def setup(self, server: "LitServer"):
         super().setup(server)
@@ -354,7 +437,7 @@ class OpenAISpec(LitSpec):
     async def get_from_queues(self, uids) -> List[AsyncGenerator]:
         choice_pipes = []
         for uid, q, event in zip(uids, self.queues, self.events):
-            data = self._server.data_streamer(q, event, send_status=True)
+            data = self.data_streamer(q, event, send_status=True)
             choice_pipes.append(data)
         return choice_pipes
 
@@ -372,8 +455,8 @@ class OpenAISpec(LitSpec):
             request_el.n = 1
             q = deque()
             event = asyncio.Event()
-            self._server.response_buffer[uid] = (q, event)
-            self._server.request_queue.put((response_queue_id, uid, time.monotonic(), request_el))
+            self.response_buffer[uid] = (q, event)
+            self.request_queue.put((response_queue_id, uid, time.monotonic(), request_el))
             self.queues.append(q)
             self.events.append(event)
 

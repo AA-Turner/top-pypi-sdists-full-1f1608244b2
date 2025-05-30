@@ -1099,6 +1099,15 @@ def list_user_ssh_access_info(ctx, user_id, org_id=None, **kwargs):
     return query_results.user_ssh_access_info
 
 
+def get_user_ssh_access_info(ctx, user_id, org_id=None, **kwargs):
+    apiclient = context.get_apiclient_from_ctx(ctx)
+    org_id = get_org_from_input_or_ctx(ctx, org_id=org_id)
+    kwargs = strip_none(kwargs)
+    return apiclient.user_api.list_user_access_info(
+        org_id=org_id, user_id=user_id, _return_http_data_only=False, **kwargs
+    )
+
+
 def format_user_ssh_access_info_as_text(ctx, info):
     columns = [
         status_column("org_id"),

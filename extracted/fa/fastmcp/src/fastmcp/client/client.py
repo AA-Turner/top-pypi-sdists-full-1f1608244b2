@@ -1,7 +1,7 @@
 import datetime
 from contextlib import AsyncExitStack, asynccontextmanager
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Generic, cast, overload
 
 import anyio
 import mcp.types
@@ -9,6 +9,7 @@ from exceptiongroup import catch
 from mcp import ClientSession
 from pydantic import AnyUrl
 
+import fastmcp
 from fastmcp.client.logging import (
     LogHandler,
     MessageHandler,
@@ -27,7 +28,18 @@ from fastmcp.server import FastMCP
 from fastmcp.utilities.exceptions import get_catch_handlers
 from fastmcp.utilities.mcp_config import MCPConfig
 
-from .transports import ClientTransport, SessionKwargs, infer_transport
+from .transports import (
+    ClientTransportT,
+    FastMCP1Server,
+    FastMCPTransport,
+    MCPConfigTransport,
+    NodeStdioTransport,
+    PythonStdioTransport,
+    SessionKwargs,
+    SSETransport,
+    StreamableHttpTransport,
+    infer_transport,
+)
 
 __all__ = [
     "Client",
@@ -40,13 +52,13 @@ __all__ = [
 ]
 
 
-class Client:
+class Client(Generic[ClientTransportT]):
     """
     MCP client that delegates connection management to a Transport instance.
 
     The Client class is responsible for MCP protocol logic, while the Transport
-    handles connection establishment and management. Client provides methods
-    for working with resources, prompts, tools and other MCP capabilities.
+    handles connection establishment and management. Client provides methods for
+    working with resources, prompts, tools and other MCP capabilities.
 
     Args:
         transport: Connection source specification, which can be:
@@ -62,24 +74,60 @@ class Client:
         message_handler: Optional handler for protocol messages
         progress_handler: Optional handler for progress notifications
         timeout: Optional timeout for requests (seconds or timedelta)
+        init_timeout: Optional timeout for initial connection (seconds or timedelta).
+            Set to 0 to disable. If None, uses the value in the FastMCP global settings.
 
     Examples:
-        ```python
-        # Connect to FastMCP server
-        client = Client("http://localhost:8080")
+        ```python # Connect to FastMCP server client =
+        Client("http://localhost:8080")
 
         async with client:
-            # List available resources
-            resources = await client.list_resources()
+            # List available resources resources = await client.list_resources()
 
-            # Call a tool
-            result = await client.call_tool("my_tool", {"param": "value"})
+            # Call a tool result = await client.call_tool("my_tool", {"param":
+            "value"})
         ```
     """
 
+    @overload
+    def __new__(
+        cls,
+        transport: ClientTransportT,
+        **kwargs: Any,
+    ) -> "Client[ClientTransportT]": ...
+
+    @overload
+    def __new__(
+        cls, transport: AnyUrl, **kwargs
+    ) -> "Client[SSETransport|StreamableHttpTransport]": ...
+
+    @overload
+    def __new__(
+        cls, transport: FastMCP | FastMCP1Server, **kwargs
+    ) -> "Client[FastMCPTransport]": ...
+
+    @overload
+    def __new__(
+        cls, transport: Path, **kwargs
+    ) -> "Client[PythonStdioTransport|NodeStdioTransport]": ...
+
+    @overload
+    def __new__(
+        cls, transport: MCPConfig | dict[str, Any], **kwargs
+    ) -> "Client[MCPConfigTransport]": ...
+
+    @overload
+    def __new__(
+        cls, transport: str, **kwargs
+    ) -> "Client[PythonStdioTransport|NodeStdioTransport|SSETransport|StreamableHttpTransport]": ...
+
+    def __new__(cls, transport, **kwargs) -> "Client":
+        instance = super().__new__(cls)
+        return instance
+
     def __init__(
         self,
-        transport: ClientTransport
+        transport: ClientTransportT
         | FastMCP
         | AnyUrl
         | Path
@@ -93,8 +141,9 @@ class Client:
         message_handler: MessageHandler | None = None,
         progress_handler: ProgressHandler | None = None,
         timeout: datetime.timedelta | float | int | None = None,
+        init_timeout: datetime.timedelta | float | int | None = None,
     ):
-        self.transport = infer_transport(transport)
+        self.transport = cast(ClientTransportT, infer_transport(transport))
         self._session: ClientSession | None = None
         self._exit_stack: AsyncExitStack | None = None
         self._nesting_counter: int = 0
@@ -110,6 +159,17 @@ class Client:
 
         if isinstance(timeout, int | float):
             timeout = datetime.timedelta(seconds=timeout)
+
+        # handle init handshake timeout
+        if init_timeout is None:
+            init_timeout = fastmcp.settings.settings.client_init_timeout
+        if isinstance(init_timeout, datetime.timedelta):
+            init_timeout = init_timeout.total_seconds()
+        elif not init_timeout:
+            init_timeout = None
+        else:
+            init_timeout = float(init_timeout)
+        self._init_timeout = init_timeout
 
         self._session_kwargs: SessionKwargs = {
             "sampling_callback": None,
@@ -134,6 +194,7 @@ class Client:
             raise RuntimeError(
                 "Client is not connected. Use the 'async with client:' context manager first."
             )
+
         return self._session
 
     @property
@@ -168,9 +229,11 @@ class Client:
                 self._session = session
                 # Initialize the session
                 try:
-                    with anyio.fail_after(1):
+                    with anyio.fail_after(self._init_timeout):
                         self._initialize_result = await self._session.initialize()
                     yield
+                except anyio.ClosedResourceError:
+                    raise RuntimeError("Server session was closed unexpectedly")
                 except TimeoutError:
                     raise RuntimeError("Failed to initialize server session")
                 finally:
@@ -202,6 +265,11 @@ class Client:
                     await self._exit_stack.__aexit__(exc_type, exc_val, exc_tb)
                 finally:
                     self._exit_stack = None
+
+    async def close(self):
+        await self.transport.close()
+        self._session = None
+        self._initialize_result = None
 
     # --- MCP Client Methods ---
 

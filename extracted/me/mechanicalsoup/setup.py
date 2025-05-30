@@ -6,11 +6,15 @@ from os import path
 from setuptools import setup  # Always prefer setuptools over distutils
 
 
+def strip(line):
+    """Strip comments and whitespace from a line of text."""
+    return line.split('#', 1)[0].strip()
+
+
 def requirements_from_file(filename):
     """Parses a pip requirements file into a list."""
     with open(filename, 'r') as fd:
-        return [line.strip() for line in fd
-                if line.strip() and not line.strip().startswith('--')]
+        return [strip(line) for line in fd if strip(line)]
 
 
 def read(fname, URL, URLImage):
@@ -57,7 +61,7 @@ setup(
 
     license=about['__license__'],
 
-    python_requires='>=3.6',
+    python_requires='>=3.9',
 
     classifiers=[
         'License :: OSI Approved :: MIT License',
@@ -65,12 +69,11 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Programming Language :: Python :: 3 :: Only',
     ],
 

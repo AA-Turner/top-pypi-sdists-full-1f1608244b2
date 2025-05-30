@@ -28,7 +28,7 @@ def push(job_folder, *, resume: bool = True, path: str = None, owner: str = None
          global_inventory: Optional[str] = None, create_dummy_items: bool = False,
          errors: Optional[str] = None, quiet: Optional[bool] = None,
          status: Optional[Status] = None, session: Optional[Session] = None,
-         scope_globals_to_workbook: bool = False) -> pd.DataFrame:
+         scope_globals_to_workbook: Optional[bool] = None) -> pd.DataFrame:
     """
     Pushes the definitions for each workbook that was pulled by the
     spy.workbooks.job.pull() function, in a restartable "job"-like fashion.

@@ -16,8 +16,11 @@ from chalk.features.feature_field import Feature
 from chalk.features.feature_set import Features
 from chalk.features.feature_wrapper import FeatureWrapper, unwrap_feature
 from chalk.features.resolver import RESOLVER_REGISTRY, OnlineResolver
+from chalk.features.underscore import Underscore, UnderscoreFunction
 from chalk.serialization.parsed_annotation import ParsedAnnotation
 from chalk.utils.collections import ensure_tuple
+
+SUPPORTED_LOCAL_MODELS = {"all-MiniLM-L6-v2"}
 
 
 def _get_provider(provider: str, model: str, dimensions: int | None = None) -> EmbeddingProvider:
@@ -37,8 +40,10 @@ def _get_provider(provider: str, model: str, dimensions: int | None = None) -> E
 
 def embed(
     input: Callable[[], Any],
-    provider: str,
-    model: str,
+    model: str | None = None,
+    model_path: str | None = None,
+    tokenizer_path: str | None = None,
+    provider: str | None = None,
     name: str | None = None,
     owner: str | None = None,
     tags: list[str] | None = None,
@@ -63,6 +68,10 @@ def embed(
         The AI provider to use for the embedding.
     model
         The model to generate the embedding.
+    model_path
+        The path to the embedding model file: currently, `onnx` models are supported.
+    tokenizer_path
+        The path to the tokenizer for the model file. This is only used running an embedding model locally.
     dimensions
         The dimensionality of the embedding. If not specified, the default dimensionality will be used.
         Supported dimensionality varies based on the model.
@@ -166,6 +175,25 @@ def embed(
     ...         model="text-embedding-ada-002",
     ...     )
     """
+    if provider is None:
+        if not isinstance(input, Underscore):
+            raise TypeError(
+                "When using `model_path` and `provider`, the `input` must be an underscore not a lambda expression: `_.content`."
+            )
+
+        if model in SUPPORTED_LOCAL_MODELS:
+            return UnderscoreFunction("onnx_run_embedding", input, model_name=model)
+
+        if model_path is not None and tokenizer_path is not None:
+            return UnderscoreFunction("onnx_run_embedding", input, model_path=model_path, tokenizer_path=tokenizer_path)
+
+        raise ValueError(
+            f"If `provider` is None, you must specify either: both a `model_path` and `tokenizer_path`, or one of the supported local embedding models ({', '.join(list(SUPPORTED_LOCAL_MODELS))})."
+        )
+
+    if model is None:
+        raise ValueError("If provider is set, then model must also be set")
+
     embedding_provider = _get_provider(provider, model, dimensions)
     # Manually set the dimensions of the Vector when using embedding
     typ = ParsedAnnotation(underlying=embedding_provider.get_vector_class())

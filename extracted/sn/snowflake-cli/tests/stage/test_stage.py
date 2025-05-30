@@ -13,12 +13,12 @@
 # limitations under the License.
 import sys
 from pathlib import Path
-from tempfile import TemporaryDirectory
+from typing import Optional
 from unittest import mock
 from unittest.mock import MagicMock
 
 import pytest
-from snowflake.cli._plugins.stage.manager import StageManager
+from snowflake.cli._plugins.stage.manager import StageManager, TemporaryDirectory
 from snowflake.cli.api.errno import DOES_NOT_EXIST_OR_NOT_AUTHORIZED
 from snowflake.cli.api.stage_path import StagePath
 from snowflake.connector import ProgrammingError
@@ -114,7 +114,7 @@ def test_stage_copy_remote_to_local_quoted_stage_recursive(
 ):
     mock_execute.side_effect = [
         mock_cursor([{"name": '"stage name"/file'}], []),
-        mock_cursor([("file")], ["file"]),
+        mock_cursor(["file"], ["file"]),
     ]
     with TemporaryDirectory() as tmp_dir:
         result = runner.invoke(
@@ -191,7 +191,7 @@ def test_stage_copy_remote_to_local_quoted_uri_recursive(
 ):
     mock_execute.side_effect = [
         mock_cursor([{"name": "stageName/file.py"}], []),
-        mock_cursor([(raw_path)], ["file"]),
+        mock_cursor([raw_path], ["file"]),
     ]
     with TemporaryDirectory() as tmp_dir:
         tmp_dir = Path(tmp_dir).resolve()
@@ -516,8 +516,32 @@ def test_stage_create(mock_execute, runner, mock_cursor):
     result = runner.invoke(["stage", "create", "-c", "empty", "stageName"])
     assert result.exit_code == 0, result.output
     mock_execute.assert_called_once_with(
-        "create stage if not exists IDENTIFIER('stageName')"
+        "create stage if not exists IDENTIFIER('stageName') encryption = (type = 'SNOWFLAKE_FULL')"
     )
+
+
+@mock.patch(f"{STAGE_MANAGER}.execute_query")
+def test_stage_create_encryption(mock_execute, runner, mock_cursor):
+    mock_execute.return_value = mock_cursor(["row"], [])
+    for encryption in ["SNOWFLAKE_SSE", "SNOWFLAKE_FULL"]:
+        result = runner.invoke(
+            ["stage", "create", '"stage name"', "--encryption", encryption]
+        )
+        assert result.exit_code == 0, result.output
+        mock_execute.assert_called_once_with(
+            f"""create stage if not exists IDENTIFIER('"stage name"') encryption = (type = '{encryption}')"""
+        )
+        mock_execute.reset_mock()
+
+    result = runner.invoke(
+        ["stage", "create", '"stage name"', "--encryption", "incorrect_encryption"]
+    )
+    assert result.exit_code == 2, result.output
+    assert (
+        "Invalid value for '--encryption': 'incorrect_encryption' is not one of"
+        in result.output
+    )
+    assert "'SNOWFLAKE_FULL', 'SNOWFLAKE_SSE'." in result.output
 
 
 @mock.patch(f"{STAGE_MANAGER}.execute_query")
@@ -526,7 +550,7 @@ def test_stage_create_quoted(mock_execute, runner, mock_cursor):
     result = runner.invoke(["stage", "create", "-c", "empty", '"stage name"'])
     assert result.exit_code == 0, result.output
     mock_execute.assert_called_once_with(
-        """create stage if not exists IDENTIFIER('"stage name"')"""
+        """create stage if not exists IDENTIFIER('"stage name"') encryption = (type = 'SNOWFLAKE_FULL')"""
     )
 
 
@@ -1186,9 +1210,10 @@ def test_stage_manager_check_for_requirements_file(
 
 
 class RecursiveUploadTester:
-    def __init__(self, tmp_dir: str):
+    def __init__(self, source_dir: str, temp_directory: Optional[Path] = None):
         self.calls: list[dict] = []
-        self.tmp_dir = Path(tmp_dir)
+        self.source_dir = Path(source_dir)
+        self.temp_directory = temp_directory
 
     def prepare(self, structure: dict):
         def create_structure(root: Path, dir_def: dict):
@@ -1199,7 +1224,7 @@ class RecursiveUploadTester:
                 else:
                     (root / name).write_text(content)
 
-        create_structure(self.tmp_dir, structure)
+        create_structure(self.source_dir, structure)
 
     def execute(self, local_path):
         calls = self.calls
@@ -1227,7 +1252,11 @@ class RecursiveUploadTester:
                 "snowflake.cli._plugins.stage.manager.TemporaryDirectory",
                 MockTemporaryDirectory,
             ):
-                generator = StageManager().put_recursive(Path(local_path), "stageName")
+                if self.temp_directory is not None:
+                    MockTemporaryDirectory.current_name = self.temp_directory.name
+                generator = StageManager().put_recursive(
+                    Path(local_path), "stageName", temp_directory=self.temp_directory
+                )
                 list(generator)
 
         return Path(MockTemporaryDirectory.current_name)
@@ -1376,3 +1405,16 @@ def test_recursive_unbalanced_tree(temporary_directory):
     tester = RecursiveUploadTester(temporary_directory)
     tester.prepare(structure=NESTED_UNBALANCED_STRUCTURE)
     tester.execute(local_path=temporary_directory + "/")
+
+
+def test_recursive_upload_with_provided_temp_directory():
+    with TemporaryDirectory("src") as source_directory, TemporaryDirectory(
+        "temp"
+    ) as temp_directory:
+        temp_directory_path = Path(temp_directory)
+        tester = RecursiveUploadTester(
+            source_directory, temp_directory=temp_directory_path
+        )
+        tester.prepare(structure=NESTED_STRUCTURE)
+        StageManager().copy_to_tmp_dir(Path(source_directory), temp_directory_path)
+        tester.execute(local_path=source_directory)

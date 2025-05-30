@@ -20,7 +20,7 @@ setup(
     author="Dagster Labs",
     author_email="hello@dagsterlabs.com",
     license="Apache-2.0",
-    description="Shared code between dagster and dagster-dg.",
+    description="Shared code between dagster and dagster-dg-core.",
     url=(
         "https://github.com/dagster-io/dagster/tree/master/python_modules/libraries/dagster-shared"
     ),
@@ -42,7 +42,11 @@ setup(
         "tomlkit",
     ],
     extras_require={
-        "test": ["pytest"],
+        "test": [
+            "pytest",
+            "buildkite-test-collector",
+            "flaky",
+        ],
     },
     zip_safe=False,
 )

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: cdp-sdk
-Version: 1.8.1
+Version: 1.9.0
 Summary: CDP SDK
 License: MIT
 Requires-Python: >=3.10
@@ -154,6 +154,22 @@ from cdp import CdpClient
 async def main():
     async with CdpClient() as cdp:
         account = await cdp.evm.create_account()
+
+asyncio.run(main())
+```
+
+#### Import an EVM account as follows:
+
+```python
+import asyncio
+from cdp import CdpClient
+
+async def main():
+    async with CdpClient() as cdp:
+        account = await cdp.evm.import_account(
+            private_key="0x12345",
+            name="MyAccount",
+        )
 
 asyncio.run(main())
 ```

@@ -65,6 +65,8 @@ from .type_defs import (
     GetChannelResponseTypeDef,
     GetDashboardRequestTypeDef,
     GetDashboardResponseTypeDef,
+    GetEventConfigurationRequestTypeDef,
+    GetEventConfigurationResponseTypeDef,
     GetEventDataStoreRequestTypeDef,
     GetEventDataStoreResponseTypeDef,
     GetEventSelectorsRequestTypeDef,
@@ -103,6 +105,8 @@ from .type_defs import (
     ListTrailsResponseTypeDef,
     LookupEventsRequestTypeDef,
     LookupEventsResponseTypeDef,
+    PutEventConfigurationRequestTypeDef,
+    PutEventConfigurationResponseTypeDef,
     PutEventSelectorsRequestTypeDef,
     PutEventSelectorsResponseTypeDef,
     PutInsightSelectorsRequestTypeDef,
@@ -186,6 +190,7 @@ class Exceptions(BaseClientExceptions):
     InsightNotEnabledException: Type[BotocoreClientError]
     InsufficientDependencyServiceAccessPermissionException: Type[BotocoreClientError]
     InsufficientEncryptionPolicyException: Type[BotocoreClientError]
+    InsufficientIAMAccessPermissionException: Type[BotocoreClientError]
     InsufficientS3BucketPolicyException: Type[BotocoreClientError]
     InsufficientSnsTopicPolicyException: Type[BotocoreClientError]
     InvalidCloudWatchLogsLogGroupArnException: Type[BotocoreClientError]
@@ -466,6 +471,18 @@ class CloudTrailClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_cloudtrail/client/#get_dashboard)
         """
 
+    def get_event_configuration(
+        self, **kwargs: Unpack[GetEventConfigurationRequestTypeDef]
+    ) -> GetEventConfigurationResponseTypeDef:
+        """
+        Retrieves the current event configuration settings for the specified event data
+        store, including details about maximum event size and context key selectors
+        configured for the event data store.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cloudtrail/client/get_event_configuration.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_cloudtrail/client/#get_event_configuration)
+        """
+
     def get_event_data_store(
         self, **kwargs: Unpack[GetEventDataStoreRequestTypeDef]
     ) -> GetEventDataStoreResponseTypeDef:
@@ -657,6 +674,16 @@ class CloudTrailClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cloudtrail/client/lookup_events.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_cloudtrail/client/#lookup_events)
+        """
+
+    def put_event_configuration(
+        self, **kwargs: Unpack[PutEventConfigurationRequestTypeDef]
+    ) -> PutEventConfigurationResponseTypeDef:
+        """
+        Updates the event configuration settings for the specified event data store.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cloudtrail/client/put_event_configuration.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_cloudtrail/client/#put_event_configuration)
         """
 
     def put_event_selectors(

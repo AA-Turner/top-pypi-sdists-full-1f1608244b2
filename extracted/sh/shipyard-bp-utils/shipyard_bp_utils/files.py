@@ -47,7 +47,10 @@ def determine_destination_file_name(
             else destination_file_name
         )
     else:
-        return os.path.basename(source_full_path)
+        basename = os.path.basename(source_full_path)
+        if file_number:
+            return enumerate_destination_file_name(basename, file_number)
+        return basename or ""
 
 
 def clean_folder_name(folder_name: str) -> str:
@@ -60,6 +63,8 @@ def clean_folder_name(folder_name: str) -> str:
     Returns:
     str: The cleaned folder name.
     """
+    if not folder_name:
+        return ""
     folder_name = folder_name.strip("/")
     if folder_name != "":
         folder_name = os.path.normpath(folder_name.strip("/"))
@@ -78,7 +83,7 @@ def create_folder_if_dne(destination_folder_name: str) -> None:
     Returns:
     None
     """
-    os.makedirs(destination_folder_name, exist_ok=True)
+    os.makedirs(clean_folder_name(destination_folder_name), exist_ok=True)
 
 
 def combine_folder_and_file_name(folder_name: str, file_name: str) -> str:
@@ -92,11 +97,7 @@ def combine_folder_and_file_name(folder_name: str, file_name: str) -> str:
     Returns:
     str: The combined folder and file name as a single path.
     """
-
-    combined_name = os.path.normpath(
-        f'{folder_name}{"/" if folder_name else ""}{file_name}'
-    )
-    return os.path.normpath(combined_name)
+    return os.path.normpath(os.path.join(clean_folder_name(folder_name), file_name))
 
 
 def determine_destination_full_path(
@@ -147,6 +148,7 @@ def compress_files(file_paths: list, destination_full_path: str, compression: st
 
     if "tar" in compression:
         return compress_with_tar(file_paths, compressed_file_name, compression)
+    return None
 
 
 def compress_with_zip(file_paths: list, compressed_file_name: str):
@@ -223,7 +225,7 @@ def are_files_too_large(file_paths: str, max_size_bytes: int) -> bool:
     return total_size >= max_size_bytes
 
 
-def find_all_local_file_names(source_folder_name: str = None) -> List[str]:
+def find_all_local_file_names(source_folder_name: str = "") -> List[str]:
     """
     Returns a list of all files that exist in the current working directory,
     filtered by source_folder_name if provided.
@@ -237,8 +239,9 @@ def find_all_local_file_names(source_folder_name: str = None) -> List[str]:
     logger.debug(f"Finding all local file names in {source_folder_name}...")
 
     cwd = os.getcwd()
-    cwd_extension = os.path.normpath(f"{cwd}/{source_folder_name}/**")
-    all_paths = glob.glob(cwd_extension, recursive=True)
+    source_folder_name = clean_folder_name(source_folder_name)
+    search_pattern = os.path.normpath(os.path.join(cwd, source_folder_name, "**"))
+    all_paths = glob.glob(search_pattern, recursive=True)
 
     return remove_directories_from_path_list(all_paths)
 
@@ -481,15 +484,17 @@ def file_match(
 
         if not matching_files:
             raise FileNotFoundError(f"No files found matching the regex {search_term}")
-
         logger.info(f"{len(matching_files)} files found.")
         for index, file_name in enumerate(matching_files, start=1):
             source_full_path = combine_folder_and_file_name(source_directory, file_name)
+            file_num = (
+                index if destination_filename and len(matching_files) > 1 else None
+            )
             filename = determine_destination_full_path(
                 destination_folder_name=destination_directory,
                 destination_file_name=destination_filename,
                 source_full_path=file_name,
-                file_number=index if len(matching_files) > 1 else None,
+                file_number=file_num,
             )
             matches.append(
                 {"source_path": source_full_path, "destination_filename": filename}

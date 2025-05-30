@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyresample
-Version: 1.34.1
+Version: 1.34.2
 Summary: Geospatial image resampling in Python
 Home-page: https://github.com/pytroll/pyresample
 Author: Thomas Lavergne
@@ -56,19 +56,19 @@ Requires-Dist: pytest-lazy-fixtures; extra == "tests"
 Requires-Dist: shapely; extra == "tests"
 Requires-Dist: odc-geo; extra == "tests"
 Provides-Extra: all
-Requires-Dist: numexpr; extra == "all"
-Requires-Dist: zarr; extra == "all"
-Requires-Dist: matplotlib; extra == "all"
-Requires-Dist: shapely; extra == "all"
-Requires-Dist: xarray; extra == "all"
-Requires-Dist: rasterio; extra == "all"
-Requires-Dist: scipy; extra == "all"
-Requires-Dist: cartopy>=0.20.0; extra == "all"
-Requires-Dist: pillow; extra == "all"
-Requires-Dist: odc-geo; extra == "all"
+Requires-Dist: dask; extra == "all"
 Requires-Dist: pytest-lazy-fixtures; extra == "all"
 Requires-Dist: dask>=0.16.1; extra == "all"
-Requires-Dist: dask; extra == "all"
+Requires-Dist: xarray; extra == "all"
+Requires-Dist: numexpr; extra == "all"
+Requires-Dist: pillow; extra == "all"
+Requires-Dist: rasterio; extra == "all"
+Requires-Dist: matplotlib; extra == "all"
+Requires-Dist: shapely; extra == "all"
+Requires-Dist: scipy; extra == "all"
+Requires-Dist: cartopy>=0.20.0; extra == "all"
+Requires-Dist: odc-geo; extra == "all"
+Requires-Dist: zarr; extra == "all"
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier

@@ -307,7 +307,7 @@ async def get_dataframe(iloc_tuple: Optional[tuple] = None, feishu_url: Optional
 async def get_series(feishu_url: str, index: int = 0, duplicated: bool = False):  # 系统配置
     df = await aget_spreadsheet_values(feishu_url=feishu_url, to_dataframe=True)
     series = df[index]
-    values = [i for i in series if i]  # todo: 非标准字符串处理
+    values = [i for i in series if i and isinstance(i, str)]  # todo: 非标准字符串处理
     if duplicated:  # 有序去重
         values = values | xUnique
 

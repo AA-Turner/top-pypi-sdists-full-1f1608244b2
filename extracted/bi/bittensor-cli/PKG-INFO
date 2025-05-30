@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bittensor-cli
-Version: 9.4.2
+Version: 9.4.4
 Summary: Bittensor CLI
 Author: bittensor.com
 Project-URL: homepage, https://github.com/opentensor/btcli
@@ -8,7 +8,6 @@ Project-URL: Repository, https://github.com/opentensor/btcli
 Requires-Python: <3.14,>=3.9
 Description-Content-Type: text/markdown
 Requires-Dist: wheel
-Requires-Dist: async-property==0.2.2
 Requires-Dist: async-substrate-interface>=1.1.0
 Requires-Dist: aiohttp~=3.10.2
 Requires-Dist: backoff~=2.2.1
@@ -35,7 +34,6 @@ Requires-Dist: torch<3.0,>=1.13.1; extra == "cuda"
 <div align="center">
 
 # Bittensor CLI <!-- omit in toc -->
-### Rao Development Version
 [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/bittensor)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 [![PyPI version](https://badge.fury.io/py/bittensor_cli.svg)](https://badge.fury.io/py/bittensor_cli)

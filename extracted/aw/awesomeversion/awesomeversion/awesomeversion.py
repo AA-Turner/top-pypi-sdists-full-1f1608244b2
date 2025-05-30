@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import cached_property
 from typing import TYPE_CHECKING, Any, Dict
 from warnings import warn
 
@@ -37,7 +38,6 @@ class AwesomeVersion(str):
     _modifier: str | None = None
     _modifier_type: str | None = None
     _sections: int | None = None
-    _simple: bool | None = None
     _ensure_strategy: EnsureStrategyIterableType = []
 
     def __init__(
@@ -101,6 +101,7 @@ class AwesomeVersion(str):
                     )
                     if match is not None:
                         self._version = match.group(0)
+                        break
 
             if self.strategy not in ensure_strategy:
                 raise AwesomeVersionStrategyException(
@@ -254,7 +255,7 @@ class AwesomeVersion(str):
             return self._version
         return self._version[len(prefix) :]
 
-    @property
+    @cached_property
     def prefix(self) -> str | None:
         """Return the version prefix if any"""
         version = self._version
@@ -304,7 +305,7 @@ class AwesomeVersion(str):
             )
         return self._sections
 
-    @property
+    @cached_property
     def major(self) -> AwesomeVersion | None:
         """
         Return a AwesomeVersion representation of the major version.
@@ -321,7 +322,7 @@ class AwesomeVersion(str):
             return None
         return AwesomeVersion(self.section(0))
 
-    @property
+    @cached_property
     def minor(self) -> AwesomeVersion | None:
         """
         Return a AwesomeVersion representation of the minor version.
@@ -343,7 +344,7 @@ class AwesomeVersion(str):
 
         return AwesomeVersion(self.section(1))
 
-    @property
+    @cached_property
     def patch(self) -> AwesomeVersion | None:
         """
         Return a AwesomeVersion representation of the patch version.
@@ -432,7 +433,7 @@ class AwesomeVersion(str):
             return None
         return VERSION_STRATEGIES_DICT[self.strategy]
 
-    @property
+    @cached_property
     def strategy(self) -> AwesomeVersionStrategy:
         """Return the version strategy."""
         version_strategies: dict[
@@ -453,14 +454,10 @@ class AwesomeVersion(str):
                 return description.strategy
         return AwesomeVersionStrategy.UNKNOWN
 
-    @property
+    @cached_property
     def simple(self) -> bool:
         """Return True if the version string is simple."""
-        if self._simple is None:
-            self._simple = (
-                generate_full_string_regex(RE_SIMPLE).match(self.string) is not None
-            )
-        return self._simple
+        return generate_full_string_regex(RE_SIMPLE).match(self.string) is not None
 
 
 class AwesomeVersionDiff:
