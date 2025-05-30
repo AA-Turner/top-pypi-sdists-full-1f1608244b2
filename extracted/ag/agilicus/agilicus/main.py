@@ -70,6 +70,7 @@ from .input_helpers import (
     SubObjectString,
     pop_item_if_none,
     get_org_from_input_or_ctx,
+    get_user_id_from_input_or_ctx,
 )
 
 from .output.console import output_formatted
@@ -8300,6 +8301,22 @@ def list_user_launcher_access_info(ctx, user, org_id, **kwargs):
 def add_remote_app(ctx, **kwargs):
     result = desktops.add_remote_app(ctx, **kwargs)
     output_entry(ctx, result)
+
+
+@cli.command(name="get-user-access-info")
+@click.argument("user-id", default=None, required=False)
+@click.argument("org-id", default=None, required=False)
+@click.option(
+    "--if-none-match", default=None, help="use sha256 of last fetched to short-circuit"
+)
+@click.pass_context
+def get_user_access_info(ctx, user_id, org_id, **kwargs):
+    user_id = get_user_id_from_input_or_ctx(ctx, org_id)
+    org_id = get_org_from_input_or_ctx(ctx, org_id)
+    result, _, headers = users.get_user_ssh_access_info(
+        ctx, user_id, org_id=org_id, **kwargs
+    )
+    output_entry(ctx, result.to_dict(), headers)
 
 
 @cli.command(name="update-remote-app")

@@ -794,7 +794,6 @@ class DatasetRevisionImpl(DatasetRevision):
         dashboard_url: str | None = None,
         num_computers: int = 1,
         errors: list[ChalkError] | None = None,
-        timeout: float | timedelta | ellipsis | None = ...,
         metadata: Mapping[str, Any] | None = None,
     ):
         super().__init__()
@@ -824,7 +823,8 @@ class DatasetRevisionImpl(DatasetRevision):
         # Threading `timeout` through because sometimes we don't await
         # the dataset at the initial `offline_query` call, but await
         # it when calling methods on the dataset like `to_polars()`.
-        self.timeout = timeout
+        self.timeout: float | timedelta | ellipsis | None = ...
+        self.show_progress: bool | ellipsis = ...
         self.metadata = metadata
 
     def __getattr__(self, name: str):
@@ -858,7 +858,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_data_as_polars",
     ) -> pl.LazyFrame:
@@ -880,7 +880,7 @@ class DatasetRevisionImpl(DatasetRevision):
     def arrow_schema(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "arrow_schema",
     ) -> pa.Schema:
@@ -897,7 +897,7 @@ class DatasetRevisionImpl(DatasetRevision):
     def to_arrow(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_arrow",
     ) -> pa.Table:
@@ -921,7 +921,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_polars",
     ) -> pl.DataFrame:
@@ -939,7 +939,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_polars_async",
     ) -> pl.DataFrame:
@@ -961,7 +961,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_polars_lazyframe",
     ) -> pl.LazyFrame:
@@ -979,7 +979,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_data_as_pandas",
     ) -> pd.DataFrame:
@@ -1005,7 +1005,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_ts: bool | str = False,
         ignore_errors: bool = False,
         timeout: float | timedelta | ellipsis | None = ...,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         caller_name: str = "to_pandas",
     ) -> pd.DataFrame:
         return self.get_data_as_pandas(
@@ -1022,7 +1022,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_data_as_dataframe",
     ) -> DataFrame:
@@ -1049,7 +1049,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "download_uris",
     ) -> list[str]:
@@ -1085,7 +1085,7 @@ class DatasetRevisionImpl(DatasetRevision):
     def wait(
         self,
         timeout: float | timedelta | ellipsis | None = ...,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         caller_name: str = "wait",
     ) -> None:
         from chalk.client.client_impl import DatasetJobStatusRequest
@@ -1109,7 +1109,7 @@ class DatasetRevisionImpl(DatasetRevision):
         output_ts: Union[bool, str] = False,
         ignore_errors: bool = False,
         executor: ThreadPoolExecutor | None = None,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "download_data",
     ) -> None:
@@ -1139,7 +1139,7 @@ class DatasetRevisionImpl(DatasetRevision):
     def get_input_dataframe(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_input_dataframe",
     ) -> pl.LazyFrame:
@@ -1195,10 +1195,16 @@ class DatasetRevisionImpl(DatasetRevision):
     def resolver_replay(
         self,
         resolver: ResolverProtocol,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_method: str = "resolver_replay",
     ) -> Union[pl.DataFrame, pl.LazyFrame, Mapping[str, pl.DataFrame], Mapping[str, pl.LazyFrame]]:
+        if show_progress is not ...:
+            show_progress_bool = show_progress
+        elif self.show_progress is not ...:
+            show_progress_bool = self.show_progress
+        else:
+            show_progress_bool = True
         revision_id = self.revision_id
         if isinstance(resolver, Resolver):
             resolver_fqn = resolver.fqn
@@ -1213,7 +1219,7 @@ class DatasetRevisionImpl(DatasetRevision):
             timeout = timeout if timeout is not ... else self.timeout
             self._client.await_operation_completion(
                 operation_id=self.revision_id,
-                show_progress=show_progress,
+                show_progress=show_progress_bool,
                 caller_method=caller_method,
                 environment_id=self.environment,
                 num_computers=self.num_computers,
@@ -1359,20 +1365,27 @@ This occurred during the actual execution of resolver {resolver.fqn}.
 
     def wait_for_completion(
         self,
-        show_progress: bool = False,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_method: str | None = None,
     ) -> None:
         self._hydrate(show_progress=show_progress, timeout=timeout, caller_method=caller_method)
 
     def _hydrate(
-        self, show_progress: bool, caller_method: Optional[str], timeout: float | timedelta | ellipsis | None
+        self, show_progress: bool | ellipsis, caller_method: Optional[str], timeout: float | timedelta | ellipsis | None
     ) -> None:
         """
         :param show_progress: Pass `True` to show a progress bar while waiting for the operation to complete.
         :param caller_method: Caller method name. This will be used to display a user-facing message explaining
         the implicit showing of computation progress.
         """
+        if show_progress is not ...:
+            show_progress_bool = show_progress
+        elif self.show_progress is not ...:
+            show_progress_bool = self.show_progress
+        else:
+            show_progress_bool = True
+
         if self._hydrated:
             return
 
@@ -1380,7 +1393,7 @@ This occurred during the actual execution of resolver {resolver.fqn}.
         timeout = timeout if timeout is not ... else self.timeout
         self._client.await_operation_completion(
             operation_id=self.revision_id,
-            show_progress=show_progress,
+            show_progress=show_progress_bool,
             caller_method=caller_method,
             environment_id=self.environment,
             num_computers=self.num_computers,
@@ -1468,7 +1481,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_data_as_polars",
     ) -> pl.LazyFrame:
@@ -1488,7 +1501,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_polars",
     ) -> pl.DataFrame:
@@ -1506,7 +1519,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_polars_async",
     ) -> pl.DataFrame:
@@ -1528,7 +1541,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_polars_lazyframe",
     ) -> pl.LazyFrame:
@@ -1544,7 +1557,7 @@ class DatasetImpl(Dataset):
     def to_arrow(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_arrow",
     ) -> pa.Table:
@@ -1560,7 +1573,7 @@ class DatasetImpl(Dataset):
     def arrow_schema(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "arrow_schema",
     ) -> pa.Schema:
@@ -1578,7 +1591,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_data_as_pandas",
     ) -> pd.DataFrame:
@@ -1598,7 +1611,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "to_pandas",
     ) -> pd.DataFrame:
@@ -1616,7 +1629,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_data_as_dataframe",
     ) -> DataFrame:
@@ -1636,7 +1649,7 @@ class DatasetImpl(Dataset):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "download_uris",
     ) -> list[str]:
@@ -1652,7 +1665,7 @@ class DatasetImpl(Dataset):
     def wait(
         self,
         timeout: float | timedelta | ellipsis | None = ...,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         caller_name: str = "wait",
     ) -> DatasetImpl:
         self.revisions[-1].wait(timeout=timeout, show_progress=show_progress, caller_name=caller_name)
@@ -1663,7 +1676,7 @@ class DatasetImpl(Dataset):
         path: str,
         executor: ThreadPoolExecutor | None = None,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "download_data",
     ) -> None:
@@ -1689,7 +1702,7 @@ class DatasetImpl(Dataset):
     def get_input_dataframe(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_name: str = "get_input_dataframe",
     ) -> pl.LazyFrame:
@@ -1712,7 +1725,7 @@ class DatasetImpl(Dataset):
         features: Optional[List[Union[Feature, Any]]] = None,
         branch: Optional[str] = None,
         wait: bool = False,
-        show_progress: bool = False,
+        show_progress: bool | ellipsis = ...,
         store_plan_stages: bool = False,
         correlation_id: str | None = None,
         explain: bool = False,
@@ -1773,7 +1786,7 @@ class DatasetImpl(Dataset):
     def resolver_replay(
         self,
         resolver: ResolverProtocol,
-        show_progress: bool = False,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         caller_method: str = "resolver_replay",
     ):

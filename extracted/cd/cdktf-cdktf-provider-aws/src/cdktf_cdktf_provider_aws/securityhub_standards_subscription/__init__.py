@@ -1,7 +1,7 @@
 r'''
 # `aws_securityhub_standards_subscription`
 
-Refer to the Terraform Registry for docs: [`aws_securityhub_standards_subscription`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription).
+Refer to the Terraform Registry for docs: [`aws_securityhub_standards_subscription`](https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class SecurityhubStandardsSubscription(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.securityhubStandardsSubscription.SecurityhubStandardsSubscription",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription aws_securityhub_standards_subscription}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription aws_securityhub_standards_subscription}.'''
 
     def __init__(
         self,
@@ -53,6 +53,7 @@ class SecurityhubStandardsSubscription(
         *,
         standards_arn: builtins.str,
         id: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["SecurityhubStandardsSubscriptionTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -61,12 +62,13 @@ class SecurityhubStandardsSubscription(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription aws_securityhub_standards_subscription} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription aws_securityhub_standards_subscription} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param standards_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription#standards_arn SecurityhubStandardsSubscription#standards_arn}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription#id SecurityhubStandardsSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param standards_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#standards_arn SecurityhubStandardsSubscription#standards_arn}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#id SecurityhubStandardsSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#timeouts SecurityhubStandardsSubscription#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -82,6 +84,7 @@ class SecurityhubStandardsSubscription(
         config = SecurityhubStandardsSubscriptionConfig(
             standards_arn=standards_arn,
             id=id,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -106,7 +109,7 @@ class SecurityhubStandardsSubscription(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the SecurityhubStandardsSubscription to import.
-        :param import_from_id: The id of the existing SecurityhubStandardsSubscription that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing SecurityhubStandardsSubscription that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the SecurityhubStandardsSubscription to import is found.
         '''
         if __debug__:
@@ -117,9 +120,28 @@ class SecurityhubStandardsSubscription(
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
 
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#create SecurityhubStandardsSubscription#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#delete SecurityhubStandardsSubscription#delete}.
+        '''
+        value = SecurityhubStandardsSubscriptionTimeouts(create=create, delete=delete)
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
+
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetId", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -135,6 +157,11 @@ class SecurityhubStandardsSubscription(
         return typing.cast(builtins.str, jsii.sget(cls, "tfResourceType"))
 
     @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "SecurityhubStandardsSubscriptionTimeoutsOutputReference":
+        return typing.cast("SecurityhubStandardsSubscriptionTimeoutsOutputReference", jsii.get(self, "timeouts"))
+
+    @builtins.property
     @jsii.member(jsii_name="idInput")
     def id_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "idInput"))
@@ -143,6 +170,13 @@ class SecurityhubStandardsSubscription(
     @jsii.member(jsii_name="standardsArnInput")
     def standards_arn_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "standardsArnInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "SecurityhubStandardsSubscriptionTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "SecurityhubStandardsSubscriptionTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="id")
@@ -182,6 +216,7 @@ class SecurityhubStandardsSubscription(
         "provisioners": "provisioners",
         "standards_arn": "standardsArn",
         "id": "id",
+        "timeouts": "timeouts",
     },
 )
 class SecurityhubStandardsSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -197,6 +232,7 @@ class SecurityhubStandardsSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArgume
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         standards_arn: builtins.str,
         id: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["SecurityhubStandardsSubscriptionTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -206,11 +242,14 @@ class SecurityhubStandardsSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArgume
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param standards_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription#standards_arn SecurityhubStandardsSubscription#standards_arn}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription#id SecurityhubStandardsSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param standards_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#standards_arn SecurityhubStandardsSubscription#standards_arn}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#id SecurityhubStandardsSubscription#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#timeouts SecurityhubStandardsSubscription#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = SecurityhubStandardsSubscriptionTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8556760f9fb094efd598f66bb09654cbaed45166df2f19e86d06e7d94e44af59)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -222,6 +261,7 @@ class SecurityhubStandardsSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArgume
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument standards_arn", value=standards_arn, expected_type=type_hints["standards_arn"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "standards_arn": standards_arn,
         }
@@ -241,6 +281,8 @@ class SecurityhubStandardsSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArgume
             self._values["provisioners"] = provisioners
         if id is not None:
             self._values["id"] = id
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -308,20 +350,29 @@ class SecurityhubStandardsSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
     @builtins.property
     def standards_arn(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription#standards_arn SecurityhubStandardsSubscription#standards_arn}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#standards_arn SecurityhubStandardsSubscription#standards_arn}.'''
         result = self._values.get("standards_arn")
         assert result is not None, "Required property 'standards_arn' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/securityhub_standards_subscription#id SecurityhubStandardsSubscription#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#id SecurityhubStandardsSubscription#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         result = self._values.get("id")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["SecurityhubStandardsSubscriptionTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#timeouts SecurityhubStandardsSubscription#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["SecurityhubStandardsSubscriptionTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -335,9 +386,141 @@ class SecurityhubStandardsSubscriptionConfig(_cdktf_9a9027ec.TerraformMetaArgume
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-aws.securityhubStandardsSubscription.SecurityhubStandardsSubscriptionTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={"create": "create", "delete": "delete"},
+)
+class SecurityhubStandardsSubscriptionTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#create SecurityhubStandardsSubscription#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#delete SecurityhubStandardsSubscription#delete}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8a8549771d4ed665b228f056492e1613694f1d69ab547f52f2db80eceb23ff64)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#create SecurityhubStandardsSubscription#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/securityhub_standards_subscription#delete SecurityhubStandardsSubscription#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "SecurityhubStandardsSubscriptionTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class SecurityhubStandardsSubscriptionTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.securityhubStandardsSubscription.SecurityhubStandardsSubscriptionTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__27fbb5e0176fc18ff94285c742843add1bbf9563b9753ad57c7dacfbfc0d201f)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__46a58f9b3b3a56e801115a7b8af84dcb3a586c3614eafb1078e27b47a9c574f1)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4dcdfd1947d2586a5e04bf0762513c784bec838673ab1faac00963deb18a219e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SecurityhubStandardsSubscriptionTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SecurityhubStandardsSubscriptionTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SecurityhubStandardsSubscriptionTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__78eed2c775a1bad7d8287c32bcb741eb0fec8608cc4910e444c6e9b42f56363a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "SecurityhubStandardsSubscription",
     "SecurityhubStandardsSubscriptionConfig",
+    "SecurityhubStandardsSubscriptionTimeouts",
+    "SecurityhubStandardsSubscriptionTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -348,6 +531,7 @@ def _typecheckingstub__dd15ee0f3d7306e752947c0a269021f08b64ce440b65567d6021ce844
     *,
     standards_arn: builtins.str,
     id: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[SecurityhubStandardsSubscriptionTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -391,6 +575,40 @@ def _typecheckingstub__8556760f9fb094efd598f66bb09654cbaed45166df2f19e86d06e7d94
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     standards_arn: builtins.str,
     id: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[SecurityhubStandardsSubscriptionTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8a8549771d4ed665b228f056492e1613694f1d69ab547f52f2db80eceb23ff64(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__27fbb5e0176fc18ff94285c742843add1bbf9563b9753ad57c7dacfbfc0d201f(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__46a58f9b3b3a56e801115a7b8af84dcb3a586c3614eafb1078e27b47a9c574f1(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4dcdfd1947d2586a5e04bf0762513c784bec838673ab1faac00963deb18a219e(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__78eed2c775a1bad7d8287c32bcb741eb0fec8608cc4910e444c6e9b42f56363a(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, SecurityhubStandardsSubscriptionTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

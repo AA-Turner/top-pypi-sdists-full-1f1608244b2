@@ -35,6 +35,7 @@ __all__ = (
     "UnitType",
     "UpdateStatusType",
     "WebserverAccessModeType",
+    "WorkerReplacementStrategyType",
 )
 
 EndpointManagementType = Literal["CUSTOMER", "SERVICE"]
@@ -86,6 +87,7 @@ UnitType = Literal[
 ]
 UpdateStatusType = Literal["FAILED", "PENDING", "SUCCESS"]
 WebserverAccessModeType = Literal["PRIVATE_ONLY", "PUBLIC_ONLY"]
+WorkerReplacementStrategyType = Literal["FORCED", "GRACEFUL"]
 MWAAServiceName = Literal["mwaa"]
 ServiceName = Literal[
     "accessanalyzer",
@@ -384,7 +386,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -445,7 +446,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -453,6 +453,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

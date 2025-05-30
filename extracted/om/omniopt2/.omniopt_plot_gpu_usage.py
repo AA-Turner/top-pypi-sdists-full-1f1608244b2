@@ -20,7 +20,6 @@ from beartype import beartype
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--run_dir', type=str, help='Directory where to search for CSV files')
-
 parser.add_argument('--no_legend', help='Disables legend (useless here)', action='store_true', default=False)
 parser.add_argument('--save_to_file', nargs='?', const='plot', type=str, help='Path to save the plot(s)')
 parser.add_argument('--no_plt_show', help='Disable showing the plot', action='store_true', default=False)

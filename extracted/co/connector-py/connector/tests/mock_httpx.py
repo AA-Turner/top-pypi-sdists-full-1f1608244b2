@@ -28,17 +28,22 @@ def mock_requests(
     for method, requests in response_body_map.items():
         if isinstance(requests, dict):
             for request_line, response in requests.items():
+                if request_line.startswith("https://"):
+                    url = request_line
+                else:
+                    url = f"{host or ''}{request_line}"
+
                 if isinstance(response.response_body, str):
                     httpx_mock.add_response(
                         method=method,
-                        url=f"{host or ''}{request_line}",
+                        url=url,
                         content=response.response_body.encode(),
                         status_code=response.status_code,
                     )
                 else:
                     httpx_mock.add_response(
                         method=method,
-                        url=f"{host or ''}{request_line}",
+                        url=url,
                         json=response.response_body,
                         status_code=response.status_code,
                         headers=response.headers if response.headers else None,

@@ -43,6 +43,7 @@ __all__ = (
     "ListTrailsPaginatorName",
     "LookupAttributeKeyType",
     "LookupEventsPaginatorName",
+    "MaxEventSizeType",
     "PaginatorName",
     "QueryStatusType",
     "ReadWriteTypeType",
@@ -51,6 +52,7 @@ __all__ = (
     "RegionName",
     "ResourceServiceName",
     "ServiceName",
+    "TypeType",
 )
 
 
@@ -99,10 +101,12 @@ LookupAttributeKeyType = Literal[
     "Username",
 ]
 LookupEventsPaginatorName = Literal["lookup_events"]
+MaxEventSizeType = Literal["Large", "Standard"]
 QueryStatusType = Literal["CANCELLED", "FAILED", "FINISHED", "QUEUED", "RUNNING", "TIMED_OUT"]
 ReadWriteTypeType = Literal["All", "ReadOnly", "WriteOnly"]
 RefreshScheduleFrequencyUnitType = Literal["DAYS", "HOURS"]
 RefreshScheduleStatusType = Literal["DISABLED", "ENABLED"]
+TypeType = Literal["RequestContext", "TagContext"]
 CloudTrailServiceName = Literal["cloudtrail"]
 ServiceName = Literal[
     "accessanalyzer",
@@ -401,7 +405,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -462,7 +465,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -470,6 +472,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

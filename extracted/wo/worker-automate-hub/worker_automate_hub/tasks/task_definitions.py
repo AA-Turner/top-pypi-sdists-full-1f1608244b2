@@ -106,6 +106,7 @@ task_definitions = {
     "f061c8f8-f862-410e-9de6-8bbc47b0ec74": entrada_de_notas_503,
     "d168e770-0c33-4e20-a7f9-977bf15542f3": entrada_de_notas_505,
     "8e61a6c6-aeb4-456d-9aa5-b83ab8be297d": entrada_de_notas_9,
+    "d4d1f7e1-3803-4859-9dc8-6316de6dc7d0": entrada_de_notas_9,
     "1a53d689-3cfb-4ec0-a02c-b249224b12ac": entrada_de_notas_15,
     "811e8934-8227-4686-a030-df057c054f75": entrada_de_notas_16,
     "e19d48a4-850b-413e-81c3-808158711ea0": entrada_de_notas_7139,
@@ -176,7 +177,7 @@ task_definitions = {
     "c10bbf8c-3949-4a0e-9e10-3d85d367263d": abertura_livros_fiscais,
     "68d6a695-73f0-424c-afb6-54b5dba3ab9d": lancamento_pis_cofins,
     "def194c2-ffa0-4b9e-b95c-920fb4ad4150": importar_cte_xml,
-    "58de6a65-68cd-4e68-ab28-31b543b6de02": transferencias, #Logistica reverse
+    "58de6a65-68cd-4e68-ab28-31b543b6de02": transferencias,  # Logistica reverse
 }
 
 

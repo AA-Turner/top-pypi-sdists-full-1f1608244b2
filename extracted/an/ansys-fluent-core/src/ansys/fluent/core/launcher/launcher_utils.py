@@ -37,6 +37,14 @@ from ansys.fluent.core.utils.networking import find_remoting_ip
 logger = logging.getLogger("pyfluent.launcher")
 
 
+def is_compose() -> bool:
+    """Check if the Fluent launch is through compose."""
+    return (
+        os.getenv("PYFLUENT_USE_DOCKER_COMPOSE") == "1"
+        or os.getenv("PYFLUENT_USE_PODMAN_COMPOSE") == "1"
+    )
+
+
 def is_windows():
     """Check if the current operating system is Windows."""
     return platform.system() == "Windows"
@@ -61,6 +69,7 @@ def _get_subprocess_kwargs_for_fluent(env: Dict[str, Any], argvals) -> Dict[str,
     fluent_env = os.environ.copy()
     fluent_env.update({k: str(v) for k, v in env.items()})
     fluent_env["REMOTING_THROW_LAST_TUI_ERROR"] = "1"
+    fluent_env["REMOTING_THROW_LAST_SETTINGS_ERROR"] = "1"
     if pyfluent.CLEAR_FLUENT_PARA_ENVS:
         fluent_env.pop("PARA_NPROCS", None)
         fluent_env.pop("PARA_MESH_NPROCS", None)

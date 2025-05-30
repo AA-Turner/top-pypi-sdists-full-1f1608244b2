@@ -40,7 +40,8 @@ def _get_file_path(folder_name: str, file_name: str):
 
 
 hierarchy = {
-    "file_reader": ["case_file", "data_file", "lispy"],
+    "docker": ["docker_compose"],
+    "filereader": ["case_file", "data_file", "lispy"],
     "launcher": [
         "container_launcher",
         "error_handler",
@@ -49,7 +50,7 @@ hierarchy = {
         "launcher",
         "pim_launcher",
         "process_launch_string",
-        "pyfluent_enums",
+        "launch_options",
         "slurm_launcher",
         "standalone_launcher",
         "watchdog",
@@ -115,7 +116,7 @@ hierarchy = {
         "file_session",
         "fluent_connection",
         "journaling",
-        "logging",
+        "logger",
         "parametric",
         "rpvars",
         "search",
@@ -127,7 +128,7 @@ hierarchy = {
         "session_solver",
         "session",
         "system_coupling",
-        "warnings",
+        "pyfluent_warnings",
         "workflow",
     ],
 }

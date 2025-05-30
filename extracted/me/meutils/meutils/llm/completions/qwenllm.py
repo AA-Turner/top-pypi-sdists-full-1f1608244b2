@@ -85,7 +85,17 @@ async def create(request: CompletionRequest, token: Optional[str] = None, cookie
     )
     # qwen结构
     model = request.model.lower()
-    if any(i in model for i in ("search",)):
+    if any(i in model for i in ("research",)):  # 遇到错误 任意切换
+        request.model = np.random.choice({""})
+        request.messages[-1]['chat_type'] = "deep_research"
+
+        # request.messages["extra"] = {
+        #     "meta": {
+        #         "subChatType": "deep_thinking"
+        #     }
+        # }
+
+    elif any(i in model for i in ("search",)):
         request.model = "qwen-max-latest"
         request.messages[-1]['chat_type'] = "search"
 
@@ -263,7 +273,7 @@ if __name__ == '__main__':
                 # 'content': "9.8 9.11哪个大",
                 'content': 'https://oss.ffire.cc/files/AIGC.pdf 总结下',
 
-                # "chat_type": "search",
+                # "chat_type": "search", deep_research
 
                 # 'content': user_content,
 

@@ -1,14 +1,6 @@
 __all__ = ("t",)
 
-from typing import Any, Dict, Union, Tuple, Optional, overload
-try:
-    from typing import SupportsIndex, Literal
-except ImportError:
-    SupportsIndex = int  # type: ignore
-    # trick older versions
-    from collections import defaultdict
-    Literal = defaultdict(int)  # type: ignore
-    del defaultdict
+from typing import Any, Dict, Union, Tuple, Optional, SupportsIndex, Literal, overload
 
 from . import config
 from . import resource_loader
@@ -21,6 +13,7 @@ from . import translations, formatters
 @overload
 def t(
     key: str,
+    /,
     locale: Optional[str] = None,
     *,
     _list: Literal[False] = False,
@@ -31,6 +24,7 @@ def t(
 @overload
 def t(
     key: str,
+    /,
     locale: Optional[str] = None,
     *,
     _list: Literal[True],
@@ -40,6 +34,7 @@ def t(
 
 def t(
     key: str,
+    /,
     locale: Optional[str] = None,
     **kwargs: Any,
 ) -> Union[str, "LazyTranslationTuple"]:

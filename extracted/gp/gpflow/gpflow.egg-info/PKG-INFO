@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: gpflow
-Version: 2.9.2
+Version: 2.10.0
 Summary: Gaussian process methods in TensorFlow
 Home-page: https://www.gpflow.org
 Author: James Hensman, Alex Matthews
@@ -9,7 +9,6 @@ License: Apache License 2.0
 Project-URL: Source on GitHub, https://github.com/GPflow/GPflow
 Project-URL: Documentation, https://gpflow.github.io/GPflow/
 Keywords: machine-learning gaussian-processes kernels tensorflow
-Platform: UNKNOWN
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: GPU :: NVIDIA CUDA
 Classifier: Intended Audience :: Developers
@@ -217,4 +216,3 @@ which can be cited by users.
   url = {https://arxiv.org/abs/2003.01115}
 }
 ```
-

@@ -44,6 +44,7 @@ from .literals import (
     InputOntapVolumeTypeType,
     LustreAccessAuditLogLevelType,
     LustreDeploymentTypeType,
+    LustreReadCacheSizingModeType,
     MetadataConfigurationModeType,
     OntapDeploymentTypeType,
     OntapVolumeTypeType,
@@ -223,6 +224,7 @@ __all__ = (
     "LustreFileSystemConfigurationTypeDef",
     "LustreLogConfigurationTypeDef",
     "LustreLogCreateConfigurationTypeDef",
+    "LustreReadCacheConfigurationTypeDef",
     "LustreRootSquashConfigurationOutputTypeDef",
     "LustreRootSquashConfigurationTypeDef",
     "LustreRootSquashConfigurationUnionTypeDef",
@@ -388,6 +390,10 @@ class CreateFileSystemLustreMetadataConfigurationTypeDef(TypedDict):
 class LustreLogCreateConfigurationTypeDef(TypedDict):
     Level: LustreAccessAuditLogLevelType
     Destination: NotRequired[str]
+
+class LustreReadCacheConfigurationTypeDef(TypedDict):
+    SizingMode: NotRequired[LustreReadCacheSizingModeType]
+    SizeGiB: NotRequired[int]
 
 class DiskIopsConfigurationTypeDef(TypedDict):
     Mode: NotRequired[DiskIopsConfigurationModeType]
@@ -1093,6 +1099,8 @@ class LustreFileSystemConfigurationTypeDef(TypedDict):
     RootSquashConfiguration: NotRequired[LustreRootSquashConfigurationOutputTypeDef]
     MetadataConfiguration: NotRequired[FileSystemLustreMetadataConfigurationTypeDef]
     EfaEnabled: NotRequired[bool]
+    ThroughputCapacity: NotRequired[int]
+    DataReadCacheConfiguration: NotRequired[LustreReadCacheConfigurationTypeDef]
 
 CreateDataRepositoryTaskRequestTypeDef = TypedDict(
     "CreateDataRepositoryTaskRequestTypeDef",
@@ -1225,6 +1233,8 @@ class CreateFileSystemLustreConfigurationTypeDef(TypedDict):
     LogConfiguration: NotRequired[LustreLogCreateConfigurationTypeDef]
     RootSquashConfiguration: NotRequired[LustreRootSquashConfigurationUnionTypeDef]
     MetadataConfiguration: NotRequired[CreateFileSystemLustreMetadataConfigurationTypeDef]
+    ThroughputCapacity: NotRequired[int]
+    DataReadCacheConfiguration: NotRequired[LustreReadCacheConfigurationTypeDef]
 
 class UpdateFileSystemLustreConfigurationTypeDef(TypedDict):
     WeeklyMaintenanceStartTime: NotRequired[str]
@@ -1236,6 +1246,8 @@ class UpdateFileSystemLustreConfigurationTypeDef(TypedDict):
     RootSquashConfiguration: NotRequired[LustreRootSquashConfigurationUnionTypeDef]
     PerUnitStorageThroughput: NotRequired[int]
     MetadataConfiguration: NotRequired[UpdateFileSystemLustreMetadataConfigurationTypeDef]
+    ThroughputCapacity: NotRequired[int]
+    DataReadCacheConfiguration: NotRequired[LustreReadCacheConfigurationTypeDef]
 
 OpenZFSVolumeConfigurationTypeDef = TypedDict(
     "OpenZFSVolumeConfigurationTypeDef",

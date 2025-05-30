@@ -7,6 +7,7 @@
 # @WeChat       : meutils
 # @Software     : PyCharm
 # @Description  :
+import os
 
 from meutils.pipe import *
 from meutils.decorators.retry import retrying
@@ -156,7 +157,7 @@ async def check_token_for_ppinfra(api_key, threshold: float = 1):
     try:
         client = AsyncOpenAI(base_url="https://api.ppinfra.com/v3/user", api_key=api_key)
         data = await client.get("", cast_to=object)
-        # logger.debug(data)  # credit_balance
+        logger.debug(data)  # credit_balance
         return data["credit_balance"] > threshold
     except TimeoutException as e:
         raise
@@ -166,8 +167,30 @@ async def check_token_for_ppinfra(api_key, threshold: float = 1):
         return False
 
 
+@retrying()
+async def check_token_for_sophnet(api_key, threshold: float = 1):
+    if not isinstance(api_key, str):
+        return await check_tokens(api_key, check_token_for_sophnet)
+
+    try:
+        client = AsyncOpenAI(base_url=os.getenv("SOPHNET_BASE_URL"), api_key=api_key)
+        data = await client.chat.completions.create(
+            model="DeepSeek-v3",
+            messages=[{"role": "user", "content": "hi"}],
+            stream=True,
+            max_tokens=1
+        )
+        return True
+    except TimeoutException as e:
+        raise
+
+    except Exception as e:
+        logger.error(f"Error: {e}\n{api_key}")
+        return False
+
+
 if __name__ == '__main__':
-    from meutils.config_utils.lark_utils import get_next_token_for_polling
+    from meutils.config_utils.lark_utils import get_next_token_for_polling, get_series
 
     check_valid_token = partial(check_token_for_siliconflow, threshold=-1)
 
@@ -189,4 +212,13 @@ if __name__ == '__main__':
 
     # arun(check_token_for_moonshot("sk-Qnr87vtf2Q6MEfc2mVNkVZ4qaoZg3smH9527I25QgcFe7HrT"))
 
-    arun(check_token_for_ppinfra("sk_DkIaRrPq7sTiRPevhjV9WFZN3FvLk6WhCXOj1JAwu6c"))
+    # arun(check_token_for_ppinfra("sk_DkIaRrPq7sTiRPevhjV9WFZN3FvLk6WhCXOj1JAwu6c"))
+
+    # from meutils.config_utils.lark_utils import get_next_token_for_polling, get_series
+    #
+    # arun(get_series("https://xchatllm.feishu.cn/sheets/Bmjtst2f6hfMqFttbhLcdfRJnNf?sheet=PP1PGr"))
+
+    # arun(check_token_for_sophnet(["gzHpp_zRtGaw1IjpepCiWu_ySyke3Hu5wR5VNNYMLyXwAESqZoZWUZ4T3tiWUxtac6n9Hk-kRRo4_jPQmndo-g"]))
+
+
+    arun(check_token_for_ppinfra("sk_F0kgPyCMTzmOH_-VCEJucOK8HIrbnLGYm_IWxBToHZQ"))

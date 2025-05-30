@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: azure-ai-evaluation
-Version: 1.7.0
+Version: 1.8.0
 Summary: Microsoft Azure Evaluation Library for Python
 Home-page: https://github.com/Azure/azure-sdk-for-python
 Author: Microsoft Corporation
@@ -399,6 +399,15 @@ This project has adopted the [Microsoft Open Source Code of Conduct][code_of_con
 
 
 # Release History
+
+## 1.8.0 (2025-05-29)
+
+### Features Added
+
+- Introduces `AttackStrategy.MultiTurn` and `AttackStrategy.Crescendo` to `RedTeam`. These strategies attack the target of a `RedTeam` scan over the course of multi-turn conversations. 
+
+### Bugs Fixed
+- AdversarialSimulator in `ADVERSARIAL_CONVERSATION` mode was broken. It is now fixed.
 
 ## 1.7.0 (2025-05-12)
 

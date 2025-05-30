@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: Unified-python-sdk
-Version: 0.46.3
+Version: 0.47.0
 Summary: Python Client SDK for Unified.to
 Author: Unified API Inc.
 Requires-Python: >=3.9.2
@@ -9,6 +9,7 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: httpcore (>=1.0.9)
 Requires-Dist: httpx (>=0.28.1)
 Requires-Dist: pydantic (>=2.11.2)
 Project-URL: Repository, https://github.com/unified-to/unified-python-sdk.git

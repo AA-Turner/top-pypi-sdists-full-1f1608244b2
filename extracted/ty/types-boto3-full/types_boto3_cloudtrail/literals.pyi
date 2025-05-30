@@ -42,6 +42,7 @@ __all__ = (
     "ListTrailsPaginatorName",
     "LookupAttributeKeyType",
     "LookupEventsPaginatorName",
+    "MaxEventSizeType",
     "PaginatorName",
     "QueryStatusType",
     "ReadWriteTypeType",
@@ -50,6 +51,7 @@ __all__ = (
     "RegionName",
     "ResourceServiceName",
     "ServiceName",
+    "TypeType",
 )
 
 BillingModeType = Literal["EXTENDABLE_RETENTION_PRICING", "FIXED_RETENTION_PRICING"]
@@ -97,10 +99,12 @@ LookupAttributeKeyType = Literal[
     "Username",
 ]
 LookupEventsPaginatorName = Literal["lookup_events"]
+MaxEventSizeType = Literal["Large", "Standard"]
 QueryStatusType = Literal["CANCELLED", "FAILED", "FINISHED", "QUEUED", "RUNNING", "TIMED_OUT"]
 ReadWriteTypeType = Literal["All", "ReadOnly", "WriteOnly"]
 RefreshScheduleFrequencyUnitType = Literal["DAYS", "HOURS"]
 RefreshScheduleStatusType = Literal["DISABLED", "ENABLED"]
+TypeType = Literal["RequestContext", "TagContext"]
 CloudTrailServiceName = Literal["cloudtrail"]
 ServiceName = Literal[
     "accessanalyzer",

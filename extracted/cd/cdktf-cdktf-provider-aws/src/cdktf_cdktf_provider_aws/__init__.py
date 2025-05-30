@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/aws provider version 5.98.0
+# CDKTF prebuilt bindings for hashicorp/aws provider version 5.99.0
 
-This repo builds and publishes the [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform aws provider version 1:1. 
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.98.0)
+* [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.99.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -1686,6 +1686,11 @@ __all__ = [
     "networkmanager_vpc_attachment",
     "networkmonitor_monitor",
     "networkmonitor_probe",
+    "notifications_channel_association",
+    "notifications_event_rule",
+    "notifications_notification_configuration",
+    "notifications_notification_hub",
+    "notificationscontacts_email_contact",
     "oam_link",
     "oam_sink",
     "oam_sink_policy",
@@ -1757,6 +1762,7 @@ __all__ = [
     "qbusiness_application",
     "qldb_ledger",
     "qldb_stream",
+    "quicksight_account_settings",
     "quicksight_account_subscription",
     "quicksight_analysis",
     "quicksight_dashboard",
@@ -2236,6 +2242,9 @@ __all__ = [
     "workspaces_directory",
     "workspaces_ip_group",
     "workspaces_workspace",
+    "workspacesweb_browser_settings",
+    "workspacesweb_network_settings",
+    "workspacesweb_user_settings",
     "xray_encryption_config",
     "xray_group",
     "xray_resource_policy",
@@ -3805,6 +3814,11 @@ from . import networkmanager_transit_gateway_route_table_attachment
 from . import networkmanager_vpc_attachment
 from . import networkmonitor_monitor
 from . import networkmonitor_probe
+from . import notifications_channel_association
+from . import notifications_event_rule
+from . import notifications_notification_configuration
+from . import notifications_notification_hub
+from . import notificationscontacts_email_contact
 from . import oam_link
 from . import oam_sink
 from . import oam_sink_policy
@@ -3876,6 +3890,7 @@ from . import proxy_protocol_policy
 from . import qbusiness_application
 from . import qldb_ledger
 from . import qldb_stream
+from . import quicksight_account_settings
 from . import quicksight_account_subscription
 from . import quicksight_analysis
 from . import quicksight_dashboard
@@ -4355,6 +4370,9 @@ from . import workspaces_connection_alias
 from . import workspaces_directory
 from . import workspaces_ip_group
 from . import workspaces_workspace
+from . import workspacesweb_browser_settings
+from . import workspacesweb_network_settings
+from . import workspacesweb_user_settings
 from . import xray_encryption_config
 from . import xray_group
 from . import xray_resource_policy

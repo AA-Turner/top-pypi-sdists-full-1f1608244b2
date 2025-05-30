@@ -1073,6 +1073,7 @@ class NotificationDetailsTypeDef(TypedDict):
 class CreateEventActionRequestTypeDef(TypedDict):
     Action: ActionTypeDef
     Event: EventTypeDef
+    Tags: NotRequired[Mapping[str, str]]
 
 
 class CreateEventActionResponseTypeDef(TypedDict):
@@ -1081,6 +1082,7 @@ class CreateEventActionResponseTypeDef(TypedDict):
     CreatedAt: datetime
     Event: EventTypeDef
     Id: str
+    Tags: Dict[str, str]
     UpdatedAt: datetime
     ResponseMetadata: ResponseMetadataTypeDef
 
@@ -1100,6 +1102,7 @@ class GetEventActionResponseTypeDef(TypedDict):
     CreatedAt: datetime
     Event: EventTypeDef
     Id: str
+    Tags: Dict[str, str]
     UpdatedAt: datetime
     ResponseMetadata: ResponseMetadataTypeDef
 

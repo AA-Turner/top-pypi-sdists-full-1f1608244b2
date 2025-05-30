@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pywatchman
-Version: 2.0.0
+Version: 3.0.0
 Summary: Watchman client for Python
 Author-email: Meta Source Control Team <sourcecontrol-dev@fb.com>
 License: The following license applies to all files within this directory and any
@@ -72,3 +72,14 @@ Classifier: Programming Language :: Python :: 3.11
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Dynamic: license-file
+
+# Watchman client for Python
+
+This directory contains the Watchman client for Python.
+
+## Build
+
+```sh
+python -m build
+```

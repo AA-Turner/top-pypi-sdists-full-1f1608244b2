@@ -815,6 +815,7 @@ from agilicus_api.model.usage_measurement import UsageMeasurement
 from agilicus_api.model.usage_metric import UsageMetric
 from agilicus_api.model.usage_metrics import UsageMetrics
 from agilicus_api.model.user import User
+from agilicus_api.model.user_access_info import UserAccessInfo
 from agilicus_api.model.user_application_access_info import UserApplicationAccessInfo
 from agilicus_api.model.user_application_access_info_status import UserApplicationAccessInfoStatus
 from agilicus_api.model.user_attribute import UserAttribute

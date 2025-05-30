@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: singlestoredb
-Version: 1.13.1
+Version: 1.14.0
 Summary: Interface to the SingleStoreDB database and workspace management APIs
 Home-page: https://github.com/singlestore-labs/singlestoredb-python
 Author: SingleStore
@@ -11,7 +11,7 @@ Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Topic :: Database
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 Provides-Extra: dataframe
 Provides-Extra: dbt

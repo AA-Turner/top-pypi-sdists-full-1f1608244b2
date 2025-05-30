@@ -26,6 +26,7 @@ from .literals import (
     AgentStatusType,
     AtimeType,
     AzureAccessTierType,
+    AzureBlobAuthenticationTypeType,
     EfsInTransitEncryptionType,
     EndpointTypeType,
     GidType,
@@ -79,6 +80,7 @@ __all__ = (
     "AzureBlobSasConfigurationTypeDef",
     "BlobTypeDef",
     "CancelTaskExecutionRequestTypeDef",
+    "CmkSecretConfigTypeDef",
     "CreateAgentRequestTypeDef",
     "CreateAgentResponseTypeDef",
     "CreateLocationAzureBlobRequestTypeDef",
@@ -105,6 +107,7 @@ __all__ = (
     "CreateLocationSmbResponseTypeDef",
     "CreateTaskRequestTypeDef",
     "CreateTaskResponseTypeDef",
+    "CustomSecretConfigTypeDef",
     "DeleteAgentRequestTypeDef",
     "DeleteLocationRequestTypeDef",
     "DeleteTaskRequestTypeDef",
@@ -163,6 +166,7 @@ __all__ = (
     "ListTasksResponseTypeDef",
     "LocationFilterTypeDef",
     "LocationListEntryTypeDef",
+    "ManagedSecretConfigTypeDef",
     "ManifestConfigTypeDef",
     "NfsMountOptionsTypeDef",
     "OnPremConfigOutputTypeDef",
@@ -224,6 +228,10 @@ BlobTypeDef = Union[str, bytes, IO[Any], StreamingBody]
 class CancelTaskExecutionRequestTypeDef(TypedDict):
     TaskExecutionArn: str
 
+class CmkSecretConfigTypeDef(TypedDict):
+    SecretArn: NotRequired[str]
+    KmsKeyArn: NotRequired[str]
+
 class TagListEntryTypeDef(TypedDict):
     Key: str
     Value: NotRequired[str]
@@ -234,6 +242,10 @@ class ResponseMetadataTypeDef(TypedDict):
     HTTPHeaders: Dict[str, str]
     RetryAttempts: int
     HostId: NotRequired[str]
+
+class CustomSecretConfigTypeDef(TypedDict):
+    SecretArn: NotRequired[str]
+    SecretAccessRoleArn: NotRequired[str]
 
 class HdfsNameNodeTypeDef(TypedDict):
     Hostname: str
@@ -297,6 +309,9 @@ class PrivateLinkConfigTypeDef(TypedDict):
 
 class DescribeLocationAzureBlobRequestTypeDef(TypedDict):
     LocationArn: str
+
+class ManagedSecretConfigTypeDef(TypedDict):
+    SecretArn: NotRequired[str]
 
 class DescribeLocationEfsRequestTypeDef(TypedDict):
     LocationArn: str
@@ -469,26 +484,6 @@ class AgentListEntryTypeDef(TypedDict):
     Status: NotRequired[AgentStatusType]
     Platform: NotRequired[PlatformTypeDef]
 
-class UpdateLocationAzureBlobRequestTypeDef(TypedDict):
-    LocationArn: str
-    Subdirectory: NotRequired[str]
-    AuthenticationType: NotRequired[Literal["SAS"]]
-    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
-    BlobType: NotRequired[Literal["BLOCK"]]
-    AccessTier: NotRequired[AzureAccessTierType]
-    AgentArns: NotRequired[Sequence[str]]
-
-class UpdateLocationObjectStorageRequestTypeDef(TypedDict):
-    LocationArn: str
-    ServerPort: NotRequired[int]
-    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
-    Subdirectory: NotRequired[str]
-    ServerHostname: NotRequired[str]
-    AccessKey: NotRequired[str]
-    SecretKey: NotRequired[str]
-    AgentArns: NotRequired[Sequence[str]]
-    ServerCertificate: NotRequired[BlobTypeDef]
-
 class CreateAgentRequestTypeDef(TypedDict):
     ActivationKey: str
     AgentName: NotRequired[str]
@@ -496,16 +491,6 @@ class CreateAgentRequestTypeDef(TypedDict):
     VpcEndpointId: NotRequired[str]
     SubnetArns: NotRequired[Sequence[str]]
     SecurityGroupArns: NotRequired[Sequence[str]]
-
-class CreateLocationAzureBlobRequestTypeDef(TypedDict):
-    ContainerUrl: str
-    AuthenticationType: Literal["SAS"]
-    AgentArns: Sequence[str]
-    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
-    BlobType: NotRequired[Literal["BLOCK"]]
-    AccessTier: NotRequired[AzureAccessTierType]
-    Subdirectory: NotRequired[str]
-    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
 
 class CreateLocationFsxLustreRequestTypeDef(TypedDict):
     FsxFilesystemArn: str
@@ -521,18 +506,6 @@ class CreateLocationFsxWindowsRequestTypeDef(TypedDict):
     Subdirectory: NotRequired[str]
     Tags: NotRequired[Sequence[TagListEntryTypeDef]]
     Domain: NotRequired[str]
-
-class CreateLocationObjectStorageRequestTypeDef(TypedDict):
-    ServerHostname: str
-    BucketName: str
-    AgentArns: Sequence[str]
-    ServerPort: NotRequired[int]
-    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
-    Subdirectory: NotRequired[str]
-    AccessKey: NotRequired[str]
-    SecretKey: NotRequired[str]
-    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
-    ServerCertificate: NotRequired[BlobTypeDef]
 
 class TagResourceRequestTypeDef(TypedDict):
     ResourceArn: str
@@ -590,16 +563,6 @@ class CreateTaskResponseTypeDef(TypedDict):
     TaskArn: str
     ResponseMetadata: ResponseMetadataTypeDef
 
-class DescribeLocationAzureBlobResponseTypeDef(TypedDict):
-    LocationArn: str
-    LocationUri: str
-    AuthenticationType: Literal["SAS"]
-    BlobType: Literal["BLOCK"]
-    AccessTier: AzureAccessTierType
-    AgentArns: List[str]
-    CreationTime: datetime
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class DescribeLocationFsxLustreResponseTypeDef(TypedDict):
     LocationArn: str
     LocationUri: str
@@ -616,17 +579,6 @@ class DescribeLocationFsxWindowsResponseTypeDef(TypedDict):
     Domain: str
     ResponseMetadata: ResponseMetadataTypeDef
 
-class DescribeLocationObjectStorageResponseTypeDef(TypedDict):
-    LocationArn: str
-    LocationUri: str
-    AccessKey: str
-    ServerPort: int
-    ServerProtocol: ObjectStorageServerProtocolType
-    AgentArns: List[str]
-    CreationTime: datetime
-    ServerCertificate: bytes
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class ListTagsForResourceResponseTypeDef(TypedDict):
     Tags: List[TagListEntryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -635,6 +587,56 @@ class ListTagsForResourceResponseTypeDef(TypedDict):
 class StartTaskExecutionResponseTypeDef(TypedDict):
     TaskExecutionArn: str
     ResponseMetadata: ResponseMetadataTypeDef
+
+class CreateLocationAzureBlobRequestTypeDef(TypedDict):
+    ContainerUrl: str
+    AuthenticationType: AzureBlobAuthenticationTypeType
+    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
+    BlobType: NotRequired[Literal["BLOCK"]]
+    AccessTier: NotRequired[AzureAccessTierType]
+    Subdirectory: NotRequired[str]
+    AgentArns: NotRequired[Sequence[str]]
+    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
+    CmkSecretConfig: NotRequired[CmkSecretConfigTypeDef]
+    CustomSecretConfig: NotRequired[CustomSecretConfigTypeDef]
+
+class CreateLocationObjectStorageRequestTypeDef(TypedDict):
+    ServerHostname: str
+    BucketName: str
+    ServerPort: NotRequired[int]
+    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
+    Subdirectory: NotRequired[str]
+    AccessKey: NotRequired[str]
+    SecretKey: NotRequired[str]
+    AgentArns: NotRequired[Sequence[str]]
+    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
+    ServerCertificate: NotRequired[BlobTypeDef]
+    CmkSecretConfig: NotRequired[CmkSecretConfigTypeDef]
+    CustomSecretConfig: NotRequired[CustomSecretConfigTypeDef]
+
+class UpdateLocationAzureBlobRequestTypeDef(TypedDict):
+    LocationArn: str
+    Subdirectory: NotRequired[str]
+    AuthenticationType: NotRequired[AzureBlobAuthenticationTypeType]
+    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
+    BlobType: NotRequired[Literal["BLOCK"]]
+    AccessTier: NotRequired[AzureAccessTierType]
+    AgentArns: NotRequired[Sequence[str]]
+    CmkSecretConfig: NotRequired[CmkSecretConfigTypeDef]
+    CustomSecretConfig: NotRequired[CustomSecretConfigTypeDef]
+
+class UpdateLocationObjectStorageRequestTypeDef(TypedDict):
+    LocationArn: str
+    ServerPort: NotRequired[int]
+    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
+    Subdirectory: NotRequired[str]
+    ServerHostname: NotRequired[str]
+    AccessKey: NotRequired[str]
+    SecretKey: NotRequired[str]
+    AgentArns: NotRequired[Sequence[str]]
+    ServerCertificate: NotRequired[BlobTypeDef]
+    CmkSecretConfig: NotRequired[CmkSecretConfigTypeDef]
+    CustomSecretConfig: NotRequired[CustomSecretConfigTypeDef]
 
 class CreateLocationHdfsRequestTypeDef(TypedDict):
     NameNodes: Sequence[HdfsNameNodeTypeDef]
@@ -775,6 +777,33 @@ class DescribeAgentResponseTypeDef(TypedDict):
     EndpointType: EndpointTypeType
     PrivateLinkConfig: PrivateLinkConfigTypeDef
     Platform: PlatformTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DescribeLocationAzureBlobResponseTypeDef(TypedDict):
+    LocationArn: str
+    LocationUri: str
+    AuthenticationType: AzureBlobAuthenticationTypeType
+    BlobType: Literal["BLOCK"]
+    AccessTier: AzureAccessTierType
+    AgentArns: List[str]
+    CreationTime: datetime
+    ManagedSecretConfig: ManagedSecretConfigTypeDef
+    CmkSecretConfig: CmkSecretConfigTypeDef
+    CustomSecretConfig: CustomSecretConfigTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DescribeLocationObjectStorageResponseTypeDef(TypedDict):
+    LocationArn: str
+    LocationUri: str
+    AccessKey: str
+    ServerPort: int
+    ServerProtocol: ObjectStorageServerProtocolType
+    AgentArns: List[str]
+    CreationTime: datetime
+    ServerCertificate: bytes
+    ManagedSecretConfig: ManagedSecretConfigTypeDef
+    CmkSecretConfig: CmkSecretConfigTypeDef
+    CustomSecretConfig: CustomSecretConfigTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class DescribeLocationEfsResponseTypeDef(TypedDict):
@@ -1003,6 +1032,8 @@ class DescribeTaskExecutionResponseTypeDef(TypedDict):
     FilesPrepared: int
     FilesListed: TaskExecutionFilesListedDetailTypeDef
     FilesFailed: TaskExecutionFilesFailedDetailTypeDef
+    LaunchTime: datetime
+    EndTime: datetime
     ResponseMetadata: ResponseMetadataTypeDef
 
 class DescribeTaskResponseTypeDef(TypedDict):

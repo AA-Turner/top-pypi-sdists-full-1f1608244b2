@@ -1,3 +1,6 @@
+# Copyright 2025 Daytona Platforms Inc.
+# SPDX-License-Identifier: AGPL-3.0
+
 import warnings
 from enum import Enum, EnumMeta
 from typing import Any, Callable, ParamSpec, Type, TypeVar, cast

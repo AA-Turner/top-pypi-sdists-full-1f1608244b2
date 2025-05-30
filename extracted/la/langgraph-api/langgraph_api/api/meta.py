@@ -54,10 +54,10 @@ async def meta_metrics(request: ApiRequest):
                 }
             )
     elif format == "prometheus":
-        # LANGSMITH_HOST_PROJECT_ID and HOSTED_LANGSERVE_REVISION_ID are injected
+        # LANGSMITH_HOST_PROJECT_ID and LANGSMITH_HOST_REVISION_ID are injected
         # into the deployed image by host-backend.
         project_id = os.getenv("LANGSMITH_HOST_PROJECT_ID")
-        revision_id = os.getenv("HOSTED_LANGSERVE_REVISION_ID")
+        revision_id = os.getenv("LANGSMITH_HOST_REVISION_ID")
 
         metrics = [
             "# HELP lg_api_workers_max The maximum number of workers available.",

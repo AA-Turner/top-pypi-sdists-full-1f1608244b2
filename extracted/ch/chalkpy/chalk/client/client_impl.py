@@ -2026,7 +2026,7 @@ https://docs.chalk.ai/cli/apply
         query_context: Mapping[str, JsonValue] | str | None = None,
         max_samples: Optional[int] = None,
         wait: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         recompute_features: Union[bool, List[FeatureReference]] = False,
         sample_features: Optional[List[FeatureReference]] = None,
@@ -2178,11 +2178,16 @@ https://docs.chalk.ai/cli/apply
         # Storing timeout for when we call dataset revision methods that
         # require polling
         revision.timeout = timeout
+        revision.show_progress = show_progress
 
         if not wait:
             return initialized_dataset
 
-        revision.wait_for_completion(show_progress=show_progress, timeout=timeout, caller_method="offline_query")
+        revision.wait_for_completion(
+            show_progress=show_progress if isinstance(show_progress, bool) else True,
+            timeout=timeout,
+            caller_method="offline_query",
+        )
         initialized_dataset.is_finished = True
         return initialized_dataset
 
@@ -2206,7 +2211,7 @@ https://docs.chalk.ai/cli/apply
         query_context: Mapping[str, JsonValue] | str | None = None,
         max_samples: Optional[int] = None,
         wait: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         recompute_features: Union[bool, List[FeatureReference]] = False,
         sample_features: Optional[List[FeatureReference]] = None,
@@ -2433,11 +2438,16 @@ https://docs.chalk.ai/cli/apply
         # Storing timeout for when we call dataset revision methods that
         # require polling
         revision.timeout = timeout
+        revision.show_progress = show_progress
 
         if not wait:
             return initialized_dataset
 
-        revision.wait_for_completion(show_progress=show_progress, timeout=timeout, caller_method="offline_query")
+        revision.wait_for_completion(
+            show_progress=show_progress if isinstance(show_progress, bool) else True,
+            timeout=timeout,
+            caller_method="offline_query",
+        )
         initialized_dataset.is_finished = True
         return initialized_dataset
 
@@ -2610,7 +2620,7 @@ https://docs.chalk.ai/cli/apply
         environment: Optional[EnvironmentId] = None,
         branch: Optional[Union[BranchId, ellipsis]] = ...,
         wait: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> DatasetImpl:
         output = _get_column_names(input)
@@ -2686,11 +2696,16 @@ https://docs.chalk.ai/cli/apply
         # Storing timeout for when we call dataset revision methods that
         # require polling
         revision.timeout = timeout
+        revision.show_progress = show_progress
 
         if not wait:
             return initialized_dataset
 
-        revision.wait_for_completion(show_progress=show_progress, timeout=timeout, caller_method="offline_query")
+        revision.wait_for_completion(
+            show_progress=show_progress if isinstance(show_progress, bool) else True,
+            timeout=timeout,
+            caller_method="offline_query",
+        )
         initialized_dataset.is_finished = True
         return initialized_dataset
 
@@ -3061,7 +3076,7 @@ https://docs.chalk.ai/cli/apply
         num_shards: int,
         correlation_id: str | None = None,
         wait: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         store_plan_stages: bool = False,
         explain: bool = False,
         tags: Optional[List[str]] = None,
@@ -3114,11 +3129,16 @@ https://docs.chalk.ai/cli/apply
         # Storing timeout for when we call dataset revision methods that
         # require polling
         revision.timeout = timeout
+        revision.show_progress = show_progress
 
         if not wait:
             return initialized_dataset
 
-        revision.wait_for_completion(show_progress=show_progress, timeout=timeout, caller_method="recompute")
+        revision.wait_for_completion(
+            show_progress=show_progress if isinstance(show_progress, bool) else True,
+            timeout=timeout,
+            caller_method="recompute",
+        )
         initialized_dataset.is_finished = True
         return initialized_dataset
 

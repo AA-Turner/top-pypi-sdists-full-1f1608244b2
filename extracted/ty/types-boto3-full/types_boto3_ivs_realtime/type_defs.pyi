@@ -35,6 +35,8 @@ from .literals import (
     ParticipantTokenCapabilityType,
     PipBehaviorType,
     PipPositionType,
+    ReplicationStateType,
+    ReplicationTypeType,
     ThumbnailRecordingModeType,
     ThumbnailStorageTypeType,
     VideoAspectRatioType,
@@ -119,6 +121,9 @@ __all__ = (
     "ListIngestConfigurationsResponseTypeDef",
     "ListParticipantEventsRequestTypeDef",
     "ListParticipantEventsResponseTypeDef",
+    "ListParticipantReplicasRequestPaginateTypeDef",
+    "ListParticipantReplicasRequestTypeDef",
+    "ListParticipantReplicasResponseTypeDef",
     "ListParticipantsRequestTypeDef",
     "ListParticipantsResponseTypeDef",
     "ListPublicKeysRequestPaginateTypeDef",
@@ -134,6 +139,7 @@ __all__ = (
     "ListTagsForResourceResponseTypeDef",
     "PaginatorConfigTypeDef",
     "ParticipantRecordingHlsConfigurationTypeDef",
+    "ParticipantReplicaTypeDef",
     "ParticipantSummaryTypeDef",
     "ParticipantThumbnailConfigurationOutputTypeDef",
     "ParticipantThumbnailConfigurationTypeDef",
@@ -157,7 +163,11 @@ __all__ = (
     "StageTypeDef",
     "StartCompositionRequestTypeDef",
     "StartCompositionResponseTypeDef",
+    "StartParticipantReplicationRequestTypeDef",
+    "StartParticipantReplicationResponseTypeDef",
     "StopCompositionRequestTypeDef",
+    "StopParticipantReplicationRequestTypeDef",
+    "StopParticipantReplicationResponseTypeDef",
     "StorageConfigurationSummaryTypeDef",
     "StorageConfigurationTypeDef",
     "TagResourceRequestTypeDef",
@@ -301,6 +311,9 @@ class EventTypeDef(TypedDict):
     eventTime: NotRequired[datetime]
     remoteParticipantId: NotRequired[str]
     errorCode: NotRequired[EventErrorCodeType]
+    destinationStageArn: NotRequired[str]
+    destinationSessionId: NotRequired[str]
+    replica: NotRequired[bool]
 
 class GetCompositionRequestTypeDef(TypedDict):
     arn: str
@@ -333,6 +346,10 @@ class ParticipantTypeDef(TypedDict):
     recordingS3Prefix: NotRequired[str]
     recordingState: NotRequired[ParticipantRecordingStateType]
     protocol: NotRequired[ParticipantProtocolType]
+    replicationType: NotRequired[ReplicationTypeType]
+    replicationState: NotRequired[ReplicationStateType]
+    sourceStageArn: NotRequired[str]
+    sourceSessionId: NotRequired[str]
 
 class GetPublicKeyRequestTypeDef(TypedDict):
     arn: str
@@ -420,6 +437,20 @@ class ListParticipantEventsRequestTypeDef(TypedDict):
     nextToken: NotRequired[str]
     maxResults: NotRequired[int]
 
+class ListParticipantReplicasRequestTypeDef(TypedDict):
+    sourceStageArn: str
+    participantId: str
+    nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
+
+class ParticipantReplicaTypeDef(TypedDict):
+    sourceStageArn: str
+    participantId: str
+    sourceSessionId: str
+    destinationStageArn: str
+    destinationSessionId: str
+    replicationState: ReplicationStateType
+
 class ListParticipantsRequestTypeDef(TypedDict):
     stageArn: str
     sessionId: str
@@ -437,6 +468,10 @@ class ParticipantSummaryTypeDef(TypedDict):
     firstJoinTime: NotRequired[datetime]
     published: NotRequired[bool]
     recordingState: NotRequired[ParticipantRecordingStateType]
+    replicationType: NotRequired[ReplicationTypeType]
+    replicationState: NotRequired[ReplicationStateType]
+    sourceStageArn: NotRequired[str]
+    sourceSessionId: NotRequired[str]
 
 class ListPublicKeysRequestTypeDef(TypedDict):
     nextToken: NotRequired[str]
@@ -480,8 +515,20 @@ class StageEndpointsTypeDef(TypedDict):
     rtmp: NotRequired[str]
     rtmps: NotRequired[str]
 
+class StartParticipantReplicationRequestTypeDef(TypedDict):
+    sourceStageArn: str
+    destinationStageArn: str
+    participantId: str
+    reconnectWindowSeconds: NotRequired[int]
+    attributes: NotRequired[Mapping[str, str]]
+
 class StopCompositionRequestTypeDef(TypedDict):
     arn: str
+
+class StopParticipantReplicationRequestTypeDef(TypedDict):
+    sourceStageArn: str
+    destinationStageArn: str
+    participantId: str
 
 class TagResourceRequestTypeDef(TypedDict):
     resourceArn: str
@@ -501,6 +548,7 @@ class AutoParticipantRecordingConfigurationOutputTypeDef(TypedDict):
     thumbnailConfiguration: NotRequired[ParticipantThumbnailConfigurationOutputTypeDef]
     recordingReconnectWindowSeconds: NotRequired[int]
     hlsConfiguration: NotRequired[ParticipantRecordingHlsConfigurationTypeDef]
+    recordParticipantReplicas: NotRequired[bool]
 
 class AutoParticipantRecordingConfigurationTypeDef(TypedDict):
     storageConfigurationArn: str
@@ -508,6 +556,7 @@ class AutoParticipantRecordingConfigurationTypeDef(TypedDict):
     thumbnailConfiguration: NotRequired[ParticipantThumbnailConfigurationTypeDef]
     recordingReconnectWindowSeconds: NotRequired[int]
     hlsConfiguration: NotRequired[ParticipantRecordingHlsConfigurationTypeDef]
+    recordParticipantReplicas: NotRequired[bool]
 
 RecordingConfigurationTypeDef = TypedDict(
     "RecordingConfigurationTypeDef",
@@ -543,6 +592,26 @@ class EncoderConfigurationTypeDef(TypedDict):
 
 class ListTagsForResourceResponseTypeDef(TypedDict):
     tags: Dict[str, str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartParticipantReplicationResponseTypeDef(TypedDict):
+    accessControlAllowOrigin: str
+    accessControlExposeHeaders: str
+    cacheControl: str
+    contentSecurityPolicy: str
+    strictTransportSecurity: str
+    xContentTypeOptions: str
+    xFrameOptions: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StopParticipantReplicationResponseTypeDef(TypedDict):
+    accessControlAllowOrigin: str
+    accessControlExposeHeaders: str
+    cacheControl: str
+    contentSecurityPolicy: str
+    strictTransportSecurity: str
+    xContentTypeOptions: str
+    xFrameOptions: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 class CreateIngestConfigurationResponseTypeDef(TypedDict):
@@ -621,8 +690,18 @@ class ListIngestConfigurationsRequestPaginateTypeDef(TypedDict):
     filterByState: NotRequired[IngestConfigurationStateType]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
+class ListParticipantReplicasRequestPaginateTypeDef(TypedDict):
+    sourceStageArn: str
+    participantId: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
 class ListPublicKeysRequestPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListParticipantReplicasResponseTypeDef(TypedDict):
+    replicas: List[ParticipantReplicaTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 class ListParticipantsResponseTypeDef(TypedDict):
     participants: List[ParticipantSummaryTypeDef]

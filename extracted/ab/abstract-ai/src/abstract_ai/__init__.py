@@ -1,5 +1,6 @@
 from .specializations import *
 from .specializations.database_query import *
+from .gpt_classes import search_in_conversation
 from .gpt_classes.api_selection.ApiBuilder import ApiManager
 from .gpt_classes.model_selection.ModelBuilder import ModelManager
 from .gpt_classes.prompt_selection.PromptBuilder import PromptManager

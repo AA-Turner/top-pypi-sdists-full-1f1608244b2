@@ -11,7 +11,13 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
@@ -172,7 +178,6 @@ class Root(PyMenu):
     class add_labels_on_cell_zones(PyCommand):
         """
         Add labels on the specified cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -194,12 +199,42 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.add_labels_on_cell_zones(cell_zone_id_list=[87], label_name_list=["87-1"])
         >>> meshing_session.meshing_utilities.add_labels_on_cell_zones(cell_zone_name_pattern="*", label_name_list=["cell-1"])
         """
-        pass
+        class _add_labels_on_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _add_labels_on_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._add_labels_on_cell_zonesCommandArguments(*args)
 
     class add_labels_on_edge_zones(PyCommand):
         """
         Add labels on the specified edge zones.
-
         Parameters
         ----------
         edge_zone_id_list : list[int]
@@ -221,12 +256,42 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.add_labels_on_edge_zones(edge_zone_id_list=[22, 23], label_name_list=["22-1", "23-1"])
         >>> meshing_session.meshing_utilities.add_labels_on_edge_zones(edge_zone_name_pattern="cold-inlet*", label_name_list=["26-1"])
         """
-        pass
+        class _add_labels_on_edge_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.edge_zone_name_pattern = self._edge_zone_name_pattern(self, "edge_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _edge_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _add_labels_on_edge_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._add_labels_on_edge_zonesCommandArguments(*args)
 
     class add_labels_on_face_zones(PyCommand):
         """
         Add labels on the specified face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -248,7 +313,38 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.add_labels_on_face_zones(face_zone_id_list=[30, 31], label_name_list=["hot-inlet-1", "cold-inlet-1"])
         >>> meshing_session.meshing_utilities.add_labels_on_face_zones(face_zone_name_pattern="out*", label_name_list=["outlet-1"])
         """
-        pass
+        class _add_labels_on_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _add_labels_on_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._add_labels_on_face_zonesCommandArguments(*args)
 
     class clean_face_zone_names(PyCommand):
         """
@@ -262,7 +358,14 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.clean_face_zone_names()
         """
-        pass
+        class _clean_face_zone_namesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _clean_face_zone_namesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._clean_face_zone_namesCommandArguments(*args)
 
     class delete_all_sub_domains(PyCommand):
         """
@@ -276,12 +379,18 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.delete_all_sub_domains()
         """
-        pass
+        class _delete_all_sub_domainsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _delete_all_sub_domainsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_all_sub_domainsCommandArguments(*args)
 
     class delete_empty_cell_zones(PyCommand):
         """
         Delete empty cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -301,12 +410,36 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_cell_zones(cell_zone_name_list=["elbow.87"])
         >>> meshing_session.meshing_utilities.delete_empty_cell_zones(cell_zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_cell_zonesCommandArguments(*args)
 
     class delete_empty_edge_zones(PyCommand):
         """
         Delete empty edge zones.
-
         Parameters
         ----------
         edge_zone_id_list : list[int]
@@ -326,12 +459,36 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_edge_zones("symmetry:xyplane:hot-inlet:elbow-fluid:feature.20", "hot-inlet:wall-inlet:elbow-fluid:feature.21")
         >>> meshing_session.meshing_utilities.delete_empty_edge_zones(edge_zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_edge_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.edge_zone_name_pattern = self._edge_zone_name_pattern(self, "edge_zone_name_pattern", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _edge_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_edge_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_edge_zonesCommandArguments(*args)
 
     class delete_empty_face_zones(PyCommand):
         """
         Delete empty face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -351,12 +508,36 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_face_zones(face_zone_name_list=["wall-inlet", "wallfluid-new"])
         >>> meshing_session.meshing_utilities.delete_empty_face_zones(face_zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_face_zonesCommandArguments(*args)
 
     class delete_empty_zones(PyCommand):
         """
         Delete empty zones based on the zones specified.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -376,12 +557,36 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_zones(zone_name_list=["hotfluid-new", "elbow.87"])
         >>> meshing_session.meshing_utilities.delete_empty_zones(zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id_list = self._zone_id_list(self, "zone_id_list", service, rules, path)
+                self.zone_name_list = self._zone_name_list(self, "zone_name_list", service, rules, path)
+                self.zone_name_pattern = self._zone_name_pattern(self, "zone_name_pattern", service, rules, path)
+
+            class _zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id_list.
+                """
+
+            class _zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name_list.
+                """
+
+            class _zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_zonesCommandArguments(*args)
 
     class delete_marked_faces_in_zones(PyCommand):
         """
         Delete marked faces.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -401,13 +606,37 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_marked_faces_in_zones(face_zone_name_list=["wall-inlet", "wallfluid-new"])
         >>> meshing_session.meshing_utilities.delete_marked_faces_in_zones(face_zone_name_pattern="*")
         """
-        pass
+        class _delete_marked_faces_in_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_marked_faces_in_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_marked_faces_in_zonesCommandArguments(*args)
 
     class merge_cell_zones(PyCommand):
         """
         - Merges the specified cell zones.
         - Specify a list of cell zones or name pattern.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -427,12 +656,36 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.merge_cell_zones(cell_zone_name_list=["elbow-fluid"])
         >>> meshing_session.meshing_utilities.merge_cell_zones(cell_zone_name_pattern="*")
         """
-        pass
+        class _merge_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _merge_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_cell_zonesCommandArguments(*args)
 
     class merge_cell_zones_with_same_prefix(PyCommand):
         """
         Merge cell zones containing the specified prefix.
-
         Parameters
         ----------
         prefix : str
@@ -446,12 +699,24 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_cell_zones_with_same_prefix(prefix="elbow")
         """
-        pass
+        class _merge_cell_zones_with_same_prefixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.prefix = self._prefix(self, "prefix", service, rules, path)
+
+            class _prefix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument prefix.
+                """
+
+        def create_instance(self) -> _merge_cell_zones_with_same_prefixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_cell_zones_with_same_prefixCommandArguments(*args)
 
     class merge_cell_zones_with_same_suffix(PyCommand):
         """
         Merge cell zones containing the specified suffix.
-
         Parameters
         ----------
         suffix : str
@@ -465,13 +730,25 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_cell_zones_with_same_suffix(suffix="fluid")
         """
-        pass
+        class _merge_cell_zones_with_same_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.suffix = self._suffix(self, "suffix", service, rules, path)
+
+            class _suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument suffix.
+                """
+
+        def create_instance(self) -> _merge_cell_zones_with_same_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_cell_zones_with_same_suffixCommandArguments(*args)
 
     class merge_face_zones(PyCommand):
         """
         - Merges the specified face zones.
         - Specify a list of zone IDs or name pattern.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -488,12 +765,30 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.merge_face_zones(face_zone_id_list=[30, 31, 32])
         >>> meshing_session.meshing_utilities.merge_face_zones(face_zone_name_pattern="wall*")
         """
-        pass
+        class _merge_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _merge_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_face_zonesCommandArguments(*args)
 
     class merge_face_zones_of_type(PyCommand):
         """
         Merges face zones of a given type based on name pattern.
-
         Parameters
         ----------
         face_zone_type : str
@@ -509,12 +804,30 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_face_zones_of_type(face_zone_type="velocity-inlet", face_zone_name_pattern="*")
         """
-        pass
+        class _merge_face_zones_of_typeCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_type = self._face_zone_type(self, "face_zone_type", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_type(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_type.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _merge_face_zones_of_typeCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_face_zones_of_typeCommandArguments(*args)
 
     class merge_face_zones_with_same_prefix(PyCommand):
         """
         Merge face zones containing the specified prefix.
-
         Parameters
         ----------
         prefix : str
@@ -528,7 +841,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_face_zones_with_same_prefix(prefix="elbow")
         """
-        pass
+        class _merge_face_zones_with_same_prefixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.prefix = self._prefix(self, "prefix", service, rules, path)
+
+            class _prefix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument prefix.
+                """
+
+        def create_instance(self) -> _merge_face_zones_with_same_prefixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_face_zones_with_same_prefixCommandArguments(*args)
 
     class remove_id_suffix_from_face_zones(PyCommand):
         """
@@ -542,12 +868,18 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.remove_id_suffix_from_face_zones()
         """
-        pass
+        class _remove_id_suffix_from_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _remove_id_suffix_from_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_id_suffix_from_face_zonesCommandArguments(*args)
 
     class remove_ids_from_zone_names(PyCommand):
         """
         Remove the zone ID from zone ID list.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -561,12 +893,24 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.remove_ids_from_zone_names(zone_id_list=[30, 31, 32])
         """
-        pass
+        class _remove_ids_from_zone_namesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id_list = self._zone_id_list(self, "zone_id_list", service, rules, path)
+
+            class _zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id_list.
+                """
+
+        def create_instance(self) -> _remove_ids_from_zone_namesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_ids_from_zone_namesCommandArguments(*args)
 
     class remove_labels_on_cell_zones(PyCommand):
         """
         Removes the specified labels from the cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -588,12 +932,42 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.remove_labels_on_cell_zones(cell_zone_id_list=[87], label_name_list=["87-1"])
         >>> meshing_session.meshing_utilities.remove_labels_on_cell_zones(cell_zone_name_pattern="*", label_name_list=["cell-1"])
         """
-        pass
+        class _remove_labels_on_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _remove_labels_on_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_labels_on_cell_zonesCommandArguments(*args)
 
     class remove_labels_on_edge_zones(PyCommand):
         """
         Removes the specified labels from the edge zones.
-
         Parameters
         ----------
         edge_zone_id_list : list[int]
@@ -615,12 +989,42 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.remove_labels_on_edge_zones(edge_zone_id_list=[22], label_name_list=["22-1"])
         >>> meshing_session.meshing_utilities.remove_labels_on_edge_zones(edge_zone_name_pattern="*", label_name_list=["26-1"])
         """
-        pass
+        class _remove_labels_on_edge_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.edge_zone_name_pattern = self._edge_zone_name_pattern(self, "edge_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _edge_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _remove_labels_on_edge_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_labels_on_edge_zonesCommandArguments(*args)
 
     class remove_labels_on_face_zones(PyCommand):
         """
         Removes the specified labels from the face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -642,12 +1046,42 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.remove_labels_on_face_zones(face_zone_id_list=[30], label_name_list=["hot-inlet-1"])
         >>> meshing_session.meshing_utilities.remove_labels_on_face_zones(face_zone_name_pattern="*", label_name_list=["wall-elbow-1"])
         """
-        pass
+        class _remove_labels_on_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _remove_labels_on_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_labels_on_face_zonesCommandArguments(*args)
 
     class rename_edge_zone(PyCommand):
         """
         Renames an existing edge zone.
-
         Parameters
         ----------
         zone_id : int
@@ -665,12 +1099,36 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.rename_edge_zone(zone_id=20, new_name="symmetry:xyplane:hot-inlet:elbow-fluid:feature.20-new")
         """
-        pass
+        class _rename_edge_zoneCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id = self._zone_id(self, "zone_id", service, rules, path)
+                self.zone_name = self._zone_name(self, "zone_name", service, rules, path)
+                self.new_name = self._new_name(self, "new_name", service, rules, path)
+
+            class _zone_id(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id.
+                """
+
+            class _zone_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name.
+                """
+
+            class _new_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_name.
+                """
+
+        def create_instance(self) -> _rename_edge_zoneCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_edge_zoneCommandArguments(*args)
 
     class rename_face_zone(PyCommand):
         """
         Renames an existing face zone.
-
         Parameters
         ----------
         zone_id : int
@@ -690,12 +1148,36 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.rename_face_zone(zone_id=32, new_name="outlet-32")
         >>> meshing_session.meshing_utilities.rename_face_zone(zone_name="outlet-32", new_name="outlet")
         """
-        pass
+        class _rename_face_zoneCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id = self._zone_id(self, "zone_id", service, rules, path)
+                self.zone_name = self._zone_name(self, "zone_name", service, rules, path)
+                self.new_name = self._new_name(self, "new_name", service, rules, path)
+
+            class _zone_id(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id.
+                """
+
+            class _zone_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name.
+                """
+
+            class _new_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_name.
+                """
+
+        def create_instance(self) -> _rename_face_zoneCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_face_zoneCommandArguments(*args)
 
     class rename_face_zone_label(PyCommand):
         """
         Renames the face zone label.
-
         Parameters
         ----------
         object_name : str
@@ -713,12 +1195,36 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.rename_face_zone_label(object_name="elbow-fluid-1", old_label_name="outlet", new_label_name="outlet-new")
         """
-        pass
+        class _rename_face_zone_labelCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name = self._object_name(self, "object_name", service, rules, path)
+                self.old_label_name = self._old_label_name(self, "old_label_name", service, rules, path)
+                self.new_label_name = self._new_label_name(self, "new_label_name", service, rules, path)
+
+            class _object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name.
+                """
+
+            class _old_label_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_label_name.
+                """
+
+            class _new_label_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_label_name.
+                """
+
+        def create_instance(self) -> _rename_face_zone_labelCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_face_zone_labelCommandArguments(*args)
 
     class rename_object(PyCommand):
         """
         Renames the object.
-
         Parameters
         ----------
         old_object_name : str
@@ -734,12 +1240,30 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.rename_object(old_object_name="elbow-fluid", new_object_name="elbow-fluid-1")
         """
-        pass
+        class _rename_objectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.old_object_name = self._old_object_name(self, "old_object_name", service, rules, path)
+                self.new_object_name = self._new_object_name(self, "new_object_name", service, rules, path)
+
+            class _old_object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_object_name.
+                """
+
+            class _new_object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_object_name.
+                """
+
+        def create_instance(self) -> _rename_objectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_objectCommandArguments(*args)
 
     class renumber_zone_ids(PyCommand):
         """
         Renumber zone IDs starting from the number specified (start_number).
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -755,13 +1279,31 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.renumber_zone_ids(zone_id_list=[30, 31, 32], start_number=1)
         """
-        pass
+        class _renumber_zone_idsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id_list = self._zone_id_list(self, "zone_id_list", service, rules, path)
+                self.start_number = self._start_number(self, "start_number", service, rules, path)
+
+            class _zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id_list.
+                """
+
+            class _start_number(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument start_number.
+                """
+
+        def create_instance(self) -> _renumber_zone_idsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._renumber_zone_idsCommandArguments(*args)
 
     class replace_cell_zone_suffix(PyCommand):
         """
         - Replace the cell zone suffix to rename cell zones.
         - Specify whether to merge the cell zones being renamed (set merge to True or False).
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -784,13 +1326,49 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.replace_cell_zone_suffix(cell_zone_id_list=[87], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         >>> meshing_session.meshing_utilities.replace_cell_zone_suffix(cell_zone_name_list=["elbow-fluid-new"], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         """
-        pass
+        class _replace_cell_zone_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.old_suffix = self._old_suffix(self, "old_suffix", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+                self.merge = self._merge(self, "merge", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _old_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_suffix.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+            class _merge(PyParameterCommandArgumentsSubItem):
+                """
+                Argument merge.
+                """
+
+        def create_instance(self) -> _replace_cell_zone_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_cell_zone_suffixCommandArguments(*args)
 
     class replace_edge_zone_suffix(PyCommand):
         """
         - Replace the edge zone suffix to rename edge zones.
         - Specify whether to merge the edge zones being renamed (set merge to True or False).
-
         Parameters
         ----------
         edge_zone_id_list : list[int]
@@ -813,14 +1391,50 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.replace_edge_zone_suffix(edge_zone_id_list=[20], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         >>> meshing_session.meshing_utilities.replace_edge_zone_suffix(edge_zone_name_list=["hot-inlet:wall-inlet:elbow-fluid:feature.21"], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         """
-        pass
+        class _replace_edge_zone_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.old_suffix = self._old_suffix(self, "old_suffix", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+                self.merge = self._merge(self, "merge", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _old_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_suffix.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+            class _merge(PyParameterCommandArgumentsSubItem):
+                """
+                Argument merge.
+                """
+
+        def create_instance(self) -> _replace_edge_zone_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_edge_zone_suffixCommandArguments(*args)
 
     class replace_face_zone_suffix(PyCommand):
         """
         - Replace the face zone suffix to rename face zones.
         - Specify whether to merge the face zones being renamed (set merge to True or False).
         - Note - If an empty string is specified for the separator (' '), the string specified for replace with will be appended to the face zone names.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -843,12 +1457,48 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.replace_face_zone_suffix(face_zone_id_list=[30, 31, 32], separator="-suffix-", replace_with="-with-", merge=False)
         >>> meshing_session.meshing_utilities.replace_face_zone_suffix(face_zone_name_list=["cold-inlet", "hot-inlet"], separator="-suffix-", replace_with="-with-", merge=False)
         """
-        pass
+        class _replace_face_zone_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.separator = self._separator(self, "separator", service, rules, path)
+                self.replace_with = self._replace_with(self, "replace_with", service, rules, path)
+                self.merge = self._merge(self, "merge", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _separator(PyTextualCommandArgumentsSubItem):
+                """
+                Argument separator.
+                """
+
+            class _replace_with(PyTextualCommandArgumentsSubItem):
+                """
+                Argument replace_with.
+                """
+
+            class _merge(PyParameterCommandArgumentsSubItem):
+                """
+                Argument merge.
+                """
+
+        def create_instance(self) -> _replace_face_zone_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_face_zone_suffixCommandArguments(*args)
 
     class replace_label_suffix(PyCommand):
         """
         Rename labels by replacing the label suffix with a new suffix.
-
         Parameters
         ----------
         object_name_list : list[str]
@@ -866,12 +1516,36 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.replace_label_suffix(object_name_list=["elbow-fluid-1"], separator="-", new_suffix="fluid-new")
         """
-        pass
+        class _replace_label_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name_list = self._object_name_list(self, "object_name_list", service, rules, path)
+                self.separator = self._separator(self, "separator", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+
+            class _object_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name_list.
+                """
+
+            class _separator(PyTextualCommandArgumentsSubItem):
+                """
+                Argument separator.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+        def create_instance(self) -> _replace_label_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_label_suffixCommandArguments(*args)
 
     class replace_object_suffix(PyCommand):
         """
         Rename objects by replacing the object suffix with a new suffix.
-
         Parameters
         ----------
         object_name_list : list[str]
@@ -889,14 +1563,38 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.replace_object_suffix(object_name_list=["elbow-fluid"], separator="-", new_suffix="fluid-new")
         """
-        pass
+        class _replace_object_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name_list = self._object_name_list(self, "object_name_list", service, rules, path)
+                self.separator = self._separator(self, "separator", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+
+            class _object_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name_list.
+                """
+
+            class _separator(PyTextualCommandArgumentsSubItem):
+                """
+                Argument separator.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+        def create_instance(self) -> _replace_object_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_object_suffixCommandArguments(*args)
 
     class set_number_of_parallel_compute_threads(PyCommand):
         """
         - Set the number of compute threads to use for algorithms like mesh check and quality computation.
         - You can use a variable number of compute threads for these algorithms depending on the current machine loads.
         - The number of compute threads is between 2 and the value (maximum-cores-available - 1).
-
         Parameters
         ----------
         nthreads : int
@@ -910,12 +1608,24 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.set_number_of_parallel_compute_threads(nthreads=2)
         """
-        pass
+        class _set_number_of_parallel_compute_threadsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.nthreads = self._nthreads(self, "nthreads", service, rules, path)
+
+            class _nthreads(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument nthreads.
+                """
+
+        def create_instance(self) -> _set_number_of_parallel_compute_threadsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._set_number_of_parallel_compute_threadsCommandArguments(*args)
 
     class set_object_cell_zone_type(PyCommand):
         """
         Set object cell zone type.
-
         Parameters
         ----------
         object_name : str
@@ -931,13 +1641,31 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.set_object_cell_zone_type(object_name="elbow-fluid", cell_zone_type="mixed")
         """
-        pass
+        class _set_object_cell_zone_typeCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name = self._object_name(self, "object_name", service, rules, path)
+                self.cell_zone_type = self._cell_zone_type(self, "cell_zone_type", service, rules, path)
+
+            class _object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name.
+                """
+
+            class _cell_zone_type(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_type.
+                """
+
+        def create_instance(self) -> _set_object_cell_zone_typeCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._set_object_cell_zone_typeCommandArguments(*args)
 
     class set_quality_measure(PyCommand):
         """
         - Set the quality measure.
         - Specify the 'measure' as one of the 'Orthogonal Quality', 'Skewness', 'Equiangle Skewness', 'Size Change', 'Edge Ratio', 'Size', 'Aspect Ratio', 'Squish', 'Warp', 'Dihedral Angle', 'ICEMCFD Quality', 'Ortho Skew', 'FLUENT Aspect Ratio', 'Inverse Orthogonal Quality' value.
-
         Parameters
         ----------
         measure : str
@@ -951,7 +1679,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.set_quality_measure(measure="Aspect Ratio")
         """
-        pass
+        class _set_quality_measureCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.measure = self._measure(self, "measure", service, rules, path)
+
+            class _measure(PyTextualCommandArgumentsSubItem):
+                """
+                Argument measure.
+                """
+
+        def create_instance(self) -> _set_quality_measureCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._set_quality_measureCommandArguments(*args)
 
     class _cell_zones_labels_fdl(PyQuery):
         """
@@ -1138,7 +1879,6 @@ class Root(PyMenu):
     class boundary_zone_exists(PyQuery):
         """
         Report if the boundary face zone exists.
-
         Parameters
         ----------
         zone_id : int
@@ -1160,7 +1900,6 @@ class Root(PyMenu):
     class cell_zone_exists(PyQuery):
         """
         Report if the volume mesh exists.
-
         Parameters
         ----------
         zone_id : int
@@ -1182,7 +1921,6 @@ class Root(PyMenu):
     class convert_zone_ids_to_name_strings(PyQuery):
         """
         Convert a list of IDs to a list of names.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -1201,7 +1939,6 @@ class Root(PyMenu):
     class convert_zone_name_strings_to_ids(PyQuery):
         """
         Convert a list of zone name strings to a list of IDs.
-
         Parameters
         ----------
         zone_name_list : list[str]
@@ -1221,7 +1958,6 @@ class Root(PyMenu):
         """
         - Copy labels from one face zone to another.
         - Specify either face zone names or IDs.
-
         Parameters
         ----------
         from_face_zone_id : int
@@ -1246,7 +1982,6 @@ class Root(PyMenu):
     class count_marked_faces(PyQuery):
         """
         Returns the count of marked faces for the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1272,7 +2007,6 @@ class Root(PyMenu):
         - Create bodies of influence and if required body of influence size functions from the mesh refinement regions.
         - Specify the refinement region type (set 'region_type' to 'tet' or 'hexcore').
         - Specify the prefix for the BOI zones ('boi_prefix_string'), and choose whether to create the size functions (set create_size_function to True or False).
-
         Parameters
         ----------
         region_type : str
@@ -1295,7 +2029,6 @@ class Root(PyMenu):
     class dump_face_zone_orientation_in_region(PyQuery):
         """
         Return the face zones and their orientation for the mesh file specified.
-
         Parameters
         ----------
         file_name : str
@@ -1314,7 +2047,6 @@ class Root(PyMenu):
     class fill_holes_in_face_zone_list(PyQuery):
         """
         Fill holes associated with free edges for the face zones specified, based on the number of free edges (max_hole_edges).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1341,7 +2073,6 @@ class Root(PyMenu):
     class get_adjacent_cell_zones_for_given_face_zones(PyQuery):
         """
         Return adjacent cell zones for given face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1366,7 +2097,6 @@ class Root(PyMenu):
     class get_adjacent_face_zones_for_given_cell_zones(PyQuery):
         """
         Return adjacent boundary face zones for given cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -1391,7 +2121,6 @@ class Root(PyMenu):
     class get_adjacent_interior_and_boundary_face_zones_for_given_cell_zones(PyQuery):
         """
         Return adjacent interior and boundary face zones for given cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -1416,7 +2145,6 @@ class Root(PyMenu):
     class get_adjacent_zones_by_edge_connectivity(PyQuery):
         """
         Return adjacent zones based on edge connectivity.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -1441,7 +2169,6 @@ class Root(PyMenu):
     class get_adjacent_zones_by_node_connectivity(PyQuery):
         """
         Return adjacent zones based on node connectivity.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -1480,7 +2207,6 @@ class Root(PyMenu):
     class get_average_bounding_box_center(PyQuery):
         """
         Return a suitable average point based on the zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1499,7 +2225,6 @@ class Root(PyMenu):
     class get_baffles_for_face_zones(PyQuery):
         """
         Return the baffle zones based on the face zone list specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1518,7 +2243,6 @@ class Root(PyMenu):
     class get_bounding_box_of_zone_list(PyQuery):
         """
         Return the bounding box extents for the list of zones.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -1538,7 +2262,6 @@ class Root(PyMenu):
         """
         - Report the cell mesh distribution based on the specified measure, partitions, and range.
         - Specify the 'measure' as one of the 'Orthogonal Quality', 'Skewness', 'Equiangle Skewness', 'Size Change', 'Edge Ratio', 'Size', 'Aspect Ratio', 'Squish', 'Warp', 'Dihedral Angle', 'ICEMCFD Quality', 'Ortho Skew', 'FLUENT Aspect Ratio', 'Inverse Orthogonal Quality' value.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -1571,7 +2294,6 @@ class Root(PyMenu):
         - Report the number of cells and the cell quality limits (minimum, maximum, average quality) for the list of zones based on the measure specified.
         - You can also report the cell size limits.
         - Specify the 'measure' as one of the 'Orthogonal Quality', 'Skewness', 'Equiangle Skewness', 'Size Change', 'Edge Ratio', 'Size', 'Aspect Ratio', 'Squish', 'Warp', 'Dihedral Angle', 'ICEMCFD Quality', 'Ortho Skew', 'FLUENT Aspect Ratio', 'Inverse Orthogonal Quality' value.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -1598,7 +2320,6 @@ class Root(PyMenu):
     class get_cell_zone_count(PyQuery):
         """
         Return count of entities for cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -1623,7 +2344,6 @@ class Root(PyMenu):
     class get_cell_zone_id_list_with_labels(PyQuery):
         """
         Returns the list of cell zones (by ID) containing the labels specified.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -1650,7 +2370,6 @@ class Root(PyMenu):
     class get_cell_zone_shape(PyQuery):
         """
         Return cell zone shape as string.
-
         Parameters
         ----------
         cell_zone_id : int
@@ -1669,7 +2388,6 @@ class Root(PyMenu):
     class get_cell_zone_volume(PyQuery):
         """
         Return cell zone volume for the specified zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -1698,7 +2416,6 @@ class Root(PyMenu):
         - Return a list of cell zones with a count below the maximum entity count (maximum_entity_count) specified.
         - You can choose to restrict the report to only boundary cell zones, if required (only_boundary set to True or False).
         - Return a list of zones whose names contain the specified filter string.
-
         Parameters
         ----------
         maximum_entity_count : float
@@ -1723,7 +2440,6 @@ class Root(PyMenu):
     class get_edge_size_limits(PyQuery):
         """
         Report the edge size limits for the list of face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1748,7 +2464,6 @@ class Root(PyMenu):
     class get_edge_zone_id_list_with_labels(PyQuery):
         """
         Returns the list of edge zones (by ID) containing the labels specified.
-
         Parameters
         ----------
         edge_zone_id_list : list[int]
@@ -1777,7 +2492,6 @@ class Root(PyMenu):
         - Get edge zones using 1 - maximum_entity_count and only_boundary or 2 - filter Return a list of edge zones with a count below the maximum entity count (maximum_entity_count) specified.
         - You can choose to restrict the report to only boundary edge zones, if required (only_boundary set to True or False).
         - Return a list of zones whose names contain the specified filter string.
-
         Parameters
         ----------
         maximum_entity_count : float
@@ -1801,7 +2515,6 @@ class Root(PyMenu):
     class get_edge_zones_list(PyQuery):
         """
         Return a list of edge zones whose names contain the specified filter string.
-
         Parameters
         ----------
         filter : list[str]
@@ -1820,7 +2533,6 @@ class Root(PyMenu):
     class get_edge_zones_of_object(PyQuery):
         """
         Return a list of edge zones in the specified object or objects.
-
         Parameters
         ----------
         objects : list[str]
@@ -1857,7 +2569,6 @@ class Root(PyMenu):
         """
         - Report the face mesh distribution based on the specified measure, partitions, and range.
         - Specify the 'measure' as one of the 'Orthogonal Quality', 'Skewness', 'Equiangle Skewness', 'Size Change', 'Edge Ratio', 'Size', 'Aspect Ratio', 'Squish', 'Warp', 'Dihedral Angle', 'ICEMCFD Quality', 'Ortho Skew', 'FLUENT Aspect Ratio', 'Inverse Orthogonal Quality' value.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1890,7 +2601,6 @@ class Root(PyMenu):
         - Report the number of faces and the face quality limits (minimum, maximum, average quality) for the list of zones based on the measure specified.
         - You can also report the face size limits.
         - Specify the 'measure' as one of the 'Orthogonal Quality', 'Skewness', 'Equiangle Skewness', 'Size Change', 'Edge Ratio', 'Size', 'Aspect Ratio', 'Squish', 'Warp', 'Dihedral Angle', 'ICEMCFD Quality', 'Ortho Skew', 'FLUENT Aspect Ratio', 'Inverse Orthogonal Quality' value.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1917,7 +2627,6 @@ class Root(PyMenu):
     class get_face_zone_area(PyQuery):
         """
         Return face zone area for the specified zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1942,7 +2651,6 @@ class Root(PyMenu):
     class get_face_zone_count(PyQuery):
         """
         Return count of entities for face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1967,7 +2675,6 @@ class Root(PyMenu):
     class get_face_zone_id_list_with_labels(PyQuery):
         """
         Returns the list of face zones (by ID) containing the labels specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -1994,7 +2701,6 @@ class Root(PyMenu):
     class get_face_zone_node_count(PyQuery):
         """
         Returns the node count for the specified face zone.
-
         Parameters
         ----------
         face_zone_id : int
@@ -2021,7 +2727,6 @@ class Root(PyMenu):
         - You can choose to restrict the report to only boundary face zones, if required (only_boundary set to True or False).
         - Return a list of face zones to which the specified prism controls apply.
         - Return a list of zones whose names contain the specified filter string.
-
         Parameters
         ----------
         maximum_entity_count : float
@@ -2052,7 +2757,6 @@ class Root(PyMenu):
         """
         - Return a list of face zones with a maximum zone area below the maximum_zone_area specified.
         - Return a list of face zones with a minimum zone area above the minimum_zone_area specified.
-
         Parameters
         ----------
         maximum_zone_area : float
@@ -2075,7 +2779,6 @@ class Root(PyMenu):
         """
         - Return a list of face zones using 1 - object_name and regions or 2 - object_name and labels or 3 - object_name and region_type or 4 - object_name or 5 - objects.
         - where region_type is one of the 'fluid-fluid', 'solid-solid', or 'fluid-solid' value.
-
         Parameters
         ----------
         regions : list[str]
@@ -2120,7 +2823,6 @@ class Root(PyMenu):
     class get_free_faces_count(PyQuery):
         """
         Returns the count of free faces for the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2145,7 +2847,6 @@ class Root(PyMenu):
     class get_interior_face_zones_for_given_cell_zones(PyQuery):
         """
         Returns interior face zones connected to given cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -2170,7 +2871,6 @@ class Root(PyMenu):
     class get_labels(PyQuery):
         """
         Return a list of face zone labels in the specified object, whose names contain the specified filter or pattern string.
-
         Parameters
         ----------
         object_name : str
@@ -2195,7 +2895,6 @@ class Root(PyMenu):
     class get_labels_on_cell_zones(PyQuery):
         """
         Returns the list of labels for the specified cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -2220,7 +2919,6 @@ class Root(PyMenu):
     class get_labels_on_edge_zones(PyQuery):
         """
         Returns the list of labels for the specified edge zones.
-
         Parameters
         ----------
         edge_zone_id_list : list[int]
@@ -2245,7 +2943,6 @@ class Root(PyMenu):
     class get_labels_on_face_zones(PyQuery):
         """
         Returns the list of labels for the specified face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2270,7 +2967,6 @@ class Root(PyMenu):
     class get_labels_on_face_zones_list(PyQuery):
         """
         Returns the list of labels for the specified face zones.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2289,7 +2985,6 @@ class Root(PyMenu):
     class get_maxsize_cell_zone_by_count(PyQuery):
         """
         Return cell zone with maximum count of elements for given list or pattern of cell zones.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -2314,7 +3009,6 @@ class Root(PyMenu):
     class get_maxsize_cell_zone_by_volume(PyQuery):
         """
         Return cell zone with maximum volume for given list or pattern of cell zones.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -2339,7 +3033,6 @@ class Root(PyMenu):
     class get_minsize_face_zone_by_area(PyQuery):
         """
         Return face zone with minimum area for given list or pattern of face zones.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -2364,7 +3057,6 @@ class Root(PyMenu):
     class get_minsize_face_zone_by_count(PyQuery):
         """
         Return face zone with minimum count of elements for given list or pattern of face zones.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -2389,7 +3081,6 @@ class Root(PyMenu):
     class get_multi_faces_count(PyQuery):
         """
         Returns the count of multi-connected faces for the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2414,7 +3105,6 @@ class Root(PyMenu):
     class get_node_zones(PyQuery):
         """
         Return a list of zones whose names contain the specified filter string.
-
         Parameters
         ----------
         filter : str
@@ -2433,7 +3123,6 @@ class Root(PyMenu):
     class get_objects(PyQuery):
         """
         Return a list of objects of the specified type or whose names contain the specified filter string.
-
         Parameters
         ----------
         type_name : str
@@ -2455,7 +3144,6 @@ class Root(PyMenu):
     class get_overlapping_face_zones(PyQuery):
         """
         Return a list of overlapping face zones based on the area_tolerance and distance_tolerance specified.
-
         Parameters
         ----------
         face_zone_name_pattern : str
@@ -2484,7 +3172,6 @@ class Root(PyMenu):
         - The default value is 40.
         - Each member in the list returned includes the zone IDs for the overlapping zone pair and the join region represented by the bounding box.
         - The same pair of zones may appear multiple times (with different join region bounding box coordinates) in the returned list.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2515,7 +3202,6 @@ class Root(PyMenu):
     class get_prism_cell_zones(PyQuery):
         """
         Return a list of prism cell zones.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -2543,7 +3229,6 @@ class Root(PyMenu):
         - Return the region volume for the specified region of an object.
         - Returns a sorted list of volumetric regions by volume for the object specified.
         - Specify the order 'ascending' or 'descending'.
-
         Parameters
         ----------
         object_name : str
@@ -2567,7 +3252,6 @@ class Root(PyMenu):
     class get_regions(PyQuery):
         """
         Return a list of regions in the specified object, whose names contain the specified filter string or specified name pattern.
-
         Parameters
         ----------
         object_name : str
@@ -2592,7 +3276,6 @@ class Root(PyMenu):
     class get_regions_of_face_zones(PyQuery):
         """
         Return a list of regions containing the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2617,7 +3300,6 @@ class Root(PyMenu):
     class get_shared_boundary_face_zones_for_given_cell_zones(PyQuery):
         """
         Returns the number of faces and the boundary face zones that are shared with the specified cell zones.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -2642,7 +3324,6 @@ class Root(PyMenu):
     class get_tet_cell_zones(PyQuery):
         """
         Return a list of tet cell zones.
-
         Parameters
         ----------
         zone_id_list : list[int]
@@ -2667,7 +3348,6 @@ class Root(PyMenu):
     class get_unreferenced_cell_zones(PyQuery):
         """
         Return a list of unreferenced cell zones by ID, whose names contain the specified pattern or filter.
-
         Parameters
         ----------
         filter : str
@@ -2690,7 +3370,6 @@ class Root(PyMenu):
     class get_unreferenced_edge_zones(PyQuery):
         """
         Return a list of unreferenced edge zones by ID, whose names contain the specified pattern or filter.
-
         Parameters
         ----------
         filter : str
@@ -2713,7 +3392,6 @@ class Root(PyMenu):
     class get_unreferenced_face_zones(PyQuery):
         """
         Return a list of unreferenced face zones by ID, whose names contain the specified pattern or filter.
-
         Parameters
         ----------
         filter : str
@@ -2750,7 +3428,6 @@ class Root(PyMenu):
     class get_zone_type(PyQuery):
         """
         Return zone type as integer.
-
         Parameters
         ----------
         zone_id : int
@@ -2772,7 +3449,6 @@ class Root(PyMenu):
     class get_zones(PyQuery):
         """
         Return a list of zones of the specified default zone type, group or user-defined group.
-
         Parameters
         ----------
         type_name : str
@@ -2794,7 +3470,6 @@ class Root(PyMenu):
     class get_zones_with_free_faces_for_given_face_zones(PyQuery):
         """
         Return a list of zones with free faces for the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2819,7 +3494,6 @@ class Root(PyMenu):
     class get_zones_with_marked_faces_for_given_face_zones(PyQuery):
         """
         Return a list of zones with marked faces for the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2844,7 +3518,6 @@ class Root(PyMenu):
     class get_zones_with_multi_faces_for_given_face_zones(PyQuery):
         """
         Return a list of zones with multi-connected faces for the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2869,7 +3542,6 @@ class Root(PyMenu):
     class interior_zone_exists(PyQuery):
         """
         Report if the interior face zone exists.
-
         Parameters
         ----------
         zone_id : int
@@ -2891,7 +3563,6 @@ class Root(PyMenu):
     class mark_bad_quality_faces(PyQuery):
         """
         Mark bad quality faces on the boundary face zones specified, based on the quality limit (quality_limit) and number of rings (number_of_rings).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2920,7 +3591,6 @@ class Root(PyMenu):
     class mark_duplicate_faces(PyQuery):
         """
         Mark duplicate faces on the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2952,7 +3622,6 @@ class Root(PyMenu):
         - 4 - 'pure feature-feature' strip, only pure features, boundary edges and multi edges will not be considered as pure feature edges even if there is an angle based feature.
         - The recommended value is 2.
         - Specify the 'quality_measure' as one of the 'Skewness', 'Size Change', 'Edge Ratio', 'Area', 'Aspect Ratio', 'Warp', 'Dihedral Angle', 'Ortho Skew' value.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -2989,7 +3658,6 @@ class Root(PyMenu):
         - Mark faces based on the 'quality_measure' and 'quality_limit' specified.
         - Specify whether to append the faces to those previously marked or clear previously marked faces (append_marking set to True or False).
         - Specify the 'quality_measure' as one of the 'Skewness', 'Size Change', 'Edge Ratio', 'Area', 'Aspect Ratio', 'Warp', 'Dihedral Angle', 'Ortho Skew' value.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3023,7 +3691,6 @@ class Root(PyMenu):
         - Specify the size field type to be used to get size at node.
         - Set 'size_factor_type_to_compare' to 'volumetric' or 'geodesic'.
         - Faces will be marked if the minimum edge length at the node is less than min_size_factor × size_factor_type_to_compare or the maximum edge length is greater than max_size_factor × size_factor_type_to_compare.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3055,7 +3722,6 @@ class Root(PyMenu):
         """
         - Mark faces in self-proximity on the face zones specified.
         - Specify whether to use relative tolerance (relative_tolerance set to True or False), tolerance value, the angle, and whether to ignore orientation (ignore_orientation set to True or False).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3089,7 +3755,6 @@ class Root(PyMenu):
         """
         - Mark all faces with node degree above the specified threshold.
         - Node degree is defined as the number of edges connected to the node.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3116,7 +3781,6 @@ class Root(PyMenu):
     class mark_free_faces(PyQuery):
         """
         Mark free faces on the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3141,7 +3805,6 @@ class Root(PyMenu):
     class mark_invalid_normals(PyQuery):
         """
         Mark invalid normal locations on the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3166,7 +3829,6 @@ class Root(PyMenu):
     class mark_island_faces(PyQuery):
         """
         Mark island faces on the face zones specified, based on the island face count (island_face_count).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3193,7 +3855,6 @@ class Root(PyMenu):
     class mark_multi_faces(PyQuery):
         """
         Mark multi-connected faces on the face zones specified based on fringe length (fringe_length).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3220,7 +3881,6 @@ class Root(PyMenu):
     class mark_point_contacts(PyQuery):
         """
         Mark point contact locations on the face zones specified.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3246,7 +3906,6 @@ class Root(PyMenu):
         """
         - Mark self-intersecting faces on the face zones specified.
         - Specify whether to mark folded faces or not (mark_folded set to True or False).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3273,7 +3932,6 @@ class Root(PyMenu):
     class mark_sliver_faces(PyQuery):
         """
         Mark sliver faces on the face zones specified, based on the maximum height (max_height) and skewness limit (skew_limit).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3302,7 +3960,6 @@ class Root(PyMenu):
     class mark_spikes(PyQuery):
         """
         Mark spikes on the face zones specified, based on the spike angle (spike_angle).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3329,7 +3986,6 @@ class Root(PyMenu):
     class mark_steps(PyQuery):
         """
         Mark steps on the face zones specified, based on the step angle (step_angle) and step width (step_width).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3359,7 +4015,6 @@ class Root(PyMenu):
         """
         - Reports the selected mesh check statistics for the zones specified.
         - Specify the 'type_name' as one of the 'bounding-box-statistics', 'volume-statistics', 'face-area-statistics', 'nodes-per-edge', 'nodes-per-face', 'nodes-per-cell', 'faces-or-neighbors-per-cell', 'cell-faces-or-neighbors', 'isolated-cells', 'face-handedness', 'periodic-face-pairs', 'face-children', 'zone-boundary-conditions', 'invalid-node-coordinates', 'poly-cells', 'parallel-invalid-zones', 'parallel-invalid-neighborhood', 'parallel-invalid-interfaces' value.
-
         Parameters
         ----------
         type_name : str
@@ -3416,7 +4071,6 @@ class Root(PyMenu):
         """
         - Report the worst quality cell (ID and location) for the cell zones based on the measure specified.
         - Specify the 'measure' as one of the 'Orthogonal Quality', 'Skewness', 'Equiangle Skewness', 'Size Change', 'Edge Ratio', 'Size', 'Aspect Ratio', 'Squish', 'Warp', 'Dihedral Angle', 'ICEMCFD Quality', 'Ortho Skew', 'FLUENT Aspect Ratio', 'Inverse Orthogonal Quality' value.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -3444,7 +4098,6 @@ class Root(PyMenu):
         """
         - Project a zone on the plane specified.
         - Specify three points for defining the plane.
-
         Parameters
         ----------
         zone_id : int
@@ -3464,7 +4117,6 @@ class Root(PyMenu):
     class refine_marked_faces_in_zones(PyQuery):
         """
         Refine marked faces.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3490,7 +4142,6 @@ class Root(PyMenu):
         """
         - Enables you to scale the cell zones around a pivot point or the bounding box center.
         - Specify the cell zones, the scale factors in the X, Y, Z directions (scale), the pivot point (pivot), and choose whether to use the bounding box center (use_bbox_center set to True or False).
-
         Parameters
         ----------
         cell_zone_id_list : list[int]
@@ -3522,7 +4173,6 @@ class Root(PyMenu):
         """
         - Enables you to scale the face zones around a pivot point or the bounding box center.
         - Specify the face zones, the scale factors in the X, Y, Z directions (scale), the pivot point (pivot), and choose whether to use the bounding box center (use_bbox_center set to True or False).
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3555,7 +4205,6 @@ class Root(PyMenu):
         - Separates cells that are connected to specified face zones into another cell zone.
         - This separation method applies only to prism cells.
         - Specify the number of layers of cells (nlayers) to be separated.
-
         Parameters
         ----------
         cell_zone_id : int
@@ -3586,7 +4235,6 @@ class Root(PyMenu):
         - Separates cells that are connected to specified face zones into another cell zone.
         - This separation method applies only to prism cells.
         - Specify the number of layers of cells (nlayers) to be separated.
-
         Parameters
         ----------
         cell_zone_name : str
@@ -3615,7 +4263,6 @@ class Root(PyMenu):
     class separate_face_zones_by_cell_neighbor(PyQuery):
         """
         Separate face zones based on the cell neighbors.
-
         Parameters
         ----------
         face_zone_id_list : list[int]
@@ -3640,7 +4287,6 @@ class Root(PyMenu):
     class unpreserve_cell_zones(PyQuery):
         """
         Enables you to unpreserve some/all preserved cell zones during the meshing process.
-
         Parameters
         ----------
         cell_zone_id_list : list[int]

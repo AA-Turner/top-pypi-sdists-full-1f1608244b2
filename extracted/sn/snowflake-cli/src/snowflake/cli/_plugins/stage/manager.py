@@ -25,6 +25,7 @@ import time
 from collections import deque
 from contextlib import nullcontext
 from dataclasses import dataclass
+from enum import Enum
 from os import path
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -66,6 +67,11 @@ EXECUTE_SUPPORTED_FILES_FORMATS = (
 # Replace magic numbers with constants
 OMIT_FIRST = slice(1, None)
 STAGE_PATH_REGEX = rf"(?P<prefix>(@|{re.escape('snow://')}))?(?:(?P<first_qualifier>{VALID_IDENTIFIER_REGEX})\.)?(?:(?P<second_qualifier>{VALID_IDENTIFIER_REGEX})\.)?(?P<name>{VALID_IDENTIFIER_REGEX})/?(?P<directory>([^/]*/?)*)?"
+
+
+class InternalStageEncryptionType(Enum):
+    SNOWFLAKE_FULL = "SNOWFLAKE_FULL"
+    SNOWFLAKE_SSE = "SNOWFLAKE_SSE"
 
 
 @dataclass
@@ -379,15 +385,7 @@ class StageManager(SqlExecutionMixin):
         else:
             dest_path.mkdir(exist_ok=True, parents=True)
 
-    def put_recursive(
-        self,
-        local_path: Path,
-        stage_path: str,
-        parallel: int = 4,
-        overwrite: bool = False,
-        role: Optional[str] = None,
-        auto_compress: bool = False,
-    ) -> Generator[dict, None, None]:
+    def copy_to_tmp_dir(self, local_path: Path, tmp_dir: Path):
         if local_path.is_file():
             raise UsageError("Cannot use recursive upload with a single file.")
 
@@ -398,16 +396,32 @@ class StageManager(SqlExecutionMixin):
             root = Path([p for p in local_path.parents if p.is_dir()][0])
             glob_pattern = str(local_path)
 
-        with TemporaryDirectory() as tmp:
-            temp_dir_with_copy = Path(tmp)
+        temp_dir_with_copy = Path(tmp_dir)
 
-            # Create a symlink or copy the file to the temp directory
-            for file_or_dir in glob.iglob(glob_pattern, recursive=True):
-                self._symlink_or_copy(
-                    source_root=root,
-                    source_file_or_dir=Path(file_or_dir),
-                    dest_dir=temp_dir_with_copy,
-                )
+        # Create a symlink or copy the file to the temp directory
+        for file_or_dir in glob.iglob(glob_pattern, recursive=True):
+            self._symlink_or_copy(
+                source_root=root,
+                source_file_or_dir=Path(file_or_dir),
+                dest_dir=temp_dir_with_copy,
+            )
+
+    def put_recursive(
+        self,
+        local_path: Path,
+        stage_path: str,
+        parallel: int = 4,
+        overwrite: bool = False,
+        role: Optional[str] = None,
+        auto_compress: bool = False,
+        temp_directory: Optional[Path] = None,
+    ) -> Generator[dict, None, None]:
+        is_temp_dir_provided = temp_directory is not None
+
+        with TemporaryDirectory() if temp_directory is None else nullcontext(str(temp_directory)) as tmp:  # type: ignore[attr-defined]
+            temp_dir_with_copy = Path(tmp)
+            if not is_temp_dir_provided:
+                self.copy_to_tmp_dir(local_path, temp_dir_with_copy)
 
             # Find the deepest directories, we will be iterating from bottom to top
             deepest_dirs_list = self._find_deepest_directories(temp_dir_with_copy)
@@ -515,10 +529,16 @@ class StageManager(SqlExecutionMixin):
             return self.execute_query(f"remove {stage_path.path_for_sql()}")
 
     def create(
-        self, fqn: FQN, comment: Optional[str] = None, temporary: bool = False
+        self,
+        fqn: FQN,
+        comment: Optional[str] = None,
+        temporary: bool = False,
+        encryption: InternalStageEncryptionType | None = None,
     ) -> SnowflakeCursor:
         temporary_str = "temporary " if temporary else ""
         query = f"create {temporary_str}stage if not exists {fqn.sql_identifier}"
+        if encryption:
+            query += f" encryption = (type = '{encryption.value}')"
         if comment:
             query += f" comment='{comment}'"
         return self.execute_query(query)

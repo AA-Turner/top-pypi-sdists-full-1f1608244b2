@@ -107,7 +107,7 @@ class DatasetRevision(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.DataFrame:
         """Loads a `pl.DataFrame` containing the output. Use `.to_polars_lazyframe()` if you want
@@ -125,7 +125,7 @@ class DatasetRevision(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -144,7 +144,7 @@ class DatasetRevision(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.LazyFrame:
         """Loads a `pl.LazyFrame` containing the output. This method is appropriate for working with larger-than-memory datasets.
@@ -162,7 +162,7 @@ class DatasetRevision(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -181,7 +181,7 @@ class DatasetRevision(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.LazyFrame:
         """Loads a `pl.LazyFrame` containing the output.
@@ -198,7 +198,7 @@ class DatasetRevision(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -217,7 +217,7 @@ class DatasetRevision(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pd.DataFrame:
         """Loads a `pd.DataFrame` containing the output.
@@ -234,7 +234,7 @@ class DatasetRevision(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -253,7 +253,7 @@ class DatasetRevision(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> DataFrame:
         """Loads a Chalk `DataFrame` containing the output.
@@ -270,7 +270,7 @@ class DatasetRevision(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data\
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -287,7 +287,7 @@ class DatasetRevision(Protocol):
     def arrow_schema(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> pa.Schema:
         """Returns the schema of the output data.
@@ -297,7 +297,7 @@ class DatasetRevision(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -314,7 +314,7 @@ class DatasetRevision(Protocol):
     def to_arrow(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pa.Table:
         """Loads a `pa.Table` from the raw parquet file outputs.
@@ -324,7 +324,7 @@ class DatasetRevision(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -343,7 +343,7 @@ class DatasetRevision(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> Sequence[str]:
         """
@@ -374,7 +374,7 @@ class DatasetRevision(Protocol):
     def wait(
         self,
         timeout: float | timedelta | ellipsis | None = ...,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
     ) -> None:
         """
         Waits for an offline query job to complete.
@@ -388,7 +388,7 @@ class DatasetRevision(Protocol):
             For no timeout, set to `None`. If no timeout is specified, the client's default
             timeout is used.
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         """
         ...
 
@@ -399,7 +399,7 @@ class DatasetRevision(Protocol):
         output_ts: Union[bool, str] = False,
         ignore_errors: bool = False,
         executor: ThreadPoolExecutor | None = None,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> None:
         """Downloads output files pertaining to the revision to given path.
@@ -424,7 +424,7 @@ class DatasetRevision(Protocol):
         executor:
             The executor to use for parallelizing downloads. If None, the default executor will be used.
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -436,7 +436,7 @@ class DatasetRevision(Protocol):
     def get_input_dataframe(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.LazyFrame:
         """Loads a `pl.LazyFrame` containing the inputs.
@@ -444,7 +444,7 @@ class DatasetRevision(Protocol):
         Parameters
         ----------
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -476,7 +476,7 @@ class DatasetRevision(Protocol):
 
     def wait_for_completion(
         self,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> None:
         """Waits for the revision job to complete.
@@ -496,7 +496,7 @@ class DatasetRevision(Protocol):
         Parameters
         ----------
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -520,7 +520,7 @@ class DatasetRevision(Protocol):
     def resolver_replay(
         self,
         resolver: ResolverProtocol,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> Union[pl.DataFrame, pl.LazyFrame, Mapping[str, pl.DataFrame], Mapping[str, pl.LazyFrame],]:
         """
@@ -538,7 +538,7 @@ class DatasetRevision(Protocol):
         resolver
             The resolver to download the replay data for, or its fqn.
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -622,7 +622,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.DataFrame:
         """Loads a `pl.DataFrame` containing the output. Use `.to_polars_lazyframe()` if you want
@@ -640,7 +640,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a `TimeoutError`.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -659,7 +659,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.DataFrame:
         """Loads a `pl.DataFrame` containing the output. Use `.to_polars_lazyframe()` if you want
@@ -677,7 +677,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a `TimeoutError`.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -694,7 +694,7 @@ class Dataset(Protocol):
     def to_arrow(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pa.Table:
         """Loads a `pa.Table` from the raw parquet file outputs.
@@ -704,7 +704,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a `TimeoutError`.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -721,7 +721,7 @@ class Dataset(Protocol):
     def arrow_schema(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> pa.Schema:
         """Returns the schema of the output data.
@@ -731,7 +731,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -750,7 +750,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.LazyFrame:
         """Loads a `pl.LazyFrame` containing the output. This method is appropriate for working with larger-than-memory datasets.
@@ -768,7 +768,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -787,7 +787,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.LazyFrame:
         """Loads a `pl.LazyFrame` containing the output.
@@ -804,7 +804,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -823,7 +823,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pd.DataFrame:
         """Loads a `pd.DataFrame` containing the output.
@@ -840,7 +840,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -859,7 +859,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> DataFrame:
         """Loads a Chalk `DataFrame` containing the output.
@@ -877,7 +877,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -896,7 +896,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pd.DataFrame:
         """Loads a `pd.DataFrame` containing the output of the most recent revision.
@@ -913,7 +913,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -932,7 +932,7 @@ class Dataset(Protocol):
         output_id: bool = False,
         output_ts: bool | str = False,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> list[str]:
         """
@@ -952,7 +952,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -964,7 +964,7 @@ class Dataset(Protocol):
     def wait(
         self,
         timeout: float | timedelta | ellipsis | None = ...,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
     ) -> Dataset:
         """
         Waits for an offline query job to complete. Returns a list of errors if unsuccessful, or None if successful.
@@ -977,7 +977,7 @@ class Dataset(Protocol):
             For no timeout, set to `None`. If no timeout is specified, the client's default
             timeout is used.
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         """
         ...
 
@@ -986,7 +986,7 @@ class Dataset(Protocol):
         path: str,
         executor: ThreadPoolExecutor | None = None,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> None:
         """Downloads output files pertaining to the revision to the given path.
@@ -1005,7 +1005,7 @@ class Dataset(Protocol):
             An executor to use to download the data in parallel. If not specified, the
             default executor will be used.
         show_progress
-            Whether to show a progress bar.
+            Whether to show a progress bar. Defaults to True..
         timeout
             How long to wait, in seconds, for job completion before raising a `TimeoutError`.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -1054,7 +1054,7 @@ class Dataset(Protocol):
     def get_input_dataframe(
         self,
         ignore_errors: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | None | ellipsis = ...,
     ) -> pl.LazyFrame:
         """Loads a `pl.LazyFrame` containing the inputs that were used to create the dataset.
@@ -1064,7 +1064,7 @@ class Dataset(Protocol):
         ignore_errors
             Whether to ignore query errors upon fetching data
         show_progress
-            Whether to show a progress bar
+            Whether to show a progress bar. Defaults to True.
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.
@@ -1099,7 +1099,7 @@ class Dataset(Protocol):
         features: list[FeatureReference] | None = None,
         branch: str | None = None,
         wait: bool = True,
-        show_progress: bool = False,
+        show_progress: bool | ellipsis = ...,
         store_plan_stages: bool = False,
         correlation_id: str | None = None,
         explain: bool = False,
@@ -1125,7 +1125,7 @@ class Dataset(Protocol):
             If not specified, Chalk will use the current client's branch info.
         show_progress
             If True, progress bars will be shown while recomputation is running.
-            This flag will also be propogated to the methods of the resulting
+            This flag will also be propagated to the methods of the resulting
             `Dataset`.
         correlation_id
             You can specify a correlation ID to be used in logs and web interfaces.
@@ -1187,7 +1187,7 @@ class Dataset(Protocol):
     def resolver_replay(
         self,
         resolver: ResolverProtocol,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> Union[pl.DataFrame, pl.LazyFrame, Mapping[str, pl.DataFrame], Mapping[str, pl.LazyFrame],]:
         """

@@ -11,7 +11,13 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
@@ -245,7 +251,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteCadKeyCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Key = self._Key(self, "Key", service, rules, path)
+
+                class _Key(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Argument Key.
+                    """
+
+            def create_instance(self) -> _DeleteCadKeyCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteCadKeyCommandArguments(*args)
 
         class LoadFiles(PyCommand):
             """
@@ -256,7 +275,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _LoadFilesCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _LoadFilesCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._LoadFilesCommandArguments(*args)
 
         class Reload(PyCommand):
             """
@@ -270,7 +296,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _ReloadCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+            def create_instance(self) -> _ReloadCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._ReloadCommandArguments(*args)
 
         class Unload(PyCommand):
             """
@@ -284,5 +323,18 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UnloadCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+            def create_instance(self) -> _UnloadCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UnloadCommandArguments(*args)
 

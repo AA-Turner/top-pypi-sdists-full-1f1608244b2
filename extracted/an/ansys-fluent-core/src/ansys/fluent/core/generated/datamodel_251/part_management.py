@@ -11,13 +11,19 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
 class Root(PyMenu):
     """
-    Singleton Root.
+    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
     """
     def __init__(self, service, rules, path):
         self.AssemblyNode = self.__class__.AssemblyNode(service, rules, path + [("AssemblyNode", "")])
@@ -66,7 +72,7 @@ class Root(PyMenu):
         """
         class _AssemblyNode(PyMenu):
             """
-            Singleton _AssemblyNode.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Refaceting = self.__class__.Refaceting(service, rules, path + [("Refaceting", "")])
@@ -95,7 +101,7 @@ class Root(PyMenu):
 
             class Refaceting(PyMenu):
                 """
-                Singleton Refaceting.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 def __init__(self, service, rules, path):
                     self.Deviation = self.__class__.Deviation(service, rules, path + [("Deviation", "")])
@@ -106,109 +112,109 @@ class Root(PyMenu):
 
                 class Deviation(PyNumerical):
                     """
-                    Parameter Deviation of value type float.
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                     """
                     pass
 
                 class MaxSize(PyNumerical):
                     """
-                    Parameter MaxSize of value type float.
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                     """
                     pass
 
                 class NormalAngle(PyNumerical):
                     """
-                    Parameter NormalAngle of value type float.
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                     """
                     pass
 
                 class Refacet(PyParameter):
                     """
-                    Parameter Refacet of value type bool.
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                     """
                     pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class EdgeExtraction(PyTextual):
                 """
-                Parameter EdgeExtraction of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class FeatureAngle(PyNumerical):
                 """
-                Parameter FeatureAngle of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class IsChildrenSettingsChanged(PyParameter):
                 """
-                Parameter IsChildrenSettingsChanged of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class KeyId(PyNumerical):
                 """
-                Parameter KeyId of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class MergeChildren(PyParameter):
                 """
-                Parameter MergeChildren of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class OneZonePer(PyTextual):
                 """
-                Parameter OneZonePer of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Parent(PyTextual):
                 """
-                Parameter Parent of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class PrefixObjectName(PyParameter):
                 """
-                Parameter PrefixObjectName of value type bool.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class RefacetOperation(PyTextual):
                 """
-                Parameter RefacetOperation of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Transformations(PyTextual):
                 """
-                Parameter Transformations of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -221,7 +227,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ChangeChildrenSettingsCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ChangeChildrenSettingsCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ChangeChildrenSettingsCommandArguments(*args)
 
             class Copy(PyCommand):
                 """
@@ -230,12 +243,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _CopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _CopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CopyCommandArguments(*args)
 
             class CreateChild(PyCommand):
                 """
@@ -244,12 +271,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 ChildName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _CreateChildCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.ChildName = self._ChildName(self, "ChildName", service, rules, path)
+
+                    class _ChildName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _CreateChildCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateChildCommandArguments(*args)
 
             class Move(PyCommand):
                 """
@@ -258,12 +299,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _MoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _MoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._MoveCommandArguments(*args)
 
             class ReFacet(PyCommand):
                 """
@@ -272,14 +327,42 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Deviation : float
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 NormalAngle : float
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 MaxSize : float
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _ReFacetCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+                        self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+                        self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+
+                    class _Deviation(PyNumericalCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                    class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                    class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _ReFacetCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ReFacetCommandArguments(*args)
 
             class ReFacetNow(PyCommand):
                 """
@@ -290,7 +373,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ReFacetNowCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ReFacetNowCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ReFacetNowCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -299,12 +389,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _AssemblyNode:
             return super().__getitem__(key)
@@ -315,7 +419,7 @@ class Root(PyMenu):
         """
         class _Mirror(PyMenu):
             """
-            Singleton _Mirror.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Applied = self.__class__.Applied(service, rules, path + [("Applied", "")])
@@ -336,49 +440,49 @@ class Root(PyMenu):
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class MirrorAbout(PyTextual):
                 """
-                Parameter MirrorAbout of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -389,12 +493,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -405,7 +523,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -414,12 +539,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -428,12 +567,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -444,7 +597,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -455,7 +615,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Mirror:
             return super().__getitem__(key)
@@ -466,7 +633,7 @@ class Root(PyMenu):
         """
         class _Node(PyMenu):
             """
-            Singleton _Node.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Children = self.__class__.Children(service, rules, path + [("Children", "")])
@@ -489,67 +656,67 @@ class Root(PyMenu):
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class KeyId(PyNumerical):
                 """
-                Parameter KeyId of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class ObjectSetting(PyTextual):
                 """
-                Parameter ObjectSetting of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Parent(PyTextual):
                 """
-                Parameter Parent of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class RefacetOperation(PyTextual):
                 """
-                Parameter RefacetOperation of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Suppress(PyParameter):
                 """
-                Parameter Suppress of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Transformations(PyTextual):
                 """
-                Parameter Transformations of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Updated(PyParameter):
                 """
-                Parameter Updated of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -560,12 +727,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _CopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _CopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CopyCommandArguments(*args)
 
             class CreateChild(PyCommand):
                 """
@@ -574,12 +755,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 ChildName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _CreateChildCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.ChildName = self._ChildName(self, "ChildName", service, rules, path)
+
+                    class _ChildName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _CreateChildCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateChildCommandArguments(*args)
 
             class Move(PyCommand):
                 """
@@ -588,12 +783,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _MoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _MoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._MoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -602,12 +811,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class WildcardCopy(PyCommand):
                 """
@@ -616,12 +839,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Pattern : str
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _WildcardCopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Pattern = self._Pattern(self, "Pattern", service, rules, path)
+
+                    class _Pattern(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _WildcardCopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._WildcardCopyCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Node:
             return super().__getitem__(key)
@@ -632,7 +869,7 @@ class Root(PyMenu):
         """
         class _ObjectSetting(PyMenu):
             """
-            Singleton _ObjectSetting.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Children = self.__class__.Children(service, rules, path + [("Children", "")])
@@ -652,61 +889,61 @@ class Root(PyMenu):
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class EdgeExtraction(PyTextual):
                 """
-                Parameter EdgeExtraction of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class FeatureAngle(PyNumerical):
                 """
-                Parameter FeatureAngle of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class MergeChildren(PyParameter):
                 """
-                Parameter MergeChildren of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class OneZonePer(PyTextual):
                 """
-                Parameter OneZonePer of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class PrefixObjectName(PyParameter):
                 """
-                Parameter PrefixObjectName of value type bool.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class UseDefaultSettings(PyParameter):
                 """
-                Parameter UseDefaultSettings of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -717,12 +954,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -731,12 +982,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -745,12 +1010,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _ObjectSetting:
             return super().__getitem__(key)
@@ -761,7 +1040,7 @@ class Root(PyMenu):
         """
         class _Refaceting(PyMenu):
             """
-            Singleton _Refaceting.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Applied = self.__class__.Applied(service, rules, path + [("Applied", "")])
@@ -784,61 +1063,61 @@ class Root(PyMenu):
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Deviation(PyNumerical):
                 """
-                Parameter Deviation of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class FacetMaxEdgeLength(PyTextual):
                 """
-                Parameter FacetMaxEdgeLength of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class MaxEdgeLengthFactor(PyNumerical):
                 """
-                Parameter MaxEdgeLengthFactor of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class MaxSize(PyNumerical):
                 """
-                Parameter MaxSize of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class NormalAngle(PyNumerical):
                 """
-                Parameter NormalAngle of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -849,12 +1128,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -865,7 +1158,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Delete(PyCommand):
                 """
@@ -876,7 +1176,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _DeleteCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _DeleteCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._DeleteCommandArguments(*args)
 
             class Edit(PyCommand):
                 """
@@ -887,7 +1194,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _EditCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _EditCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._EditCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -896,12 +1210,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -910,12 +1238,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Refaceting:
             return super().__getitem__(key)
@@ -926,7 +1268,7 @@ class Root(PyMenu):
         """
         class _Rotate(PyMenu):
             """
-            Singleton _Rotate.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Applied = self.__class__.Applied(service, rules, path + [("Applied", "")])
@@ -949,61 +1291,61 @@ class Root(PyMenu):
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class RotateX(PyNumerical):
                 """
-                Parameter RotateX of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class RotateY(PyNumerical):
                 """
-                Parameter RotateY of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class RotateZ(PyNumerical):
                 """
-                Parameter RotateZ of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -1014,12 +1356,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1030,7 +1386,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1039,12 +1402,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1053,12 +1430,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1069,7 +1460,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1080,7 +1478,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Rotate:
             return super().__getitem__(key)
@@ -1091,7 +1496,7 @@ class Root(PyMenu):
         """
         class _RotateAboutAxis(PyMenu):
             """
-            Singleton _RotateAboutAxis.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Angle = self.__class__.Angle(service, rules, path + [("Angle", "")])
@@ -1118,85 +1523,85 @@ class Root(PyMenu):
 
             class Angle(PyNumerical):
                 """
-                Parameter Angle of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class AxisX(PyNumerical):
                 """
-                Parameter AxisX of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class AxisY(PyNumerical):
                 """
-                Parameter AxisY of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class AxisZ(PyNumerical):
                 """
-                Parameter AxisZ of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class PivotX(PyNumerical):
                 """
-                Parameter PivotX of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class PivotY(PyNumerical):
                 """
-                Parameter PivotY of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class PivotZ(PyNumerical):
                 """
-                Parameter PivotZ of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -1207,12 +1612,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1223,7 +1642,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1232,12 +1658,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1246,12 +1686,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1262,7 +1716,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1273,7 +1734,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _RotateAboutAxis:
             return super().__getitem__(key)
@@ -1284,7 +1752,7 @@ class Root(PyMenu):
         """
         class _Scaling(PyMenu):
             """
-            Singleton _Scaling.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Applied = self.__class__.Applied(service, rules, path + [("Applied", "")])
@@ -1307,61 +1775,61 @@ class Root(PyMenu):
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class ScaleX(PyNumerical):
                 """
-                Parameter ScaleX of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class ScaleY(PyNumerical):
                 """
-                Parameter ScaleY of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class ScaleZ(PyNumerical):
                 """
-                Parameter ScaleZ of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -1372,12 +1840,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1388,7 +1870,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1397,12 +1886,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1411,12 +1914,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1427,7 +1944,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1438,7 +1962,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Scaling:
             return super().__getitem__(key)
@@ -1449,7 +1980,7 @@ class Root(PyMenu):
         """
         class _Transform(PyMenu):
             """
-            Singleton _Transform.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Applied = self.__class__.Applied(service, rules, path + [("Applied", "")])
@@ -1476,79 +2007,79 @@ class Root(PyMenu):
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class RotateX(PyNumerical):
                 """
-                Parameter RotateX of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class RotateY(PyNumerical):
                 """
-                Parameter RotateY of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class RotateZ(PyNumerical):
                 """
-                Parameter RotateZ of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class TranslateX(PyNumerical):
                 """
-                Parameter TranslateX of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class TranslateY(PyNumerical):
                 """
-                Parameter TranslateY of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class TranslateZ(PyNumerical):
                 """
-                Parameter TranslateZ of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -1559,12 +2090,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1575,7 +2120,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Delete(PyCommand):
                 """
@@ -1584,12 +2136,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Path : str
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _DeleteCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Path = self._Path(self, "Path", service, rules, path)
+
+                    class _Path(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _DeleteCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._DeleteCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1598,12 +2164,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1612,12 +2192,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1628,7 +2222,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1639,7 +2240,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Transform:
             return super().__getitem__(key)
@@ -1650,7 +2258,7 @@ class Root(PyMenu):
         """
         class _TransformBase(PyMenu):
             """
-            Singleton _TransformBase.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Applied = self.__class__.Applied(service, rules, path + [("Applied", "")])
@@ -1670,43 +2278,43 @@ class Root(PyMenu):
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -1717,12 +2325,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1733,7 +2355,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1742,12 +2371,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1756,12 +2399,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1772,7 +2429,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1783,7 +2447,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _TransformBase:
             return super().__getitem__(key)
@@ -1794,7 +2465,7 @@ class Root(PyMenu):
         """
         class _Translate(PyMenu):
             """
-            Singleton _Translate.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             def __init__(self, service, rules, path):
                 self.Applied = self.__class__.Applied(service, rules, path + [("Applied", "")])
@@ -1817,61 +2488,61 @@ class Root(PyMenu):
 
             class Applied(PyParameter):
                 """
-                Parameter Applied of value type bool.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Children(PyTextual):
                 """
-                Parameter Children of value type list[str].
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Context(PyNumerical):
                 """
-                Parameter Context of value type int.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Name(PyTextual):
                 """
-                Parameter Name of value type str.
+                Enter a name for the capping surface.
                 """
                 pass
 
             class TranslateX(PyNumerical):
                 """
-                Parameter TranslateX of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class TranslateY(PyNumerical):
                 """
-                Parameter TranslateY of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class TranslateZ(PyNumerical):
                 """
-                Parameter TranslateZ of value type float.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
                 """
                 pass
 
             class _name_(PyTextual):
                 """
-                Parameter _name_ of value type str.
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
                 """
                 pass
 
@@ -1882,12 +2553,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1898,7 +2583,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1907,12 +2599,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 Paths : list[str]
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1921,12 +2627,26 @@ class Root(PyMenu):
                 Parameters
                 ----------
                 NewName : str
+                    Enter a name for the capping surface.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Enter a name for the capping surface.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1937,7 +2657,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1948,14 +2675,21 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Translate:
             return super().__getitem__(key)
 
     class GlobalSettings(PyMenu):
         """
-        Singleton GlobalSettings.
+        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         """
         def __init__(self, service, rules, path):
             self.CurrentContext = self.__class__.CurrentContext(service, rules, path + [("CurrentContext", "")])
@@ -1966,31 +2700,31 @@ class Root(PyMenu):
 
         class CurrentContext(PyNumerical):
             """
-            Parameter CurrentContext of value type int.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
         class CurrentNode(PyTextual):
             """
-            Parameter CurrentNode of value type str.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
         class DisplayBoundingBox(PyParameter):
             """
-            Parameter DisplayBoundingBox of value type bool.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
         class LengthUnit(PyTextual):
             """
-            Parameter LengthUnit of value type str.
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
     class MeshingOperations(PyMenu):
         """
-        Singleton MeshingOperations.
+        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         """
         def __init__(self, service, rules, path):
             self.Children = self.__class__.Children(service, rules, path + [("Children", "")])
@@ -2001,13 +2735,13 @@ class Root(PyMenu):
 
         class Children(PyTextual):
             """
-            Parameter Children of value type list[str].
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
         class Name(PyTextual):
             """
-            Parameter Name of value type str.
+            Enter a name for the capping surface.
             """
             pass
 
@@ -2020,7 +2754,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllOperationsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllOperationsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllOperationsCommandArguments(*args)
 
         class UpdateAllOperations(PyCommand):
             """
@@ -2031,11 +2772,18 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllOperationsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllOperationsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllOperationsCommandArguments(*args)
 
     class ObjectSettingOperations(PyMenu):
         """
-        Singleton ObjectSettingOperations.
+        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         """
         def __init__(self, service, rules, path):
             self.Children = self.__class__.Children(service, rules, path + [("Children", "")])
@@ -2047,13 +2795,13 @@ class Root(PyMenu):
 
         class Children(PyTextual):
             """
-            Parameter Children of value type list[str].
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
         class Name(PyTextual):
             """
-            Parameter Name of value type str.
+            Enter a name for the capping surface.
             """
             pass
 
@@ -2064,12 +2812,26 @@ class Root(PyMenu):
             Parameters
             ----------
             Paths : list[str]
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
             Returns
             -------
             bool
             """
-            pass
+            class _CreateObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            def create_instance(self) -> _CreateObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateObjectSettingCommandArguments(*args)
 
         class DeleteAllObjectSetting(PyCommand):
             """
@@ -2080,7 +2842,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllObjectSettingCommandArguments(*args)
 
         class DeleteObjectSetting(PyCommand):
             """
@@ -2089,16 +2858,30 @@ class Root(PyMenu):
             Parameters
             ----------
             Paths : list[str]
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
             Returns
             -------
             bool
             """
-            pass
+            class _DeleteObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            def create_instance(self) -> _DeleteObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteObjectSettingCommandArguments(*args)
 
     class RefacetingOperations(PyMenu):
         """
-        Singleton RefacetingOperations.
+        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         """
         def __init__(self, service, rules, path):
             self.Children = self.__class__.Children(service, rules, path + [("Children", "")])
@@ -2111,13 +2894,13 @@ class Root(PyMenu):
 
         class Children(PyTextual):
             """
-            Parameter Children of value type list[str].
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
         class Name(PyTextual):
             """
-            Parameter Name of value type str.
+            Enter a name for the capping surface.
             """
             pass
 
@@ -2128,12 +2911,26 @@ class Root(PyMenu):
             Parameters
             ----------
             Paths : list[str]
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
             Returns
             -------
             bool
             """
-            pass
+            class _CreateRefacetCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            def create_instance(self) -> _CreateRefacetCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateRefacetCommandArguments(*args)
 
         class DeleteAllRefacets(PyCommand):
             """
@@ -2144,7 +2941,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllRefacetsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllRefacetsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllRefacetsCommandArguments(*args)
 
         class DeleteRefacet(PyCommand):
             """
@@ -2153,12 +2957,26 @@ class Root(PyMenu):
             Parameters
             ----------
             Paths : list[str]
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
             Returns
             -------
             bool
             """
-            pass
+            class _DeleteRefacetCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            def create_instance(self) -> _DeleteRefacetCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteRefacetCommandArguments(*args)
 
         class UpdateAllRefacets(PyCommand):
             """
@@ -2169,11 +2987,18 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllRefacetsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllRefacetsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllRefacetsCommandArguments(*args)
 
     class TransformOperations(PyMenu):
         """
-        Singleton TransformOperations.
+        This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         """
         def __init__(self, service, rules, path):
             self.Children = self.__class__.Children(service, rules, path + [("Children", "")])
@@ -2187,13 +3012,13 @@ class Root(PyMenu):
 
         class Children(PyTextual):
             """
-            Parameter Children of value type list[str].
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
             """
             pass
 
         class Name(PyTextual):
             """
-            Parameter Name of value type str.
+            Enter a name for the capping surface.
             """
             pass
 
@@ -2204,12 +3029,26 @@ class Root(PyMenu):
             Parameters
             ----------
             Paths : list[str]
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
             Returns
             -------
             bool
             """
-            pass
+            class _CreateTransformCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            def create_instance(self) -> _CreateTransformCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateTransformCommandArguments(*args)
 
         class CreateTransformType(PyCommand):
             """
@@ -2218,13 +3057,34 @@ class Root(PyMenu):
             Parameters
             ----------
             Type : str
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
             Paths : list[str]
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
             Returns
             -------
             bool
             """
-            pass
+            class _CreateTransformTypeCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Type = self._Type(self, "Type", service, rules, path)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Type(PyTextualCommandArgumentsSubItem):
+                    """
+                    Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
+                    """
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            def create_instance(self) -> _CreateTransformTypeCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateTransformTypeCommandArguments(*args)
 
         class DeleteAllTransforms(PyCommand):
             """
@@ -2235,7 +3095,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllTransformsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllTransformsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllTransformsCommandArguments(*args)
 
         class DeleteTransform(PyCommand):
             """
@@ -2244,12 +3111,26 @@ class Root(PyMenu):
             Parameters
             ----------
             Paths : list[str]
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
             Returns
             -------
             bool
             """
-            pass
+            class _DeleteTransformCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            def create_instance(self) -> _DeleteTransformCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteTransformCommandArguments(*args)
 
         class UpdateAllTransforms(PyCommand):
             """
@@ -2260,7 +3141,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllTransformsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllTransformsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllTransformsCommandArguments(*args)
 
     class AppendFmdFiles(PyCommand):
         """
@@ -2269,22 +3157,154 @@ class Root(PyMenu):
         Parameters
         ----------
         FilePath : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         AssemblyParentNode : int
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         FileUnit : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         Route : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         JtLOD : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         PartPerBody : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         PrefixParentName : bool
+            Enter a name for the capping surface.
         RemoveEmptyParts : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         IgnoreSolidNamesAppend : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         Options : dict[str, Any]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         RefacetOptions : dict[str, Any]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _AppendFmdFilesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.AssemblyParentNode = self._AssemblyParentNode(self, "AssemblyParentNode", service, rules, path)
+                self.FileUnit = self._FileUnit(self, "FileUnit", service, rules, path)
+                self.Route = self._Route(self, "Route", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNamesAppend = self._IgnoreSolidNamesAppend(self, "IgnoreSolidNamesAppend", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+                self.RefacetOptions = self._RefacetOptions(self, "RefacetOptions", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _AssemblyParentNode(PyNumericalCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _FileUnit(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _Route(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                Enter a name for the capping surface.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _IgnoreSolidNamesAppend(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            class _RefacetOptions(PySingletonCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+                    self.RefacetDuringLoad = self._RefacetDuringLoad(self, "RefacetDuringLoad", service, rules, path)
+                    self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+                    self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+
+                class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _RefacetDuringLoad(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Deviation(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+        def create_instance(self) -> _AppendFmdFilesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._AppendFmdFilesCommandArguments(*args)
 
     class ChangeFileLengthUnit(PyCommand):
         """
@@ -2293,12 +3313,26 @@ class Root(PyMenu):
         Parameters
         ----------
         LengthUnit : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _ChangeFileLengthUnitCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.LengthUnit = self._LengthUnit(self, "LengthUnit", service, rules, path)
+
+            class _LengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _ChangeFileLengthUnitCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ChangeFileLengthUnitCommandArguments(*args)
 
     class ChangeLengthUnit(PyCommand):
         """
@@ -2307,12 +3341,26 @@ class Root(PyMenu):
         Parameters
         ----------
         LengthUnit : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _ChangeLengthUnitCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.LengthUnit = self._LengthUnit(self, "LengthUnit", service, rules, path)
+
+            class _LengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _ChangeLengthUnitCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ChangeLengthUnitCommandArguments(*args)
 
     class CreateObjForEachPart(PyCommand):
         """
@@ -2321,12 +3369,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Paths : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _CreateObjForEachPartCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _CreateObjForEachPartCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateObjForEachPartCommandArguments(*args)
 
     class CreateObjects(PyCommand):
         """
@@ -2337,7 +3399,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _CreateObjectsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _CreateObjectsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateObjectsCommandArguments(*args)
 
     class Delete(PyCommand):
         """
@@ -2346,12 +3415,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Path : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _DeleteCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Path = self._Path(self, "Path", service, rules, path)
+
+            class _Path(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _DeleteCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._DeleteCommandArguments(*args)
 
     class DeletePaths(PyCommand):
         """
@@ -2360,12 +3443,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Paths : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _DeletePathsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _DeletePathsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._DeletePathsCommandArguments(*args)
 
     class InitializeTemplate(PyCommand):
         """
@@ -2374,12 +3471,26 @@ class Root(PyMenu):
         Parameters
         ----------
         templateType : str
+            Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
 
         Returns
         -------
         bool
         """
-        pass
+        class _InitializeTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.templateType = self._templateType(self, "templateType", service, rules, path)
+
+            class _templateType(PyTextualCommandArgumentsSubItem):
+                """
+                Choose the type of capping surface: a regular, simple opening with one or more faces:  or an annular opening where the fluid is within two concentric cylinders:
+                """
+
+        def create_instance(self) -> _InitializeTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InitializeTemplateCommandArguments(*args)
 
     class InputFileChanged(PyCommand):
         """
@@ -2388,20 +3499,138 @@ class Root(PyMenu):
         Parameters
         ----------
         FilePath : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         PartPerBody : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         PrefixParentName : bool
+            Enter a name for the capping surface.
         RemoveEmptyParts : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         IgnoreSolidNames : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         FileLengthUnit : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         JtLOD : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         Options : dict[str, Any]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         RefacetOptions : dict[str, Any]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _InputFileChangedCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNames = self._IgnoreSolidNames(self, "IgnoreSolidNames", service, rules, path)
+                self.FileLengthUnit = self._FileLengthUnit(self, "FileLengthUnit", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+                self.RefacetOptions = self._RefacetOptions(self, "RefacetOptions", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                Enter a name for the capping surface.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _IgnoreSolidNames(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _FileLengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            class _RefacetOptions(PySingletonCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+                    self.RefacetDuringLoad = self._RefacetDuringLoad(self, "RefacetDuringLoad", service, rules, path)
+                    self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+                    self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+
+                class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _RefacetDuringLoad(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Deviation(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+        def create_instance(self) -> _InputFileChangedCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InputFileChangedCommandArguments(*args)
 
     class ListMeshingOperations(PyCommand):
         """
@@ -2410,12 +3639,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Path : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _ListMeshingOperationsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Path = self._Path(self, "Path", service, rules, path)
+
+            class _Path(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _ListMeshingOperationsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ListMeshingOperationsCommandArguments(*args)
 
     class LoadFmdFile(PyCommand):
         """
@@ -2424,21 +3667,146 @@ class Root(PyMenu):
         Parameters
         ----------
         FilePath : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         FileUnit : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         Route : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         JtLOD : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         PartPerBody : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         PrefixParentName : bool
+            Enter a name for the capping surface.
         RemoveEmptyParts : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         IgnoreSolidNames : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         Options : dict[str, Any]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         RefacetOptions : dict[str, Any]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _LoadFmdFileCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.FileUnit = self._FileUnit(self, "FileUnit", service, rules, path)
+                self.Route = self._Route(self, "Route", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNames = self._IgnoreSolidNames(self, "IgnoreSolidNames", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+                self.RefacetOptions = self._RefacetOptions(self, "RefacetOptions", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _FileUnit(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _Route(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                Enter a name for the capping surface.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _IgnoreSolidNames(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+            class _RefacetOptions(PySingletonCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+                    self.RefacetDuringLoad = self._RefacetDuringLoad(self, "RefacetDuringLoad", service, rules, path)
+                    self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+                    self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+
+                class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _RefacetDuringLoad(PyParameterCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _Deviation(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+                class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                    """
+                    This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                    """
+
+        def create_instance(self) -> _LoadFmdFileCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadFmdFileCommandArguments(*args)
 
     class LoadTemplate(PyCommand):
         """
@@ -2447,12 +3815,26 @@ class Root(PyMenu):
         Parameters
         ----------
         FilePath : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _LoadTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _LoadTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadTemplateCommandArguments(*args)
 
     class MarkObjectsOutofDate(PyCommand):
         """
@@ -2461,12 +3843,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Paths : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _MarkObjectsOutofDateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _MarkObjectsOutofDateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MarkObjectsOutofDateCommandArguments(*args)
 
     class MoveCADComponentsToNewObject(PyCommand):
         """
@@ -2475,12 +3871,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Paths : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _MoveCADComponentsToNewObjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _MoveCADComponentsToNewObjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveCADComponentsToNewObjectCommandArguments(*args)
 
     class MoveToNewSubobject(PyCommand):
         """
@@ -2489,12 +3899,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Paths : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _MoveToNewSubobjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _MoveToNewSubobjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveToNewSubobjectCommandArguments(*args)
 
     class MoveToObject(PyCommand):
         """
@@ -2503,12 +3927,26 @@ class Root(PyMenu):
         Parameters
         ----------
         Paths : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _MoveToObjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _MoveToObjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveToObjectCommandArguments(*args)
 
     class RedoAllTransforms(PyCommand):
         """
@@ -2519,7 +3957,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _RedoAllTransformsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _RedoAllTransformsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._RedoAllTransformsCommandArguments(*args)
 
     class ResetTemplate(PyCommand):
         """
@@ -2530,7 +3975,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ResetTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _ResetTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ResetTemplateCommandArguments(*args)
 
     class SaveFmdFile(PyCommand):
         """
@@ -2539,12 +3991,26 @@ class Root(PyMenu):
         Parameters
         ----------
         FilePath : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _SaveFmdFileCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _SaveFmdFileCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SaveFmdFileCommandArguments(*args)
 
     class SaveTemplate(PyCommand):
         """
@@ -2553,12 +4019,26 @@ class Root(PyMenu):
         Parameters
         ----------
         FilePath : str
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _SaveTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _SaveTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SaveTemplateCommandArguments(*args)
 
     class SuppressNodeObjects(PyCommand):
         """
@@ -2567,13 +4047,34 @@ class Root(PyMenu):
         Parameters
         ----------
         Paths : list[str]
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
         Suppress : bool
+            This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
 
         Returns
         -------
         bool
         """
-        pass
+        class _SuppressNodeObjectsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+                self.Suppress = self._Suppress(self, "Suppress", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+            class _Suppress(PyParameterCommandArgumentsSubItem):
+                """
+                This task will cover any gaps within a selected object. Recommended with geometries containing noticeable gaps and openings that need to be covered prior to surface meshing. More...
+                """
+
+        def create_instance(self) -> _SuppressNodeObjectsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SuppressNodeObjectsCommandArguments(*args)
 
     class UndoAllTransforms(PyCommand):
         """
@@ -2584,5 +4085,12 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _UndoAllTransformsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _UndoAllTransformsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._UndoAllTransformsCommandArguments(*args)
 

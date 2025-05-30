@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: trl
-Version: 0.18.0
+Version: 0.18.1
 Summary: Train transformer language models with reinforcement learning.
 Home-page: https://github.com/huggingface/trl
 Author: Leandro von Werra
@@ -74,11 +74,6 @@ Requires-Dist: pytest-cov; extra == "dev"
 Requires-Dist: pytest-rerunfailures; extra == "dev"
 Requires-Dist: pytest-xdist; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
-Requires-Dist: vllm>=0.8.3; python_version < "3.13" and extra == "dev"
-Requires-Dist: fastapi; python_version < "3.13" and extra == "dev"
-Requires-Dist: pydantic; python_version < "3.13" and extra == "dev"
-Requires-Dist: requests; python_version < "3.13" and extra == "dev"
-Requires-Dist: uvicorn; python_version < "3.13" and extra == "dev"
 Requires-Dist: Pillow; extra == "dev"
 Dynamic: license-file
 
