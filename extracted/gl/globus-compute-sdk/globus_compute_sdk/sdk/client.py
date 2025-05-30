@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import functools
 import json
 import logging
 import sys
+import threading
 import typing as t
 import warnings
 
@@ -16,6 +18,7 @@ from globus_compute_sdk.errors import (
 from globus_compute_sdk.sdk._environments import get_web_service_url
 from globus_compute_sdk.sdk.hardware_report import run_hardware_report
 from globus_compute_sdk.sdk.utils import check_version
+from globus_compute_sdk.sdk.utils.gare import GareLogin, gare_handler
 from globus_compute_sdk.sdk.utils.uuid_like import UUID_LIKE_T
 from globus_compute_sdk.sdk.web_client import (
     FunctionRegistrationData,
@@ -23,16 +26,41 @@ from globus_compute_sdk.sdk.web_client import (
 )
 from globus_compute_sdk.serialize import ComputeSerializer, SerializationStrategy
 from globus_compute_sdk.version import __version__, compare_versions
+from globus_sdk.gare import GlobusAuthorizationParameters
 from globus_sdk.version import __version__ as __version_globus__
 
 from .auth.auth_client import ComputeAuthClient
 from .auth.globus_app import get_globus_app
 from .batch import Batch, UserRuntime
-from .login_manager import LoginManagerProtocol, requires_login
+from .login_manager import LoginManagerProtocol
 from .utils import get_env_var_with_deprecation
 from .web_client import WebClient
 
 logger = logging.getLogger(__name__)
+
+
+def _client_gares_handler(f: t.Callable):
+    @functools.wraps(f)
+    def _wrapper(self: Client, *args, **kwargs):
+        _login: GareLogin | None = None
+        if self.app:
+            _login = self.app.login
+        elif self._login_manager:
+
+            def _login(auth_params: GlobusAuthorizationParameters):
+                self.login_manager.run_login_flow(auth_params=auth_params)
+                self.web_client = self.login_manager.get_web_client(
+                    base_url=self.web_service_address
+                )
+
+        if _login:
+            return gare_handler(_login, f, self, *args, **kwargs)
+
+        # Perhaps an authorizer is in use; there is no way to relogin so if an error
+        # happens, then just let the naked exception raise
+        return f(self, *args, **kwargs)
+
+    return _wrapper
 
 
 class _ComputeWebClient:
@@ -134,6 +162,7 @@ class Client:
         self._login_manager: LoginManagerProtocol | None = None
         self._web_client: WebClient | None = None
         self._auth_client: globus_sdk.AuthClient | None = None
+        self._request_lock = threading.Lock()
 
         if sum(bool(x) for x in (app, authorizer, login_manager)) > 1:
             raise ValueError(
@@ -227,7 +256,8 @@ class Client:
 
         Raises a VersionMismatch error on failure.
         """
-        data = self._compute_web_client.v2.get_version(service="all")
+        with self._request_lock:
+            data = self._compute_web_client.v2.get_version(service="all")
 
         min_ep_version = data["min_ep_version"]
         min_sdk_version = data["min_sdk_version"]
@@ -323,7 +353,7 @@ class Client:
         self._task_status_table[task_id] = status
         return status
 
-    @requires_login
+    @_client_gares_handler
     def get_task(self, task_id):
         """Get a Globus Compute task.
 
@@ -342,11 +372,11 @@ class Client:
         if task.get("pending", True) is False:
             return task
 
-        r = self._compute_web_client.v2.get_task(task_id)
-        logger.debug(f"Response string : {r}")
+        with self._request_lock:
+            r = self._compute_web_client.v2.get_task(task_id)
+        logger.debug("Response string: %s", r)
         return self._update_task_table(r.text, tid)
 
-    @requires_login
     def get_result(self, task_id: UUID_LIKE_T):
         """Get the result of a Globus Compute task
 
@@ -371,7 +401,7 @@ class Client:
                 logger.warning("We have an exception : {}".format(task["exception"]))
                 task["exception"].reraise()
 
-    @requires_login
+    @_client_gares_handler
     def get_batch_result(self, task_id_list: list[UUID_LIKE_T]) -> dict[str, dict]:
         """Request status of list of tasks
 
@@ -420,8 +450,9 @@ class Client:
         results = {tid: tst[tid] for tid in result_ids}
 
         if pending_task_ids:
-            r = self._compute_web_client.v2.get_task_batch(pending_task_ids)
-            logger.debug(f"Response string : {r}")
+            with self._request_lock:
+                r = self._compute_web_client.v2.get_task_batch(pending_task_ids)
+            logger.debug("Response string: %s", r)
 
             statuses = r["results"]
             for task_id in pending_task_ids:
@@ -438,7 +469,6 @@ class Client:
 
         return results
 
-    @requires_login
     def run(
         self, *args, endpoint_id: UUID_LIKE_T, function_id: UUID_LIKE_T, **kwargs
     ) -> str:
@@ -520,7 +550,7 @@ class Client:
             ),
         )
 
-    @requires_login
+    @_client_gares_handler
     def batch_run(
         self, endpoint_id: UUID_LIKE_T, batch: Batch
     ) -> dict[str, str | dict[str, list[str]]]:
@@ -543,9 +573,10 @@ class Client:
             raise ValueError("No tasks specified for batch run")
 
         # Send the data to Globus Compute
-        return self._compute_web_client.v3.submit(endpoint_id, batch.prepare()).data
+        with self._request_lock:
+            return self._compute_web_client.v3.submit(endpoint_id, batch.prepare()).data
 
-    @requires_login
+    @_client_gares_handler
     def register_endpoint(
         self,
         name,
@@ -558,6 +589,7 @@ class Client:
         subscription_id: UUID_LIKE_T | None = None,
         public: bool | None = None,
         high_assurance: bool | None = None,
+        admins: list[UUID_LIKE_T] | tuple[UUID_LIKE_T, ...] | None = None,
     ):
         """Register an endpoint with the Globus Compute service.
 
@@ -583,6 +615,10 @@ class Client:
             Subscription ID to associate endpoint with
         public : bool | None
             Indicates if all users can discover the multi-user endpoint.
+        admins: list[UUID_LIKE_T] | tuple[UUID_LIKE_T, ...] | None
+            A list of Globus Auth identity IDs that have administrative access to the
+            endpoint, in addition to the owner. This field requires an active
+            Globus subscription (i.e., ``subscription_id``).
 
         Returns
         -------
@@ -610,42 +646,31 @@ class Client:
             data["public"] = public
         if high_assurance is not None:
             data["high_assurance"] = high_assurance
+        if admins:
+            data["admins"] = admins
 
-        if endpoint_id:
-            r = self._compute_web_client.v3.update_endpoint(endpoint_id, data)
-        else:
-            r = self._compute_web_client.v3.register_endpoint(data)
+        with self._request_lock:
+            if endpoint_id:
+                r = self._compute_web_client.v3.update_endpoint(endpoint_id, data)
+            else:
+                r = self._compute_web_client.v3.register_endpoint(data)
 
         return r.data
 
-    @requires_login
+    @_client_gares_handler
     def get_result_amqp_url(self) -> dict[str, str]:
-        r = self._compute_web_client.v2.get_result_amqp_url()
-        return r.data
+        with self._request_lock:
+            return self._compute_web_client.v2.get_result_amqp_url().data
 
-    @requires_login
-    def get_containers(self, name, description=None):
-        """
-        Register a DLHub endpoint with the Globus Compute service and get
-        the containers to launch.
+    def _raise_container_deprecation_warning(self, method_name: str):
+        warnings.warn(
+            f"The '{method_name}' method is deprecated."
+            " Container functionality has moved to the endpoint configuration.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
 
-        Parameters
-        ----------
-        name : str
-            Name of the endpoint
-        description : str
-            Description of the endpoint
-
-        Returns
-        -------
-        int
-            The port to connect to and a list of containers
-        """
-        data = {"endpoint_name": name, "description": description}
-        r = self._compute_web_client.v2.post("/v2/get_containers", data=data)
-        return r.data["endpoint_uuid"], r.data["endpoint_containers"]
-
-    @requires_login
+    @_client_gares_handler
     def get_container(self, container_uuid, container_type):
         """Get the details of a container for staging it locally.
 
@@ -662,14 +687,14 @@ class Client:
         dict
             The details of the containers to deploy
         """
-        self.version_check()
-
-        r = self._compute_web_client.v2.get(
-            f"/v2/containers/{container_uuid}/{container_type}"
-        )
+        self._raise_container_deprecation_warning("get_container")
+        with self._request_lock:
+            r = self._compute_web_client.v2.get(
+                f"/v2/containers/{container_uuid}/{container_type}"
+            )
         return r.data["container"]
 
-    @requires_login
+    @_client_gares_handler
     def get_endpoint_status(self, endpoint_uuid):
         """Get the status reports for an endpoint.
 
@@ -683,10 +708,10 @@ class Client:
         dict
             The details of the endpoint's stats
         """
-        r = self._compute_web_client.v2.get_endpoint_status(endpoint_uuid)
-        return r.data
+        with self._request_lock:
+            return self._compute_web_client.v2.get_endpoint_status(endpoint_uuid).data
 
-    @requires_login
+    @_client_gares_handler
     def get_endpoint_metadata(self, endpoint_uuid):
         """Get the metadata for an endpoint.
 
@@ -702,10 +727,10 @@ class Client:
             configuration values. If there were any issues deserializing this data, may
             also include an "errors" key.
         """
-        r = self._compute_web_client.v2.get_endpoint(endpoint_uuid)
-        return r.data
+        with self._request_lock:
+            return self._compute_web_client.v2.get_endpoint(endpoint_uuid).data
 
-    @requires_login
+    @_client_gares_handler
     def get_endpoints(self):
         """Get a list of all endpoints owned by the current user across all systems.
 
@@ -714,10 +739,10 @@ class Client:
         list
             A list of dictionaries which contain endpoint info
         """
-        r = self._compute_web_client.v2.get_endpoints()
-        return r.data
+        with self._request_lock:
+            return self._compute_web_client.v2.get_endpoints().data
 
-    @requires_login
+    @_client_gares_handler
     def register_function(
         self,
         function,
@@ -741,6 +766,7 @@ class Client:
             DEPRECATED - functions' names are derived from their ``__name__`` attribute
         container_uuid : str
             Container UUID from registration with Globus Compute
+            DEPRECATED - Container functionality has moved to the endpoint configuration
         description : str
             Description of the function. If this is None, and the function has a
             docstring, that docstring is uploaded as the function's description instead;
@@ -788,10 +814,12 @@ class Client:
         )
         logger.info("Registering function: %s", data.function_name)
         logger.debug("Function data: %s", data)
-        r = self._compute_web_client.v3.register_function(data.to_dict())
+
+        with self._request_lock:
+            r = self._compute_web_client.v3.register_function(data.to_dict())
         return r.data["function_uuid"]
 
-    @requires_login
+    @_client_gares_handler
     def get_function(self, function_id: UUID_LIKE_T):
         """Submit a request for details about a registered function.
 
@@ -806,10 +834,10 @@ class Client:
             Information about the registered function, such as name, description,
             serialized source code, python version, etc.
         """
-        r = self._compute_web_client.v2.get_function(function_id)
-        return r.data
+        with self._request_lock:
+            return self._compute_web_client.v2.get_function(function_id).data
 
-    @requires_login
+    @_client_gares_handler
     def register_container(self, location, container_type, name="", description=""):
         """Register a container with the Globus Compute service.
 
@@ -830,6 +858,8 @@ class Client:
         str
             The id of the container
         """
+        self._raise_container_deprecation_warning("register_container")
+
         payload = {
             "name": name,
             "location": location,
@@ -837,10 +867,11 @@ class Client:
             "type": container_type,
         }
 
-        r = self._compute_web_client.v2.post("/v2/containers", data=payload)
+        with self._request_lock:
+            r = self._compute_web_client.v2.post("/v2/containers", data=payload)
         return r.data["container_id"]
 
-    @requires_login
+    @_client_gares_handler
     def build_container(self, container_spec):
         """
         Submit a request to build a docker image based on a container spec. This
@@ -866,13 +897,18 @@ class Client:
         ContainerBuildForbidden
             User is not in the globus group that protects the build
         """
-        r = self._compute_web_client.v2.post(
-            "/v2/containers/build", data=container_spec.to_json()
-        )
+        self._raise_container_deprecation_warning("build_container")
+        with self._request_lock:
+            r = self._compute_web_client.v2.post(
+                "/v2/containers/build", data=container_spec.to_json()
+            )
         return r.data["container_id"]
 
+    @_client_gares_handler
     def get_container_build_status(self, container_id):
-        r = self._compute_web_client.v2.get(f"/v2/containers/build/{container_id}")
+        self._raise_container_deprecation_warning("get_container_build_status")
+        with self._request_lock:
+            r = self._compute_web_client.v2.get(f"/v2/containers/build/{container_id}")
         if r.http_status == 200:
             return r["status"]
         elif r.http_status == 404:
@@ -885,7 +921,7 @@ class Client:
             logger.error(message)
             raise SystemError(message)
 
-    @requires_login
+    @_client_gares_handler
     def get_allowed_functions(self, endpoint_id: UUID_LIKE_T):
         """List the functions that are allowed to execute on this endpoint
         Parameters
@@ -897,9 +933,10 @@ class Client:
         json
             The response of the request
         """
-        return self._compute_web_client.v3.get_endpoint_allowlist(endpoint_id).data
+        with self._request_lock:
+            return self._compute_web_client.v3.get_endpoint_allowlist(endpoint_id).data
 
-    @requires_login
+    @_client_gares_handler
     def stop_endpoint(self, endpoint_id: str):
         """Stop an endpoint by dropping it's active connections.
 
@@ -913,9 +950,10 @@ class Client:
         json
             The response of the request
         """
-        return self._compute_web_client.v2.lock_endpoint(endpoint_id)
+        with self._request_lock:
+            return self._compute_web_client.v2.lock_endpoint(endpoint_id)
 
-    @requires_login
+    @_client_gares_handler
     def delete_endpoint(self, endpoint_id: str):
         """Delete an endpoint
 
@@ -929,9 +967,10 @@ class Client:
         json
             The response of the request
         """
-        return self._compute_web_client.v2.delete_endpoint(endpoint_id)
+        with self._request_lock:
+            return self._compute_web_client.v2.delete_endpoint(endpoint_id)
 
-    @requires_login
+    @_client_gares_handler
     def delete_function(self, function_id: str):
         """Delete a function
 
@@ -945,9 +984,9 @@ class Client:
         json
             The response of the request
         """
-        return self._compute_web_client.v2.delete_function(function_id)
+        with self._request_lock:
+            return self._compute_web_client.v2.delete_function(function_id)
 
-    @requires_login
     def get_worker_hardware_details(self, endpoint_id: UUID_LIKE_T) -> str:
         """
         Run a function to get hardware details. Returns a task ID; when that task is

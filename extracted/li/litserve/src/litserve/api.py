@@ -17,11 +17,14 @@ import json
 import warnings
 from abc import ABC, abstractmethod
 from queue import Queue
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 from pydantic import BaseModel
 
 from litserve.specs.base import LitSpec
+
+if TYPE_CHECKING:
+    from litserve.loops.base import LitLoop
 
 
 class LitAPI(ABC):
@@ -32,13 +35,62 @@ class LitAPI(ABC):
     _logger_queue: Optional[Queue] = None
     request_timeout: Optional[float] = None
 
-    def __init__(self, max_batch_size: int = 1, batch_timeout: float = 0.0, enable_async: bool = False):
-        """Initialize a LitAPI instance.
+    def __init__(
+        self,
+        max_batch_size: int = 1,
+        batch_timeout: float = 0.0,
+        api_path: str = "/predict",
+        stream: bool = False,
+        loop: Optional[Union[str, "LitLoop"]] = "auto",
+        spec: Optional[LitSpec] = None,
+        enable_async: bool = False,
+    ):
+        """Initialize a LitAPI instance that defines the model's inference behavior.
 
         Args:
-            max_batch_size: Maximum number of requests to process in a batch.
-            batch_timeout: Maximum time to wait for a batch to fill before processing.
-            enable_async: Enable async support.
+            max_batch_size (int, optional):
+                Maximum requests to batch together for inference. Higher values improve throughput
+                for models that benefit from batching but use more memory. Defaults to 1.
+
+            batch_timeout (float, optional):
+                Maximum seconds to wait for a batch to fill before processing incomplete batches.
+                Lower values reduce latency, higher values improve batching efficiency. Defaults to 0.0.
+
+            api_path (str, optional):
+                URL endpoint path for predictions (e.g., "/predict", "/v1/chat"). Defaults to "/predict".
+
+            stream (bool, optional):
+                Enable streaming responses for real-time output (useful for LLMs, long-running tasks).
+                Requires implementing encode_response() for streaming. Defaults to False.
+
+            loop (Union[str, LitLoop], optional):
+                Inference loop strategy. "auto" selects optimal loop based on batching/streaming settings,
+                or provide custom LitLoop instance for advanced control. Defaults to "auto".
+
+            spec (LitSpec, optional):
+                API specification defining input/output schemas and behavior. Use OpenAISpec for
+                OpenAI-compatible APIs or custom LitSpec implementations. Defaults to None.
+
+            enable_async (bool, optional):
+                Enable async/await support for non-blocking operations in predict() method.
+                Useful for I/O-bound inference or external API calls. Defaults to False.
+
+        Example:
+            >>> # Simple API
+            >>> api = LitAPI()
+
+            >>> # Batched inference
+            >>> api = LitAPI(max_batch_size=8, batch_timeout=0.1)
+
+            >>> # OpenAI-compatible API
+            >>> api = LitAPI(spec=OpenAISpec())
+
+            >>> # Async processing
+            >>> api = LitAPI(enable_async=True)
+
+        Note:
+            You must implement setup(), predict(), and optionally decode_request()/encode_response()
+            methods to define your model's behavior.
 
         """
 
@@ -47,6 +99,36 @@ class LitAPI(ABC):
 
         if batch_timeout < 0:
             raise ValueError("batch_timeout must be greater than or equal to 0")
+
+        if isinstance(spec, LitSpec):
+            stream = spec.stream
+
+        if loop is None:
+            loop = "auto"
+
+        if isinstance(loop, str) and loop != "auto":
+            raise ValueError("loop must be an instance of _BaseLoop or 'auto'")
+
+        if not api_path.startswith("/"):
+            raise ValueError(
+                "api_path must start with '/'. "
+                "Please provide a valid api path like '/predict', '/classify', or '/v1/predict'"
+            )
+
+        # Check if the batch and unbatch methods are overridden in the lit_api instance
+        batch_overridden = self.batch.__code__ is not LitAPI.batch.__code__
+        unbatch_overridden = self.unbatch.__code__ is not LitAPI.unbatch.__code__
+
+        if batch_overridden and unbatch_overridden and max_batch_size == 1:
+            warnings.warn(
+                "The LitServer has both batch and unbatch methods implemented, "
+                "but the max_batch_size parameter was not set."
+            )
+
+        self._api_path = api_path
+        self.stream = stream
+        self._loop = loop
+        self._spec = spec
         self.max_batch_size = max_batch_size
         self.batch_timeout = batch_timeout
         self.enable_async = enable_async
@@ -165,10 +247,8 @@ Streaming example:
     def device(self, value):
         self._device = value
 
-    def pre_setup(self, spec: Optional[LitSpec]):
-        if self.batch_timeout > self.request_timeout and self.request_timeout not in (False, -1):
-            raise ValueError("batch_timeout must be less than request_timeout")
-
+    def pre_setup(self, spec: Optional[LitSpec] = None):
+        spec = spec or self._spec
         if self.stream:
             self._default_unbatch = self._unbatch_stream
         else:
@@ -176,6 +256,7 @@ Streaming example:
 
         if spec:
             self._spec = spec
+            spec._max_batch_size = self.max_batch_size
             spec.pre_setup(self)
 
     def set_logger_queue(self, queue: Queue):
@@ -211,3 +292,33 @@ Streaming example:
 
         """
         return True
+
+    @property
+    def loop(self):
+        if self._loop == "auto":
+            from litserve.loops.loops import get_default_loop
+
+            self._loop = get_default_loop(self.stream, self.max_batch_size, self.enable_async)
+        return self._loop
+
+    @loop.setter
+    def loop(self, value: "LitLoop"):
+        self._loop = value
+
+    @property
+    def spec(self):
+        return self._spec
+
+    @spec.setter
+    def spec(self, value: LitSpec):
+        self._spec = value
+
+    @property
+    def api_path(self):
+        if self._spec:
+            return self._spec.api_path
+        return self._api_path
+
+    @api_path.setter
+    def api_path(self, value: str):
+        self._api_path = value

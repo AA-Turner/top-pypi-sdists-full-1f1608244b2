@@ -4,6 +4,7 @@ import collections
 import sys
 import time
 import uuid
+from contextlib import nullcontext
 from datetime import datetime, timedelta
 from functools import cached_property
 from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Tuple
@@ -150,6 +151,7 @@ class ProgressService:
             self.main_progress = None
             self.explainer_text = None
             self.shard_progress = None
+        self.show_progress = show_progress
 
     @cached_property
     def enclosure_panel(self) -> Panel | None:
@@ -398,8 +400,8 @@ class ProgressService:
         else:
             main_task_id = None
             shard_task_id = None
-
-        with ChalkLive(self.enclosure_panel, auto_refresh=True):
+        context = ChalkLive(self.enclosure_panel, auto_refresh=True) if self.show_progress else nullcontext()
+        with context:
             for batch_report in self.poll_report(timeout, completion_timeout=self.client.default_job_timeout):
 
                 # Update main progress text
@@ -409,9 +411,7 @@ class ProgressService:
                     if self.main_progress.tasks[main_task_id].description == initial_description:
                         description = f"Executing {OFFLINE_QUERY}: "
                         self.main_progress.update(main_task_id, description=description)
-
                 self.handle_resolver_update(batch_report=batch_report, fqn_to_task_id=fqn_to_task_id)
-
                 if batch_report.status == BatchOpStatus.COMPLETED:
                     self._shard_id += 1
                     if main_task_id is not None:

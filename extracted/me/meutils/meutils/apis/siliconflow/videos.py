@@ -46,7 +46,7 @@ async def create_task(request: VideoRequest, token: Optional[str] = None):
         request.model = "Wan-AI/Wan2.1-T2V-14B-720P-Turbo"
 
     if request.image:
-        request.image = await to_base64(request.image)
+        # request.image = await to_base64(request.image)
         request.model = request.model.replace("-T2V-", "-I2V-")
 
     payload = request.model_dump(exclude_none=True)
@@ -88,7 +88,7 @@ async def get_task(task_id, token: str):
 
 if __name__ == '__main__':
     token = None
-    token = "sk-raapiguffsnsxgkfiwfusjmbpcyqoxhcohhxaybflrnvpqjw"
+    token = "sk-rfuayacpsnrcikpgwrotzfcnpzhsrgqnfjdgnihckbhhscgw"
 
     request = VideoRequest(
         model="x",
@@ -96,13 +96,13 @@ if __name__ == '__main__':
         image='https://oss.ffire.cc/files/kling_watermark.png'  # 1148f2e4-0a62-4208-84de-0bf2c88f740d
     )
 
-    r = arun(create_task(request))
+    # r = arun(create_task(request))
 
     # tokens_ = arun(check_token_for_siliconflow(tokens, threshold=0.01))
 
     # arun(create_task(request, token=token))
 
-    # arun(get_task("fa248aac-00ec-4b00-a2f8-3d6bf1cea6d3", token))
+    arun(get_task("gkx1e8fejgod", token))
     # arun(get_task("c716a328-438e-4612-aff2-a669034499cb", token))
     # arun(get_task("1148f2e4-0a62-4208-84de-0bf2c88f740d", token))
 

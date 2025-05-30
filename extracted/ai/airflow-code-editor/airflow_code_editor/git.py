@@ -23,7 +23,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from flask import Response, make_response
+# TODO
 from flask_login import current_user  # type: ignore
 
 from airflow_code_editor.commons import (
@@ -35,9 +35,11 @@ from airflow_code_editor.commons import (
 )
 from airflow_code_editor.fs import RootFS
 from airflow_code_editor.utils import (
+    Response,
     get_plugin_boolean_config,
     get_plugin_config,
     get_root_folder,
+    make_response,
     normalize_path,
     prepare_api_response,
     read_mount_points_config,
@@ -81,17 +83,16 @@ class CompletedGitCommand:
     def prepare_git_response(self) -> Response:
         if self.git_cmd == 'cat-file':
             response = make_response(
-                self.stdout or self.stderr,
-                HTTP_200_OK if self.returncode == 0 else HTTP_404_NOT_FOUND,
+                content=self.stdout or self.stderr,
+                status=HTTP_200_OK if self.returncode == 0 else HTTP_404_NOT_FOUND,
+                mimetype='text/plain',
             )
-            response.headers['Content-Type'] = 'text/plain'
         else:
-            message = prepare_api_response(
+            response = prepare_api_response(
                 data=self.stdout,
                 returncode=self.returncode,
                 error_message=self.stderr or None,
             )
-            response = make_response(message)
         return response
 
 
@@ -187,7 +188,13 @@ def git_mv_local(git_args: List[str]) -> str:
     return ''
 
 
+def git_help(git_args: List[str]) -> str:
+    "Show supported git commands"
+    return '\n'.join(list(LOCAL_COMMANDS.keys()) + SUPPORTED_GIT_COMMANDS)
+
+
 LOCAL_COMMANDS = {
+    'help': git_help,
     'mounts': git_mounts,
     'ls-local': git_ls_local,
     'rm-local': git_rm_local,
@@ -241,6 +248,7 @@ def prepare_git_env() -> Dict[str, str]:
     # Don't prompt on the terminal
     env['GIT_TERMINAL_PROMPT'] = '0'
     env['GIT_ASKPASS'] = '/bin/true'
+    env['GIT_EDITOR'] = '/bin/false'
     # Author
     git_author_name = get_plugin_config('git_author_name')
     if not git_author_name:

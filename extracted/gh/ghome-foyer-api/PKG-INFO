@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: ghome-foyer-api
-Version: 1.1.1
+Version: 1.2.1
 Summary: Generated protobuf stubs for Google Home Foyer API
 Project-URL: Homepage, https://github.com/KapJI/ghome-foyer-api
 Project-URL: Bug Tracker, https://github.com/KapJI/ghome-foyer-api/issues
@@ -17,9 +17,9 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Topic :: Software Development
 Classifier: Typing :: Typed
-Requires-Python: <3.14,>=3.9
-Requires-Dist: grpcio<2,>=1.66.2
-Requires-Dist: protobuf<6,>=5.28.3
+Requires-Python: >=3.9
+Requires-Dist: grpcio<2,>=1.71.0
+Requires-Dist: protobuf>=5.29.5
 Description-Content-Type: text/markdown
 
 [![CI](https://github.com/KapJI/ghome-foyer-api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/KapJI/ghome-foyer-api/actions/workflows/ci.yml)

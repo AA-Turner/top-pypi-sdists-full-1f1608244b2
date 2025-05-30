@@ -11,7 +11,13 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
@@ -188,7 +194,38 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.add_labels_on_cell_zones(cell_zone_id_list=[87], label_name_list=["87-1"])
         >>> meshing_session.meshing_utilities.add_labels_on_cell_zones(cell_zone_name_pattern="*", label_name_list=["cell-1"])
         """
-        pass
+        class _add_labels_on_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _add_labels_on_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._add_labels_on_cell_zonesCommandArguments(*args)
 
     class add_labels_on_edge_zones(PyCommand):
         """
@@ -211,7 +248,38 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.add_labels_on_edge_zones(edge_zone_id_list=[22, 23], label_name_list=["22-1", "23-1"])
         >>> meshing_session.meshing_utilities.add_labels_on_edge_zones(edge_zone_name_pattern="cold-inlet*", label_name_list=["26-1"])
         """
-        pass
+        class _add_labels_on_edge_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.edge_zone_name_pattern = self._edge_zone_name_pattern(self, "edge_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _edge_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _add_labels_on_edge_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._add_labels_on_edge_zonesCommandArguments(*args)
 
     class add_labels_on_face_zones(PyCommand):
         """
@@ -234,7 +302,38 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.add_labels_on_face_zones(face_zone_id_list=[30, 31], label_name_list=["hot-inlet-1", "cold-inlet-1"])
         >>> meshing_session.meshing_utilities.add_labels_on_face_zones(face_zone_name_pattern="out*", label_name_list=["outlet-1"])
         """
-        pass
+        class _add_labels_on_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _add_labels_on_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._add_labels_on_face_zonesCommandArguments(*args)
 
     class clean_face_zone_names(PyCommand):
         """
@@ -249,7 +348,14 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.clean_face_zone_names()
         """
-        pass
+        class _clean_face_zone_namesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _clean_face_zone_namesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._clean_face_zone_namesCommandArguments(*args)
 
     class delete_all_sub_domains(PyCommand):
         """
@@ -264,7 +370,14 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.delete_all_sub_domains()
         """
-        pass
+        class _delete_all_sub_domainsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _delete_all_sub_domainsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_all_sub_domainsCommandArguments(*args)
 
     class delete_empty_cell_zones(PyCommand):
         """
@@ -286,7 +399,32 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_cell_zones(cell_zone_name_list=["elbow.87"])
         >>> meshing_session.meshing_utilities.delete_empty_cell_zones(cell_zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_cell_zonesCommandArguments(*args)
 
     class delete_empty_edge_zones(PyCommand):
         """
@@ -308,7 +446,32 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_edge_zones("symmetry:xyplane:hot-inlet:elbow-fluid:feature.20", "hot-inlet:wall-inlet:elbow-fluid:feature.21")
         >>> meshing_session.meshing_utilities.delete_empty_edge_zones(edge_zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_edge_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.edge_zone_name_pattern = self._edge_zone_name_pattern(self, "edge_zone_name_pattern", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _edge_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_edge_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_edge_zonesCommandArguments(*args)
 
     class delete_empty_face_zones(PyCommand):
         """
@@ -330,7 +493,32 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_face_zones(face_zone_name_list=["wall-inlet", "wallfluid-new"])
         >>> meshing_session.meshing_utilities.delete_empty_face_zones(face_zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_face_zonesCommandArguments(*args)
 
     class delete_empty_zones(PyCommand):
         """
@@ -352,7 +540,32 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_empty_zones(zone_name_list=["hotfluid-new", "elbow.87"])
         >>> meshing_session.meshing_utilities.delete_empty_zones(zone_name_pattern="*")
         """
-        pass
+        class _delete_empty_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id_list = self._zone_id_list(self, "zone_id_list", service, rules, path)
+                self.zone_name_list = self._zone_name_list(self, "zone_name_list", service, rules, path)
+                self.zone_name_pattern = self._zone_name_pattern(self, "zone_name_pattern", service, rules, path)
+
+            class _zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id_list.
+                """
+
+            class _zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name_list.
+                """
+
+            class _zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_empty_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_empty_zonesCommandArguments(*args)
 
     class delete_marked_faces_in_zones(PyCommand):
         """
@@ -374,7 +587,32 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.delete_marked_faces_in_zones(face_zone_name_list=["wall-inlet", "wallfluid-new"])
         >>> meshing_session.meshing_utilities.delete_marked_faces_in_zones(face_zone_name_pattern="*")
         """
-        pass
+        class _delete_marked_faces_in_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _delete_marked_faces_in_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._delete_marked_faces_in_zonesCommandArguments(*args)
 
     class merge_cell_zones(PyCommand):
         """
@@ -396,7 +634,32 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.merge_cell_zones(cell_zone_name_list=["elbow-fluid"])
         >>> meshing_session.meshing_utilities.merge_cell_zones(cell_zone_name_pattern="*")
         """
-        pass
+        class _merge_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _merge_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_cell_zonesCommandArguments(*args)
 
     class merge_cell_zones_with_same_prefix(PyCommand):
         """
@@ -414,7 +677,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_cell_zones_with_same_prefix(prefix="elbow")
         """
-        pass
+        class _merge_cell_zones_with_same_prefixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.prefix = self._prefix(self, "prefix", service, rules, path)
+
+            class _prefix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument prefix.
+                """
+
+        def create_instance(self) -> _merge_cell_zones_with_same_prefixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_cell_zones_with_same_prefixCommandArguments(*args)
 
     class merge_cell_zones_with_same_suffix(PyCommand):
         """
@@ -432,7 +708,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_cell_zones_with_same_suffix(suffix="fluid")
         """
-        pass
+        class _merge_cell_zones_with_same_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.suffix = self._suffix(self, "suffix", service, rules, path)
+
+            class _suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument suffix.
+                """
+
+        def create_instance(self) -> _merge_cell_zones_with_same_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_cell_zones_with_same_suffixCommandArguments(*args)
 
     class merge_face_zones(PyCommand):
         """
@@ -452,7 +741,26 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.merge_face_zones(face_zone_id_list=[30, 31, 32])
         >>> meshing_session.meshing_utilities.merge_face_zones(face_zone_name_pattern="wall*")
         """
-        pass
+        class _merge_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _merge_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_face_zonesCommandArguments(*args)
 
     class merge_face_zones_of_type(PyCommand):
         """
@@ -471,7 +779,26 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_face_zones_of_type(face_zone_type="velocity-inlet", face_zone_name_pattern="*")
         """
-        pass
+        class _merge_face_zones_of_typeCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_type = self._face_zone_type(self, "face_zone_type", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+
+            class _face_zone_type(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_type.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+        def create_instance(self) -> _merge_face_zones_of_typeCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_face_zones_of_typeCommandArguments(*args)
 
     class merge_face_zones_with_same_prefix(PyCommand):
         """
@@ -489,7 +816,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.merge_face_zones_with_same_prefix(prefix="elbow")
         """
-        pass
+        class _merge_face_zones_with_same_prefixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.prefix = self._prefix(self, "prefix", service, rules, path)
+
+            class _prefix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument prefix.
+                """
+
+        def create_instance(self) -> _merge_face_zones_with_same_prefixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._merge_face_zones_with_same_prefixCommandArguments(*args)
 
     class remove_id_suffix_from_face_zones(PyCommand):
         """
@@ -504,7 +844,14 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.remove_id_suffix_from_face_zones()
         """
-        pass
+        class _remove_id_suffix_from_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _remove_id_suffix_from_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_id_suffix_from_face_zonesCommandArguments(*args)
 
     class remove_ids_from_zone_names(PyCommand):
         """
@@ -522,7 +869,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.remove_ids_from_zone_names(zone_id_list=[30, 31, 32])
         """
-        pass
+        class _remove_ids_from_zone_namesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id_list = self._zone_id_list(self, "zone_id_list", service, rules, path)
+
+            class _zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id_list.
+                """
+
+        def create_instance(self) -> _remove_ids_from_zone_namesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_ids_from_zone_namesCommandArguments(*args)
 
     class remove_labels_on_cell_zones(PyCommand):
         """
@@ -545,7 +905,38 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.remove_labels_on_cell_zones(cell_zone_id_list=[87], label_name_list=["87-1"])
         >>> meshing_session.meshing_utilities.remove_labels_on_cell_zones(cell_zone_name_pattern="*", label_name_list=["cell-1"])
         """
-        pass
+        class _remove_labels_on_cell_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.cell_zone_name_pattern = self._cell_zone_name_pattern(self, "cell_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _cell_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _remove_labels_on_cell_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_labels_on_cell_zonesCommandArguments(*args)
 
     class remove_labels_on_edge_zones(PyCommand):
         """
@@ -568,7 +959,38 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.remove_labels_on_edge_zones(edge_zone_id_list=[22], label_name_list=["22-1"])
         >>> meshing_session.meshing_utilities.remove_labels_on_edge_zones(edge_zone_name_pattern="*", label_name_list=["26-1"])
         """
-        pass
+        class _remove_labels_on_edge_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.edge_zone_name_pattern = self._edge_zone_name_pattern(self, "edge_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _edge_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _remove_labels_on_edge_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_labels_on_edge_zonesCommandArguments(*args)
 
     class remove_labels_on_face_zones(PyCommand):
         """
@@ -591,7 +1013,38 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.remove_labels_on_face_zones(face_zone_id_list=[30], label_name_list=["hot-inlet-1"])
         >>> meshing_session.meshing_utilities.remove_labels_on_face_zones(face_zone_name_pattern="*", label_name_list=["wall-elbow-1"])
         """
-        pass
+        class _remove_labels_on_face_zonesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.face_zone_name_pattern = self._face_zone_name_pattern(self, "face_zone_name_pattern", service, rules, path)
+                self.label_name_list = self._label_name_list(self, "label_name_list", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _face_zone_name_pattern(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_pattern.
+                """
+
+            class _label_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument label_name_list.
+                """
+
+        def create_instance(self) -> _remove_labels_on_face_zonesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._remove_labels_on_face_zonesCommandArguments(*args)
 
     class rename_edge_zone(PyCommand):
         """
@@ -611,7 +1064,32 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.rename_edge_zone(zone_id=20, new_name="symmetry:xyplane:hot-inlet:elbow-fluid:feature.20-new")
         """
-        pass
+        class _rename_edge_zoneCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id = self._zone_id(self, "zone_id", service, rules, path)
+                self.zone_name = self._zone_name(self, "zone_name", service, rules, path)
+                self.new_name = self._new_name(self, "new_name", service, rules, path)
+
+            class _zone_id(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id.
+                """
+
+            class _zone_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name.
+                """
+
+            class _new_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_name.
+                """
+
+        def create_instance(self) -> _rename_edge_zoneCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_edge_zoneCommandArguments(*args)
 
     class rename_face_zone(PyCommand):
         """
@@ -633,7 +1111,32 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.rename_face_zone(zone_id=32, new_name="outlet-32")
         >>> meshing_session.meshing_utilities.rename_face_zone(zone_name="outlet-32", new_name="outlet")
         """
-        pass
+        class _rename_face_zoneCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id = self._zone_id(self, "zone_id", service, rules, path)
+                self.zone_name = self._zone_name(self, "zone_name", service, rules, path)
+                self.new_name = self._new_name(self, "new_name", service, rules, path)
+
+            class _zone_id(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id.
+                """
+
+            class _zone_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument zone_name.
+                """
+
+            class _new_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_name.
+                """
+
+        def create_instance(self) -> _rename_face_zoneCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_face_zoneCommandArguments(*args)
 
     class rename_face_zone_label(PyCommand):
         """
@@ -653,7 +1156,32 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.rename_face_zone_label(object_name="elbow-fluid-1", old_label_name="outlet", new_label_name="outlet-new")
         """
-        pass
+        class _rename_face_zone_labelCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name = self._object_name(self, "object_name", service, rules, path)
+                self.old_label_name = self._old_label_name(self, "old_label_name", service, rules, path)
+                self.new_label_name = self._new_label_name(self, "new_label_name", service, rules, path)
+
+            class _object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name.
+                """
+
+            class _old_label_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_label_name.
+                """
+
+            class _new_label_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_label_name.
+                """
+
+        def create_instance(self) -> _rename_face_zone_labelCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_face_zone_labelCommandArguments(*args)
 
     class rename_object(PyCommand):
         """
@@ -672,7 +1200,26 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.rename_object(old_object_name="elbow-fluid", new_object_name="elbow-fluid-1")
         """
-        pass
+        class _rename_objectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.old_object_name = self._old_object_name(self, "old_object_name", service, rules, path)
+                self.new_object_name = self._new_object_name(self, "new_object_name", service, rules, path)
+
+            class _old_object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_object_name.
+                """
+
+            class _new_object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_object_name.
+                """
+
+        def create_instance(self) -> _rename_objectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._rename_objectCommandArguments(*args)
 
     class renumber_zone_ids(PyCommand):
         """
@@ -691,7 +1238,26 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.renumber_zone_ids(zone_id_list=[30, 31, 32], start_number=1)
         """
-        pass
+        class _renumber_zone_idsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.zone_id_list = self._zone_id_list(self, "zone_id_list", service, rules, path)
+                self.start_number = self._start_number(self, "start_number", service, rules, path)
+
+            class _zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument zone_id_list.
+                """
+
+            class _start_number(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument start_number.
+                """
+
+        def create_instance(self) -> _renumber_zone_idsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._renumber_zone_idsCommandArguments(*args)
 
     class replace_cell_zone_suffix(PyCommand):
         """
@@ -714,7 +1280,44 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.replace_cell_zone_suffix(cell_zone_id_list=[87], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         >>> meshing_session.meshing_utilities.replace_cell_zone_suffix(cell_zone_name_list=["elbow-fluid-new"], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         """
-        pass
+        class _replace_cell_zone_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.cell_zone_id_list = self._cell_zone_id_list(self, "cell_zone_id_list", service, rules, path)
+                self.cell_zone_name_list = self._cell_zone_name_list(self, "cell_zone_name_list", service, rules, path)
+                self.old_suffix = self._old_suffix(self, "old_suffix", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+                self.merge = self._merge(self, "merge", service, rules, path)
+
+            class _cell_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument cell_zone_id_list.
+                """
+
+            class _cell_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_name_list.
+                """
+
+            class _old_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_suffix.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+            class _merge(PyParameterCommandArgumentsSubItem):
+                """
+                Argument merge.
+                """
+
+        def create_instance(self) -> _replace_cell_zone_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_cell_zone_suffixCommandArguments(*args)
 
     class replace_edge_zone_suffix(PyCommand):
         """
@@ -737,7 +1340,44 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.replace_edge_zone_suffix(edge_zone_id_list=[20], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         >>> meshing_session.meshing_utilities.replace_edge_zone_suffix(edge_zone_name_list=["hot-inlet:wall-inlet:elbow-fluid:feature.21"], old_suffix="fluid", new_suffix="fluid-new", merge=True)
         """
-        pass
+        class _replace_edge_zone_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.edge_zone_id_list = self._edge_zone_id_list(self, "edge_zone_id_list", service, rules, path)
+                self.edge_zone_name_list = self._edge_zone_name_list(self, "edge_zone_name_list", service, rules, path)
+                self.old_suffix = self._old_suffix(self, "old_suffix", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+                self.merge = self._merge(self, "merge", service, rules, path)
+
+            class _edge_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument edge_zone_id_list.
+                """
+
+            class _edge_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument edge_zone_name_list.
+                """
+
+            class _old_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument old_suffix.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+            class _merge(PyParameterCommandArgumentsSubItem):
+                """
+                Argument merge.
+                """
+
+        def create_instance(self) -> _replace_edge_zone_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_edge_zone_suffixCommandArguments(*args)
 
     class replace_face_zone_suffix(PyCommand):
         """
@@ -760,7 +1400,44 @@ class Root(PyMenu):
         >>> meshing_session.meshing_utilities.replace_face_zone_suffix(face_zone_id_list=[30, 31, 32], separator="-suffix-", replace_with="-with-", merge=False)
         >>> meshing_session.meshing_utilities.replace_face_zone_suffix(face_zone_name_list=["cold-inlet", "hot-inlet"], separator="-suffix-", replace_with="-with-", merge=False)
         """
-        pass
+        class _replace_face_zone_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.face_zone_id_list = self._face_zone_id_list(self, "face_zone_id_list", service, rules, path)
+                self.face_zone_name_list = self._face_zone_name_list(self, "face_zone_name_list", service, rules, path)
+                self.separator = self._separator(self, "separator", service, rules, path)
+                self.replace_with = self._replace_with(self, "replace_with", service, rules, path)
+                self.merge = self._merge(self, "merge", service, rules, path)
+
+            class _face_zone_id_list(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument face_zone_id_list.
+                """
+
+            class _face_zone_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument face_zone_name_list.
+                """
+
+            class _separator(PyTextualCommandArgumentsSubItem):
+                """
+                Argument separator.
+                """
+
+            class _replace_with(PyTextualCommandArgumentsSubItem):
+                """
+                Argument replace_with.
+                """
+
+            class _merge(PyParameterCommandArgumentsSubItem):
+                """
+                Argument merge.
+                """
+
+        def create_instance(self) -> _replace_face_zone_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_face_zone_suffixCommandArguments(*args)
 
     class replace_label_suffix(PyCommand):
         """
@@ -780,7 +1457,32 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.replace_label_suffix(object_name_list=["elbow-fluid-1"], separator="-", new_suffix="fluid-new")
         """
-        pass
+        class _replace_label_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name_list = self._object_name_list(self, "object_name_list", service, rules, path)
+                self.separator = self._separator(self, "separator", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+
+            class _object_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name_list.
+                """
+
+            class _separator(PyTextualCommandArgumentsSubItem):
+                """
+                Argument separator.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+        def create_instance(self) -> _replace_label_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_label_suffixCommandArguments(*args)
 
     class replace_object_suffix(PyCommand):
         """
@@ -800,7 +1502,32 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.replace_object_suffix(object_name_list=["elbow-fluid"], separator="-", new_suffix="fluid-new")
         """
-        pass
+        class _replace_object_suffixCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name_list = self._object_name_list(self, "object_name_list", service, rules, path)
+                self.separator = self._separator(self, "separator", service, rules, path)
+                self.new_suffix = self._new_suffix(self, "new_suffix", service, rules, path)
+
+            class _object_name_list(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name_list.
+                """
+
+            class _separator(PyTextualCommandArgumentsSubItem):
+                """
+                Argument separator.
+                """
+
+            class _new_suffix(PyTextualCommandArgumentsSubItem):
+                """
+                Argument new_suffix.
+                """
+
+        def create_instance(self) -> _replace_object_suffixCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._replace_object_suffixCommandArguments(*args)
 
     class set_number_of_parallel_compute_threads(PyCommand):
         """
@@ -818,7 +1545,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.set_number_of_parallel_compute_threads(nthreads=2)
         """
-        pass
+        class _set_number_of_parallel_compute_threadsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.nthreads = self._nthreads(self, "nthreads", service, rules, path)
+
+            class _nthreads(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument nthreads.
+                """
+
+        def create_instance(self) -> _set_number_of_parallel_compute_threadsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._set_number_of_parallel_compute_threadsCommandArguments(*args)
 
     class set_object_cell_zone_type(PyCommand):
         """
@@ -837,7 +1577,26 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.set_object_cell_zone_type(object_name="elbow-fluid", cell_zone_type="mixed")
         """
-        pass
+        class _set_object_cell_zone_typeCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.object_name = self._object_name(self, "object_name", service, rules, path)
+                self.cell_zone_type = self._cell_zone_type(self, "cell_zone_type", service, rules, path)
+
+            class _object_name(PyTextualCommandArgumentsSubItem):
+                """
+                Argument object_name.
+                """
+
+            class _cell_zone_type(PyTextualCommandArgumentsSubItem):
+                """
+                Argument cell_zone_type.
+                """
+
+        def create_instance(self) -> _set_object_cell_zone_typeCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._set_object_cell_zone_typeCommandArguments(*args)
 
     class set_quality_measure(PyCommand):
         """
@@ -855,7 +1614,20 @@ class Root(PyMenu):
         --------
         >>> meshing_session.meshing_utilities.set_quality_measure(measure="Aspect Ratio")
         """
-        pass
+        class _set_quality_measureCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.measure = self._measure(self, "measure", service, rules, path)
+
+            class _measure(PyTextualCommandArgumentsSubItem):
+                """
+                Argument measure.
+                """
+
+        def create_instance(self) -> _set_quality_measureCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._set_quality_measureCommandArguments(*args)
 
     class _cell_zones_labels_fdl(PyQuery):
         """

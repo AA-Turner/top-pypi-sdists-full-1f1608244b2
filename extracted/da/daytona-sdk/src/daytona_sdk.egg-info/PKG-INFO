@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: daytona_sdk
-Version: 0.18.1
+Version: 0.18.2
 Summary: Python SDK for Daytona
-Author-email: Vedran Jukic <vedran.jukic@gmail.com>
-License: Apache 2.0
+Author-email: "Daytona Platforms Inc." <support@daytona.io>
+License: AGPL-3.0
 Keywords: daytona,sdk
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
@@ -13,21 +13,30 @@ Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
-License-File: LICENCE
+Requires-Dist: daytona_api_client<0.20.0,>=0.19.1
+Requires-Dist: daytona_api_client_async<0.20.0,>=0.19.1
 Requires-Dist: environs<10.0.0,>=9.5.0
 Requires-Dist: marshmallow<4.0.0,>=3.19.0
 Requires-Dist: pydantic<3.0.0,>=2.4.2
 Requires-Dist: python-dateutil<3.0.0,>=2.8.2
 Requires-Dist: urllib3<3.0.0,>=2.0.7
-Requires-Dist: daytona_api_client<1.0.0,>=0.19.1
 Requires-Dist: Deprecated<2.0.0,>=1.2.18
 Requires-Dist: httpx<0.29.0,>=0.28.0
-Requires-Dist: requests_toolbelt<1.1.0,>=1.0.0
+Requires-Dist: aiofiles<24.2.0,>=24.1.0
+Requires-Dist: aiohttp<4.0.0,>=3.12.0
+Requires-Dist: aiohttp_retry<3.0.0,>=2.9.0
 Provides-Extra: dev
 Requires-Dist: pydoc-markdown>=4.8.2; extra == "dev"
-Requires-Dist: black>=22.0.0; extra == "dev"
-Requires-Dist: isort>=5.10.0; extra == "dev"
-Dynamic: license-file
+Requires-Dist: build>=1.0.3; extra == "dev"
+Requires-Dist: wheel>=0.41.2; extra == "dev"
+Requires-Dist: setuptools>=68.0.0; extra == "dev"
+Requires-Dist: twine>=4.0.2; extra == "dev"
+Requires-Dist: nbqa<2.0.0,>=1.9.1; extra == "dev"
+Requires-Dist: black[jupyter]<24.0.0,>=23.1.0; extra == "dev"
+Requires-Dist: pylint<4.0.0,>=3.3.4; extra == "dev"
+Requires-Dist: isort<6.0.0,>=5.10.0; extra == "dev"
+Requires-Dist: matplotlib<3.11.0,>=3.10.0; extra == "dev"
+Requires-Dist: unasync<0.7.0,>=0.6.0; extra == "dev"
 
 # Daytona SDK for Python
 
@@ -165,26 +174,6 @@ completions = lsp.completions('path/to/file.ts', {"line": 10, "character": 15})
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Daytona is Open Source under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE), and is the [copyright of its contributors](NOTICE). If you would like to contribute to the software, read the Developer Certificate of Origin Version 1.1 (https://developercertificate.org/). Afterwards, navigate to the [contributing guide](CONTRIBUTING.md) to get started.
 
-## License
-
-This project is licensed under the Apache License, Version 2.0 - see below for details:
-
-```
-Copyright 2024 Daytona
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
-
-For the full license text, please see the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+Code in [\_sync](src/daytona_sdk/_sync/) directory shouldn't be edited directly. It should be generated from the corresponding async code in the [\_async](src/daytona_sdk/_async/) directory using the [sync_generator.py](scripts/sync_generator.py) script.

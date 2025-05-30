@@ -28,7 +28,7 @@ import pydoc
 
 # isort: off
 # Logging has to be imported before importing other PyFluent modules
-from ansys.fluent.core.logging import set_console_logging_level  # noqa: F401
+from ansys.fluent.core.logger import set_console_logging_level  # noqa: F401
 
 # isort: on
 
@@ -36,17 +36,17 @@ from ansys.fluent.core.get_build_details import (  # noqa: F401
     get_build_version,
     get_build_version_string,
 )
-from ansys.fluent.core.launcher.launcher import (  # noqa: F401
-    connect_to_fluent,
-    launch_fluent,
-)
-from ansys.fluent.core.launcher.pyfluent_enums import (  # noqa: F401
+from ansys.fluent.core.launcher.launch_options import (  # noqa: F401
     Dimension,
     FluentLinuxGraphicsDriver,
     FluentMode,
     FluentWindowsGraphicsDriver,
     Precision,
     UIMode,
+)
+from ansys.fluent.core.launcher.launcher import (  # noqa: F401
+    connect_to_fluent,
+    launch_fluent,
 )
 from ansys.fluent.core.parametric import LocalParametricStudy  # noqa: F401
 from ansys.fluent.core.pyfluent_warnings import (  # noqa: F401
@@ -57,14 +57,22 @@ from ansys.fluent.core.pyfluent_warnings import (  # noqa: F401
 from ansys.fluent.core.search import search  # noqa: F401
 from ansys.fluent.core.services.batch_ops import BatchOps  # noqa: F401
 from ansys.fluent.core.session import BaseSession as Fluent  # noqa: F401
+from ansys.fluent.core.session_utilities import (  # noqa: F401
+    Meshing,
+    PrePost,
+    PureMeshing,
+    Solver,
+    SolverAero,
+    SolverIcing,
+)
 from ansys.fluent.core.streaming_services.events_streaming import *  # noqa: F401, F403
 from ansys.fluent.core.utils import fldoc, get_examples_download_dir
 from ansys.fluent.core.utils.fluent_version import FluentVersion  # noqa: F401
 from ansys.fluent.core.utils.setup_for_fluent import setup_for_fluent  # noqa: F401
 
-__version__ = "0.30.5"
+__version__ = "0.32.0"
 
-_VERSION_INFO = "Build date: April 29, 2025 16:52 UTC ShaID: f730b88"
+_VERSION_INFO = "Build date: May 29, 2025 03:27 UTC ShaID: 0c41a55"
 """
 Global variable indicating the version info of the PyFluent package.
 Build timestamp and commit hash are added to this variable during packaging.
@@ -106,7 +114,7 @@ EXAMPLES_PATH = str(get_examples_download_dir())
 CONTAINER_MOUNT_SOURCE = None
 
 # Path inside the container where the host path is mounted
-CONTAINER_MOUNT_TARGET = "/mnt/pyfluent"
+CONTAINER_MOUNT_TARGET = "/home/container/workdir"
 
 # Set this to False to stop automatically inferring and setting REMOTING_SERVER_ADDRESS
 INFER_REMOTING_IP = True
@@ -148,6 +156,9 @@ SUPPORT_SOLVER_INTERRUPT = False
 # Whether to start watchdog
 START_WATCHDOG = None
 
+# Health check timeout in seconds
+CHECK_HEALTH_TIMEOUT = 60
+
 # Whether to skip health check
 CHECK_HEALTH = True
 
@@ -173,6 +184,3 @@ LAUNCH_FLUENT_PORT = None
 
 # Skip password check during rpc execution when Fluent is launched from PyFluent
 LAUNCH_FLUENT_SKIP_PASSWORD_CHECK = False
-
-# Set Fluent precision mode
-FLUENT_PRECISION_MODE = None

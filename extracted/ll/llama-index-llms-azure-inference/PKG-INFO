@@ -1,21 +1,15 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: llama-index-llms-azure-inference
-Version: 0.3.0
+Version: 0.4.0
 Summary: Integration for model supporting Azure AI model inference API in llama-index
-License: MIT
-Author: Azure AI model inference group
-Author-email: azureml-inference@microsoft.com
-Requires-Python: >=3.9,<4.0
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.11
-Classifier: Programming Language :: Python :: 3.12
-Requires-Dist: aiohttp (>=3.10.0,<4.0.0)
-Requires-Dist: azure-ai-inference (>=1.0.0b5)
-Requires-Dist: azure-identity (>=1.15.0,<2.0.0)
-Requires-Dist: llama-index-core (>=0.12.0,<0.13.0)
+Author-email: Azure AI model inference group <azureml-inference@microsoft.com>
+License-Expression: MIT
+License-File: LICENSE
+Requires-Python: <4.0,>=3.9
+Requires-Dist: aiohttp<4,>=3.10.0
+Requires-Dist: azure-ai-inference>=1.0.0b5
+Requires-Dist: azure-identity<2,>=1.15.0
+Requires-Dist: llama-index-core<0.13,>=0.12.0
 Description-Content-Type: text/markdown
 
 # LlamaIndex LLMs Integration: Azure AI model inference
@@ -30,4 +24,3 @@ For details and examples about how to use this integration, see [Getting startin
 
   - Introduce `api_version` parameter in the `AzureAICompletionsModel` class to allow overriding of the default value.
   - Introduce support for [Azure AI model inference service](https://aka.ms/aiservices/infernece) which requires `azure-ai-inference>=1.0.0b5`.
-

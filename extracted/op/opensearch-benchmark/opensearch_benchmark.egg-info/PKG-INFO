@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: opensearch-benchmark
-Version: 1.13.0
+Version: 1.14.0
 Summary: Macrobenchmarking framework for OpenSearch
 Home-page: https://github.com/opensearch-project/OpenSearch-Benchmark
 Author: Ian Hoang, Govind Kamat, Mingyang Shi, Chinmay Gadgil, Rishabh Singh, Vijayan Balasubramanian

@@ -11,7 +11,13 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
@@ -410,7 +416,47 @@ class Root(PyMenu):
                         -------
                         list[float]
                         """
-                        pass
+                        class _GetReportCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+                                self.TimestepSelection = self._TimestepSelection(self, "TimestepSelection", service, rules, path)
+
+                            class _TimestepSelection(PySingletonCommandArgumentsSubItem):
+                                """
+                                Argument TimestepSelection.
+                                """
+
+                                def __init__(self, parent, attr, service, rules, path):
+                                    super().__init__(parent, attr, service, rules, path)
+                                    self.Increment = self._Increment(self, "Increment", service, rules, path)
+                                    self.Option = self._Option(self, "Option", service, rules, path)
+                                    self.Begin = self._Begin(self, "Begin", service, rules, path)
+                                    self.End = self._End(self, "End", service, rules, path)
+
+                                class _Increment(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Increment.
+                                    """
+
+                                class _Option(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Option.
+                                    """
+
+                                class _Begin(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Begin.
+                                    """
+
+                                class _End(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument End.
+                                    """
+
+                        def create_instance(self) -> _GetReportCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._GetReportCommandArguments(*args)
 
                     class PlotReport(PyCommand):
                         """
@@ -428,7 +474,71 @@ class Root(PyMenu):
                         -------
                         None
                         """
-                        pass
+                        class _PlotReportCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+                                self.TimestepSelection = self._TimestepSelection(self, "TimestepSelection", service, rules, path)
+                                self.Title = self._Title(self, "Title", service, rules, path)
+                                self.XAxis = self._XAxis(self, "XAxis", service, rules, path)
+                                self.XAxisLabel = self._XAxisLabel(self, "XAxisLabel", service, rules, path)
+                                self.YAxisLabel = self._YAxisLabel(self, "YAxisLabel", service, rules, path)
+
+                            class _TimestepSelection(PySingletonCommandArgumentsSubItem):
+                                """
+                                Argument TimestepSelection.
+                                """
+
+                                def __init__(self, parent, attr, service, rules, path):
+                                    super().__init__(parent, attr, service, rules, path)
+                                    self.Increment = self._Increment(self, "Increment", service, rules, path)
+                                    self.Option = self._Option(self, "Option", service, rules, path)
+                                    self.Begin = self._Begin(self, "Begin", service, rules, path)
+                                    self.End = self._End(self, "End", service, rules, path)
+
+                                class _Increment(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Increment.
+                                    """
+
+                                class _Option(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Option.
+                                    """
+
+                                class _Begin(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Begin.
+                                    """
+
+                                class _End(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument End.
+                                    """
+
+                            class _Title(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument Title.
+                                """
+
+                            class _XAxis(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument XAxis.
+                                """
+
+                            class _XAxisLabel(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument XAxisLabel.
+                                """
+
+                            class _YAxisLabel(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument YAxisLabel.
+                                """
+
+                        def create_instance(self) -> _PlotReportCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._PlotReportCommandArguments(*args)
 
                     class PrintReport(PyCommand):
                         """
@@ -442,7 +552,47 @@ class Root(PyMenu):
                         -------
                         None
                         """
-                        pass
+                        class _PrintReportCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+                                self.TimestepSelection = self._TimestepSelection(self, "TimestepSelection", service, rules, path)
+
+                            class _TimestepSelection(PySingletonCommandArgumentsSubItem):
+                                """
+                                Argument TimestepSelection.
+                                """
+
+                                def __init__(self, parent, attr, service, rules, path):
+                                    super().__init__(parent, attr, service, rules, path)
+                                    self.Increment = self._Increment(self, "Increment", service, rules, path)
+                                    self.Option = self._Option(self, "Option", service, rules, path)
+                                    self.Begin = self._Begin(self, "Begin", service, rules, path)
+                                    self.End = self._End(self, "End", service, rules, path)
+
+                                class _Increment(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Increment.
+                                    """
+
+                                class _Option(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Option.
+                                    """
+
+                                class _Begin(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Begin.
+                                    """
+
+                                class _End(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument End.
+                                    """
+
+                        def create_instance(self) -> _PrintReportCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._PrintReportCommandArguments(*args)
 
                     class SaveReport(PyCommand):
                         """
@@ -457,7 +607,53 @@ class Root(PyMenu):
                         -------
                         None
                         """
-                        pass
+                        class _SaveReportCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+                                self.Filename = self._Filename(self, "Filename", service, rules, path)
+                                self.TimestepSelection = self._TimestepSelection(self, "TimestepSelection", service, rules, path)
+
+                            class _Filename(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument Filename.
+                                """
+
+                            class _TimestepSelection(PySingletonCommandArgumentsSubItem):
+                                """
+                                Argument TimestepSelection.
+                                """
+
+                                def __init__(self, parent, attr, service, rules, path):
+                                    super().__init__(parent, attr, service, rules, path)
+                                    self.Increment = self._Increment(self, "Increment", service, rules, path)
+                                    self.Option = self._Option(self, "Option", service, rules, path)
+                                    self.Begin = self._Begin(self, "Begin", service, rules, path)
+                                    self.End = self._End(self, "End", service, rules, path)
+
+                                class _Increment(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Increment.
+                                    """
+
+                                class _Option(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Option.
+                                    """
+
+                                class _Begin(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Begin.
+                                    """
+
+                                class _End(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument End.
+                                    """
+
+                        def create_instance(self) -> _SaveReportCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._SaveReportCommandArguments(*args)
 
                 def __getitem__(self, key: str) -> _Reports:
                     return super().__getitem__(key)
@@ -536,7 +732,14 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _UpdateMinMaxCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _UpdateMinMaxCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._UpdateMinMaxCommandArguments(*args)
 
                     class IsosurfaceSettings(PyMenu):
                         """
@@ -618,7 +821,14 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _UpdateMinMaxCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _UpdateMinMaxCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._UpdateMinMaxCommandArguments(*args)
 
                     class LineSettings(PyMenu):
                         """
@@ -1121,7 +1331,14 @@ class Root(PyMenu):
                         -------
                         bool
                         """
-                        pass
+                        class _DisplayCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+
+                        def create_instance(self) -> _DisplayCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._DisplayCommandArguments(*args)
 
                     class SaveImage(PyCommand):
                         """
@@ -1141,7 +1358,89 @@ class Root(PyMenu):
                         -------
                         bool
                         """
-                        pass
+                        class _SaveImageCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+                                self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                self.Format = self._Format(self, "Format", service, rules, path)
+                                self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                            class _FileName(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument FileName.
+                                """
+
+                            class _Format(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument Format.
+                                """
+
+                            class _FileType(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument FileType.
+                                """
+
+                            class _Coloring(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument Coloring.
+                                """
+
+                            class _Orientation(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument Orientation.
+                                """
+
+                            class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                """
+                                Argument UseWhiteBackground.
+                                """
+
+                            class _Resolution(PySingletonCommandArgumentsSubItem):
+                                """
+                                Argument Resolution.
+                                """
+
+                                def __init__(self, parent, attr, service, rules, path):
+                                    super().__init__(parent, attr, service, rules, path)
+                                    self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                    self.Width = self._Width(self, "Width", service, rules, path)
+                                    self.Option = self._Option(self, "Option", service, rules, path)
+                                    self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                    self.Height = self._Height(self, "Height", service, rules, path)
+
+                                class _DPI(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument DPI.
+                                    """
+
+                                class _Width(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Width.
+                                    """
+
+                                class _Option(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Option.
+                                    """
+
+                                class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWindowResolution.
+                                    """
+
+                                class _Height(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument Height.
+                                    """
+
+                        def create_instance(self) -> _SaveImageCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._SaveImageCommandArguments(*args)
 
                     class Ungroup(PyCommand):
                         """
@@ -1152,7 +1451,14 @@ class Root(PyMenu):
                         -------
                         bool
                         """
-                        pass
+                        class _UngroupCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+
+                        def create_instance(self) -> _UngroupCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._UngroupCommandArguments(*args)
 
                 def __getitem__(self, key: str) -> _SurfaceDefs:
                     return super().__getitem__(key)
@@ -1301,7 +1607,14 @@ class Root(PyMenu):
                         -------
                         bool
                         """
-                        pass
+                        class _RestoreViewCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+
+                        def create_instance(self) -> _RestoreViewCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._RestoreViewCommandArguments(*args)
 
                 def __getitem__(self, key: str) -> _View:
                     return super().__getitem__(key)
@@ -1692,7 +2005,20 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _AddToViewportCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.Viewport = self._Viewport(self, "Viewport", service, rules, path)
+
+                                class _Viewport(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Viewport.
+                                    """
+
+                            def create_instance(self) -> _AddToViewportCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._AddToViewportCommandArguments(*args)
 
                         class Diff(PyCommand):
                             """
@@ -1703,7 +2029,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -1714,7 +2047,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class DisplayInViewport(PyCommand):
                             """
@@ -1728,7 +2068,20 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayInViewportCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.Viewport = self._Viewport(self, "Viewport", service, rules, path)
+
+                                class _Viewport(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Viewport.
+                                    """
+
+                            def create_instance(self) -> _DisplayInViewportCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayInViewportCommandArguments(*args)
 
                         class ManageViews(PyCommand):
                             """
@@ -1739,7 +2092,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _ManageViewsCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _ManageViewsCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._ManageViewsCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -1750,7 +2110,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -1761,7 +2128,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveAnimation(PyCommand):
                             """
@@ -1787,7 +2161,125 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _SaveAnimationCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FPS = self._FPS(self, "FPS", service, rules, path)
+                                    self.AntiAliasingPasses = self._AntiAliasingPasses(self, "AntiAliasingPasses", service, rules, path)
+                                    self.Quality = self._Quality(self, "Quality", service, rules, path)
+                                    self.H264 = self._H264(self, "H264", service, rules, path)
+                                    self.Compression = self._Compression(self, "Compression", service, rules, path)
+                                    self.BitRate = self._BitRate(self, "BitRate", service, rules, path)
+                                    self.JPegQuality = self._JPegQuality(self, "JPegQuality", service, rules, path)
+                                    self.PPMFormat = self._PPMFormat(self, "PPMFormat", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FPS(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument FPS.
+                                    """
+
+                                class _AntiAliasingPasses(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument AntiAliasingPasses.
+                                    """
+
+                                class _Quality(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Quality.
+                                    """
+
+                                class _H264(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument H264.
+                                    """
+
+                                class _Compression(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Compression.
+                                    """
+
+                                class _BitRate(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument BitRate.
+                                    """
+
+                                class _JPegQuality(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument JPegQuality.
+                                    """
+
+                                class _PPMFormat(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument PPMFormat.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveAnimationCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveAnimationCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -1807,7 +2299,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                         class SaveView(PyCommand):
                             """
@@ -1818,7 +2392,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveViewCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _SaveViewCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveViewCommandArguments(*args)
 
                         class UpdateMinMax(PyCommand):
                             """
@@ -1829,7 +2410,14 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _UpdateMinMaxCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _UpdateMinMaxCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._UpdateMinMaxCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _Contour:
                         return super().__getitem__(key)
@@ -2149,7 +2737,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -2160,7 +2755,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -2171,7 +2773,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -2182,7 +2791,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveAnimation(PyCommand):
                             """
@@ -2208,7 +2824,125 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _SaveAnimationCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FPS = self._FPS(self, "FPS", service, rules, path)
+                                    self.AntiAliasingPasses = self._AntiAliasingPasses(self, "AntiAliasingPasses", service, rules, path)
+                                    self.Quality = self._Quality(self, "Quality", service, rules, path)
+                                    self.H264 = self._H264(self, "H264", service, rules, path)
+                                    self.Compression = self._Compression(self, "Compression", service, rules, path)
+                                    self.BitRate = self._BitRate(self, "BitRate", service, rules, path)
+                                    self.JPegQuality = self._JPegQuality(self, "JPegQuality", service, rules, path)
+                                    self.PPMFormat = self._PPMFormat(self, "PPMFormat", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FPS(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument FPS.
+                                    """
+
+                                class _AntiAliasingPasses(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument AntiAliasingPasses.
+                                    """
+
+                                class _Quality(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Quality.
+                                    """
+
+                                class _H264(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument H264.
+                                    """
+
+                                class _Compression(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Compression.
+                                    """
+
+                                class _BitRate(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument BitRate.
+                                    """
+
+                                class _JPegQuality(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument JPegQuality.
+                                    """
+
+                                class _PPMFormat(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument PPMFormat.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveAnimationCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveAnimationCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -2228,7 +2962,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _LIC:
                         return super().__getitem__(key)
@@ -2523,7 +3339,20 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _AddToViewportCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.Viewport = self._Viewport(self, "Viewport", service, rules, path)
+
+                                class _Viewport(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Viewport.
+                                    """
+
+                            def create_instance(self) -> _AddToViewportCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._AddToViewportCommandArguments(*args)
 
                         class Diff(PyCommand):
                             """
@@ -2534,7 +3363,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -2545,7 +3381,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class DisplayInViewport(PyCommand):
                             """
@@ -2559,7 +3402,20 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayInViewportCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.Viewport = self._Viewport(self, "Viewport", service, rules, path)
+
+                                class _Viewport(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Viewport.
+                                    """
+
+                            def create_instance(self) -> _DisplayInViewportCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayInViewportCommandArguments(*args)
 
                         class ManageViews(PyCommand):
                             """
@@ -2570,7 +3426,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _ManageViewsCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _ManageViewsCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._ManageViewsCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -2581,7 +3444,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -2592,7 +3462,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveAnimation(PyCommand):
                             """
@@ -2618,7 +3495,125 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _SaveAnimationCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FPS = self._FPS(self, "FPS", service, rules, path)
+                                    self.AntiAliasingPasses = self._AntiAliasingPasses(self, "AntiAliasingPasses", service, rules, path)
+                                    self.Quality = self._Quality(self, "Quality", service, rules, path)
+                                    self.H264 = self._H264(self, "H264", service, rules, path)
+                                    self.Compression = self._Compression(self, "Compression", service, rules, path)
+                                    self.BitRate = self._BitRate(self, "BitRate", service, rules, path)
+                                    self.JPegQuality = self._JPegQuality(self, "JPegQuality", service, rules, path)
+                                    self.PPMFormat = self._PPMFormat(self, "PPMFormat", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FPS(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument FPS.
+                                    """
+
+                                class _AntiAliasingPasses(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument AntiAliasingPasses.
+                                    """
+
+                                class _Quality(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Quality.
+                                    """
+
+                                class _H264(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument H264.
+                                    """
+
+                                class _Compression(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Compression.
+                                    """
+
+                                class _BitRate(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument BitRate.
+                                    """
+
+                                class _JPegQuality(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument JPegQuality.
+                                    """
+
+                                class _PPMFormat(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument PPMFormat.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveAnimationCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveAnimationCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -2638,7 +3633,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                         class SaveView(PyCommand):
                             """
@@ -2649,7 +3726,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveViewCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _SaveViewCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveViewCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _Mesh:
                         return super().__getitem__(key)
@@ -3210,7 +4294,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -3221,7 +4312,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -3232,7 +4330,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -3243,7 +4348,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveAnimation(PyCommand):
                             """
@@ -3269,7 +4381,125 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _SaveAnimationCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FPS = self._FPS(self, "FPS", service, rules, path)
+                                    self.AntiAliasingPasses = self._AntiAliasingPasses(self, "AntiAliasingPasses", service, rules, path)
+                                    self.Quality = self._Quality(self, "Quality", service, rules, path)
+                                    self.H264 = self._H264(self, "H264", service, rules, path)
+                                    self.Compression = self._Compression(self, "Compression", service, rules, path)
+                                    self.BitRate = self._BitRate(self, "BitRate", service, rules, path)
+                                    self.JPegQuality = self._JPegQuality(self, "JPegQuality", service, rules, path)
+                                    self.PPMFormat = self._PPMFormat(self, "PPMFormat", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FPS(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument FPS.
+                                    """
+
+                                class _AntiAliasingPasses(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument AntiAliasingPasses.
+                                    """
+
+                                class _Quality(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Quality.
+                                    """
+
+                                class _H264(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument H264.
+                                    """
+
+                                class _Compression(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Compression.
+                                    """
+
+                                class _BitRate(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument BitRate.
+                                    """
+
+                                class _JPegQuality(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument JPegQuality.
+                                    """
+
+                                class _PPMFormat(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument PPMFormat.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveAnimationCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveAnimationCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -3289,7 +4519,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _ParticleTracks:
                         return super().__getitem__(key)
@@ -3813,7 +5125,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -3824,7 +5143,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class ManageViews(PyCommand):
                             """
@@ -3835,7 +5161,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _ManageViewsCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _ManageViewsCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._ManageViewsCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -3846,7 +5179,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -3857,7 +5197,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -3877,7 +5224,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                         class SaveView(PyCommand):
                             """
@@ -3888,7 +5317,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveViewCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _SaveViewCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveViewCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _Pathlines:
                         return super().__getitem__(key)
@@ -4056,7 +5492,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -4067,7 +5510,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class ManageViews(PyCommand):
                             """
@@ -4078,7 +5528,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _ManageViewsCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _ManageViewsCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._ManageViewsCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -4089,7 +5546,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -4100,7 +5564,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveAnimation(PyCommand):
                             """
@@ -4126,7 +5597,125 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _SaveAnimationCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FPS = self._FPS(self, "FPS", service, rules, path)
+                                    self.AntiAliasingPasses = self._AntiAliasingPasses(self, "AntiAliasingPasses", service, rules, path)
+                                    self.Quality = self._Quality(self, "Quality", service, rules, path)
+                                    self.H264 = self._H264(self, "H264", service, rules, path)
+                                    self.Compression = self._Compression(self, "Compression", service, rules, path)
+                                    self.BitRate = self._BitRate(self, "BitRate", service, rules, path)
+                                    self.JPegQuality = self._JPegQuality(self, "JPegQuality", service, rules, path)
+                                    self.PPMFormat = self._PPMFormat(self, "PPMFormat", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FPS(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument FPS.
+                                    """
+
+                                class _AntiAliasingPasses(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument AntiAliasingPasses.
+                                    """
+
+                                class _Quality(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Quality.
+                                    """
+
+                                class _H264(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument H264.
+                                    """
+
+                                class _Compression(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Compression.
+                                    """
+
+                                class _BitRate(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument BitRate.
+                                    """
+
+                                class _JPegQuality(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument JPegQuality.
+                                    """
+
+                                class _PPMFormat(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument PPMFormat.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveAnimationCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveAnimationCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -4146,7 +5735,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                         class SaveView(PyCommand):
                             """
@@ -4157,7 +5828,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveViewCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _SaveViewCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveViewCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _Scene:
                         return super().__getitem__(key)
@@ -4587,7 +6265,20 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _AddToViewportCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.Viewport = self._Viewport(self, "Viewport", service, rules, path)
+
+                                class _Viewport(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Viewport.
+                                    """
+
+                            def create_instance(self) -> _AddToViewportCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._AddToViewportCommandArguments(*args)
 
                         class Diff(PyCommand):
                             """
@@ -4598,7 +6289,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -4609,7 +6307,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class DisplayInViewport(PyCommand):
                             """
@@ -4623,7 +6328,20 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayInViewportCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.Viewport = self._Viewport(self, "Viewport", service, rules, path)
+
+                                class _Viewport(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Viewport.
+                                    """
+
+                            def create_instance(self) -> _DisplayInViewportCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayInViewportCommandArguments(*args)
 
                         class ManageViews(PyCommand):
                             """
@@ -4634,7 +6352,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _ManageViewsCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _ManageViewsCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._ManageViewsCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -4645,7 +6370,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -4656,7 +6388,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveAnimation(PyCommand):
                             """
@@ -4682,7 +6421,125 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _SaveAnimationCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FPS = self._FPS(self, "FPS", service, rules, path)
+                                    self.AntiAliasingPasses = self._AntiAliasingPasses(self, "AntiAliasingPasses", service, rules, path)
+                                    self.Quality = self._Quality(self, "Quality", service, rules, path)
+                                    self.H264 = self._H264(self, "H264", service, rules, path)
+                                    self.Compression = self._Compression(self, "Compression", service, rules, path)
+                                    self.BitRate = self._BitRate(self, "BitRate", service, rules, path)
+                                    self.JPegQuality = self._JPegQuality(self, "JPegQuality", service, rules, path)
+                                    self.PPMFormat = self._PPMFormat(self, "PPMFormat", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FPS(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument FPS.
+                                    """
+
+                                class _AntiAliasingPasses(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument AntiAliasingPasses.
+                                    """
+
+                                class _Quality(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Quality.
+                                    """
+
+                                class _H264(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument H264.
+                                    """
+
+                                class _Compression(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Compression.
+                                    """
+
+                                class _BitRate(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument BitRate.
+                                    """
+
+                                class _JPegQuality(PyNumericalCommandArgumentsSubItem):
+                                    """
+                                    Argument JPegQuality.
+                                    """
+
+                                class _PPMFormat(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument PPMFormat.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveAnimationCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveAnimationCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -4702,7 +6559,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                         class SaveView(PyCommand):
                             """
@@ -4713,7 +6652,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveViewCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _SaveViewCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveViewCommandArguments(*args)
 
                         class UpdateMinMax(PyCommand):
                             """
@@ -4724,7 +6670,14 @@ class Root(PyMenu):
                             -------
                             None
                             """
-                            pass
+                            class _UpdateMinMaxCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _UpdateMinMaxCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._UpdateMinMaxCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _Vector:
                         return super().__getitem__(key)
@@ -5395,7 +7348,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DiffCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DiffCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DiffCommandArguments(*args)
 
                         class ExportData(PyCommand):
                             """
@@ -5409,7 +7369,20 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _ExportDataCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                            def create_instance(self) -> _ExportDataCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._ExportDataCommandArguments(*args)
 
                         class Plot(PyCommand):
                             """
@@ -5420,7 +7393,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PlotCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PlotCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PlotCommandArguments(*args)
 
                         class Pull(PyCommand):
                             """
@@ -5431,7 +7411,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PullCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PullCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PullCommandArguments(*args)
 
                         class Push(PyCommand):
                             """
@@ -5442,7 +7429,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PushCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PushCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PushCommandArguments(*args)
 
                         class SaveImage(PyCommand):
                             """
@@ -5462,7 +7456,89 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _SaveImageCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+                                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                                    self.Format = self._Format(self, "Format", service, rules, path)
+                                    self.FileType = self._FileType(self, "FileType", service, rules, path)
+                                    self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                                    self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                                    self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                                    self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                                class _FileName(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileName.
+                                    """
+
+                                class _Format(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Format.
+                                    """
+
+                                class _FileType(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument FileType.
+                                    """
+
+                                class _Coloring(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Coloring.
+                                    """
+
+                                class _Orientation(PyTextualCommandArgumentsSubItem):
+                                    """
+                                    Argument Orientation.
+                                    """
+
+                                class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                                    """
+                                    Argument UseWhiteBackground.
+                                    """
+
+                                class _Resolution(PySingletonCommandArgumentsSubItem):
+                                    """
+                                    Argument Resolution.
+                                    """
+
+                                    def __init__(self, parent, attr, service, rules, path):
+                                        super().__init__(parent, attr, service, rules, path)
+                                        self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                        self.Option = self._Option(self, "Option", service, rules, path)
+                                        self.Width = self._Width(self, "Width", service, rules, path)
+                                        self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                        self.Height = self._Height(self, "Height", service, rules, path)
+
+                                    class _DPI(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument DPI.
+                                        """
+
+                                    class _Option(PyTextualCommandArgumentsSubItem):
+                                        """
+                                        Argument Option.
+                                        """
+
+                                    class _Width(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Width.
+                                        """
+
+                                    class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                        """
+                                        Argument UseWindowResolution.
+                                        """
+
+                                    class _Height(PyNumericalCommandArgumentsSubItem):
+                                        """
+                                        Argument Height.
+                                        """
+
+                            def create_instance(self) -> _SaveImageCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._SaveImageCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _XYPlot:
                         return super().__getitem__(key)
@@ -5668,7 +7744,89 @@ class Root(PyMenu):
                     -------
                     bool
                     """
-                    pass
+                    class _SaveImageCommandArguments(PyCommandArguments):
+                        def __init__(self, service, rules, command, path, id):
+                            super().__init__(service, rules, command, path, id)
+                            self.FileName = self._FileName(self, "FileName", service, rules, path)
+                            self.Format = self._Format(self, "Format", service, rules, path)
+                            self.FileType = self._FileType(self, "FileType", service, rules, path)
+                            self.Coloring = self._Coloring(self, "Coloring", service, rules, path)
+                            self.Orientation = self._Orientation(self, "Orientation", service, rules, path)
+                            self.UseWhiteBackground = self._UseWhiteBackground(self, "UseWhiteBackground", service, rules, path)
+                            self.Resolution = self._Resolution(self, "Resolution", service, rules, path)
+
+                        class _FileName(PyTextualCommandArgumentsSubItem):
+                            """
+                            Argument FileName.
+                            """
+
+                        class _Format(PyTextualCommandArgumentsSubItem):
+                            """
+                            Argument Format.
+                            """
+
+                        class _FileType(PyTextualCommandArgumentsSubItem):
+                            """
+                            Argument FileType.
+                            """
+
+                        class _Coloring(PyTextualCommandArgumentsSubItem):
+                            """
+                            Argument Coloring.
+                            """
+
+                        class _Orientation(PyTextualCommandArgumentsSubItem):
+                            """
+                            Argument Orientation.
+                            """
+
+                        class _UseWhiteBackground(PyParameterCommandArgumentsSubItem):
+                            """
+                            Argument UseWhiteBackground.
+                            """
+
+                        class _Resolution(PySingletonCommandArgumentsSubItem):
+                            """
+                            Argument Resolution.
+                            """
+
+                            def __init__(self, parent, attr, service, rules, path):
+                                super().__init__(parent, attr, service, rules, path)
+                                self.DPI = self._DPI(self, "DPI", service, rules, path)
+                                self.Width = self._Width(self, "Width", service, rules, path)
+                                self.Option = self._Option(self, "Option", service, rules, path)
+                                self.UseWindowResolution = self._UseWindowResolution(self, "UseWindowResolution", service, rules, path)
+                                self.Height = self._Height(self, "Height", service, rules, path)
+
+                            class _DPI(PyNumericalCommandArgumentsSubItem):
+                                """
+                                Argument DPI.
+                                """
+
+                            class _Width(PyNumericalCommandArgumentsSubItem):
+                                """
+                                Argument Width.
+                                """
+
+                            class _Option(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument Option.
+                                """
+
+                            class _UseWindowResolution(PyParameterCommandArgumentsSubItem):
+                                """
+                                Argument UseWindowResolution.
+                                """
+
+                            class _Height(PyNumericalCommandArgumentsSubItem):
+                                """
+                                Argument Height.
+                                """
+
+                    def create_instance(self) -> _SaveImageCommandArguments:
+                        args = self._get_create_instance_args()
+                        if args is not None:
+                            return self._SaveImageCommandArguments(*args)
 
             class Plots(PyMenu):
                 """
@@ -6084,7 +8242,14 @@ class Root(PyMenu):
                         -------
                         None
                         """
-                        pass
+                        class _PlotCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+
+                        def create_instance(self) -> _PlotCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._PlotCommandArguments(*args)
 
             class ResultsExternalInfo(PyMenu):
                 """
@@ -6102,7 +8267,14 @@ class Root(PyMenu):
                 -------
                 list[int]
                 """
-                pass
+                class _CreateCellZoneSurfacesCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _CreateCellZoneSurfacesCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateCellZoneSurfacesCommandArguments(*args)
 
             class CreateMultipleIsosurfaces(PyCommand):
                 """
@@ -6122,7 +8294,56 @@ class Root(PyMenu):
                 -------
                 None
                 """
-                pass
+                class _CreateMultipleIsosurfacesCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NameFormat = self._NameFormat(self, "NameFormat", service, rules, path)
+                        self.Field = self._Field(self, "Field", service, rules, path)
+                        self.SpecifyBy = self._SpecifyBy(self, "SpecifyBy", service, rules, path)
+                        self.FirstValue = self._FirstValue(self, "FirstValue", service, rules, path)
+                        self.Increment = self._Increment(self, "Increment", service, rules, path)
+                        self.Steps = self._Steps(self, "Steps", service, rules, path)
+                        self.LastValue = self._LastValue(self, "LastValue", service, rules, path)
+
+                    class _NameFormat(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NameFormat.
+                        """
+
+                    class _Field(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Field.
+                        """
+
+                    class _SpecifyBy(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument SpecifyBy.
+                        """
+
+                    class _FirstValue(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument FirstValue.
+                        """
+
+                    class _Increment(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument Increment.
+                        """
+
+                    class _Steps(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument Steps.
+                        """
+
+                    class _LastValue(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument LastValue.
+                        """
+
+                def create_instance(self) -> _CreateMultipleIsosurfacesCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateMultipleIsosurfacesCommandArguments(*args)
 
             class CreateMultiplePlanes(PyCommand):
                 """
@@ -6143,7 +8364,125 @@ class Root(PyMenu):
                 -------
                 None
                 """
-                pass
+                class _CreateMultiplePlanesCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NameFormat = self._NameFormat(self, "NameFormat", service, rules, path)
+                        self.NumberOfPlanes = self._NumberOfPlanes(self, "NumberOfPlanes", service, rules, path)
+                        self.Option = self._Option(self, "Option", service, rules, path)
+                        self.NormalSpecification = self._NormalSpecification(self, "NormalSpecification", service, rules, path)
+                        self.NormalVector = self._NormalVector(self, "NormalVector", service, rules, path)
+                        self.StartPoint = self._StartPoint(self, "StartPoint", service, rules, path)
+                        self.EndPoint = self._EndPoint(self, "EndPoint", service, rules, path)
+                        self.Spacing = self._Spacing(self, "Spacing", service, rules, path)
+
+                    class _NameFormat(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NameFormat.
+                        """
+
+                    class _NumberOfPlanes(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument NumberOfPlanes.
+                        """
+
+                    class _Option(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Option.
+                        """
+
+                    class _NormalSpecification(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NormalSpecification.
+                        """
+
+                    class _NormalVector(PySingletonCommandArgumentsSubItem):
+                        """
+                        Argument NormalVector.
+                        """
+
+                        def __init__(self, parent, attr, service, rules, path):
+                            super().__init__(parent, attr, service, rules, path)
+                            self.X = self._X(self, "X", service, rules, path)
+                            self.Z = self._Z(self, "Z", service, rules, path)
+                            self.Y = self._Y(self, "Y", service, rules, path)
+
+                        class _X(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument X.
+                            """
+
+                        class _Z(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument Z.
+                            """
+
+                        class _Y(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument Y.
+                            """
+
+                    class _StartPoint(PySingletonCommandArgumentsSubItem):
+                        """
+                        Argument StartPoint.
+                        """
+
+                        def __init__(self, parent, attr, service, rules, path):
+                            super().__init__(parent, attr, service, rules, path)
+                            self.X = self._X(self, "X", service, rules, path)
+                            self.Z = self._Z(self, "Z", service, rules, path)
+                            self.Y = self._Y(self, "Y", service, rules, path)
+
+                        class _X(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument X.
+                            """
+
+                        class _Z(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument Z.
+                            """
+
+                        class _Y(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument Y.
+                            """
+
+                    class _EndPoint(PySingletonCommandArgumentsSubItem):
+                        """
+                        Argument EndPoint.
+                        """
+
+                        def __init__(self, parent, attr, service, rules, path):
+                            super().__init__(parent, attr, service, rules, path)
+                            self.X = self._X(self, "X", service, rules, path)
+                            self.Z = self._Z(self, "Z", service, rules, path)
+                            self.Y = self._Y(self, "Y", service, rules, path)
+
+                        class _X(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument X.
+                            """
+
+                        class _Z(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument Z.
+                            """
+
+                        class _Y(PyNumericalCommandArgumentsSubItem):
+                            """
+                            Argument Y.
+                            """
+
+                    class _Spacing(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument Spacing.
+                        """
+
+                def create_instance(self) -> _CreateMultiplePlanesCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateMultiplePlanesCommandArguments(*args)
 
             class GetFieldMinMax(PyCommand):
                 """
@@ -6158,7 +8497,26 @@ class Root(PyMenu):
                 -------
                 list[float]
                 """
-                pass
+                class _GetFieldMinMaxCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Field = self._Field(self, "Field", service, rules, path)
+                        self.Surfaces = self._Surfaces(self, "Surfaces", service, rules, path)
+
+                    class _Field(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Field.
+                        """
+
+                    class _Surfaces(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Surfaces.
+                        """
+
+                def create_instance(self) -> _GetFieldMinMaxCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._GetFieldMinMaxCommandArguments(*args)
 
             class GetXYData(PyCommand):
                 """
@@ -6173,7 +8531,26 @@ class Root(PyMenu):
                 -------
                 None
                 """
-                pass
+                class _GetXYDataCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Surfaces = self._Surfaces(self, "Surfaces", service, rules, path)
+                        self.Fields = self._Fields(self, "Fields", service, rules, path)
+
+                    class _Surfaces(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Surfaces.
+                        """
+
+                    class _Fields(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Fields.
+                        """
+
+                def create_instance(self) -> _GetXYDataCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._GetXYDataCommandArguments(*args)
 
         class ResultsInfo(PyMenu):
             """
@@ -7234,7 +9611,20 @@ class Root(PyMenu):
                         -------
                         None
                         """
-                        pass
+                        class _LoadFromDatabaseCommandArguments(PyCommandArguments):
+                            def __init__(self, service, rules, command, path, id):
+                                super().__init__(service, rules, command, path, id)
+                                self.MaterialName = self._MaterialName(self, "MaterialName", service, rules, path)
+
+                            class _MaterialName(PyTextualCommandArgumentsSubItem):
+                                """
+                                Argument MaterialName.
+                                """
+
+                        def create_instance(self) -> _LoadFromDatabaseCommandArguments:
+                            args = self._get_create_instance_args()
+                            if args is not None:
+                                return self._LoadFromDatabaseCommandArguments(*args)
 
                 def __getitem__(self, key: str) -> _Material:
                     return super().__getitem__(key)
@@ -7314,7 +9704,14 @@ class Root(PyMenu):
                     -------
                     bool
                     """
-                    pass
+                    class _CalculateCommandArguments(PyCommandArguments):
+                        def __init__(self, service, rules, command, path, id):
+                            super().__init__(service, rules, command, path, id)
+
+                    def create_instance(self) -> _CalculateCommandArguments:
+                        args = self._get_create_instance_args()
+                        if args is not None:
+                            return self._CalculateCommandArguments(*args)
 
                 class Initialize(PyCommand):
                     """
@@ -7325,7 +9722,14 @@ class Root(PyMenu):
                     -------
                     bool
                     """
-                    pass
+                    class _InitializeCommandArguments(PyCommandArguments):
+                        def __init__(self, service, rules, command, path, id):
+                            super().__init__(service, rules, command, path, id)
+
+                    def create_instance(self) -> _InitializeCommandArguments:
+                        args = self._get_create_instance_args()
+                        if args is not None:
+                            return self._InitializeCommandArguments(*args)
 
                 class Interrupt(PyCommand):
                     """
@@ -7336,7 +9740,14 @@ class Root(PyMenu):
                     -------
                     bool
                     """
-                    pass
+                    class _InterruptCommandArguments(PyCommandArguments):
+                        def __init__(self, service, rules, command, path, id):
+                            super().__init__(service, rules, command, path, id)
+
+                    def create_instance(self) -> _InterruptCommandArguments:
+                        args = self._get_create_instance_args()
+                        if args is not None:
+                            return self._InterruptCommandArguments(*args)
 
                 class Pause(PyCommand):
                     """
@@ -7347,7 +9758,14 @@ class Root(PyMenu):
                     -------
                     bool
                     """
-                    pass
+                    class _PauseCommandArguments(PyCommandArguments):
+                        def __init__(self, service, rules, command, path, id):
+                            super().__init__(service, rules, command, path, id)
+
+                    def create_instance(self) -> _PauseCommandArguments:
+                        args = self._get_create_instance_args()
+                        if args is not None:
+                            return self._PauseCommandArguments(*args)
 
                 class Resume(PyCommand):
                     """
@@ -7358,7 +9776,14 @@ class Root(PyMenu):
                     -------
                     bool
                     """
-                    pass
+                    class _ResumeCommandArguments(PyCommandArguments):
+                        def __init__(self, service, rules, command, path, id):
+                            super().__init__(service, rules, command, path, id)
+
+                    def create_instance(self) -> _ResumeCommandArguments:
+                        args = self._get_create_instance_args()
+                        if args is not None:
+                            return self._ResumeCommandArguments(*args)
 
             class CalculationActivities(PyMenu):
                 """
@@ -7469,7 +9894,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _ApplyCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _ApplyCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._ApplyCommandArguments(*args)
 
                         class Delete(PyCommand):
                             """
@@ -7480,7 +9912,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DeleteCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DeleteCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DeleteCommandArguments(*args)
 
                         class Display(PyCommand):
                             """
@@ -7491,7 +9930,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _DisplayCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _DisplayCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._DisplayCommandArguments(*args)
 
                         class PlayBack(PyCommand):
                             """
@@ -7502,7 +9948,14 @@ class Root(PyMenu):
                             -------
                             bool
                             """
-                            pass
+                            class _PlayBackCommandArguments(PyCommandArguments):
+                                def __init__(self, service, rules, command, path, id):
+                                    super().__init__(service, rules, command, path, id)
+
+                            def create_instance(self) -> _PlayBackCommandArguments:
+                                args = self._get_create_instance_args()
+                                if args is not None:
+                                    return self._PlayBackCommandArguments(*args)
 
                     def __getitem__(self, key: str) -> _SolutionAnimations:
                         return super().__getitem__(key)
@@ -7898,7 +10351,14 @@ class Root(PyMenu):
             -------
             None
             """
-            pass
+            class _ClearDatamodelCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _ClearDatamodelCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._ClearDatamodelCommandArguments(*args)
 
         class ReadCase(PyCommand):
             """
@@ -7912,7 +10372,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _ReadCaseCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+            def create_instance(self) -> _ReadCaseCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._ReadCaseCommandArguments(*args)
 
         class ReadCaseAndData(PyCommand):
             """
@@ -7926,7 +10399,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _ReadCaseAndDataCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+            def create_instance(self) -> _ReadCaseAndDataCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._ReadCaseAndDataCommandArguments(*args)
 
         class ReadData(PyCommand):
             """
@@ -7940,7 +10426,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _ReadDataCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+            def create_instance(self) -> _ReadDataCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._ReadDataCommandArguments(*args)
 
         class SendCommand(PyCommand):
             """
@@ -7955,7 +10454,26 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _SendCommandCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Command = self._Command(self, "Command", service, rules, path)
+                    self.PythonCommand = self._PythonCommand(self, "PythonCommand", service, rules, path)
+
+                class _Command(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Command.
+                    """
+
+                class _PythonCommand(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument PythonCommand.
+                    """
+
+            def create_instance(self) -> _SendCommandCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._SendCommandCommandArguments(*args)
 
         class WriteCase(PyCommand):
             """
@@ -7971,7 +10489,32 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _WriteCaseCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                    self.Binary = self._Binary(self, "Binary", service, rules, path)
+                    self.Overwrite = self._Overwrite(self, "Overwrite", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+                class _Binary(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Binary.
+                    """
+
+                class _Overwrite(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Overwrite.
+                    """
+
+            def create_instance(self) -> _WriteCaseCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._WriteCaseCommandArguments(*args)
 
         class WriteCaseAndData(PyCommand):
             """
@@ -7987,7 +10530,32 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _WriteCaseAndDataCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                    self.Binary = self._Binary(self, "Binary", service, rules, path)
+                    self.Overwrite = self._Overwrite(self, "Overwrite", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+                class _Binary(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Binary.
+                    """
+
+                class _Overwrite(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Overwrite.
+                    """
+
+            def create_instance(self) -> _WriteCaseAndDataCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._WriteCaseAndDataCommandArguments(*args)
 
         class WriteData(PyCommand):
             """
@@ -8003,5 +10571,30 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _WriteDataCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.FileName = self._FileName(self, "FileName", service, rules, path)
+                    self.Binary = self._Binary(self, "Binary", service, rules, path)
+                    self.Overwrite = self._Overwrite(self, "Overwrite", service, rules, path)
+
+                class _FileName(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument FileName.
+                    """
+
+                class _Binary(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Binary.
+                    """
+
+                class _Overwrite(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Overwrite.
+                    """
+
+            def create_instance(self) -> _WriteDataCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._WriteDataCommandArguments(*args)
 

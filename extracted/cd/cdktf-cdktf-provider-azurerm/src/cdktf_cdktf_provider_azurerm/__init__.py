@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/azurerm provider version 4.30.0
+# CDKTF prebuilt bindings for hashicorp/azurerm provider version 4.31.0
 
-This repo builds and publishes the [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform azurerm provider version 1
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0)
+* [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -461,6 +461,7 @@ __all__ = [
     "data_azurerm_databricks_workspace_private_endpoint_connection",
     "data_azurerm_dedicated_host",
     "data_azurerm_dedicated_host_group",
+    "data_azurerm_dev_center",
     "data_azurerm_dev_test_lab",
     "data_azurerm_dev_test_virtual_network",
     "data_azurerm_digital_twins_instance",
@@ -1174,6 +1175,7 @@ __all__ = [
     "network_manager_ipam_pool",
     "network_manager_management_group_connection",
     "network_manager_network_group",
+    "network_manager_routing_configuration",
     "network_manager_scope_connection",
     "network_manager_security_admin_configuration",
     "network_manager_static_member",
@@ -1935,6 +1937,7 @@ from . import data_azurerm_databricks_workspace
 from . import data_azurerm_databricks_workspace_private_endpoint_connection
 from . import data_azurerm_dedicated_host
 from . import data_azurerm_dedicated_host_group
+from . import data_azurerm_dev_center
 from . import data_azurerm_dev_test_lab
 from . import data_azurerm_dev_test_virtual_network
 from . import data_azurerm_digital_twins_instance
@@ -2648,6 +2651,7 @@ from . import network_manager_deployment
 from . import network_manager_ipam_pool
 from . import network_manager_management_group_connection
 from . import network_manager_network_group
+from . import network_manager_routing_configuration
 from . import network_manager_scope_connection
 from . import network_manager_security_admin_configuration
 from . import network_manager_static_member

@@ -1,4 +1,5 @@
 import sqlalchemy
+from wtforms import SelectMultipleField
 
 from project.sqladmin_.model_view.common import SimpleMV
 from project.sqladmin_.util.etc import format_datetime_, format_json_for_preview_, format_json_
@@ -14,6 +15,23 @@ class UserMV(SimpleMV, model=UserDBM):
         UserDBM.long_id,
         UserDBM.slug,
         UserDBM.creation_dt,
+        UserDBM.fullname,
+        UserDBM.email,
+        UserDBM.username,
+        UserDBM.roles,
+        UserDBM.is_active,
+        UserDBM.password,
+        UserDBM.tg_id,
+        UserDBM.tg_data,
+        UserDBM.tg_bot_last_action_dt,
+        UserDBM.extra_data
+    ]
+    column_details_list = [
+        UserDBM.id,
+        UserDBM.long_id,
+        UserDBM.slug,
+        UserDBM.creation_dt,
+        UserDBM.fullname,
         UserDBM.email,
         UserDBM.username,
         UserDBM.roles,
@@ -26,6 +44,7 @@ class UserMV(SimpleMV, model=UserDBM):
     ]
     form_columns = [
         UserDBM.slug,
+        UserDBM.fullname,
         UserDBM.email,
         UserDBM.username,
         UserDBM.roles,
@@ -36,6 +55,15 @@ class UserMV(SimpleMV, model=UserDBM):
         UserDBM.tg_bot_last_action_dt,
         UserDBM.extra_data
     ]
+    form_overrides = {
+        UserDBM.roles.key: SelectMultipleField
+    }
+    form_args = {
+        UserDBM.roles.key: {
+            "choices": [(role, role) for role in UserDBM.Roles.values_list()],
+            "description": "Choose roles"
+        }
+    }
     column_sortable_list = sqlalchemy.inspect(UserDBM).columns
     column_default_sort = [
         (UserDBM.creation_dt, True)
@@ -43,9 +71,9 @@ class UserMV(SimpleMV, model=UserDBM):
     column_searchable_list = [
         UserDBM.id,
         UserDBM.long_id,
+        UserDBM.fullname,
         UserDBM.email,
         UserDBM.username,
-        UserDBM.password,
         UserDBM.tg_id
     ]
     column_formatters = {

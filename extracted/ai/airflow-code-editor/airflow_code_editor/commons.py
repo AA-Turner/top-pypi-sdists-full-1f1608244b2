@@ -20,6 +20,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 __all__ = [
     'PLUGIN_NAME',
+    'PLUGIN_LONG_NAME',
     'MENU_CATEGORY',
     'MENU_LABEL',
     'API_REFERENCE_MENU_CATEGORY',
@@ -52,8 +53,9 @@ __all__ = [
 ]
 
 PLUGIN_NAME = 'code_editor'
+PLUGIN_LONG_NAME = 'Airflow Code Editor'
 MENU_CATEGORY = 'Admin'
-MENU_LABEL = 'DAGs Code Editor'
+MENU_LABEL = 'Airflow Code Editor'
 API_REFERENCE_MENU_CATEGORY = 'Docs'
 API_REFERENCE_LABEL = 'Airflow Code Editor REST API Reference'
 ROUTE = '/' + PLUGIN_NAME

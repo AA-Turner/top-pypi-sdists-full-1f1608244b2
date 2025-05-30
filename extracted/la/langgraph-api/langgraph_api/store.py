@@ -9,7 +9,7 @@ from typing import Any
 
 import structlog
 from langchain_core.runnables.config import run_in_executor
-from langgraph.graph import Graph
+from langgraph.graph import StateGraph
 from langgraph.pregel import Pregel
 from langgraph.store.base import BaseStore
 
@@ -108,7 +108,9 @@ def _load_store(store_path: str) -> Any:
         suggestion = ""
         if available:
             likely = [
-                k for k in available if isinstance(module.__dict__[k], Graph | Pregel)
+                k
+                for k in available
+                if isinstance(module.__dict__[k], StateGraph | Pregel)
             ]
             if likely:
                 likely_ = "\n".join(

@@ -78,7 +78,7 @@ CapacityDistributionStrategyType = Literal["balanced-best-effort", "balanced-onl
 CapacityReservationPreferenceType = Literal[
     "capacity-reservations-first", "capacity-reservations-only", "default", "none"
 ]
-CpuManufacturerType = Literal["amazon-web-services", "amd", "intel"]
+CpuManufacturerType = Literal["amazon-web-services", "amd", "apple", "intel"]
 DescribeAutoScalingGroupsPaginatorName = Literal["describe_auto_scaling_groups"]
 DescribeAutoScalingInstancesPaginatorName = Literal["describe_auto_scaling_instances"]
 DescribeLaunchConfigurationsPaginatorName = Literal["describe_launch_configurations"]

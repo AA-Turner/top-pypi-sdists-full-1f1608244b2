@@ -234,7 +234,7 @@ class StoredOrCalculatedItem(Item):
     def _lookup_in_item_level_map_files(self, session: Session, datasource_map,
                                         item_map: ItemMap) -> Optional[Item]:
         item: Optional[ItemOutputV1] = None
-        item_level_map_files = datasource_map['Item-Level Map Files']
+        item_level_map_files = datasource_map[_common.DATASOURCE_MAP_ITEM_LEVEL_MAP_FILES]
         if not isinstance(item_level_map_files, list):
             item_level_map_files = [item_level_map_files]
 

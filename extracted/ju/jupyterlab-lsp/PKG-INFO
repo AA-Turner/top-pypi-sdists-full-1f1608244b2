@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: jupyterlab-lsp
-Version: 5.1.0
+Version: 5.1.1
 Summary: Coding assistance for JupyterLab with Language Server Protocol
 Author: JupyterLab-LSP Development Team
 Author-email: project.jupyter@gmail.com
@@ -24,10 +24,11 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: jupyter_lsp>=2.0.0
 Requires-Dist: jupyterlab<5.0.0a0,>=4.1.0
+Dynamic: license-file
 
 # Language Server Protocol integration for Jupyter(Lab)
 
-[![tests](https://github.com/jupyter-lsp/jupyterlab-lsp/workflows/CI/badge.svg)](https://github.com/jupyter-lsp/jupyterlab-lsp/actions?query=workflow%3ACI+branch%3Amain)
+[![CI](https://github.com/jupyter-lsp/jupyterlab-lsp/actions/workflows/job.test.yml/badge.svg)](https://github.com/jupyter-lsp/jupyterlab-lsp/actions/workflows/job.test.yml)
 [![Documentation Status](https://readthedocs.org/projects/jupyterlab-lsp/badge/?version=latest)](https://jupyterlab-lsp.readthedocs.io/en/latest/?badge=latest)
 [![Python Demo](https://img.shields.io/badge/demo-Python-blue)](https://mybinder.org/v2/gh/jupyter-lsp/demo-python/main?urlpath=lab)
 [![R Demo](https://img.shields.io/badge/demo-R-blue)](https://mybinder.org/v2/gh/jupyter-lsp/demo-r/main?urlpath=lab)
@@ -118,7 +119,7 @@ Use context menu on rows in the panel to filter out diagnostics or copy their me
 You will need to have both of the following installed:
 
 - JupyterLab >=4.1.0,<5.0.0a0
-- Python 3.8+
+- Python 3.9+
 
 In addition, if you wish to use javascript, html, markdown or any other NodeJS-based language server you will need to have appropriate NodeJS version installed.
 

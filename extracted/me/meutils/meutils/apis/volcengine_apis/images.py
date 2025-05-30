@@ -90,14 +90,15 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
 
 if __name__ == '__main__':
     token = f"""{os.getenv("VOLC_ACCESSKEY")}|{os.getenv("VOLC_SECRETKEY")}"""
+    token = "AKLTOWM5ZTc5ZDFhZWNlNDIzODkwYmZiNjEyNzYwNzE0MTI|T0RCbFpHRTJaRFEyWmpjeE5ERXpNR0ptWlRCaU16WmhPRE0wWVdKa01tTQ=="
     prompt = """
     3D魔童哪吒 c4d 搬砖 很开心， 很快乐， 精神抖擞， 背景是数不清的敖丙虚化 视觉冲击力强 大师构图 色彩鲜艳丰富 吸引人 背景用黄金色艺术字写着“搬砖挣钱” 冷暖色对比
     """
 
-    prompt = """
-    https://oss.ffire.cc/files/kling_watermark.png
-    让这个女人带上眼镜 衣服换个颜色
-    """
+    # prompt = """
+    # https://oss.ffire.cc/files/kling_watermark.png
+    # 让这个女人带上眼镜 衣服换个颜色
+    # """
 
     request = ImageRequest(
         model="high_aes_general_v30l_zt2i",

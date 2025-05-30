@@ -786,7 +786,8 @@ class S3Client(BaseClient):
         self, **kwargs: Unpack[GetObjectAttributesRequestTypeDef]
     ) -> GetObjectAttributesOutputTypeDef:
         """
-        Retrieves all the metadata from an object without returning the object itself.
+        Retrieves all of the metadata from an object without returning the object
+        itself.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/get_object_attributes.html)
         [Show types-boto3 documentation](https://youtype.github.io/types_boto3_docs/types_boto3_s3/client/#get_object_attributes)

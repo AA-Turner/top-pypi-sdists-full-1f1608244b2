@@ -77,6 +77,7 @@ try:
 
     with console.status("[bold green]Importing warnings..."):
         import warnings
+
         warnings.filterwarnings(
             "ignore",
             category=FutureWarning,
@@ -188,9 +189,6 @@ try:
     with console.status("[bold green]Importing itertools.combinations..."):
         from itertools import combinations
 
-    with console.status("[bold green]Importing pandas..."):
-        import pandas as pd
-
     with console.status("[bold green]Importing os.listdir..."):
         from os import listdir
 
@@ -223,11 +221,11 @@ try:
             figlet_loaded = False
 except ModuleNotFoundError as e:
     print(f"Some of the base modules could not be loaded. Most probably that means you have not loaded or installed the virtualenv properly. Error: {e}")
-    print("Exit-Code: 2")
-    sys.exit(2)
+    print("Exit-Code: 4")
+    sys.exit(4)
 except ImportError as e:
     print(f"Error loading modules: {e}\nThis may be caused by forgetting to 'module load' the right python version or missing the python virtual environment.")
-    sys.exit(2)
+    sys.exit(4)
 except KeyboardInterrupt:
     print("You pressed CTRL-C while modules were loading.")
     sys.exit(17)
@@ -235,12 +233,6 @@ except KeyboardInterrupt:
 @beartype
 def fool_linter(*fool_linter_args: Any) -> Any:
     return fool_linter_args
-
-with console.status("[bold green]Importing rich_argparse...") as status:
-    try:
-        from rich_argparse import RichHelpFormatter
-    except ModuleNotFoundError:
-        RichHelpFormatter = argparse.HelpFormatter  # type: ignore
 
 @beartype
 def makedirs(p: str) -> bool:
@@ -539,7 +531,6 @@ class ConfigLoader:
     auto_exclude_defective_hosts: bool
     debug: bool
     num_restarts: int
-    batch_limit: int
     raw_samples: int
     show_generate_time_table: bool
     max_attempts_for_generation: int
@@ -590,8 +581,7 @@ class ConfigLoader:
         self.parser = argparse.ArgumentParser(
             prog="omniopt",
             description='A hyperparameter optimizer for slurm-based HPC-systems',
-            epilog=f"Example:\n\n{oo_call} --partition=alpha --experiment_name=neural_network ...",
-            formatter_class=RichHelpFormatter
+            epilog=f"Example:\n\n{oo_call} --partition=alpha --experiment_name=neural_network ..."
         )
 
         self.parser.add_argument('--config_yaml', help='YAML configuration file', type=str, default=None)
@@ -671,7 +661,6 @@ class ConfigLoader:
         speed.add_argument('--raw_samples', help='raw_samples option for optimizer_options', type=int, default=1024)
         speed.add_argument('--no_transform_inputs', help='Disable input transformations', action='store_true', default=False)
         speed.add_argument('--no_normalize_y', help='Disable target normalization', action='store_true', default=False)
-        speed.add_argument('--batch_limit', help='batch_limit option for optimizer_options (limits number of parallel candidates per restart)', type=int, default=32)
 
         slurm.add_argument('--num_parallel_jobs', help='Number of parallel SLURM jobs (default: 20)', type=int, default=20)
         slurm.add_argument('--worker_timeout', help='Timeout for SLURM jobs (i.e. for each single point to be optimized)', type=int, default=30)
@@ -980,6 +969,9 @@ try:
 
     with console.status("[bold green]Importing TParameterization..."):
         from ax.core.types import TParameterization
+
+    with console.status("[bold green]Importing pandas..."):
+        import pandas as pd
 
     with console.status("[bold green]Importing AxClient and ObjectiveProperties..."):
         from ax.service.ax_client import AxClient, ObjectiveProperties
@@ -1879,7 +1871,6 @@ def get_line_info() -> Any:
 
         frame_info = stack[1]
 
-        # fallbacks bei Problemen mit Encoding oder Zugriffsfehlern
         try:
             filename = str(frame_info.filename)
         except Exception as e:
@@ -1900,7 +1891,6 @@ def get_line_info() -> Any:
         return (filename, ":", lineno, ":", function)
 
     except Exception as e:
-        # finaler Fallback, wenn gar nichts geht
         return ("<exception in get_line_info>", ":", -1, ":", str(e))
 
 @beartype
@@ -2413,11 +2403,13 @@ def switch_lower_and_upper_if_needed(name: Union[list, str], lower_bound: Union[
 def round_lower_and_upper_if_type_is_int(value_type: str, lower_bound: Union[int, float], upper_bound: Union[int, float]) -> Tuple[Union[int, float], Union[int, float]]:
     if value_type == "int":
         if not helpers.looks_like_int(lower_bound):
-            print_yellow(f"{value_type} can only contain integers. You chose {lower_bound}. Will be rounded down to {math.floor(lower_bound)}.")
+            if not args.tests:
+                print_yellow(f"{value_type} can only contain integers. You chose {lower_bound}. Will be rounded down to {math.floor(lower_bound)}.")
             lower_bound = math.floor(lower_bound)
 
         if not helpers.looks_like_int(upper_bound):
-            print_yellow(f"{value_type} can only contain integers. You chose {upper_bound}. Will be rounded up to {math.ceil(upper_bound)}.")
+            if not args.tests:
+                print_yellow(f"{value_type} can only contain integers. You chose {upper_bound}. Will be rounded up to {math.ceil(upper_bound)}.")
             upper_bound = math.ceil(upper_bound)
 
     return lower_bound, upper_bound
@@ -2962,11 +2954,13 @@ def find_file_paths(_text: str) -> List[str]:
 @beartype
 def check_file_info(file_path: str) -> str:
     if not os.path.exists(file_path):
-        print(f"check_file_info: The file {file_path} does not exist.")
+        if not args.tests:
+            print(f"check_file_info: The file {file_path} does not exist.")
         return ""
 
     if not os.access(file_path, os.R_OK):
-        print(f"check_file_info: The file {file_path} is not readable.")
+        if not args.tests:
+            print(f"check_file_info: The file {file_path} is not readable.")
         return ""
 
     file_stat = os.stat(file_path)
@@ -3175,11 +3169,13 @@ def calculate_signed_weighted_euclidean_distance(_args: Union[dict, List[float]]
     weights = [float(w.strip()) for w in weights_string.split(",") if w.strip()]
 
     if len(weights) > len(_args):
-        print_yellow(f"calculate_signed_weighted_euclidean_distance: Warning: Trimming {len(weights) - len(_args)} extra weight(s): {weights[len(_args):]}")
+        if not args.tests:
+            print_yellow(f"calculate_signed_weighted_euclidean_distance: Warning: Trimming {len(weights) - len(_args)} extra weight(s): {weights[len(_args):]}")
         weights = weights[:len(_args)]
 
     if len(weights) < len(_args):
-        print_yellow("calculate_signed_weighted_euclidean_distance: Warning: Not enough weights, filling with 1s")
+        if not args.tests:
+            print_yellow("calculate_signed_weighted_euclidean_distance: Warning: Not enough weights, filling with 1s")
         weights.extend([1] * (len(_args) - len(weights)))
 
     if len(_args) != len(weights):
@@ -4067,7 +4063,8 @@ def plot_sixel_imgs() -> None:
 def get_crf() -> str:
     crf = get_current_run_folder()
     if crf in ["", None]:
-        console.print("[red]Could not find current run folder[/]")
+        if not args.tests:
+            console.print("[red]Could not find current run folder[/]")
         return ""
     return crf
 
@@ -5664,7 +5661,6 @@ def insert_jobs_from_csv(this_csv_file_path: str, experiment_parameters: Optiona
     with console.status("[bold green]Loading existing jobs into ax_client...") as __status:
         i = 0
         for arm_params, result in zip(arm_params_list, results_list):
-
             __status.update(f"[bold green]Loading existing jobs from {this_csv_file_path} into ax_client")
             arm_params = validate_and_convert_params(experiment_parameters, arm_params)
 
@@ -5718,6 +5714,8 @@ def insert_job_into_ax_client(arm_params: dict, result: dict, new_job_type: str 
             manual_generator_run = GeneratorRun(arms=[arm], generation_node_name=new_job_type)
 
             trial._generator_run = manual_generator_run
+
+            fool_linter(trial._generator_run)
 
             ax_client.complete_trial(trial_index=new_trial_idx, raw_data=result)
 
@@ -6182,7 +6180,7 @@ def finish_job_core(job: Any, trial_index: int, this_jobs_finished: int) -> int:
             try:
                 _finish_job_core_helper_mark_success(_trial, result)
 
-                if len(arg_result_names) > 1 and count_done_jobs() > 1 and job_calculate_pareto_front(get_current_run_folder(), True):
+                if len(arg_result_names) > 1 and count_done_jobs() > 1 and not job_calculate_pareto_front(get_current_run_folder(), True):
                     print_red("job_calculate_pareto_front post job failed")
             except Exception as e:
                 print(f"ERROR in line {get_line_info()}: {e}")
@@ -6441,6 +6439,21 @@ def handle_restart(stdout_path: str, trial_index: int) -> None:
     else:
         print(f"Could not determine parameters from outfile {stdout_path} for restarting job")
 
+#@beartype
+#def check_alternate_path(path: str) -> str:
+#    if os.path.exists(path):
+#        return path
+#    if path.endswith('.out'):
+#        alt_path = path[:-4] + '.err'
+#    elif path.endswith('.err'):
+#        alt_path = path[:-4] + '.out'
+#    else:
+#        alt_path = None
+#    if alt_path and os.path.exists(alt_path):
+#        return alt_path
+#    # Wenn auch der alternative Pfad nicht existiert, gib den Originalpfad zurück
+#    return path
+
 @beartype
 def handle_restart_on_different_node(stdout_path: str, hostname_from_out_file: Union[None, str], trial_index: int) -> None:
     if hostname_from_out_file:
@@ -6455,6 +6468,8 @@ def handle_restart_on_different_node(stdout_path: str, hostname_from_out_file: U
 
 @beartype
 def _orchestrate(stdout_path: str, trial_index: int) -> None:
+    #stdout_path = check_alternate_path(stdout_path)
+
     behavs = check_orchestrator(stdout_path, trial_index)
 
     if not behavs or behavs is None:
@@ -6933,9 +6948,6 @@ def get_model_gen_kwargs() -> dict:
                 "num_restarts": args.num_restarts,
                 "raw_samples": args.raw_samples,
                 # "sequential": False, # TODO, when https://github.com/facebook/Ax/issues/3819 is solved
-                "options": {
-                    "batch_limit": args.batch_limit,
-                },
             },
         },
         "fallback_to_sample_polytope": True,
@@ -7159,7 +7171,7 @@ def plot_times_vs_jobs_sixel(
     fig, _ax = plt.subplots()
 
     iterations = list(range(1, len(times) + 1))
-    sizes = [max(20, min(200, jc * 10)) for jc in job_counts]  # Punktgröße je nach Jobanzahl, skaliert
+    sizes = [max(20, min(200, jc * 10)) for jc in job_counts]
 
     scatter = _ax.scatter(iterations, times, s=sizes, c=job_counts, cmap='viridis', alpha=0.7, edgecolors='black')
 
@@ -8321,13 +8333,11 @@ def _pareto_front_aggregate_data(path_to_calculate: str) -> Optional[Dict[Tuple[
     if not os.path.exists(results_csv_file) or not os.path.exists(result_names_file):
         return None
 
-    # Lade die Ergebnisnamen
     with open(result_names_file, mode="r", encoding="utf-8") as f:
         result_names = [line.strip() for line in f if line.strip()]
 
     records: dict = defaultdict(lambda: {'means': {}})
 
-    # Lese die CSV-Datei
     with open(results_csv_file, encoding="utf-8", mode="r", newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -8340,7 +8350,7 @@ def _pareto_front_aggregate_data(path_to_calculate: str) -> Optional[Dict[Tuple[
                     try:
                         records[key]['means'][metric] = float(row[metric])
                     except ValueError:
-                        continue  # Wenn der Wert nicht konvertierbar ist
+                        continue
 
     return records
 
@@ -8412,11 +8422,9 @@ def _pareto_front_build_return_structure(
     results_csv_file = f"{path_to_calculate}/results.csv"
     result_names_file = f"{path_to_calculate}/result_names.txt"
 
-    # Lade die Ergebnisnamen
     with open(result_names_file, mode="r", encoding="utf-8") as f:
         result_names = [line.strip() for line in f if line.strip()]
 
-    # CSV komplett in dict laden (trial_index als int -> row dict)
     csv_rows = {}
     with open(results_csv_file, mode="r", encoding="utf-8", newline='') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -8424,7 +8432,6 @@ def _pareto_front_build_return_structure(
             trial_index = int(row['trial_index'])
             csv_rows[trial_index] = row
 
-    # Statische Spalten, die keine Parameter sind
     ignored_columns = {'trial_index', 'arm_name', 'trial_status', 'generation_node'}
     ignored_columns.update(result_names)
 
@@ -8433,14 +8440,14 @@ def _pareto_front_build_return_structure(
     means_dict = defaultdict(list)
 
     for (trial_index, arm_name), _, _ in selected_points:
-        row = csv_rows.get(trial_index)
-        if row is None or row['arm_name'] != arm_name:
-            continue  # Sicherheitshalber prüfen
+        row = csv_rows.get(trial_index, {})
+        if row == {} or row is None or row['arm_name'] != arm_name:
+            print_debug(f"_pareto_front_build_return_structure: trial_index '{trial_index}' could not be found and row returned as None")
+            continue
 
         idxs.append(int(row["trial_index"]))
 
-        # Parameter extrahieren
-        param_dict = {}
+        param_dict: dict[str, int | float | str] = {}
         for key, value in row.items():
             if key not in ignored_columns:
                 try:
@@ -8449,11 +8456,10 @@ def _pareto_front_build_return_structure(
                     try:
                         param_dict[key] = float(value)
                     except ValueError:
-                        param_dict[key] = value  # z.B. choice_param als String
+                        param_dict[key] = value
 
         param_dicts.append(param_dict)
 
-        # Mittelwerte aus records übernehmen
         for metric in absolute_metrics:
             means_dict[metric].append(records[(trial_index, arm_name)]['means'].get(metric, float("nan")))
 
@@ -8675,7 +8681,7 @@ def show_pareto_frontier_data(path_to_calculate: str, res_names: list, disable_s
 
     pareto_front_data: dict = get_pareto_front_data(path_to_calculate, res_names)
 
-    pareto_points = {}
+    pareto_points: dict = {}
 
     for metric_x in pareto_front_data.keys():
         if metric_x not in pareto_points:
@@ -9025,7 +9031,7 @@ def post_job_calculate_pareto_front() -> None:
 
     for _path_to_calculate in _paths_to_calculate:
         for path_to_calculate in found_paths:
-            if job_calculate_pareto_front(path_to_calculate):
+            if not job_calculate_pareto_front(path_to_calculate):
                 failure = True
 
     if failure:
@@ -9037,9 +9043,8 @@ def post_job_calculate_pareto_front() -> None:
 def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: bool = False) -> bool:
     pf_start_time = time.time()
 
-    # Returns true if it fails
     if not path_to_calculate:
-        return True
+        return False
 
     global CURRENT_RUN_FOLDER
     global RESULT_CSV_FILE
@@ -9047,41 +9052,41 @@ def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: 
 
     if not path_to_calculate:
         print_red("Can only calculate pareto front of previous job when --calculate_pareto_front_of_job is set")
-        return True
+        return False
 
     if not os.path.exists(path_to_calculate):
         print_red(f"Path '{path_to_calculate}' does not exist")
-        return True
+        return False
 
     ax_client_json = f"{path_to_calculate}/state_files/ax_client.experiment.json"
 
     if not os.path.exists(ax_client_json):
         print_red(f"Path '{ax_client_json}' not found")
-        return True
+        return False
 
     checkpoint_file: str = f"{path_to_calculate}/state_files/checkpoint.json"
     if not os.path.exists(checkpoint_file):
         print_red(f"The checkpoint file '{checkpoint_file}' does not exist")
-        return True
+        return False
 
     RESULT_CSV_FILE = f"{path_to_calculate}/results.csv"
     if not os.path.exists(RESULT_CSV_FILE):
         print_red(f"{RESULT_CSV_FILE} not found")
-        return True
+        return False
 
     res_names = []
 
     res_names_file = f"{path_to_calculate}/result_names.txt"
     if not os.path.exists(res_names_file):
         print_red(f"File '{res_names_file}' does not exist")
-        return True
+        return False
 
     try:
         with open(res_names_file, "r", encoding="utf-8") as file:
             lines = file.readlines()
     except Exception as e:
         print_red(f"Error reading file '{res_names_file}': {e}")
-        return True
+        return False
 
     for line in lines:
         entry = line.strip()
@@ -9090,7 +9095,7 @@ def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: 
 
     if len(res_names) < 2:
         print_red(f"Error: There are less than 2 result names (is: {len(res_names)}, {', '.join(res_names)}) in {path_to_calculate}. Cannot continue calculating the pareto front.")
-        return True
+        return False
 
     load_username_to_args(path_to_calculate)
 
@@ -9101,7 +9106,7 @@ def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: 
     experiment_parameters = load_experiment_parameters_from_checkpoint_file(checkpoint_file, False)
 
     if experiment_parameters is None:
-        return True
+        return False
 
     show_pareto_or_error_msg(path_to_calculate, res_names, disable_sixel_and_table)
 
@@ -9109,7 +9114,7 @@ def job_calculate_pareto_front(path_to_calculate: str, disable_sixel_and_table: 
 
     print_debug(f"Calculating the pareto-front took {pf_end_time - pf_start_time} seconds")
 
-    return False
+    return True
 
 @beartype
 def set_arg_states_from_continue() -> None:
@@ -9239,7 +9244,7 @@ def main() -> None:
     write_files_and_show_overviews()
 
     for existing_run in args.load_data_from_existing_jobs:
-        insert_jobs_from_csv(f"{existing_run}/results.csv", experiment_parameters)
+        insert_jobs_from_csv(f"{existing_run}/results.csv".replace("//", "/"), experiment_parameters)
 
         set_global_generation_strategy()
 
@@ -9827,6 +9832,9 @@ def main_outside() -> None:
     print(f"Run-UUID: {run_uuid}")
 
     print_logo()
+
+    fool_linter(args.num_cpus_main_job)
+    fool_linter(args.flame_graph)
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")

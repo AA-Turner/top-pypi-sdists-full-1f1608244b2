@@ -11,7 +11,13 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
@@ -148,7 +154,26 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddChildAndUpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.DeferUpdate = self._DeferUpdate(self, "DeferUpdate", service, rules, path)
+                        self.Force = self._Force(self, "Force", service, rules, path)
+
+                    class _DeferUpdate(PyParameterCommandArgumentsSubItem):
+                        """
+                        Argument DeferUpdate.
+                        """
+
+                    class _Force(PyParameterCommandArgumentsSubItem):
+                        """
+                        Argument Force.
+                        """
+
+                def create_instance(self) -> _AddChildAndUpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddChildAndUpdateCommandArguments(*args)
 
             class AddChildToTask(PyCommand):
                 """
@@ -159,7 +184,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddChildToTaskCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _AddChildToTaskCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddChildToTaskCommandArguments(*args)
 
             class DisplayModel(PyCommand):
                 """
@@ -170,7 +202,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _DisplayModelCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _DisplayModelCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._DisplayModelCommandArguments(*args)
 
             class Execute(PyCommand):
                 """
@@ -184,7 +223,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ExecuteCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Force = self._Force(self, "Force", service, rules, path)
+
+                    class _Force(PyParameterCommandArgumentsSubItem):
+                        """
+                        Argument Force.
+                        """
+
+                def create_instance(self) -> _ExecuteCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ExecuteCommandArguments(*args)
 
             class ExecuteUpstreamNonExecutedAndThisTask(PyCommand):
                 """
@@ -195,7 +247,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ExecuteUpstreamNonExecutedAndThisTaskCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ExecuteUpstreamNonExecutedAndThisTaskCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ExecuteUpstreamNonExecutedAndThisTaskCommandArguments(*args)
 
             class ForceUptoDate(PyCommand):
                 """
@@ -209,7 +268,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ForceUptoDateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Force = self._Force(self, "Force", service, rules, path)
+
+                    class _Force(PyParameterCommandArgumentsSubItem):
+                        """
+                        Argument Force.
+                        """
+
+                def create_instance(self) -> _ForceUptoDateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ForceUptoDateCommandArguments(*args)
 
             class GetNextPossibleTasks(PyCommand):
                 """
@@ -220,7 +292,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _GetNextPossibleTasksCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _GetNextPossibleTasksCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._GetNextPossibleTasksCommandArguments(*args)
 
             class InsertCompositeChildTask(PyCommand):
                 """
@@ -234,7 +313,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _InsertCompositeChildTaskCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.CommandName = self._CommandName(self, "CommandName", service, rules, path)
+
+                    class _CommandName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument CommandName.
+                        """
+
+                def create_instance(self) -> _InsertCompositeChildTaskCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._InsertCompositeChildTaskCommandArguments(*args)
 
             class InsertCompoundChildTask(PyCommand):
                 """
@@ -245,7 +337,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _InsertCompoundChildTaskCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _InsertCompoundChildTaskCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._InsertCompoundChildTaskCommandArguments(*args)
 
             class InsertNextTask(PyCommand):
                 """
@@ -260,7 +359,26 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _InsertNextTaskCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.CommandName = self._CommandName(self, "CommandName", service, rules, path)
+                        self.Select = self._Select(self, "Select", service, rules, path)
+
+                    class _CommandName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument CommandName.
+                        """
+
+                    class _Select(PyParameterCommandArgumentsSubItem):
+                        """
+                        Argument Select.
+                        """
+
+                def create_instance(self) -> _InsertNextTaskCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._InsertNextTaskCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -274,7 +392,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Revert(PyCommand):
                 """
@@ -285,7 +416,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RevertCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _RevertCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RevertCommandArguments(*args)
 
             class SetAsCurrent(PyCommand):
                 """
@@ -296,7 +434,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _SetAsCurrentCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _SetAsCurrentCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._SetAsCurrentCommandArguments(*args)
 
             class UpdateChildTasks(PyCommand):
                 """
@@ -310,7 +455,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateChildTasksCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.SetupTypeChanged = self._SetupTypeChanged(self, "SetupTypeChanged", service, rules, path)
+
+                    class _SetupTypeChanged(PyParameterCommandArgumentsSubItem):
+                        """
+                        Argument SetupTypeChanged.
+                        """
+
+                def create_instance(self) -> _UpdateChildTasksCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateChildTasksCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _TaskObject:
             return super().__getitem__(key)
@@ -355,7 +513,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _CreateCompositeTaskCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.ListOfTasks = self._ListOfTasks(self, "ListOfTasks", service, rules, path)
+
+            class _ListOfTasks(PyTextualCommandArgumentsSubItem):
+                """
+                Argument ListOfTasks.
+                """
+
+        def create_instance(self) -> _CreateCompositeTaskCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateCompositeTaskCommandArguments(*args)
 
     class CreateNewWorkflow(PyCommand):
         """
@@ -366,7 +537,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _CreateNewWorkflowCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _CreateNewWorkflowCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateNewWorkflowCommandArguments(*args)
 
     class DeleteTasks(PyCommand):
         """
@@ -380,7 +558,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _DeleteTasksCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.ListOfTasks = self._ListOfTasks(self, "ListOfTasks", service, rules, path)
+
+            class _ListOfTasks(PyTextualCommandArgumentsSubItem):
+                """
+                Argument ListOfTasks.
+                """
+
+        def create_instance(self) -> _DeleteTasksCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._DeleteTasksCommandArguments(*args)
 
     class InitializeWorkflow(PyCommand):
         """
@@ -394,7 +585,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _InitializeWorkflowCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.WorkflowType = self._WorkflowType(self, "WorkflowType", service, rules, path)
+
+            class _WorkflowType(PyTextualCommandArgumentsSubItem):
+                """
+                Argument WorkflowType.
+                """
+
+        def create_instance(self) -> _InitializeWorkflowCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InitializeWorkflowCommandArguments(*args)
 
     class InsertNewTask(PyCommand):
         """
@@ -408,7 +612,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _InsertNewTaskCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.CommandName = self._CommandName(self, "CommandName", service, rules, path)
+
+            class _CommandName(PyTextualCommandArgumentsSubItem):
+                """
+                Argument CommandName.
+                """
+
+        def create_instance(self) -> _InsertNewTaskCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InsertNewTaskCommandArguments(*args)
 
     class LoadState(PyCommand):
         """
@@ -422,7 +639,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _LoadStateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.ListOfRoots = self._ListOfRoots(self, "ListOfRoots", service, rules, path)
+
+            class _ListOfRoots(PyTextualCommandArgumentsSubItem):
+                """
+                Argument ListOfRoots.
+                """
+
+        def create_instance(self) -> _LoadStateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadStateCommandArguments(*args)
 
     class LoadWorkflow(PyCommand):
         """
@@ -436,7 +666,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _LoadWorkflowCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _LoadWorkflowCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadWorkflowCommandArguments(*args)
 
     class ResetWorkflow(PyCommand):
         """
@@ -447,7 +690,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ResetWorkflowCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _ResetWorkflowCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ResetWorkflowCommandArguments(*args)
 
     class SaveWorkflow(PyCommand):
         """
@@ -461,5 +711,18 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _SaveWorkflowCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _SaveWorkflowCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SaveWorkflowCommandArguments(*args)
 

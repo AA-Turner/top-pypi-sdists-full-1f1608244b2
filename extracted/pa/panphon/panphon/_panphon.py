@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
-from os import stat
-import unicodedata
 
 import os.path
+import unicodedata
 from functools import reduce
+from importlib.resources import files
+from os import stat
 
 import numpy
-import pkg_resources
-
 import regex as re
 import unicodecsv as csv
 
 from panphon import featuretable
+from panphon.errors import SegmentError
 
 from . import xsampa
-
-from panphon.errors import SegmentError
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -136,8 +134,7 @@ class FeatureTable(object):
         self.seg_dict, a dictionary mapping from unicode segments and sets of
         feature tuples.
         """
-        filename = pkg_resources.resource_filename(
-            __name__, filename)
+        filename = files('panphon').joinpath(filename)
         segments = []
         with open(filename, 'rb') as f:
             reader = csv.reader(f, encoding='utf-8')
@@ -152,8 +149,7 @@ class FeatureTable(object):
         return segments, seg_dict, names
 
     def _read_weights(self, filename=os.path.join('data', 'feature_weights.csv')):
-        filename = pkg_resources.resource_filename(
-            __name__, filename)
+        filename = files('panphon').joinpath(filename)
         with open(filename, 'rb') as f:
             reader = csv.reader(f, encoding='utf-8')
             next(reader)

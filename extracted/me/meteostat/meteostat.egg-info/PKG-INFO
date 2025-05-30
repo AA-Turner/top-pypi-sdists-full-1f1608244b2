@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: meteostat
-Version: 1.6.8
+Version: 1.7.0
 Summary: Access and analyze historical weather and climate data with Python.
 Home-page: https://github.com/meteostat/meteostat-python
 Author: Meteostat
@@ -14,7 +14,7 @@ Classifier: Topic :: Database
 Classifier: Topic :: Scientific/Engineering :: Atmospheric Science
 Classifier: Topic :: Scientific/Engineering :: Information Analysis
 Classifier: Topic :: Scientific/Engineering :: Visualization
-Requires-Python: >=3.6.0
+Requires-Python: >=3.8.0
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
@@ -22,7 +22,7 @@ License-File: LICENSE
 
 The Meteostat Python library provides a simple API for accessing open weather and climate data. The historical observations and statistics are collected by [Meteostat](https://meteostat.net) from different public interfaces, most of which are governmental.
 
-Among the data sources are national weather services like the National Oceanic and Atmospheric Administration (NOAA) and Germany's national meteorological service (DWD).
+Among the data sources are national weather services like the National Oceanic and Atmospheric Administration (NOAA) and Germany's national weather service (DWD).
 
 Are you looking for a **hosted solution**? Try our [JSON API](https://rapidapi.com/meteostat/api/meteostat/).
 

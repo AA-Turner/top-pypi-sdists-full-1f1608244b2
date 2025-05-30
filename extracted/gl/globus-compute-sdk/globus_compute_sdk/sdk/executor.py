@@ -144,6 +144,7 @@ class Executor(concurrent.futures.Executor):
         """
         :param endpoint_id: id of the endpoint to which to submit tasks
         :param container_id: id of the container in which to execute tasks
+            DEPRECATED - Container functionality has moved to endpoint configuration.
         :param client: instance of Client to be used by the executor.  If not provided,
             the executor will instantiate one with default arguments.
         :param task_group_id: The Task Group to which to associate tasks.  If not set,
@@ -418,6 +419,13 @@ class Executor(concurrent.futures.Executor):
 
     @container_id.setter
     def container_id(self, c_id: UUID_LIKE_T | None):
+        if c_id:
+            warnings.warn(
+                "The 'container_id' attribute is deprecated."
+                " Container functionality has moved to the endpoint configuration.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
         self._container_id = as_optional_uuid(c_id)
 
     @property
@@ -728,6 +736,69 @@ class Executor(concurrent.futures.Executor):
 
         raise NotImplementedError()
 
+    @staticmethod
+    def _load_tasks_status(
+        tasks: dict[str, ComputeFuture],
+        *,
+        client: Client,
+        batch_size: int = 128,
+    ) -> list[ComputeFuture]:
+        """
+        Given a dictionary of task futures, load the task status from the Compute web
+        service.
+
+        Completed tasks will have their associated future results set accordingly.
+        Tasks still pending will be returned as a list.
+
+        :param tasks: a dictionary of {task_id: task future} values.  If no future is
+            supplied for a given key (task id), one will be created.  This dictionary
+            will not be modified, but the futures in this dictionary will be set
+            (``.set_result`` or ``.set_exception``) if the web-service reports the
+            task has completed.
+        :param client: a Client through which to make requests to the web service.
+        :batch_size: the number of tasks to receive per API call to the web service.
+            For example, if ``len(tasks) == 152`` and ``batch_size == 50``, this
+            method will reach out to the API 4 times (50, 50, 50, 2).
+        """
+        batch_size = max(1, int(batch_size))
+        num_chunks = len(tasks) // batch_size
+        num_chunks += len(tasks) % batch_size > 0
+        serde = client.fx_serializer
+        pending: list[ComputeFuture] = []
+        chunk_iter = chunk_by(tasks, batch_size)
+        for chunk_no, data_chunk in enumerate(chunk_iter, start=1):
+            if num_chunks > 1:
+                log.debug(
+                    "Loading large number of tasks (%d items; %d chunks);"
+                    " processing chunk %d (of %d tasks)",
+                    len(tasks),
+                    num_chunks,
+                    chunk_no,
+                    len(data_chunk),
+                )
+
+            chunk_res = client._compute_web_client.v2.get_task_batch(data_chunk)
+
+            for tid, t_status in chunk_res.data.get("results", {}).items():
+                f = tasks.get(tid) or ComputeFuture(tid)
+                tasks[tid] = f
+                completed_t = t_status.get("completion_t")
+                if not completed_t:
+                    pending.append(f)
+                    continue
+                try:
+                    if t_status.get("status") == "success":
+                        f.set_result(serde.deserialize(t_status["result"]))
+                    else:
+                        exc = TaskExecutionFailed(t_status["exception"], completed_t)
+                        f.set_exception(exc)
+                except Exception as exc:
+                    t_err = TaskExecutionFailed("Failed to set result or exception")
+                    t_err.__cause__ = exc
+                    f.set_exception(t_err)
+
+        return pending
+
     def reload_tasks(
         self, task_group_id: UUID_LIKE_T | None = None
     ) -> t.Iterable[ComputeFuture]:
@@ -772,55 +843,16 @@ class Executor(concurrent.futures.Executor):
 
         # step 2: create the associated set of futures
         task_ids: list[str] = [task["id"] for task in r.get("tasks", [])]
-        futures: list[ComputeFuture] = []
 
         rw = _RESULT_WATCHERS.get(self.task_group_id)
         open_futures = rw.get_open_futures() if rw else {}
 
-        if task_ids:
-            # Complete the futures that already have results.
-            pending: list[ComputeFuture] = []
-            deserialize = self.client.fx_serializer.deserialize
-            chunk_size = 1024
-            num_chunks = len(task_ids) // chunk_size
-            num_chunks += len(task_ids) % chunk_size > 0
-            for chunk_no, id_chunk in enumerate(
-                chunk_by(task_ids, chunk_size), start=1
-            ):
-                if num_chunks > 1:
-                    log.debug(
-                        "Large task group (%s tasks; %s chunks); retrieving chunk %s"
-                        " (%s tasks)",
-                        len(task_ids),
-                        num_chunks,
-                        chunk_no,
-                        len(id_chunk),
-                    )
-
-                res = self.client._compute_web_client.v2.get_task_batch(id_chunk)
-                for task_id, task in res.data.get("results", {}).items():
-                    if task_id in open_futures:
-                        continue
-                    fut = ComputeFuture(task_id)
-                    futures.append(fut)
-                    completed_t = task.get("completion_t")
-                    if not completed_t:
-                        pending.append(fut)
-                    else:
-                        try:
-                            if task.get("status") == "success":
-                                fut.set_result(deserialize(task["result"]))
-                            else:
-                                exc = TaskExecutionFailed(
-                                    task["exception"], completed_t
-                                )
-                                fut.set_exception(exc)
-                        except Exception as exc:
-                            funcx_err = TaskExecutionFailed(
-                                "Failed to set result or exception"
-                            )
-                            funcx_err.__cause__ = exc
-                            fut.set_exception(funcx_err)
+        tasks = {tid: ComputeFuture(tid) for tid in task_ids if tid not in open_futures}
+        if tasks:
+            # Already completed tasks will have futures already set
+            pending = Executor._load_tasks_status(
+                tasks, client=self.client, batch_size=self.batch_size
+            )
 
             if pending:
                 if rw is None:
@@ -830,7 +862,7 @@ class Executor(concurrent.futures.Executor):
             log.warning(f"Received no tasks for Task Group ID: {task_group_id}")
 
         # step 3: the goods for the consumer
-        return futures
+        return tasks.values()
 
     def shutdown(self, wait=True, *, cancel_futures=False):
         """Clean-up the resources associated with the Executor.
@@ -1521,14 +1553,20 @@ class _ResultWatcher(threading.Thread):
             if not self._open_futures:
                 self._open_futures_empty.set()
 
+        res_to_retrieve: dict[str, ComputeFuture] = {}
         for fut in futures_to_complete:
             props, res = self._received_results.pop(fut.task_id)
 
             self.client._log_version_mismatch(res.details)
-            if res.is_error:
+            if props.headers and props.headers.get("high_assurance"):
+                log.debug("Enqueuing result retrieval for HA task: %s", fut.task_id)
+                res_to_retrieve[fut.task_id] = fut
+
+            elif res.is_error:
                 fut.set_exception(
                     TaskExecutionFailed(res.data, str(props.timestamp or 0))
                 )
+
             else:
                 try:
                     fut.set_result(deserialize(res.data))
@@ -1542,6 +1580,22 @@ class _ResultWatcher(threading.Thread):
                     )
                     task_exc.__cause__ = exc
                     fut.set_exception(task_exc)
+
+        if res_to_retrieve:
+            # in HA setups, be kinder to web-service; increase min coalescing time
+            self.poll_period_s = max(4, self.poll_period_s)
+
+            pending = Executor._load_tasks_status(res_to_retrieve, client=self.client)
+            if pending:
+                # We don't expect this path ~ever, as should only get
+                # *completed* tasks per the web-service guarantee.  Nevertheless,
+                # account for the possibility of a mistake somewhere and at least log
+                # the situation
+                task_ids = "\n  ".join(str(f.task_id) for f in pending)
+                log.warning(
+                    "Service reported tasks completed but did not return results for"
+                    f" the following tasks:\n  {task_ids}"
+                )
 
     def _event_watcher(self):
         """

@@ -197,7 +197,7 @@ while True:
                             connected_jms.append(remote_device.get_id())
 
                     for jm_id in snode.jm_ids:
-                        if jm_id not in connected_jms:
+                        if jm_id and jm_id not in connected_jms:
                             for nd in db.get_storage_nodes():
                                 if nd.jm_device and nd.jm_device.get_id() == jm_id:
                                     if nd.status == StorageNode.STATUS_ONLINE:
@@ -227,7 +227,7 @@ while True:
                     if snode.secondary_node_id:
 
                         lvstore_check &= health_controller._check_node_hublvol(
-                            snode, node_bdev_names=node_bdev_names, node_lvols_nqns=subsystem_list)
+                            snode, node_bdev_names=node_bdev_names, node_lvols_nqns=subsystems)
 
                         second_node_1 = db.get_storage_node_by_id(snode.secondary_node_id)
                         if second_node_1 and second_node_1.status == StorageNode.STATUS_ONLINE:

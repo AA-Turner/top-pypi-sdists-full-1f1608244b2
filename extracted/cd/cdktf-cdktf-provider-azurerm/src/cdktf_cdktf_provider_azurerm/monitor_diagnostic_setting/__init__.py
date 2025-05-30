@@ -1,7 +1,7 @@
 r'''
 # `azurerm_monitor_diagnostic_setting`
 
-Refer to the Terraform Registry for docs: [`azurerm_monitor_diagnostic_setting`](https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting).
+Refer to the Terraform Registry for docs: [`azurerm_monitor_diagnostic_setting`](https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class MonitorDiagnosticSetting(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-azurerm.monitorDiagnosticSetting.MonitorDiagnosticSetting",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting azurerm_monitor_diagnostic_setting}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting azurerm_monitor_diagnostic_setting}.'''
 
     def __init__(
         self,
@@ -54,6 +54,7 @@ class MonitorDiagnosticSetting(
         name: builtins.str,
         target_resource_id: builtins.str,
         enabled_log: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["MonitorDiagnosticSettingEnabledLog", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        enabled_metric: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["MonitorDiagnosticSettingEnabledMetric", typing.Dict[builtins.str, typing.Any]]]]] = None,
         eventhub_authorization_rule_id: typing.Optional[builtins.str] = None,
         eventhub_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
@@ -71,22 +72,23 @@ class MonitorDiagnosticSetting(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting azurerm_monitor_diagnostic_setting} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting azurerm_monitor_diagnostic_setting} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#name MonitorDiagnosticSetting#name}.
-        :param target_resource_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#target_resource_id MonitorDiagnosticSetting#target_resource_id}.
-        :param enabled_log: enabled_log block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled_log MonitorDiagnosticSetting#enabled_log}
-        :param eventhub_authorization_rule_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#eventhub_authorization_rule_id MonitorDiagnosticSetting#eventhub_authorization_rule_id}.
-        :param eventhub_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#eventhub_name MonitorDiagnosticSetting#eventhub_name}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#id MonitorDiagnosticSetting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param log_analytics_destination_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#log_analytics_destination_type MonitorDiagnosticSetting#log_analytics_destination_type}.
-        :param log_analytics_workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#log_analytics_workspace_id MonitorDiagnosticSetting#log_analytics_workspace_id}.
-        :param metric: metric block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#metric MonitorDiagnosticSetting#metric}
-        :param partner_solution_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#partner_solution_id MonitorDiagnosticSetting#partner_solution_id}.
-        :param storage_account_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#storage_account_id MonitorDiagnosticSetting#storage_account_id}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#timeouts MonitorDiagnosticSetting#timeouts}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#name MonitorDiagnosticSetting#name}.
+        :param target_resource_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#target_resource_id MonitorDiagnosticSetting#target_resource_id}.
+        :param enabled_log: enabled_log block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled_log MonitorDiagnosticSetting#enabled_log}
+        :param enabled_metric: enabled_metric block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled_metric MonitorDiagnosticSetting#enabled_metric}
+        :param eventhub_authorization_rule_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#eventhub_authorization_rule_id MonitorDiagnosticSetting#eventhub_authorization_rule_id}.
+        :param eventhub_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#eventhub_name MonitorDiagnosticSetting#eventhub_name}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#id MonitorDiagnosticSetting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param log_analytics_destination_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#log_analytics_destination_type MonitorDiagnosticSetting#log_analytics_destination_type}.
+        :param log_analytics_workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#log_analytics_workspace_id MonitorDiagnosticSetting#log_analytics_workspace_id}.
+        :param metric: metric block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#metric MonitorDiagnosticSetting#metric}
+        :param partner_solution_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#partner_solution_id MonitorDiagnosticSetting#partner_solution_id}.
+        :param storage_account_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#storage_account_id MonitorDiagnosticSetting#storage_account_id}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#timeouts MonitorDiagnosticSetting#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,6 +105,7 @@ class MonitorDiagnosticSetting(
             name=name,
             target_resource_id=target_resource_id,
             enabled_log=enabled_log,
+            enabled_metric=enabled_metric,
             eventhub_authorization_rule_id=eventhub_authorization_rule_id,
             eventhub_name=eventhub_name,
             id=id,
@@ -136,7 +139,7 @@ class MonitorDiagnosticSetting(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the MonitorDiagnosticSetting to import.
-        :param import_from_id: The id of the existing MonitorDiagnosticSetting that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing MonitorDiagnosticSetting that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the MonitorDiagnosticSetting to import is found.
         '''
         if __debug__:
@@ -159,6 +162,19 @@ class MonitorDiagnosticSetting(
             type_hints = typing.get_type_hints(_typecheckingstub__02768db5f6842cfb78a6c6a5ef7e68a761dfd59ec3431499106c5bd56bdcf7fb)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         return typing.cast(None, jsii.invoke(self, "putEnabledLog", [value]))
+
+    @jsii.member(jsii_name="putEnabledMetric")
+    def put_enabled_metric(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["MonitorDiagnosticSettingEnabledMetric", typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d828190a1db75dacdfbcbaa490d74d5de8d9628589664bacea5e9ed8c5167c7b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putEnabledMetric", [value]))
 
     @jsii.member(jsii_name="putMetric")
     def put_metric(
@@ -183,10 +199,10 @@ class MonitorDiagnosticSetting(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#create MonitorDiagnosticSetting#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#delete MonitorDiagnosticSetting#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#read MonitorDiagnosticSetting#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#update MonitorDiagnosticSetting#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#create MonitorDiagnosticSetting#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#delete MonitorDiagnosticSetting#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#read MonitorDiagnosticSetting#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#update MonitorDiagnosticSetting#update}.
         '''
         value = MonitorDiagnosticSettingTimeouts(
             create=create, delete=delete, read=read, update=update
@@ -197,6 +213,10 @@ class MonitorDiagnosticSetting(
     @jsii.member(jsii_name="resetEnabledLog")
     def reset_enabled_log(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetEnabledLog", []))
+
+    @jsii.member(jsii_name="resetEnabledMetric")
+    def reset_enabled_metric(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEnabledMetric", []))
 
     @jsii.member(jsii_name="resetEventhubAuthorizationRuleId")
     def reset_eventhub_authorization_rule_id(self) -> None:
@@ -253,6 +273,11 @@ class MonitorDiagnosticSetting(
         return typing.cast("MonitorDiagnosticSettingEnabledLogList", jsii.get(self, "enabledLog"))
 
     @builtins.property
+    @jsii.member(jsii_name="enabledMetric")
+    def enabled_metric(self) -> "MonitorDiagnosticSettingEnabledMetricList":
+        return typing.cast("MonitorDiagnosticSettingEnabledMetricList", jsii.get(self, "enabledMetric"))
+
+    @builtins.property
     @jsii.member(jsii_name="metric")
     def metric(self) -> "MonitorDiagnosticSettingMetricList":
         return typing.cast("MonitorDiagnosticSettingMetricList", jsii.get(self, "metric"))
@@ -268,6 +293,13 @@ class MonitorDiagnosticSetting(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledLog"]]]:
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledLog"]]], jsii.get(self, "enabledLogInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enabledMetricInput")
+    def enabled_metric_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledMetric"]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledMetric"]]], jsii.get(self, "enabledMetricInput"))
 
     @builtins.property
     @jsii.member(jsii_name="eventhubAuthorizationRuleIdInput")
@@ -451,6 +483,7 @@ class MonitorDiagnosticSetting(
         "name": "name",
         "target_resource_id": "targetResourceId",
         "enabled_log": "enabledLog",
+        "enabled_metric": "enabledMetric",
         "eventhub_authorization_rule_id": "eventhubAuthorizationRuleId",
         "eventhub_name": "eventhubName",
         "id": "id",
@@ -476,6 +509,7 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         name: builtins.str,
         target_resource_id: builtins.str,
         enabled_log: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["MonitorDiagnosticSettingEnabledLog", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        enabled_metric: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["MonitorDiagnosticSettingEnabledMetric", typing.Dict[builtins.str, typing.Any]]]]] = None,
         eventhub_authorization_rule_id: typing.Optional[builtins.str] = None,
         eventhub_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
@@ -494,18 +528,19 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#name MonitorDiagnosticSetting#name}.
-        :param target_resource_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#target_resource_id MonitorDiagnosticSetting#target_resource_id}.
-        :param enabled_log: enabled_log block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled_log MonitorDiagnosticSetting#enabled_log}
-        :param eventhub_authorization_rule_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#eventhub_authorization_rule_id MonitorDiagnosticSetting#eventhub_authorization_rule_id}.
-        :param eventhub_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#eventhub_name MonitorDiagnosticSetting#eventhub_name}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#id MonitorDiagnosticSetting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param log_analytics_destination_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#log_analytics_destination_type MonitorDiagnosticSetting#log_analytics_destination_type}.
-        :param log_analytics_workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#log_analytics_workspace_id MonitorDiagnosticSetting#log_analytics_workspace_id}.
-        :param metric: metric block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#metric MonitorDiagnosticSetting#metric}
-        :param partner_solution_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#partner_solution_id MonitorDiagnosticSetting#partner_solution_id}.
-        :param storage_account_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#storage_account_id MonitorDiagnosticSetting#storage_account_id}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#timeouts MonitorDiagnosticSetting#timeouts}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#name MonitorDiagnosticSetting#name}.
+        :param target_resource_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#target_resource_id MonitorDiagnosticSetting#target_resource_id}.
+        :param enabled_log: enabled_log block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled_log MonitorDiagnosticSetting#enabled_log}
+        :param enabled_metric: enabled_metric block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled_metric MonitorDiagnosticSetting#enabled_metric}
+        :param eventhub_authorization_rule_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#eventhub_authorization_rule_id MonitorDiagnosticSetting#eventhub_authorization_rule_id}.
+        :param eventhub_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#eventhub_name MonitorDiagnosticSetting#eventhub_name}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#id MonitorDiagnosticSetting#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param log_analytics_destination_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#log_analytics_destination_type MonitorDiagnosticSetting#log_analytics_destination_type}.
+        :param log_analytics_workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#log_analytics_workspace_id MonitorDiagnosticSetting#log_analytics_workspace_id}.
+        :param metric: metric block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#metric MonitorDiagnosticSetting#metric}
+        :param partner_solution_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#partner_solution_id MonitorDiagnosticSetting#partner_solution_id}.
+        :param storage_account_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#storage_account_id MonitorDiagnosticSetting#storage_account_id}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#timeouts MonitorDiagnosticSetting#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -523,6 +558,7 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument target_resource_id", value=target_resource_id, expected_type=type_hints["target_resource_id"])
             check_type(argname="argument enabled_log", value=enabled_log, expected_type=type_hints["enabled_log"])
+            check_type(argname="argument enabled_metric", value=enabled_metric, expected_type=type_hints["enabled_metric"])
             check_type(argname="argument eventhub_authorization_rule_id", value=eventhub_authorization_rule_id, expected_type=type_hints["eventhub_authorization_rule_id"])
             check_type(argname="argument eventhub_name", value=eventhub_name, expected_type=type_hints["eventhub_name"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
@@ -552,6 +588,8 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provisioners"] = provisioners
         if enabled_log is not None:
             self._values["enabled_log"] = enabled_log
+        if enabled_metric is not None:
+            self._values["enabled_metric"] = enabled_metric
         if eventhub_authorization_rule_id is not None:
             self._values["eventhub_authorization_rule_id"] = eventhub_authorization_rule_id
         if eventhub_name is not None:
@@ -637,14 +675,14 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#name MonitorDiagnosticSetting#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#name MonitorDiagnosticSetting#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def target_resource_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#target_resource_id MonitorDiagnosticSetting#target_resource_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#target_resource_id MonitorDiagnosticSetting#target_resource_id}.'''
         result = self._values.get("target_resource_id")
         assert result is not None, "Required property 'target_resource_id' is missing"
         return typing.cast(builtins.str, result)
@@ -655,26 +693,37 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledLog"]]]:
         '''enabled_log block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled_log MonitorDiagnosticSetting#enabled_log}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled_log MonitorDiagnosticSetting#enabled_log}
         '''
         result = self._values.get("enabled_log")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledLog"]]], result)
 
     @builtins.property
+    def enabled_metric(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledMetric"]]]:
+        '''enabled_metric block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled_metric MonitorDiagnosticSetting#enabled_metric}
+        '''
+        result = self._values.get("enabled_metric")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingEnabledMetric"]]], result)
+
+    @builtins.property
     def eventhub_authorization_rule_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#eventhub_authorization_rule_id MonitorDiagnosticSetting#eventhub_authorization_rule_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#eventhub_authorization_rule_id MonitorDiagnosticSetting#eventhub_authorization_rule_id}.'''
         result = self._values.get("eventhub_authorization_rule_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def eventhub_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#eventhub_name MonitorDiagnosticSetting#eventhub_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#eventhub_name MonitorDiagnosticSetting#eventhub_name}.'''
         result = self._values.get("eventhub_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#id MonitorDiagnosticSetting#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#id MonitorDiagnosticSetting#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -684,13 +733,13 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def log_analytics_destination_type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#log_analytics_destination_type MonitorDiagnosticSetting#log_analytics_destination_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#log_analytics_destination_type MonitorDiagnosticSetting#log_analytics_destination_type}.'''
         result = self._values.get("log_analytics_destination_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def log_analytics_workspace_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#log_analytics_workspace_id MonitorDiagnosticSetting#log_analytics_workspace_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#log_analytics_workspace_id MonitorDiagnosticSetting#log_analytics_workspace_id}.'''
         result = self._values.get("log_analytics_workspace_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -700,20 +749,20 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingMetric"]]]:
         '''metric block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#metric MonitorDiagnosticSetting#metric}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#metric MonitorDiagnosticSetting#metric}
         '''
         result = self._values.get("metric")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["MonitorDiagnosticSettingMetric"]]], result)
 
     @builtins.property
     def partner_solution_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#partner_solution_id MonitorDiagnosticSetting#partner_solution_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#partner_solution_id MonitorDiagnosticSetting#partner_solution_id}.'''
         result = self._values.get("partner_solution_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def storage_account_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#storage_account_id MonitorDiagnosticSetting#storage_account_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#storage_account_id MonitorDiagnosticSetting#storage_account_id}.'''
         result = self._values.get("storage_account_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -721,7 +770,7 @@ class MonitorDiagnosticSettingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["MonitorDiagnosticSettingTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#timeouts MonitorDiagnosticSetting#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#timeouts MonitorDiagnosticSetting#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["MonitorDiagnosticSettingTimeouts"], result)
@@ -756,9 +805,9 @@ class MonitorDiagnosticSettingEnabledLog:
         retention_policy: typing.Optional[typing.Union["MonitorDiagnosticSettingEnabledLogRetentionPolicy", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param category: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.
-        :param category_group: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#category_group MonitorDiagnosticSetting#category_group}.
-        :param retention_policy: retention_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
+        :param category: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.
+        :param category_group: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category_group MonitorDiagnosticSetting#category_group}.
+        :param retention_policy: retention_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
         '''
         if isinstance(retention_policy, dict):
             retention_policy = MonitorDiagnosticSettingEnabledLogRetentionPolicy(**retention_policy)
@@ -777,13 +826,13 @@ class MonitorDiagnosticSettingEnabledLog:
 
     @builtins.property
     def category(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.'''
         result = self._values.get("category")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def category_group(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#category_group MonitorDiagnosticSetting#category_group}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category_group MonitorDiagnosticSetting#category_group}.'''
         result = self._values.get("category_group")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -793,7 +842,7 @@ class MonitorDiagnosticSettingEnabledLog:
     ) -> typing.Optional["MonitorDiagnosticSettingEnabledLogRetentionPolicy"]:
         '''retention_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
         '''
         result = self._values.get("retention_policy")
         return typing.cast(typing.Optional["MonitorDiagnosticSettingEnabledLogRetentionPolicy"], result)
@@ -937,8 +986,8 @@ class MonitorDiagnosticSettingEnabledLogOutputReference(
         days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
-        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
+        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
         '''
         value = MonitorDiagnosticSettingEnabledLogRetentionPolicy(
             enabled=enabled, days=days
@@ -1037,8 +1086,8 @@ class MonitorDiagnosticSettingEnabledLogRetentionPolicy:
         days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
-        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
+        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e97c26d50680409a35fc68f9472489fa53e21e1ac6d793014e785ce823b5df57)
@@ -1052,14 +1101,14 @@ class MonitorDiagnosticSettingEnabledLogRetentionPolicy:
 
     @builtins.property
     def enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.'''
         result = self._values.get("enabled")
         assert result is not None, "Required property 'enabled' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
 
     @builtins.property
     def days(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.'''
         result = self._values.get("days")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -1157,6 +1206,196 @@ class MonitorDiagnosticSettingEnabledLogRetentionPolicyOutputReference(
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-azurerm.monitorDiagnosticSetting.MonitorDiagnosticSettingEnabledMetric",
+    jsii_struct_bases=[],
+    name_mapping={"category": "category"},
+)
+class MonitorDiagnosticSettingEnabledMetric:
+    def __init__(self, *, category: builtins.str) -> None:
+        '''
+        :param category: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__792f7b5e65abdd56a17a1f04b7310d7141ad3afea9a7d950893ce2b6e1f586dd)
+            check_type(argname="argument category", value=category, expected_type=type_hints["category"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "category": category,
+        }
+
+    @builtins.property
+    def category(self) -> builtins.str:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.'''
+        result = self._values.get("category")
+        assert result is not None, "Required property 'category' is missing"
+        return typing.cast(builtins.str, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "MonitorDiagnosticSettingEnabledMetric(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class MonitorDiagnosticSettingEnabledMetricList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-azurerm.monitorDiagnosticSetting.MonitorDiagnosticSettingEnabledMetricList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9d149ed46e40674557fa1cd7b9379af25c8c0eb4d51efcf4bbd98f15df5f500a)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "MonitorDiagnosticSettingEnabledMetricOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__adcd22f65c315b3d63d1706c0df301659c9ee48917a41af0e44d9cd40778aa7c)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("MonitorDiagnosticSettingEnabledMetricOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6a3291c7128a8e660ec047020d8090e422f685c2f18b84eb1baa55a723e5476a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4244789a45aba6f3860ef678ac999417d03125fd72538d48e71cc929ad9400c3)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__22108066b68969d0b4d90077adfc4c4f12874fd3c44c4bbbfb1a0fb2eeeec52c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[MonitorDiagnosticSettingEnabledMetric]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[MonitorDiagnosticSettingEnabledMetric]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[MonitorDiagnosticSettingEnabledMetric]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__29ee530c0be91c029479009364f5eb44a24db385b0a346a7704229718ede89d7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class MonitorDiagnosticSettingEnabledMetricOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-azurerm.monitorDiagnosticSetting.MonitorDiagnosticSettingEnabledMetricOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__52e2812969fead622e2df2182feadda9a76fb120a49524eb9bce54f555dfe2e9)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="categoryInput")
+    def category_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "categoryInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="category")
+    def category(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "category"))
+
+    @category.setter
+    def category(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__650f5d07e1eadefae43fc85bdc7fe14d747a0a732076c5e937525187869b1923)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "category", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MonitorDiagnosticSettingEnabledMetric]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MonitorDiagnosticSettingEnabledMetric]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MonitorDiagnosticSettingEnabledMetric]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0554c47396749f867947a5e4135df72be43cbd167496ab60d623fa38cd022e04)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-azurerm.monitorDiagnosticSetting.MonitorDiagnosticSettingMetric",
     jsii_struct_bases=[],
     name_mapping={
@@ -1174,9 +1413,9 @@ class MonitorDiagnosticSettingMetric:
         retention_policy: typing.Optional[typing.Union["MonitorDiagnosticSettingMetricRetentionPolicy", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param category: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
-        :param retention_policy: retention_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
+        :param category: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
+        :param retention_policy: retention_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
         '''
         if isinstance(retention_policy, dict):
             retention_policy = MonitorDiagnosticSettingMetricRetentionPolicy(**retention_policy)
@@ -1195,7 +1434,7 @@ class MonitorDiagnosticSettingMetric:
 
     @builtins.property
     def category(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#category MonitorDiagnosticSetting#category}.'''
         result = self._values.get("category")
         assert result is not None, "Required property 'category' is missing"
         return typing.cast(builtins.str, result)
@@ -1204,7 +1443,7 @@ class MonitorDiagnosticSettingMetric:
     def enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.'''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1214,7 +1453,7 @@ class MonitorDiagnosticSettingMetric:
     ) -> typing.Optional["MonitorDiagnosticSettingMetricRetentionPolicy"]:
         '''retention_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#retention_policy MonitorDiagnosticSetting#retention_policy}
         '''
         result = self._values.get("retention_policy")
         return typing.cast(typing.Optional["MonitorDiagnosticSettingMetricRetentionPolicy"], result)
@@ -1358,8 +1597,8 @@ class MonitorDiagnosticSettingMetricOutputReference(
         days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
-        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
+        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
         '''
         value = MonitorDiagnosticSettingMetricRetentionPolicy(
             enabled=enabled, days=days
@@ -1459,8 +1698,8 @@ class MonitorDiagnosticSettingMetricRetentionPolicy:
         days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
-        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
+        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.
+        :param days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__972f6d1ae856f8babb79990adfbe13357e0e11cd6174e285c233dc72d2aaf4b6)
@@ -1474,14 +1713,14 @@ class MonitorDiagnosticSettingMetricRetentionPolicy:
 
     @builtins.property
     def enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#enabled MonitorDiagnosticSetting#enabled}.'''
         result = self._values.get("enabled")
         assert result is not None, "Required property 'enabled' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
 
     @builtins.property
     def days(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#days MonitorDiagnosticSetting#days}.'''
         result = self._values.get("days")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -1598,10 +1837,10 @@ class MonitorDiagnosticSettingTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#create MonitorDiagnosticSetting#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#delete MonitorDiagnosticSetting#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#read MonitorDiagnosticSetting#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#update MonitorDiagnosticSetting#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#create MonitorDiagnosticSetting#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#delete MonitorDiagnosticSetting#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#read MonitorDiagnosticSetting#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#update MonitorDiagnosticSetting#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d02d3fe4820aeee8e0cda949b5a6565d7d9419aed7d4385d0ee5e15215e50016)
@@ -1621,25 +1860,25 @@ class MonitorDiagnosticSettingTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#create MonitorDiagnosticSetting#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#create MonitorDiagnosticSetting#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#delete MonitorDiagnosticSetting#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#delete MonitorDiagnosticSetting#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#read MonitorDiagnosticSetting#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#read MonitorDiagnosticSetting#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.30.0/docs/resources/monitor_diagnostic_setting#update MonitorDiagnosticSetting#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.31.0/docs/resources/monitor_diagnostic_setting#update MonitorDiagnosticSetting#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1785,6 +2024,9 @@ __all__ = [
     "MonitorDiagnosticSettingEnabledLogOutputReference",
     "MonitorDiagnosticSettingEnabledLogRetentionPolicy",
     "MonitorDiagnosticSettingEnabledLogRetentionPolicyOutputReference",
+    "MonitorDiagnosticSettingEnabledMetric",
+    "MonitorDiagnosticSettingEnabledMetricList",
+    "MonitorDiagnosticSettingEnabledMetricOutputReference",
     "MonitorDiagnosticSettingMetric",
     "MonitorDiagnosticSettingMetricList",
     "MonitorDiagnosticSettingMetricOutputReference",
@@ -1803,6 +2045,7 @@ def _typecheckingstub__bde40295c3226adee79aeaadd4c348d318cbc958207960542bd053a06
     name: builtins.str,
     target_resource_id: builtins.str,
     enabled_log: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MonitorDiagnosticSettingEnabledLog, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    enabled_metric: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MonitorDiagnosticSettingEnabledMetric, typing.Dict[builtins.str, typing.Any]]]]] = None,
     eventhub_authorization_rule_id: typing.Optional[builtins.str] = None,
     eventhub_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
@@ -1834,6 +2077,12 @@ def _typecheckingstub__b1ab731b86774bc67ea0c4ff9c0d6fc5790b849d08c1711e785483853
 
 def _typecheckingstub__02768db5f6842cfb78a6c6a5ef7e68a761dfd59ec3431499106c5bd56bdcf7fb(
     value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MonitorDiagnosticSettingEnabledLog, typing.Dict[builtins.str, typing.Any]]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d828190a1db75dacdfbcbaa490d74d5de8d9628589664bacea5e9ed8c5167c7b(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MonitorDiagnosticSettingEnabledMetric, typing.Dict[builtins.str, typing.Any]]]],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -1910,6 +2159,7 @@ def _typecheckingstub__255db65e37fd9e340d2f73a798a2acfd052b413e2981938d67d80a1d8
     name: builtins.str,
     target_resource_id: builtins.str,
     enabled_log: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MonitorDiagnosticSettingEnabledLog, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    enabled_metric: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[MonitorDiagnosticSettingEnabledMetric, typing.Dict[builtins.str, typing.Any]]]]] = None,
     eventhub_authorization_rule_id: typing.Optional[builtins.str] = None,
     eventhub_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
@@ -2026,6 +2276,72 @@ def _typecheckingstub__cd2e44b2e8307847b96bdcb5a243db27d98b432aef324255c89d257a9
 
 def _typecheckingstub__ff6a39850532caa50536e5a9a7082ca9fcf37c1336594b97935ef835b0b87691(
     value: typing.Optional[MonitorDiagnosticSettingEnabledLogRetentionPolicy],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__792f7b5e65abdd56a17a1f04b7310d7141ad3afea9a7d950893ce2b6e1f586dd(
+    *,
+    category: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9d149ed46e40674557fa1cd7b9379af25c8c0eb4d51efcf4bbd98f15df5f500a(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__adcd22f65c315b3d63d1706c0df301659c9ee48917a41af0e44d9cd40778aa7c(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6a3291c7128a8e660ec047020d8090e422f685c2f18b84eb1baa55a723e5476a(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4244789a45aba6f3860ef678ac999417d03125fd72538d48e71cc929ad9400c3(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__22108066b68969d0b4d90077adfc4c4f12874fd3c44c4bbbfb1a0fb2eeeec52c(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__29ee530c0be91c029479009364f5eb44a24db385b0a346a7704229718ede89d7(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[MonitorDiagnosticSettingEnabledMetric]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__52e2812969fead622e2df2182feadda9a76fb120a49524eb9bce54f555dfe2e9(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__650f5d07e1eadefae43fc85bdc7fe14d747a0a732076c5e937525187869b1923(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0554c47396749f867947a5e4135df72be43cbd167496ab60d623fa38cd022e04(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, MonitorDiagnosticSettingEnabledMetric]],
 ) -> None:
     """Type checking stubs"""
     pass

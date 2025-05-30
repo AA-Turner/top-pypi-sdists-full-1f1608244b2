@@ -1,7 +1,7 @@
 r'''
 # `aws_organizations_account`
 
-Refer to the Terraform Registry for docs: [`aws_organizations_account`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account).
+Refer to the Terraform Registry for docs: [`aws_organizations_account`](https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OrganizationsAccount(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.organizationsAccount.OrganizationsAccount",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account aws_organizations_account}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account aws_organizations_account}.'''
 
     def __init__(
         self,
@@ -70,21 +70,21 @@ class OrganizationsAccount(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account aws_organizations_account} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account aws_organizations_account} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#email OrganizationsAccount#email}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#name OrganizationsAccount#name}.
-        :param close_on_deletion: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#close_on_deletion OrganizationsAccount#close_on_deletion}.
-        :param create_govcloud: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#create_govcloud OrganizationsAccount#create_govcloud}.
-        :param iam_user_access_to_billing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#iam_user_access_to_billing OrganizationsAccount#iam_user_access_to_billing}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#id OrganizationsAccount#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param parent_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#parent_id OrganizationsAccount#parent_id}.
-        :param role_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#role_name OrganizationsAccount#role_name}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#tags OrganizationsAccount#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#tags_all OrganizationsAccount#tags_all}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#timeouts OrganizationsAccount#timeouts}
+        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#email OrganizationsAccount#email}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#name OrganizationsAccount#name}.
+        :param close_on_deletion: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#close_on_deletion OrganizationsAccount#close_on_deletion}.
+        :param create_govcloud: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#create_govcloud OrganizationsAccount#create_govcloud}.
+        :param iam_user_access_to_billing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#iam_user_access_to_billing OrganizationsAccount#iam_user_access_to_billing}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#id OrganizationsAccount#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param parent_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#parent_id OrganizationsAccount#parent_id}.
+        :param role_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#role_name OrganizationsAccount#role_name}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#tags OrganizationsAccount#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#tags_all OrganizationsAccount#tags_all}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#timeouts OrganizationsAccount#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -133,7 +133,7 @@ class OrganizationsAccount(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OrganizationsAccount to import.
-        :param import_from_id: The id of the existing OrganizationsAccount that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OrganizationsAccount that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OrganizationsAccount to import is found.
         '''
         if __debug__:
@@ -150,12 +150,16 @@ class OrganizationsAccount(
         *,
         create: typing.Optional[builtins.str] = None,
         delete: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#create OrganizationsAccount#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#delete OrganizationsAccount#delete}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#create OrganizationsAccount#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#delete OrganizationsAccount#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#update OrganizationsAccount#update}.
         '''
-        value = OrganizationsAccountTimeouts(create=create, delete=delete)
+        value = OrganizationsAccountTimeouts(
+            create=create, delete=delete, update=update
+        )
 
         return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
@@ -487,17 +491,17 @@ class OrganizationsAccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#email OrganizationsAccount#email}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#name OrganizationsAccount#name}.
-        :param close_on_deletion: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#close_on_deletion OrganizationsAccount#close_on_deletion}.
-        :param create_govcloud: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#create_govcloud OrganizationsAccount#create_govcloud}.
-        :param iam_user_access_to_billing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#iam_user_access_to_billing OrganizationsAccount#iam_user_access_to_billing}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#id OrganizationsAccount#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param parent_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#parent_id OrganizationsAccount#parent_id}.
-        :param role_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#role_name OrganizationsAccount#role_name}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#tags OrganizationsAccount#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#tags_all OrganizationsAccount#tags_all}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#timeouts OrganizationsAccount#timeouts}
+        :param email: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#email OrganizationsAccount#email}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#name OrganizationsAccount#name}.
+        :param close_on_deletion: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#close_on_deletion OrganizationsAccount#close_on_deletion}.
+        :param create_govcloud: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#create_govcloud OrganizationsAccount#create_govcloud}.
+        :param iam_user_access_to_billing: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#iam_user_access_to_billing OrganizationsAccount#iam_user_access_to_billing}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#id OrganizationsAccount#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param parent_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#parent_id OrganizationsAccount#parent_id}.
+        :param role_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#role_name OrganizationsAccount#role_name}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#tags OrganizationsAccount#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#tags_all OrganizationsAccount#tags_all}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#timeouts OrganizationsAccount#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -626,14 +630,14 @@ class OrganizationsAccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def email(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#email OrganizationsAccount#email}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#email OrganizationsAccount#email}.'''
         result = self._values.get("email")
         assert result is not None, "Required property 'email' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#name OrganizationsAccount#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#name OrganizationsAccount#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
@@ -642,7 +646,7 @@ class OrganizationsAccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def close_on_deletion(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#close_on_deletion OrganizationsAccount#close_on_deletion}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#close_on_deletion OrganizationsAccount#close_on_deletion}.'''
         result = self._values.get("close_on_deletion")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -650,19 +654,19 @@ class OrganizationsAccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def create_govcloud(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#create_govcloud OrganizationsAccount#create_govcloud}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#create_govcloud OrganizationsAccount#create_govcloud}.'''
         result = self._values.get("create_govcloud")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def iam_user_access_to_billing(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#iam_user_access_to_billing OrganizationsAccount#iam_user_access_to_billing}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#iam_user_access_to_billing OrganizationsAccount#iam_user_access_to_billing}.'''
         result = self._values.get("iam_user_access_to_billing")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#id OrganizationsAccount#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#id OrganizationsAccount#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -672,25 +676,25 @@ class OrganizationsAccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def parent_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#parent_id OrganizationsAccount#parent_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#parent_id OrganizationsAccount#parent_id}.'''
         result = self._values.get("parent_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def role_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#role_name OrganizationsAccount#role_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#role_name OrganizationsAccount#role_name}.'''
         result = self._values.get("role_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#tags OrganizationsAccount#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#tags OrganizationsAccount#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def tags_all(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#tags_all OrganizationsAccount#tags_all}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#tags_all OrganizationsAccount#tags_all}.'''
         result = self._values.get("tags_all")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -698,7 +702,7 @@ class OrganizationsAccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["OrganizationsAccountTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#timeouts OrganizationsAccount#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#timeouts OrganizationsAccount#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["OrganizationsAccountTimeouts"], result)
@@ -718,7 +722,7 @@ class OrganizationsAccountConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 @jsii.data_type(
     jsii_type="@cdktf/provider-aws.organizationsAccount.OrganizationsAccountTimeouts",
     jsii_struct_bases=[],
-    name_mapping={"create": "create", "delete": "delete"},
+    name_mapping={"create": "create", "delete": "delete", "update": "update"},
 )
 class OrganizationsAccountTimeouts:
     def __init__(
@@ -726,31 +730,42 @@ class OrganizationsAccountTimeouts:
         *,
         create: typing.Optional[builtins.str] = None,
         delete: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#create OrganizationsAccount#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#delete OrganizationsAccount#delete}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#create OrganizationsAccount#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#delete OrganizationsAccount#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#update OrganizationsAccount#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c83d12896d2e2e6e5510e0be11858826f73e0aa417f307d9066154988ec21a39)
             check_type(argname="argument create", value=create, expected_type=type_hints["create"])
             check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
         self._values: typing.Dict[builtins.str, typing.Any] = {}
         if create is not None:
             self._values["create"] = create
         if delete is not None:
             self._values["delete"] = delete
+        if update is not None:
+            self._values["update"] = update
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#create OrganizationsAccount#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#create OrganizationsAccount#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/organizations_account#delete OrganizationsAccount#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#delete OrganizationsAccount#delete}.'''
         result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.0/docs/resources/organizations_account#update OrganizationsAccount#update}.'''
+        result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
@@ -793,6 +808,10 @@ class OrganizationsAccountTimeoutsOutputReference(
     def reset_delete(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetDelete", []))
 
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
     @builtins.property
     @jsii.member(jsii_name="createInput")
     def create_input(self) -> typing.Optional[builtins.str]:
@@ -802,6 +821,11 @@ class OrganizationsAccountTimeoutsOutputReference(
     @jsii.member(jsii_name="deleteInput")
     def delete_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
 
     @builtins.property
     @jsii.member(jsii_name="create")
@@ -826,6 +850,18 @@ class OrganizationsAccountTimeoutsOutputReference(
             type_hints = typing.get_type_hints(_typecheckingstub__385abad0012ac4c7258c7375a734764686561bd598bf872c3308b8c9187b654a)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a18822b0c546446e6a3602b92b9fa18af935b27aa494391d7f1f4a80b809e6bd)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="internalValue")
@@ -977,6 +1013,7 @@ def _typecheckingstub__c83d12896d2e2e6e5510e0be11858826f73e0aa417f307d9066154988
     *,
     create: typing.Optional[builtins.str] = None,
     delete: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -995,6 +1032,12 @@ def _typecheckingstub__912eafc4b9dc2efaf1b555f6cc5f45affcf443ff61bcbf8a7e50525ea
     pass
 
 def _typecheckingstub__385abad0012ac4c7258c7375a734764686561bd598bf872c3308b8c9187b654a(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a18822b0c546446e6a3602b92b9fa18af935b27aa494391d7f1f4a80b809e6bd(
     value: builtins.str,
 ) -> None:
     """Type checking stubs"""

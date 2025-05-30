@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: glocaltokens
-Version: 0.7.3
+Version: 0.7.4
 Summary: Tool to extract Google device local authentication tokens in Python
 Project-URL: Homepage, https://github.com/leikoilja/glocaltokens
 Project-URL: Bug Tracker, https://github.com/leikoilja/glocaltokens/issues
@@ -18,12 +18,12 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Topic :: Software Development
 Classifier: Typing :: Typed
 Requires-Python: >=3.9
-Requires-Dist: ghome-foyer-api>=1.1.1
+Requires-Dist: ghome-foyer-api>=1.2.1
 Requires-Dist: gpsoauth>=1.1.1
-Requires-Dist: grpcio>=1.66.0
+Requires-Dist: grpcio>=1.71.0
 Requires-Dist: requests>=2.32.3
-Requires-Dist: simplejson>=3.19.3
-Requires-Dist: zeroconf>=0.136.0
+Requires-Dist: simplejson>=3.20.1
+Requires-Dist: zeroconf>=0.147.0
 Description-Content-Type: text/markdown
 
 [![GitHub Workflow Status][workflow-shield]][workflow]
@@ -47,10 +47,18 @@ You will probably need to run the script repeatedly storing the tokens somewhere
 
 Note: the package was written and tested on Python 3.
 
-- Install the python package
+- Install the python package.
 
+Using uv:
+
+```console
+$ uv add glocaltokens
 ```
-pip install glocaltokens
+
+Using pip:
+
+```console
+$ pip install glocaltokens
 ```
 
 Use in your program as (see examples folder for detailed example):

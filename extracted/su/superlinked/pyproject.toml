@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "superlinked"
-version = "27.0.0"  # The version will be dynamically updated
+version = "27.1.0"  # The version will be dynamically updated
 description = "The Superlinked vector computing library"
 authors = ["Superlinked Release <release@superlinked.com>"]
 readme = "PYPI_README.md"
@@ -104,7 +104,7 @@ wheel = ">=0.42,<0.46"
 pylint = ">=3.0.3,<3.4.0"
 python-semantic-release = ">=8.7,<9.22"
 mdformat-gfm = ">=0.3.5,<0.5.0"
-moto = { version = "5.1.4", extras = ["all"] }
+moto = { version = "5.1.5", extras = ["all"] }
 pylint-pydantic = "^0.3.2"
 nbqa = "^1.8.4"
 black = {extras = ["jupyter"], version = ">=24.2,<26.0"}

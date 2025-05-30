@@ -722,6 +722,8 @@ def j_spin(pdgid: PDGID_TYPE) -> int | None:
                 return 2
             if 20 < fund < 25:
                 return 3
+            if fund == 25:
+                return 1
             return None
     if abs(int(pdgid)) in {1000000010, 1000010010}:  # neutron, proton
         return 2
@@ -897,10 +899,13 @@ def _digit(pdgid: PDGID_TYPE, loc: int) -> int:
     """
     Provides a convenient index into the PDGID number, whose format is in base 10.
 
-    Returns the digit at position 'loc' given that the right-most digit is at position 1.
+    Returns the digit at position 'loc' >0 given that the right-most digit is at position 1.
     """
-    sid = str(abspid(pdgid))
-    return int(sid[-loc]) if loc <= len(sid) else 0
+    assert loc > 0, (
+        "Internal inconsistency: `loc` is supposed to be > 0, an attribute of `Location`"
+    )
+    sid: float = (abspid(pdgid) % 10**loc) // (10 ** (loc - 1))
+    return int(sid)
 
 
 def _extra_bits(pdgid: PDGID_TYPE) -> int:

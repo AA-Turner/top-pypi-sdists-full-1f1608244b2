@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-bda',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1390"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1391"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Bda SDK for Python',
     long_description=open('README.rst').read(),

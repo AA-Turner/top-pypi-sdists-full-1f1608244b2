@@ -123,9 +123,11 @@ ListWorkloadEstimatesFilterNameType = Literal["NAME", "STATUS"]
 ListWorkloadEstimatesPaginatorName = Literal["list_workload_estimates"]
 MatchOptionType = Literal["CONTAINS", "EQUALS", "STARTS_WITH"]
 PurchaseAgreementTypeType = Literal["RESERVED_INSTANCE", "SAVINGS_PLANS"]
-RateTypeType = Literal["AFTER_DISCOUNTS", "BEFORE_DISCOUNTS"]
+RateTypeType = Literal["AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS", "BEFORE_DISCOUNTS"]
 WorkloadEstimateCostStatusType = Literal["INVALID", "STALE", "VALID"]
-WorkloadEstimateRateTypeType = Literal["AFTER_DISCOUNTS", "BEFORE_DISCOUNTS"]
+WorkloadEstimateRateTypeType = Literal[
+    "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS", "BEFORE_DISCOUNTS"
+]
 WorkloadEstimateStatusType = Literal["ACTION_NEEDED", "INVALID", "UPDATING", "VALID"]
 WorkloadEstimateUpdateUsageErrorCodeType = Literal[
     "BAD_REQUEST", "CONFLICT", "INTERNAL_SERVER_ERROR", "NOT_FOUND"
@@ -428,7 +430,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -489,7 +490,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -497,6 +497,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

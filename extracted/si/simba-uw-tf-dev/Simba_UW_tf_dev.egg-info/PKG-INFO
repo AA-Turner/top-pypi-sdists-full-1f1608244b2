@@ -1,14 +1,13 @@
 Metadata-Version: 2.1
 Name: simba-uw-tf-dev
-Version: 3.1.7
+Version: 3.1.8
 Summary: Toolkit for computer classification and analysis of behaviors in experimental animals
 Home-page: https://github.com/sgoldenlab/simba
 Author: Simon Nilsson, Jia Jie Choong, Sophia Hwang
 Author-email: sronilsson@gmail.com
-License: GNU General Public License v3 (GPLv3)
+License: Modified BSD 3-Clause License
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
-Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Classifier: Operating System :: OS Independent
 Description-Content-Type: text/markdown
 Provides-Extra: arm

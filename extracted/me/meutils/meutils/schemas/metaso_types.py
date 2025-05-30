@@ -15,15 +15,20 @@ FEISHU_URL = "https://xchatllm.feishu.cn/sheets/Bmjtst2f6hfMqFttbhLcdfRJnNf?shee
 
 
 class MetasoRequest(BaseModel):
-    model: Optional[Literal["ds-r1",]] = None
+    model: Optional[Literal["ds-r1", "fast_thinking"]] = None
 
-    """search-mini search search-pro"""
+    """search-mini search search-pro
+    
+    model-mode
+    
+    """
     mode: Union[str, Literal["concise", "detail", "research", "strong-research"]] = "detail"  # concise detail research
 
     question: str = "Chatfire"
 
-    """全网 文库 学术 图片 播客"""
+    """全网 文库 学术 图片 播客 视频"""
     scholarSearchDomain: str = "all"
+    engineType: Optional[Literal["pdf", "scholar", "image", "podcast", "video"]] = None
 
     url: str = "https://metaso.cn/"
     lang: str = "zh"
@@ -35,6 +40,7 @@ class MetasoRequest(BaseModel):
     newEngine: str = 'true'
     enableImage: str = 'true'
 
+#
 
 # question: hi
 # mode: detail

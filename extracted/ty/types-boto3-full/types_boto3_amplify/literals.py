@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_boto3_amplify.literals import CacheConfigTypeType
+    from types_boto3_amplify.literals import BuildComputeTypeType
 
-    data: CacheConfigTypeType = "AMPLIFY_MANAGED"
+    data: BuildComputeTypeType = "LARGE_16GB"
     ```
 """
 
@@ -24,6 +24,7 @@ else:
 
 __all__ = (
     "AmplifyServiceName",
+    "BuildComputeTypeType",
     "CacheConfigTypeType",
     "CertificateTypeType",
     "DomainStatusType",
@@ -46,6 +47,7 @@ __all__ = (
 )
 
 
+BuildComputeTypeType = Literal["LARGE_16GB", "STANDARD_8GB", "XLARGE_72GB"]
 CacheConfigTypeType = Literal["AMPLIFY_MANAGED", "AMPLIFY_MANAGED_NO_COOKIES"]
 CertificateTypeType = Literal["AMPLIFY_MANAGED", "CUSTOM"]
 DomainStatusType = Literal[

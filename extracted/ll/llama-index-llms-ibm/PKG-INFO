@@ -1,17 +1,13 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: llama-index-llms-ibm
-Version: 0.3.5
+Version: 0.4.0
 Summary: llama-index llms IBM watsonx.ai integration
-License: MIT
 Author: IBM
-Requires-Python: >=3.10,<3.13
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.11
-Classifier: Programming Language :: Python :: 3.12
-Requires-Dist: ibm-watsonx-ai (>=1.1.24)
-Requires-Dist: llama-index-core (>=0.12.0,<0.13.0)
+License-Expression: MIT
+License-File: LICENSE
+Requires-Python: <3.13,>=3.10
+Requires-Dist: ibm-watsonx-ai>=1.1.24
+Requires-Dist: llama-index-core<0.13,>=0.12.0
 Requires-Dist: pyarrow
 Description-Content-Type: text/markdown
 
@@ -154,4 +150,3 @@ messages = [
 for chunk in watsonx_llm.stream_chat(messages):
     print(chunk.delta, end="")
 ```
-

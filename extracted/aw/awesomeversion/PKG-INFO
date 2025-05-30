@@ -1,24 +1,23 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.3
 Name: awesomeversion
-Version: 24.6.0
+Version: 25.5.0
 Summary: One version package to rule them all, One version package to find them, One version package to bring them all, and in the darkness bind them.
-Home-page: https://github.com/ludeeus/awesomeversion
 License: MIT
 Keywords: calver,semver,0ver,version,pep440,buildver
 Author: Ludeeus
 Author-email: ludeeus@ludeeus.dev
 Maintainer: Ludeeus
 Maintainer-email: ludeeus@ludeeus.dev
-Requires-Python: >=3.8,<4.0
+Requires-Python: >=3.9,<4.0
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Project-URL: Repository, https://github.com/ludeeus/awesomeversion
 Description-Content-Type: text/markdown
@@ -26,7 +25,7 @@ Description-Content-Type: text/markdown
 # AwesomeVersion
 
 [![codecov](https://codecov.io/gh/ludeeus/awesomeversion/branch/main/graph/badge.svg)](https://codecov.io/gh/ludeeus/awesomeversion)
-![python version](https://img.shields.io/badge/Python-3.8=><=3.12-blue.svg)
+![python version](https://img.shields.io/badge/Python-3.9=><=3.13-blue.svg)
 ![dependencies](https://img.shields.io/badge/Dependencies-0-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/awesomeversion)](https://pypi.org/project/awesomeversion)
 ![Actions](https://github.com/ludeeus/awesomeversion/workflows/Actions/badge.svg?branch=main)

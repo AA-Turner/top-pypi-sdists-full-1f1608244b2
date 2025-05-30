@@ -260,7 +260,7 @@ class InboxNotification(Notification):
     def create_new_requests_list(self, requests: list):
         new_requests = ""
         for request in requests[:3]:
-            name = request['user']['real_name']
+            name = request['user']['real_name'] if request['user'].get('real_name') else request['user'].get('display_name', '')
             photo = request['user'].get('images', {}).get('image_72', '{{ IMAGE_PERSON.src }}')
             item = self.new_request_html_item.replace('$$USER_NAME$$', name)
             item = item.replace('$$USER_IMAGE$$', photo)

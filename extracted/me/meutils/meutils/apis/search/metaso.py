@@ -30,12 +30,20 @@ MODELS = {
 
     "deepseek-r1-metasearch": "strong-research",
 
-    "meta-research": "strong-research",
-    "meta-deepresearch": "strong-research",
     "deepseek-r1-metaresearch": "strong-research",
+
+    "meta-research": "strong-research",
+
+    "meta-search": "detail",
+    "meta-deepsearch": "strong-research",
+    "meta-deepresearch": "strong-research",
+
+    "meta-search:scholar": "detail",
+    "meta-deepsearch:scholar": "strong-research",
+    "meta-deepresearch:scholar": "strong-research",
+
 }
 
-""
 # pattern = re.compile('\[\[(\d+)\]\]')
 pattern = re.compile(r'\[\[(\d+)\]\]')
 
@@ -105,18 +113,18 @@ async def create(request: Union[ChatCompletionRequest, CompletionRequest]):
 
     system_fingerprint = request.system_fingerprint
 
-    engine_type = ''
+    engine_type = None
     if ":" in request.model:
         _, engine_type = request.model.split(':')
 
     model = None
-    if request.model.startswith(("deepseek",)):
-        model = "ds-r1"
-        system_fingerprint = "deepseek-r1"
+    if any(i in request.model for i in {"deep", "thinking"}):
+        model = system_fingerprint = "fast_thinking"
 
     request = MetasoRequest(
         model=model,
         mode=MODELS.get(request.model, "detail"),
+        engineType=engine_type,
         question=request.last_content,
     )
 
@@ -190,13 +198,23 @@ if __name__ == '__main__':
     # arun(get_access_token(request))
     """
     metasearch-
+    
+    model-mode
     """
 
     request = ChatCompletionRequest(
+
+        # model="meta-search",
+        # model="meta-deepsearch",
+        # model="meta-deepresearch",
+
+        model="meta-search:video",
+
+        # model="deepseek-r1-metasearch",
+
         # model="deepseek-search",
         # model="deepseek-r1-search",
         # model="11meta-deepresearch",
-        model="meta-search",
 
         # model="ai-search",
         # model="ai-search:scholar",
@@ -206,7 +224,7 @@ if __name__ == '__main__':
 
         # messages=[{'role': 'user', 'content': '今天南京天气怎么样'}]
         # messages=[{'role': 'user', 'content': '1+1'}]
-        messages=[{'role': 'user', 'content': '周杰伦'}]
+        messages=[{'role': 'user', 'content': '周杰伦是谁'}]
 
     )
 

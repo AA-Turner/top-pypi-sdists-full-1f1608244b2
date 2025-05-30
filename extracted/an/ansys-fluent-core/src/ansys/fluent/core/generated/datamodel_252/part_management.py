@@ -11,7 +11,13 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
@@ -106,25 +112,25 @@ class Root(PyMenu):
 
                 class Deviation(PyNumerical):
                     """
-                    Parameter Deviation of value type float.
+                    Specify the distance between facet edges and the geometry edges. Decreasing this value will result in more facets along curved edges.
                     """
                     pass
 
                 class MaxSize(PyNumerical):
                     """
-                    Parameter MaxSize of value type float.
+                    Specify a maximum element size for the imported model to avoid very large facets during the file import.
                     """
                     pass
 
                 class NormalAngle(PyNumerical):
                     """
-                    Parameter NormalAngle of value type float.
+                    Specify a rotational angle (in degrees) of transformation.
                     """
                     pass
 
                 class Refacet(PyParameter):
                     """
-                    Parameter Refacet of value type bool.
+                    Select this option when you want to change faceting of the selected object. Refaceting will refacet the original CAD geometry. Only the faceted CAD geometry is used during the meshing process. The refaceting settings control how far the facet edges are from the model and the size of the facets.  More...
                     """
                     pass
 
@@ -142,13 +148,13 @@ class Root(PyMenu):
 
             class EdgeExtraction(PyTextual):
                 """
-                Parameter EdgeExtraction of value type str.
+                Choose how edges will be extracted from the CAD geometry. Setting this option to auto will extract edges from the CAD geometry when the number of meshing objects is less than 10,000. If this limit is exceeded, then no edges are extracted. When this option is set to yes, then edges are extracted regardless of the number of meshing objects. No edges are extracted when this option is set to no.
                 """
                 pass
 
             class FeatureAngle(PyNumerical):
                 """
-                Parameter FeatureAngle of value type float.
+                Specify a rotational angle (in degrees) of transformation.
                 """
                 pass
 
@@ -166,7 +172,7 @@ class Root(PyMenu):
 
             class MergeChildren(PyParameter):
                 """
-                Parameter MergeChildren of value type bool.
+                This option is only available when there are nested objects in the Meshing Model tree, and you want to assign object property settings to the top-level object. Upon updating the task, disabling this option ensures that each nested sub-object becomes its own geometry object, whereas enabling this option merges all child sub-objects into a single geometry object.
                 """
                 pass
 
@@ -178,7 +184,7 @@ class Root(PyMenu):
 
             class OneZonePer(PyTextual):
                 """
-                Parameter OneZonePer of value type str.
+                Specify whether to create your meshing zones based on an object, part, body or face. For instance, choosing the face option would create a separate zone for every topological face.
                 """
                 pass
 
@@ -190,7 +196,7 @@ class Root(PyMenu):
 
             class PrefixObjectName(PyParameter):
                 """
-                Parameter PrefixObjectName of value type bool.
+                Append the name of the object to the beginning of the name of the zone.
                 """
                 pass
 
@@ -221,7 +227,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ChangeChildrenSettingsCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ChangeChildrenSettingsCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ChangeChildrenSettingsCommandArguments(*args)
 
             class Copy(PyCommand):
                 """
@@ -235,7 +248,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _CopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CopyCommandArguments(*args)
 
             class CreateChild(PyCommand):
                 """
@@ -249,7 +275,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CreateChildCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.ChildName = self._ChildName(self, "ChildName", service, rules, path)
+
+                    class _ChildName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument ChildName.
+                        """
+
+                def create_instance(self) -> _CreateChildCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateChildCommandArguments(*args)
 
             class Move(PyCommand):
                 """
@@ -263,23 +302,63 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _MoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _MoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._MoveCommandArguments(*args)
 
             class ReFacet(PyCommand):
                 """
-                Command ReFacet.
-
+                Select this option when you want to change faceting of the selected object. Refaceting will refacet the original CAD geometry. Only the faceted CAD geometry is used during the meshing process. The refaceting settings control how far the facet edges are from the model and the size of the facets.  More...
                 Parameters
                 ----------
                 Deviation : float
+                    Specify the distance between facet edges and the geometry edges. Decreasing this value will result in more facets along curved edges.
                 NormalAngle : float
+                    Specify a rotational angle (in degrees) of transformation.
                 MaxSize : float
+                    Specify a maximum element size for the imported model to avoid very large facets during the file import.
 
                 Returns
                 -------
                 bool
                 """
-                pass
+                class _ReFacetCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+                        self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+                        self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+
+                    class _Deviation(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Specify the distance between facet edges and the geometry edges. Decreasing this value will result in more facets along curved edges.
+                        """
+
+                    class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Specify a rotational angle (in degrees) of transformation.
+                        """
+
+                    class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Specify a maximum element size for the imported model to avoid very large facets during the file import.
+                        """
+
+                def create_instance(self) -> _ReFacetCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ReFacetCommandArguments(*args)
 
             class ReFacetNow(PyCommand):
                 """
@@ -290,7 +369,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ReFacetNowCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ReFacetNowCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ReFacetNowCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -304,7 +390,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _AssemblyNode:
             return super().__getitem__(key)
@@ -354,13 +453,13 @@ class Root(PyMenu):
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                Specify whether to apply the transformation to the Local or Global coordinate system. The local coordinate system is one that is associated with the individual CAD geometry as it is being created, where one chooses to re-orient that CAD sketch and create the model. Its orientation can vary based on its placement in an assembly of the entire model (for example, tires for a car). The global coordinate system has a fixed orientation, whereas the local coordinate system will have a different orientation. If, however, the CAD part was created without changing the coordinate systems, then there will be no difference between the local and global coordinate systems.
                 """
                 pass
 
             class MirrorAbout(PyTextual):
                 """
-                Parameter MirrorAbout of value type str.
+                Specify the plane about which the geometry will be mirrored (either XY, YZ, or ZX).
                 """
                 pass
 
@@ -372,7 +471,7 @@ class Root(PyMenu):
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Specify whether to apply a translational or a rotational transformation.
                 """
                 pass
 
@@ -394,7 +493,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -405,7 +517,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -419,7 +538,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -433,7 +565,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -444,7 +589,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -455,7 +607,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Mirror:
             return super().__getitem__(key)
@@ -565,7 +724,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _CopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CopyCommandArguments(*args)
 
             class CreateChild(PyCommand):
                 """
@@ -579,7 +751,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CreateChildCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.ChildName = self._ChildName(self, "ChildName", service, rules, path)
+
+                    class _ChildName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument ChildName.
+                        """
+
+                def create_instance(self) -> _CreateChildCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateChildCommandArguments(*args)
 
             class Move(PyCommand):
                 """
@@ -593,7 +778,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _MoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _MoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._MoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -607,7 +805,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class WildcardCopy(PyCommand):
                 """
@@ -621,7 +832,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _WildcardCopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Pattern = self._Pattern(self, "Pattern", service, rules, path)
+
+                    class _Pattern(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Pattern.
+                        """
+
+                def create_instance(self) -> _WildcardCopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._WildcardCopyCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Node:
             return super().__getitem__(key)
@@ -664,19 +888,19 @@ class Root(PyMenu):
 
             class EdgeExtraction(PyTextual):
                 """
-                Parameter EdgeExtraction of value type str.
+                Choose how edges will be extracted from the CAD geometry. Setting this option to auto will extract edges from the CAD geometry when the number of meshing objects is less than 10,000. If this limit is exceeded, then no edges are extracted. When this option is set to yes, then edges are extracted regardless of the number of meshing objects. No edges are extracted when this option is set to no.
                 """
                 pass
 
             class FeatureAngle(PyNumerical):
                 """
-                Parameter FeatureAngle of value type float.
+                Specify a rotational angle (in degrees) of transformation.
                 """
                 pass
 
             class MergeChildren(PyParameter):
                 """
-                Parameter MergeChildren of value type bool.
+                This option is only available when there are nested objects in the Meshing Model tree, and you want to assign object property settings to the top-level object. Upon updating the task, disabling this option ensures that each nested sub-object becomes its own geometry object, whereas enabling this option merges all child sub-objects into a single geometry object.
                 """
                 pass
 
@@ -688,19 +912,19 @@ class Root(PyMenu):
 
             class OneZonePer(PyTextual):
                 """
-                Parameter OneZonePer of value type str.
+                Specify whether to create your meshing zones based on an object, part, body or face. For instance, choosing the face option would create a separate zone for every topological face.
                 """
                 pass
 
             class PrefixObjectName(PyParameter):
                 """
-                Parameter PrefixObjectName of value type bool.
+                Append the name of the object to the beginning of the name of the zone.
                 """
                 pass
 
             class UseDefaultSettings(PyParameter):
                 """
-                Parameter UseDefaultSettings of value type bool.
+                This option is only available when there are nested objects in the Meshing Model tree, and you want to assign object property settings to the top-level object. Upon updating the task, enabling this option applies the top-level (or the default) object settings to all child sub-objects, whereas disabling this option lets you define separate object settings for your individual sub-objects.
                 """
                 pass
 
@@ -722,7 +946,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -736,7 +973,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -750,7 +1000,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _ObjectSetting:
             return super().__getitem__(key)
@@ -802,25 +1065,25 @@ class Root(PyMenu):
 
             class Deviation(PyNumerical):
                 """
-                Parameter Deviation of value type float.
+                Specify the distance between facet edges and the geometry edges. Decreasing this value will result in more facets along curved edges.
                 """
                 pass
 
             class FacetMaxEdgeLength(PyTextual):
                 """
-                Parameter FacetMaxEdgeLength of value type str.
+                Controls the edge size of facets, ensuring that no facet edge exceeds the specified length. The max edge length size (Max Size) can either be specified directly by selecting Absolute or specified as a factor (Max Edge Length Factor) relative to the bounding box of the geometry by selecting Relative (Bounding Box).
                 """
                 pass
 
             class MaxEdgeLengthFactor(PyNumerical):
                 """
-                Parameter MaxEdgeLengthFactor of value type float.
+                Specifies the maximum size of the facets relative to the bounding box of the geometry.
                 """
                 pass
 
             class MaxSize(PyNumerical):
                 """
-                Parameter MaxSize of value type float.
+                Specify a maximum element size for the imported model to avoid very large facets during the file import.
                 """
                 pass
 
@@ -832,7 +1095,7 @@ class Root(PyMenu):
 
             class NormalAngle(PyNumerical):
                 """
-                Parameter NormalAngle of value type float.
+                Specify a rotational angle (in degrees) of transformation.
                 """
                 pass
 
@@ -854,7 +1117,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -865,7 +1141,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Delete(PyCommand):
                 """
@@ -876,7 +1159,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _DeleteCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _DeleteCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._DeleteCommandArguments(*args)
 
             class Edit(PyCommand):
                 """
@@ -887,7 +1177,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _EditCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _EditCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._EditCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -901,7 +1198,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -915,7 +1225,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Refaceting:
             return super().__getitem__(key)
@@ -967,7 +1290,7 @@ class Root(PyMenu):
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                Specify whether to apply the transformation to the Local or Global coordinate system. The local coordinate system is one that is associated with the individual CAD geometry as it is being created, where one chooses to re-orient that CAD sketch and create the model. Its orientation can vary based on its placement in an assembly of the entire model (for example, tires for a car). The global coordinate system has a fixed orientation, whereas the local coordinate system will have a different orientation. If, however, the CAD part was created without changing the coordinate systems, then there will be no difference between the local and global coordinate systems.
                 """
                 pass
 
@@ -979,25 +1302,25 @@ class Root(PyMenu):
 
             class RotateX(PyNumerical):
                 """
-                Parameter RotateX of value type float.
+                Specify the angle of rotation (in degrees) around the X axis that you want to apply to the transformation.
                 """
                 pass
 
             class RotateY(PyNumerical):
                 """
-                Parameter RotateY of value type float.
+                Specify the angle of rotation (in degrees) around the Y axis that you want to apply to the transformation.
                 """
                 pass
 
             class RotateZ(PyNumerical):
                 """
-                Parameter RotateZ of value type float.
+                Specify the angle of rotation (in degrees) around the Z axis that you want to apply to the transformation.
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Specify whether to apply a translational or a rotational transformation.
                 """
                 pass
 
@@ -1019,7 +1342,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1030,7 +1366,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1044,7 +1387,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1058,7 +1414,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1069,7 +1438,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1080,7 +1456,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Rotate:
             return super().__getitem__(key)
@@ -1118,7 +1501,7 @@ class Root(PyMenu):
 
             class Angle(PyNumerical):
                 """
-                Parameter Angle of value type float.
+                Specify a rotational angle (in degrees) of transformation.
                 """
                 pass
 
@@ -1130,19 +1513,19 @@ class Root(PyMenu):
 
             class AxisX(PyNumerical):
                 """
-                Parameter AxisX of value type float.
+                Specify the X component of the rotational axis, based on the specified coordinate system.
                 """
                 pass
 
             class AxisY(PyNumerical):
                 """
-                Parameter AxisY of value type float.
+                Specify the Y component of the rotational axis, based on the specified coordinate system.
                 """
                 pass
 
             class AxisZ(PyNumerical):
                 """
-                Parameter AxisZ of value type float.
+                Specify the Z component of the rotational axis, based on the specified coordinate system.
                 """
                 pass
 
@@ -1160,7 +1543,7 @@ class Root(PyMenu):
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                Specify whether to apply the transformation to the Local or Global coordinate system. The local coordinate system is one that is associated with the individual CAD geometry as it is being created, where one chooses to re-orient that CAD sketch and create the model. Its orientation can vary based on its placement in an assembly of the entire model (for example, tires for a car). The global coordinate system has a fixed orientation, whereas the local coordinate system will have a different orientation. If, however, the CAD part was created without changing the coordinate systems, then there will be no difference between the local and global coordinate systems.
                 """
                 pass
 
@@ -1172,25 +1555,25 @@ class Root(PyMenu):
 
             class PivotX(PyNumerical):
                 """
-                Parameter PivotX of value type float.
+                Specify the X coordinate (using display units) of the pivot point, based on the specified coordinate system.
                 """
                 pass
 
             class PivotY(PyNumerical):
                 """
-                Parameter PivotY of value type float.
+                Specify the Y coordinate (using display units) of the pivot point, based on the specified coordinate system.
                 """
                 pass
 
             class PivotZ(PyNumerical):
                 """
-                Parameter PivotZ of value type float.
+                Specify the Z coordinate (using display units) of the pivot point, based on the specified coordinate system.
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Specify whether to apply a translational or a rotational transformation.
                 """
                 pass
 
@@ -1212,7 +1595,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1223,7 +1619,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1237,7 +1640,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1251,7 +1667,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1262,7 +1691,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1273,7 +1709,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _RotateAboutAxis:
             return super().__getitem__(key)
@@ -1325,7 +1768,7 @@ class Root(PyMenu):
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                Specify whether to apply the transformation to the Local or Global coordinate system. The local coordinate system is one that is associated with the individual CAD geometry as it is being created, where one chooses to re-orient that CAD sketch and create the model. Its orientation can vary based on its placement in an assembly of the entire model (for example, tires for a car). The global coordinate system has a fixed orientation, whereas the local coordinate system will have a different orientation. If, however, the CAD part was created without changing the coordinate systems, then there will be no difference between the local and global coordinate systems.
                 """
                 pass
 
@@ -1337,25 +1780,25 @@ class Root(PyMenu):
 
             class ScaleX(PyNumerical):
                 """
-                Parameter ScaleX of value type float.
+                Specify the X component of the scale factor, based on the specified coordinate system.
                 """
                 pass
 
             class ScaleY(PyNumerical):
                 """
-                Parameter ScaleY of value type float.
+                Specify the Y component of the scale factor, based on the specified coordinate system.
                 """
                 pass
 
             class ScaleZ(PyNumerical):
                 """
-                Parameter ScaleZ of value type float.
+                Specify the Z component of the scale factor, based on the specified coordinate system.
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Specify whether to apply a translational or a rotational transformation.
                 """
                 pass
 
@@ -1377,7 +1820,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1388,7 +1844,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1402,7 +1865,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1416,7 +1892,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1427,7 +1916,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1438,7 +1934,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Scaling:
             return super().__getitem__(key)
@@ -1494,7 +1997,7 @@ class Root(PyMenu):
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                Specify whether to apply the transformation to the Local or Global coordinate system. The local coordinate system is one that is associated with the individual CAD geometry as it is being created, where one chooses to re-orient that CAD sketch and create the model. Its orientation can vary based on its placement in an assembly of the entire model (for example, tires for a car). The global coordinate system has a fixed orientation, whereas the local coordinate system will have a different orientation. If, however, the CAD part was created without changing the coordinate systems, then there will be no difference between the local and global coordinate systems.
                 """
                 pass
 
@@ -1506,43 +2009,43 @@ class Root(PyMenu):
 
             class RotateX(PyNumerical):
                 """
-                Parameter RotateX of value type float.
+                Specify the angle of rotation (in degrees) around the X axis that you want to apply to the transformation.
                 """
                 pass
 
             class RotateY(PyNumerical):
                 """
-                Parameter RotateY of value type float.
+                Specify the angle of rotation (in degrees) around the Y axis that you want to apply to the transformation.
                 """
                 pass
 
             class RotateZ(PyNumerical):
                 """
-                Parameter RotateZ of value type float.
+                Specify the angle of rotation (in degrees) around the Z axis that you want to apply to the transformation.
                 """
                 pass
 
             class TranslateX(PyNumerical):
                 """
-                Parameter TranslateX of value type float.
+                Specify the distance (using display units) along the X axis to apply the translation.
                 """
                 pass
 
             class TranslateY(PyNumerical):
                 """
-                Parameter TranslateY of value type float.
+                Specify the distance (using display units) along the Y axis to apply the translation.
                 """
                 pass
 
             class TranslateZ(PyNumerical):
                 """
-                Parameter TranslateZ of value type float.
+                Specify the distance (using display units) along the Z axis to apply the translation.
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Specify whether to apply a translational or a rotational transformation.
                 """
                 pass
 
@@ -1564,7 +2067,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1575,7 +2091,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Delete(PyCommand):
                 """
@@ -1589,7 +2112,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _DeleteCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Path = self._Path(self, "Path", service, rules, path)
+
+                    class _Path(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Path.
+                        """
+
+                def create_instance(self) -> _DeleteCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._DeleteCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1603,7 +2139,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1617,7 +2166,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1628,7 +2190,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1639,7 +2208,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Transform:
             return super().__getitem__(key)
@@ -1688,7 +2264,7 @@ class Root(PyMenu):
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                Specify whether to apply the transformation to the Local or Global coordinate system. The local coordinate system is one that is associated with the individual CAD geometry as it is being created, where one chooses to re-orient that CAD sketch and create the model. Its orientation can vary based on its placement in an assembly of the entire model (for example, tires for a car). The global coordinate system has a fixed orientation, whereas the local coordinate system will have a different orientation. If, however, the CAD part was created without changing the coordinate systems, then there will be no difference between the local and global coordinate systems.
                 """
                 pass
 
@@ -1700,7 +2276,7 @@ class Root(PyMenu):
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Specify whether to apply a translational or a rotational transformation.
                 """
                 pass
 
@@ -1722,7 +2298,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1733,7 +2322,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1747,7 +2343,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1761,7 +2370,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1772,7 +2394,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1783,7 +2412,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _TransformBase:
             return super().__getitem__(key)
@@ -1835,7 +2471,7 @@ class Root(PyMenu):
 
             class Global(PyTextual):
                 """
-                Parameter Global of value type str.
+                Specify whether to apply the transformation to the Local or Global coordinate system. The local coordinate system is one that is associated with the individual CAD geometry as it is being created, where one chooses to re-orient that CAD sketch and create the model. Its orientation can vary based on its placement in an assembly of the entire model (for example, tires for a car). The global coordinate system has a fixed orientation, whereas the local coordinate system will have a different orientation. If, however, the CAD part was created without changing the coordinate systems, then there will be no difference between the local and global coordinate systems.
                 """
                 pass
 
@@ -1847,25 +2483,25 @@ class Root(PyMenu):
 
             class TranslateX(PyNumerical):
                 """
-                Parameter TranslateX of value type float.
+                Specify the distance (using display units) along the X axis to apply the translation.
                 """
                 pass
 
             class TranslateY(PyNumerical):
                 """
-                Parameter TranslateY of value type float.
+                Specify the distance (using display units) along the Y axis to apply the translation.
                 """
                 pass
 
             class TranslateZ(PyNumerical):
                 """
-                Parameter TranslateZ of value type float.
+                Specify the distance (using display units) along the Z axis to apply the translation.
                 """
                 pass
 
             class Type(PyTextual):
                 """
-                Parameter Type of value type str.
+                Specify whether to apply a translational or a rotational transformation.
                 """
                 pass
 
@@ -1887,7 +2523,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1898,7 +2547,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1912,7 +2568,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1926,7 +2595,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1937,7 +2619,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1948,7 +2637,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Translate:
             return super().__getitem__(key)
@@ -1984,7 +2680,7 @@ class Root(PyMenu):
 
         class LengthUnit(PyTextual):
             """
-            Parameter LengthUnit of value type str.
+            Select a suitable unit for display in the graphics window.
             """
             pass
 
@@ -2020,7 +2716,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllOperationsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllOperationsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllOperationsCommandArguments(*args)
 
         class UpdateAllOperations(PyCommand):
             """
@@ -2031,7 +2734,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllOperationsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllOperationsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllOperationsCommandArguments(*args)
 
     class ObjectSettingOperations(PyMenu):
         """
@@ -2069,7 +2779,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _CreateObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateObjectSettingCommandArguments(*args)
 
         class DeleteAllObjectSetting(PyCommand):
             """
@@ -2080,7 +2803,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllObjectSettingCommandArguments(*args)
 
         class DeleteObjectSetting(PyCommand):
             """
@@ -2094,7 +2824,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _DeleteObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteObjectSettingCommandArguments(*args)
 
     class RefacetingOperations(PyMenu):
         """
@@ -2123,8 +2866,7 @@ class Root(PyMenu):
 
         class CreateRefacet(PyCommand):
             """
-            Command CreateRefacet.
-
+            Select this option when you want to change faceting of the selected object. Refaceting will refacet the original CAD geometry. Only the faceted CAD geometry is used during the meshing process. The refaceting settings control how far the facet edges are from the model and the size of the facets.  More...
             Parameters
             ----------
             Paths : list[str]
@@ -2133,7 +2875,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _CreateRefacetCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateRefacetCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateRefacetCommandArguments(*args)
 
         class DeleteAllRefacets(PyCommand):
             """
@@ -2144,12 +2899,18 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllRefacetsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllRefacetsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllRefacetsCommandArguments(*args)
 
         class DeleteRefacet(PyCommand):
             """
-            Command DeleteRefacet.
-
+            Select this option when you want to change faceting of the selected object. Refaceting will refacet the original CAD geometry. Only the faceted CAD geometry is used during the meshing process. The refaceting settings control how far the facet edges are from the model and the size of the facets.  More...
             Parameters
             ----------
             Paths : list[str]
@@ -2158,7 +2919,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteRefacetCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _DeleteRefacetCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteRefacetCommandArguments(*args)
 
         class UpdateAllRefacets(PyCommand):
             """
@@ -2169,7 +2943,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllRefacetsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllRefacetsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllRefacetsCommandArguments(*args)
 
     class TransformOperations(PyMenu):
         """
@@ -2209,22 +2990,54 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _CreateTransformCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateTransformCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateTransformCommandArguments(*args)
 
         class CreateTransformType(PyCommand):
             """
-            Command CreateTransformType.
-
+            Specify whether to apply a translational or a rotational transformation.
             Parameters
             ----------
             Type : str
+                Specify whether to apply a translational or a rotational transformation.
             Paths : list[str]
 
             Returns
             -------
             bool
             """
-            pass
+            class _CreateTransformTypeCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Type = self._Type(self, "Type", service, rules, path)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Type(PyTextualCommandArgumentsSubItem):
+                    """
+                    Specify whether to apply a translational or a rotational transformation.
+                    """
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateTransformTypeCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateTransformTypeCommandArguments(*args)
 
         class DeleteAllTransforms(PyCommand):
             """
@@ -2235,7 +3048,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllTransformsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllTransformsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllTransformsCommandArguments(*args)
 
         class DeleteTransform(PyCommand):
             """
@@ -2249,7 +3069,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteTransformCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _DeleteTransformCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteTransformCommandArguments(*args)
 
         class UpdateAllTransforms(PyCommand):
             """
@@ -2260,7 +3093,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllTransformsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllTransformsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllTransformsCommandArguments(*args)
 
     class AppendFmdFiles(PyCommand):
         """
@@ -2272,11 +3112,17 @@ class Root(PyMenu):
         AssemblyParentNode : int
         FileUnit : str
         Route : str
+            Provides the recommended route in order to import and load the specified CAD file into this task. The default settings are recommended in most cases.  More...
         JtLOD : str
+            Specify the level of detail that you want to include for this .jt file before loading the CAD file.
         PartPerBody : bool
+            Enable this option to make all bodies available as individual parts in the CAD Model tree once the CAD file is loaded into the task.
         PrefixParentName : bool
+            This applies the name of the component (or assembly) as a prefix to the individual part names when the geometry is loaded into the task.
         RemoveEmptyParts : bool
+            Enabled by default, this option lets you import your CAD geometry while removing any empty components.
         IgnoreSolidNamesAppend : bool
+            Enable this field and browse and select additional CAD files. Use the Append button to add the additional CAD components to the bottom of the CAD Model tree upon loading.
         Options : dict[str, Any]
         RefacetOptions : dict[str, Any]
 
@@ -2284,35 +3130,182 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _AppendFmdFilesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.AssemblyParentNode = self._AssemblyParentNode(self, "AssemblyParentNode", service, rules, path)
+                self.FileUnit = self._FileUnit(self, "FileUnit", service, rules, path)
+                self.Route = self._Route(self, "Route", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNamesAppend = self._IgnoreSolidNamesAppend(self, "IgnoreSolidNamesAppend", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+                self.RefacetOptions = self._RefacetOptions(self, "RefacetOptions", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+            class _AssemblyParentNode(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument AssemblyParentNode.
+                """
+
+            class _FileUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FileUnit.
+                """
+
+            class _Route(PyTextualCommandArgumentsSubItem):
+                """
+                Provides the recommended route in order to import and load the specified CAD file into this task. The default settings are recommended in most cases.  More...
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                Specify the level of detail that you want to include for this .jt file before loading the CAD file.
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                Enable this option to make all bodies available as individual parts in the CAD Model tree once the CAD file is loaded into the task.
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                This applies the name of the component (or assembly) as a prefix to the individual part names when the geometry is loaded into the task.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                Enabled by default, this option lets you import your CAD geometry while removing any empty components.
+                """
+
+            class _IgnoreSolidNamesAppend(PyParameterCommandArgumentsSubItem):
+                """
+                Enable this field and browse and select additional CAD files. Use the Append button to add the additional CAD components to the bottom of the CAD Model tree upon loading.
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                Argument Options.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import solid bodies along with your CAD geometry.
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import line bodies along with your CAD geometry.
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import surface bodies along with your CAD geometry.
+                    """
+
+            class _RefacetOptions(PySingletonCommandArgumentsSubItem):
+                """
+                Argument RefacetOptions.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+                    self.RefacetDuringLoad = self._RefacetDuringLoad(self, "RefacetDuringLoad", service, rules, path)
+                    self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+                    self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+
+                class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify a maximum element size for the imported model to avoid very large facets during the file import.
+                    """
+
+                class _RefacetDuringLoad(PyParameterCommandArgumentsSubItem):
+                    """
+                    This option is available when DSCO is selected for the Import Route. When enabled, this option will refacet the geometry as it is converted to a .fmd file. This option eliminates the need for any refaceting operation after the geometry is loaded, which can be expensive.
+                    """
+
+                class _Deviation(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify the distance between facet edges and the geometry edges. Decreasing this value will result in more facets along curved edges.
+                    """
+
+                class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify a rotational angle (in degrees) of transformation.
+                    """
+
+        def create_instance(self) -> _AppendFmdFilesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._AppendFmdFilesCommandArguments(*args)
 
     class ChangeFileLengthUnit(PyCommand):
         """
-        Command ChangeFileLengthUnit.
-
+        Specify the units of length used by this .stl file before loading the CAD file.
         Parameters
         ----------
         LengthUnit : str
+            Select a suitable unit for display in the graphics window.
 
         Returns
         -------
         bool
         """
-        pass
+        class _ChangeFileLengthUnitCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.LengthUnit = self._LengthUnit(self, "LengthUnit", service, rules, path)
+
+            class _LengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Select a suitable unit for display in the graphics window.
+                """
+
+        def create_instance(self) -> _ChangeFileLengthUnitCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ChangeFileLengthUnitCommandArguments(*args)
 
     class ChangeLengthUnit(PyCommand):
         """
-        Command ChangeLengthUnit.
-
+        Select a suitable unit for display in the graphics window.
         Parameters
         ----------
         LengthUnit : str
+            Select a suitable unit for display in the graphics window.
 
         Returns
         -------
         bool
         """
-        pass
+        class _ChangeLengthUnitCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.LengthUnit = self._LengthUnit(self, "LengthUnit", service, rules, path)
+
+            class _LengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Select a suitable unit for display in the graphics window.
+                """
+
+        def create_instance(self) -> _ChangeLengthUnitCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ChangeLengthUnitCommandArguments(*args)
 
     class CreateObjForEachPart(PyCommand):
         """
@@ -2326,7 +3319,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _CreateObjForEachPartCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _CreateObjForEachPartCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateObjForEachPartCommandArguments(*args)
 
     class CreateObjects(PyCommand):
         """
@@ -2337,7 +3343,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _CreateObjectsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _CreateObjectsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateObjectsCommandArguments(*args)
 
     class Delete(PyCommand):
         """
@@ -2351,7 +3364,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _DeleteCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Path = self._Path(self, "Path", service, rules, path)
+
+            class _Path(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Path.
+                """
+
+        def create_instance(self) -> _DeleteCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._DeleteCommandArguments(*args)
 
     class DeletePaths(PyCommand):
         """
@@ -2365,7 +3391,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _DeletePathsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _DeletePathsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._DeletePathsCommandArguments(*args)
 
     class InitializeTemplate(PyCommand):
         """
@@ -2374,12 +3413,26 @@ class Root(PyMenu):
         Parameters
         ----------
         templateType : str
+            Specify whether to apply a translational or a rotational transformation.
 
         Returns
         -------
         bool
         """
-        pass
+        class _InitializeTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.templateType = self._templateType(self, "templateType", service, rules, path)
+
+            class _templateType(PyTextualCommandArgumentsSubItem):
+                """
+                Specify whether to apply a translational or a rotational transformation.
+                """
+
+        def create_instance(self) -> _InitializeTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InitializeTemplateCommandArguments(*args)
 
     class InputFileChanged(PyCommand):
         """
@@ -2389,11 +3442,17 @@ class Root(PyMenu):
         ----------
         FilePath : str
         PartPerBody : bool
+            Enable this option to make all bodies available as individual parts in the CAD Model tree once the CAD file is loaded into the task.
         PrefixParentName : bool
+            This applies the name of the component (or assembly) as a prefix to the individual part names when the geometry is loaded into the task.
         RemoveEmptyParts : bool
+            Enabled by default, this option lets you import your CAD geometry while removing any empty components.
         IgnoreSolidNames : bool
+            Enable this option to import your CAD geometry while ignoring the names assigned to solids. Note that binary STL files contain a single solid and may have an associated solid name, whereas ASCII STL files contain one or more solids and each can have a  solid name. This option allows to control whether or not to use the name contained in the STL file for naming mesh objects and components.
         FileLengthUnit : str
+            Specify the units of length used by this .stl file before loading the CAD file.
         JtLOD : str
+            Specify the level of detail that you want to include for this .jt file before loading the CAD file.
         Options : dict[str, Any]
         RefacetOptions : dict[str, Any]
 
@@ -2401,7 +3460,116 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _InputFileChangedCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNames = self._IgnoreSolidNames(self, "IgnoreSolidNames", service, rules, path)
+                self.FileLengthUnit = self._FileLengthUnit(self, "FileLengthUnit", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+                self.RefacetOptions = self._RefacetOptions(self, "RefacetOptions", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                Enable this option to make all bodies available as individual parts in the CAD Model tree once the CAD file is loaded into the task.
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                This applies the name of the component (or assembly) as a prefix to the individual part names when the geometry is loaded into the task.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                Enabled by default, this option lets you import your CAD geometry while removing any empty components.
+                """
+
+            class _IgnoreSolidNames(PyParameterCommandArgumentsSubItem):
+                """
+                Enable this option to import your CAD geometry while ignoring the names assigned to solids. Note that binary STL files contain a single solid and may have an associated solid name, whereas ASCII STL files contain one or more solids and each can have a  solid name. This option allows to control whether or not to use the name contained in the STL file for naming mesh objects and components.
+                """
+
+            class _FileLengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Specify the units of length used by this .stl file before loading the CAD file.
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                Specify the level of detail that you want to include for this .jt file before loading the CAD file.
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                Argument Options.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import solid bodies along with your CAD geometry.
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import line bodies along with your CAD geometry.
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import surface bodies along with your CAD geometry.
+                    """
+
+            class _RefacetOptions(PySingletonCommandArgumentsSubItem):
+                """
+                Argument RefacetOptions.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+                    self.RefacetDuringLoad = self._RefacetDuringLoad(self, "RefacetDuringLoad", service, rules, path)
+                    self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+                    self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+
+                class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify a maximum element size for the imported model to avoid very large facets during the file import.
+                    """
+
+                class _RefacetDuringLoad(PyParameterCommandArgumentsSubItem):
+                    """
+                    This option is available when DSCO is selected for the Import Route. When enabled, this option will refacet the geometry as it is converted to a .fmd file. This option eliminates the need for any refaceting operation after the geometry is loaded, which can be expensive.
+                    """
+
+                class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify a rotational angle (in degrees) of transformation.
+                    """
+
+                class _Deviation(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify the distance between facet edges and the geometry edges. Decreasing this value will result in more facets along curved edges.
+                    """
+
+        def create_instance(self) -> _InputFileChangedCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InputFileChangedCommandArguments(*args)
 
     class ListMeshingOperations(PyCommand):
         """
@@ -2415,7 +3583,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ListMeshingOperationsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Path = self._Path(self, "Path", service, rules, path)
+
+            class _Path(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Path.
+                """
+
+        def create_instance(self) -> _ListMeshingOperationsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ListMeshingOperationsCommandArguments(*args)
 
     class LoadFmdFile(PyCommand):
         """
@@ -2426,11 +3607,17 @@ class Root(PyMenu):
         FilePath : str
         FileUnit : str
         Route : str
+            Provides the recommended route in order to import and load the specified CAD file into this task. The default settings are recommended in most cases.  More...
         JtLOD : str
+            Specify the level of detail that you want to include for this .jt file before loading the CAD file.
         PartPerBody : bool
+            Enable this option to make all bodies available as individual parts in the CAD Model tree once the CAD file is loaded into the task.
         PrefixParentName : bool
+            This applies the name of the component (or assembly) as a prefix to the individual part names when the geometry is loaded into the task.
         RemoveEmptyParts : bool
+            Enabled by default, this option lets you import your CAD geometry while removing any empty components.
         IgnoreSolidNames : bool
+            Enable this option to import your CAD geometry while ignoring the names assigned to solids. Note that binary STL files contain a single solid and may have an associated solid name, whereas ASCII STL files contain one or more solids and each can have a  solid name. This option allows to control whether or not to use the name contained in the STL file for naming mesh objects and components.
         Options : dict[str, Any]
         RefacetOptions : dict[str, Any]
 
@@ -2438,7 +3625,122 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _LoadFmdFileCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.FileUnit = self._FileUnit(self, "FileUnit", service, rules, path)
+                self.Route = self._Route(self, "Route", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNames = self._IgnoreSolidNames(self, "IgnoreSolidNames", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+                self.RefacetOptions = self._RefacetOptions(self, "RefacetOptions", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+            class _FileUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FileUnit.
+                """
+
+            class _Route(PyTextualCommandArgumentsSubItem):
+                """
+                Provides the recommended route in order to import and load the specified CAD file into this task. The default settings are recommended in most cases.  More...
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                Specify the level of detail that you want to include for this .jt file before loading the CAD file.
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                Enable this option to make all bodies available as individual parts in the CAD Model tree once the CAD file is loaded into the task.
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                This applies the name of the component (or assembly) as a prefix to the individual part names when the geometry is loaded into the task.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                Enabled by default, this option lets you import your CAD geometry while removing any empty components.
+                """
+
+            class _IgnoreSolidNames(PyParameterCommandArgumentsSubItem):
+                """
+                Enable this option to import your CAD geometry while ignoring the names assigned to solids. Note that binary STL files contain a single solid and may have an associated solid name, whereas ASCII STL files contain one or more solids and each can have a  solid name. This option allows to control whether or not to use the name contained in the STL file for naming mesh objects and components.
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                Argument Options.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import solid bodies along with your CAD geometry.
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import line bodies along with your CAD geometry.
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    Enable this option to import surface bodies along with your CAD geometry.
+                    """
+
+            class _RefacetOptions(PySingletonCommandArgumentsSubItem):
+                """
+                Argument RefacetOptions.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+                    self.RefacetDuringLoad = self._RefacetDuringLoad(self, "RefacetDuringLoad", service, rules, path)
+                    self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+                    self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+
+                class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify a maximum element size for the imported model to avoid very large facets during the file import.
+                    """
+
+                class _RefacetDuringLoad(PyParameterCommandArgumentsSubItem):
+                    """
+                    This option is available when DSCO is selected for the Import Route. When enabled, this option will refacet the geometry as it is converted to a .fmd file. This option eliminates the need for any refaceting operation after the geometry is loaded, which can be expensive.
+                    """
+
+                class _Deviation(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify the distance between facet edges and the geometry edges. Decreasing this value will result in more facets along curved edges.
+                    """
+
+                class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                    """
+                    Specify a rotational angle (in degrees) of transformation.
+                    """
+
+        def create_instance(self) -> _LoadFmdFileCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadFmdFileCommandArguments(*args)
 
     class LoadTemplate(PyCommand):
         """
@@ -2452,7 +3754,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _LoadTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _LoadTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadTemplateCommandArguments(*args)
 
     class MarkObjectsOutofDate(PyCommand):
         """
@@ -2466,7 +3781,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MarkObjectsOutofDateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MarkObjectsOutofDateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MarkObjectsOutofDateCommandArguments(*args)
 
     class MoveCADComponentsToNewObject(PyCommand):
         """
@@ -2480,7 +3808,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MoveCADComponentsToNewObjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MoveCADComponentsToNewObjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveCADComponentsToNewObjectCommandArguments(*args)
 
     class MoveToNewSubobject(PyCommand):
         """
@@ -2494,7 +3835,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MoveToNewSubobjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MoveToNewSubobjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveToNewSubobjectCommandArguments(*args)
 
     class MoveToObject(PyCommand):
         """
@@ -2508,7 +3862,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MoveToObjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MoveToObjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveToObjectCommandArguments(*args)
 
     class RedoAllTransforms(PyCommand):
         """
@@ -2519,7 +3886,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _RedoAllTransformsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _RedoAllTransformsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._RedoAllTransformsCommandArguments(*args)
 
     class ResetTemplate(PyCommand):
         """
@@ -2530,7 +3904,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ResetTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _ResetTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ResetTemplateCommandArguments(*args)
 
     class SaveFmdFile(PyCommand):
         """
@@ -2544,7 +3925,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _SaveFmdFileCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _SaveFmdFileCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SaveFmdFileCommandArguments(*args)
 
     class SaveTemplate(PyCommand):
         """
@@ -2558,7 +3952,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _SaveTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _SaveTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SaveTemplateCommandArguments(*args)
 
     class SuppressNodeObjects(PyCommand):
         """
@@ -2573,7 +3980,26 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _SuppressNodeObjectsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+                self.Suppress = self._Suppress(self, "Suppress", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+            class _Suppress(PyParameterCommandArgumentsSubItem):
+                """
+                Argument Suppress.
+                """
+
+        def create_instance(self) -> _SuppressNodeObjectsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SuppressNodeObjectsCommandArguments(*args)
 
     class UndoAllTransforms(PyCommand):
         """
@@ -2584,5 +4010,12 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _UndoAllTransformsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _UndoAllTransformsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._UndoAllTransformsCommandArguments(*args)
 

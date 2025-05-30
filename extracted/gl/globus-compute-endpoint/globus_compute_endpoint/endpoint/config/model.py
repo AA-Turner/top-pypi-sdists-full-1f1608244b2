@@ -63,6 +63,7 @@ class LauncherModel(BaseConfigModel):
 class ProviderModel(BaseConfigModel):
     type: str
     launcher: t.Optional[LauncherModel]
+    persistent_volumes: t.Optional[t.List[t.Tuple[str, str]]]  # KubernetesProvider
 
     _validate_type = _validate_import("type", parsl_providers)
     _validate_launcher = _validate_params("launcher")
@@ -110,6 +111,7 @@ class BaseEndpointConfigModel(BaseModel):
     multi_user: t.Optional[bool]
     display_name: t.Optional[str]
     allowed_functions: t.Optional[t.List[uuid.UUID]]
+    admins: t.Optional[t.List[uuid.UUID]]
     authentication_policy: t.Optional[uuid.UUID]
     subscription_id: t.Optional[uuid.UUID]
     amqp_port: t.Optional[int]

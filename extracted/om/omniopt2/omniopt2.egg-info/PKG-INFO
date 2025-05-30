@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: omniopt2
-Version: 6962
+Version: 7031
 Summary: Automatic highly parallelized hyperparameter optimizer based on Ax/Botorch
 Home-page: https://scads.ai/transfer-2/verfuegbare-software-dienste-en/omniopt/
 Author: Norman Koch
@@ -17,7 +17,6 @@ Requires-Dist: ax-platform
 Requires-Dist: art
 Requires-Dist: tzlocal
 Requires-Dist: Rich
-Requires-Dist: rich-argparse
 Requires-Dist: sixel
 Requires-Dist: scikit-learn
 Requires-Dist: submitit
@@ -34,7 +33,6 @@ Requires-Dist: hiplot
 Requires-Dist: html5lib
 Requires-Dist: lxml
 Requires-Dist: toml
-Requires-Dist: rich_argparse
 Requires-Dist: beartype
 Requires-Dist: pyyaml
 Requires-Dist: pyspellchecker
@@ -109,7 +107,7 @@ scientists with hyperparameter optimization on SLURM-based clusters, even
 though it works without it as well. It simplifies large-scale optimization
 tasks with built-in fault tolerance and flexibility. A graphical user interface
 (GUI) is available for command creation, accessible at 
-[OmniOpt2 GUI](https://imageseg.scads.de/omniax/). For tutorials on 
+[OmniOpt2 GUI](https://imageseg.scads.de/omniax/gui). For tutorials on 
 configuration, exit codes, and debugging, visit
 [OmniOpt2 Tutorials](https://imageseg.scads.de/omniax/tutorials).
 
@@ -140,6 +138,12 @@ omniopt_plot --run_dir runs/example/0
 omniopt_plot --run_dir runs/example/0 --min 0 --max 100
 ```
 
+## Using live-share
+
+Use `--live_share` (also enablable via GUI) to automatically share the job. You will get a URL
+where your job data is hosted publically for 30 days, meaning everyone can access your results,
+and you can see all kinds of visualizations and export them.
+
 ## Run Tests (Developer Use Only)
 
 The test suite simulates various scenarios, including handling faulty
@@ -155,13 +159,13 @@ for more details.
 
 ## Install from pypi
 
-This may not use the latest version.
+This may not use the bleeding-edge version, but if you get the version from here it means, the test suite has completety tested it properly.
 
 ```command
 pip3 install omniopt2
 ```
 
-## Install from repo
+## Install from repo (bleeding edge, may contain untested changes)
 
 ```command
 pip3 install -e git+https://github.com/NormanTUD/OmniOpt2.git#egg=OmniOpt2
@@ -188,6 +192,10 @@ to install them.
 ## Contributions
 
 I'd be glad to see your contributions!
+
+## Issues
+
+If you experience any problems, please write issues at my [Github Issues page](https://github.com/NormanTUD/OmniOpt/issues).
 
 ## Old OmniOpt
 

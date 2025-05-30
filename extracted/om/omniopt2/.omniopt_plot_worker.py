@@ -12,12 +12,18 @@ import os
 import sys
 import traceback
 from datetime import datetime, timezone
-from typing import Any
 
 import matplotlib.pyplot as plt
 import pandas as pd
 
 from beartype import beartype
+
+parser = argparse.ArgumentParser(description='Plot worker usage from CSV file')
+parser.add_argument('--run_dir', type=str, help='Directory containing worker usage CSV file')
+parser.add_argument('--debug', action='store_true', help='Enable debug mode')
+parser.add_argument('--save_to_file', type=str, help='Save the plot to the specified file', default=None)
+parser.add_argument('--no_plt_show', help='Disable showing the plot', action='store_true', default=False)
+args = parser.parse_args()
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 helpers_file = f"{script_dir}/.helpers.py"
@@ -32,7 +38,7 @@ else:
     raise ImportError(f"Could not load module from {helpers_file}")
 
 @beartype
-def plot_worker_usage(args: Any, pd_csv: str) -> None:
+def plot_worker_usage(pd_csv: str) -> None:
     try:
         data = pd.read_csv(pd_csv, names=['time', 'num_parallel_jobs', 'nr_current_workers', 'percentage'])
 
@@ -93,15 +99,6 @@ def plot_worker_usage(args: Any, pd_csv: str) -> None:
         print(traceback.format_exc(), file=sys.stderr)
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Plot worker usage from CSV file')
-    parser.add_argument('--run_dir', type=str, help='Directory containing worker usage CSV file')
-    parser.add_argument('--debug', action='store_true', help='Enable debug mode')
-
-    parser.add_argument('--save_to_file', type=str, help='Save the plot to the specified file', default=None)
-
-    parser.add_argument('--no_plt_show', help='Disable showing the plot', action='store_true', default=False)
-    args = parser.parse_args()
-
     if args.debug:
         print(f"Debug mode enabled. Run directory: {args.run_dir}")
 
@@ -111,7 +108,7 @@ def main() -> None:
         worker_usage_csv = os.path.join(args.run_dir, "worker_usage.csv")
         if os.path.exists(worker_usage_csv):
             try:
-                plot_worker_usage(args, worker_usage_csv)
+                plot_worker_usage(worker_usage_csv)
             except Exception as e:
                 helpers.log_error(f"Error: {e}")
                 sys.exit(3)

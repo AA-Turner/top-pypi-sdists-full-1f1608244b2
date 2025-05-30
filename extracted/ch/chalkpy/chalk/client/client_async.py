@@ -471,7 +471,7 @@ class AsyncChalkClient:
         query_context: Mapping[str, Union[str, int, float, bool, None]] | str | None = None,
         max_samples: int | None = None,
         wait: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         recompute_features: bool | list[FeatureReference] = False,
         sample_features: list[FeatureReference] | None = None,
@@ -630,7 +630,7 @@ class AsyncChalkClient:
         environment: EnvironmentId | None = None,
         branch: BranchId | None = ...,
         wait: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> Dataset:
         """Create a Chalk `Dataset`.
@@ -708,7 +708,7 @@ class AsyncChalkClient:
         query_context: Mapping[str, Union[str, int, float, bool, None]] | str | None = None,
         max_samples: int | None = None,
         wait: bool = False,
-        show_progress: bool = True,
+        show_progress: bool | ellipsis = ...,
         timeout: float | timedelta | ellipsis | None = ...,
         recompute_features: bool | list[FeatureReference] = False,
         sample_features: list[FeatureReference] | None = None,

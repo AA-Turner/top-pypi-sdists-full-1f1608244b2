@@ -41,19 +41,40 @@ class QrackAceBackend:
     def __init__(
         self,
         qubit_count=1,
+        recursive_stack_depth=1,
         alternating_codes=True,
         isTensorNetwork=False,
+        isStabilizerHybrid=False,
+        isBinaryDecisionTree=False,
         toClone=None,
     ):
-        self.sim = (
-            toClone.sim.clone()
-            if toClone
-            else QrackSimulator(3 * qubit_count + 1, isTensorNetwork=isTensorNetwork)
-        )
+        if recursive_stack_depth < 1:
+            recursive_stack_depth = 1
+        if toClone:
+            qubit_count = toClone.num_qubits()
+        if recursive_stack_depth > 1:
+            recursive_stack_depth -= 1
+            self.sim = (
+                toClone.sim
+                if toClone
+                else QrackAceBackend(3 * qubit_count + 1, recursive_stack_depth=recursive_stack_depth, alternating_codes=alternating_codes, isTensorNetwork=isTensorNetwork, isStabilizerHybrid=isStabilizerHybrid, isBinaryDecisionTree=isBinaryDecisionTree)
+            )
+        else:
+            self.sim = (
+                toClone.sim.clone()
+                if toClone
+                else QrackSimulator(3 * qubit_count + 1, isTensorNetwork=isTensorNetwork, isStabilizerHybrid=isStabilizerHybrid, isBinaryDecisionTree=isBinaryDecisionTree)
+            )
         self._ancilla = 3 * qubit_count
         self._factor_width(qubit_count)
         self.alternating_codes = alternating_codes
         self._is_init = [False] * qubit_count
+
+    def clone(self):
+        return QrackAceBackend(toClone=self)
+
+    def num_qubits(self):
+        return self.sim.num_qubits() // 3
 
     def _factor_width(self, width):
         col_len = math.floor(math.sqrt(width))
@@ -244,7 +265,7 @@ class QrackAceBackend:
         if not math.isclose(th, 0):
             self._correct(lq)
 
-    def u(self, th, ph, lm, lq):
+    def u(self, lq, th, ph, lm):
         while ph > math.pi:
             ph -= 2 * math.pi
         while ph <= -math.pi:
@@ -404,6 +425,36 @@ class QrackAceBackend:
     def acz(self, lq1, lq2):
         self._cpauli(lq1, lq2, True, Pauli.PauliZ)
 
+    def mcx(self, lq1, lq2):
+        if len(lq1) > 1:
+            raise RuntimeError("QrackAceBackend.mcx() is provided for syntax convenience and only supports 1 control qubit!")
+        self._cpauli(lq1[0], lq2, False, Pauli.PauliX)
+
+    def mcy(self, lq1, lq2):
+        if len(lq1) > 1:
+            raise RuntimeError("QrackAceBackend.mcy() is provided for syntax convenience and only supports 1 control qubit!")
+        self._cpauli(lq1[0], lq2, False, Pauli.PauliY)
+
+    def mcz(self, lq1, lq2):
+        if len(lq1) > 1:
+            raise RuntimeError("QrackAceBackend.mcz() is provided for syntax convenience and only supports 1 control qubit!")
+        self._cpauli(lq1[0], lq2, False, Pauli.PauliZ)
+
+    def macx(self, lq1, lq2):
+        if len(lq1) > 1:
+            raise RuntimeError("QrackAceBackend.macx() is provided for syntax convenience and only supports 1 control qubit!")
+        self._cpauli(lq1[0], lq2, True, Pauli.PauliX)
+
+    def macy(self, lq1, lq2):
+        if len(lq1) > 1:
+            raise RuntimeError("QrackAceBackend.macy() is provided for syntax convenience and only supports 1 control qubit!")
+        self._cpauli(lq1[0], lq2, True, Pauli.PauliY)
+
+    def macz(self, lq1, lq2):
+        if len(lq1) > 1:
+            raise RuntimeError("QrackAceBackend.macz() is provided for syntax convenience and only supports 1 control qubit!")
+        self._cpauli(lq1[0], lq2, True, Pauli.PauliZ)
+
     def swap(self, lq1, lq2):
         self.cx(lq1, lq2)
         self.cx(lq2, lq1)
@@ -430,49 +481,57 @@ class QrackAceBackend:
         else:
             single_bit = 0
             other_bits = [1, 2]
+        # The syndrome of "other_bits" is guaranteed to be fixed, after this.
+        self._correct(lq)
         syndrome = 0
-        bits = []
         for q in other_bits:
-            bits.append(self.sim.m(hq[q]))
-            if bits[-1]:
-                syndrome += 1
-        # single_bit never shares entanglement with other_bits.
-        # In the ideal, it should simply duplicate other_bits.
-        # So get more precision by using it analytically.
-        analytical = self.sim.prob(hq[single_bit])
-        syndrome += analytical
-        result = True if (syndrome >= 1.5) else False
+            syndrome += self.sim.m(hq[q])
         # The two separable parts of the code are correlated,
         # but not non-locally, via entanglement.
-        # Prefer to collapse the analytical part toward agreement.
-        bits.append(self.sim.m(hq[single_bit]) if math.isclose(analytical, 0 if result else 1) else self.sim.force_m(hq[single_bit], result))
-        for i in range(2):
-            if bits[i] != result:
-                self.sim.x(hq[other_bits[i]])
-        if bits[2] != result:
-            self.sim.x(hq[single_bit])
+        # Collapse the other separable part toward agreement.
+        if syndrome == 0:
+            self.sim.force_m(hq[single_bit], False)
+        elif syndrome == 2:
+            syndrome += self.sim.force_m(hq[single_bit], True)
+        else:
+            raise RuntimeError("Unexpected syndrome in m()!")
         self._is_init[lq] = False
 
-        return result
+        return True if (syndrome > 1) else False
+
+    def force_m(self, lq, c):
+        hq = self._unpack(lq)
+        self._correct(lq)
+        for q in hq:
+            self.sim.force_m(q, c)
+        self._is_init[lq] = False
+
+        return c
 
     def m_all(self):
         result = 0
-        for lq in range(self.sim.num_qubits() // 3):
-            result <<= 1
+        # Whenever a nonzero syndrome occurs (so the code has an error),
+        # we insert the more-probable results and collapse towards it.
+        # Randomize the order of post-selection to amortize error.
+        lqubits = list(range(self.sim.num_qubits() // 3))
+        random.shuffle(lqubits)
+        for lq in lqubits:
             if self.m(lq):
-                result |= 1
+                result |= 1 << lq
 
         return result
 
-    def measure_shots(self, q, s, high_accuracy=False):
+    def measure_shots(self, q, s, high_accuracy=True):
         if high_accuracy:
             samples = []
+            _q = q.copy()
             for _ in range(s):
                 clone = self.sim.clone()
                 sample = 0
-                for i in range(len(q)):
-                    if clone.m(q[i]):
-                        sample |= 1 << i
+                random.shuffle(_q)
+                for b in _q:
+                    if clone.m(b):
+                        sample |= 1 << q.index(b)
                 samples.append(sample)
 
             return samples
@@ -501,6 +560,20 @@ class QrackAceBackend:
 
         return results
 
+    def prob(self, lq):
+        self._correct(lq)
+        hq = self._unpack(lq)
+        even_row = not ((lq // self.row_length) & 1)
+        if not self.alternating_codes or even_row:
+            other_bits = [0, 1]
+        else:
+            other_bits = [1, 2]
+        self.sim.mcx([hq[other_bits[0]]], hq[other_bits[1]])
+        result = self.sim.prob(hq[other_bits[0]])
+        self.sim.mcx([hq[other_bits[0]]], hq[other_bits[1]])
+
+        return result
+
     def _apply_op(self, operation):
         name = operation.name
 
@@ -524,27 +597,27 @@ class QrackAceBackend:
                     return
 
         if (name == "u1") or (name == "p"):
-            self._sim.u(0, 0, float(operation.params[0]), operation.qubits[0]._index)
+            self._sim.u(operation.qubits[0]._index, 0, 0, float(operation.params[0]))
         elif name == "u2":
             self._sim.u(
+                operation.qubits[0]._index,
                 math.pi / 2,
                 float(operation.params[0]),
                 float(operation.params[1]),
-                operation.qubits[0]._index,
             )
         elif (name == "u3") or (name == "u"):
             self._sim.u(
+                operation.qubits[0]._index,
                 float(operation.params[0]),
                 float(operation.params[1]),
                 float(operation.params[2]),
-                operation.qubits[0]._index,
             )
         elif name == "r":
             self._sim.u(
+                operation.qubits[0]._index,
                 float(operation.params[0]),
                 float(operation.params[1]) - math.pi / 2,
                 (-1 * float(operation.params[1])) + math.pi / 2,
-                operation.qubits[0]._index,
             )
         elif name == "rx":
             self._sim.r(

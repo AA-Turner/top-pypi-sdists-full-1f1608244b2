@@ -427,11 +427,14 @@ class ImagesResponse(_ImagesResponse):
 
 class TTSRequest(BaseModel):
     model: Optional[Union[str, Literal["tts-1", "tts-1-hd"]]] = 'tts'
-    voice: Optional[Union[str, Literal["alloy", "echo", "fable", "onyx", "nova", "shimmer"]]] = ""
+    voice: Optional[Union[str, Literal["alloy", "echo", "fable", "onyx", "nova", "shimmer",
+    "male", "femal",
+    ]]] = ""
 
     input: str
     instructions: Optional[str] = None
-    # emotion: Optional[Literal["happy", "angry", "surprise", "coldness", "disgust", "fear", "excited", "hate"]] = None
+    emotion: Optional[Literal[
+        "happy", "angry", "surprise", "coldness", "disgust", "fear", "excited", "hate", "sad", "fearful", "disgusted", "surprised", "neutral"]] = None
 
     speed: Optional[float] = None
 

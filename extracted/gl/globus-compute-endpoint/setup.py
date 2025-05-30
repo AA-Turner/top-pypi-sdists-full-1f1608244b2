@@ -6,7 +6,7 @@ from setuptools import find_packages, setup
 REQUIRES = [
     "requests>=2.31.0,<3",
     "globus-sdk",  # version will be bounded by `globus-compute-sdk`
-    "globus-compute-sdk==3.7.0",
+    "globus-compute-sdk==3.8.0",
     "globus-compute-common==0.5.0",
     "globus-identity-mapping==0.4.0",
     # table printing used in list-endpoints
@@ -22,7 +22,7 @@ REQUIRES = [
     # provides easy daemonization of the endpoint
     "python-daemon>=2,<3",
     # CLI parsing
-    "click>=8,<9",
+    "click>=8,<8.2.0",
     "click-option-group>=0.5.6,<1",
     # disallow use of 22.3.0; the whl package on some platforms causes ZMQ issues
     #

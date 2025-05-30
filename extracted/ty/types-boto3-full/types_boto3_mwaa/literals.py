@@ -36,6 +36,7 @@ __all__ = (
     "UnitType",
     "UpdateStatusType",
     "WebserverAccessModeType",
+    "WorkerReplacementStrategyType",
 )
 
 
@@ -88,6 +89,7 @@ UnitType = Literal[
 ]
 UpdateStatusType = Literal["FAILED", "PENDING", "SUCCESS"]
 WebserverAccessModeType = Literal["PRIVATE_ONLY", "PUBLIC_ONLY"]
+WorkerReplacementStrategyType = Literal["FORCED", "GRACEFUL"]
 MWAAServiceName = Literal["mwaa"]
 ServiceName = Literal[
     "accessanalyzer",

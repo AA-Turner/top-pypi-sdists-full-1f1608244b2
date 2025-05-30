@@ -59272,18 +59272,18 @@ class scout_datareview_api_GeneratedAlertsState(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'rids': ConjureFieldDefinition('rids', List[scout_rids_api_CheckAlertRid]),
+            'rids': ConjureFieldDefinition('rids', OptionalTypeWrapper[List[scout_rids_api_CheckAlertRid]]),
             'event_rids': ConjureFieldDefinition('eventRids', List[api_rids_EventRid])
         }
 
     __slots__: List[str] = ['_rids', '_event_rids']
 
-    def __init__(self, event_rids: List[str], rids: List[str]) -> None:
+    def __init__(self, event_rids: List[str], rids: Optional[List[str]] = None) -> None:
         self._rids = rids
         self._event_rids = event_rids
 
     @builtins.property
-    def rids(self) -> List[str]:
+    def rids(self) -> Optional[List[str]]:
         return self._rids
 
     @builtins.property

@@ -204,7 +204,7 @@ class InfoModule(BaseIntegrationModule):
                 "properties": {
                     "request": request_payload_schema,
                     "settings": {
-                        "$ref": f"#/components/schemas/{self.integration.settings_model.__name__}"
+                        "$ref": "#/components/schemas/Settings"
                         if hasattr(self.integration, "settings_model")
                         else {"type": "object", "example": "{}"},
                     },
@@ -770,8 +770,8 @@ class InfoModule(BaseIntegrationModule):
             raise ValueError(f"Model {name} does not have a model_json_schema method")
 
         schema = model.model_json_schema()
-        spec["components"]["schemas"][name] = schema
-        used_refs.add(name)
+        spec["components"]["schemas"]["Settings"] = schema
+        used_refs.add("Settings")
 
         # Clean up
         if "$defs" in schema:

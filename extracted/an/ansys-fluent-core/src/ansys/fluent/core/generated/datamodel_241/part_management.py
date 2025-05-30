@@ -11,7 +11,13 @@ from ansys.fluent.core.services.datamodel_se import (
     PyDictionary,
     PyNamedObjectContainer,
     PyCommand,
-    PyQuery
+    PyQuery,
+    PyCommandArguments,
+    PyTextualCommandArgumentsSubItem,
+    PyNumericalCommandArgumentsSubItem,
+    PyDictionaryCommandArgumentsSubItem,
+    PyParameterCommandArgumentsSubItem,
+    PySingletonCommandArgumentsSubItem
 )
 
 
@@ -221,7 +227,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ChangeChildrenSettingsCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ChangeChildrenSettingsCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ChangeChildrenSettingsCommandArguments(*args)
 
             class Copy(PyCommand):
                 """
@@ -235,7 +248,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _CopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CopyCommandArguments(*args)
 
             class CreateChild(PyCommand):
                 """
@@ -249,7 +275,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CreateChildCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.ChildName = self._ChildName(self, "ChildName", service, rules, path)
+
+                    class _ChildName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument ChildName.
+                        """
+
+                def create_instance(self) -> _CreateChildCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateChildCommandArguments(*args)
 
             class Move(PyCommand):
                 """
@@ -263,7 +302,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _MoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _MoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._MoveCommandArguments(*args)
 
             class ReFacet(PyCommand):
                 """
@@ -279,7 +331,32 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ReFacetCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Deviation = self._Deviation(self, "Deviation", service, rules, path)
+                        self.NormalAngle = self._NormalAngle(self, "NormalAngle", service, rules, path)
+                        self.MaxSize = self._MaxSize(self, "MaxSize", service, rules, path)
+
+                    class _Deviation(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument Deviation.
+                        """
+
+                    class _NormalAngle(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument NormalAngle.
+                        """
+
+                    class _MaxSize(PyNumericalCommandArgumentsSubItem):
+                        """
+                        Argument MaxSize.
+                        """
+
+                def create_instance(self) -> _ReFacetCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ReFacetCommandArguments(*args)
 
             class ReFacetNow(PyCommand):
                 """
@@ -290,7 +367,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ReFacetNowCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ReFacetNowCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ReFacetNowCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -304,7 +388,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _AssemblyNode:
             return super().__getitem__(key)
@@ -394,7 +491,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -405,7 +515,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -419,7 +536,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -433,7 +563,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -444,7 +587,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -455,7 +605,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Mirror:
             return super().__getitem__(key)
@@ -565,7 +722,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _CopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CopyCommandArguments(*args)
 
             class CreateChild(PyCommand):
                 """
@@ -579,7 +749,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _CreateChildCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.ChildName = self._ChildName(self, "ChildName", service, rules, path)
+
+                    class _ChildName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument ChildName.
+                        """
+
+                def create_instance(self) -> _CreateChildCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._CreateChildCommandArguments(*args)
 
             class Move(PyCommand):
                 """
@@ -593,7 +776,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _MoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _MoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._MoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -607,7 +803,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class WildcardCopy(PyCommand):
                 """
@@ -621,7 +830,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _WildcardCopyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Pattern = self._Pattern(self, "Pattern", service, rules, path)
+
+                    class _Pattern(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Pattern.
+                        """
+
+                def create_instance(self) -> _WildcardCopyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._WildcardCopyCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Node:
             return super().__getitem__(key)
@@ -722,7 +944,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -736,7 +971,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -750,7 +998,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _ObjectSetting:
             return super().__getitem__(key)
@@ -840,7 +1101,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -851,7 +1125,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Delete(PyCommand):
                 """
@@ -862,7 +1143,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _DeleteCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _DeleteCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._DeleteCommandArguments(*args)
 
             class Edit(PyCommand):
                 """
@@ -873,7 +1161,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _EditCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _EditCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._EditCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -887,7 +1182,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -901,7 +1209,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Refaceting:
             return super().__getitem__(key)
@@ -1005,7 +1326,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1016,7 +1350,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1030,7 +1371,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1044,7 +1398,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1055,7 +1422,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1066,7 +1440,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Rotate:
             return super().__getitem__(key)
@@ -1198,7 +1579,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1209,7 +1603,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1223,7 +1624,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1237,7 +1651,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1248,7 +1675,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1259,7 +1693,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _RotateAboutAxis:
             return super().__getitem__(key)
@@ -1363,7 +1804,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1374,7 +1828,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1388,7 +1849,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1402,7 +1876,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1413,7 +1900,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1424,7 +1918,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Scaling:
             return super().__getitem__(key)
@@ -1550,7 +2051,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1561,7 +2075,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Delete(PyCommand):
                 """
@@ -1575,7 +2096,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _DeleteCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Path = self._Path(self, "Path", service, rules, path)
+
+                    class _Path(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Path.
+                        """
+
+                def create_instance(self) -> _DeleteCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._DeleteCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1589,7 +2123,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1603,7 +2150,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1614,7 +2174,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1625,7 +2192,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Transform:
             return super().__getitem__(key)
@@ -1708,7 +2282,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1719,7 +2306,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1733,7 +2327,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1747,7 +2354,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1758,7 +2378,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1769,7 +2396,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _TransformBase:
             return super().__getitem__(key)
@@ -1873,7 +2507,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _AddCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _AddCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._AddCommandArguments(*args)
 
             class Apply(PyCommand):
                 """
@@ -1884,7 +2531,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _ApplyCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _ApplyCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._ApplyCommandArguments(*args)
 
             class Remove(PyCommand):
                 """
@@ -1898,7 +2552,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RemoveCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                    class _Paths(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument Paths.
+                        """
+
+                def create_instance(self) -> _RemoveCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RemoveCommandArguments(*args)
 
             class Rename(PyCommand):
                 """
@@ -1912,7 +2579,20 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _RenameCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+                        self.NewName = self._NewName(self, "NewName", service, rules, path)
+
+                    class _NewName(PyTextualCommandArgumentsSubItem):
+                        """
+                        Argument NewName.
+                        """
+
+                def create_instance(self) -> _RenameCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._RenameCommandArguments(*args)
 
             class Undo(PyCommand):
                 """
@@ -1923,7 +2603,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UndoCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UndoCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UndoCommandArguments(*args)
 
             class Update(PyCommand):
                 """
@@ -1934,7 +2621,14 @@ class Root(PyMenu):
                 -------
                 bool
                 """
-                pass
+                class _UpdateCommandArguments(PyCommandArguments):
+                    def __init__(self, service, rules, command, path, id):
+                        super().__init__(service, rules, command, path, id)
+
+                def create_instance(self) -> _UpdateCommandArguments:
+                    args = self._get_create_instance_args()
+                    if args is not None:
+                        return self._UpdateCommandArguments(*args)
 
         def __getitem__(self, key: str) -> _Translate:
             return super().__getitem__(key)
@@ -1999,7 +2693,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllOperationsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllOperationsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllOperationsCommandArguments(*args)
 
         class UpdateAllOperations(PyCommand):
             """
@@ -2010,7 +2711,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllOperationsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllOperationsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllOperationsCommandArguments(*args)
 
     class ObjectSettingOperations(PyMenu):
         """
@@ -2048,7 +2756,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _CreateObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateObjectSettingCommandArguments(*args)
 
         class DeleteAllObjectSetting(PyCommand):
             """
@@ -2059,7 +2780,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllObjectSettingCommandArguments(*args)
 
         class DeleteObjectSetting(PyCommand):
             """
@@ -2073,7 +2801,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteObjectSettingCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _DeleteObjectSettingCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteObjectSettingCommandArguments(*args)
 
     class RefacetingOperations(PyMenu):
         """
@@ -2112,7 +2853,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _CreateRefacetCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateRefacetCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateRefacetCommandArguments(*args)
 
         class DeleteAllRefacets(PyCommand):
             """
@@ -2123,7 +2877,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllRefacetsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllRefacetsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllRefacetsCommandArguments(*args)
 
         class DeleteRefacet(PyCommand):
             """
@@ -2137,7 +2898,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteRefacetCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _DeleteRefacetCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteRefacetCommandArguments(*args)
 
         class UpdateAllRefacets(PyCommand):
             """
@@ -2148,7 +2922,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllRefacetsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllRefacetsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllRefacetsCommandArguments(*args)
 
     class TransformOperations(PyMenu):
         """
@@ -2188,7 +2969,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _CreateTransformCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateTransformCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateTransformCommandArguments(*args)
 
         class CreateTransformType(PyCommand):
             """
@@ -2203,7 +2997,26 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _CreateTransformTypeCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Type = self._Type(self, "Type", service, rules, path)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Type(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Type.
+                    """
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _CreateTransformTypeCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._CreateTransformTypeCommandArguments(*args)
 
         class DeleteAllTransforms(PyCommand):
             """
@@ -2214,7 +3027,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteAllTransformsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _DeleteAllTransformsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteAllTransformsCommandArguments(*args)
 
         class DeleteTransform(PyCommand):
             """
@@ -2228,7 +3048,20 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _DeleteTransformCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+                    self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+                class _Paths(PyTextualCommandArgumentsSubItem):
+                    """
+                    Argument Paths.
+                    """
+
+            def create_instance(self) -> _DeleteTransformCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._DeleteTransformCommandArguments(*args)
 
         class UpdateAllTransforms(PyCommand):
             """
@@ -2239,7 +3072,14 @@ class Root(PyMenu):
             -------
             bool
             """
-            pass
+            class _UpdateAllTransformsCommandArguments(PyCommandArguments):
+                def __init__(self, service, rules, command, path, id):
+                    super().__init__(service, rules, command, path, id)
+
+            def create_instance(self) -> _UpdateAllTransformsCommandArguments:
+                args = self._get_create_instance_args()
+                if args is not None:
+                    return self._UpdateAllTransformsCommandArguments(*args)
 
     class AppendFmdFiles(PyCommand):
         """
@@ -2262,7 +3102,95 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _AppendFmdFilesCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.AssemblyParentNode = self._AssemblyParentNode(self, "AssemblyParentNode", service, rules, path)
+                self.FileUnit = self._FileUnit(self, "FileUnit", service, rules, path)
+                self.Route = self._Route(self, "Route", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNamesAppend = self._IgnoreSolidNamesAppend(self, "IgnoreSolidNamesAppend", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+            class _AssemblyParentNode(PyNumericalCommandArgumentsSubItem):
+                """
+                Argument AssemblyParentNode.
+                """
+
+            class _FileUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FileUnit.
+                """
+
+            class _Route(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Route.
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                Argument JtLOD.
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                Argument PartPerBody.
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                Argument PrefixParentName.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                Argument RemoveEmptyParts.
+                """
+
+            class _IgnoreSolidNamesAppend(PyParameterCommandArgumentsSubItem):
+                """
+                Argument IgnoreSolidNamesAppend.
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                Argument Options.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Solid.
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Line.
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Surface.
+                    """
+
+        def create_instance(self) -> _AppendFmdFilesCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._AppendFmdFilesCommandArguments(*args)
 
     class ChangeFileLengthUnit(PyCommand):
         """
@@ -2276,7 +3204,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ChangeFileLengthUnitCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.LengthUnit = self._LengthUnit(self, "LengthUnit", service, rules, path)
+
+            class _LengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Argument LengthUnit.
+                """
+
+        def create_instance(self) -> _ChangeFileLengthUnitCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ChangeFileLengthUnitCommandArguments(*args)
 
     class ChangeLengthUnit(PyCommand):
         """
@@ -2290,7 +3231,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ChangeLengthUnitCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.LengthUnit = self._LengthUnit(self, "LengthUnit", service, rules, path)
+
+            class _LengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Argument LengthUnit.
+                """
+
+        def create_instance(self) -> _ChangeLengthUnitCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ChangeLengthUnitCommandArguments(*args)
 
     class CreateObjForEachPart(PyCommand):
         """
@@ -2304,7 +3258,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _CreateObjForEachPartCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _CreateObjForEachPartCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateObjForEachPartCommandArguments(*args)
 
     class CreateObjects(PyCommand):
         """
@@ -2315,7 +3282,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _CreateObjectsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _CreateObjectsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._CreateObjectsCommandArguments(*args)
 
     class Delete(PyCommand):
         """
@@ -2329,7 +3303,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _DeleteCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Path = self._Path(self, "Path", service, rules, path)
+
+            class _Path(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Path.
+                """
+
+        def create_instance(self) -> _DeleteCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._DeleteCommandArguments(*args)
 
     class DeletePaths(PyCommand):
         """
@@ -2343,7 +3330,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _DeletePathsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _DeletePathsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._DeletePathsCommandArguments(*args)
 
     class InitializeTemplate(PyCommand):
         """
@@ -2357,7 +3357,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _InitializeTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.templateType = self._templateType(self, "templateType", service, rules, path)
+
+            class _templateType(PyTextualCommandArgumentsSubItem):
+                """
+                Argument templateType.
+                """
+
+        def create_instance(self) -> _InitializeTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InitializeTemplateCommandArguments(*args)
 
     class InputFileChanged(PyCommand):
         """
@@ -2378,7 +3391,83 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _InputFileChangedCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNames = self._IgnoreSolidNames(self, "IgnoreSolidNames", service, rules, path)
+                self.FileLengthUnit = self._FileLengthUnit(self, "FileLengthUnit", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                Argument PartPerBody.
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                Argument PrefixParentName.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                Argument RemoveEmptyParts.
+                """
+
+            class _IgnoreSolidNames(PyParameterCommandArgumentsSubItem):
+                """
+                Argument IgnoreSolidNames.
+                """
+
+            class _FileLengthUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FileLengthUnit.
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                Argument JtLOD.
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                Argument Options.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Solid.
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Line.
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Surface.
+                    """
+
+        def create_instance(self) -> _InputFileChangedCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._InputFileChangedCommandArguments(*args)
 
     class ListMeshingOperations(PyCommand):
         """
@@ -2392,7 +3481,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ListMeshingOperationsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Path = self._Path(self, "Path", service, rules, path)
+
+            class _Path(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Path.
+                """
+
+        def create_instance(self) -> _ListMeshingOperationsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ListMeshingOperationsCommandArguments(*args)
 
     class LoadFmdFile(PyCommand):
         """
@@ -2414,7 +3516,89 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _LoadFmdFileCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+                self.FileUnit = self._FileUnit(self, "FileUnit", service, rules, path)
+                self.Route = self._Route(self, "Route", service, rules, path)
+                self.JtLOD = self._JtLOD(self, "JtLOD", service, rules, path)
+                self.PartPerBody = self._PartPerBody(self, "PartPerBody", service, rules, path)
+                self.PrefixParentName = self._PrefixParentName(self, "PrefixParentName", service, rules, path)
+                self.RemoveEmptyParts = self._RemoveEmptyParts(self, "RemoveEmptyParts", service, rules, path)
+                self.IgnoreSolidNames = self._IgnoreSolidNames(self, "IgnoreSolidNames", service, rules, path)
+                self.Options = self._Options(self, "Options", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+            class _FileUnit(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FileUnit.
+                """
+
+            class _Route(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Route.
+                """
+
+            class _JtLOD(PyTextualCommandArgumentsSubItem):
+                """
+                Argument JtLOD.
+                """
+
+            class _PartPerBody(PyParameterCommandArgumentsSubItem):
+                """
+                Argument PartPerBody.
+                """
+
+            class _PrefixParentName(PyParameterCommandArgumentsSubItem):
+                """
+                Argument PrefixParentName.
+                """
+
+            class _RemoveEmptyParts(PyParameterCommandArgumentsSubItem):
+                """
+                Argument RemoveEmptyParts.
+                """
+
+            class _IgnoreSolidNames(PyParameterCommandArgumentsSubItem):
+                """
+                Argument IgnoreSolidNames.
+                """
+
+            class _Options(PySingletonCommandArgumentsSubItem):
+                """
+                Argument Options.
+                """
+
+                def __init__(self, parent, attr, service, rules, path):
+                    super().__init__(parent, attr, service, rules, path)
+                    self.Solid = self._Solid(self, "Solid", service, rules, path)
+                    self.Line = self._Line(self, "Line", service, rules, path)
+                    self.Surface = self._Surface(self, "Surface", service, rules, path)
+
+                class _Solid(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Solid.
+                    """
+
+                class _Line(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Line.
+                    """
+
+                class _Surface(PyParameterCommandArgumentsSubItem):
+                    """
+                    Argument Surface.
+                    """
+
+        def create_instance(self) -> _LoadFmdFileCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadFmdFileCommandArguments(*args)
 
     class LoadTemplate(PyCommand):
         """
@@ -2428,7 +3612,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _LoadTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _LoadTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._LoadTemplateCommandArguments(*args)
 
     class MarkObjectsOutofDate(PyCommand):
         """
@@ -2442,7 +3639,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MarkObjectsOutofDateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MarkObjectsOutofDateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MarkObjectsOutofDateCommandArguments(*args)
 
     class MoveCADComponentsToNewObject(PyCommand):
         """
@@ -2456,7 +3666,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MoveCADComponentsToNewObjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MoveCADComponentsToNewObjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveCADComponentsToNewObjectCommandArguments(*args)
 
     class MoveToNewSubobject(PyCommand):
         """
@@ -2470,7 +3693,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MoveToNewSubobjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MoveToNewSubobjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveToNewSubobjectCommandArguments(*args)
 
     class MoveToObject(PyCommand):
         """
@@ -2484,7 +3720,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _MoveToObjectCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+        def create_instance(self) -> _MoveToObjectCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._MoveToObjectCommandArguments(*args)
 
     class RedoAllTransforms(PyCommand):
         """
@@ -2495,7 +3744,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _RedoAllTransformsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _RedoAllTransformsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._RedoAllTransformsCommandArguments(*args)
 
     class ResetTemplate(PyCommand):
         """
@@ -2506,7 +3762,14 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _ResetTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _ResetTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._ResetTemplateCommandArguments(*args)
 
     class SaveFmdFile(PyCommand):
         """
@@ -2520,7 +3783,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _SaveFmdFileCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _SaveFmdFileCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SaveFmdFileCommandArguments(*args)
 
     class SaveTemplate(PyCommand):
         """
@@ -2534,7 +3810,20 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _SaveTemplateCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.FilePath = self._FilePath(self, "FilePath", service, rules, path)
+
+            class _FilePath(PyTextualCommandArgumentsSubItem):
+                """
+                Argument FilePath.
+                """
+
+        def create_instance(self) -> _SaveTemplateCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SaveTemplateCommandArguments(*args)
 
     class SuppressNodeObjects(PyCommand):
         """
@@ -2549,7 +3838,26 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _SuppressNodeObjectsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+                self.Paths = self._Paths(self, "Paths", service, rules, path)
+                self.Suppress = self._Suppress(self, "Suppress", service, rules, path)
+
+            class _Paths(PyTextualCommandArgumentsSubItem):
+                """
+                Argument Paths.
+                """
+
+            class _Suppress(PyParameterCommandArgumentsSubItem):
+                """
+                Argument Suppress.
+                """
+
+        def create_instance(self) -> _SuppressNodeObjectsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._SuppressNodeObjectsCommandArguments(*args)
 
     class UndoAllTransforms(PyCommand):
         """
@@ -2560,5 +3868,12 @@ class Root(PyMenu):
         -------
         bool
         """
-        pass
+        class _UndoAllTransformsCommandArguments(PyCommandArguments):
+            def __init__(self, service, rules, command, path, id):
+                super().__init__(service, rules, command, path, id)
+
+        def create_instance(self) -> _UndoAllTransformsCommandArguments:
+            args = self._get_create_instance_args()
+            if args is not None:
+                return self._UndoAllTransformsCommandArguments(*args)
 

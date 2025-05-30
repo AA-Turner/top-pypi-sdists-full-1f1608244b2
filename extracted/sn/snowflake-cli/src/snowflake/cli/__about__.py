@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from enum import Enum, unique
 
-VERSION = "3.8.3"
+VERSION = "3.9.0"
 
 
 @unique
