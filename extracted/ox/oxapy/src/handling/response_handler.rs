@@ -1,13 +1,14 @@
 use pyo3::{
-    types::{PyAnyMethods, PyDict},
-    Py, PyResult, Python,
+    exceptions::PyValueError,
+    types::{PyAnyMethods, PyDict, PyInt, PyString},
+    PyObject, PyResult, Python,
 };
 use tokio::sync::mpsc::Receiver;
 
 use crate::{
     into_response::convert_to_response, middleware::MiddlewareChain, request::Request,
     response::Response, routing::Router, serializer::ValidationException, status::Status,
-    MatchRouteInfo, ProcessRequest, Wrap,
+    MatchRoute, ProcessRequest,
 };
 
 pub async fn handle_response(
@@ -17,21 +18,19 @@ pub async fn handle_response(
     loop {
         tokio::select! {
             Some(process_request) = request_receiver.recv() => {
-                let mut response: Response = match process_response(
-                    &process_request.router,
-                    process_request.route_info,
-                    &process_request.request,
-                ) {
-                    Ok(response) => response,
-                    Err(err) => {
-                        Python::with_gil(|py|{
-                            let status = if err.is_instance_of::<ValidationException>(py)
-                                { Status::BAD_REQUEST } else { Status::INTERNAL_SERVER_ERROR };
-                            let response: Response = status.into();
-                            response.set_body(err.to_string())
-                        })
-                    }
-                };
+                let mut response = Python::with_gil(|py| {
+                    process_response(
+                        &process_request.router,
+                        process_request.match_route,
+                        &process_request.request,
+                        py,
+                    ).unwrap_or_else(|err| {
+                        let status = if err.is_instance_of::<ValidationException>(py)
+                            { Status::BAD_REQUEST } else { Status::INTERNAL_SERVER_ERROR };
+                        let response: Response = status.into();
+                        response.set_body(err.to_string())
+                    })
+                });
 
                 if let (Some(session), Some(store)) = (&process_request.request.session, &process_request.request.session_store) {
                     response.set_session_cookie(session, store);
@@ -50,25 +49,47 @@ pub async fn handle_response(
 
 fn process_response(
     router: &Router,
-    route_info: MatchRouteInfo,
+    match_route: MatchRoute,
     request: &Request,
+    py: Python<'_>,
 ) -> PyResult<Response> {
-    Python::with_gil(|py| {
-        let params = route_info.params;
-        let route = route_info.route;
+    let params = match_route.params;
+    let route = match_route.value;
 
-        let params_dict: Py<PyDict> = Wrap(params).into();
-        let kwargs = params_dict.into_bound(py);
+    let kwargs = PyDict::new(py);
 
-        kwargs.set_item("request", request.clone())?;
-
-        let result = if !router.middlewares.is_empty() {
-            let chain = MiddlewareChain::new(router.middlewares.clone());
-            chain.execute(py, &route.handler.clone(), kwargs.clone())?
+    for (key, value) in params.iter() {
+        if let Some((name, ty)) = key.split_once(":") {
+            let parsed_value: PyObject = match ty {
+                "int" => {
+                    let n = value.parse::<i64>().map_err(|_| {
+                        PyValueError::new_err(format!(
+                            "Failed to parse parameter '{key}' with value '{value}' as type 'int'."
+                        ))
+                    })?;
+                    PyInt::new(py, n).into()
+                }
+                "str" => PyString::new(py, value).into(),
+                other => {
+                    return Err(PyValueError::new_err(format!(
+                        "Unsupported type annotation '{other}' in parameter key '{key}'."
+                    )));
+                }
+            };
+            kwargs.set_item(name, parsed_value)?;
         } else {
-            route.handler.call(py, (), Some(&kwargs))?
-        };
+            kwargs.set_item(key, value)?;
+        }
+    }
 
-        convert_to_response(result, py)
-    })
+    kwargs.set_item("request", request.clone())?;
+
+    let result = if !router.middlewares.is_empty() {
+        let chain = MiddlewareChain::new(router.middlewares.clone());
+        chain.execute(py, &route.handler.clone(), kwargs.clone())?
+    } else {
+        route.handler.call(py, (), Some(&kwargs))?
+    };
+
+    convert_to_response(result, py)
 }

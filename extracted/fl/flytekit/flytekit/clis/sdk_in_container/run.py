@@ -186,6 +186,17 @@ class RunLevelParams(PyFlyteParams):
             help="Whether to overwrite the cache if it already exists",
         )
     )
+    interruptible: typing.Optional[bool] = make_click_option_field(
+        click.Option(
+            param_decls=["--interruptible"],
+            type=bool,
+            required=False,
+            default=None,
+            help="Specify if the execution should be forced to run with an interruptible flag of true or false."
+            " Use '--interruptible true' or '--interruptible false' to explicitly enable/disable."
+            " If this option is not provided, the default interruptible behavior of the remote Flyte entity is used.",
+        )
+    )
     envvars: typing.Dict[str, str] = make_click_option_field(
         click.Option(
             param_decls=["--envvars", "--env"],
@@ -461,10 +472,8 @@ def to_click_option(
         python_type=python_type,
         is_remote=run_level_params.is_remote,
     )
-
     if literal_converter.is_bool() and not default_val:
         default_val = False
-
     description_extra = ""
     if literal_var.type.simple == SimpleType.STRUCT:
         if default_val and not isinstance(default_val, ArtifactQuery):
@@ -506,6 +515,7 @@ def to_click_option(
         required=required,
         help=literal_var.description + description_extra,
         callback=literal_converter.convert,
+        is_flag=literal_converter.is_bool(),
     )
 
 
@@ -557,6 +567,7 @@ def run_remote(
             options=options_from_run_params(run_level_params),
             type_hints=type_hints,
             overwrite_cache=run_level_params.overwrite_cache,
+            interruptible=run_level_params.interruptible,
             envs=run_level_params.envvars,
             tags=run_level_params.tags,
             cluster_pool=run_level_params.cluster_pool,
@@ -858,12 +869,17 @@ class DynamicEntityLaunchCommand(click.RichCommand):
         run_level_params: RunLevelParams = ctx.obj
         r = run_level_params.remote_instance()
         entity = self._fetch_entity(ctx)
+
+        param_defaults = {param.name: param.default for param in ctx.command.params}
+
+        filtered_inputs = {k: param_defaults.get(k, v) if v is None else v for k, v in ctx.params.items()}
+
         run_remote(
             r,
             entity,
             run_level_params.project,
             run_level_params.domain,
-            ctx.params,
+            filtered_inputs,
             run_level_params,
             type_hints=entity.python_interface.inputs if entity.python_interface else None,
         )

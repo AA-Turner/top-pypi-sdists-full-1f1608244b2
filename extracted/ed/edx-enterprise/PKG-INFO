@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: edx-enterprise
-Version: 6.0.3
+Version: 6.0.4
 Summary: Your project description goes here
 Home-page: https://github.com/openedx/edx-enterprise
 Author: edX
@@ -107,6 +107,10 @@ Change Log
 Unreleased
 ----------
 * nothing unreleased
+
+[6.0.4]
+--------
+* feat: add `enterprise-sso-user-info/` API endpoint
 
 [6.0.3]
 --------

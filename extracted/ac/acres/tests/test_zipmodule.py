@@ -2,6 +2,7 @@ import os
 import sys
 import zipfile
 from pathlib import Path
+from types import ModuleType
 
 from acres import Loader
 
@@ -28,9 +29,15 @@ def test_zipimport(tmp_path: Path) -> None:
     # Test
     import mypkg  # type: ignore[import-not-found]
 
+    # The test shouldn't get this far if these fail, but they help the type checker
+    assert isinstance(mypkg, ModuleType)
+    assert isinstance(mypkg.__file__, str)
     assert mypkg.__file__.endswith(os.path.join('mymodule.zip', 'mypkg', '__init__.py'))
 
-    loader = mypkg.data.load_resource
+    loader: Loader = mypkg.data.load_resource
+
+    # This check verifies the above annotation and ensures full resolution of types below
+    assert isinstance(loader, Loader)
 
     readable = loader.readable('resource.txt')
     assert not isinstance(readable, Path)

@@ -1,32 +1,34 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: warlock
-Version: 2.0.1
+Version: 2.1.0
 Summary: Python object model built on JSON schema and JSON patch.
-Home-page: http://github.com/bcwaldon/warlock
-License: Apache-2.0
 Keywords: JSON schema,JSON patch,model validation
-Author: Brian Waldon
-Author-email: bcwaldon@gmail.com
-Maintainer: Jan Willhaus
-Maintainer-email: mail@janwillhaus.de
-Requires-Python: >=3.7,<4.0
+Author-email: Brian Waldon <bcwaldon@gmail.com>
+Maintainer-email: Stephen Finucane <stephen@that.guru>
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-Expression: Apache-2.0
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Operating System :: Microsoft :: Windows
 Classifier: Operating System :: POSIX
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.7
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Requires-Dist: jsonpatch (>=1,<2)
-Requires-Dist: jsonschema (>=4,<5)
-Project-URL: Repository, http://github.com/bcwaldon/warlock
-Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: jsonschema ~= 4.0
+Requires-Dist: jsonpatch ~= 1.0
+Requires-Dist: pytest ~= 6.0 ; extra == "test"
+Requires-Dist: pytest-cov ~= 3.0 ; extra == "test"
+Project-URL: Homepage, http://github.com/bcwaldon/warlock
+Project-URL: Source Code, http://github.com/bcwaldon/warlock
+Provides-Extra: test
 
 # Warlock 🧙‍♀️
 

@@ -4,16 +4,15 @@ import typing as t
 
 from connector.generated import (
     ErrorResponse,
+    StandardCapabilityName,
     ValidateCredentials,
     ValidateCredentialsRequest,
     ValidateCredentialsResponse,
     ValidatedCredentials,
 )
-
-from tests.common_mock_data import SETTINGS, VALID_AUTH
 from connector.tests.type_definitions import ResponseBodyMap
 
-from connector.generated.models.standard_capability_name import StandardCapabilityName
+from tests.common_mock_data import SETTINGS, VALID_AUTH
 
 Case: t.TypeAlias = tuple[
     StandardCapabilityName,

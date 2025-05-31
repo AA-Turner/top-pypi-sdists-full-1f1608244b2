@@ -351,3 +351,15 @@ def alias(*aliases):
             globals()[name] = func
         return wrapper
     return decorator
+def get_class_inputs(cls, *args, **kwargs):
+    fields = list(cls.__annotations__.keys())
+    values = {}
+    args = list(args)
+    for field in fields:
+        if field in kwargs:
+            values[field] = kwargs[field]
+        elif args:
+            values[field] = args.pop(0)
+        else:
+            values[field] = getattr(cls(), field)
+    return cls(**values)

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: arraykit
-Version: 1.0.8
+Version: 1.0.9
 Summary: Array utilities for StaticFrame
 Home-page: https://github.com/static-frame/arraykit
 Author: Christopher Ariza, Brandt Bucher, Charles Burkland
@@ -54,6 +54,12 @@ ArrayKit requires the following:
 
 What is New in ArrayKit
 -------------------------
+
+1.0.9
+............
+
+Updated types in ``pyi`` file.
+
 
 1.0.8
 ............

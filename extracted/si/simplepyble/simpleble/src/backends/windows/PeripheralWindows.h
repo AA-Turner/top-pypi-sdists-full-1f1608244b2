@@ -40,6 +40,7 @@ struct gatt_service_t {
 
 class PeripheralWindows : public PeripheralBase {
   public:
+    PeripheralWindows(BluetoothLEDevice device);
     PeripheralWindows(advertising_data_t advertising_data);
     virtual ~PeripheralWindows();
 
@@ -117,9 +118,8 @@ class PeripheralWindows : public PeripheralBase {
     gatt_characteristic_t& _fetch_characteristic(const BluetoothUUID& service_uuid,
                                                  const BluetoothUUID& characteristic_uuid);
 
-    GattDescriptor PeripheralWindows::_fetch_descriptor(const BluetoothUUID& service_uuid,
-                                                        const BluetoothUUID& characteristic_uuid,
-                                                        const BluetoothUUID& descriptor_uuid);
+    GattDescriptor _fetch_descriptor(const BluetoothUUID& service_uuid, const BluetoothUUID& characteristic_uuid,
+                                     const BluetoothUUID& descriptor_uuid);
 
     void _subscribe(BluetoothUUID const& service, BluetoothUUID const& characteristic,
                     std::function<void(ByteArray payload)> callback, GattCharacteristicProperties property,

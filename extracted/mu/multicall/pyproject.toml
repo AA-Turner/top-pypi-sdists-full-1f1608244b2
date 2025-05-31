@@ -13,7 +13,7 @@ file = "attr:classifiers"
 
 [tool.poetry]
 name = "multicall"
-version = "0.12.1"
+version = "0.12.2"
 description = "aggregate results from multiple ethereum contract calls"
 authors = ["banteg"]
 
@@ -52,7 +52,7 @@ yarl = { "version" = "*", python = ">=3.9,<4" }
 requires = [
     "setuptools", 
     "wheel", 
-    "mypy[mypyc]>=1.14.1,<1.15.1", 
+    "mypy[mypyc]>=1.14.1,<1.16.1", 
     "tomli>=2.0.0; python_version < '3.11'",
     "types-requests",
 ]

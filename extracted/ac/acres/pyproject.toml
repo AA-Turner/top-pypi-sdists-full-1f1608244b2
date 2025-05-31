@@ -5,7 +5,7 @@ authors = [
     { name = "The NiPreps Developers", email = "nipreps@gmail.com" },
 ]
 dependencies = [
-    "importlib_resources >=5.7; python_version < '3.11'",
+    "importlib_resources >=5.7; python_version < '3.10'",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -20,10 +20,27 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 dynamic = []
-version = "0.3.0"
+version = "0.4.1"
 
 [project.license]
 text = "Apache-2.0"
+
+[dependency-groups]
+doc = [
+    "furo>=2024.8.6",
+    "myst-parser>=3.0.1",
+    "sphinx>=7.4.7",
+]
+test = [
+    "coverage[toml]>=7.8.2",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+]
+types = [
+    "importlib-resources>=6.5.2 ; python_full_version < '3.10'",
+    "mypy>=1.16.0",
+    "pyright>=1.1.401",
+]
 
 [build-system]
 requires = [
@@ -38,6 +55,7 @@ distribution = true
 source-includes = [
     "tests/",
     "tox.ini",
+    "uv.lock",
 ]
 
 [tool.pdm.version]
@@ -63,4 +81,14 @@ omit = [
 source = [
     "src/acres",
     "**/site-packages/acres",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "if.*TYPE_CHECKING:",
+]
+
+[tool.codespell]
+skip = [
+    "_build",
 ]

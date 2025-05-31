@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import textwrap
+from collections import defaultdict
 from datetime import timedelta
 from typing import (
     TYPE_CHECKING,
@@ -15,6 +16,7 @@ from typing import (
     Tuple,
     Type,
     cast,
+    Set,
 )
 
 from typing_extensions import TypeGuard
@@ -230,6 +232,12 @@ class FeatureSetBase:
 
     __chalk_singletons__: ClassVar[Dict[str, Type[Features]]] = {}
     """Mapping of fqn to singleton Features cls. These are also included in `.registry`."""
+
+    __chalk_notebook_defined_feature_fields__: ClassVar[Dict[str, Set[str]]] = defaultdict(set)
+    """
+    (Mapping of namespace to a set of unversioned attribute names).
+    This tracks which feature fields have been added to a feature class in a notebook, after it's been defined.
+    """
 
     hook: ClassVar[Optional[Callable[[Type[Features]], None]]] = None
 

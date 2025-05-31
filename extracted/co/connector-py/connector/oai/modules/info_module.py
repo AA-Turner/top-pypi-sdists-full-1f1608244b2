@@ -21,9 +21,7 @@ from connector.generated import (
     StandardCapabilityName,
     TokenAuthentication,
 )
-from connector.oai.capability import (
-    generate_capability_schema,
-)
+from connector.oai.capability import generate_capability_schema
 from connector.oai.modules.base_module import BaseIntegrationModule
 from connector.oai.modules.oauth_module_types import OAuthConfig, OAuthFlowType, OAuthSettings
 

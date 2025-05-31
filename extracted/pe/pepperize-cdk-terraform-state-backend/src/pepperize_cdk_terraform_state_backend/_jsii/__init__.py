@@ -34,9 +34,9 @@ import pepperize_cdk_private_bucket._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/cdk-terraform-state-backend",
-    "0.1.1191",
+    "0.1.1192",
     __name__[0:-6],
-    "cdk-terraform-state-backend@0.1.1191.jsii.tgz",
+    "cdk-terraform-state-backend@0.1.1192.jsii.tgz",
 )
 
 __all__ = [

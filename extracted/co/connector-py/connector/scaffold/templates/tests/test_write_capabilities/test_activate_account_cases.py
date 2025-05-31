@@ -10,12 +10,11 @@ from connector.generated import (
     ActivateAccountResponse,
     ActivatedAccount,
     ErrorResponse,
+    StandardCapabilityName,
 )
 from connector.tests.type_definitions import MockedResponse, ResponseBodyMap
 
 from tests.common_mock_data import SETTINGS, VALID_AUTH
-
-from connector.generated.models.standard_capability_name import StandardCapabilityName
 
 Case: t.TypeAlias = tuple[
     StandardCapabilityName,

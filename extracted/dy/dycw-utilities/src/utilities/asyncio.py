@@ -59,6 +59,7 @@ from utilities.datetime import (
 )
 from utilities.errors import ImpossibleCaseError, repr_error
 from utilities.functions import ensure_int, ensure_not_none, get_class_name
+from utilities.random import SYSTEM_RANDOM
 from utilities.sentinel import Sentinel, sentinel
 from utilities.types import (
     Coroutine1,
@@ -75,6 +76,7 @@ if TYPE_CHECKING:
     from collections import deque
     from collections.abc import AsyncIterator, Sequence
     from contextvars import Context
+    from random import Random
     from types import TracebackType
 
     from utilities.types import Duration
@@ -686,6 +688,7 @@ class Looper(Generic[_T]):
     auto_start: bool = field(default=False, repr=False)
     freq: Duration = field(default=SECOND, repr=False)
     backoff: Duration = field(default=10 * SECOND, repr=False)
+    empty_upon_exit: bool = field(default=False, repr=False)
     logger: str | None = field(default=None, repr=False)
     timeout: Duration | None = field(default=None, repr=False)
     timeout_error: type[Exception] = field(default=LooperTimeoutError, repr=False)
@@ -789,6 +792,8 @@ class Looper(Generic[_T]):
                     )
                 _ = await self._stack.__aexit__(exc_type, exc_value, traceback)
                 await self.stop()
+                if self.empty_upon_exit:
+                    await self.run_until_empty()
             case False:
                 _ = self._debug and self._logger.debug("%s: already exited", self)
             case _ as never:
@@ -889,19 +894,27 @@ class Looper(Generic[_T]):
         self,
         *,
         auto_start: bool | Sentinel = sentinel,
+        empty_upon_exit: bool | Sentinel = sentinel,
         freq: Duration | Sentinel = sentinel,
         backoff: Duration | Sentinel = sentinel,
         logger: str | None | Sentinel = sentinel,
         timeout: Duration | None | Sentinel = sentinel,
+        timeout_error: type[Exception] | Sentinel = sentinel,
+        _debug: bool | Sentinel = sentinel,
+        **kwargs: Any,
     ) -> Self:
         """Replace elements of the looper."""
         return replace_non_sentinel(
             self,
             auto_start=auto_start,
+            empty_upon_exit=empty_upon_exit,
             freq=freq,
             backoff=backoff,
             logger=logger,
             timeout=timeout,
+            timeout_error=timeout_error,
+            _debug=_debug,
+            **kwargs,
         )
 
     def request_restart(self) -> None:
@@ -1054,6 +1067,13 @@ class Looper(Generic[_T]):
                         async with self._lock:
                             self._core_successes += 1
                         await sleep(self._freq)
+
+    async def run_until_empty(self) -> None:
+        """Run until the queue is empty."""
+        while not self.empty():
+            await self.core()
+            if not self.empty():
+                await sleep(self._freq)
 
     @property
     def stats(self) -> _LooperStats:
@@ -1305,6 +1325,18 @@ async def sleep_dur(*, duration: Duration | None = None) -> None:
 ##
 
 
+async def sleep_max_dur(
+    *, duration: Duration | None = None, random: Random = SYSTEM_RANDOM
+) -> None:
+    """Sleep which accepts max durations."""
+    if duration is None:
+        return
+    await sleep(random.uniform(0.0, datetime_duration_to_float(duration)))
+
+
+##
+
+
 async def sleep_until(datetime: dt.datetime, /) -> None:
     """Sleep until a given time."""
     await sleep_dur(duration=datetime - get_now())
@@ -1407,6 +1439,7 @@ __all__ = [
     "put_items",
     "put_items_nowait",
     "sleep_dur",
+    "sleep_max_dur",
     "sleep_until",
     "sleep_until_rounded",
     "stream_command",

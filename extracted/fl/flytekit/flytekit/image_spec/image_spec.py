@@ -23,6 +23,9 @@ from flytekit.exceptions.user import FlyteAssertion
 DOCKER_HUB = "docker.io"
 _F_IMG_ID = "_F_IMG_ID"
 FLYTE_FORCE_PUSH_IMAGE_SPEC = "FLYTE_FORCE_PUSH_IMAGE_SPEC"
+# If the FLYTE_IMG_FAST_FAIL env variable is set to TRUE, ImageSpec will fail the registration rather than assuming
+# an image exists if the image cannot be found or built.
+FLYTE_IMG_FAST_FAIL = "FLYTE_IMG_FAST_FAIL"
 
 
 @dataclass
@@ -74,6 +77,7 @@ class ImageSpec:
                   use `builder="noop"`: `ImageSpec(base_image="ghcr.io/name/my-custom-image", builder="noop").with_runtime_packages(["numpy"])`.
         builder_options (Optional[Dict[str, Any]]): Additional options for the builder. This is a dictionary that will be passed to the builder.
             The options are builder-specific and may not be supported by all builders.
+        builder_config (Optional[typing.Dict[str, typing.Any]]): Custom builder images configuration, such as uv and micromamba images.
     """
 
     name: str = "flytekit"
@@ -104,10 +108,14 @@ class ImageSpec:
     python_exec: Optional[str] = None
     runtime_packages: Optional[List[str]] = None
     builder_options: Optional[Dict[str, Any]] = None
+    builder_config: Optional[typing.Dict[str, typing.Any]] = None
 
     def __post_init__(self):
+        from flytekit.clis.helpers import str2bool
+
         self.name = self.name.lower()
-        self._is_force_push = os.environ.get(FLYTE_FORCE_PUSH_IMAGE_SPEC, False)  # False by default
+        self._is_force_push = str2bool(os.environ.get(FLYTE_FORCE_PUSH_IMAGE_SPEC, "FALSE"))  # False by default
+        self._fast_fail = str2bool(os.environ.get(FLYTE_IMG_FAST_FAIL, "FALSE"))  # False by default
         if self.registry:
             self.registry = self.registry.lower()
             if not validate_container_registry_name(self.registry):
@@ -184,7 +192,7 @@ class ImageSpec:
     def __hash__(self):
         return hash(self.id)
 
-    @property
+    @cached_property
     def tag(self) -> str:
         """
         Calculate a hash from the image spec. The hash will be the tag of the image.
@@ -452,6 +460,11 @@ class ImageSpecBuilder:
 
         Returns:
             True if the image should be built, otherwise it returns False.
+
+        Raises:
+            RuntimeError: If FLYTE_IMG_FAST_FAIL is set to True and ImageSpec
+                          fails to check if the image exists due to a permission
+                          issue or other reason.
         """
         img_name = image_spec.image_name()
         exist = image_spec.exist()
@@ -464,6 +477,14 @@ class ImageSpecBuilder:
                 return True
             click.secho(f"Image {img_name} found. Skip building.", fg="blue")
         else:
+            if image_spec._fast_fail:
+                click.secho(f"FLYTE_IMG_FAST_FAIL set to {image_spec._fast_fail}.", fg="red")
+                raise RuntimeError(
+                    "Build failed as ImageSpec failed to check if the image exists due to a "
+                    "permission issue or other reason. \n"
+                    "Note, this fast failure is configured with the env var `FLYTE_IMG_FAST_FAIL`."
+                )
+
             click.secho(f"Flytekit assumes the image {img_name} already exists.", fg="blue")
         return False
 

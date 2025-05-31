@@ -21,6 +21,7 @@ import pytest
 from pydicom import dcmread
 from pydicom.dataset import Dataset, FileMetaDataset
 from pydicom.uid import (
+    generate_uid,
     ImplicitVRLittleEndian,
     ExplicitVRLittleEndian,
     JPEGBaseline8Bit,
@@ -44,6 +45,7 @@ from pynetdicom.dimse_primitives import C_STORE, C_FIND, C_GET, C_MOVE
 from pynetdicom.dsutils import encode, decode
 from pynetdicom.events import Event
 from pynetdicom._globals import MODE_REQUESTOR
+from pynetdicom.pdu import A_RELEASE_RQ
 from pynetdicom.pdu_primitives import (
     UserIdentityNegotiation,
     SOPClassExtendedNegotiation,
@@ -618,6 +620,74 @@ class TestAssociation:
         assert assoc.is_aborted
 
         scp.shutdown()
+
+    def test_ipv6(self):
+        """Test Association release with IPv6"""
+        self.ae = ae = AE()
+        ae.acse_timeout = 5
+        ae.dimse_timeout = 5
+        ae.network_timeout = 5
+        ae.add_supported_context(Verification)
+        scp = ae.start_server(("::1", 11112), block=False)
+
+        # Simple release
+        ae.add_requested_context(Verification)
+        assoc = ae.associate("::1", 11112)
+        assert assoc.is_established
+        assoc.release()
+        assert assoc.is_released
+        assert not assoc.is_established
+
+        # Simple release, then release again
+        assoc = ae.associate("::1", 11112)
+        assert assoc.is_established
+        assoc.release()
+        assert assoc.is_released
+        assert not assoc.is_established
+        assert assoc.is_released
+        assoc.release()
+        assert assoc.is_released
+
+        # Simple release, then abort
+        assoc = ae.associate("::1", 11112)
+        assert assoc.is_established
+        assoc.release()
+        assert assoc.is_released
+        assert assoc.is_released
+        assert not assoc.is_established
+        assoc.abort()
+        assert not assoc.is_aborted
+
+        scp.shutdown()
+
+    def test_abort_dul_shutdown(self):
+        """Test for #912"""
+
+        made_it = []
+
+        def on_pdu_recv(event):
+            if isinstance(event.pdu, A_RELEASE_RQ):
+                event.assoc.abort()
+                made_it.append(True)
+
+        hh = [(evt.EVT_PDU_RECV, on_pdu_recv)]
+
+        self.ae = ae = AE()
+        ae.acse_timeout = 5
+        ae.dimse_timeout = 5
+        ae.network_timeout = 5
+        ae.add_supported_context(Verification)
+        ae.add_requested_context(Verification)
+        scp = ae.start_server(("localhost", 11112), block=False, evt_handlers=hh)
+
+        assoc = ae.associate("localhost", 11112)
+        assoc.release()
+
+        assert assoc.is_aborted
+
+        scp.shutdown()
+
+        assert len(made_it) > 0
 
 
 class TestCStoreSCP:
@@ -1876,24 +1946,33 @@ class TestAssociationSendCStore:
         ae.add_requested_context(CTImageStorage, ImplicitVRLittleEndian)
         ae.add_requested_context(CTImageStorage, ExplicitVRBigEndian)
         assoc = ae.associate("localhost", 11112)
-
         assert assoc.is_established
+
         ds = dcmread(DATASET_PATH)
-        assert ds.is_little_endian
-        assert not ds.is_implicit_VR
+        assert ds.original_encoding == (False, True)
         assert ds.file_meta.TransferSyntaxUID == ExplicitVRLittleEndian
-        ds.is_implicit_VR = True
+
         with caplog.at_level(logging.WARNING, logger="pynetdicom"):
+            ds.set_original_encoding(True, True)
             status = assoc.send_c_store(ds)
             assert status.Status == 0x0000
 
-            ds.is_implicit_VR = False
-            ds.is_little_endian = False
+            ds.set_original_encoding(False, False)
             status = assoc.send_c_store(ds)
             assert status.Status == 0x0000
 
-        ds.is_implicit_VR = False
-        ds.is_little_endian = True
+        assert (
+            "'dataset' is encoded as implicit VR little endian but the file "
+            "meta has a (0002,0010) Transfer Syntax UID of 'Explicit VR "
+            "Little Endian' - using 'Implicit VR Little Endian' instead"
+        ) in caplog.text
+        assert (
+            "'dataset' is encoded as explicit VR big endian but the file "
+            "meta has a (0002,0010) Transfer Syntax UID of 'Explicit VR "
+            "Little Endian' - using 'Explicit VR Big Endian' instead"
+        ) in caplog.text
+
+        ds.set_original_encoding(False, True)
         ds.file_meta.TransferSyntaxUID = ImplicitVRLittleEndian
         msg = (
             "'dataset' is encoded as explicit VR little endian but the file "
@@ -1906,17 +1985,6 @@ class TestAssociationSendCStore:
         assoc.release()
         assert assoc.is_released
         scp.shutdown()
-
-        assert (
-            "'dataset' is encoded as implicit VR little endian but the file "
-            "meta has a (0002,0010) Transfer Syntax UID of 'Explicit VR "
-            "Little Endian' - using 'Implicit VR Little Endian' instead"
-        ) in caplog.text
-        assert (
-            "'dataset' is encoded as explicit VR big endian but the file "
-            "meta has a (0002,0010) Transfer Syntax UID of 'Explicit VR "
-            "Little Endian' - using 'Explicit VR Big Endian' instead"
-        ) in caplog.text
 
     # Regression tests
     def test_no_send_mismatch(self):

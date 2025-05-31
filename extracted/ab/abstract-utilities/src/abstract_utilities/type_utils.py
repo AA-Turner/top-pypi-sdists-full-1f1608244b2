@@ -794,7 +794,19 @@ def get_bool_response(bool_response,json_data):
         except:
             pass       
     return bool_response
+def if_true_get_string(data, key):
+    return key if data.get(key) else None
+def find_for_string(string, parts):
+    return [part for part in parts if string.lower() in str(part).lower()]
 
+
+def is_strings_in_string(strings, parts):
+    strings = make_list(strings)
+    for string in strings:
+        parts = find_for_string(string, parts)
+        if not parts:
+            return []
+    return parts
 # Function: is_number
 # Function: is_str
 # Function: is_int

@@ -20,6 +20,12 @@ HTML_PARSER = re.compile(r'```html(.*?)```', re.DOTALL)
 
 # re.sub(r'=(.+)', r'=123','s=xxxxx')
 
+@lru_cache()
+def has_chinese(text):
+    pattern = re.compile(r'[\u4e00-\u9fff]')  # 基本汉字 Unicode 范围
+    return bool(pattern.search(text))
+
+
 
 @lru_cache()
 def remove_date_suffix(filename):

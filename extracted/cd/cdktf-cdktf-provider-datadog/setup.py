@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-datadog",
-    "version": "11.27.0",
+    "version": "11.28.0",
     "description": "Prebuilt datadog Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-datadog.git",
@@ -35,6 +35,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_datadog.child_organization",
         "cdktf_cdktf_provider_datadog.cloud_configuration_rule",
         "cdktf_cdktf_provider_datadog.cloud_workload_security_agent_rule",
+        "cdktf_cdktf_provider_datadog.compliance_custom_framework",
         "cdktf_cdktf_provider_datadog.csm_threats_agent_rule",
         "cdktf_cdktf_provider_datadog.dashboard",
         "cdktf_cdktf_provider_datadog.dashboard_json",
@@ -129,6 +130,9 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_datadog.monitor_json",
         "cdktf_cdktf_provider_datadog.monitor_notification_rule",
         "cdktf_cdktf_provider_datadog.observability_pipeline",
+        "cdktf_cdktf_provider_datadog.on_call_escalation_policy",
+        "cdktf_cdktf_provider_datadog.on_call_schedule",
+        "cdktf_cdktf_provider_datadog.on_call_team_routing_rules",
         "cdktf_cdktf_provider_datadog.openapi_api",
         "cdktf_cdktf_provider_datadog.organization_settings",
         "cdktf_cdktf_provider_datadog.powerpack",
@@ -171,7 +175,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_datadog._jsii": [
-            "provider-datadog@11.27.0.jsii.tgz"
+            "provider-datadog@11.28.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_datadog": [
             "py.typed"

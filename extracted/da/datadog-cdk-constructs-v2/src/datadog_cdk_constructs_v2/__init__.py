@@ -216,48 +216,49 @@ To further configure your DatadogLambda construct for Lambda, use the following 
 
 *Note*: The descriptions use the npm package parameters, but they also apply to PyPI and Go package parameters.
 
-| npm package parameter        | PyPI package parameter          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ---------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `addLayers`                  | `add_layers`                    | Whether to add the runtime Lambda Layers or expect the user to bring their own. Defaults to `true`. When `true`, the Lambda Library version variables are also required. When `false`, you must include the Datadog Lambda library in your functions' deployment packages.                                                                                                                                                                                                                                                              |
-| `pythonLayerVersion`         | `python_layer_version`          | Version of the Python Lambda layer to install, such as `83`. Required if you are deploying at least one Lambda function written in Python and `addLayers` is `true`. Find the latest version number [here](https://github.com/DataDog/datadog-lambda-python/releases). **Warning**: This parameter and `pythonLayerArn` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                             |
-| `pythonLayerArn`             | `python_layer_arn`              | The custom ARN of the Python Lambda layer to install. Required if you are deploying at least one Lambda function written in Python and `addLayers` is `true`. **Warning**: This parameter and `pythonLayerVersion` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                                                          |
-| `nodeLayerVersion`           | `node_layer_version`            | Version of the Node.js Lambda layer to install, such as `100`. Required if you are deploying at least one Lambda function written in Node.js and `addLayers` is `true`. Find the latest version number from [here](https://github.com/DataDog/datadog-lambda-js/releases). **Warning**: This parameter and `nodeLayerArn` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                       |
-| `nodeLayerArn`               | `node_layer_arn`                | The custom ARN of the Node.js Lambda layer to install. Required if you are deploying at least one Lambda function written in Node.js and `addLayers` is `true`. **Warning**: This parameter and `nodeLayerVersion` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                                                          |
-| `javaLayerVersion`           | `java_layer_version`            | Version of the Java layer to install, such as `8`. Required if you are deploying at least one Lambda function written in Java and `addLayers` is `true`. Find the latest version number in the [Serverless Java installation documentation](https://docs.datadoghq.com/serverless/installation/java/?tab=awscdk). **Note**: `extensionLayerVersion >= 25` and `javaLayerVersion >= 5` are required for the DatadogLambda construct to instrument your Java functions properly. **Warning**: This parameter and `javaLayerArn` are mutually exclusive. If used, only set one or the other.                |
-| `javaLayerArn`               | `java_layer_arn`                | The custom ARN of the Java layer to install. Required if you are deploying at least one Lambda function written in Java and `addLayers` is `true`. **Warning**: This parameter and `javaLayerVersion` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                                                                       |
-| `dotnetLayerVersion`         | `dotnet_layer_version`          | Version of the .NET layer to install, such as `13`. Required if you are deploying at least one Lambda function written in .NET and `addLayers` is `true`. Find the latest version number from [here](https://github.com/DataDog/dd-trace-dotnet-aws-lambda-layer/releases). **Warning**: This parameter and `dotnetLayerArn` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                  |
-| `dotnetLayerArn`             | `dotnet_layer_arn`              | The custom ARN of the .NET layer to install. Required if you are deploying at least one Lambda function written in .NET and `addLayers` is `true`. **Warning**: This parameter and `dotnetLayerVersion` are mutually exclusive. If used, only set one or the other. .                                                                                                                                                                                                                                                                   |
-| `extensionLayerVersion`      | `extension_layer_version`       | Version of the Datadog Lambda Extension layer to install, such as 5. When `extensionLayerVersion` is set, `apiKey` (or if encrypted, `apiKMSKey` or `apiKeySecretArn`) needs to be set as well. When enabled, lambda function log groups will not be subscribed by the forwarder. Learn more about the Lambda extension [here](https://docs.datadoghq.com/serverless/datadog_lambda_library/extension/). **Warning**: This parameter and `extensionVersionArn` are mutually exclusive. Set only one or the other. **Note**: If this parameter is set, it adds a layer even if `addLayers` is set to `false`. |
-| `extensionLayerArn`          | `extension_layer_arn`           | The custom ARN of the Datadog Lambda Extension layer to install. When `extensionLayerArn` is set, `apiKey` (or if encrypted, `apiKMSKey` or `apiKeySecretArn`) needs to be set as well. When enabled, lambda function log groups are not subscribed by the forwarder. Learn more about the Lambda extension [here](https://docs.datadoghq.com/serverless/datadog_lambda_library/extension/). **Warning**: This parameter and`extensionLayerVersion` are mutually exclusive. If used, only set one or the other. **Note**: If this parameter is set, it adds a layer even if `addLayers` is set to `false`.   |
-| `forwarderArn`               | `forwarder_arn`                 | When set, the plugin automatically subscribes the Datadog Forwarder to the functions' log groups. Do not set `forwarderArn` when `extensionLayerVersion` or `extensionLayerArn` is set.                                                                                                                                                                                                                                                                                                                                                 |
-| `createForwarderPermissions` | `createForwarderPermissions`    | When set to `true`, creates a Lambda permission on the the Datadog Forwarder per log group. Since the Datadog Forwarder has permissions configured by default, this is unnecessary in most use cases.                                                                                                                                                                                                                                                                                                                                   |
-| `flushMetricsToLogs`         | `flush_metrics_to_logs`         | Send custom metrics using CloudWatch logs with the Datadog Forwarder Lambda function (recommended). Defaults to `true` . If you disable this parameter, it's required to set `apiKey` (or if encrypted, `apiKMSKey` or `apiKeySecretArn`).                                                                                                                                                                                                                                                                                              |
-| `site`                       | `site`                          | Set which Datadog site to send data. This is only used when `flushMetricsToLogs` is `false` or `extensionLayerVersion` or `extensionLayerArn` is set. Possible values are `datadoghq.com`, `datadoghq.eu`, `us3.datadoghq.com`, `us5.datadoghq.com`, `ap1.datadoghq.com`, and `ddog-gov.com`. The default is `datadoghq.com`.                                                                                                                                                                                                           |
-| `apiKey`                     | `api_key`                       | Datadog API Key, only needed when `flushMetricsToLogs` is `false` or `extensionLayerVersion` or `extensionLayerArn` is set. For more information about getting a Datadog API key, see the [API key documentation](https://docs.datadoghq.com/account_management/api-app-keys/#api-keys).                                                                                                                                                                                                                                                                                                                   |
-| `apiKeySecretArn`            | `api_key_secret_arn`            | The ARN of the secret storing the Datadog API key in AWS Secrets Manager. Use this parameter in place of `apiKey` when `flushMetricsToLogs` is `false` or `extensionLayer` is set. Remember to add the `secretsmanager:GetSecretValue` permission to the Lambda execution role.                                                                                                                                                                                                                                                         |
-| `apiKeySecret`               | `api_key_secret`                | An [AWS CDK ISecret](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_secretsmanager.ISecret.html) representing a secret storing the Datadog API key in AWS Secrets Manager. Use this parameter in place of `apiKeySecretArn` to automatically grant your Lambda execution roles read access to the given secret. [See here](#automatically-grant-aws-secret-read-access-to-lambda-execution-role) for an example. **Only available in datadog-cdk-constructs-v2**.                                                                                                                                               |
-| `apiKmsKey`                  | `api_kms_key`                   | Datadog API Key encrypted using KMS. Use this parameter in place of `apiKey` when `flushMetricsToLogs` is `false` or `extensionLayerVersion` or `extensionLayerArn` is set, and you are using KMS encryption.                                                                                                                                                                                                                                                                                                                           |
-| `enableDatadogTracing`       | `enable_datadog_tracing`        | Enable Datadog tracing on your Lambda functions. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `enableMergeXrayTraces`      | `enable_merge_xray_traces`      | Enable merging X-Ray traces on your Lambda functions. Defaults to `false`.                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `enableDatadogLogs`          | `enable_datadog_logs`           | Send Lambda function logs to Datadog via the Datadog Lambda Extension. Defaults to `true`. Note: This setting has no effect on logs sent via the Datadog Forwarder.                                                                                                                                                                                                                                                                                                                                                                     |
-| `enableDatadogASM`           | `enable_datadog_asm`            | Enable [Datadog Application Security Management (ASM)](https://docs.datadoghq.com/security/application_security/) on the Lambda function. Requires the Datadog extension to be present (using `extensionLayerVersion` or `extensionLayerArn`) and `enableDatadogTracing`. Defaults to `false`.                                                                                                                                                                                                                                                                                                 |
-| `captureLambdaPayload`       | `capture_lambda_payload`        | [Captures incoming and outgoing AWS Lambda payloads](https://www.datadoghq.com/blog/troubleshoot-lambda-function-request-response-payloads/) in the Datadog APM spans for Lambda invocations. Defaults to `false`.                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `sourceCodeIntegration`      | `source_code_integration`       | Enable Datadog Source Code Integration, connecting your telemetry with application code in your Git repositories. This requires the Datadog Github integration to work, otherwise please follow the [alternative method](#alternative-methods-to-enable-source-code-integration). Learn more [here](https://docs.datadoghq.com/integrations/guide/source-code-integration/). Defaults to `true`.                                                                                                                                        |
-| `injectLogContext`           | `inject_log_context`            | When set, the Lambda layer will automatically patch console.log with Datadog's tracing ids. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `logLevel`                   | `log_level`                     | When set to `debug`, the Datadog Lambda Library and Extension will log additional information to help troubleshoot issues.                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `env`                        | `env`                           | When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_ENV` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, an `env` tag is added to all Lambda functions with the provided value.                                                                                                                                                                                                                                                                |
-| `service`                    | `service`                       | When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_SERVICE` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, a `service` tag is added to all Lambda functions with the provided value.                                                                                                                                                                                                                                                         |
-| `version`                    | `version`                       | When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_VERSION` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, a `version` tag is added to all Lambda functions with the provided value.                                                                                                                                                                                                                                                         |
-| `tags`                       | `tags`                          | A comma separated list of key:value pairs as a single string. When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_TAGS` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, the cdk parses the string and sets each key:value pair as a tag to all Lambda functions.                                                                                                                                                                               |
-| `enableColdStartTracing`     | `enable_cold_start_tracing`     | Set to `false` to disable Cold Start Tracing. Used in Node.js and Python. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `coldStartTraceMinDuration`  | `min_cold_start_trace_duration` | Sets the minimum duration (in milliseconds) for a module load event to be traced via Cold Start Tracing. Number. Defaults to `3`.                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `coldStartTraceSkipLibs`     | `cold_start_trace_skip_libs`    | Optionally skip creating Cold Start Spans for a comma-separated list of libraries. Useful to limit depth or skip known libraries. Default depends on runtime.                                                                                                                                                                                                                                                                                                                                                                           |
-| `enableProfiling`            | `enable_profiling`              | Enable the Datadog Continuous Profiler with `true`. Supported in Beta for Node.js and Python. Defaults to `false`.                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `encodeAuthorizerContext`    | `encode_authorizer_context`     | When set to `true` for Lambda authorizers, the tracing context will be encoded into the response for propagation. Supported for Node.js and Python. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                 |
-| `decodeAuthorizerContext`    | `decode_authorizer_context`     | When set to `true` for Lambdas that are authorized via Lambda authorizers, it will parse and use the encoded tracing context (if found). Supported for Node.js and Python. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                          |
-| `apmFlushDeadline`           | `apm_flush_deadline`            | Used to determine when to submit spans before a timeout occurs, in milliseconds. When the remaining time in an AWS Lambda invocation is less than the value set, the tracer attempts to submit the current active spans and all finished spans. Supported for Node.js and Python. Defaults to `100` milliseconds.                                                                                                                                                                                                                       |
-| `redirectHandler`            | `redirect_handler`              | When set to `false`, skip redirecting handler to the Datadog Lambda Library's handler. Useful when only instrumenting with Datadog Lambda Extension. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                |
-| `grantSecretReadAccess`      | `grant_secret_read_access`      | When set to `true` and `apiKeySecretArn` is provided, automatically grant read access to the given secret to all the lambdas added. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                 |
+| npm package parameter        | PyPI package parameter          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ---------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `addLayers`                  | `add_layers`                    | Whether to add the runtime Lambda Layers or expect the user to bring their own. Defaults to `true`. When `true`, the Lambda Library version variables are also required. When `false`, you must include the Datadog Lambda library in your functions' deployment packages.                                                                                                                                                                                                                                                                    |
+| `pythonLayerVersion`         | `python_layer_version`          | Version of the Python Lambda layer to install, such as `83`. Required if you are deploying at least one Lambda function written in Python and `addLayers` is `true`. Find the latest version number [here](https://github.com/DataDog/datadog-lambda-python/releases). **Warning**: This parameter and `pythonLayerArn` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                   |
+| `pythonLayerArn`             | `python_layer_arn`              | The custom ARN of the Python Lambda layer to install. Required if you are deploying at least one Lambda function written in Python and `addLayers` is `true`. **Warning**: This parameter and `pythonLayerVersion` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                                                                |
+| `nodeLayerVersion`           | `node_layer_version`            | Version of the Node.js Lambda layer to install, such as `100`. Required if you are deploying at least one Lambda function written in Node.js and `addLayers` is `true`. Find the latest version number from [here](https://github.com/DataDog/datadog-lambda-js/releases). **Warning**: This parameter and `nodeLayerArn` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                             |
+| `nodeLayerArn`               | `node_layer_arn`                | The custom ARN of the Node.js Lambda layer to install. Required if you are deploying at least one Lambda function written in Node.js and `addLayers` is `true`. **Warning**: This parameter and `nodeLayerVersion` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                                                                |
+| `javaLayerVersion`           | `java_layer_version`            | Version of the Java layer to install, such as `8`. Required if you are deploying at least one Lambda function written in Java and `addLayers` is `true`. Find the latest version number in the [Serverless Java installation documentation](https://docs.datadoghq.com/serverless/installation/java/?tab=awscdk). **Note**: `extensionLayerVersion >= 25` and `javaLayerVersion >= 5` are required for the DatadogLambda construct to instrument your Java functions properly. **Warning**: This parameter and `javaLayerArn` are mutually exclusive. If used, only set one or the other.                      |
+| `javaLayerArn`               | `java_layer_arn`                | The custom ARN of the Java layer to install. Required if you are deploying at least one Lambda function written in Java and `addLayers` is `true`. **Warning**: This parameter and `javaLayerVersion` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                                                                             |
+| `dotnetLayerVersion`         | `dotnet_layer_version`          | Version of the .NET layer to install, such as `13`. Required if you are deploying at least one Lambda function written in .NET and `addLayers` is `true`. Find the latest version number from [here](https://github.com/DataDog/dd-trace-dotnet-aws-lambda-layer/releases). **Warning**: This parameter and `dotnetLayerArn` are mutually exclusive. If used, only set one or the other.                                                                                                                                                                                                                        |
+| `dotnetLayerArn`             | `dotnet_layer_arn`              | The custom ARN of the .NET layer to install. Required if you are deploying at least one Lambda function written in .NET and `addLayers` is `true`. **Warning**: This parameter and `dotnetLayerVersion` are mutually exclusive. If used, only set one or the other. .                                                                                                                                                                                                                                                                         |
+| `extensionLayerVersion`      | `extension_layer_version`       | Version of the Datadog Lambda Extension layer to install, such as 5. When `extensionLayerVersion` is set, `apiKey` (or if encrypted, `apiKMSKey` or `apiKeySecretArn`) needs to be set as well. When enabled, lambda function log groups will not be subscribed by the forwarder. Learn more about the Lambda extension [here](https://docs.datadoghq.com/serverless/datadog_lambda_library/extension/). **Warning**: This parameter and `extensionVersionArn` are mutually exclusive. Set only one or the other. **Note**: If this parameter is set, it adds a layer even if `addLayers` is set to `false`.       |
+| `extensionLayerArn`          | `extension_layer_arn`           | The custom ARN of the Datadog Lambda Extension layer to install. When `extensionLayerArn` is set, `apiKey` (or if encrypted, `apiKMSKey` or `apiKeySecretArn`) needs to be set as well. When enabled, lambda function log groups are not subscribed by the forwarder. Learn more about the Lambda extension [here](https://docs.datadoghq.com/serverless/datadog_lambda_library/extension/). **Warning**: This parameter and`extensionLayerVersion` are mutually exclusive. If used, only set one or the other. **Note**: If this parameter is set, it adds a layer even if `addLayers` is set to `false`.         |
+| `forwarderArn`               | `forwarder_arn`                 | When set, the plugin automatically subscribes the Datadog Forwarder to the functions' log groups. Do not set `forwarderArn` when `extensionLayerVersion` or `extensionLayerArn` is set.                                                                                                                                                                                                                                                                                                                                                       |
+| `createForwarderPermissions` | `createForwarderPermissions`    | When set to `true`, creates a Lambda permission on the the Datadog Forwarder per log group. Since the Datadog Forwarder has permissions configured by default, this is unnecessary in most use cases.                                                                                                                                                                                                                                                                                                                                         |
+| `flushMetricsToLogs`         | `flush_metrics_to_logs`         | Send custom metrics using CloudWatch logs with the Datadog Forwarder Lambda function (recommended). Defaults to `true` . If you disable this parameter, it's required to set `apiKey` (or if encrypted, `apiKMSKey` or `apiKeySecretArn`).                                                                                                                                                                                                                                                                                                    |
+| `site`                       | `site`                          | Set which Datadog site to send data. This is only used when `flushMetricsToLogs` is `false` or `extensionLayerVersion` or `extensionLayerArn` is set. Possible values are `datadoghq.com`, `datadoghq.eu`, `us3.datadoghq.com`, `us5.datadoghq.com`, `ap1.datadoghq.com`, and `ddog-gov.com`. The default is `datadoghq.com`.                                                                                                                                                                                                                 |
+| `apiKey`                     | `api_key`                       | Datadog API Key, only needed when `flushMetricsToLogs` is `false` or `extensionLayerVersion` or `extensionLayerArn` is set. For more information about getting a Datadog API key, see the [API key documentation](https://docs.datadoghq.com/account_management/api-app-keys/#api-keys).                                                                                                                                                                                                                                                                                                                         |
+| `apiKeySecretArn`            | `api_key_secret_arn`            | The ARN of the secret storing the Datadog API key in AWS Secrets Manager. Use this parameter in place of `apiKey` when `flushMetricsToLogs` is `false` or `extensionLayer` is set. Remember to add the `secretsmanager:GetSecretValue` permission to the Lambda execution role.                                                                                                                                                                                                                                                               |
+| `apiKeySecret`               | `api_key_secret`                | An [AWS CDK ISecret](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_secretsmanager.ISecret.html) representing a secret storing the Datadog API key in AWS Secrets Manager. Use this parameter in place of `apiKeySecretArn` to automatically grant your Lambda execution roles read access to the given secret. [See here](#automatically-grant-aws-secret-read-access-to-lambda-execution-role) for an example. **Only available in datadog-cdk-constructs-v2**.                                                                                                                                                     |
+| `apiKmsKey`                  | `api_kms_key`                   | Datadog API Key encrypted using KMS. Use this parameter in place of `apiKey` when `flushMetricsToLogs` is `false` or `extensionLayerVersion` or `extensionLayerArn` is set, and you are using KMS encryption.                                                                                                                                                                                                                                                                                                                                 |
+| `enableDatadogTracing`       | `enable_datadog_tracing`        | Enable Datadog tracing on your Lambda functions. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `enableMergeXrayTraces`      | `enable_merge_xray_traces`      | Enable merging X-Ray traces on your Lambda functions. Defaults to `false`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `enableDatadogLogs`          | `enable_datadog_logs`           | Send Lambda function logs to Datadog via the Datadog Lambda Extension. Defaults to `true`. Note: This setting has no effect on logs sent via the Datadog Forwarder.                                                                                                                                                                                                                                                                                                                                                                           |
+| `enableDatadogASM`           | `enable_datadog_asm`            | Enable [Datadog Application Security Management (ASM)](https://docs.datadoghq.com/security/application_security/) on the Lambda function. Requires the Datadog extension to be present (using `extensionLayerVersion` or `extensionLayerArn`) and `enableDatadogTracing`. Defaults to `false`.                                                                                                                                                                                                                                                                                                       |
+| `captureLambdaPayload`       | `capture_lambda_payload`        | [Captures incoming and outgoing AWS Lambda payloads](https://www.datadoghq.com/blog/troubleshoot-lambda-function-request-response-payloads/) in the Datadog APM spans for Lambda invocations. Defaults to `false`.                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `captureCloudServicePayload` | `capture_cloud_service_payload` | [Capture requests and responses between your application and AWS services](https://docs.datadoghq.com/tracing/guide/aws_payload_tagging/) in the Datadog APM spans' tags. Supported services include SNS, SQS, Kinesis, S3, EventBridge, DynamoDB. If set to `true`, it will add `DD_TRACE_CLOUD_REQUEST_PAYLOAD_TAGGING='all'` and `DD_TRACE_CLOUD_RESPONSE_PAYLOAD_TAGGING='all'`. If set to `false` it would add `DD_TRACE_CLOUD_REQUEST_PAYLOAD_TAGGING='$.*'` and `DD_TRACE_CLOUD_RESPONSE_PAYLOAD_TAGGING='$.*'`. `$.*` is a JSONPath redaction rule that redacts all values. Defaults to `false`. |
+| `sourceCodeIntegration`      | `source_code_integration`       | Enable Datadog Source Code Integration, connecting your telemetry with application code in your Git repositories. This requires the Datadog Github integration to work, otherwise please follow the [alternative method](#alternative-methods-to-enable-source-code-integration). Learn more [here](https://docs.datadoghq.com/integrations/guide/source-code-integration/). Defaults to `true`.                                                                                                                                              |
+| `injectLogContext`           | `inject_log_context`            | When set, the Lambda layer will automatically patch console.log with Datadog's tracing ids. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `logLevel`                   | `log_level`                     | When set to `debug`, the Datadog Lambda Library and Extension will log additional information to help troubleshoot issues.                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `env`                        | `env`                           | When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_ENV` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, an `env` tag is added to all Lambda functions with the provided value.                                                                                                                                                                                                                                                                      |
+| `service`                    | `service`                       | When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_SERVICE` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, a `service` tag is added to all Lambda functions with the provided value.                                                                                                                                                                                                                                                               |
+| `version`                    | `version`                       | When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_VERSION` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, a `version` tag is added to all Lambda functions with the provided value.                                                                                                                                                                                                                                                               |
+| `tags`                       | `tags`                          | A comma separated list of key:value pairs as a single string. When set along with `extensionLayerVersion` or `extensionLayerArn`, a `DD_TAGS` environment variable is added to all Lambda functions with the provided value. When set along with `forwarderArn`, the cdk parses the string and sets each key:value pair as a tag to all Lambda functions.                                                                                                                                                                                     |
+| `enableColdStartTracing`     | `enable_cold_start_tracing`     | Set to `false` to disable Cold Start Tracing. Used in Node.js and Python. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `coldStartTraceMinDuration`  | `min_cold_start_trace_duration` | Sets the minimum duration (in milliseconds) for a module load event to be traced via Cold Start Tracing. Number. Defaults to `3`.                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `coldStartTraceSkipLibs`     | `cold_start_trace_skip_libs`    | Optionally skip creating Cold Start Spans for a comma-separated list of libraries. Useful to limit depth or skip known libraries. Default depends on runtime.                                                                                                                                                                                                                                                                                                                                                                                 |
+| `enableProfiling`            | `enable_profiling`              | Enable the Datadog Continuous Profiler with `true`. Supported in Beta for Node.js and Python. Defaults to `false`.                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `encodeAuthorizerContext`    | `encode_authorizer_context`     | When set to `true` for Lambda authorizers, the tracing context will be encoded into the response for propagation. Supported for Node.js and Python. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                       |
+| `decodeAuthorizerContext`    | `decode_authorizer_context`     | When set to `true` for Lambdas that are authorized via Lambda authorizers, it will parse and use the encoded tracing context (if found). Supported for Node.js and Python. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                |
+| `apmFlushDeadline`           | `apm_flush_deadline`            | Used to determine when to submit spans before a timeout occurs, in milliseconds. When the remaining time in an AWS Lambda invocation is less than the value set, the tracer attempts to submit the current active spans and all finished spans. Supported for Node.js and Python. Defaults to `100` milliseconds.                                                                                                                                                                                                                             |
+| `redirectHandler`            | `redirect_handler`              | When set to `false`, skip redirecting handler to the Datadog Lambda Library's handler. Useful when only instrumenting with Datadog Lambda Extension. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                      |
+| `grantSecretReadAccess`      | `grant_secret_read_access`      | When set to `true` and `apiKeySecretArn` is provided, automatically grant read access to the given secret to all the lambdas added. Defaults to `true`.                                                                                                                                                                                                                                                                                                                                                                                       |
 
 **Note**: Using the parameters above may override corresponding function level `DD_XXX` environment variables.
 
@@ -772,34 +773,58 @@ import constructs as _constructs_77d1e7e8
 @jsii.data_type(
     jsii_type="datadog-cdk-constructs-v2.APMFeatureConfig",
     jsii_struct_bases=[],
-    name_mapping={"is_enabled": "isEnabled", "is_socket_enabled": "isSocketEnabled"},
+    name_mapping={
+        "is_enabled": "isEnabled",
+        "is_profiling_enabled": "isProfilingEnabled",
+        "is_socket_enabled": "isSocketEnabled",
+        "trace_inferred_proxy_services": "traceInferredProxyServices",
+    },
 )
 class APMFeatureConfig:
     def __init__(
         self,
         *,
         is_enabled: typing.Optional[builtins.bool] = None,
+        is_profiling_enabled: typing.Optional[builtins.bool] = None,
         is_socket_enabled: typing.Optional[builtins.bool] = None,
+        trace_inferred_proxy_services: typing.Optional[builtins.bool] = None,
     ) -> None:
         '''APM feature configuration.
 
         :param is_enabled: Enables APM.
+        :param is_profiling_enabled: Enables Profile collection. Requires Datadog APM SSI instrumentation on your application containers.
         :param is_socket_enabled: Enables APM traces traffic over Unix Domain Socket. Falls back to TCP configuration for application containers when disabled
+        :param trace_inferred_proxy_services: Enables inferred spans for proxy services like AWS API Gateway. When enabled, the tracer will create spans for proxy services by using headers passed from the proxy service to the application.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e230986922ff4221b55047d221e20a0c611bc5d8df4610875061e8ae695d6738)
             check_type(argname="argument is_enabled", value=is_enabled, expected_type=type_hints["is_enabled"])
+            check_type(argname="argument is_profiling_enabled", value=is_profiling_enabled, expected_type=type_hints["is_profiling_enabled"])
             check_type(argname="argument is_socket_enabled", value=is_socket_enabled, expected_type=type_hints["is_socket_enabled"])
+            check_type(argname="argument trace_inferred_proxy_services", value=trace_inferred_proxy_services, expected_type=type_hints["trace_inferred_proxy_services"])
         self._values: typing.Dict[builtins.str, typing.Any] = {}
         if is_enabled is not None:
             self._values["is_enabled"] = is_enabled
+        if is_profiling_enabled is not None:
+            self._values["is_profiling_enabled"] = is_profiling_enabled
         if is_socket_enabled is not None:
             self._values["is_socket_enabled"] = is_socket_enabled
+        if trace_inferred_proxy_services is not None:
+            self._values["trace_inferred_proxy_services"] = trace_inferred_proxy_services
 
     @builtins.property
     def is_enabled(self) -> typing.Optional[builtins.bool]:
         '''Enables APM.'''
         result = self._values.get("is_enabled")
+        return typing.cast(typing.Optional[builtins.bool], result)
+
+    @builtins.property
+    def is_profiling_enabled(self) -> typing.Optional[builtins.bool]:
+        '''Enables Profile collection.
+
+        Requires Datadog APM SSI instrumentation on your application containers.
+        '''
+        result = self._values.get("is_profiling_enabled")
         return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
@@ -809,6 +834,16 @@ class APMFeatureConfig:
         Falls back to TCP configuration for application containers when disabled
         '''
         result = self._values.get("is_socket_enabled")
+        return typing.cast(typing.Optional[builtins.bool], result)
+
+    @builtins.property
+    def trace_inferred_proxy_services(self) -> typing.Optional[builtins.bool]:
+        '''Enables inferred spans for proxy services like AWS API Gateway.
+
+        When enabled, the tracer will create spans for proxy services by using headers
+        passed from the proxy service to the application.
+        '''
+        result = self._values.get("trace_inferred_proxy_services")
         return typing.cast(typing.Optional[builtins.bool], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
@@ -2021,6 +2056,99 @@ class DatadogECSLogDriverProps:
         )
 
 
+@jsii.data_type(
+    jsii_type="datadog-cdk-constructs-v2.DatadogFirelensOptions",
+    jsii_struct_bases=[_aws_cdk_aws_ecs_ceddda9d.FirelensOptions],
+    name_mapping={
+        "config_file_type": "configFileType",
+        "config_file_value": "configFileValue",
+        "enable_ecs_log_metadata": "enableECSLogMetadata",
+        "is_parse_json": "isParseJson",
+    },
+)
+class DatadogFirelensOptions(_aws_cdk_aws_ecs_ceddda9d.FirelensOptions):
+    def __init__(
+        self,
+        *,
+        config_file_type: typing.Optional[_aws_cdk_aws_ecs_ceddda9d.FirelensConfigFileType] = None,
+        config_file_value: typing.Optional[builtins.str] = None,
+        enable_ecs_log_metadata: typing.Optional[builtins.bool] = None,
+        is_parse_json: typing.Optional[builtins.bool] = None,
+    ) -> None:
+        '''
+        :param config_file_type: Custom configuration file, s3 or file. Both configFileType and configFileValue must be used together to define a custom configuration source. Default: - determined by checking configFileValue with S3 ARN.
+        :param config_file_value: Custom configuration file, S3 ARN or a file path Both configFileType and configFileValue must be used together to define a custom configuration source. Default: - no config file value
+        :param enable_ecs_log_metadata: By default, Amazon ECS adds additional fields in your log entries that help identify the source of the logs. You can disable this action by setting enable-ecs-log-metadata to false. Default: - true
+        :param is_parse_json: Overrides the config file type and value to support JSON parsing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7b73367dd8934066b0e85349e1e0223d15cbd2ebd04ffe9ce237c87f413f1f2e)
+            check_type(argname="argument config_file_type", value=config_file_type, expected_type=type_hints["config_file_type"])
+            check_type(argname="argument config_file_value", value=config_file_value, expected_type=type_hints["config_file_value"])
+            check_type(argname="argument enable_ecs_log_metadata", value=enable_ecs_log_metadata, expected_type=type_hints["enable_ecs_log_metadata"])
+            check_type(argname="argument is_parse_json", value=is_parse_json, expected_type=type_hints["is_parse_json"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if config_file_type is not None:
+            self._values["config_file_type"] = config_file_type
+        if config_file_value is not None:
+            self._values["config_file_value"] = config_file_value
+        if enable_ecs_log_metadata is not None:
+            self._values["enable_ecs_log_metadata"] = enable_ecs_log_metadata
+        if is_parse_json is not None:
+            self._values["is_parse_json"] = is_parse_json
+
+    @builtins.property
+    def config_file_type(
+        self,
+    ) -> typing.Optional[_aws_cdk_aws_ecs_ceddda9d.FirelensConfigFileType]:
+        '''Custom configuration file, s3 or file.
+
+        Both configFileType and configFileValue must be used together
+        to define a custom configuration source.
+
+        :default: - determined by checking configFileValue with S3 ARN.
+        '''
+        result = self._values.get("config_file_type")
+        return typing.cast(typing.Optional[_aws_cdk_aws_ecs_ceddda9d.FirelensConfigFileType], result)
+
+    @builtins.property
+    def config_file_value(self) -> typing.Optional[builtins.str]:
+        '''Custom configuration file, S3 ARN or a file path Both configFileType and configFileValue must be used together to define a custom configuration source.
+
+        :default: - no config file value
+        '''
+        result = self._values.get("config_file_value")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def enable_ecs_log_metadata(self) -> typing.Optional[builtins.bool]:
+        '''By default, Amazon ECS adds additional fields in your log entries that help identify the source of the logs.
+
+        You can disable this action by setting enable-ecs-log-metadata to false.
+
+        :default: - true
+        '''
+        result = self._values.get("enable_ecs_log_metadata")
+        return typing.cast(typing.Optional[builtins.bool], result)
+
+    @builtins.property
+    def is_parse_json(self) -> typing.Optional[builtins.bool]:
+        '''Overrides the config file type and value to support JSON parsing.'''
+        result = self._values.get("is_parse_json")
+        return typing.cast(typing.Optional[builtins.bool], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DatadogFirelensOptions(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
 class DatadogLambda(
     _constructs_77d1e7e8.Construct,
     metaclass=jsii.JSIIMeta,
@@ -2037,6 +2165,7 @@ class DatadogLambda(
         api_key_secret_arn: typing.Optional[builtins.str] = None,
         api_kms_key: typing.Optional[builtins.str] = None,
         apm_flush_deadline: typing.Optional[typing.Union[builtins.str, jsii.Number]] = None,
+        capture_cloud_service_payload: typing.Optional[builtins.bool] = None,
         capture_lambda_payload: typing.Optional[builtins.bool] = None,
         cold_start_trace_skip_libs: typing.Optional[builtins.str] = None,
         create_forwarder_permissions: typing.Optional[builtins.bool] = None,
@@ -2084,6 +2213,7 @@ class DatadogLambda(
         :param api_key_secret_arn: 
         :param api_kms_key: 
         :param apm_flush_deadline: 
+        :param capture_cloud_service_payload: 
         :param capture_lambda_payload: 
         :param cold_start_trace_skip_libs: 
         :param create_forwarder_permissions: 
@@ -2133,6 +2263,7 @@ class DatadogLambda(
             api_key_secret_arn=api_key_secret_arn,
             api_kms_key=api_kms_key,
             apm_flush_deadline=apm_flush_deadline,
+            capture_cloud_service_payload=capture_cloud_service_payload,
             capture_lambda_payload=capture_lambda_payload,
             cold_start_trace_skip_libs=cold_start_trace_skip_libs,
             create_forwarder_permissions=create_forwarder_permissions,
@@ -2338,6 +2469,7 @@ class DatadogLambda(
         "api_key_secret_arn": "apiKeySecretArn",
         "api_kms_key": "apiKmsKey",
         "apm_flush_deadline": "apmFlushDeadline",
+        "capture_cloud_service_payload": "captureCloudServicePayload",
         "capture_lambda_payload": "captureLambdaPayload",
         "cold_start_trace_skip_libs": "coldStartTraceSkipLibs",
         "create_forwarder_permissions": "createForwarderPermissions",
@@ -2387,6 +2519,7 @@ class DatadogLambdaProps:
         api_key_secret_arn: typing.Optional[builtins.str] = None,
         api_kms_key: typing.Optional[builtins.str] = None,
         apm_flush_deadline: typing.Optional[typing.Union[builtins.str, jsii.Number]] = None,
+        capture_cloud_service_payload: typing.Optional[builtins.bool] = None,
         capture_lambda_payload: typing.Optional[builtins.bool] = None,
         cold_start_trace_skip_libs: typing.Optional[builtins.str] = None,
         create_forwarder_permissions: typing.Optional[builtins.bool] = None,
@@ -2432,6 +2565,7 @@ class DatadogLambdaProps:
         :param api_key_secret_arn: 
         :param api_kms_key: 
         :param apm_flush_deadline: 
+        :param capture_cloud_service_payload: 
         :param capture_lambda_payload: 
         :param cold_start_trace_skip_libs: 
         :param create_forwarder_permissions: 
@@ -2478,6 +2612,7 @@ class DatadogLambdaProps:
             check_type(argname="argument api_key_secret_arn", value=api_key_secret_arn, expected_type=type_hints["api_key_secret_arn"])
             check_type(argname="argument api_kms_key", value=api_kms_key, expected_type=type_hints["api_kms_key"])
             check_type(argname="argument apm_flush_deadline", value=apm_flush_deadline, expected_type=type_hints["apm_flush_deadline"])
+            check_type(argname="argument capture_cloud_service_payload", value=capture_cloud_service_payload, expected_type=type_hints["capture_cloud_service_payload"])
             check_type(argname="argument capture_lambda_payload", value=capture_lambda_payload, expected_type=type_hints["capture_lambda_payload"])
             check_type(argname="argument cold_start_trace_skip_libs", value=cold_start_trace_skip_libs, expected_type=type_hints["cold_start_trace_skip_libs"])
             check_type(argname="argument create_forwarder_permissions", value=create_forwarder_permissions, expected_type=type_hints["create_forwarder_permissions"])
@@ -2528,6 +2663,8 @@ class DatadogLambdaProps:
             self._values["api_kms_key"] = api_kms_key
         if apm_flush_deadline is not None:
             self._values["apm_flush_deadline"] = apm_flush_deadline
+        if capture_cloud_service_payload is not None:
+            self._values["capture_cloud_service_payload"] = capture_cloud_service_payload
         if capture_lambda_payload is not None:
             self._values["capture_lambda_payload"] = capture_lambda_payload
         if cold_start_trace_skip_libs is not None:
@@ -2636,6 +2773,11 @@ class DatadogLambdaProps:
     ) -> typing.Optional[typing.Union[builtins.str, jsii.Number]]:
         result = self._values.get("apm_flush_deadline")
         return typing.cast(typing.Optional[typing.Union[builtins.str, jsii.Number]], result)
+
+    @builtins.property
+    def capture_cloud_service_payload(self) -> typing.Optional[builtins.bool]:
+        result = self._values.get("capture_cloud_service_payload")
+        return typing.cast(typing.Optional[builtins.bool], result)
 
     @builtins.property
     def capture_lambda_payload(self) -> typing.Optional[builtins.bool]:
@@ -2839,6 +2981,7 @@ class DatadogLambdaProps:
     jsii_struct_bases=[],
     name_mapping={
         "add_layers": "addLayers",
+        "capture_cloud_service_payload": "captureCloudServicePayload",
         "capture_lambda_payload": "captureLambdaPayload",
         "enable_datadog_asm": "enableDatadogASM",
         "enable_datadog_logs": "enableDatadogLogs",
@@ -2871,6 +3014,7 @@ class DatadogLambdaStrictProps:
         self,
         *,
         add_layers: builtins.bool,
+        capture_cloud_service_payload: builtins.bool,
         capture_lambda_payload: builtins.bool,
         enable_datadog_asm: builtins.bool,
         enable_datadog_logs: builtins.bool,
@@ -2899,6 +3043,7 @@ class DatadogLambdaStrictProps:
     ) -> None:
         '''
         :param add_layers: 
+        :param capture_cloud_service_payload: 
         :param capture_lambda_payload: 
         :param enable_datadog_asm: 
         :param enable_datadog_logs: 
@@ -2928,6 +3073,7 @@ class DatadogLambdaStrictProps:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__83a8c4fb2da825eb5b4c4706ded5ed3a805d4d22c40216a83a302992413a7603)
             check_type(argname="argument add_layers", value=add_layers, expected_type=type_hints["add_layers"])
+            check_type(argname="argument capture_cloud_service_payload", value=capture_cloud_service_payload, expected_type=type_hints["capture_cloud_service_payload"])
             check_type(argname="argument capture_lambda_payload", value=capture_lambda_payload, expected_type=type_hints["capture_lambda_payload"])
             check_type(argname="argument enable_datadog_asm", value=enable_datadog_asm, expected_type=type_hints["enable_datadog_asm"])
             check_type(argname="argument enable_datadog_logs", value=enable_datadog_logs, expected_type=type_hints["enable_datadog_logs"])
@@ -2955,6 +3101,7 @@ class DatadogLambdaStrictProps:
             check_type(argname="argument source_code_integration", value=source_code_integration, expected_type=type_hints["source_code_integration"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "add_layers": add_layers,
+            "capture_cloud_service_payload": capture_cloud_service_payload,
             "capture_lambda_payload": capture_lambda_payload,
             "enable_datadog_asm": enable_datadog_asm,
             "enable_datadog_logs": enable_datadog_logs,
@@ -3004,6 +3151,12 @@ class DatadogLambdaStrictProps:
     def add_layers(self) -> builtins.bool:
         result = self._values.get("add_layers")
         assert result is not None, "Required property 'add_layers' is missing"
+        return typing.cast(builtins.bool, result)
+
+    @builtins.property
+    def capture_cloud_service_payload(self) -> builtins.bool:
+        result = self._values.get("capture_cloud_service_payload")
+        assert result is not None, "Required property 'capture_cloud_service_payload' is missing"
         return typing.cast(builtins.bool, result)
 
     @builtins.property
@@ -3507,6 +3660,7 @@ class FargateCWSFeatureConfig(CWSFeatureConfig):
     jsii_struct_bases=[],
     name_mapping={
         "cpu": "cpu",
+        "firelens_options": "firelensOptions",
         "image_version": "imageVersion",
         "is_log_router_dependency_enabled": "isLogRouterDependencyEnabled",
         "is_log_router_essential": "isLogRouterEssential",
@@ -3521,6 +3675,7 @@ class FluentbitConfig:
         self,
         *,
         cpu: typing.Optional[jsii.Number] = None,
+        firelens_options: typing.Optional[typing.Union[DatadogFirelensOptions, typing.Dict[builtins.str, typing.Any]]] = None,
         image_version: typing.Optional[builtins.str] = None,
         is_log_router_dependency_enabled: typing.Optional[builtins.bool] = None,
         is_log_router_essential: typing.Optional[builtins.bool] = None,
@@ -3531,6 +3686,7 @@ class FluentbitConfig:
     ) -> None:
         '''
         :param cpu: The minimum number of CPU units to reserve for the Datadog fluent-bit container.
+        :param firelens_options: Firelens options for the Fluentbit container.
         :param image_version: The version of the Fluentbit container image to use.
         :param is_log_router_dependency_enabled: Enables the log router health check.
         :param is_log_router_essential: Makes the log router essential.
@@ -3539,6 +3695,8 @@ class FluentbitConfig:
         :param memory_limit_mib: The amount (in MiB) of memory to present to the Datadog fluent-bit container.
         :param registry: The registry to pull the Fluentbit container image from.
         '''
+        if isinstance(firelens_options, dict):
+            firelens_options = DatadogFirelensOptions(**firelens_options)
         if isinstance(log_driver_config, dict):
             log_driver_config = DatadogECSLogDriverProps(**log_driver_config)
         if isinstance(log_router_health_check, dict):
@@ -3546,6 +3704,7 @@ class FluentbitConfig:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__bce7f515206c50e8fb1ec5d51a1f261f008e45a207781b3820caf1e40b9fabcb)
             check_type(argname="argument cpu", value=cpu, expected_type=type_hints["cpu"])
+            check_type(argname="argument firelens_options", value=firelens_options, expected_type=type_hints["firelens_options"])
             check_type(argname="argument image_version", value=image_version, expected_type=type_hints["image_version"])
             check_type(argname="argument is_log_router_dependency_enabled", value=is_log_router_dependency_enabled, expected_type=type_hints["is_log_router_dependency_enabled"])
             check_type(argname="argument is_log_router_essential", value=is_log_router_essential, expected_type=type_hints["is_log_router_essential"])
@@ -3556,6 +3715,8 @@ class FluentbitConfig:
         self._values: typing.Dict[builtins.str, typing.Any] = {}
         if cpu is not None:
             self._values["cpu"] = cpu
+        if firelens_options is not None:
+            self._values["firelens_options"] = firelens_options
         if image_version is not None:
             self._values["image_version"] = image_version
         if is_log_router_dependency_enabled is not None:
@@ -3576,6 +3737,12 @@ class FluentbitConfig:
         '''The minimum number of CPU units to reserve for the Datadog fluent-bit container.'''
         result = self._values.get("cpu")
         return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def firelens_options(self) -> typing.Optional[DatadogFirelensOptions]:
+        '''Firelens options for the Fluentbit container.'''
+        result = self._values.get("firelens_options")
+        return typing.cast(typing.Optional[DatadogFirelensOptions], result)
 
     @builtins.property
     def image_version(self) -> typing.Optional[builtins.str]:
@@ -3975,6 +4142,7 @@ __all__ = [
     "DatadogECSFargateProps",
     "DatadogECSFargateTaskDefinition",
     "DatadogECSLogDriverProps",
+    "DatadogFirelensOptions",
     "DatadogLambda",
     "DatadogLambdaProps",
     "DatadogLambdaStrictProps",
@@ -3998,7 +4166,9 @@ publication.publish()
 def _typecheckingstub__e230986922ff4221b55047d221e20a0c611bc5d8df4610875061e8ae695d6738(
     *,
     is_enabled: typing.Optional[builtins.bool] = None,
+    is_profiling_enabled: typing.Optional[builtins.bool] = None,
     is_socket_enabled: typing.Optional[builtins.bool] = None,
+    trace_inferred_proxy_services: typing.Optional[builtins.bool] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -4183,6 +4353,16 @@ def _typecheckingstub__1d244c4707c408dda2c6e1127da618ed1b203600e8fbd40e66eadf006
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__7b73367dd8934066b0e85349e1e0223d15cbd2ebd04ffe9ce237c87f413f1f2e(
+    *,
+    config_file_type: typing.Optional[_aws_cdk_aws_ecs_ceddda9d.FirelensConfigFileType] = None,
+    config_file_value: typing.Optional[builtins.str] = None,
+    enable_ecs_log_metadata: typing.Optional[builtins.bool] = None,
+    is_parse_json: typing.Optional[builtins.bool] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__7d2984f96d56b35b6bf9f462eeb539cb66d7814bc0c2c05efa693a19e965978d(
     scope: _constructs_77d1e7e8.Construct,
     id: builtins.str,
@@ -4193,6 +4373,7 @@ def _typecheckingstub__7d2984f96d56b35b6bf9f462eeb539cb66d7814bc0c2c05efa693a19e
     api_key_secret_arn: typing.Optional[builtins.str] = None,
     api_kms_key: typing.Optional[builtins.str] = None,
     apm_flush_deadline: typing.Optional[typing.Union[builtins.str, jsii.Number]] = None,
+    capture_cloud_service_payload: typing.Optional[builtins.bool] = None,
     capture_lambda_payload: typing.Optional[builtins.bool] = None,
     cold_start_trace_skip_libs: typing.Optional[builtins.str] = None,
     create_forwarder_permissions: typing.Optional[builtins.bool] = None,
@@ -4312,6 +4493,7 @@ def _typecheckingstub__63d91330a506031886b9d88e6eb264015f9a55aa2384c231f96607376
     api_key_secret_arn: typing.Optional[builtins.str] = None,
     api_kms_key: typing.Optional[builtins.str] = None,
     apm_flush_deadline: typing.Optional[typing.Union[builtins.str, jsii.Number]] = None,
+    capture_cloud_service_payload: typing.Optional[builtins.bool] = None,
     capture_lambda_payload: typing.Optional[builtins.bool] = None,
     cold_start_trace_skip_libs: typing.Optional[builtins.str] = None,
     create_forwarder_permissions: typing.Optional[builtins.bool] = None,
@@ -4356,6 +4538,7 @@ def _typecheckingstub__63d91330a506031886b9d88e6eb264015f9a55aa2384c231f96607376
 def _typecheckingstub__83a8c4fb2da825eb5b4c4706ded5ed3a805d4d22c40216a83a302992413a7603(
     *,
     add_layers: builtins.bool,
+    capture_cloud_service_payload: builtins.bool,
     capture_lambda_payload: builtins.bool,
     enable_datadog_asm: builtins.bool,
     enable_datadog_logs: builtins.bool,
@@ -4468,6 +4651,7 @@ def _typecheckingstub__dfc0e228d3d1e5a0c42fa76c959abedf019b9d4ede760018ef694f755
 def _typecheckingstub__bce7f515206c50e8fb1ec5d51a1f261f008e45a207781b3820caf1e40b9fabcb(
     *,
     cpu: typing.Optional[jsii.Number] = None,
+    firelens_options: typing.Optional[typing.Union[DatadogFirelensOptions, typing.Dict[builtins.str, typing.Any]]] = None,
     image_version: typing.Optional[builtins.str] = None,
     is_log_router_dependency_enabled: typing.Optional[builtins.bool] = None,
     is_log_router_essential: typing.Optional[builtins.bool] = None,

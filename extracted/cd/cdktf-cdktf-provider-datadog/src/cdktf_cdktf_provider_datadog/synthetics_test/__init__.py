@@ -1,7 +1,7 @@
 r'''
 # `datadog_synthetics_test`
 
-Refer to the Terraform Registry for docs: [`datadog_synthetics_test`](https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test).
+Refer to the Terraform Registry for docs: [`datadog_synthetics_test`](https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class SyntheticsTest(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-datadog.syntheticsTest.SyntheticsTest",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test datadog_synthetics_test}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test datadog_synthetics_test}.'''
 
     def __init__(
         self,
@@ -88,39 +88,39 @@ class SyntheticsTest(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test datadog_synthetics_test} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test datadog_synthetics_test} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param locations: Array of locations used to run the test. Refer to `the Datadog Synthetics location data source <https://registry.terraform.io/providers/DataDog/datadog/latest/docs/data-sources/synthetics_locations>`_ to retrieve the list of locations or find the possible values listed in `this API response <https://app.datadoghq.com/api/v1/synthetics/locations?only_public=true>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#locations SyntheticsTest#locations}
-        :param name: Name of Datadog synthetics test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param status: Define whether you want to start (``live``) or pause (``paused``) a Synthetic test. Valid values are ``live``, ``paused``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#status SyntheticsTest#status}
-        :param type: Synthetics test type. Valid values are ``api``, ``browser``, ``mobile``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param api_step: api_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#api_step SyntheticsTest#api_step}
-        :param assertion: assertion block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
-        :param browser_step: browser_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#browser_step SyntheticsTest#browser_step}
-        :param browser_variable: browser_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#browser_variable SyntheticsTest#browser_variable}
-        :param config_initial_application_arguments: Initial application arguments for the mobile test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#config_initial_application_arguments SyntheticsTest#config_initial_application_arguments}
-        :param config_variable: config_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#config_variable SyntheticsTest#config_variable}
-        :param device_ids: Required if ``type = "browser"``. Array with the different device IDs used to run the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}
-        :param force_delete_dependencies: A boolean indicating whether this synthetics test can be deleted even if it's referenced by other resources (for example, SLOs and composite monitors). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#force_delete_dependencies SyntheticsTest#force_delete_dependencies}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#id SyntheticsTest#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param message: A message to include with notifications for this synthetics test. Email notifications can be sent to specific users by using the same ``@username`` notation as events. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
-        :param mobile_options_list: mobile_options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_options_list SyntheticsTest#mobile_options_list}
-        :param mobile_step: mobile_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_step SyntheticsTest#mobile_step}
-        :param options_list: options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#options_list SyntheticsTest#options_list}
-        :param request_basicauth: request_basicauth block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
-        :param request_client_certificate: request_client_certificate block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
-        :param request_definition: request_definition block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
-        :param request_file: request_file block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
-        :param request_headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
-        :param request_metadata: Metadata to include when performing the gRPC request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
-        :param request_proxy: request_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
-        :param request_query: Query arguments name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
-        :param set_cookie: Cookies to be used for a browser test request, using the `Set-Cookie <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>`_ syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#set_cookie SyntheticsTest#set_cookie}
-        :param subtype: The subtype of the Synthetic API test. Defaults to ``http``. Valid values are ``http``, ``ssl``, ``tcp``, ``dns``, ``multi``, ``icmp``, ``udp``, ``websocket``, ``grpc``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
-        :param tags: A list of tags to associate with your synthetics test. This can help you categorize and filter tests in the manage synthetics page of the UI. Default is an empty list (``[]``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tags SyntheticsTest#tags}
-        :param variables_from_script: Variables defined from JavaScript code for API HTTP tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variables_from_script SyntheticsTest#variables_from_script}
+        :param locations: Array of locations used to run the test. Refer to `the Datadog Synthetics location data source <https://registry.terraform.io/providers/DataDog/datadog/latest/docs/data-sources/synthetics_locations>`_ to retrieve the list of locations or find the possible values listed in `this API response <https://app.datadoghq.com/api/v1/synthetics/locations?only_public=true>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#locations SyntheticsTest#locations}
+        :param name: Name of Datadog synthetics test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param status: Define whether you want to start (``live``) or pause (``paused``) a Synthetic test. Valid values are ``live``, ``paused``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#status SyntheticsTest#status}
+        :param type: Synthetics test type. Valid values are ``api``, ``browser``, ``mobile``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param api_step: api_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#api_step SyntheticsTest#api_step}
+        :param assertion: assertion block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
+        :param browser_step: browser_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#browser_step SyntheticsTest#browser_step}
+        :param browser_variable: browser_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#browser_variable SyntheticsTest#browser_variable}
+        :param config_initial_application_arguments: Initial application arguments for the mobile test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#config_initial_application_arguments SyntheticsTest#config_initial_application_arguments}
+        :param config_variable: config_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#config_variable SyntheticsTest#config_variable}
+        :param device_ids: Required if ``type = "browser"``. Array with the different device IDs used to run the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}
+        :param force_delete_dependencies: A boolean indicating whether this synthetics test can be deleted even if it's referenced by other resources (for example, SLOs and composite monitors). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#force_delete_dependencies SyntheticsTest#force_delete_dependencies}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#id SyntheticsTest#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param message: A message to include with notifications for this synthetics test. Email notifications can be sent to specific users by using the same ``@username`` notation as events. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        :param mobile_options_list: mobile_options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_options_list SyntheticsTest#mobile_options_list}
+        :param mobile_step: mobile_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_step SyntheticsTest#mobile_step}
+        :param options_list: options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#options_list SyntheticsTest#options_list}
+        :param request_basicauth: request_basicauth block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
+        :param request_client_certificate: request_client_certificate block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
+        :param request_definition: request_definition block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
+        :param request_file: request_file block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
+        :param request_headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
+        :param request_metadata: Metadata to include when performing the gRPC request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
+        :param request_proxy: request_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
+        :param request_query: Query arguments name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
+        :param set_cookie: Cookies to be used for a browser test request, using the `Set-Cookie <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>`_ syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#set_cookie SyntheticsTest#set_cookie}
+        :param subtype: The subtype of the Synthetic API test. Defaults to ``http``. Valid values are ``http``, ``ssl``, ``tcp``, ``dns``, ``multi``, ``icmp``, ``udp``, ``websocket``, ``grpc``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
+        :param tags: A list of tags to associate with your synthetics test. This can help you categorize and filter tests in the manage synthetics page of the UI. Default is an empty list (``[]``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tags SyntheticsTest#tags}
+        :param variables_from_script: Variables defined from JavaScript code for API HTTP tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variables_from_script SyntheticsTest#variables_from_script}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -187,7 +187,7 @@ class SyntheticsTest(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the SyntheticsTest to import.
-        :param import_from_id: The id of the existing SyntheticsTest that should be imported. Refer to the {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing SyntheticsTest that should be imported. Refer to the {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the SyntheticsTest to import is found.
         '''
         if __debug__:
@@ -286,23 +286,23 @@ class SyntheticsTest(
         verbosity: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param device_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}.
-        :param mobile_application: mobile_application block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_application SyntheticsTest#mobile_application}
-        :param tick_every: How often the test should run (in seconds). Valid range is ``300-604800`` for mobile tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
-        :param allow_application_crash: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_application_crash SyntheticsTest#allow_application_crash}.
-        :param bindings: bindings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#bindings SyntheticsTest#bindings}
-        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
-        :param default_step_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#default_step_timeout SyntheticsTest#default_step_timeout}.
-        :param disable_auto_accept_alert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_auto_accept_alert SyntheticsTest#disable_auto_accept_alert}.
-        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
-        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
-        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
-        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
-        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
-        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
-        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
-        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
-        :param verbosity: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#verbosity SyntheticsTest#verbosity}.
+        :param device_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}.
+        :param mobile_application: mobile_application block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_application SyntheticsTest#mobile_application}
+        :param tick_every: How often the test should run (in seconds). Valid range is ``300-604800`` for mobile tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
+        :param allow_application_crash: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_application_crash SyntheticsTest#allow_application_crash}.
+        :param bindings: bindings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#bindings SyntheticsTest#bindings}
+        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
+        :param default_step_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#default_step_timeout SyntheticsTest#default_step_timeout}.
+        :param disable_auto_accept_alert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_auto_accept_alert SyntheticsTest#disable_auto_accept_alert}.
+        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
+        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
+        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
+        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
+        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
+        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
+        :param verbosity: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#verbosity SyntheticsTest#verbosity}.
         '''
         value = SyntheticsTestMobileOptionsListStruct(
             device_ids=device_ids,
@@ -366,27 +366,27 @@ class SyntheticsTest(
         scheduling: typing.Optional[typing.Union["SyntheticsTestOptionsListScheduling", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param tick_every: How often the test should run (in seconds). Valid range is ``30-604800`` for API tests and ``60-604800`` for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
-        :param accept_self_signed: For SSL test, whether or not the test should allow self signed certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#accept_self_signed SyntheticsTest#accept_self_signed}
-        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
-        :param check_certificate_revocation: For SSL test, whether or not the test should fail on revoked certificate in stapled OCSP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check_certificate_revocation SyntheticsTest#check_certificate_revocation}
-        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
-        :param disable_cors: Disable Cross-Origin Resource Sharing for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_cors SyntheticsTest#disable_cors}
-        :param disable_csp: Disable Content Security Policy for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_csp SyntheticsTest#disable_csp}
-        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
-        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
-        :param ignore_server_certificate_error: Ignore server certificate error for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ignore_server_certificate_error SyntheticsTest#ignore_server_certificate_error}
-        :param initial_navigation_timeout: Timeout before declaring the initial step as failed (in seconds) for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#initial_navigation_timeout SyntheticsTest#initial_navigation_timeout}
-        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
-        :param min_location_failed: Minimum number of locations in failure required to trigger an alert. Defaults to ``1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_location_failed SyntheticsTest#min_location_failed}
-        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
-        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
-        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
-        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
-        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
-        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
-        :param rum_settings: rum_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#rum_settings SyntheticsTest#rum_settings}
-        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
+        :param tick_every: How often the test should run (in seconds). Valid range is ``30-604800`` for API tests and ``60-604800`` for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
+        :param accept_self_signed: For SSL test, whether or not the test should allow self signed certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#accept_self_signed SyntheticsTest#accept_self_signed}
+        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
+        :param check_certificate_revocation: For SSL test, whether or not the test should fail on revoked certificate in stapled OCSP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check_certificate_revocation SyntheticsTest#check_certificate_revocation}
+        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
+        :param disable_cors: Disable Cross-Origin Resource Sharing for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_cors SyntheticsTest#disable_cors}
+        :param disable_csp: Disable Content Security Policy for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_csp SyntheticsTest#disable_csp}
+        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
+        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        :param ignore_server_certificate_error: Ignore server certificate error for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ignore_server_certificate_error SyntheticsTest#ignore_server_certificate_error}
+        :param initial_navigation_timeout: Timeout before declaring the initial step as failed (in seconds) for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#initial_navigation_timeout SyntheticsTest#initial_navigation_timeout}
+        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
+        :param min_location_failed: Minimum number of locations in failure required to trigger an alert. Defaults to ``1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_location_failed SyntheticsTest#min_location_failed}
+        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
+        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
+        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
+        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
+        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        :param rum_settings: rum_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#rum_settings SyntheticsTest#rum_settings}
+        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
         '''
         value = SyntheticsTestOptionsListStruct(
             tick_every=tick_every,
@@ -437,23 +437,23 @@ class SyntheticsTest(
         workstation: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
-        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
-        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
-        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
-        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
-        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
-        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#password SyntheticsTest#password}
-        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#region SyntheticsTest#region}
-        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
-        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
-        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
-        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
-        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
-        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
-        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#username SyntheticsTest#username}
-        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
+        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
+        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
+        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
+        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
+        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
+        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
+        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#password SyntheticsTest#password}
+        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#region SyntheticsTest#region}
+        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
+        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
+        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
+        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
+        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
+        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
+        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#username SyntheticsTest#username}
+        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
         '''
         value = SyntheticsTestRequestBasicauth(
             access_key=access_key,
@@ -485,8 +485,8 @@ class SyntheticsTest(
         key: typing.Union["SyntheticsTestRequestClientCertificateKey", typing.Dict[builtins.str, typing.Any]],
     ) -> None:
         '''
-        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
-        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#key SyntheticsTest#key}
+        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
+        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#key SyntheticsTest#key}
         '''
         value = SyntheticsTestRequestClientCertificate(cert=cert, key=key)
 
@@ -519,27 +519,27 @@ class SyntheticsTest(
         url: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body SyntheticsTest#body}
-        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
-        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
-        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
-        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
-        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
-        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#host SyntheticsTest#host}
-        :param http_version: HTTP version to use for an HTTP request in an API test or step. **Deprecated.** Use ``http_version`` in the ``options_list`` field instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
-        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
-        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#method SyntheticsTest#method}
-        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
-        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
-        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
-        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
-        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#port SyntheticsTest#port}
-        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
-        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
-        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service SyntheticsTest#service}
-        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
-        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
-        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body SyntheticsTest#body}
+        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
+        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
+        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
+        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
+        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
+        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#host SyntheticsTest#host}
+        :param http_version: HTTP version to use for an HTTP request in an API test or step. **Deprecated.** Use ``http_version`` in the ``options_list`` field instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#method SyntheticsTest#method}
+        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
+        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
+        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
+        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
+        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#port SyntheticsTest#port}
+        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
+        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
+        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service SyntheticsTest#service}
+        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
+        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         value = SyntheticsTestRequestDefinition(
             body=body,
@@ -588,8 +588,8 @@ class SyntheticsTest(
         headers: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     ) -> None:
         '''
-        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
-        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
+        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
         '''
         value = SyntheticsTestRequestProxy(url=url, headers=headers)
 
@@ -1216,24 +1216,24 @@ class SyntheticsTestApiStep:
         value: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param name: The name of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param allow_failure: Determines whether or not to continue with test if this step fails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
-        :param assertion: assertion block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
-        :param exit_if_succeed: Determines whether or not to exit the test if the step succeeds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
-        :param extracted_value: extracted_value block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#extracted_value SyntheticsTest#extracted_value}
-        :param extracted_values_from_script: Generate variables using JavaScript. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#extracted_values_from_script SyntheticsTest#extracted_values_from_script}
-        :param is_critical: Determines whether or not to consider the entire test as failed if this step fails. Can be used only if ``allow_failure`` is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
-        :param request_basicauth: request_basicauth block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
-        :param request_client_certificate: request_client_certificate block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
-        :param request_definition: request_definition block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
-        :param request_file: request_file block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
-        :param request_headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
-        :param request_metadata: Metadata to include when performing the gRPC request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
-        :param request_proxy: request_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
-        :param request_query: Query arguments name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
-        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
-        :param subtype: The subtype of the Synthetic multi-step API test step. Valid values are ``http``, ``grpc``, ``wait``. Defaults to ``"http"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
-        :param value: The time to wait in seconds. Minimum value: 0. Maximum value: 180. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param name: The name of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param allow_failure: Determines whether or not to continue with test if this step fails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
+        :param assertion: assertion block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
+        :param exit_if_succeed: Determines whether or not to exit the test if the step succeeds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
+        :param extracted_value: extracted_value block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#extracted_value SyntheticsTest#extracted_value}
+        :param extracted_values_from_script: Generate variables using JavaScript. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#extracted_values_from_script SyntheticsTest#extracted_values_from_script}
+        :param is_critical: Determines whether or not to consider the entire test as failed if this step fails. Can be used only if ``allow_failure`` is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
+        :param request_basicauth: request_basicauth block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
+        :param request_client_certificate: request_client_certificate block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
+        :param request_definition: request_definition block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
+        :param request_file: request_file block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
+        :param request_headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
+        :param request_metadata: Metadata to include when performing the gRPC request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
+        :param request_proxy: request_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
+        :param request_query: Query arguments name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
+        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        :param subtype: The subtype of the Synthetic multi-step API test step. Valid values are ``http``, ``grpc``, ``wait``. Defaults to ``"http"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
+        :param value: The time to wait in seconds. Minimum value: 0. Maximum value: 180. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         if isinstance(request_basicauth, dict):
             request_basicauth = SyntheticsTestApiStepRequestBasicauth(**request_basicauth)
@@ -1307,7 +1307,7 @@ class SyntheticsTestApiStep:
     def name(self) -> builtins.str:
         '''The name of the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1319,7 +1319,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not to continue with test if this step fails.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
         '''
         result = self._values.get("allow_failure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1330,7 +1330,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestApiStepAssertion"]]]:
         '''assertion block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
         '''
         result = self._values.get("assertion")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestApiStepAssertion"]]], result)
@@ -1341,7 +1341,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not to exit the test if the step succeeds.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
         '''
         result = self._values.get("exit_if_succeed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1352,7 +1352,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestApiStepExtractedValue"]]]:
         '''extracted_value block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#extracted_value SyntheticsTest#extracted_value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#extracted_value SyntheticsTest#extracted_value}
         '''
         result = self._values.get("extracted_value")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestApiStepExtractedValue"]]], result)
@@ -1361,7 +1361,7 @@ class SyntheticsTestApiStep:
     def extracted_values_from_script(self) -> typing.Optional[builtins.str]:
         '''Generate variables using JavaScript.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#extracted_values_from_script SyntheticsTest#extracted_values_from_script}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#extracted_values_from_script SyntheticsTest#extracted_values_from_script}
         '''
         result = self._values.get("extracted_values_from_script")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1374,7 +1374,7 @@ class SyntheticsTestApiStep:
 
         Can be used only if ``allow_failure`` is ``true``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
         '''
         result = self._values.get("is_critical")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1385,7 +1385,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional["SyntheticsTestApiStepRequestBasicauth"]:
         '''request_basicauth block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
         '''
         result = self._values.get("request_basicauth")
         return typing.cast(typing.Optional["SyntheticsTestApiStepRequestBasicauth"], result)
@@ -1396,7 +1396,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional["SyntheticsTestApiStepRequestClientCertificate"]:
         '''request_client_certificate block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
         '''
         result = self._values.get("request_client_certificate")
         return typing.cast(typing.Optional["SyntheticsTestApiStepRequestClientCertificate"], result)
@@ -1407,7 +1407,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional["SyntheticsTestApiStepRequestDefinition"]:
         '''request_definition block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
         '''
         result = self._values.get("request_definition")
         return typing.cast(typing.Optional["SyntheticsTestApiStepRequestDefinition"], result)
@@ -1418,7 +1418,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestApiStepRequestFile"]]]:
         '''request_file block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
         '''
         result = self._values.get("request_file")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestApiStepRequestFile"]]], result)
@@ -1429,7 +1429,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Header name and value map.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
         '''
         result = self._values.get("request_headers")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1440,7 +1440,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Metadata to include when performing the gRPC request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
         '''
         result = self._values.get("request_metadata")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1449,7 +1449,7 @@ class SyntheticsTestApiStep:
     def request_proxy(self) -> typing.Optional["SyntheticsTestApiStepRequestProxy"]:
         '''request_proxy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
         '''
         result = self._values.get("request_proxy")
         return typing.cast(typing.Optional["SyntheticsTestApiStepRequestProxy"], result)
@@ -1460,7 +1460,7 @@ class SyntheticsTestApiStep:
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Query arguments name and value map.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
         '''
         result = self._values.get("request_query")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1469,7 +1469,7 @@ class SyntheticsTestApiStep:
     def retry(self) -> typing.Optional["SyntheticsTestApiStepRetry"]:
         '''retry block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
         '''
         result = self._values.get("retry")
         return typing.cast(typing.Optional["SyntheticsTestApiStepRetry"], result)
@@ -1478,7 +1478,7 @@ class SyntheticsTestApiStep:
     def subtype(self) -> typing.Optional[builtins.str]:
         '''The subtype of the Synthetic multi-step API test step. Valid values are ``http``, ``grpc``, ``wait``. Defaults to ``"http"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
         '''
         result = self._values.get("subtype")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1487,7 +1487,7 @@ class SyntheticsTestApiStep:
     def value(self) -> typing.Optional[jsii.Number]:
         '''The time to wait in seconds. Minimum value: 0. Maximum value: 180.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1534,15 +1534,15 @@ class SyntheticsTestApiStepAssertion:
         timings_scope: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Type of assertion. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Valid values are ``body``, ``header``, ``statusCode``, ``certificate``, ``responseTime``, ``property``, ``recordEvery``, ``recordSome``, ``tlsVersion``, ``minTlsVersion``, ``latency``, ``packetLossPercentage``, ``packetsReceived``, ``networkHop``, ``receivedMessage``, ``grpcHealthcheckStatus``, ``grpcMetadata``, ``grpcProto``, ``connection``, ``bodyHash``, ``javascript``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param code: If assertion type is ``javascript``, this is the JavaScript code that performs the assertions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#code SyntheticsTest#code}
-        :param operator: Assertion operator. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param property: If assertion type is ``header``, this is the header name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#property SyntheticsTest#property}
-        :param target: Expected value. Depends on the assertion type, refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_ for details. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#target SyntheticsTest#target}
-        :param targetjsonpath: targetjsonpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
-        :param targetjsonschema: targetjsonschema block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
-        :param targetxpath: targetxpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
-        :param timings_scope: Timings scope for response time assertions. Valid values are ``all``, ``withoutDNS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
+        :param type: Type of assertion. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Valid values are ``body``, ``header``, ``statusCode``, ``certificate``, ``responseTime``, ``property``, ``recordEvery``, ``recordSome``, ``tlsVersion``, ``minTlsVersion``, ``latency``, ``packetLossPercentage``, ``packetsReceived``, ``networkHop``, ``receivedMessage``, ``grpcHealthcheckStatus``, ``grpcMetadata``, ``grpcProto``, ``connection``, ``bodyHash``, ``javascript``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param code: If assertion type is ``javascript``, this is the JavaScript code that performs the assertions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#code SyntheticsTest#code}
+        :param operator: Assertion operator. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param property: If assertion type is ``header``, this is the header name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#property SyntheticsTest#property}
+        :param target: Expected value. Depends on the assertion type, refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_ for details. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#target SyntheticsTest#target}
+        :param targetjsonpath: targetjsonpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
+        :param targetjsonschema: targetjsonschema block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
+        :param targetxpath: targetxpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
+        :param timings_scope: Timings scope for response time assertions. Valid values are ``all``, ``withoutDNS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
         '''
         if isinstance(targetjsonpath, dict):
             targetjsonpath = SyntheticsTestApiStepAssertionTargetjsonpath(**targetjsonpath)
@@ -1587,7 +1587,7 @@ class SyntheticsTestApiStepAssertion:
 
         **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Valid values are ``body``, ``header``, ``statusCode``, ``certificate``, ``responseTime``, ``property``, ``recordEvery``, ``recordSome``, ``tlsVersion``, ``minTlsVersion``, ``latency``, ``packetLossPercentage``, ``packetsReceived``, ``networkHop``, ``receivedMessage``, ``grpcHealthcheckStatus``, ``grpcMetadata``, ``grpcProto``, ``connection``, ``bodyHash``, ``javascript``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -1597,7 +1597,7 @@ class SyntheticsTestApiStepAssertion:
     def code(self) -> typing.Optional[builtins.str]:
         '''If assertion type is ``javascript``, this is the JavaScript code that performs the assertions.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#code SyntheticsTest#code}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#code SyntheticsTest#code}
         '''
         result = self._values.get("code")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1606,7 +1606,7 @@ class SyntheticsTestApiStepAssertion:
     def operator(self) -> typing.Optional[builtins.str]:
         '''Assertion operator. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
         '''
         result = self._values.get("operator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1615,7 +1615,7 @@ class SyntheticsTestApiStepAssertion:
     def property(self) -> typing.Optional[builtins.str]:
         '''If assertion type is ``header``, this is the header name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#property SyntheticsTest#property}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#property SyntheticsTest#property}
         '''
         result = self._values.get("property")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1624,7 +1624,7 @@ class SyntheticsTestApiStepAssertion:
     def target(self) -> typing.Optional[builtins.str]:
         '''Expected value. Depends on the assertion type, refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_ for details.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#target SyntheticsTest#target}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#target SyntheticsTest#target}
         '''
         result = self._values.get("target")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1635,7 +1635,7 @@ class SyntheticsTestApiStepAssertion:
     ) -> typing.Optional["SyntheticsTestApiStepAssertionTargetjsonpath"]:
         '''targetjsonpath block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
         '''
         result = self._values.get("targetjsonpath")
         return typing.cast(typing.Optional["SyntheticsTestApiStepAssertionTargetjsonpath"], result)
@@ -1646,7 +1646,7 @@ class SyntheticsTestApiStepAssertion:
     ) -> typing.Optional["SyntheticsTestApiStepAssertionTargetjsonschema"]:
         '''targetjsonschema block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
         '''
         result = self._values.get("targetjsonschema")
         return typing.cast(typing.Optional["SyntheticsTestApiStepAssertionTargetjsonschema"], result)
@@ -1657,7 +1657,7 @@ class SyntheticsTestApiStepAssertion:
     ) -> typing.Optional["SyntheticsTestApiStepAssertionTargetxpath"]:
         '''targetxpath block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
         '''
         result = self._values.get("targetxpath")
         return typing.cast(typing.Optional["SyntheticsTestApiStepAssertionTargetxpath"], result)
@@ -1666,7 +1666,7 @@ class SyntheticsTestApiStepAssertion:
     def timings_scope(self) -> typing.Optional[builtins.str]:
         '''Timings scope for response time assertions. Valid values are ``all``, ``withoutDNS``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
         '''
         result = self._values.get("timings_scope")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1812,10 +1812,10 @@ class SyntheticsTestApiStepAssertionOutputReference(
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         value = SyntheticsTestApiStepAssertionTargetjsonpath(
             jsonpath=jsonpath,
@@ -1834,8 +1834,8 @@ class SyntheticsTestApiStepAssertionOutputReference(
         metaschema: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
-        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
+        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
+        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
         '''
         value = SyntheticsTestApiStepAssertionTargetjsonschema(
             jsonschema=jsonschema, metaschema=metaschema
@@ -1852,9 +1852,9 @@ class SyntheticsTestApiStepAssertionOutputReference(
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         value = SyntheticsTestApiStepAssertionTargetxpath(
             operator=operator, xpath=xpath, targetvalue=targetvalue
@@ -2074,10 +2074,10 @@ class SyntheticsTestApiStepAssertionTargetjsonpath:
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__2b97ecd6f8f6690d295820867eb452b459246ac3638f37f79ab32a2811771e79)
@@ -2098,7 +2098,7 @@ class SyntheticsTestApiStepAssertionTargetjsonpath:
     def jsonpath(self) -> builtins.str:
         '''The JSON path to assert.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
         '''
         result = self._values.get("jsonpath")
         assert result is not None, "Required property 'jsonpath' is missing"
@@ -2108,7 +2108,7 @@ class SyntheticsTestApiStepAssertionTargetjsonpath:
     def operator(self) -> builtins.str:
         '''The specific operator to use on the path.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
         '''
         result = self._values.get("operator")
         assert result is not None, "Required property 'operator' is missing"
@@ -2120,7 +2120,7 @@ class SyntheticsTestApiStepAssertionTargetjsonpath:
 
         Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
         '''
         result = self._values.get("elementsoperator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2129,7 +2129,7 @@ class SyntheticsTestApiStepAssertionTargetjsonpath:
     def targetvalue(self) -> typing.Optional[builtins.str]:
         '''Expected matching value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         result = self._values.get("targetvalue")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2273,8 +2273,8 @@ class SyntheticsTestApiStepAssertionTargetjsonschema:
         metaschema: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
-        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
+        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
+        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8695556f439b1ee08e568cbe3907ff108550897aeb0dc7ce6afcadf291e38c3c)
@@ -2290,7 +2290,7 @@ class SyntheticsTestApiStepAssertionTargetjsonschema:
     def jsonschema(self) -> builtins.str:
         '''The JSON Schema to validate the body against.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
         '''
         result = self._values.get("jsonschema")
         assert result is not None, "Required property 'jsonschema' is missing"
@@ -2300,7 +2300,7 @@ class SyntheticsTestApiStepAssertionTargetjsonschema:
     def metaschema(self) -> typing.Optional[builtins.str]:
         '''The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
         '''
         result = self._values.get("metaschema")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2411,9 +2411,9 @@ class SyntheticsTestApiStepAssertionTargetxpath:
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b5f9cf4825faa95d883e253dac4201a721a1f912ba9f5d3b75d1d6153ef3f757)
@@ -2431,7 +2431,7 @@ class SyntheticsTestApiStepAssertionTargetxpath:
     def operator(self) -> builtins.str:
         '''The specific operator to use on the path.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
         '''
         result = self._values.get("operator")
         assert result is not None, "Required property 'operator' is missing"
@@ -2441,7 +2441,7 @@ class SyntheticsTestApiStepAssertionTargetxpath:
     def xpath(self) -> builtins.str:
         '''The xpath to assert.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
         '''
         result = self._values.get("xpath")
         assert result is not None, "Required property 'xpath' is missing"
@@ -2451,7 +2451,7 @@ class SyntheticsTestApiStepAssertionTargetxpath:
     def targetvalue(self) -> typing.Optional[builtins.str]:
         '''Expected matching value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         result = self._values.get("targetvalue")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2583,11 +2583,11 @@ class SyntheticsTestApiStepExtractedValue:
         secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}.
-        :param parser: parser block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#parser SyntheticsTest#parser}
-        :param type: Property of the Synthetics Test Response to use for the variable. Valid values are ``grpc_message``, ``grpc_metadata``, ``http_body``, ``http_header``, ``http_status_code``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param field: When type is ``http_header`` or ``grpc_metadata``, name of the header or metadatum to extract. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#field SyntheticsTest#field}
-        :param secure: Determines whether or not the extracted value will be obfuscated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}.
+        :param parser: parser block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#parser SyntheticsTest#parser}
+        :param type: Property of the Synthetics Test Response to use for the variable. Valid values are ``grpc_message``, ``grpc_metadata``, ``http_body``, ``http_header``, ``http_status_code``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param field: When type is ``http_header`` or ``grpc_metadata``, name of the header or metadatum to extract. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#field SyntheticsTest#field}
+        :param secure: Determines whether or not the extracted value will be obfuscated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         if isinstance(parser, dict):
             parser = SyntheticsTestApiStepExtractedValueParser(**parser)
@@ -2610,7 +2610,7 @@ class SyntheticsTestApiStepExtractedValue:
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
@@ -2619,7 +2619,7 @@ class SyntheticsTestApiStepExtractedValue:
     def parser(self) -> "SyntheticsTestApiStepExtractedValueParser":
         '''parser block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#parser SyntheticsTest#parser}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#parser SyntheticsTest#parser}
         '''
         result = self._values.get("parser")
         assert result is not None, "Required property 'parser' is missing"
@@ -2629,7 +2629,7 @@ class SyntheticsTestApiStepExtractedValue:
     def type(self) -> builtins.str:
         '''Property of the Synthetics Test Response to use for the variable. Valid values are ``grpc_message``, ``grpc_metadata``, ``http_body``, ``http_header``, ``http_status_code``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -2639,7 +2639,7 @@ class SyntheticsTestApiStepExtractedValue:
     def field(self) -> typing.Optional[builtins.str]:
         '''When type is ``http_header`` or ``grpc_metadata``, name of the header or metadatum to extract.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#field SyntheticsTest#field}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#field SyntheticsTest#field}
         '''
         result = self._values.get("field")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2650,7 +2650,7 @@ class SyntheticsTestApiStepExtractedValue:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not the extracted value will be obfuscated.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         result = self._values.get("secure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2794,8 +2794,8 @@ class SyntheticsTestApiStepExtractedValueOutputReference(
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Type of parser for a Synthetics global variable from a synthetics test. Valid values are ``raw``, ``json_path``, ``regex``, ``x_path``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param value: Regex or JSON path used for the parser. Not used with type ``raw``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param type: Type of parser for a Synthetics global variable from a synthetics test. Valid values are ``raw``, ``json_path``, ``regex``, ``x_path``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param value: Regex or JSON path used for the parser. Not used with type ``raw``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         value_ = SyntheticsTestApiStepExtractedValueParser(type=type, value=value)
 
@@ -2925,8 +2925,8 @@ class SyntheticsTestApiStepExtractedValueParser:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Type of parser for a Synthetics global variable from a synthetics test. Valid values are ``raw``, ``json_path``, ``regex``, ``x_path``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param value: Regex or JSON path used for the parser. Not used with type ``raw``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param type: Type of parser for a Synthetics global variable from a synthetics test. Valid values are ``raw``, ``json_path``, ``regex``, ``x_path``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param value: Regex or JSON path used for the parser. Not used with type ``raw``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__72132190b1edd060e0da4e8a08bf4c498251b2734b641c00cd49348a5d1d235a)
@@ -2942,7 +2942,7 @@ class SyntheticsTestApiStepExtractedValueParser:
     def type(self) -> builtins.str:
         '''Type of parser for a Synthetics global variable from a synthetics test. Valid values are ``raw``, ``json_path``, ``regex``, ``x_path``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -2952,7 +2952,7 @@ class SyntheticsTestApiStepExtractedValueParser:
     def value(self) -> typing.Optional[builtins.str]:
         '''Regex or JSON path used for the parser. Not used with type ``raw``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3210,23 +3210,23 @@ class SyntheticsTestApiStepOutputReference(
         workstation: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
-        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
-        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
-        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
-        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
-        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
-        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#password SyntheticsTest#password}
-        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#region SyntheticsTest#region}
-        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
-        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
-        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
-        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
-        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
-        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
-        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#username SyntheticsTest#username}
-        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
+        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
+        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
+        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
+        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
+        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
+        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
+        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#password SyntheticsTest#password}
+        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#region SyntheticsTest#region}
+        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
+        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
+        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
+        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
+        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
+        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
+        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#username SyntheticsTest#username}
+        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
         '''
         value = SyntheticsTestApiStepRequestBasicauth(
             access_key=access_key,
@@ -3258,8 +3258,8 @@ class SyntheticsTestApiStepOutputReference(
         key: typing.Union["SyntheticsTestApiStepRequestClientCertificateKey", typing.Dict[builtins.str, typing.Any]],
     ) -> None:
         '''
-        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
-        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#key SyntheticsTest#key}
+        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
+        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#key SyntheticsTest#key}
         '''
         value = SyntheticsTestApiStepRequestClientCertificate(cert=cert, key=key)
 
@@ -3294,29 +3294,29 @@ class SyntheticsTestApiStepOutputReference(
         url: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
-        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body SyntheticsTest#body}
-        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
-        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
-        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
-        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
-        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
-        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
-        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#host SyntheticsTest#host}
-        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
-        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
-        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#method SyntheticsTest#method}
-        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
-        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
-        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
-        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
-        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#port SyntheticsTest#port}
-        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
-        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
-        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service SyntheticsTest#service}
-        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
-        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
-        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
+        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body SyntheticsTest#body}
+        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
+        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
+        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
+        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
+        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
+        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
+        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#host SyntheticsTest#host}
+        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#method SyntheticsTest#method}
+        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
+        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
+        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
+        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
+        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#port SyntheticsTest#port}
+        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
+        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
+        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service SyntheticsTest#service}
+        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
+        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         value = SyntheticsTestApiStepRequestDefinition(
             allow_insecure=allow_insecure,
@@ -3367,8 +3367,8 @@ class SyntheticsTestApiStepOutputReference(
         headers: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     ) -> None:
         '''
-        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
-        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
+        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
         '''
         value = SyntheticsTestApiStepRequestProxy(url=url, headers=headers)
 
@@ -3382,8 +3382,8 @@ class SyntheticsTestApiStepOutputReference(
         interval: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
-        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         value = SyntheticsTestApiStepRetry(count=count, interval=interval)
 
@@ -3820,23 +3820,23 @@ class SyntheticsTestApiStepRequestBasicauth:
         workstation: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
-        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
-        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
-        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
-        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
-        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
-        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#password SyntheticsTest#password}
-        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#region SyntheticsTest#region}
-        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
-        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
-        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
-        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
-        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
-        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
-        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#username SyntheticsTest#username}
-        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
+        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
+        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
+        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
+        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
+        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
+        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
+        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#password SyntheticsTest#password}
+        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#region SyntheticsTest#region}
+        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
+        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
+        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
+        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
+        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
+        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
+        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#username SyntheticsTest#username}
+        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c9bb439d9854a2545b5777d4f0fb088cccf632bb73dc99896dd5e3db37d2abcd)
@@ -3897,7 +3897,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def access_key(self) -> typing.Optional[builtins.str]:
         '''Access key for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
         '''
         result = self._values.get("access_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3906,7 +3906,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def access_token_url(self) -> typing.Optional[builtins.str]:
         '''Access token url for ``oauth-client`` or ``oauth-rop`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
         '''
         result = self._values.get("access_token_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3915,7 +3915,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def audience(self) -> typing.Optional[builtins.str]:
         '''Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
         '''
         result = self._values.get("audience")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3924,7 +3924,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def client_id(self) -> typing.Optional[builtins.str]:
         '''Client ID for ``oauth-client`` or ``oauth-rop`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
         '''
         result = self._values.get("client_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3933,7 +3933,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def client_secret(self) -> typing.Optional[builtins.str]:
         '''Client secret for ``oauth-client`` or ``oauth-rop`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
         '''
         result = self._values.get("client_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3942,7 +3942,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def domain(self) -> typing.Optional[builtins.str]:
         '''Domain for ``ntlm`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
         '''
         result = self._values.get("domain")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3951,7 +3951,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def password(self) -> typing.Optional[builtins.str]:
         '''Password for authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#password SyntheticsTest#password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#password SyntheticsTest#password}
         '''
         result = self._values.get("password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3960,7 +3960,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def region(self) -> typing.Optional[builtins.str]:
         '''Region for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#region SyntheticsTest#region}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#region SyntheticsTest#region}
         '''
         result = self._values.get("region")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3969,7 +3969,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def resource(self) -> typing.Optional[builtins.str]:
         '''Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
         '''
         result = self._values.get("resource")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3978,7 +3978,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def scope(self) -> typing.Optional[builtins.str]:
         '''Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
         '''
         result = self._values.get("scope")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3987,7 +3987,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def secret_key(self) -> typing.Optional[builtins.str]:
         '''Secret key for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
         '''
         result = self._values.get("secret_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3996,7 +3996,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def service_name(self) -> typing.Optional[builtins.str]:
         '''Service name for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
         '''
         result = self._values.get("service_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4005,7 +4005,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def session_token(self) -> typing.Optional[builtins.str]:
         '''Session token for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
         '''
         result = self._values.get("session_token")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4014,7 +4014,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def token_api_authentication(self) -> typing.Optional[builtins.str]:
         '''Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
         '''
         result = self._values.get("token_api_authentication")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4023,7 +4023,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def type(self) -> typing.Optional[builtins.str]:
         '''Type of basic authentication to use when performing the test. Defaults to ``"web"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4032,7 +4032,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def username(self) -> typing.Optional[builtins.str]:
         '''Username for authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#username SyntheticsTest#username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#username SyntheticsTest#username}
         '''
         result = self._values.get("username")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4041,7 +4041,7 @@ class SyntheticsTestApiStepRequestBasicauth:
     def workstation(self) -> typing.Optional[builtins.str]:
         '''Workstation for ``ntlm`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
         '''
         result = self._values.get("workstation")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4464,8 +4464,8 @@ class SyntheticsTestApiStepRequestClientCertificate:
         key: typing.Union["SyntheticsTestApiStepRequestClientCertificateKey", typing.Dict[builtins.str, typing.Any]],
     ) -> None:
         '''
-        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
-        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#key SyntheticsTest#key}
+        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
+        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#key SyntheticsTest#key}
         '''
         if isinstance(cert, dict):
             cert = SyntheticsTestApiStepRequestClientCertificateCert(**cert)
@@ -4484,7 +4484,7 @@ class SyntheticsTestApiStepRequestClientCertificate:
     def cert(self) -> "SyntheticsTestApiStepRequestClientCertificateCert":
         '''cert block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
         '''
         result = self._values.get("cert")
         assert result is not None, "Required property 'cert' is missing"
@@ -4494,7 +4494,7 @@ class SyntheticsTestApiStepRequestClientCertificate:
     def key(self) -> "SyntheticsTestApiStepRequestClientCertificateKey":
         '''key block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#key SyntheticsTest#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#key SyntheticsTest#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -4525,8 +4525,8 @@ class SyntheticsTestApiStepRequestClientCertificateCert:
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e4fddecf4d78c19ae0771bb4c5b3e6cb3894f08b8be59845ffc55016392bec19)
@@ -4542,7 +4542,7 @@ class SyntheticsTestApiStepRequestClientCertificateCert:
     def content(self) -> builtins.str:
         '''Content of the certificate.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
         '''
         result = self._values.get("content")
         assert result is not None, "Required property 'content' is missing"
@@ -4552,7 +4552,7 @@ class SyntheticsTestApiStepRequestClientCertificateCert:
     def filename(self) -> typing.Optional[builtins.str]:
         '''File name for the certificate. Defaults to ``"Provided in Terraform config"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         result = self._values.get("filename")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4658,8 +4658,8 @@ class SyntheticsTestApiStepRequestClientCertificateKey:
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__56d7577c3911479f67bd42bb852e440b956110cdfe556b12fb49e784db7fc663)
@@ -4675,7 +4675,7 @@ class SyntheticsTestApiStepRequestClientCertificateKey:
     def content(self) -> builtins.str:
         '''Content of the certificate.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
         '''
         result = self._values.get("content")
         assert result is not None, "Required property 'content' is missing"
@@ -4685,7 +4685,7 @@ class SyntheticsTestApiStepRequestClientCertificateKey:
     def filename(self) -> typing.Optional[builtins.str]:
         '''File name for the certificate. Defaults to ``"Provided in Terraform config"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         result = self._values.get("filename")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4806,8 +4806,8 @@ class SyntheticsTestApiStepRequestClientCertificateOutputReference(
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         value = SyntheticsTestApiStepRequestClientCertificateCert(
             content=content, filename=filename
@@ -4823,8 +4823,8 @@ class SyntheticsTestApiStepRequestClientCertificateOutputReference(
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         value = SyntheticsTestApiStepRequestClientCertificateKey(
             content=content, filename=filename
@@ -4932,29 +4932,29 @@ class SyntheticsTestApiStepRequestDefinition:
         url: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
-        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body SyntheticsTest#body}
-        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
-        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
-        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
-        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
-        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
-        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
-        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#host SyntheticsTest#host}
-        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
-        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
-        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#method SyntheticsTest#method}
-        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
-        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
-        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
-        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
-        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#port SyntheticsTest#port}
-        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
-        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
-        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service SyntheticsTest#service}
-        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
-        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
-        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
+        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body SyntheticsTest#body}
+        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
+        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
+        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
+        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
+        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
+        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
+        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#host SyntheticsTest#host}
+        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#method SyntheticsTest#method}
+        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
+        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
+        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
+        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
+        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#port SyntheticsTest#port}
+        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
+        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
+        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service SyntheticsTest#service}
+        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
+        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__81b7ecad871d76c1341fe87074869bbb285be183268adba97a18604dd499f279)
@@ -5035,7 +5035,7 @@ class SyntheticsTestApiStepRequestDefinition:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Allows loading insecure content for a request in an API test or in a multistep API test step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
         '''
         result = self._values.get("allow_insecure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5044,7 +5044,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def body(self) -> typing.Optional[builtins.str]:
         '''The request body.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body SyntheticsTest#body}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body SyntheticsTest#body}
         '''
         result = self._values.get("body")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5053,7 +5053,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def body_type(self) -> typing.Optional[builtins.str]:
         '''Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
         '''
         result = self._values.get("body_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5062,7 +5062,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def call_type(self) -> typing.Optional[builtins.str]:
         '''The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
         '''
         result = self._values.get("call_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5073,7 +5073,7 @@ class SyntheticsTestApiStepRequestDefinition:
 
         If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
         '''
         result = self._values.get("certificate_domains")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5082,7 +5082,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def dns_server(self) -> typing.Optional[builtins.str]:
         '''DNS server to use for DNS tests (``subtype = "dns"``).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
         '''
         result = self._values.get("dns_server")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5091,7 +5091,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def dns_server_port(self) -> typing.Optional[builtins.str]:
         '''DNS server port to use for DNS tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
         '''
         result = self._values.get("dns_server_port")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5102,7 +5102,7 @@ class SyntheticsTestApiStepRequestDefinition:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not the API HTTP test should follow redirects.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
         '''
         result = self._values.get("follow_redirects")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5111,7 +5111,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def host(self) -> typing.Optional[builtins.str]:
         '''Host name to perform the test with.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#host SyntheticsTest#host}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#host SyntheticsTest#host}
         '''
         result = self._values.get("host")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5122,7 +5122,7 @@ class SyntheticsTestApiStepRequestDefinition:
 
         Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
         '''
         result = self._values.get("http_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5131,7 +5131,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def message(self) -> typing.Optional[builtins.str]:
         '''For UDP and websocket tests, message to send with the request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
         '''
         result = self._values.get("message")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5142,7 +5142,7 @@ class SyntheticsTestApiStepRequestDefinition:
 
         Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#method SyntheticsTest#method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#method SyntheticsTest#method}
         '''
         result = self._values.get("method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5153,7 +5153,7 @@ class SyntheticsTestApiStepRequestDefinition:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not to save the response body.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
         '''
         result = self._values.get("no_saving_response_body")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5162,7 +5162,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def number_of_packets(self) -> typing.Optional[jsii.Number]:
         '''Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
         '''
         result = self._values.get("number_of_packets")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -5173,7 +5173,7 @@ class SyntheticsTestApiStepRequestDefinition:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Persist cookies across redirects.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
         '''
         result = self._values.get("persist_cookies")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5182,7 +5182,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def plain_proto_file(self) -> typing.Optional[builtins.str]:
         '''The content of a proto file as a string.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
         '''
         result = self._values.get("plain_proto_file")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5191,7 +5191,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def port(self) -> typing.Optional[builtins.str]:
         '''Port to use when performing the test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#port SyntheticsTest#port}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#port SyntheticsTest#port}
         '''
         result = self._values.get("port")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5200,7 +5200,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def proto_json_descriptor(self) -> typing.Optional[builtins.str]:
         '''A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
         '''
         result = self._values.get("proto_json_descriptor")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5209,7 +5209,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def servername(self) -> typing.Optional[builtins.str]:
         '''For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
         '''
         result = self._values.get("servername")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5218,7 +5218,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def service(self) -> typing.Optional[builtins.str]:
         '''The gRPC service on which you want to perform the gRPC call.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service SyntheticsTest#service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service SyntheticsTest#service}
         '''
         result = self._values.get("service")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5231,7 +5231,7 @@ class SyntheticsTestApiStepRequestDefinition:
 
         For ICMP tests (``subtype = "icmp"``).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
         '''
         result = self._values.get("should_track_hops")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5240,7 +5240,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def timeout(self) -> typing.Optional[jsii.Number]:
         '''Timeout in seconds for the test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
         '''
         result = self._values.get("timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -5249,7 +5249,7 @@ class SyntheticsTestApiStepRequestDefinition:
     def url(self) -> typing.Optional[builtins.str]:
         '''The URL to send the request to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         result = self._values.get("url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5842,11 +5842,11 @@ class SyntheticsTestApiStepRequestFile:
         original_file_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param size: Size of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#size SyntheticsTest#size}
-        :param type: Type of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param content: Content of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param original_file_name: Original name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
+        :param name: Name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param size: Size of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#size SyntheticsTest#size}
+        :param type: Type of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param content: Content of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param original_file_name: Original name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__43009123cbf96a0c71a00cd245bbffa29ed4c4ef41a3674598b9ff20dc6cd7b3)
@@ -5869,7 +5869,7 @@ class SyntheticsTestApiStepRequestFile:
     def name(self) -> builtins.str:
         '''Name of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -5879,7 +5879,7 @@ class SyntheticsTestApiStepRequestFile:
     def size(self) -> jsii.Number:
         '''Size of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#size SyntheticsTest#size}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#size SyntheticsTest#size}
         '''
         result = self._values.get("size")
         assert result is not None, "Required property 'size' is missing"
@@ -5889,7 +5889,7 @@ class SyntheticsTestApiStepRequestFile:
     def type(self) -> builtins.str:
         '''Type of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -5899,7 +5899,7 @@ class SyntheticsTestApiStepRequestFile:
     def content(self) -> typing.Optional[builtins.str]:
         '''Content of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
         '''
         result = self._values.get("content")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5908,7 +5908,7 @@ class SyntheticsTestApiStepRequestFile:
     def original_file_name(self) -> typing.Optional[builtins.str]:
         '''Original name of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
         '''
         result = self._values.get("original_file_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6173,8 +6173,8 @@ class SyntheticsTestApiStepRequestProxy:
         headers: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     ) -> None:
         '''
-        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
-        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
+        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4a6b586490c6a8eb4ac03c07e0eec300cc3c452c48a3314c03726537e9a717e1)
@@ -6190,7 +6190,7 @@ class SyntheticsTestApiStepRequestProxy:
     def url(self) -> builtins.str:
         '''URL of the proxy to perform the test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
@@ -6200,7 +6200,7 @@ class SyntheticsTestApiStepRequestProxy:
     def headers(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Header name and value map.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
         '''
         result = self._values.get("headers")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -6306,8 +6306,8 @@ class SyntheticsTestApiStepRetry:
         interval: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
-        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__93202b1ed0aba7204e0eb616c5b350e597a30b5352d2eb607f00173a80d523db)
@@ -6325,7 +6325,7 @@ class SyntheticsTestApiStepRetry:
 
         Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
         '''
         result = self._values.get("count")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -6334,7 +6334,7 @@ class SyntheticsTestApiStepRetry:
     def interval(self) -> typing.Optional[jsii.Number]:
         '''Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         result = self._values.get("interval")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -6459,15 +6459,15 @@ class SyntheticsTestAssertion:
         timings_scope: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Type of assertion. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Valid values are ``body``, ``header``, ``statusCode``, ``certificate``, ``responseTime``, ``property``, ``recordEvery``, ``recordSome``, ``tlsVersion``, ``minTlsVersion``, ``latency``, ``packetLossPercentage``, ``packetsReceived``, ``networkHop``, ``receivedMessage``, ``grpcHealthcheckStatus``, ``grpcMetadata``, ``grpcProto``, ``connection``, ``bodyHash``, ``javascript``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param code: If assertion type is ``javascript``, this is the JavaScript code that performs the assertions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#code SyntheticsTest#code}
-        :param operator: Assertion operator. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param property: If assertion type is ``header``, this is the header name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#property SyntheticsTest#property}
-        :param target: Expected value. Depends on the assertion type, refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_ for details. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#target SyntheticsTest#target}
-        :param targetjsonpath: targetjsonpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
-        :param targetjsonschema: targetjsonschema block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
-        :param targetxpath: targetxpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
-        :param timings_scope: Timings scope for response time assertions. Valid values are ``all``, ``withoutDNS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
+        :param type: Type of assertion. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Valid values are ``body``, ``header``, ``statusCode``, ``certificate``, ``responseTime``, ``property``, ``recordEvery``, ``recordSome``, ``tlsVersion``, ``minTlsVersion``, ``latency``, ``packetLossPercentage``, ``packetsReceived``, ``networkHop``, ``receivedMessage``, ``grpcHealthcheckStatus``, ``grpcMetadata``, ``grpcProto``, ``connection``, ``bodyHash``, ``javascript``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param code: If assertion type is ``javascript``, this is the JavaScript code that performs the assertions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#code SyntheticsTest#code}
+        :param operator: Assertion operator. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param property: If assertion type is ``header``, this is the header name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#property SyntheticsTest#property}
+        :param target: Expected value. Depends on the assertion type, refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_ for details. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#target SyntheticsTest#target}
+        :param targetjsonpath: targetjsonpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
+        :param targetjsonschema: targetjsonschema block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
+        :param targetxpath: targetxpath block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
+        :param timings_scope: Timings scope for response time assertions. Valid values are ``all``, ``withoutDNS``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
         '''
         if isinstance(targetjsonpath, dict):
             targetjsonpath = SyntheticsTestAssertionTargetjsonpath(**targetjsonpath)
@@ -6512,7 +6512,7 @@ class SyntheticsTestAssertion:
 
         **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_). Valid values are ``body``, ``header``, ``statusCode``, ``certificate``, ``responseTime``, ``property``, ``recordEvery``, ``recordSome``, ``tlsVersion``, ``minTlsVersion``, ``latency``, ``packetLossPercentage``, ``packetsReceived``, ``networkHop``, ``receivedMessage``, ``grpcHealthcheckStatus``, ``grpcMetadata``, ``grpcProto``, ``connection``, ``bodyHash``, ``javascript``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -6522,7 +6522,7 @@ class SyntheticsTestAssertion:
     def code(self) -> typing.Optional[builtins.str]:
         '''If assertion type is ``javascript``, this is the JavaScript code that performs the assertions.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#code SyntheticsTest#code}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#code SyntheticsTest#code}
         '''
         result = self._values.get("code")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6531,7 +6531,7 @@ class SyntheticsTestAssertion:
     def operator(self) -> typing.Optional[builtins.str]:
         '''Assertion operator. **Note** Only some combinations of ``type`` and ``operator`` are valid (please refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
         '''
         result = self._values.get("operator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6540,7 +6540,7 @@ class SyntheticsTestAssertion:
     def property(self) -> typing.Optional[builtins.str]:
         '''If assertion type is ``header``, this is the header name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#property SyntheticsTest#property}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#property SyntheticsTest#property}
         '''
         result = self._values.get("property")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6549,7 +6549,7 @@ class SyntheticsTestAssertion:
     def target(self) -> typing.Optional[builtins.str]:
         '''Expected value. Depends on the assertion type, refer to `Datadog documentation <https://docs.datadoghq.com/api/latest/synthetics/#create-a-test>`_ for details.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#target SyntheticsTest#target}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#target SyntheticsTest#target}
         '''
         result = self._values.get("target")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6560,7 +6560,7 @@ class SyntheticsTestAssertion:
     ) -> typing.Optional["SyntheticsTestAssertionTargetjsonpath"]:
         '''targetjsonpath block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonpath SyntheticsTest#targetjsonpath}
         '''
         result = self._values.get("targetjsonpath")
         return typing.cast(typing.Optional["SyntheticsTestAssertionTargetjsonpath"], result)
@@ -6571,7 +6571,7 @@ class SyntheticsTestAssertion:
     ) -> typing.Optional["SyntheticsTestAssertionTargetjsonschema"]:
         '''targetjsonschema block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetjsonschema SyntheticsTest#targetjsonschema}
         '''
         result = self._values.get("targetjsonschema")
         return typing.cast(typing.Optional["SyntheticsTestAssertionTargetjsonschema"], result)
@@ -6580,7 +6580,7 @@ class SyntheticsTestAssertion:
     def targetxpath(self) -> typing.Optional["SyntheticsTestAssertionTargetxpath"]:
         '''targetxpath block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetxpath SyntheticsTest#targetxpath}
         '''
         result = self._values.get("targetxpath")
         return typing.cast(typing.Optional["SyntheticsTestAssertionTargetxpath"], result)
@@ -6589,7 +6589,7 @@ class SyntheticsTestAssertion:
     def timings_scope(self) -> typing.Optional[builtins.str]:
         '''Timings scope for response time assertions. Valid values are ``all``, ``withoutDNS``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timings_scope SyntheticsTest#timings_scope}
         '''
         result = self._values.get("timings_scope")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6732,10 +6732,10 @@ class SyntheticsTestAssertionOutputReference(
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         value = SyntheticsTestAssertionTargetjsonpath(
             jsonpath=jsonpath,
@@ -6754,8 +6754,8 @@ class SyntheticsTestAssertionOutputReference(
         metaschema: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
-        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
+        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
+        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
         '''
         value = SyntheticsTestAssertionTargetjsonschema(
             jsonschema=jsonschema, metaschema=metaschema
@@ -6772,9 +6772,9 @@ class SyntheticsTestAssertionOutputReference(
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         value = SyntheticsTestAssertionTargetxpath(
             operator=operator, xpath=xpath, targetvalue=targetvalue
@@ -6992,10 +6992,10 @@ class SyntheticsTestAssertionTargetjsonpath:
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param jsonpath: The JSON path to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param elementsoperator: The element from the list of results to assert on. Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1ffa57513c222e27013d3b57a97355879b583001e6995c55ec6b2d102a0973c5)
@@ -7016,7 +7016,7 @@ class SyntheticsTestAssertionTargetjsonpath:
     def jsonpath(self) -> builtins.str:
         '''The JSON path to assert.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonpath SyntheticsTest#jsonpath}
         '''
         result = self._values.get("jsonpath")
         assert result is not None, "Required property 'jsonpath' is missing"
@@ -7026,7 +7026,7 @@ class SyntheticsTestAssertionTargetjsonpath:
     def operator(self) -> builtins.str:
         '''The specific operator to use on the path.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
         '''
         result = self._values.get("operator")
         assert result is not None, "Required property 'operator' is missing"
@@ -7038,7 +7038,7 @@ class SyntheticsTestAssertionTargetjsonpath:
 
         Select from ``firstElementMatches`` (the first element in the list), ``everyElementMatches`` (every element in the list), ``atLeastOneElementMatches`` (at least one element in the list), or ``serializationMatches`` (the serialized value of the list). Defaults to ``"firstElementMatches"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#elementsoperator SyntheticsTest#elementsoperator}
         '''
         result = self._values.get("elementsoperator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7047,7 +7047,7 @@ class SyntheticsTestAssertionTargetjsonpath:
     def targetvalue(self) -> typing.Optional[builtins.str]:
         '''Expected matching value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         result = self._values.get("targetvalue")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7189,8 +7189,8 @@ class SyntheticsTestAssertionTargetjsonschema:
         metaschema: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
-        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
+        :param jsonschema: The JSON Schema to validate the body against. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
+        :param metaschema: The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b83716d699b6c48aac9fc9bab631a037fdd5856944f629a3ede467ac8f166c75)
@@ -7206,7 +7206,7 @@ class SyntheticsTestAssertionTargetjsonschema:
     def jsonschema(self) -> builtins.str:
         '''The JSON Schema to validate the body against.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#jsonschema SyntheticsTest#jsonschema}
         '''
         result = self._values.get("jsonschema")
         assert result is not None, "Required property 'jsonschema' is missing"
@@ -7216,7 +7216,7 @@ class SyntheticsTestAssertionTargetjsonschema:
     def metaschema(self) -> typing.Optional[builtins.str]:
         '''The meta schema to use for the JSON Schema. Defaults to ``"draft-07"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#metaschema SyntheticsTest#metaschema}
         '''
         result = self._values.get("metaschema")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7327,9 +7327,9 @@ class SyntheticsTestAssertionTargetxpath:
         targetvalue: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
-        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
-        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        :param operator: The specific operator to use on the path. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        :param xpath: The xpath to assert. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
+        :param targetvalue: Expected matching value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3120d1914f6076cb9896c1a6be251cf70ba0b24166d11094743e117af51e8270)
@@ -7347,7 +7347,7 @@ class SyntheticsTestAssertionTargetxpath:
     def operator(self) -> builtins.str:
         '''The specific operator to use on the path.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#operator SyntheticsTest#operator}
         '''
         result = self._values.get("operator")
         assert result is not None, "Required property 'operator' is missing"
@@ -7357,7 +7357,7 @@ class SyntheticsTestAssertionTargetxpath:
     def xpath(self) -> builtins.str:
         '''The xpath to assert.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#xpath SyntheticsTest#xpath}
         '''
         result = self._values.get("xpath")
         assert result is not None, "Required property 'xpath' is missing"
@@ -7367,7 +7367,7 @@ class SyntheticsTestAssertionTargetxpath:
     def targetvalue(self) -> typing.Optional[builtins.str]:
         '''Expected matching value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#targetvalue SyntheticsTest#targetvalue}
         '''
         result = self._values.get("targetvalue")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7509,17 +7509,17 @@ class SyntheticsTestBrowserStep:
         timeout: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param name: Name of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param params: params block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#params SyntheticsTest#params}
-        :param type: Type of the step. Valid values are ``assertCurrentUrl``, ``assertElementAttribute``, ``assertElementContent``, ``assertElementPresent``, ``assertEmail``, ``assertFileDownload``, ``assertFromJavascript``, ``assertPageContains``, ``assertPageLacks``, ``assertRequests``, ``click``, ``extractFromJavascript``, ``extractVariable``, ``goToEmailLink``, ``goToUrl``, ``goToUrlAndMeasureTti``, ``hover``, ``playSubTest``, ``pressKey``, ``refresh``, ``runApiTest``, ``scroll``, ``selectOption``, ``typeText``, ``uploadFiles``, ``wait``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param allow_failure: Determines if the step should be allowed to fail. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
-        :param always_execute: Determines whether or not to always execute this step even if the previous step failed or was skipped. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#always_execute SyntheticsTest#always_execute}
-        :param exit_if_succeed: Determines whether or not to exit the test if the step succeeds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
-        :param force_element_update: Force update of the "element" parameter for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#force_element_update SyntheticsTest#force_element_update}
-        :param is_critical: Determines whether or not to consider the entire test as failed if this step fails. Can be used only if ``allow_failure`` is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
-        :param local_key: A unique identifier used to track steps after reordering. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#local_key SyntheticsTest#local_key}
-        :param no_screenshot: Prevents saving screenshots of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
-        :param timeout: Used to override the default timeout of a step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        :param name: Name of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param params: params block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#params SyntheticsTest#params}
+        :param type: Type of the step. Valid values are ``assertCurrentUrl``, ``assertElementAttribute``, ``assertElementContent``, ``assertElementPresent``, ``assertEmail``, ``assertFileDownload``, ``assertFromJavascript``, ``assertPageContains``, ``assertPageLacks``, ``assertRequests``, ``click``, ``extractFromJavascript``, ``extractVariable``, ``goToEmailLink``, ``goToUrl``, ``goToUrlAndMeasureTti``, ``hover``, ``playSubTest``, ``pressKey``, ``refresh``, ``runApiTest``, ``scroll``, ``selectOption``, ``typeText``, ``uploadFiles``, ``wait``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param allow_failure: Determines if the step should be allowed to fail. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
+        :param always_execute: Determines whether or not to always execute this step even if the previous step failed or was skipped. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#always_execute SyntheticsTest#always_execute}
+        :param exit_if_succeed: Determines whether or not to exit the test if the step succeeds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
+        :param force_element_update: Force update of the "element" parameter for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#force_element_update SyntheticsTest#force_element_update}
+        :param is_critical: Determines whether or not to consider the entire test as failed if this step fails. Can be used only if ``allow_failure`` is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
+        :param local_key: A unique identifier used to track steps after reordering. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#local_key SyntheticsTest#local_key}
+        :param no_screenshot: Prevents saving screenshots of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        :param timeout: Used to override the default timeout of a step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
         '''
         if isinstance(params, dict):
             params = SyntheticsTestBrowserStepParams(**params)
@@ -7562,7 +7562,7 @@ class SyntheticsTestBrowserStep:
     def name(self) -> builtins.str:
         '''Name of the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -7572,7 +7572,7 @@ class SyntheticsTestBrowserStep:
     def params(self) -> "SyntheticsTestBrowserStepParams":
         '''params block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#params SyntheticsTest#params}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#params SyntheticsTest#params}
         '''
         result = self._values.get("params")
         assert result is not None, "Required property 'params' is missing"
@@ -7584,7 +7584,7 @@ class SyntheticsTestBrowserStep:
 
         Valid values are ``assertCurrentUrl``, ``assertElementAttribute``, ``assertElementContent``, ``assertElementPresent``, ``assertEmail``, ``assertFileDownload``, ``assertFromJavascript``, ``assertPageContains``, ``assertPageLacks``, ``assertRequests``, ``click``, ``extractFromJavascript``, ``extractVariable``, ``goToEmailLink``, ``goToUrl``, ``goToUrlAndMeasureTti``, ``hover``, ``playSubTest``, ``pressKey``, ``refresh``, ``runApiTest``, ``scroll``, ``selectOption``, ``typeText``, ``uploadFiles``, ``wait``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -7596,7 +7596,7 @@ class SyntheticsTestBrowserStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines if the step should be allowed to fail.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
         '''
         result = self._values.get("allow_failure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -7607,7 +7607,7 @@ class SyntheticsTestBrowserStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not to always execute this step even if the previous step failed or was skipped.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#always_execute SyntheticsTest#always_execute}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#always_execute SyntheticsTest#always_execute}
         '''
         result = self._values.get("always_execute")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -7618,7 +7618,7 @@ class SyntheticsTestBrowserStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not to exit the test if the step succeeds.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#exit_if_succeed SyntheticsTest#exit_if_succeed}
         '''
         result = self._values.get("exit_if_succeed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -7629,7 +7629,7 @@ class SyntheticsTestBrowserStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Force update of the "element" parameter for the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#force_element_update SyntheticsTest#force_element_update}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#force_element_update SyntheticsTest#force_element_update}
         '''
         result = self._values.get("force_element_update")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -7642,7 +7642,7 @@ class SyntheticsTestBrowserStep:
 
         Can be used only if ``allow_failure`` is ``true``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
         '''
         result = self._values.get("is_critical")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -7651,7 +7651,7 @@ class SyntheticsTestBrowserStep:
     def local_key(self) -> typing.Optional[builtins.str]:
         '''A unique identifier used to track steps after reordering.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#local_key SyntheticsTest#local_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#local_key SyntheticsTest#local_key}
         '''
         result = self._values.get("local_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7662,7 +7662,7 @@ class SyntheticsTestBrowserStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Prevents saving screenshots of the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
         '''
         result = self._values.get("no_screenshot")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -7671,7 +7671,7 @@ class SyntheticsTestBrowserStep:
     def timeout(self) -> typing.Optional[jsii.Number]:
         '''Used to override the default timeout of a step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
         '''
         result = self._values.get("timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -7831,27 +7831,27 @@ class SyntheticsTestBrowserStepOutputReference(
         y: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param attribute: Name of the attribute to use for an "assert attribute" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#attribute SyntheticsTest#attribute}
-        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check SyntheticsTest#check}
-        :param click_type: Type of click to use for a "click" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#click_type SyntheticsTest#click_type}
-        :param click_with_javascript: Whether to use ``element.click()`` for a "click" step. This is a more reliable way to interact with elements but does not emulate a real user interaction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#click_with_javascript SyntheticsTest#click_with_javascript}
-        :param code: Javascript code to use for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#code SyntheticsTest#code}
-        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
-        :param element: Element to use for the step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element SyntheticsTest#element}
-        :param element_user_locator: element_user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element_user_locator SyntheticsTest#element_user_locator}
-        :param email: Details of the email for an "assert email" step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#email SyntheticsTest#email}
-        :param file: JSON encoded string used for an "assert download" step. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#file SyntheticsTest#file}
-        :param files: Details of the files for an "upload files" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#files SyntheticsTest#files}
-        :param modifiers: Modifier to use for a "press key" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#modifiers SyntheticsTest#modifiers}
-        :param playing_tab_id: ID of the tab to play the subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#playing_tab_id SyntheticsTest#playing_tab_id}
-        :param request: Request for an API step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request SyntheticsTest#request}
-        :param requests: Details of the requests for an "assert request" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#requests SyntheticsTest#requests}
-        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
-        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
-        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
-        :param with_click: For "file upload" steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#with_click SyntheticsTest#with_click}
-        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}
-        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}
+        :param attribute: Name of the attribute to use for an "assert attribute" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#attribute SyntheticsTest#attribute}
+        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check SyntheticsTest#check}
+        :param click_type: Type of click to use for a "click" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#click_type SyntheticsTest#click_type}
+        :param click_with_javascript: Whether to use ``element.click()`` for a "click" step. This is a more reliable way to interact with elements but does not emulate a real user interaction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#click_with_javascript SyntheticsTest#click_with_javascript}
+        :param code: Javascript code to use for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#code SyntheticsTest#code}
+        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
+        :param element: Element to use for the step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element SyntheticsTest#element}
+        :param element_user_locator: element_user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element_user_locator SyntheticsTest#element_user_locator}
+        :param email: Details of the email for an "assert email" step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#email SyntheticsTest#email}
+        :param file: JSON encoded string used for an "assert download" step. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#file SyntheticsTest#file}
+        :param files: Details of the files for an "upload files" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#files SyntheticsTest#files}
+        :param modifiers: Modifier to use for a "press key" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#modifiers SyntheticsTest#modifiers}
+        :param playing_tab_id: ID of the tab to play the subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#playing_tab_id SyntheticsTest#playing_tab_id}
+        :param request: Request for an API step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request SyntheticsTest#request}
+        :param requests: Details of the requests for an "assert request" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#requests SyntheticsTest#requests}
+        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
+        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
+        :param with_click: For "file upload" steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#with_click SyntheticsTest#with_click}
+        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}
+        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}
         '''
         value_ = SyntheticsTestBrowserStepParams(
             attribute=attribute,
@@ -8204,27 +8204,27 @@ class SyntheticsTestBrowserStepParams:
         y: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param attribute: Name of the attribute to use for an "assert attribute" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#attribute SyntheticsTest#attribute}
-        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check SyntheticsTest#check}
-        :param click_type: Type of click to use for a "click" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#click_type SyntheticsTest#click_type}
-        :param click_with_javascript: Whether to use ``element.click()`` for a "click" step. This is a more reliable way to interact with elements but does not emulate a real user interaction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#click_with_javascript SyntheticsTest#click_with_javascript}
-        :param code: Javascript code to use for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#code SyntheticsTest#code}
-        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
-        :param element: Element to use for the step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element SyntheticsTest#element}
-        :param element_user_locator: element_user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element_user_locator SyntheticsTest#element_user_locator}
-        :param email: Details of the email for an "assert email" step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#email SyntheticsTest#email}
-        :param file: JSON encoded string used for an "assert download" step. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#file SyntheticsTest#file}
-        :param files: Details of the files for an "upload files" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#files SyntheticsTest#files}
-        :param modifiers: Modifier to use for a "press key" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#modifiers SyntheticsTest#modifiers}
-        :param playing_tab_id: ID of the tab to play the subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#playing_tab_id SyntheticsTest#playing_tab_id}
-        :param request: Request for an API step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request SyntheticsTest#request}
-        :param requests: Details of the requests for an "assert request" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#requests SyntheticsTest#requests}
-        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
-        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
-        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
-        :param with_click: For "file upload" steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#with_click SyntheticsTest#with_click}
-        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}
-        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}
+        :param attribute: Name of the attribute to use for an "assert attribute" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#attribute SyntheticsTest#attribute}
+        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check SyntheticsTest#check}
+        :param click_type: Type of click to use for a "click" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#click_type SyntheticsTest#click_type}
+        :param click_with_javascript: Whether to use ``element.click()`` for a "click" step. This is a more reliable way to interact with elements but does not emulate a real user interaction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#click_with_javascript SyntheticsTest#click_with_javascript}
+        :param code: Javascript code to use for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#code SyntheticsTest#code}
+        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
+        :param element: Element to use for the step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element SyntheticsTest#element}
+        :param element_user_locator: element_user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element_user_locator SyntheticsTest#element_user_locator}
+        :param email: Details of the email for an "assert email" step, JSON encoded string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#email SyntheticsTest#email}
+        :param file: JSON encoded string used for an "assert download" step. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#file SyntheticsTest#file}
+        :param files: Details of the files for an "upload files" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#files SyntheticsTest#files}
+        :param modifiers: Modifier to use for a "press key" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#modifiers SyntheticsTest#modifiers}
+        :param playing_tab_id: ID of the tab to play the subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#playing_tab_id SyntheticsTest#playing_tab_id}
+        :param request: Request for an API step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request SyntheticsTest#request}
+        :param requests: Details of the requests for an "assert request" step, JSON encoded string. Refer to the examples for a usage example showing the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#requests SyntheticsTest#requests}
+        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
+        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
+        :param with_click: For "file upload" steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#with_click SyntheticsTest#with_click}
+        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}
+        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}
         '''
         if isinstance(element_user_locator, dict):
             element_user_locator = SyntheticsTestBrowserStepParamsElementUserLocator(**element_user_locator)
@@ -8301,7 +8301,7 @@ class SyntheticsTestBrowserStepParams:
     def attribute(self) -> typing.Optional[builtins.str]:
         '''Name of the attribute to use for an "assert attribute" step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#attribute SyntheticsTest#attribute}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#attribute SyntheticsTest#attribute}
         '''
         result = self._values.get("attribute")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8312,7 +8312,7 @@ class SyntheticsTestBrowserStepParams:
 
         Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check SyntheticsTest#check}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check SyntheticsTest#check}
         '''
         result = self._values.get("check")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8321,7 +8321,7 @@ class SyntheticsTestBrowserStepParams:
     def click_type(self) -> typing.Optional[builtins.str]:
         '''Type of click to use for a "click" step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#click_type SyntheticsTest#click_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#click_type SyntheticsTest#click_type}
         '''
         result = self._values.get("click_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8332,7 +8332,7 @@ class SyntheticsTestBrowserStepParams:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether to use ``element.click()`` for a "click" step. This is a more reliable way to interact with elements but does not emulate a real user interaction.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#click_with_javascript SyntheticsTest#click_with_javascript}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#click_with_javascript SyntheticsTest#click_with_javascript}
         '''
         result = self._values.get("click_with_javascript")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8341,7 +8341,7 @@ class SyntheticsTestBrowserStepParams:
     def code(self) -> typing.Optional[builtins.str]:
         '''Javascript code to use for the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#code SyntheticsTest#code}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#code SyntheticsTest#code}
         '''
         result = self._values.get("code")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8350,7 +8350,7 @@ class SyntheticsTestBrowserStepParams:
     def delay(self) -> typing.Optional[jsii.Number]:
         '''Delay between each key stroke for a "type test" step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
         '''
         result = self._values.get("delay")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8359,7 +8359,7 @@ class SyntheticsTestBrowserStepParams:
     def element(self) -> typing.Optional[builtins.str]:
         '''Element to use for the step, JSON encoded string.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element SyntheticsTest#element}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element SyntheticsTest#element}
         '''
         result = self._values.get("element")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8370,7 +8370,7 @@ class SyntheticsTestBrowserStepParams:
     ) -> typing.Optional["SyntheticsTestBrowserStepParamsElementUserLocator"]:
         '''element_user_locator block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element_user_locator SyntheticsTest#element_user_locator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element_user_locator SyntheticsTest#element_user_locator}
         '''
         result = self._values.get("element_user_locator")
         return typing.cast(typing.Optional["SyntheticsTestBrowserStepParamsElementUserLocator"], result)
@@ -8379,7 +8379,7 @@ class SyntheticsTestBrowserStepParams:
     def email(self) -> typing.Optional[builtins.str]:
         '''Details of the email for an "assert email" step, JSON encoded string.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#email SyntheticsTest#email}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#email SyntheticsTest#email}
         '''
         result = self._values.get("email")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8390,7 +8390,7 @@ class SyntheticsTestBrowserStepParams:
 
         Refer to the examples for a usage example showing the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#file SyntheticsTest#file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#file SyntheticsTest#file}
         '''
         result = self._values.get("file")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8401,7 +8401,7 @@ class SyntheticsTestBrowserStepParams:
 
         Refer to the examples for a usage example showing the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#files SyntheticsTest#files}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#files SyntheticsTest#files}
         '''
         result = self._values.get("files")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8410,7 +8410,7 @@ class SyntheticsTestBrowserStepParams:
     def modifiers(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Modifier to use for a "press key" step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#modifiers SyntheticsTest#modifiers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#modifiers SyntheticsTest#modifiers}
         '''
         result = self._values.get("modifiers")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -8419,7 +8419,7 @@ class SyntheticsTestBrowserStepParams:
     def playing_tab_id(self) -> typing.Optional[builtins.str]:
         '''ID of the tab to play the subtest.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#playing_tab_id SyntheticsTest#playing_tab_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#playing_tab_id SyntheticsTest#playing_tab_id}
         '''
         result = self._values.get("playing_tab_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8428,7 +8428,7 @@ class SyntheticsTestBrowserStepParams:
     def request(self) -> typing.Optional[builtins.str]:
         '''Request for an API step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request SyntheticsTest#request}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request SyntheticsTest#request}
         '''
         result = self._values.get("request")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8439,7 +8439,7 @@ class SyntheticsTestBrowserStepParams:
 
         Refer to the examples for a usage example showing the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#requests SyntheticsTest#requests}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#requests SyntheticsTest#requests}
         '''
         result = self._values.get("requests")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8448,7 +8448,7 @@ class SyntheticsTestBrowserStepParams:
     def subtest_public_id(self) -> typing.Optional[builtins.str]:
         '''ID of the Synthetics test to use as subtest.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
         '''
         result = self._values.get("subtest_public_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8457,7 +8457,7 @@ class SyntheticsTestBrowserStepParams:
     def value(self) -> typing.Optional[builtins.str]:
         '''Value of the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8466,7 +8466,7 @@ class SyntheticsTestBrowserStepParams:
     def variable(self) -> typing.Optional["SyntheticsTestBrowserStepParamsVariable"]:
         '''variable block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
         '''
         result = self._values.get("variable")
         return typing.cast(typing.Optional["SyntheticsTestBrowserStepParamsVariable"], result)
@@ -8477,7 +8477,7 @@ class SyntheticsTestBrowserStepParams:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''For "file upload" steps.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#with_click SyntheticsTest#with_click}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#with_click SyntheticsTest#with_click}
         '''
         result = self._values.get("with_click")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8486,7 +8486,7 @@ class SyntheticsTestBrowserStepParams:
     def x(self) -> typing.Optional[jsii.Number]:
         '''X coordinates for a "scroll step".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}
         '''
         result = self._values.get("x")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8495,7 +8495,7 @@ class SyntheticsTestBrowserStepParams:
     def y(self) -> typing.Optional[jsii.Number]:
         '''Y coordinates for a "scroll step".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}
         '''
         result = self._values.get("y")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8528,8 +8528,8 @@ class SyntheticsTestBrowserStepParamsElementUserLocator:
         fail_test_on_cannot_locate: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param value: value block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
-        :param fail_test_on_cannot_locate: Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}
+        :param value: value block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param fail_test_on_cannot_locate: Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}
         '''
         if isinstance(value, dict):
             value = SyntheticsTestBrowserStepParamsElementUserLocatorValue(**value)
@@ -8547,7 +8547,7 @@ class SyntheticsTestBrowserStepParamsElementUserLocator:
     def value(self) -> "SyntheticsTestBrowserStepParamsElementUserLocatorValue":
         '''value block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -8559,7 +8559,7 @@ class SyntheticsTestBrowserStepParamsElementUserLocator:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}
         '''
         result = self._values.get("fail_test_on_cannot_locate")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8604,8 +8604,8 @@ class SyntheticsTestBrowserStepParamsElementUserLocatorOutputReference(
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}.
-        :param type: Defaults to ``"css"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}.
+        :param type: Defaults to ``"css"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         value_ = SyntheticsTestBrowserStepParamsElementUserLocatorValue(
             value=value, type=type
@@ -8686,8 +8686,8 @@ class SyntheticsTestBrowserStepParamsElementUserLocatorValue:
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}.
-        :param type: Defaults to ``"css"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}.
+        :param type: Defaults to ``"css"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__354c42baed2b65beec0e41a15875f555e18e99ee00b509d802d33b2272a11c11)
@@ -8701,7 +8701,7 @@ class SyntheticsTestBrowserStepParamsElementUserLocatorValue:
 
     @builtins.property
     def value(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}.'''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
         return typing.cast(builtins.str, result)
@@ -8710,7 +8710,7 @@ class SyntheticsTestBrowserStepParamsElementUserLocatorValue:
     def type(self) -> typing.Optional[builtins.str]:
         '''Defaults to ``"css"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8831,8 +8831,8 @@ class SyntheticsTestBrowserStepParamsOutputReference(
         fail_test_on_cannot_locate: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param value: value block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
-        :param fail_test_on_cannot_locate: Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}
+        :param value: value block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param fail_test_on_cannot_locate: Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}
         '''
         value_ = SyntheticsTestBrowserStepParamsElementUserLocator(
             value=value, fail_test_on_cannot_locate=fail_test_on_cannot_locate
@@ -8849,9 +8849,9 @@ class SyntheticsTestBrowserStepParamsOutputReference(
         secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
-        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param secure: Whether the value of this variable will be obfuscated in test results. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param secure: Whether the value of this variable will be obfuscated in test results. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         value = SyntheticsTestBrowserStepParamsVariable(
             example=example, name=name, secure=secure
@@ -9334,9 +9334,9 @@ class SyntheticsTestBrowserStepParamsVariable:
         secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
-        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param secure: Whether the value of this variable will be obfuscated in test results. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param secure: Whether the value of this variable will be obfuscated in test results. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a5905942d5b76c4cbe0b6d4672c950c27c4cf4ee3b85dfc9069a6d67b4f1a3dc)
@@ -9355,7 +9355,7 @@ class SyntheticsTestBrowserStepParamsVariable:
     def example(self) -> typing.Optional[builtins.str]:
         '''Example of the extracted variable. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
         '''
         result = self._values.get("example")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9364,7 +9364,7 @@ class SyntheticsTestBrowserStepParamsVariable:
     def name(self) -> typing.Optional[builtins.str]:
         '''Name of the extracted variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9375,7 +9375,7 @@ class SyntheticsTestBrowserStepParamsVariable:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the value of this variable will be obfuscated in test results. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         result = self._values.get("secure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -9522,12 +9522,12 @@ class SyntheticsTestBrowserVariable:
         secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param name: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param type: Type of browser test variable. Valid values are ``element``, ``email``, ``global``, ``text``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param example: Example for the variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
-        :param id: ID of the global variable to use. This is actually only used (and required) in the case of using a variable of type ``global``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#id SyntheticsTest#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param pattern: Pattern of the variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
-        :param secure: Determines whether or not the browser test variable is obfuscated. Can only be used with a browser variable of type ``text`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        :param name: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param type: Type of browser test variable. Valid values are ``element``, ``email``, ``global``, ``text``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param example: Example for the variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        :param id: ID of the global variable to use. This is actually only used (and required) in the case of using a variable of type ``global``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#id SyntheticsTest#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param pattern: Pattern of the variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
+        :param secure: Determines whether or not the browser test variable is obfuscated. Can only be used with a browser variable of type ``text`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7d0aa4fe874f2e5ba5ae360f344c13b5104fb4eba24a6a54f4992aa80c4a168b)
@@ -9554,7 +9554,7 @@ class SyntheticsTestBrowserVariable:
     def name(self) -> builtins.str:
         '''Name of the variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -9564,7 +9564,7 @@ class SyntheticsTestBrowserVariable:
     def type(self) -> builtins.str:
         '''Type of browser test variable. Valid values are ``element``, ``email``, ``global``, ``text``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -9574,7 +9574,7 @@ class SyntheticsTestBrowserVariable:
     def example(self) -> typing.Optional[builtins.str]:
         '''Example for the variable. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
         '''
         result = self._values.get("example")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9585,7 +9585,7 @@ class SyntheticsTestBrowserVariable:
 
         This is actually only used (and required) in the case of using a variable of type ``global``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#id SyntheticsTest#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#id SyntheticsTest#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -9597,7 +9597,7 @@ class SyntheticsTestBrowserVariable:
     def pattern(self) -> typing.Optional[builtins.str]:
         '''Pattern of the variable. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
         '''
         result = self._values.get("pattern")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9610,7 +9610,7 @@ class SyntheticsTestBrowserVariable:
 
         Can only be used with a browser variable of type ``text``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         result = self._values.get("secure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -9975,35 +9975,35 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param locations: Array of locations used to run the test. Refer to `the Datadog Synthetics location data source <https://registry.terraform.io/providers/DataDog/datadog/latest/docs/data-sources/synthetics_locations>`_ to retrieve the list of locations or find the possible values listed in `this API response <https://app.datadoghq.com/api/v1/synthetics/locations?only_public=true>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#locations SyntheticsTest#locations}
-        :param name: Name of Datadog synthetics test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param status: Define whether you want to start (``live``) or pause (``paused``) a Synthetic test. Valid values are ``live``, ``paused``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#status SyntheticsTest#status}
-        :param type: Synthetics test type. Valid values are ``api``, ``browser``, ``mobile``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param api_step: api_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#api_step SyntheticsTest#api_step}
-        :param assertion: assertion block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
-        :param browser_step: browser_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#browser_step SyntheticsTest#browser_step}
-        :param browser_variable: browser_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#browser_variable SyntheticsTest#browser_variable}
-        :param config_initial_application_arguments: Initial application arguments for the mobile test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#config_initial_application_arguments SyntheticsTest#config_initial_application_arguments}
-        :param config_variable: config_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#config_variable SyntheticsTest#config_variable}
-        :param device_ids: Required if ``type = "browser"``. Array with the different device IDs used to run the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}
-        :param force_delete_dependencies: A boolean indicating whether this synthetics test can be deleted even if it's referenced by other resources (for example, SLOs and composite monitors). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#force_delete_dependencies SyntheticsTest#force_delete_dependencies}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#id SyntheticsTest#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param message: A message to include with notifications for this synthetics test. Email notifications can be sent to specific users by using the same ``@username`` notation as events. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
-        :param mobile_options_list: mobile_options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_options_list SyntheticsTest#mobile_options_list}
-        :param mobile_step: mobile_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_step SyntheticsTest#mobile_step}
-        :param options_list: options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#options_list SyntheticsTest#options_list}
-        :param request_basicauth: request_basicauth block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
-        :param request_client_certificate: request_client_certificate block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
-        :param request_definition: request_definition block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
-        :param request_file: request_file block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
-        :param request_headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
-        :param request_metadata: Metadata to include when performing the gRPC request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
-        :param request_proxy: request_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
-        :param request_query: Query arguments name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
-        :param set_cookie: Cookies to be used for a browser test request, using the `Set-Cookie <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>`_ syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#set_cookie SyntheticsTest#set_cookie}
-        :param subtype: The subtype of the Synthetic API test. Defaults to ``http``. Valid values are ``http``, ``ssl``, ``tcp``, ``dns``, ``multi``, ``icmp``, ``udp``, ``websocket``, ``grpc``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
-        :param tags: A list of tags to associate with your synthetics test. This can help you categorize and filter tests in the manage synthetics page of the UI. Default is an empty list (``[]``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tags SyntheticsTest#tags}
-        :param variables_from_script: Variables defined from JavaScript code for API HTTP tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variables_from_script SyntheticsTest#variables_from_script}
+        :param locations: Array of locations used to run the test. Refer to `the Datadog Synthetics location data source <https://registry.terraform.io/providers/DataDog/datadog/latest/docs/data-sources/synthetics_locations>`_ to retrieve the list of locations or find the possible values listed in `this API response <https://app.datadoghq.com/api/v1/synthetics/locations?only_public=true>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#locations SyntheticsTest#locations}
+        :param name: Name of Datadog synthetics test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param status: Define whether you want to start (``live``) or pause (``paused``) a Synthetic test. Valid values are ``live``, ``paused``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#status SyntheticsTest#status}
+        :param type: Synthetics test type. Valid values are ``api``, ``browser``, ``mobile``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param api_step: api_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#api_step SyntheticsTest#api_step}
+        :param assertion: assertion block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
+        :param browser_step: browser_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#browser_step SyntheticsTest#browser_step}
+        :param browser_variable: browser_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#browser_variable SyntheticsTest#browser_variable}
+        :param config_initial_application_arguments: Initial application arguments for the mobile test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#config_initial_application_arguments SyntheticsTest#config_initial_application_arguments}
+        :param config_variable: config_variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#config_variable SyntheticsTest#config_variable}
+        :param device_ids: Required if ``type = "browser"``. Array with the different device IDs used to run the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}
+        :param force_delete_dependencies: A boolean indicating whether this synthetics test can be deleted even if it's referenced by other resources (for example, SLOs and composite monitors). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#force_delete_dependencies SyntheticsTest#force_delete_dependencies}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#id SyntheticsTest#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param message: A message to include with notifications for this synthetics test. Email notifications can be sent to specific users by using the same ``@username`` notation as events. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        :param mobile_options_list: mobile_options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_options_list SyntheticsTest#mobile_options_list}
+        :param mobile_step: mobile_step block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_step SyntheticsTest#mobile_step}
+        :param options_list: options_list block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#options_list SyntheticsTest#options_list}
+        :param request_basicauth: request_basicauth block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
+        :param request_client_certificate: request_client_certificate block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
+        :param request_definition: request_definition block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
+        :param request_file: request_file block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
+        :param request_headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
+        :param request_metadata: Metadata to include when performing the gRPC request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
+        :param request_proxy: request_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
+        :param request_query: Query arguments name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
+        :param set_cookie: Cookies to be used for a browser test request, using the `Set-Cookie <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>`_ syntax. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#set_cookie SyntheticsTest#set_cookie}
+        :param subtype: The subtype of the Synthetic API test. Defaults to ``http``. Valid values are ``http``, ``ssl``, ``tcp``, ``dns``, ``multi``, ``icmp``, ``udp``, ``websocket``, ``grpc``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
+        :param tags: A list of tags to associate with your synthetics test. This can help you categorize and filter tests in the manage synthetics page of the UI. Default is an empty list (``[]``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tags SyntheticsTest#tags}
+        :param variables_from_script: Variables defined from JavaScript code for API HTTP tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variables_from_script SyntheticsTest#variables_from_script}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -10198,7 +10198,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Refer to `the Datadog Synthetics location data source <https://registry.terraform.io/providers/DataDog/datadog/latest/docs/data-sources/synthetics_locations>`_ to retrieve the list of locations or find the possible values listed in `this API response <https://app.datadoghq.com/api/v1/synthetics/locations?only_public=true>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#locations SyntheticsTest#locations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#locations SyntheticsTest#locations}
         '''
         result = self._values.get("locations")
         assert result is not None, "Required property 'locations' is missing"
@@ -10208,7 +10208,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of Datadog synthetics test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -10218,7 +10218,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> builtins.str:
         '''Define whether you want to start (``live``) or pause (``paused``) a Synthetic test. Valid values are ``live``, ``paused``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#status SyntheticsTest#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#status SyntheticsTest#status}
         '''
         result = self._values.get("status")
         assert result is not None, "Required property 'status' is missing"
@@ -10228,7 +10228,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''Synthetics test type. Valid values are ``api``, ``browser``, ``mobile``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -10240,7 +10240,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestApiStep]]]:
         '''api_step block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#api_step SyntheticsTest#api_step}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#api_step SyntheticsTest#api_step}
         '''
         result = self._values.get("api_step")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestApiStep]]], result)
@@ -10251,7 +10251,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestAssertion]]]:
         '''assertion block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#assertion SyntheticsTest#assertion}
         '''
         result = self._values.get("assertion")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestAssertion]]], result)
@@ -10262,7 +10262,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestBrowserStep]]]:
         '''browser_step block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#browser_step SyntheticsTest#browser_step}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#browser_step SyntheticsTest#browser_step}
         '''
         result = self._values.get("browser_step")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestBrowserStep]]], result)
@@ -10273,7 +10273,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestBrowserVariable]]]:
         '''browser_variable block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#browser_variable SyntheticsTest#browser_variable}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#browser_variable SyntheticsTest#browser_variable}
         '''
         result = self._values.get("browser_variable")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestBrowserVariable]]], result)
@@ -10284,7 +10284,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Initial application arguments for the mobile test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#config_initial_application_arguments SyntheticsTest#config_initial_application_arguments}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#config_initial_application_arguments SyntheticsTest#config_initial_application_arguments}
         '''
         result = self._values.get("config_initial_application_arguments")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -10295,7 +10295,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestConfigVariable"]]]:
         '''config_variable block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#config_variable SyntheticsTest#config_variable}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#config_variable SyntheticsTest#config_variable}
         '''
         result = self._values.get("config_variable")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestConfigVariable"]]], result)
@@ -10304,7 +10304,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def device_ids(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Required if ``type = "browser"``. Array with the different device IDs used to run the test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}
         '''
         result = self._values.get("device_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -10315,14 +10315,14 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''A boolean indicating whether this synthetics test can be deleted even if it's referenced by other resources (for example, SLOs and composite monitors).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#force_delete_dependencies SyntheticsTest#force_delete_dependencies}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#force_delete_dependencies SyntheticsTest#force_delete_dependencies}
         '''
         result = self._values.get("force_delete_dependencies")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#id SyntheticsTest#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#id SyntheticsTest#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -10336,7 +10336,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Email notifications can be sent to specific users by using the same ``@username`` notation as events. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
         '''
         result = self._values.get("message")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10347,7 +10347,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["SyntheticsTestMobileOptionsListStruct"]:
         '''mobile_options_list block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_options_list SyntheticsTest#mobile_options_list}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_options_list SyntheticsTest#mobile_options_list}
         '''
         result = self._values.get("mobile_options_list")
         return typing.cast(typing.Optional["SyntheticsTestMobileOptionsListStruct"], result)
@@ -10358,7 +10358,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestMobileStep"]]]:
         '''mobile_step block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_step SyntheticsTest#mobile_step}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_step SyntheticsTest#mobile_step}
         '''
         result = self._values.get("mobile_step")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestMobileStep"]]], result)
@@ -10367,7 +10367,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def options_list(self) -> typing.Optional["SyntheticsTestOptionsListStruct"]:
         '''options_list block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#options_list SyntheticsTest#options_list}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#options_list SyntheticsTest#options_list}
         '''
         result = self._values.get("options_list")
         return typing.cast(typing.Optional["SyntheticsTestOptionsListStruct"], result)
@@ -10376,7 +10376,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def request_basicauth(self) -> typing.Optional["SyntheticsTestRequestBasicauth"]:
         '''request_basicauth block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_basicauth SyntheticsTest#request_basicauth}
         '''
         result = self._values.get("request_basicauth")
         return typing.cast(typing.Optional["SyntheticsTestRequestBasicauth"], result)
@@ -10387,7 +10387,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["SyntheticsTestRequestClientCertificate"]:
         '''request_client_certificate block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_client_certificate SyntheticsTest#request_client_certificate}
         '''
         result = self._values.get("request_client_certificate")
         return typing.cast(typing.Optional["SyntheticsTestRequestClientCertificate"], result)
@@ -10396,7 +10396,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def request_definition(self) -> typing.Optional["SyntheticsTestRequestDefinition"]:
         '''request_definition block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_definition SyntheticsTest#request_definition}
         '''
         result = self._values.get("request_definition")
         return typing.cast(typing.Optional["SyntheticsTestRequestDefinition"], result)
@@ -10407,7 +10407,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestRequestFile"]]]:
         '''request_file block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_file SyntheticsTest#request_file}
         '''
         result = self._values.get("request_file")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestRequestFile"]]], result)
@@ -10418,7 +10418,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Header name and value map.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_headers SyntheticsTest#request_headers}
         '''
         result = self._values.get("request_headers")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -10429,7 +10429,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Metadata to include when performing the gRPC request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_metadata SyntheticsTest#request_metadata}
         '''
         result = self._values.get("request_metadata")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -10438,7 +10438,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def request_proxy(self) -> typing.Optional["SyntheticsTestRequestProxy"]:
         '''request_proxy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_proxy SyntheticsTest#request_proxy}
         '''
         result = self._values.get("request_proxy")
         return typing.cast(typing.Optional["SyntheticsTestRequestProxy"], result)
@@ -10449,7 +10449,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Query arguments name and value map.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#request_query SyntheticsTest#request_query}
         '''
         result = self._values.get("request_query")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -10458,7 +10458,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def set_cookie(self) -> typing.Optional[builtins.str]:
         '''Cookies to be used for a browser test request, using the `Set-Cookie <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie>`_ syntax.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#set_cookie SyntheticsTest#set_cookie}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#set_cookie SyntheticsTest#set_cookie}
         '''
         result = self._values.get("set_cookie")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10469,7 +10469,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Defaults to ``http``. Valid values are ``http``, ``ssl``, ``tcp``, ``dns``, ``multi``, ``icmp``, ``udp``, ``websocket``, ``grpc``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtype SyntheticsTest#subtype}
         '''
         result = self._values.get("subtype")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10480,7 +10480,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This can help you categorize and filter tests in the manage synthetics page of the UI. Default is an empty list (``[]``).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tags SyntheticsTest#tags}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tags SyntheticsTest#tags}
         '''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -10489,7 +10489,7 @@ class SyntheticsTestConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def variables_from_script(self) -> typing.Optional[builtins.str]:
         '''Variables defined from JavaScript code for API HTTP tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variables_from_script SyntheticsTest#variables_from_script}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variables_from_script SyntheticsTest#variables_from_script}
         '''
         result = self._values.get("variables_from_script")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10530,12 +10530,12 @@ class SyntheticsTestConfigVariable:
         secure: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param name: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param type: Type of test configuration variable. Valid values are ``global``, ``text``, ``email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param example: Example for the variable. This value is not returned by the api when ``secure = true``. Avoid drift by only making updates to this value from within Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
-        :param id: When type = ``global``, ID of the global variable to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#id SyntheticsTest#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param pattern: Pattern of the variable. This value is not returned by the api when ``secure = true``. Avoid drift by only making updates to this value from within Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
-        :param secure: Whether the value of this variable will be obfuscated in test results. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        :param name: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param type: Type of test configuration variable. Valid values are ``global``, ``text``, ``email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param example: Example for the variable. This value is not returned by the api when ``secure = true``. Avoid drift by only making updates to this value from within Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        :param id: When type = ``global``, ID of the global variable to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#id SyntheticsTest#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param pattern: Pattern of the variable. This value is not returned by the api when ``secure = true``. Avoid drift by only making updates to this value from within Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
+        :param secure: Whether the value of this variable will be obfuscated in test results. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__dc81652e39c08ef70de8f9af7578b19d8491953961a9b658d4cd4ce1513ad980)
@@ -10562,7 +10562,7 @@ class SyntheticsTestConfigVariable:
     def name(self) -> builtins.str:
         '''Name of the variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -10572,7 +10572,7 @@ class SyntheticsTestConfigVariable:
     def type(self) -> builtins.str:
         '''Type of test configuration variable. Valid values are ``global``, ``text``, ``email``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -10584,7 +10584,7 @@ class SyntheticsTestConfigVariable:
 
         This value is not returned by the api when ``secure = true``. Avoid drift by only making updates to this value from within Terraform.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
         '''
         result = self._values.get("example")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10593,7 +10593,7 @@ class SyntheticsTestConfigVariable:
     def id(self) -> typing.Optional[builtins.str]:
         '''When type = ``global``, ID of the global variable to use.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#id SyntheticsTest#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#id SyntheticsTest#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -10607,7 +10607,7 @@ class SyntheticsTestConfigVariable:
 
         This value is not returned by the api when ``secure = true``. Avoid drift by only making updates to this value from within Terraform.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#pattern SyntheticsTest#pattern}
         '''
         result = self._values.get("pattern")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10618,7 +10618,7 @@ class SyntheticsTestConfigVariable:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the value of this variable will be obfuscated in test results. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secure SyntheticsTest#secure}
         '''
         result = self._values.get("secure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -10905,8 +10905,8 @@ class SyntheticsTestMobileOptionsListBindings:
         relation: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param principals: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#principals SyntheticsTest#principals}.
-        :param relation: Valid values are ``editor``, ``viewer``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#relation SyntheticsTest#relation}
+        :param principals: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#principals SyntheticsTest#principals}.
+        :param relation: Valid values are ``editor``, ``viewer``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#relation SyntheticsTest#relation}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__392fe2bee6f1ed5fa36f60a7495468c7eb2aa9187fd320ae7704dd9b25fbd1f9)
@@ -10920,7 +10920,7 @@ class SyntheticsTestMobileOptionsListBindings:
 
     @builtins.property
     def principals(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#principals SyntheticsTest#principals}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#principals SyntheticsTest#principals}.'''
         result = self._values.get("principals")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -10928,7 +10928,7 @@ class SyntheticsTestMobileOptionsListBindings:
     def relation(self) -> typing.Optional[builtins.str]:
         '''Valid values are ``editor``, ``viewer``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#relation SyntheticsTest#relation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#relation SyntheticsTest#relation}
         '''
         result = self._values.get("relation")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11132,7 +11132,7 @@ class SyntheticsTestMobileOptionsListBindingsOutputReference(
 class SyntheticsTestMobileOptionsListCi:
     def __init__(self, *, execution_rule: builtins.str) -> None:
         '''
-        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
+        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3f6021d178a4bdc78b1eb651a999924cc8ce67207e16f8fd3740b3b4d4ddbf4d)
@@ -11145,7 +11145,7 @@ class SyntheticsTestMobileOptionsListCi:
     def execution_rule(self) -> builtins.str:
         '''Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
         '''
         result = self._values.get("execution_rule")
         assert result is not None, "Required property 'execution_rule' is missing"
@@ -11234,9 +11234,9 @@ class SyntheticsTestMobileOptionsListMobileApplication:
         reference_type: builtins.str,
     ) -> None:
         '''
-        :param application_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}.
-        :param reference_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#reference_id SyntheticsTest#reference_id}.
-        :param reference_type: Valid values are ``latest``, ``version``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#reference_type SyntheticsTest#reference_type}
+        :param application_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}.
+        :param reference_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#reference_id SyntheticsTest#reference_id}.
+        :param reference_type: Valid values are ``latest``, ``version``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#reference_type SyntheticsTest#reference_type}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__71ba51746bdbf4cfa04252f210f9eb0ce7a7aa2f9962cfa1c11c7d4144660cea)
@@ -11251,14 +11251,14 @@ class SyntheticsTestMobileOptionsListMobileApplication:
 
     @builtins.property
     def application_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}.'''
         result = self._values.get("application_id")
         assert result is not None, "Required property 'application_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def reference_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#reference_id SyntheticsTest#reference_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#reference_id SyntheticsTest#reference_id}.'''
         result = self._values.get("reference_id")
         assert result is not None, "Required property 'reference_id' is missing"
         return typing.cast(builtins.str, result)
@@ -11267,7 +11267,7 @@ class SyntheticsTestMobileOptionsListMobileApplication:
     def reference_type(self) -> builtins.str:
         '''Valid values are ``latest``, ``version``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#reference_type SyntheticsTest#reference_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#reference_type SyntheticsTest#reference_type}
         '''
         result = self._values.get("reference_type")
         assert result is not None, "Required property 'reference_type' is missing"
@@ -11394,10 +11394,10 @@ class SyntheticsTestMobileOptionsListMonitorOptions:
         renotify_occurrences: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
-        :param notification_preset_name: Valid values are ``show_all``, ``hide_all``, ``hide_query``, ``hide_handles``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#notification_preset_name SyntheticsTest#notification_preset_name}
-        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
-        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
+        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
+        :param notification_preset_name: Valid values are ``show_all``, ``hide_all``, ``hide_query``, ``hide_handles``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#notification_preset_name SyntheticsTest#notification_preset_name}
+        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
+        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ef207cf4804e9b6403c714e3986dd1a13f3c321f73bf6b806a83dcf68a29ab7a)
@@ -11419,7 +11419,7 @@ class SyntheticsTestMobileOptionsListMonitorOptions:
     def escalation_message(self) -> typing.Optional[builtins.str]:
         '''A message to include with a re-notification.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
         '''
         result = self._values.get("escalation_message")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11428,7 +11428,7 @@ class SyntheticsTestMobileOptionsListMonitorOptions:
     def notification_preset_name(self) -> typing.Optional[builtins.str]:
         '''Valid values are ``show_all``, ``hide_all``, ``hide_query``, ``hide_handles``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#notification_preset_name SyntheticsTest#notification_preset_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#notification_preset_name SyntheticsTest#notification_preset_name}
         '''
         result = self._values.get("notification_preset_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11439,7 +11439,7 @@ class SyntheticsTestMobileOptionsListMonitorOptions:
 
         Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
         '''
         result = self._values.get("renotify_interval")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -11448,7 +11448,7 @@ class SyntheticsTestMobileOptionsListMonitorOptions:
     def renotify_occurrences(self) -> typing.Optional[jsii.Number]:
         '''The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
         '''
         result = self._values.get("renotify_occurrences")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -11600,8 +11600,8 @@ class SyntheticsTestMobileOptionsListRetry:
         interval: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
-        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1d1604979027f3ab6c2584af2c6ca3c33205aece3133e974b511007de3a8533b)
@@ -11619,7 +11619,7 @@ class SyntheticsTestMobileOptionsListRetry:
 
         Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
         '''
         result = self._values.get("count")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -11628,7 +11628,7 @@ class SyntheticsTestMobileOptionsListRetry:
     def interval(self) -> typing.Optional[jsii.Number]:
         '''Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         result = self._values.get("interval")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -11736,8 +11736,8 @@ class SyntheticsTestMobileOptionsListScheduling:
         timezone: builtins.str,
     ) -> None:
         '''
-        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
-        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
+        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
+        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a2e71d131d1fd53040c092fa2d2391e8fdfeac9a5fd4893c30b018387ee1f2e0)
@@ -11754,7 +11754,7 @@ class SyntheticsTestMobileOptionsListScheduling:
     ) -> typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestMobileOptionsListSchedulingTimeframes"]]:
         '''timeframes block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
         '''
         result = self._values.get("timeframes")
         assert result is not None, "Required property 'timeframes' is missing"
@@ -11764,7 +11764,7 @@ class SyntheticsTestMobileOptionsListScheduling:
     def timezone(self) -> builtins.str:
         '''Timezone in which the timeframe is based.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
         '''
         result = self._values.get("timezone")
         assert result is not None, "Required property 'timezone' is missing"
@@ -11876,9 +11876,9 @@ class SyntheticsTestMobileOptionsListSchedulingTimeframes:
         to: builtins.str,
     ) -> None:
         '''
-        :param day: Number representing the day of the week. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#day SyntheticsTest#day}
-        :param from_: The hour of the day on which scheduling starts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#from SyntheticsTest#from}
-        :param to: The hour of the day on which scheduling ends. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#to SyntheticsTest#to}
+        :param day: Number representing the day of the week. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#day SyntheticsTest#day}
+        :param from_: The hour of the day on which scheduling starts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#from SyntheticsTest#from}
+        :param to: The hour of the day on which scheduling ends. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#to SyntheticsTest#to}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4ff52e3cb73903d04253439a2358b63bacd1fb3c882329431776ee9971307e61)
@@ -11895,7 +11895,7 @@ class SyntheticsTestMobileOptionsListSchedulingTimeframes:
     def day(self) -> jsii.Number:
         '''Number representing the day of the week.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#day SyntheticsTest#day}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#day SyntheticsTest#day}
         '''
         result = self._values.get("day")
         assert result is not None, "Required property 'day' is missing"
@@ -11905,7 +11905,7 @@ class SyntheticsTestMobileOptionsListSchedulingTimeframes:
     def from_(self) -> builtins.str:
         '''The hour of the day on which scheduling starts.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#from SyntheticsTest#from}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#from SyntheticsTest#from}
         '''
         result = self._values.get("from_")
         assert result is not None, "Required property 'from_' is missing"
@@ -11915,7 +11915,7 @@ class SyntheticsTestMobileOptionsListSchedulingTimeframes:
     def to(self) -> builtins.str:
         '''The hour of the day on which scheduling ends.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#to SyntheticsTest#to}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#to SyntheticsTest#to}
         '''
         result = self._values.get("to")
         assert result is not None, "Required property 'to' is missing"
@@ -12167,23 +12167,23 @@ class SyntheticsTestMobileOptionsListStruct:
         verbosity: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param device_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}.
-        :param mobile_application: mobile_application block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_application SyntheticsTest#mobile_application}
-        :param tick_every: How often the test should run (in seconds). Valid range is ``300-604800`` for mobile tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
-        :param allow_application_crash: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_application_crash SyntheticsTest#allow_application_crash}.
-        :param bindings: bindings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#bindings SyntheticsTest#bindings}
-        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
-        :param default_step_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#default_step_timeout SyntheticsTest#default_step_timeout}.
-        :param disable_auto_accept_alert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_auto_accept_alert SyntheticsTest#disable_auto_accept_alert}.
-        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
-        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
-        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
-        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
-        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
-        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
-        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
-        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
-        :param verbosity: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#verbosity SyntheticsTest#verbosity}.
+        :param device_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}.
+        :param mobile_application: mobile_application block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_application SyntheticsTest#mobile_application}
+        :param tick_every: How often the test should run (in seconds). Valid range is ``300-604800`` for mobile tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
+        :param allow_application_crash: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_application_crash SyntheticsTest#allow_application_crash}.
+        :param bindings: bindings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#bindings SyntheticsTest#bindings}
+        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
+        :param default_step_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#default_step_timeout SyntheticsTest#default_step_timeout}.
+        :param disable_auto_accept_alert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_auto_accept_alert SyntheticsTest#disable_auto_accept_alert}.
+        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
+        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
+        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
+        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
+        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
+        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
+        :param verbosity: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#verbosity SyntheticsTest#verbosity}.
         '''
         if isinstance(mobile_application, dict):
             mobile_application = SyntheticsTestMobileOptionsListMobileApplication(**mobile_application)
@@ -12250,7 +12250,7 @@ class SyntheticsTestMobileOptionsListStruct:
 
     @builtins.property
     def device_ids(self) -> typing.List[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#device_ids SyntheticsTest#device_ids}.'''
         result = self._values.get("device_ids")
         assert result is not None, "Required property 'device_ids' is missing"
         return typing.cast(typing.List[builtins.str], result)
@@ -12259,7 +12259,7 @@ class SyntheticsTestMobileOptionsListStruct:
     def mobile_application(self) -> SyntheticsTestMobileOptionsListMobileApplication:
         '''mobile_application block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#mobile_application SyntheticsTest#mobile_application}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#mobile_application SyntheticsTest#mobile_application}
         '''
         result = self._values.get("mobile_application")
         assert result is not None, "Required property 'mobile_application' is missing"
@@ -12269,7 +12269,7 @@ class SyntheticsTestMobileOptionsListStruct:
     def tick_every(self) -> jsii.Number:
         '''How often the test should run (in seconds). Valid range is ``300-604800`` for mobile tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
         '''
         result = self._values.get("tick_every")
         assert result is not None, "Required property 'tick_every' is missing"
@@ -12279,7 +12279,7 @@ class SyntheticsTestMobileOptionsListStruct:
     def allow_application_crash(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_application_crash SyntheticsTest#allow_application_crash}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_application_crash SyntheticsTest#allow_application_crash}.'''
         result = self._values.get("allow_application_crash")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -12289,7 +12289,7 @@ class SyntheticsTestMobileOptionsListStruct:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestMobileOptionsListBindings]]]:
         '''bindings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#bindings SyntheticsTest#bindings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#bindings SyntheticsTest#bindings}
         '''
         result = self._values.get("bindings")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[SyntheticsTestMobileOptionsListBindings]]], result)
@@ -12298,14 +12298,14 @@ class SyntheticsTestMobileOptionsListStruct:
     def ci(self) -> typing.Optional[SyntheticsTestMobileOptionsListCi]:
         '''ci block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
         '''
         result = self._values.get("ci")
         return typing.cast(typing.Optional[SyntheticsTestMobileOptionsListCi], result)
 
     @builtins.property
     def default_step_timeout(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#default_step_timeout SyntheticsTest#default_step_timeout}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#default_step_timeout SyntheticsTest#default_step_timeout}.'''
         result = self._values.get("default_step_timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -12313,7 +12313,7 @@ class SyntheticsTestMobileOptionsListStruct:
     def disable_auto_accept_alert(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_auto_accept_alert SyntheticsTest#disable_auto_accept_alert}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_auto_accept_alert SyntheticsTest#disable_auto_accept_alert}.'''
         result = self._values.get("disable_auto_accept_alert")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -12321,7 +12321,7 @@ class SyntheticsTestMobileOptionsListStruct:
     def min_failure_duration(self) -> typing.Optional[jsii.Number]:
         '''Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
         '''
         result = self._values.get("min_failure_duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -12330,7 +12330,7 @@ class SyntheticsTestMobileOptionsListStruct:
     def monitor_name(self) -> typing.Optional[builtins.str]:
         '''The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
         '''
         result = self._values.get("monitor_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -12341,14 +12341,14 @@ class SyntheticsTestMobileOptionsListStruct:
     ) -> typing.Optional[SyntheticsTestMobileOptionsListMonitorOptions]:
         '''monitor_options block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
         '''
         result = self._values.get("monitor_options")
         return typing.cast(typing.Optional[SyntheticsTestMobileOptionsListMonitorOptions], result)
 
     @builtins.property
     def monitor_priority(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.'''
         result = self._values.get("monitor_priority")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -12358,7 +12358,7 @@ class SyntheticsTestMobileOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Prevents saving screenshots of the steps.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
         '''
         result = self._values.get("no_screenshot")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -12369,7 +12369,7 @@ class SyntheticsTestMobileOptionsListStruct:
 
         **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
         '''
         result = self._values.get("restricted_roles")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -12378,7 +12378,7 @@ class SyntheticsTestMobileOptionsListStruct:
     def retry(self) -> typing.Optional[SyntheticsTestMobileOptionsListRetry]:
         '''retry block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
         '''
         result = self._values.get("retry")
         return typing.cast(typing.Optional[SyntheticsTestMobileOptionsListRetry], result)
@@ -12387,14 +12387,14 @@ class SyntheticsTestMobileOptionsListStruct:
     def scheduling(self) -> typing.Optional[SyntheticsTestMobileOptionsListScheduling]:
         '''scheduling block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
         '''
         result = self._values.get("scheduling")
         return typing.cast(typing.Optional[SyntheticsTestMobileOptionsListScheduling], result)
 
     @builtins.property
     def verbosity(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#verbosity SyntheticsTest#verbosity}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#verbosity SyntheticsTest#verbosity}.'''
         result = self._values.get("verbosity")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -12446,7 +12446,7 @@ class SyntheticsTestMobileOptionsListStructOutputReference(
     @jsii.member(jsii_name="putCi")
     def put_ci(self, *, execution_rule: builtins.str) -> None:
         '''
-        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
+        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
         '''
         value = SyntheticsTestMobileOptionsListCi(execution_rule=execution_rule)
 
@@ -12461,9 +12461,9 @@ class SyntheticsTestMobileOptionsListStructOutputReference(
         reference_type: builtins.str,
     ) -> None:
         '''
-        :param application_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}.
-        :param reference_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#reference_id SyntheticsTest#reference_id}.
-        :param reference_type: Valid values are ``latest``, ``version``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#reference_type SyntheticsTest#reference_type}
+        :param application_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}.
+        :param reference_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#reference_id SyntheticsTest#reference_id}.
+        :param reference_type: Valid values are ``latest``, ``version``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#reference_type SyntheticsTest#reference_type}
         '''
         value = SyntheticsTestMobileOptionsListMobileApplication(
             application_id=application_id,
@@ -12483,10 +12483,10 @@ class SyntheticsTestMobileOptionsListStructOutputReference(
         renotify_occurrences: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
-        :param notification_preset_name: Valid values are ``show_all``, ``hide_all``, ``hide_query``, ``hide_handles``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#notification_preset_name SyntheticsTest#notification_preset_name}
-        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
-        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
+        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
+        :param notification_preset_name: Valid values are ``show_all``, ``hide_all``, ``hide_query``, ``hide_handles``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#notification_preset_name SyntheticsTest#notification_preset_name}
+        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
+        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
         '''
         value = SyntheticsTestMobileOptionsListMonitorOptions(
             escalation_message=escalation_message,
@@ -12505,8 +12505,8 @@ class SyntheticsTestMobileOptionsListStructOutputReference(
         interval: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
-        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         value = SyntheticsTestMobileOptionsListRetry(count=count, interval=interval)
 
@@ -12520,8 +12520,8 @@ class SyntheticsTestMobileOptionsListStructOutputReference(
         timezone: builtins.str,
     ) -> None:
         '''
-        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
-        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
+        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
+        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
         '''
         value = SyntheticsTestMobileOptionsListScheduling(
             timeframes=timeframes, timezone=timezone
@@ -12909,15 +12909,15 @@ class SyntheticsTestMobileStep:
         timeout: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param name: The name of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param params: params block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#params SyntheticsTest#params}
-        :param type: The type of the step. Valid values are ``assertElementContent``, ``assertScreenContains``, ``assertScreenLacks``, ``doubleTap``, ``extractVariable``, ``flick``, ``openDeeplink``, ``playSubTest``, ``pressBack``, ``restartApplication``, ``rotate``, ``scroll``, ``scrollToElement``, ``tap``, ``toggleWiFi``, ``typeText``, ``wait``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param allow_failure: A boolean set to allow this step to fail. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
-        :param has_new_step_element: A boolean set to determine if the step has a new step element. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#has_new_step_element SyntheticsTest#has_new_step_element}
-        :param is_critical: A boolean to use in addition to ``allowFailure`` to determine if the test should be marked as failed when the step fails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
-        :param no_screenshot: A boolean set to not take a screenshot for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
-        :param public_id: The public ID of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#public_id SyntheticsTest#public_id}
-        :param timeout: The time before declaring a step failed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        :param name: The name of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param params: params block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#params SyntheticsTest#params}
+        :param type: The type of the step. Valid values are ``assertElementContent``, ``assertScreenContains``, ``assertScreenLacks``, ``doubleTap``, ``extractVariable``, ``flick``, ``openDeeplink``, ``playSubTest``, ``pressBack``, ``restartApplication``, ``rotate``, ``scroll``, ``scrollToElement``, ``tap``, ``toggleWiFi``, ``typeText``, ``wait``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param allow_failure: A boolean set to allow this step to fail. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
+        :param has_new_step_element: A boolean set to determine if the step has a new step element. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#has_new_step_element SyntheticsTest#has_new_step_element}
+        :param is_critical: A boolean to use in addition to ``allowFailure`` to determine if the test should be marked as failed when the step fails. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
+        :param no_screenshot: A boolean set to not take a screenshot for the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        :param public_id: The public ID of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#public_id SyntheticsTest#public_id}
+        :param timeout: The time before declaring a step failed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
         '''
         if isinstance(params, dict):
             params = SyntheticsTestMobileStepParams(**params)
@@ -12954,7 +12954,7 @@ class SyntheticsTestMobileStep:
     def name(self) -> builtins.str:
         '''The name of the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -12964,7 +12964,7 @@ class SyntheticsTestMobileStep:
     def params(self) -> "SyntheticsTestMobileStepParams":
         '''params block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#params SyntheticsTest#params}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#params SyntheticsTest#params}
         '''
         result = self._values.get("params")
         assert result is not None, "Required property 'params' is missing"
@@ -12976,7 +12976,7 @@ class SyntheticsTestMobileStep:
 
         Valid values are ``assertElementContent``, ``assertScreenContains``, ``assertScreenLacks``, ``doubleTap``, ``extractVariable``, ``flick``, ``openDeeplink``, ``playSubTest``, ``pressBack``, ``restartApplication``, ``rotate``, ``scroll``, ``scrollToElement``, ``tap``, ``toggleWiFi``, ``typeText``, ``wait``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -12988,7 +12988,7 @@ class SyntheticsTestMobileStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''A boolean set to allow this step to fail.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_failure SyntheticsTest#allow_failure}
         '''
         result = self._values.get("allow_failure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -12999,7 +12999,7 @@ class SyntheticsTestMobileStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''A boolean set to determine if the step has a new step element.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#has_new_step_element SyntheticsTest#has_new_step_element}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#has_new_step_element SyntheticsTest#has_new_step_element}
         '''
         result = self._values.get("has_new_step_element")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -13010,7 +13010,7 @@ class SyntheticsTestMobileStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''A boolean to use in addition to ``allowFailure`` to determine if the test should be marked as failed when the step fails.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_critical SyntheticsTest#is_critical}
         '''
         result = self._values.get("is_critical")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -13021,7 +13021,7 @@ class SyntheticsTestMobileStep:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''A boolean set to not take a screenshot for the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
         '''
         result = self._values.get("no_screenshot")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -13030,7 +13030,7 @@ class SyntheticsTestMobileStep:
     def public_id(self) -> typing.Optional[builtins.str]:
         '''The public ID of the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#public_id SyntheticsTest#public_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#public_id SyntheticsTest#public_id}
         '''
         result = self._values.get("public_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -13039,7 +13039,7 @@ class SyntheticsTestMobileStep:
     def timeout(self) -> typing.Optional[jsii.Number]:
         '''The time before declaring a step failed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
         '''
         result = self._values.get("timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -13191,19 +13191,19 @@ class SyntheticsTestMobileStepOutputReference(
         y: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check SyntheticsTest#check}
-        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
-        :param direction: Valid values are ``up``, ``down``, ``left``, ``right``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#direction SyntheticsTest#direction}
-        :param element: element block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element SyntheticsTest#element}
-        :param enable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#enable SyntheticsTest#enable}.
-        :param max_scrolls: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#max_scrolls SyntheticsTest#max_scrolls}.
-        :param positions: positions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#positions SyntheticsTest#positions}
-        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
-        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
-        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
-        :param with_enter: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#with_enter SyntheticsTest#with_enter}.
-        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}
-        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}
+        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check SyntheticsTest#check}
+        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
+        :param direction: Valid values are ``up``, ``down``, ``left``, ``right``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#direction SyntheticsTest#direction}
+        :param element: element block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element SyntheticsTest#element}
+        :param enable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#enable SyntheticsTest#enable}.
+        :param max_scrolls: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#max_scrolls SyntheticsTest#max_scrolls}.
+        :param positions: positions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#positions SyntheticsTest#positions}
+        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
+        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
+        :param with_enter: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#with_enter SyntheticsTest#with_enter}.
+        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}
+        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}
         '''
         value_ = SyntheticsTestMobileStepParams(
             check=check,
@@ -13471,19 +13471,19 @@ class SyntheticsTestMobileStepParams:
         y: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check SyntheticsTest#check}
-        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
-        :param direction: Valid values are ``up``, ``down``, ``left``, ``right``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#direction SyntheticsTest#direction}
-        :param element: element block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element SyntheticsTest#element}
-        :param enable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#enable SyntheticsTest#enable}.
-        :param max_scrolls: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#max_scrolls SyntheticsTest#max_scrolls}.
-        :param positions: positions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#positions SyntheticsTest#positions}
-        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
-        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
-        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
-        :param with_enter: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#with_enter SyntheticsTest#with_enter}.
-        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}
-        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}
+        :param check: Check type to use for an assertion step. Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check SyntheticsTest#check}
+        :param delay: Delay between each key stroke for a "type test" step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
+        :param direction: Valid values are ``up``, ``down``, ``left``, ``right``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#direction SyntheticsTest#direction}
+        :param element: element block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element SyntheticsTest#element}
+        :param enable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#enable SyntheticsTest#enable}.
+        :param max_scrolls: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#max_scrolls SyntheticsTest#max_scrolls}.
+        :param positions: positions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#positions SyntheticsTest#positions}
+        :param subtest_public_id: ID of the Synthetics test to use as subtest. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
+        :param value: Value of the step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        :param variable: variable block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
+        :param with_enter: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#with_enter SyntheticsTest#with_enter}.
+        :param x: X coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}
+        :param y: Y coordinates for a "scroll step". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}
         '''
         if isinstance(element, dict):
             element = SyntheticsTestMobileStepParamsElement(**element)
@@ -13538,7 +13538,7 @@ class SyntheticsTestMobileStepParams:
 
         Valid values are ``equals``, ``notEquals``, ``contains``, ``notContains``, ``startsWith``, ``notStartsWith``, ``greater``, ``lower``, ``greaterEquals``, ``lowerEquals``, ``matchRegex``, ``between``, ``isEmpty``, ``notIsEmpty``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check SyntheticsTest#check}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check SyntheticsTest#check}
         '''
         result = self._values.get("check")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -13547,7 +13547,7 @@ class SyntheticsTestMobileStepParams:
     def delay(self) -> typing.Optional[jsii.Number]:
         '''Delay between each key stroke for a "type test" step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#delay SyntheticsTest#delay}
         '''
         result = self._values.get("delay")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -13556,7 +13556,7 @@ class SyntheticsTestMobileStepParams:
     def direction(self) -> typing.Optional[builtins.str]:
         '''Valid values are ``up``, ``down``, ``left``, ``right``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#direction SyntheticsTest#direction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#direction SyntheticsTest#direction}
         '''
         result = self._values.get("direction")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -13565,7 +13565,7 @@ class SyntheticsTestMobileStepParams:
     def element(self) -> typing.Optional["SyntheticsTestMobileStepParamsElement"]:
         '''element block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element SyntheticsTest#element}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element SyntheticsTest#element}
         '''
         result = self._values.get("element")
         return typing.cast(typing.Optional["SyntheticsTestMobileStepParamsElement"], result)
@@ -13574,13 +13574,13 @@ class SyntheticsTestMobileStepParams:
     def enable(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#enable SyntheticsTest#enable}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#enable SyntheticsTest#enable}.'''
         result = self._values.get("enable")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def max_scrolls(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#max_scrolls SyntheticsTest#max_scrolls}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#max_scrolls SyntheticsTest#max_scrolls}.'''
         result = self._values.get("max_scrolls")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -13590,7 +13590,7 @@ class SyntheticsTestMobileStepParams:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestMobileStepParamsPositions"]]]:
         '''positions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#positions SyntheticsTest#positions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#positions SyntheticsTest#positions}
         '''
         result = self._values.get("positions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestMobileStepParamsPositions"]]], result)
@@ -13599,7 +13599,7 @@ class SyntheticsTestMobileStepParams:
     def subtest_public_id(self) -> typing.Optional[builtins.str]:
         '''ID of the Synthetics test to use as subtest.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#subtest_public_id SyntheticsTest#subtest_public_id}
         '''
         result = self._values.get("subtest_public_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -13608,7 +13608,7 @@ class SyntheticsTestMobileStepParams:
     def value(self) -> typing.Optional[builtins.str]:
         '''Value of the step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -13617,7 +13617,7 @@ class SyntheticsTestMobileStepParams:
     def variable(self) -> typing.Optional["SyntheticsTestMobileStepParamsVariable"]:
         '''variable block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#variable SyntheticsTest#variable}
         '''
         result = self._values.get("variable")
         return typing.cast(typing.Optional["SyntheticsTestMobileStepParamsVariable"], result)
@@ -13626,7 +13626,7 @@ class SyntheticsTestMobileStepParams:
     def with_enter(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#with_enter SyntheticsTest#with_enter}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#with_enter SyntheticsTest#with_enter}.'''
         result = self._values.get("with_enter")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -13634,7 +13634,7 @@ class SyntheticsTestMobileStepParams:
     def x(self) -> typing.Optional[jsii.Number]:
         '''X coordinates for a "scroll step".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}
         '''
         result = self._values.get("x")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -13643,7 +13643,7 @@ class SyntheticsTestMobileStepParams:
     def y(self) -> typing.Optional[jsii.Number]:
         '''Y coordinates for a "scroll step".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}
         '''
         result = self._values.get("y")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -13688,14 +13688,14 @@ class SyntheticsTestMobileStepParamsElement:
         view_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param context: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#context SyntheticsTest#context}.
-        :param context_type: Valid values are ``native``, ``web``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#context_type SyntheticsTest#context_type}
-        :param element_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element_description SyntheticsTest#element_description}.
-        :param multi_locator: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#multi_locator SyntheticsTest#multi_locator}.
-        :param relative_position: relative_position block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#relative_position SyntheticsTest#relative_position}
-        :param text_content: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#text_content SyntheticsTest#text_content}.
-        :param user_locator: user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#user_locator SyntheticsTest#user_locator}
-        :param view_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#view_name SyntheticsTest#view_name}.
+        :param context: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#context SyntheticsTest#context}.
+        :param context_type: Valid values are ``native``, ``web``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#context_type SyntheticsTest#context_type}
+        :param element_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element_description SyntheticsTest#element_description}.
+        :param multi_locator: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#multi_locator SyntheticsTest#multi_locator}.
+        :param relative_position: relative_position block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#relative_position SyntheticsTest#relative_position}
+        :param text_content: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#text_content SyntheticsTest#text_content}.
+        :param user_locator: user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#user_locator SyntheticsTest#user_locator}
+        :param view_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#view_name SyntheticsTest#view_name}.
         '''
         if isinstance(relative_position, dict):
             relative_position = SyntheticsTestMobileStepParamsElementRelativePosition(**relative_position)
@@ -13731,7 +13731,7 @@ class SyntheticsTestMobileStepParamsElement:
 
     @builtins.property
     def context(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#context SyntheticsTest#context}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#context SyntheticsTest#context}.'''
         result = self._values.get("context")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -13739,14 +13739,14 @@ class SyntheticsTestMobileStepParamsElement:
     def context_type(self) -> typing.Optional[builtins.str]:
         '''Valid values are ``native``, ``web``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#context_type SyntheticsTest#context_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#context_type SyntheticsTest#context_type}
         '''
         result = self._values.get("context_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def element_description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element_description SyntheticsTest#element_description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element_description SyntheticsTest#element_description}.'''
         result = self._values.get("element_description")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -13754,7 +13754,7 @@ class SyntheticsTestMobileStepParamsElement:
     def multi_locator(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#multi_locator SyntheticsTest#multi_locator}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#multi_locator SyntheticsTest#multi_locator}.'''
         result = self._values.get("multi_locator")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -13764,14 +13764,14 @@ class SyntheticsTestMobileStepParamsElement:
     ) -> typing.Optional["SyntheticsTestMobileStepParamsElementRelativePosition"]:
         '''relative_position block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#relative_position SyntheticsTest#relative_position}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#relative_position SyntheticsTest#relative_position}
         '''
         result = self._values.get("relative_position")
         return typing.cast(typing.Optional["SyntheticsTestMobileStepParamsElementRelativePosition"], result)
 
     @builtins.property
     def text_content(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#text_content SyntheticsTest#text_content}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#text_content SyntheticsTest#text_content}.'''
         result = self._values.get("text_content")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -13781,14 +13781,14 @@ class SyntheticsTestMobileStepParamsElement:
     ) -> typing.Optional["SyntheticsTestMobileStepParamsElementUserLocator"]:
         '''user_locator block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#user_locator SyntheticsTest#user_locator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#user_locator SyntheticsTest#user_locator}
         '''
         result = self._values.get("user_locator")
         return typing.cast(typing.Optional["SyntheticsTestMobileStepParamsElementUserLocator"], result)
 
     @builtins.property
     def view_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#view_name SyntheticsTest#view_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#view_name SyntheticsTest#view_name}.'''
         result = self._values.get("view_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -13832,8 +13832,8 @@ class SyntheticsTestMobileStepParamsElementOutputReference(
         y: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param x: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}.
-        :param y: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}.
+        :param x: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}.
+        :param y: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}.
         '''
         value = SyntheticsTestMobileStepParamsElementRelativePosition(x=x, y=y)
 
@@ -13847,8 +13847,8 @@ class SyntheticsTestMobileStepParamsElementOutputReference(
         values: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["SyntheticsTestMobileStepParamsElementUserLocatorValues", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param fail_test_on_cannot_locate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}.
-        :param values: values block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#values SyntheticsTest#values}
+        :param fail_test_on_cannot_locate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}.
+        :param values: values block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#values SyntheticsTest#values}
         '''
         value = SyntheticsTestMobileStepParamsElementUserLocator(
             fail_test_on_cannot_locate=fail_test_on_cannot_locate, values=values
@@ -14049,8 +14049,8 @@ class SyntheticsTestMobileStepParamsElementRelativePosition:
         y: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param x: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}.
-        :param y: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}.
+        :param x: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}.
+        :param y: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7000348bf9ecde6745661a8be07948b02f9939d4a7aa52469ad173f692ed8c4f)
@@ -14064,13 +14064,13 @@ class SyntheticsTestMobileStepParamsElementRelativePosition:
 
     @builtins.property
     def x(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}.'''
         result = self._values.get("x")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def y(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}.'''
         result = self._values.get("y")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -14182,8 +14182,8 @@ class SyntheticsTestMobileStepParamsElementUserLocator:
         values: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["SyntheticsTestMobileStepParamsElementUserLocatorValues", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param fail_test_on_cannot_locate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}.
-        :param values: values block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#values SyntheticsTest#values}
+        :param fail_test_on_cannot_locate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}.
+        :param values: values block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#values SyntheticsTest#values}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__2d701108096aa05e3ae24cb1f2a165e6d94bf6f5e6b9d7e48672654167534137)
@@ -14199,7 +14199,7 @@ class SyntheticsTestMobileStepParamsElementUserLocator:
     def fail_test_on_cannot_locate(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#fail_test_on_cannot_locate SyntheticsTest#fail_test_on_cannot_locate}.'''
         result = self._values.get("fail_test_on_cannot_locate")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -14209,7 +14209,7 @@ class SyntheticsTestMobileStepParamsElementUserLocator:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestMobileStepParamsElementUserLocatorValues"]]]:
         '''values block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#values SyntheticsTest#values}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#values SyntheticsTest#values}
         '''
         result = self._values.get("values")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestMobileStepParamsElementUserLocatorValues"]]], result)
@@ -14334,8 +14334,8 @@ class SyntheticsTestMobileStepParamsElementUserLocatorValues:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param type: Valid values are ``accessibility-id``, ``id``, ``ios-predicate-string``, ``ios-class-chain``, ``xpath``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}.
+        :param type: Valid values are ``accessibility-id``, ``id``, ``ios-predicate-string``, ``ios-class-chain``, ``xpath``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e3f47ce668a5ef526ccfa3ae8b642d94b6978b9fbf8763202afba1f21b3ce977)
@@ -14351,14 +14351,14 @@ class SyntheticsTestMobileStepParamsElementUserLocatorValues:
     def type(self) -> typing.Optional[builtins.str]:
         '''Valid values are ``accessibility-id``, ``id``, ``ios-predicate-string``, ``ios-class-chain``, ``xpath``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def value(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#value SyntheticsTest#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#value SyntheticsTest#value}.'''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -14587,14 +14587,14 @@ class SyntheticsTestMobileStepParamsOutputReference(
         view_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param context: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#context SyntheticsTest#context}.
-        :param context_type: Valid values are ``native``, ``web``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#context_type SyntheticsTest#context_type}
-        :param element_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#element_description SyntheticsTest#element_description}.
-        :param multi_locator: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#multi_locator SyntheticsTest#multi_locator}.
-        :param relative_position: relative_position block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#relative_position SyntheticsTest#relative_position}
-        :param text_content: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#text_content SyntheticsTest#text_content}.
-        :param user_locator: user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#user_locator SyntheticsTest#user_locator}
-        :param view_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#view_name SyntheticsTest#view_name}.
+        :param context: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#context SyntheticsTest#context}.
+        :param context_type: Valid values are ``native``, ``web``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#context_type SyntheticsTest#context_type}
+        :param element_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#element_description SyntheticsTest#element_description}.
+        :param multi_locator: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#multi_locator SyntheticsTest#multi_locator}.
+        :param relative_position: relative_position block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#relative_position SyntheticsTest#relative_position}
+        :param text_content: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#text_content SyntheticsTest#text_content}.
+        :param user_locator: user_locator block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#user_locator SyntheticsTest#user_locator}
+        :param view_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#view_name SyntheticsTest#view_name}.
         '''
         value = SyntheticsTestMobileStepParamsElement(
             context=context,
@@ -14630,8 +14630,8 @@ class SyntheticsTestMobileStepParamsOutputReference(
         example: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
         '''
         value = SyntheticsTestMobileStepParamsVariable(name=name, example=example)
 
@@ -14932,8 +14932,8 @@ class SyntheticsTestMobileStepParamsPositions:
         y: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param x: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}.
-        :param y: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}.
+        :param x: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}.
+        :param y: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__bf5f33baf60f676573bfa197868478c10ee9356c691d1a9a9b22830c9c613daf)
@@ -14947,13 +14947,13 @@ class SyntheticsTestMobileStepParamsPositions:
 
     @builtins.property
     def x(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#x SyntheticsTest#x}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#x SyntheticsTest#x}.'''
         result = self._values.get("x")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def y(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#y SyntheticsTest#y}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#y SyntheticsTest#y}.'''
         result = self._values.get("y")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -15161,8 +15161,8 @@ class SyntheticsTestMobileStepParamsVariable:
         example: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        :param name: Name of the extracted variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param example: Example of the extracted variable. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8af64e81ebb977b1e07c7c31bc7ad016313a89605560ecec1d169746e4ffed6b)
@@ -15178,7 +15178,7 @@ class SyntheticsTestMobileStepParamsVariable:
     def name(self) -> builtins.str:
         '''Name of the extracted variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -15188,7 +15188,7 @@ class SyntheticsTestMobileStepParamsVariable:
     def example(self) -> typing.Optional[builtins.str]:
         '''Example of the extracted variable. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#example SyntheticsTest#example}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#example SyntheticsTest#example}
         '''
         result = self._values.get("example")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -15287,7 +15287,7 @@ class SyntheticsTestMobileStepParamsVariableOutputReference(
 class SyntheticsTestOptionsListCi:
     def __init__(self, *, execution_rule: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
+        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c0093f6a14d51c2ea4e6d07755ef1fdafdd0b8b9df89ddaf3c83bdcead75f6b1)
@@ -15300,7 +15300,7 @@ class SyntheticsTestOptionsListCi:
     def execution_rule(self) -> typing.Optional[builtins.str]:
         '''Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
         '''
         result = self._values.get("execution_rule")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -15392,9 +15392,9 @@ class SyntheticsTestOptionsListMonitorOptions:
         renotify_occurrences: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
-        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
-        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
+        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
+        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
+        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__28889328257d49fcc4bc5f51ec63aed2902e3d925d40bd6ed9edf1ec9b7ee0ce)
@@ -15413,7 +15413,7 @@ class SyntheticsTestOptionsListMonitorOptions:
     def escalation_message(self) -> typing.Optional[builtins.str]:
         '''A message to include with a re-notification.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
         '''
         result = self._values.get("escalation_message")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -15424,7 +15424,7 @@ class SyntheticsTestOptionsListMonitorOptions:
 
         Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
         '''
         result = self._values.get("renotify_interval")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -15433,7 +15433,7 @@ class SyntheticsTestOptionsListMonitorOptions:
     def renotify_occurrences(self) -> typing.Optional[jsii.Number]:
         '''The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
         '''
         result = self._values.get("renotify_occurrences")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -15564,8 +15564,8 @@ class SyntheticsTestOptionsListRetry:
         interval: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
-        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1fa0df52a234c3b47310cd58b4e593d79f53079a82be095d4e9a400d73721761)
@@ -15583,7 +15583,7 @@ class SyntheticsTestOptionsListRetry:
 
         Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
         '''
         result = self._values.get("count")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -15592,7 +15592,7 @@ class SyntheticsTestOptionsListRetry:
     def interval(self) -> typing.Optional[jsii.Number]:
         '''Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         result = self._values.get("interval")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -15705,9 +15705,9 @@ class SyntheticsTestOptionsListRumSettings:
         client_token_id: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param is_enabled: Determines whether RUM data is collected during test runs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_enabled SyntheticsTest#is_enabled}
-        :param application_id: RUM application ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}
-        :param client_token_id: RUM application API key ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_token_id SyntheticsTest#client_token_id}
+        :param is_enabled: Determines whether RUM data is collected during test runs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_enabled SyntheticsTest#is_enabled}
+        :param application_id: RUM application ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}
+        :param client_token_id: RUM application API key ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_token_id SyntheticsTest#client_token_id}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f6b5f4754bdd2637d48c2b54704c64d2e1663b2f709176c1af7d043ac9495d03)
@@ -15726,7 +15726,7 @@ class SyntheticsTestOptionsListRumSettings:
     def is_enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
         '''Determines whether RUM data is collected during test runs.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_enabled SyntheticsTest#is_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_enabled SyntheticsTest#is_enabled}
         '''
         result = self._values.get("is_enabled")
         assert result is not None, "Required property 'is_enabled' is missing"
@@ -15736,7 +15736,7 @@ class SyntheticsTestOptionsListRumSettings:
     def application_id(self) -> typing.Optional[builtins.str]:
         '''RUM application ID used to collect RUM data for the browser test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}
         '''
         result = self._values.get("application_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -15745,7 +15745,7 @@ class SyntheticsTestOptionsListRumSettings:
     def client_token_id(self) -> typing.Optional[jsii.Number]:
         '''RUM application API key ID used to collect RUM data for the browser test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_token_id SyntheticsTest#client_token_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_token_id SyntheticsTest#client_token_id}
         '''
         result = self._values.get("client_token_id")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -15875,8 +15875,8 @@ class SyntheticsTestOptionsListScheduling:
         timezone: builtins.str,
     ) -> None:
         '''
-        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
-        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
+        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
+        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__6433945945039476af498afb9f063790dcd37b61126c86fe56a1c6ad700b3884)
@@ -15893,7 +15893,7 @@ class SyntheticsTestOptionsListScheduling:
     ) -> typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["SyntheticsTestOptionsListSchedulingTimeframes"]]:
         '''timeframes block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
         '''
         result = self._values.get("timeframes")
         assert result is not None, "Required property 'timeframes' is missing"
@@ -15903,7 +15903,7 @@ class SyntheticsTestOptionsListScheduling:
     def timezone(self) -> builtins.str:
         '''Timezone in which the timeframe is based.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
         '''
         result = self._values.get("timezone")
         assert result is not None, "Required property 'timezone' is missing"
@@ -16013,9 +16013,9 @@ class SyntheticsTestOptionsListSchedulingTimeframes:
         to: builtins.str,
     ) -> None:
         '''
-        :param day: Number representing the day of the week. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#day SyntheticsTest#day}
-        :param from_: The hour of the day on which scheduling starts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#from SyntheticsTest#from}
-        :param to: The hour of the day on which scheduling ends. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#to SyntheticsTest#to}
+        :param day: Number representing the day of the week. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#day SyntheticsTest#day}
+        :param from_: The hour of the day on which scheduling starts. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#from SyntheticsTest#from}
+        :param to: The hour of the day on which scheduling ends. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#to SyntheticsTest#to}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__adc2ea76ab0f1cbf193fec28e452cd7dda8e0ff496c82704fccf503401afde9e)
@@ -16032,7 +16032,7 @@ class SyntheticsTestOptionsListSchedulingTimeframes:
     def day(self) -> jsii.Number:
         '''Number representing the day of the week.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#day SyntheticsTest#day}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#day SyntheticsTest#day}
         '''
         result = self._values.get("day")
         assert result is not None, "Required property 'day' is missing"
@@ -16042,7 +16042,7 @@ class SyntheticsTestOptionsListSchedulingTimeframes:
     def from_(self) -> builtins.str:
         '''The hour of the day on which scheduling starts.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#from SyntheticsTest#from}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#from SyntheticsTest#from}
         '''
         result = self._values.get("from_")
         assert result is not None, "Required property 'from_' is missing"
@@ -16052,7 +16052,7 @@ class SyntheticsTestOptionsListSchedulingTimeframes:
     def to(self) -> builtins.str:
         '''The hour of the day on which scheduling ends.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#to SyntheticsTest#to}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#to SyntheticsTest#to}
         '''
         result = self._values.get("to")
         assert result is not None, "Required property 'to' is missing"
@@ -16312,27 +16312,27 @@ class SyntheticsTestOptionsListStruct:
         scheduling: typing.Optional[typing.Union[SyntheticsTestOptionsListScheduling, typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param tick_every: How often the test should run (in seconds). Valid range is ``30-604800`` for API tests and ``60-604800`` for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
-        :param accept_self_signed: For SSL test, whether or not the test should allow self signed certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#accept_self_signed SyntheticsTest#accept_self_signed}
-        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
-        :param check_certificate_revocation: For SSL test, whether or not the test should fail on revoked certificate in stapled OCSP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check_certificate_revocation SyntheticsTest#check_certificate_revocation}
-        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
-        :param disable_cors: Disable Cross-Origin Resource Sharing for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_cors SyntheticsTest#disable_cors}
-        :param disable_csp: Disable Content Security Policy for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_csp SyntheticsTest#disable_csp}
-        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
-        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
-        :param ignore_server_certificate_error: Ignore server certificate error for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ignore_server_certificate_error SyntheticsTest#ignore_server_certificate_error}
-        :param initial_navigation_timeout: Timeout before declaring the initial step as failed (in seconds) for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#initial_navigation_timeout SyntheticsTest#initial_navigation_timeout}
-        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
-        :param min_location_failed: Minimum number of locations in failure required to trigger an alert. Defaults to ``1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_location_failed SyntheticsTest#min_location_failed}
-        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
-        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
-        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
-        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
-        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
-        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
-        :param rum_settings: rum_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#rum_settings SyntheticsTest#rum_settings}
-        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
+        :param tick_every: How often the test should run (in seconds). Valid range is ``30-604800`` for API tests and ``60-604800`` for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
+        :param accept_self_signed: For SSL test, whether or not the test should allow self signed certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#accept_self_signed SyntheticsTest#accept_self_signed}
+        :param allow_insecure: Allows loading insecure content for a request in an API test or in a multistep API test step. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
+        :param check_certificate_revocation: For SSL test, whether or not the test should fail on revoked certificate in stapled OCSP. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check_certificate_revocation SyntheticsTest#check_certificate_revocation}
+        :param ci: ci block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
+        :param disable_cors: Disable Cross-Origin Resource Sharing for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_cors SyntheticsTest#disable_cors}
+        :param disable_csp: Disable Content Security Policy for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_csp SyntheticsTest#disable_csp}
+        :param follow_redirects: Determines whether or not the API HTTP test should follow redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
+        :param http_version: HTTP version to use for an HTTP request in an API test or step. Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        :param ignore_server_certificate_error: Ignore server certificate error for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ignore_server_certificate_error SyntheticsTest#ignore_server_certificate_error}
+        :param initial_navigation_timeout: Timeout before declaring the initial step as failed (in seconds) for browser tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#initial_navigation_timeout SyntheticsTest#initial_navigation_timeout}
+        :param min_failure_duration: Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
+        :param min_location_failed: Minimum number of locations in failure required to trigger an alert. Defaults to ``1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_location_failed SyntheticsTest#min_location_failed}
+        :param monitor_name: The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
+        :param monitor_options: monitor_options block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
+        :param monitor_priority: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.
+        :param no_screenshot: Prevents saving screenshots of the steps. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        :param restricted_roles: A list of role identifiers pulled from the Roles API to restrict read and write access. **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
+        :param retry: retry block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        :param rum_settings: rum_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#rum_settings SyntheticsTest#rum_settings}
+        :param scheduling: scheduling block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
         '''
         if isinstance(ci, dict):
             ci = SyntheticsTestOptionsListCi(**ci)
@@ -16417,7 +16417,7 @@ class SyntheticsTestOptionsListStruct:
 
         Valid range is ``30-604800`` for API tests and ``60-604800`` for browser tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#tick_every SyntheticsTest#tick_every}
         '''
         result = self._values.get("tick_every")
         assert result is not None, "Required property 'tick_every' is missing"
@@ -16429,7 +16429,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''For SSL test, whether or not the test should allow self signed certificates.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#accept_self_signed SyntheticsTest#accept_self_signed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#accept_self_signed SyntheticsTest#accept_self_signed}
         '''
         result = self._values.get("accept_self_signed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16440,7 +16440,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Allows loading insecure content for a request in an API test or in a multistep API test step.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#allow_insecure SyntheticsTest#allow_insecure}
         '''
         result = self._values.get("allow_insecure")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16451,7 +16451,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''For SSL test, whether or not the test should fail on revoked certificate in stapled OCSP.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#check_certificate_revocation SyntheticsTest#check_certificate_revocation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#check_certificate_revocation SyntheticsTest#check_certificate_revocation}
         '''
         result = self._values.get("check_certificate_revocation")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16460,7 +16460,7 @@ class SyntheticsTestOptionsListStruct:
     def ci(self) -> typing.Optional[SyntheticsTestOptionsListCi]:
         '''ci block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ci SyntheticsTest#ci}
         '''
         result = self._values.get("ci")
         return typing.cast(typing.Optional[SyntheticsTestOptionsListCi], result)
@@ -16471,7 +16471,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Disable Cross-Origin Resource Sharing for browser tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_cors SyntheticsTest#disable_cors}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_cors SyntheticsTest#disable_cors}
         '''
         result = self._values.get("disable_cors")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16482,7 +16482,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Disable Content Security Policy for browser tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#disable_csp SyntheticsTest#disable_csp}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#disable_csp SyntheticsTest#disable_csp}
         '''
         result = self._values.get("disable_csp")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16493,7 +16493,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not the API HTTP test should follow redirects.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#follow_redirects SyntheticsTest#follow_redirects}
         '''
         result = self._values.get("follow_redirects")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16504,7 +16504,7 @@ class SyntheticsTestOptionsListStruct:
 
         Valid values are ``http1``, ``http2``, ``any``. Defaults to ``"any"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
         '''
         result = self._values.get("http_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -16515,7 +16515,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Ignore server certificate error for browser tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#ignore_server_certificate_error SyntheticsTest#ignore_server_certificate_error}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#ignore_server_certificate_error SyntheticsTest#ignore_server_certificate_error}
         '''
         result = self._values.get("ignore_server_certificate_error")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16524,7 +16524,7 @@ class SyntheticsTestOptionsListStruct:
     def initial_navigation_timeout(self) -> typing.Optional[jsii.Number]:
         '''Timeout before declaring the initial step as failed (in seconds) for browser tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#initial_navigation_timeout SyntheticsTest#initial_navigation_timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#initial_navigation_timeout SyntheticsTest#initial_navigation_timeout}
         '''
         result = self._values.get("initial_navigation_timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -16533,7 +16533,7 @@ class SyntheticsTestOptionsListStruct:
     def min_failure_duration(self) -> typing.Optional[jsii.Number]:
         '''Minimum amount of time in failure required to trigger an alert (in seconds). Default is ``0``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_failure_duration SyntheticsTest#min_failure_duration}
         '''
         result = self._values.get("min_failure_duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -16542,7 +16542,7 @@ class SyntheticsTestOptionsListStruct:
     def min_location_failed(self) -> typing.Optional[jsii.Number]:
         '''Minimum number of locations in failure required to trigger an alert. Defaults to ``1``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#min_location_failed SyntheticsTest#min_location_failed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#min_location_failed SyntheticsTest#min_location_failed}
         '''
         result = self._values.get("min_location_failed")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -16551,7 +16551,7 @@ class SyntheticsTestOptionsListStruct:
     def monitor_name(self) -> typing.Optional[builtins.str]:
         '''The monitor name is used for the alert title as well as for all monitor dashboard widgets and SLOs.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_name SyntheticsTest#monitor_name}
         '''
         result = self._values.get("monitor_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -16562,14 +16562,14 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[SyntheticsTestOptionsListMonitorOptions]:
         '''monitor_options block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_options SyntheticsTest#monitor_options}
         '''
         result = self._values.get("monitor_options")
         return typing.cast(typing.Optional[SyntheticsTestOptionsListMonitorOptions], result)
 
     @builtins.property
     def monitor_priority(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#monitor_priority SyntheticsTest#monitor_priority}.'''
         result = self._values.get("monitor_priority")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -16579,7 +16579,7 @@ class SyntheticsTestOptionsListStruct:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Prevents saving screenshots of the steps.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_screenshot SyntheticsTest#no_screenshot}
         '''
         result = self._values.get("no_screenshot")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -16590,7 +16590,7 @@ class SyntheticsTestOptionsListStruct:
 
         **Deprecated.** This field is no longer supported by the Datadog API. Please use ``datadog_restriction_policy`` instead.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#restricted_roles SyntheticsTest#restricted_roles}
         '''
         result = self._values.get("restricted_roles")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -16599,7 +16599,7 @@ class SyntheticsTestOptionsListStruct:
     def retry(self) -> typing.Optional[SyntheticsTestOptionsListRetry]:
         '''retry block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#retry SyntheticsTest#retry}
         '''
         result = self._values.get("retry")
         return typing.cast(typing.Optional[SyntheticsTestOptionsListRetry], result)
@@ -16608,7 +16608,7 @@ class SyntheticsTestOptionsListStruct:
     def rum_settings(self) -> typing.Optional[SyntheticsTestOptionsListRumSettings]:
         '''rum_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#rum_settings SyntheticsTest#rum_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#rum_settings SyntheticsTest#rum_settings}
         '''
         result = self._values.get("rum_settings")
         return typing.cast(typing.Optional[SyntheticsTestOptionsListRumSettings], result)
@@ -16617,7 +16617,7 @@ class SyntheticsTestOptionsListStruct:
     def scheduling(self) -> typing.Optional[SyntheticsTestOptionsListScheduling]:
         '''scheduling block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scheduling SyntheticsTest#scheduling}
         '''
         result = self._values.get("scheduling")
         return typing.cast(typing.Optional[SyntheticsTestOptionsListScheduling], result)
@@ -16657,7 +16657,7 @@ class SyntheticsTestOptionsListStructOutputReference(
     @jsii.member(jsii_name="putCi")
     def put_ci(self, *, execution_rule: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
+        :param execution_rule: Execution rule for a Synthetics test. Valid values are ``blocking``, ``non_blocking``, ``skipped``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#execution_rule SyntheticsTest#execution_rule}
         '''
         value = SyntheticsTestOptionsListCi(execution_rule=execution_rule)
 
@@ -16672,9 +16672,9 @@ class SyntheticsTestOptionsListStructOutputReference(
         renotify_occurrences: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
-        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
-        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
+        :param escalation_message: A message to include with a re-notification. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#escalation_message SyntheticsTest#escalation_message}
+        :param renotify_interval: Specify a renotification frequency in minutes. Values available by default are ``0``, ``10``, ``20``, ``30``, ``40``, ``50``, ``60``, ``90``, ``120``, ``180``, ``240``, ``300``, ``360``, ``720``, ``1440``. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_interval SyntheticsTest#renotify_interval}
+        :param renotify_occurrences: The number of times a monitor renotifies. It can only be set if ``renotify_interval`` is set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#renotify_occurrences SyntheticsTest#renotify_occurrences}
         '''
         value = SyntheticsTestOptionsListMonitorOptions(
             escalation_message=escalation_message,
@@ -16692,8 +16692,8 @@ class SyntheticsTestOptionsListStructOutputReference(
         interval: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#count SyntheticsTest#count}
-        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
+        :param count: Number of retries needed to consider a location as failed before sending a notification alert. Maximum value: ``3`` for ``api`` tests, ``2`` for ``browser`` and ``mobile`` tests. Defaults to ``0``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#count SyntheticsTest#count}
+        :param interval: Interval between a failed test and the next retry in milliseconds. Maximum value: ``5000``. Defaults to ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#interval SyntheticsTest#interval}
         '''
         value = SyntheticsTestOptionsListRetry(count=count, interval=interval)
 
@@ -16708,9 +16708,9 @@ class SyntheticsTestOptionsListStructOutputReference(
         client_token_id: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param is_enabled: Determines whether RUM data is collected during test runs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#is_enabled SyntheticsTest#is_enabled}
-        :param application_id: RUM application ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}
-        :param client_token_id: RUM application API key ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_token_id SyntheticsTest#client_token_id}
+        :param is_enabled: Determines whether RUM data is collected during test runs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#is_enabled SyntheticsTest#is_enabled}
+        :param application_id: RUM application ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#application_id SyntheticsTest#application_id}
+        :param client_token_id: RUM application API key ID used to collect RUM data for the browser test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_token_id SyntheticsTest#client_token_id}
         '''
         value = SyntheticsTestOptionsListRumSettings(
             is_enabled=is_enabled,
@@ -16728,8 +16728,8 @@ class SyntheticsTestOptionsListStructOutputReference(
         timezone: builtins.str,
     ) -> None:
         '''
-        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
-        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
+        :param timeframes: timeframes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeframes SyntheticsTest#timeframes}
+        :param timezone: Timezone in which the timeframe is based. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timezone SyntheticsTest#timezone}
         '''
         value = SyntheticsTestOptionsListScheduling(
             timeframes=timeframes, timezone=timezone
@@ -17255,23 +17255,23 @@ class SyntheticsTestRequestBasicauth:
         workstation: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
-        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
-        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
-        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
-        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
-        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
-        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#password SyntheticsTest#password}
-        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#region SyntheticsTest#region}
-        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
-        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
-        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
-        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
-        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
-        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
-        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#username SyntheticsTest#username}
-        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
+        :param access_key: Access key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
+        :param access_token_url: Access token url for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
+        :param audience: Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
+        :param client_id: Client ID for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
+        :param client_secret: Client secret for ``oauth-client`` or ``oauth-rop`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
+        :param domain: Domain for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
+        :param password: Password for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#password SyntheticsTest#password}
+        :param region: Region for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#region SyntheticsTest#region}
+        :param resource: Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
+        :param scope: Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
+        :param secret_key: Secret key for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
+        :param service_name: Service name for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
+        :param session_token: Session token for ``SIGV4`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
+        :param token_api_authentication: Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
+        :param type: Type of basic authentication to use when performing the test. Defaults to ``"web"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param username: Username for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#username SyntheticsTest#username}
+        :param workstation: Workstation for ``ntlm`` authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__fc5a48ceb2c2bf2e059d12af9f1e014c367434553afc8a2394e787c56f997510)
@@ -17332,7 +17332,7 @@ class SyntheticsTestRequestBasicauth:
     def access_key(self) -> typing.Optional[builtins.str]:
         '''Access key for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_key SyntheticsTest#access_key}
         '''
         result = self._values.get("access_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17341,7 +17341,7 @@ class SyntheticsTestRequestBasicauth:
     def access_token_url(self) -> typing.Optional[builtins.str]:
         '''Access token url for ``oauth-client`` or ``oauth-rop`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#access_token_url SyntheticsTest#access_token_url}
         '''
         result = self._values.get("access_token_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17350,7 +17350,7 @@ class SyntheticsTestRequestBasicauth:
     def audience(self) -> typing.Optional[builtins.str]:
         '''Audience for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#audience SyntheticsTest#audience}
         '''
         result = self._values.get("audience")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17359,7 +17359,7 @@ class SyntheticsTestRequestBasicauth:
     def client_id(self) -> typing.Optional[builtins.str]:
         '''Client ID for ``oauth-client`` or ``oauth-rop`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_id SyntheticsTest#client_id}
         '''
         result = self._values.get("client_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17368,7 +17368,7 @@ class SyntheticsTestRequestBasicauth:
     def client_secret(self) -> typing.Optional[builtins.str]:
         '''Client secret for ``oauth-client`` or ``oauth-rop`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#client_secret SyntheticsTest#client_secret}
         '''
         result = self._values.get("client_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17377,7 +17377,7 @@ class SyntheticsTestRequestBasicauth:
     def domain(self) -> typing.Optional[builtins.str]:
         '''Domain for ``ntlm`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#domain SyntheticsTest#domain}
         '''
         result = self._values.get("domain")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17386,7 +17386,7 @@ class SyntheticsTestRequestBasicauth:
     def password(self) -> typing.Optional[builtins.str]:
         '''Password for authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#password SyntheticsTest#password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#password SyntheticsTest#password}
         '''
         result = self._values.get("password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17395,7 +17395,7 @@ class SyntheticsTestRequestBasicauth:
     def region(self) -> typing.Optional[builtins.str]:
         '''Region for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#region SyntheticsTest#region}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#region SyntheticsTest#region}
         '''
         result = self._values.get("region")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17404,7 +17404,7 @@ class SyntheticsTestRequestBasicauth:
     def resource(self) -> typing.Optional[builtins.str]:
         '''Resource for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#resource SyntheticsTest#resource}
         '''
         result = self._values.get("resource")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17413,7 +17413,7 @@ class SyntheticsTestRequestBasicauth:
     def scope(self) -> typing.Optional[builtins.str]:
         '''Scope for ``oauth-client`` or ``oauth-rop`` authentication. Defaults to ``""``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#scope SyntheticsTest#scope}
         '''
         result = self._values.get("scope")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17422,7 +17422,7 @@ class SyntheticsTestRequestBasicauth:
     def secret_key(self) -> typing.Optional[builtins.str]:
         '''Secret key for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#secret_key SyntheticsTest#secret_key}
         '''
         result = self._values.get("secret_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17431,7 +17431,7 @@ class SyntheticsTestRequestBasicauth:
     def service_name(self) -> typing.Optional[builtins.str]:
         '''Service name for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service_name SyntheticsTest#service_name}
         '''
         result = self._values.get("service_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17440,7 +17440,7 @@ class SyntheticsTestRequestBasicauth:
     def session_token(self) -> typing.Optional[builtins.str]:
         '''Session token for ``SIGV4`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#session_token SyntheticsTest#session_token}
         '''
         result = self._values.get("session_token")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17449,7 +17449,7 @@ class SyntheticsTestRequestBasicauth:
     def token_api_authentication(self) -> typing.Optional[builtins.str]:
         '''Token API Authentication for ``oauth-client`` or ``oauth-rop`` authentication. Valid values are ``header``, ``body``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#token_api_authentication SyntheticsTest#token_api_authentication}
         '''
         result = self._values.get("token_api_authentication")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17458,7 +17458,7 @@ class SyntheticsTestRequestBasicauth:
     def type(self) -> typing.Optional[builtins.str]:
         '''Type of basic authentication to use when performing the test. Defaults to ``"web"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17467,7 +17467,7 @@ class SyntheticsTestRequestBasicauth:
     def username(self) -> typing.Optional[builtins.str]:
         '''Username for authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#username SyntheticsTest#username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#username SyntheticsTest#username}
         '''
         result = self._values.get("username")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17476,7 +17476,7 @@ class SyntheticsTestRequestBasicauth:
     def workstation(self) -> typing.Optional[builtins.str]:
         '''Workstation for ``ntlm`` authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#workstation SyntheticsTest#workstation}
         '''
         result = self._values.get("workstation")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -17899,8 +17899,8 @@ class SyntheticsTestRequestClientCertificate:
         key: typing.Union["SyntheticsTestRequestClientCertificateKey", typing.Dict[builtins.str, typing.Any]],
     ) -> None:
         '''
-        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
-        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#key SyntheticsTest#key}
+        :param cert: cert block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
+        :param key: key block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#key SyntheticsTest#key}
         '''
         if isinstance(cert, dict):
             cert = SyntheticsTestRequestClientCertificateCert(**cert)
@@ -17919,7 +17919,7 @@ class SyntheticsTestRequestClientCertificate:
     def cert(self) -> "SyntheticsTestRequestClientCertificateCert":
         '''cert block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#cert SyntheticsTest#cert}
         '''
         result = self._values.get("cert")
         assert result is not None, "Required property 'cert' is missing"
@@ -17929,7 +17929,7 @@ class SyntheticsTestRequestClientCertificate:
     def key(self) -> "SyntheticsTestRequestClientCertificateKey":
         '''key block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#key SyntheticsTest#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#key SyntheticsTest#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -17960,8 +17960,8 @@ class SyntheticsTestRequestClientCertificateCert:
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3e334ed395f958380ee046623f4875bfa101e3334814a9ed13404290a242541c)
@@ -17977,7 +17977,7 @@ class SyntheticsTestRequestClientCertificateCert:
     def content(self) -> builtins.str:
         '''Content of the certificate.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
         '''
         result = self._values.get("content")
         assert result is not None, "Required property 'content' is missing"
@@ -17987,7 +17987,7 @@ class SyntheticsTestRequestClientCertificateCert:
     def filename(self) -> typing.Optional[builtins.str]:
         '''File name for the certificate. Defaults to ``"Provided in Terraform config"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         result = self._values.get("filename")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18093,8 +18093,8 @@ class SyntheticsTestRequestClientCertificateKey:
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7a570294e7d1b0d895e81a649f5fe9c23706cbfc8e04a38bc11740b39131df81)
@@ -18110,7 +18110,7 @@ class SyntheticsTestRequestClientCertificateKey:
     def content(self) -> builtins.str:
         '''Content of the certificate.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
         '''
         result = self._values.get("content")
         assert result is not None, "Required property 'content' is missing"
@@ -18120,7 +18120,7 @@ class SyntheticsTestRequestClientCertificateKey:
     def filename(self) -> typing.Optional[builtins.str]:
         '''File name for the certificate. Defaults to ``"Provided in Terraform config"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         result = self._values.get("filename")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18241,8 +18241,8 @@ class SyntheticsTestRequestClientCertificateOutputReference(
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         value = SyntheticsTestRequestClientCertificateCert(
             content=content, filename=filename
@@ -18258,8 +18258,8 @@ class SyntheticsTestRequestClientCertificateOutputReference(
         filename: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
+        :param content: Content of the certificate. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param filename: File name for the certificate. Defaults to ``"Provided in Terraform config"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#filename SyntheticsTest#filename}
         '''
         value = SyntheticsTestRequestClientCertificateKey(
             content=content, filename=filename
@@ -18357,27 +18357,27 @@ class SyntheticsTestRequestDefinition:
         url: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body SyntheticsTest#body}
-        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
-        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
-        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
-        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
-        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
-        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#host SyntheticsTest#host}
-        :param http_version: HTTP version to use for an HTTP request in an API test or step. **Deprecated.** Use ``http_version`` in the ``options_list`` field instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
-        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
-        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#method SyntheticsTest#method}
-        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
-        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
-        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
-        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
-        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#port SyntheticsTest#port}
-        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
-        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
-        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service SyntheticsTest#service}
-        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
-        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
-        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param body: The request body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body SyntheticsTest#body}
+        :param body_type: Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
+        :param call_type: The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
+        :param certificate_domains: By default, the client certificate is applied on the domain of the starting URL for browser tests. If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
+        :param dns_server: DNS server to use for DNS tests (``subtype = "dns"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
+        :param dns_server_port: DNS server port to use for DNS tests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
+        :param host: Host name to perform the test with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#host SyntheticsTest#host}
+        :param http_version: HTTP version to use for an HTTP request in an API test or step. **Deprecated.** Use ``http_version`` in the ``options_list`` field instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        :param message: For UDP and websocket tests, message to send with the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        :param method: Either the HTTP method/verb to use or a gRPC method available on the service set in the ``service`` field. Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#method SyntheticsTest#method}
+        :param no_saving_response_body: Determines whether or not to save the response body. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
+        :param number_of_packets: Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
+        :param persist_cookies: Persist cookies across redirects. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
+        :param plain_proto_file: The content of a proto file as a string. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
+        :param port: Port to use when performing the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#port SyntheticsTest#port}
+        :param proto_json_descriptor: A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
+        :param servername: For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
+        :param service: The gRPC service on which you want to perform the gRPC call. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service SyntheticsTest#service}
+        :param should_track_hops: This will turn on a traceroute probe to discover all gateways along the path to the host destination. For ICMP tests (``subtype = "icmp"``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
+        :param timeout: Timeout in seconds for the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        :param url: The URL to send the request to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__204293cab905ee980b5021cd7bf01428689590962f898e248e4cc2fbd637f571)
@@ -18450,7 +18450,7 @@ class SyntheticsTestRequestDefinition:
     def body(self) -> typing.Optional[builtins.str]:
         '''The request body.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body SyntheticsTest#body}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body SyntheticsTest#body}
         '''
         result = self._values.get("body")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18459,7 +18459,7 @@ class SyntheticsTestRequestDefinition:
     def body_type(self) -> typing.Optional[builtins.str]:
         '''Type of the request body. Valid values are ``text/plain``, ``application/json``, ``text/xml``, ``text/html``, ``application/x-www-form-urlencoded``, ``graphql``, ``application/octet-stream``, ``multipart/form-data``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#body_type SyntheticsTest#body_type}
         '''
         result = self._values.get("body_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18468,7 +18468,7 @@ class SyntheticsTestRequestDefinition:
     def call_type(self) -> typing.Optional[builtins.str]:
         '''The type of gRPC call to perform. Valid values are ``healthcheck``, ``unary``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#call_type SyntheticsTest#call_type}
         '''
         result = self._values.get("call_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18479,7 +18479,7 @@ class SyntheticsTestRequestDefinition:
 
         If you want your client certificate to be applied on other domains instead, add them in ``certificate_domains``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#certificate_domains SyntheticsTest#certificate_domains}
         '''
         result = self._values.get("certificate_domains")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -18488,7 +18488,7 @@ class SyntheticsTestRequestDefinition:
     def dns_server(self) -> typing.Optional[builtins.str]:
         '''DNS server to use for DNS tests (``subtype = "dns"``).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server SyntheticsTest#dns_server}
         '''
         result = self._values.get("dns_server")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18497,7 +18497,7 @@ class SyntheticsTestRequestDefinition:
     def dns_server_port(self) -> typing.Optional[builtins.str]:
         '''DNS server port to use for DNS tests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#dns_server_port SyntheticsTest#dns_server_port}
         '''
         result = self._values.get("dns_server_port")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18506,7 +18506,7 @@ class SyntheticsTestRequestDefinition:
     def host(self) -> typing.Optional[builtins.str]:
         '''Host name to perform the test with.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#host SyntheticsTest#host}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#host SyntheticsTest#host}
         '''
         result = self._values.get("host")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18517,7 +18517,7 @@ class SyntheticsTestRequestDefinition:
 
         **Deprecated.** Use ``http_version`` in the ``options_list`` field instead.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#http_version SyntheticsTest#http_version}
         '''
         result = self._values.get("http_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18526,7 +18526,7 @@ class SyntheticsTestRequestDefinition:
     def message(self) -> typing.Optional[builtins.str]:
         '''For UDP and websocket tests, message to send with the request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#message SyntheticsTest#message}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#message SyntheticsTest#message}
         '''
         result = self._values.get("message")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18537,7 +18537,7 @@ class SyntheticsTestRequestDefinition:
 
         Required if ``subtype`` is ``HTTP`` or if ``subtype`` is ``grpc`` and ``callType`` is ``unary``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#method SyntheticsTest#method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#method SyntheticsTest#method}
         '''
         result = self._values.get("method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18548,7 +18548,7 @@ class SyntheticsTestRequestDefinition:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Determines whether or not to save the response body.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#no_saving_response_body SyntheticsTest#no_saving_response_body}
         '''
         result = self._values.get("no_saving_response_body")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -18557,7 +18557,7 @@ class SyntheticsTestRequestDefinition:
     def number_of_packets(self) -> typing.Optional[jsii.Number]:
         '''Number of pings to use per test for ICMP tests (``subtype = "icmp"``) between 0 and 10.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#number_of_packets SyntheticsTest#number_of_packets}
         '''
         result = self._values.get("number_of_packets")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -18568,7 +18568,7 @@ class SyntheticsTestRequestDefinition:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Persist cookies across redirects.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#persist_cookies SyntheticsTest#persist_cookies}
         '''
         result = self._values.get("persist_cookies")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -18577,7 +18577,7 @@ class SyntheticsTestRequestDefinition:
     def plain_proto_file(self) -> typing.Optional[builtins.str]:
         '''The content of a proto file as a string.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#plain_proto_file SyntheticsTest#plain_proto_file}
         '''
         result = self._values.get("plain_proto_file")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18586,7 +18586,7 @@ class SyntheticsTestRequestDefinition:
     def port(self) -> typing.Optional[builtins.str]:
         '''Port to use when performing the test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#port SyntheticsTest#port}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#port SyntheticsTest#port}
         '''
         result = self._values.get("port")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18595,7 +18595,7 @@ class SyntheticsTestRequestDefinition:
     def proto_json_descriptor(self) -> typing.Optional[builtins.str]:
         '''A protobuf JSON descriptor. **Deprecated.** Use ``plain_proto_file`` instead.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#proto_json_descriptor SyntheticsTest#proto_json_descriptor}
         '''
         result = self._values.get("proto_json_descriptor")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18604,7 +18604,7 @@ class SyntheticsTestRequestDefinition:
     def servername(self) -> typing.Optional[builtins.str]:
         '''For SSL tests, it specifies on which server you want to initiate the TLS handshake, allowing the server to present one of multiple possible certificates on the same IP address and TCP port number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#servername SyntheticsTest#servername}
         '''
         result = self._values.get("servername")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18613,7 +18613,7 @@ class SyntheticsTestRequestDefinition:
     def service(self) -> typing.Optional[builtins.str]:
         '''The gRPC service on which you want to perform the gRPC call.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#service SyntheticsTest#service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#service SyntheticsTest#service}
         '''
         result = self._values.get("service")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -18626,7 +18626,7 @@ class SyntheticsTestRequestDefinition:
 
         For ICMP tests (``subtype = "icmp"``).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#should_track_hops SyntheticsTest#should_track_hops}
         '''
         result = self._values.get("should_track_hops")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -18635,7 +18635,7 @@ class SyntheticsTestRequestDefinition:
     def timeout(self) -> typing.Optional[jsii.Number]:
         '''Timeout in seconds for the test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#timeout SyntheticsTest#timeout}
         '''
         result = self._values.get("timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -18644,7 +18644,7 @@ class SyntheticsTestRequestDefinition:
     def url(self) -> typing.Optional[builtins.str]:
         '''The URL to send the request to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         result = self._values.get("url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -19181,11 +19181,11 @@ class SyntheticsTestRequestFile:
         original_file_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
-        :param size: Size of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#size SyntheticsTest#size}
-        :param type: Type of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
-        :param content: Content of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
-        :param original_file_name: Original name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
+        :param name: Name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        :param size: Size of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#size SyntheticsTest#size}
+        :param type: Type of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        :param content: Content of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        :param original_file_name: Original name of the file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__01e12217eed7e088bf973d36b41a824fd778d822cbef6aadd5ea165a1b464819)
@@ -19208,7 +19208,7 @@ class SyntheticsTestRequestFile:
     def name(self) -> builtins.str:
         '''Name of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#name SyntheticsTest#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#name SyntheticsTest#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -19218,7 +19218,7 @@ class SyntheticsTestRequestFile:
     def size(self) -> jsii.Number:
         '''Size of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#size SyntheticsTest#size}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#size SyntheticsTest#size}
         '''
         result = self._values.get("size")
         assert result is not None, "Required property 'size' is missing"
@@ -19228,7 +19228,7 @@ class SyntheticsTestRequestFile:
     def type(self) -> builtins.str:
         '''Type of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#type SyntheticsTest#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#type SyntheticsTest#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -19238,7 +19238,7 @@ class SyntheticsTestRequestFile:
     def content(self) -> typing.Optional[builtins.str]:
         '''Content of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#content SyntheticsTest#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#content SyntheticsTest#content}
         '''
         result = self._values.get("content")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -19247,7 +19247,7 @@ class SyntheticsTestRequestFile:
     def original_file_name(self) -> typing.Optional[builtins.str]:
         '''Original name of the file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#original_file_name SyntheticsTest#original_file_name}
         '''
         result = self._values.get("original_file_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -19509,8 +19509,8 @@ class SyntheticsTestRequestProxy:
         headers: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     ) -> None:
         '''
-        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
-        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
+        :param url: URL of the proxy to perform the test. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        :param headers: Header name and value map. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c92f485264d91a1bc9f0464a9a0f1d2117e4d99f4e8c921299594e1a03fdb768)
@@ -19526,7 +19526,7 @@ class SyntheticsTestRequestProxy:
     def url(self) -> builtins.str:
         '''URL of the proxy to perform the test.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#url SyntheticsTest#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#url SyntheticsTest#url}
         '''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
@@ -19536,7 +19536,7 @@ class SyntheticsTestRequestProxy:
     def headers(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Header name and value map.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.63.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/datadog/datadog/3.65.0/docs/resources/synthetics_test#headers SyntheticsTest#headers}
         '''
         result = self._values.get("headers")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)

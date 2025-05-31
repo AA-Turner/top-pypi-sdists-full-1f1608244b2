@@ -2,7 +2,7 @@
 """
 @Author: HuangJianYi
 @Date: 2022-04-24 15:15:19
-@LastEditTime: 2025-05-07 13:43:12
+@LastEditTime: 2025-05-30 19:05:52
 @LastEditors: HuangJianYi
 @Description: 
 """
@@ -13,6 +13,79 @@ from seven_cloudapp_frame.libs.customize.cryptography_helper import *
 from seven_cloudapp_frame.libs.customize.safe_helper import *
 from seven_cloudapp_frame.models.app_base_model import *
 from urllib.parse import parse_qs
+
+
+def filter_check_sign(sign_key, sign_lower=False, reverse=False, is_sign_key=False, expired_seconds=300, exclude_params=None):
+    """
+    :description: http请求签名验证装饰器
+    :param sign_key: 参与签名的私钥
+    :param sign_lower: 返回签名是否小写(默认大写)
+    :param reverse: 是否反排序 False:升序 True:降序
+    :param is_sign_key: 参数名是否参与签名(默认False不参与)
+    :param expired_seconds: 接口timestamp过期时间(秒)
+    :param exclude_params: 不参与签名的参数,支持list,str(英文逗号分隔)
+    :last_editors: ChenXiaolei
+    """
+    def check_sign(handler):
+        def wrapper(self, *args):
+            # 签名参数
+            sign_params = {}
+            # 获取排除不需要签名的字段
+            exclude_array = []
+            if type(exclude_params) == str:
+                exclude_array = exclude_params.split(",")
+            if type(exclude_params) == list:
+                exclude_array = exclude_params
+            # 获取签名参数
+            if not hasattr(self, "request_params"):
+                if "Content-Type" in self.request.headers and self.request.headers[
+                        "Content-type"].lower().find(
+                            "application/json") >= 0 and self.request.body:
+                    json_params = {}
+                    try:
+                        json_params = json.loads(self.request.body)
+                    except:
+                        self.response_json_error_params()
+                        return
+                    if json_params:
+                        for field in json_params:
+                            sign_params[field] = json_params[field]
+                if self.request.arguments and len(self.request.arguments)>0:
+                    for field in self.request.arguments:
+                        sign_params[field] = self.get_param(field)
+            else:
+                sign_params = self.request_params
+
+            if not sign_params or len(sign_params) < 2 or "timestamp" not in sign_params or "sign" not in sign_params:
+                self.response_json_error_params("sign params error!")
+                return
+
+            sign_timestamp = int(sign_params["timestamp"])
+
+            if expired_seconds and (not sign_timestamp or TimeHelper.add_seconds_by_timestamp(sign_timestamp, expired_seconds) < TimeHelper.get_now_timestamp() or sign_timestamp > TimeHelper.add_seconds_by_timestamp(second=expired_seconds)):
+                self.response_json_error("error", "请求已失效.")
+                return
+
+            # 排除签名参数
+            if exclude_array:
+                for exclude_key in exclude_array:
+                    if exclude_key in sign_params:
+                        del sign_params[exclude_key]
+            # 构建签名
+            build_sign = SignHelper.params_sign_md5(
+                sign_params, sign_key, sign_lower, reverse, is_sign_key)
+
+            if not build_sign or build_sign != sign_params["sign"]:
+                print(
+                    f"http请求验签不匹配,收到sign:{sign_params['sign']},构建sign:{build_sign} 加密明文信息:{SignHelper.get_sign_params_str(sign_params,sign_key,reverse,is_sign_key)}")
+                self.response_json_error("error", "sign error!")
+                return
+
+            return handler(self, *args)
+
+        return wrapper
+
+    return check_sign
 
 
 def filter_check_params(must_params=None, check_user_code=False):

@@ -2,7 +2,7 @@
 """
 :Author: HuangJianYi
 :Date: 2024-01-18 18:19:58
-@LastEditTime: 2025-03-21 11:26:40
+@LastEditTime: 2025-05-28 19:46:16
 @LastEditors: HuangJianYi
 :Description: 框架DB操作类
 """
@@ -10,6 +10,7 @@ from seven_framework.base_model import *
 from seven_framework import *
 from seven_cloudapp_frame.libs.common import *
 from seven_cloudapp_frame.libs.customize.seven_helper import *
+
 
 class FrameDbModel(BaseModel):
 
@@ -63,13 +64,13 @@ class FrameDbModel(BaseModel):
                         object_id = object_id[:-1]
                 else:
                     object_id = object_id[:-1]
-                        
+
             sub_table = SevenHelper.get_sub_table(object_id, table_config.get("sub_count", 10))
             if sub_table:
                 # 数据库表名
                 self.table_name = table_name.replace("_tb", f"_{sub_table}_tb")
         return self
-    
+
     def set_view(self, view_name=''):
         """
         :description: 设置视图
@@ -83,7 +84,7 @@ class FrameDbModel(BaseModel):
         else:
             self.table_name = view_name
         return self
-    
+
     def relation_and_merge_dict_list(self, primary_dict_list, relation_db_model, relation_key_field, field="*", primary_key_field="id", is_cache=True, dependency_key="", cache_expire=1800):
         """
         :description: 根据给定的主键表关联ID数组从关联表获取字典列表合并。
@@ -111,7 +112,7 @@ class FrameDbModel(BaseModel):
             relation_dict_list = relation_db_model.get_dict_list(where, field=field)
         dict_list = SevenHelper.merge_dict_list(primary_dict_list, primary_key_field, relation_dict_list, relation_key_field, exclude_merge_columns_names="id")
         return dict_list
-    
+
     def relation_and_merge_dict(self, primary_dict, relation_db_model, field="*", primary_key_field="id", is_cache=True, dependency_key="", cache_expire=1800):
         """
         :description: 根据给定的主键表字典合并关联表字典。
@@ -136,7 +137,7 @@ class FrameDbModel(BaseModel):
         if relation_dict:
             primary_dict.update(relation_dict)
         return primary_dict
-    
+
     def call_procedure(self, procedure_name: str, params: list = None):
         """
         :Description: 调用存储过程
@@ -184,5 +185,61 @@ class FrameDbModel(BaseModel):
         covert_config["db"] = db_config.get("db", "")
         covert_config["charset"] = db_config.get("charset", "")
         return covert_config
-        
 
+    def add_values(self, model_list, ignore=False, is_doris=False, update_feild_list=None, exclude_update_feild_list=None):
+        """
+        :description: 一次性数据写入(insert into... values(...),(...),(...);)
+        :param model_list: 数据模型列表
+        :param ignore: 忽略已存在的记录
+        :param is_doris: 是否doris
+        :param update_feild_list: 触发唯一键时需要更新的字段列表(doris=True)
+        :param exclude_update_feild_list: 触发唯一键时需排除更新的字段列表(doris=True)
+        :return 成功True 失败False
+        :last_editors: HuangJingCan
+        """
+        if not model_list or len(model_list) == 0:
+            return False
+
+        field_list = self.model_obj.get_field_list()
+        if len(field_list) == 0:
+            return False
+
+        if is_doris is True:
+            if update_feild_list:
+                field_list = [field for field in field_list if field in update_feild_list]
+            elif exclude_update_feild_list:
+                field_list = [field for field in field_list if field not in exclude_update_feild_list]
+
+        insert_field_str = ""
+        for field_str in field_list:
+            if str(field_str).lower() == self.primary_key_field.lower() and not is_doris:
+                continue
+            insert_field_str += str(f"`{field_str}`,")
+
+        insert_field_str = insert_field_str.rstrip(',')
+        doris_sql = "set enable_unique_key_partial_update=true; set enable_insert_strict=false;" if is_doris else ""
+        sql = f"{doris_sql} INSERT{' IGNORE' if ignore else ''} INTO {self.table_name}({insert_field_str}) VALUES "
+        param = []
+
+        for model in model_list:
+            insert_value_str = ""
+            for field_str in field_list:
+                param_value = str(getattr(model, field_str))
+                if str(field_str).lower() == self.primary_key_field.lower() and not is_doris:
+                    continue
+                insert_value_str += "%s,"
+                param.append(param_value)
+
+            insert_value_str = insert_value_str.rstrip(',')
+            sql += f"({insert_value_str}),"
+
+        sql = sql.rstrip(',') + ";"
+
+        if self.is_transaction():
+            sql_item = {}
+            sql_item["sql"] = sql
+            sql_item["params"] = tuple(param)
+            self.db_transaction.transaction_list.append(sql_item)
+        else:
+            self.db.insert(sql, tuple(param), False)
+        return True

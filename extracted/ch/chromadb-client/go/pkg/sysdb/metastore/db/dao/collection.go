@@ -30,7 +30,7 @@ func (s *collectionDb) DeleteAll() error {
 func (s *collectionDb) GetCollectionWithoutMetadata(collectionID *string, databaseName *string, softDeletedFlag *bool) (*dbmodel.Collection, error) {
 	var collections []*dbmodel.Collection
 	query := s.db.Table("collections").
-		Select("collections.id, collections.name, collections.database_id, collections.is_deleted, collections.tenant, collections.version, collections.version_file_name, collections.root_collection_id, NULLIF(collections.lineage_file_name, '') AS lineage_file_name").
+		Select("collections.id, collections.name, collections.database_id, collections.is_deleted, collections.tenant, collections.version, collections.version_file_name, NULLIF(collections.root_collection_id, '') AS root_collection_id, NULLIF(collections.lineage_file_name, '') AS lineage_file_name").
 		Joins("INNER JOIN databases ON collections.database_id = databases.id").
 		Where("collections.id = ?", collectionID)
 
@@ -572,6 +572,23 @@ func (s *collectionDb) BatchGetCollectionVersionFilePaths(collectionIDs []string
 	result := make(map[string]string)
 	for _, collection := range collections {
 		result[collection.ID] = collection.VersionFileName
+	}
+	return result, nil
+}
+
+func (s *collectionDb) BatchGetCollectionSoftDeleteStatus(collectionIDs []string) (map[string]bool, error) {
+	var collections []dbmodel.Collection
+	err := s.read_db.Model(&dbmodel.Collection{}).
+		Select("id, is_deleted").
+		Where("id IN ?", collectionIDs).
+		Find(&collections).Error
+	if err != nil {
+		return nil, err
+	}
+
+	result := make(map[string]bool)
+	for _, collection := range collections {
+		result[collection.ID] = collection.IsDeleted
 	}
 	return result, nil
 }

@@ -80,7 +80,7 @@ class ImageRequest(BaseModel):  # openai
 
     response_format: Optional[Literal["oss_url", "url", "b64_json"]] = "url"
 
-    seed: Optional[int] = 21
+    seed: Optional[int] = None
 
     # oneapi
     negative_prompt: Optional[str] = None
@@ -491,6 +491,28 @@ class ImageProcess(BaseModel):
 
     # class Config:
     #     extra = "allow"
+
+
+class ImageEditRequest(BaseModel):
+    model: Union[str, Literal["dall-e-2", "dall-e-3", "gpt-image-1"]]
+
+    prompt: str
+    image: Any  # 图片
+
+    mask: Optional[Any] = None  # 图片
+    background: Optional[Literal["transparent", "opaque", "auto"]] = None
+
+    n: Optional[int] = None
+    quality: Optional[Literal["standard", "low", "medium", "high", "auto"]] = None
+    size: Optional[Union[str, Literal["256x256", "512x512", "1024x1024", "1536x1024", "1024x1536", "auto"]]] = None
+    response_format: Optional[Literal["url", "b64_json"]] = None
+
+    user: Optional[str] = None
+
+    def __init__(self, /, **data: Any):
+        super().__init__(**data)
+        if not isinstance(self.image, list):
+            self.image = [self.image]
 
 
 if __name__ == '__main__':
