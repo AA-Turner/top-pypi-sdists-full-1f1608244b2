@@ -33,6 +33,7 @@ class VersionedHostRequirements(object):
     swagger_types = {
         'version': 'str',
         'master': 'ClusterHostRequirementsDetails',
+        'arbiter': 'ClusterHostRequirementsDetails',
         'worker': 'ClusterHostRequirementsDetails',
         'sno': 'ClusterHostRequirementsDetails',
         'edge_worker': 'ClusterHostRequirementsDetails'
@@ -41,16 +42,18 @@ class VersionedHostRequirements(object):
     attribute_map = {
         'version': 'version',
         'master': 'master',
+        'arbiter': 'arbiter',
         'worker': 'worker',
         'sno': 'sno',
         'edge_worker': 'edge-worker'
     }
 
-    def __init__(self, version=None, master=None, worker=None, sno=None, edge_worker=None):  # noqa: E501
+    def __init__(self, version=None, master=None, arbiter=None, worker=None, sno=None, edge_worker=None):  # noqa: E501
         """VersionedHostRequirements - a model defined in Swagger"""  # noqa: E501
 
         self._version = None
         self._master = None
+        self._arbiter = None
         self._worker = None
         self._sno = None
         self._edge_worker = None
@@ -60,6 +63,8 @@ class VersionedHostRequirements(object):
             self.version = version
         if master is not None:
             self.master = master
+        if arbiter is not None:
+            self.arbiter = arbiter
         if worker is not None:
             self.worker = worker
         if sno is not None:
@@ -112,6 +117,29 @@ class VersionedHostRequirements(object):
         """
 
         self._master = master
+
+    @property
+    def arbiter(self):
+        """Gets the arbiter of this VersionedHostRequirements.  # noqa: E501
+
+        Arbiter node requirements  # noqa: E501
+
+        :return: The arbiter of this VersionedHostRequirements.  # noqa: E501
+        :rtype: ClusterHostRequirementsDetails
+        """
+        return self._arbiter
+
+    @arbiter.setter
+    def arbiter(self, arbiter):
+        """Sets the arbiter of this VersionedHostRequirements.
+
+        Arbiter node requirements  # noqa: E501
+
+        :param arbiter: The arbiter of this VersionedHostRequirements.  # noqa: E501
+        :type: ClusterHostRequirementsDetails
+        """
+
+        self._arbiter = arbiter
 
     @property
     def worker(self):

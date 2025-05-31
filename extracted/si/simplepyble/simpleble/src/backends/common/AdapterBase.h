@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 
-#include <simpleble/export.h>
-
 #include <simpleble/Exceptions.h>
 #include <simpleble/Types.h>
+
+#include <kvn_safe_callback.hpp>
 
 namespace SimpleBLE {
 
@@ -22,7 +22,6 @@ class PeripheralBase;
  *
  * Notes for implementers:
  *
- * - The `initialize()` method is not present because internally we enforce RAII.
  * - The methods here return shared pointers to AdapterBase, PeripheralBase,
  *   etc. The code in Adapter.cpp will automatically wrap these in Adapter,
  *   Peripheral, etc. objects.
@@ -39,18 +38,25 @@ class AdapterBase {
     virtual std::string identifier() = 0;
     virtual BluetoothAddress address() = 0;
 
+    virtual void power_on() = 0;
+    virtual void power_off() = 0;
+    virtual bool is_powered() = 0;
+    virtual void set_callback_on_power_on(std::function<void()> on_power_on);
+    virtual void set_callback_on_power_off(std::function<void()> on_power_off);
+
     virtual void scan_start() = 0;
     virtual void scan_stop() = 0;
     virtual void scan_for(int timeout_ms) = 0;
     virtual bool scan_is_active() = 0;
     virtual std::vector<std::shared_ptr<PeripheralBase>> scan_get_results() = 0;
 
-    virtual void set_callback_on_scan_start(std::function<void()> on_scan_start) = 0;
-    virtual void set_callback_on_scan_stop(std::function<void()> on_scan_stop) = 0;
-    virtual void set_callback_on_scan_updated(std::function<void(Peripheral)> on_scan_updated) = 0;
-    virtual void set_callback_on_scan_found(std::function<void(Peripheral)> on_scan_found) = 0;
+    virtual void set_callback_on_scan_start(std::function<void()> on_scan_start);
+    virtual void set_callback_on_scan_stop(std::function<void()> on_scan_stop);
+    virtual void set_callback_on_scan_updated(std::function<void(Peripheral)> on_scan_updated);
+    virtual void set_callback_on_scan_found(std::function<void(Peripheral)> on_scan_found);
 
     virtual std::vector<std::shared_ptr<PeripheralBase>> get_paired_peripherals() = 0;
+    virtual std::vector<std::shared_ptr<PeripheralBase>> get_connected_peripherals() { return {}; };
 
     /**
      * Checks if Bluetooth is enabled.
@@ -62,6 +68,14 @@ class AdapterBase {
 
   protected:
     AdapterBase() = default;
+
+    kvn::safe_callback<void()> _callback_on_power_on;
+    kvn::safe_callback<void()> _callback_on_power_off;
+
+    kvn::safe_callback<void()> _callback_on_scan_start;
+    kvn::safe_callback<void()> _callback_on_scan_stop;
+    kvn::safe_callback<void(Peripheral)> _callback_on_scan_updated;
+    kvn::safe_callback<void(Peripheral)> _callback_on_scan_found;
 };
 
 }  // namespace SimpleBLE

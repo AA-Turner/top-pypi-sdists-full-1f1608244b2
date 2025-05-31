@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: acres
-Version: 0.3.0
+Version: 0.4.1
 Summary: Access resources on your terms
 Author-Email: The NiPreps Developers <nipreps@gmail.com>
 License: Apache-2.0
@@ -13,7 +13,7 @@ Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Requires-Python: >=3.9
-Requires-Dist: importlib_resources>=5.7; python_version < "3.11"
+Requires-Dist: importlib_resources>=5.7; python_version < "3.10"
 Description-Content-Type: text/markdown
 
 # Acres: Access resources on your terms
@@ -119,7 +119,7 @@ which lets it play nicely with type checkers.
 
 `Loader.cached` uses a global cache. This ensures that cached files do not get
 unloaded if a `Loader()` instance is garbage collected, and it also ensures that
-instances created cheaply and garbage collected when out of scope.
+instances can be created cheaply and garbage collected when out of scope.
 
 ## Why acres?
 
@@ -152,6 +152,21 @@ this bug will only exhibit when the package is zipped.
 
 `acres.Loader` aims to clearly delineate the scopes and capabilities of
 the accessed resources, including providing an interpreter-lifetime scope.
+
+## Type annotations
+
+`acres` is fully type-annotated, and checked with both `mypy` and `pyright`.
+The `Loader.readable` method returns a [Traversable][], which moved from
+`importlib.abc` in Python 3.10 to `importlib.resources.abc` in Python 3.11.
+To simplify the use of this annotation in functions that accept readable
+resources, use:
+
+```python
+import acres.typ as at
+
+def myfunc(resource: at.Traversable) -> ReturnType:
+    ...
+```
 
 [Traversable]: https://docs.python.org/3/library/importlib.resources.abc.html#importlib.resources.abc.Traversable
 [pathlib.Path]: https://docs.python.org/3/library/pathlib.html#pathlib.Path

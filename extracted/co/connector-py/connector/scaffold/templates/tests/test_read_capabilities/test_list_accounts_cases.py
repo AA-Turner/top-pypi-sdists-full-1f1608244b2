@@ -4,18 +4,16 @@ import typing as t
 
 import httpx
 from connector.generated import (
-    Error,
-    ErrorCode,
     ErrorResponse,
     ListAccounts,
     ListAccountsRequest,
     ListAccountsResponse,
-    Page,
+    StandardCapabilityName,
 )
-from connector.generated.models.standard_capability_name import StandardCapabilityName
-from {name}.pagination import NextPageToken, Pagination
-from tests.common_mock_data import INVALID_AUTH, SETTINGS, VALID_AUTH, TEST_MAX_PAGE_SIZE
 from connector.tests.type_definitions import MockedResponse, ResponseBodyMap
+from {name}.pagination import NextPageToken, Pagination
+
+from tests.common_mock_data import SETTINGS, TEST_MAX_PAGE_SIZE, VALID_AUTH
 
 Case: t.TypeAlias = tuple[
     StandardCapabilityName,

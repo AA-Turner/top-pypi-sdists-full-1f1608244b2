@@ -39,10 +39,10 @@ class FrameBaseApiHandler(BaseApiHandler):
     """
     def options_async(self):
         self.response_json_success()
-    
+
     def check_xsrf_cookie(self):
         return
-    
+
     def set_default_headers(self):
         allow_origin_list = share_config.get_value("allow_origin_list")
         if allow_origin_list:
@@ -69,7 +69,7 @@ class FrameBaseApiHandler(BaseApiHandler):
         :last_editors: HuangJianYi
         """
         return SevenHelper.create_order_id(ran)
-    
+
     def json_dumps(self, rep_dic):
         """
         :description: 将字典转化为字符串
@@ -87,7 +87,7 @@ class FrameBaseApiHandler(BaseApiHandler):
         :last_editors: HuangJianYi
         """
         return SevenHelper.json_loads(rep_str)
-    
+
     def get_param(self, param_name, default="", strip=True, filter_sql=False, filter_special_key=False):
         """
         :description: 二次封装获取参数
@@ -207,7 +207,7 @@ class FrameBaseApiHandler(BaseApiHandler):
             else:
                 self.param_error_list.append(log_info)
         return param
-    
+
     def get_environment(self):
         """
         :description:获取服务器环境
@@ -221,7 +221,7 @@ class FrameBaseApiHandler(BaseApiHandler):
         else:
             environment = "development"
         return environment
-    
+
     def business_process_executing(self):
         """
         :description: 执行前事件
@@ -256,7 +256,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
         dict_param = {}
         try:
             if share_config.get_value("plat_type", PlatType.tb.value) != PlatType.web.value:  #平台类型：如果是web站点，从cookie取
-                
+
                 dict_param["open_id"] = self.get_open_id()
                 if not dict_param["open_id"]:
                     dict_param["open_id"] = self.get_user_id()
@@ -375,7 +375,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
             invoke_result_data.error_message = "参数解析错误"
             invoke_result_data.data = traceback.format_exc()
             return invoke_result_data
-         
+
     def _convert_request_params(self):
         """
         :Description: 转换请求参数 post请求：Content-type必须为application/json，前端必须对对象进行序列化转成json字符串，不能直接传对象,否则无法接收参数,存在特殊字符的参数必须进行url编码，否则+会被变成空值
@@ -412,7 +412,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
                     return invoke_result_data
                 body_params = invoke_result_data.data
                 for field in body_params:
-                    self.request_params[field] = body_params[field]         
+                    self.request_params[field] = body_params[field]
             else:
                 for field in self.request.arguments:
                     self.request_params[field] = self.get_argument(field, "", strip=True)
@@ -515,14 +515,14 @@ class FrameBaseHandler(FrameBaseApiHandler):
             self.logging_link_error(f"{error_code}\n{error_message}\n{data}\n{self.request}")
         self.response_common(False, data, error_code, error_message)
 
-    def response_json_error_params(self):
+    def response_json_error_params(self, desc='params error'):
         """
         :description: 通用参数错误返回json结构
         :param desc: 返错误描述
         :return: 将dumps后的数据字符串返回给客户端
         :last_editors: HuangJianYi
         """
-        self.response_common(False, None, "params error", "参数错误")
+        self.response_common(False, None, "params_error", desc)
 
     def return_dict_error(self, error_code="", error_message=""):
         """
@@ -676,7 +676,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
                         app_info_dict = AppInfoModel(context=self, is_auto=True).get_cache_dict(where=condition_where.to_string(), limit="1", field="app_id", params=params)
                         app_id = app_info_dict["app_id"] if app_info_dict else ""
                 elif request_source_type == 1: # 1-client(客户端)
-                    app_id = self.get_param("source_app_id")    
+                    app_id = self.get_param("source_app_id")
             #淘宝小程序 在IDE上返回前端模板id，无论哪个环境
             if request_source_type == 1 :
                 test_config = share_config.get_value("test_config", {})
@@ -704,7 +704,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
                         app_id = test_config.get("source_app_id", "")
                     elif app_id == template_id:
                         app_id = test_config.get("source_app_id", "")
-            
+
         if not app_id:
             app_id = share_config.get_value("app_id")
         return app_id
@@ -754,7 +754,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
             if act_info_dict:
                 act_id = act_info_dict["id"]
                 return act_id
-        
+
         act_id_config = share_config.get_value("act_id_config", None)
         if act_id_config:
             act_info_model = ActInfoModel(context=self, is_auto=True)
@@ -814,7 +814,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
             if SevenHelper.is_continue_request(f"continue_request:{handler_name}_{app_id}_{object_id}_{sign}", expire) == True:
                 result = True, f"操作太频繁,请{expire}毫秒后再试"
         return result
-    
+
     def check_current_limit_request(self):
         """
         :description: 全局请求限制校验，限制当前请求次数，超过次数直接返回错误提示
@@ -835,7 +835,7 @@ class FrameBaseHandler(FrameBaseApiHandler):
                 self.response_json_error("global_current_limit", '当前人数过多,请稍后再试')
                 self.finish()
                 return True
-            
+
 
 
 class ClientBaseHandler(FrameBaseHandler):
@@ -890,7 +890,7 @@ class ClientBaseHandler(FrameBaseHandler):
                 self.logging_link_info(f"plain_request_params:{self.json_dumps(self.request_params)}")
             # 验证超时 10秒过期
             if is_api_encrypt == True and not self._check_timestamp_validity():
-                    return
+                return
             # 防攻击校验
             invoke_result_data = SafeHelper.check_attack_request(context=self)
             if invoke_result_data.success == False:

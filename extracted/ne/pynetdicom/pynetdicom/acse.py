@@ -1,7 +1,7 @@
 """ACSE service provider"""
 
 import logging
-from typing import TYPE_CHECKING, Optional, Dict, List, cast, Tuple
+from typing import TYPE_CHECKING, cast
 
 from pydicom.uid import UID
 
@@ -55,19 +55,16 @@ class ACSE:
         return self.assoc.acceptor
 
     @property
-    def acse_timeout(self) -> Optional[float]:
+    def acse_timeout(self) -> float | None:
         """Return the ACSE timeout (in seconds)."""
         return self.assoc.acse_timeout
 
     @property
     def assoc(self) -> "Association":
-        """Return the parent :class:`~pynetdicom.association.Association`.
-
-        .. versionadded:: 1.3
-        """
+        """Return the parent :class:`~pynetdicom.association.Association`."""
         return self._assoc
 
-    def _check_async_ops(self) -> Optional[AsynchronousOperationsWindowNegotiation]:
+    def _check_async_ops(self) -> AsynchronousOperationsWindowNegotiation | None:
         """Check the user's response to an Asynchronous Operations request.
 
         .. currentmodule:: pynetdicom.pdu_primitives
@@ -82,6 +79,8 @@ class ACSE:
             (1, 1).
         """
         # pylint: disable=broad-except
+        setattr(self.assoc, "abort", self.assoc._abort_nonblocking)
+
         try:
             # Response is always ignored as async ops is not supported
             inv, perf = self.requestor.asynchronous_operations
@@ -89,10 +88,13 @@ class ACSE:
                 self.assoc, evt.EVT_ASYNC_OPS, {"nr_invoked": inv, "nr_performed": perf}
             )
         except NotImplementedError:
+            setattr(self.assoc, "abort", self.assoc._abort_blocking)
             return None
         except Exception as exc:
             LOGGER.error("Exception raised in handler bound to 'evt.EVT_ASYNC_OPS'")
             LOGGER.exception(exc)
+
+        setattr(self.assoc, "abort", self.assoc._abort_blocking)
 
         item = AsynchronousOperationsWindowNegotiation()
         item.maximum_number_operations_invoked = 1
@@ -102,7 +104,7 @@ class ACSE:
 
     def _check_sop_class_common_extended(
         self,
-    ) -> Dict[UID, SOPClassCommonExtendedNegotiation]:
+    ) -> dict[UID, SOPClassCommonExtendedNegotiation]:
         """Check the user's response to a SOP Class Common Extended request.
 
         Returns
@@ -112,6 +114,8 @@ class ACSE:
             the accepted SOP Class Common Extended negotiation items.
         """
         # pylint: disable=broad-except
+        setattr(self.assoc, "abort", self.assoc._abort_nonblocking)
+
         try:
             rsp = evt.trigger(
                 self.assoc,
@@ -119,11 +123,14 @@ class ACSE:
                 {"items": self.requestor.sop_class_common_extended},
             )
         except Exception as exc:
+            setattr(self.assoc, "abort", self.assoc._abort_blocking)
+
             LOGGER.error("Exception raised in handler bound to 'evt.EVT_SOP_COMMON'")
             LOGGER.exception(exc)
             return {}
 
-        rsp = cast(Dict[UID, SOPClassCommonExtendedNegotiation], rsp)
+        setattr(self.assoc, "abort", self.assoc._abort_blocking)
+        rsp = cast(dict[UID, SOPClassCommonExtendedNegotiation], rsp)
 
         try:
             rsp = {
@@ -140,7 +147,7 @@ class ACSE:
 
         return rsp
 
-    def _check_sop_class_extended(self) -> List[SOPClassExtendedNegotiation]:
+    def _check_sop_class_extended(self) -> list[SOPClassExtendedNegotiation]:
         """Check the user's response to a SOP Class Extended request.
 
         Returns
@@ -149,6 +156,8 @@ class ACSE:
             The SOP Class Extended Negotiation items to be sent in response
         """
         # pylint: disable=broad-except
+        setattr(self.assoc, "abort", self.assoc._abort_nonblocking)
+
         try:
             user_response = evt.trigger(
                 self.assoc,
@@ -159,6 +168,8 @@ class ACSE:
             user_response = {}
             LOGGER.error("Exception raised in handler bound to 'evt.EVT_SOP_EXTENDED'")
             LOGGER.exception(exc)
+
+        setattr(self.assoc, "abort", self.assoc._abort_blocking)
 
         if not isinstance(user_response, (type(None), dict)):
             LOGGER.error(
@@ -185,7 +196,7 @@ class ACSE:
 
         return items
 
-    def _check_user_identity(self) -> Tuple[bool, Optional[UserIdentityNegotiation]]:
+    def _check_user_identity(self) -> tuple[bool, UserIdentityNegotiation | None]:
         """Check the user's response to a User Identity request.
 
         Returns
@@ -197,6 +208,8 @@ class ACSE:
             otherwise None.
         """
         # pylint: disable=broad-except
+        setattr(self.assoc, "abort", self.assoc._abort_nonblocking)
+
         # The UserIdentityNegotiation (request) item
         req = self.requestor.user_identity
         if req is None:
@@ -213,17 +226,20 @@ class ACSE:
                 },
             )
         except NotImplementedError:
+            setattr(self.assoc, "abort", self.assoc._abort_blocking)
             # If the user hasn't implemented identity negotiation then
             #   default to accepting the association
             return True, None
         except Exception as exc:
+            setattr(self.assoc, "abort", self.assoc._abort_blocking)
             # If the user has implemented identity negotiation but an exception
             #   occurred then reject the association
             LOGGER.error("Exception in handler bound to 'evt.EVT_USER_ID'")
             LOGGER.exception(exc)
             return False, None
 
-        identity_verified, response = cast(Tuple[bool, Optional[bytes]], rsp)
+        setattr(self.assoc, "abort", self.assoc._abort_blocking)
+        identity_verified, response = cast(tuple[bool, bytes | None], rsp)
 
         if not identity_verified:
             # Reject association as the user isn't authorised
@@ -257,10 +273,6 @@ class ACSE:
         """Return ``True`` if an A-ABORT and/or A-P-ABORT request has been
         received.
 
-        .. versionchanged:: 1.5
-
-            Added `abort_type` keyword parameter.
-
         Parameters
         ----------
         abort_type : str, optional
@@ -282,18 +294,12 @@ class ACSE:
             "a-abort": (A_ABORT,),
             "a-p-abort": (A_P_ABORT,),
         }
-
         primitive = self.dul.peek_next_pdu()
-        if isinstance(primitive, abort_classes[abort_type]):
-            return True
 
-        return False
+        return isinstance(primitive, abort_classes[abort_type])
 
     def is_release_requested(self) -> bool:
-        """Return ``True`` if an A-RELEASE request has been received.
-
-        .. versionadded:: 1.1
-        """
+        """Return ``True`` if an A-RELEASE request has been received."""
         primitive = self.dul.peek_next_pdu()
         if isinstance(primitive, A_RELEASE) and primitive.result is None:
             _ = self.dul.receive_pdu(wait=False)
@@ -318,7 +324,7 @@ class ACSE:
         self.requestor.ae_title = assoc_rq.calling_ae_title
 
         # If we reject association -> [result, source, diagnostic]
-        reject_assoc_rsd: Tuple[int, ...] = tuple()
+        reject_assoc_rsd: tuple[int, ...] = tuple()
 
         # Calling AE Title not recognised
         authorised_aet = [s.strip() for s in self.assoc.ae.require_calling_aet]
@@ -561,8 +567,6 @@ class ACSE:
     def negotiate_release(self) -> None:
         """Negotiate association release.
 
-        .. versionadded:: 1.1
-
         Once an A-RELEASE request has been sent any received P-DATA PDUs will
         be ignored.
         """
@@ -596,14 +600,6 @@ class ACSE:
                 evt.trigger(self.assoc, evt.EVT_ABORTED, {})
                 self.assoc.kill()
                 return
-
-            # Any other primitive besides A_RELEASE gets trashed
-            elif not isinstance(primitive, A_RELEASE):
-                # Should only be P-DATA
-                LOGGER.warning(
-                    "P-DATA received after Association release, data has been lost"
-                )
-                continue
 
             # Must be A-RELEASE, but may be either request or release
             if primitive.result is None:
@@ -809,6 +805,7 @@ class ACSE:
         if is_response:
             primitive.result = "affirmative"
 
+        self.assoc._sent_release = True
         self.dul.send_pdu(primitive)
 
     def send_request(self) -> None:
@@ -831,16 +828,10 @@ class ACSE:
         primitive.calling_ae_title = self.requestor.ae_title
         # Called AE Title is the destination DICOM AE title
         primitive.called_ae_title = self.acceptor.ae_title
-        # The TCP/IP address of the source, pynetdicom includes port too
-        primitive.calling_presentation_address = (
-            cast(str, self.requestor.address),
-            cast(int, self.requestor.port),
-        )
-        # The TCP/IP address of the destination, pynetdicom includes port too
-        primitive.called_presentation_address = (
-            cast(str, self.acceptor.address),
-            cast(int, self.acceptor.port),
-        )
+        # The TCP/IP address info of the source
+        primitive.calling_presentation_address = self.requestor.address_info
+        # The TCP/IP address info of the destination
+        primitive.called_presentation_address = self.acceptor.address_info
         # Proposed presentation contexts
         primitive.presentation_context_definition_list = (
             self.requestor.requested_contexts
@@ -867,6 +858,6 @@ class ACSE:
         self.dul.send_pdu(primitive)
 
     @property
-    def socket(self) -> Optional["AssociationSocket"]:
+    def socket(self) -> "AssociationSocket | None":
         """Return the :class:`~pynetdicom.transport.AssociationSocket`."""
         return self.assoc.dul.socket

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mkdocs-rss-plugin
-Version: 1.17.2
+Version: 1.17.3
 Summary: MkDocs plugin which generates a static RSS feed using git log and page.meta.
 Author: Julien Moura
 Author-email: dev@ingeoveritas.com

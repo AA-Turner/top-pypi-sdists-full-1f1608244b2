@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import pathlib
@@ -22,15 +23,24 @@ from mashumaro.types import SerializableType
 
 from flytekit.core.constants import MESSAGEPACK
 from flytekit.core.context_manager import FlyteContext, FlyteContextManager
-from flytekit.core.type_engine import AsyncTypeTransformer, TypeEngine, TypeTransformerFailedError, get_batch_size
+from flytekit.core.type_engine import (
+    AsyncTypeTransformer,
+    TypeEngine,
+    TypeTransformerFailedError,
+    get_batch_size,
+)
 from flytekit.exceptions.user import FlyteAssertion
-from flytekit.extras.pydantic_transformer.decorator import model_serializer, model_validator
+from flytekit.extras.pydantic_transformer.decorator import (
+    model_serializer,
+    model_validator,
+)
 from flytekit.models import types as _type_models
 from flytekit.models.core import types as _core_types
 from flytekit.models.core.types import BlobType
 from flytekit.models.literals import Binary, Blob, BlobMetadata, Literal, Scalar
 from flytekit.models.types import LiteralType
 from flytekit.types.file import FileExt, FlyteFile
+from flytekit.utils.asyn import loop_manager
 
 T = typing.TypeVar("T")
 PathType = typing.Union[str, os.PathLike]
@@ -43,13 +53,12 @@ def noop(): ...
 class FlyteDirectory(SerializableType, DataClassJsonMixin, os.PathLike, typing.Generic[T]):
     path: PathType = field(default=None, metadata=config(mm_field=fields.String()))  # type: ignore
     """
-    .. warning::
-
-        This class should not be used on very large datasets, as merely listing the dataset will cause
+    > [!WARNING]
+    > This class should not be used on very large datasets, as merely listing the dataset will cause
         the entire dataset to be downloaded. Listing on S3 and other backend object stores is not consistent
         and we should not need data to be downloaded to list.
 
-    Please first read through the comments on the :py:class:`flytekit.types.file.FlyteFile` class as the
+    Please first read through the comments on the {{< py_class_ref flytekit.types.file.FlyteFile >}} class as the
     implementation here is similar.
 
     One thing to note is that the ``os.PathLike`` type that comes with Python was used as a stand-in for ``FlyteFile``.
@@ -194,7 +203,19 @@ class FlyteDirectory(SerializableType, DataClassJsonMixin, os.PathLike, typing.G
         This function should be called by os.listdir as well.
         """
         if not self._downloaded:
-            self._downloader()
+            if isinstance(self._downloader, partial):
+                underlying_func = self._downloader.func
+            else:
+                underlying_func = self._downloader
+
+            if asyncio.iscoroutinefunction(underlying_func):
+                # If the downloader is a coroutine function, we need to run it in the event loop.
+                # This is required when using the Elastic task config with the start method set to 'spawn'.
+                # This is possibly due to pickling and unpickling the task function, which may not properly rebind to the synced version.
+                loop_manager.synced(self._downloader)()
+            else:
+                # If the downloader is not a coroutine, we can just call it directly.
+                self._downloader()
             self._downloaded = True
         return self.path
 
@@ -345,17 +366,17 @@ class FlyteDirectory(SerializableType, DataClassJsonMixin, os.PathLike, typing.G
         In addition, it will return a list of FlyteFile and FlyteDirectory objects that have ability to lazily download the
         contents of the file/folder. For example:
 
-        .. code-block:: python
+        ```python
+        entity = FlyteDirectory.listdir(directory)
+        for e in entity:
+            print("s3 object:", e.remote_source)
+            # s3 object: s3://test-flytedir/file1.txt
+            # s3 object: s3://test-flytedir/file2.txt
+            # s3 object: s3://test-flytedir/sub_dir
 
-            entity = FlyteDirectory.listdir(directory)
-            for e in entity:
-                print("s3 object:", e.remote_source)
-                # s3 object: s3://test-flytedir/file1.txt
-                # s3 object: s3://test-flytedir/file2.txt
-                # s3 object: s3://test-flytedir/sub_dir
-
-            open(entity[0], "r")  # This will download the file to the local disk.
-            open(entity[0], "r")  # flytekit will read data from the local disk if you open it again.
+        open(entity[0], "r")  # This will download the file to the local disk.
+        open(entity[0], "r")  # flytekit will read data from the local disk if you open it again.
+        ```
         """
 
         final_path = directory.path
@@ -449,9 +470,8 @@ class FlyteDirToMultipartBlobTransformer(AsyncTypeTransformer[FlyteDirectory]):
     This transformer handles conversion between the Python native FlyteDirectory class defined above, and the Flyte
     IDL literal/type of Multipart Blob. Please see the FlyteDirectory comments for additional information.
 
-    .. caution:
-
-       The transformer will not check if the given path is actually a directory. This is because the path could be
+    > [!CAUTION] caution:
+    > The transformer will not check if the given path is actually a directory. This is because the path could be
        a remote reference.
 
     """
@@ -470,7 +490,8 @@ class FlyteDirToMultipartBlobTransformer(AsyncTypeTransformer[FlyteDirectory]):
     def assert_type(self, t: typing.Type[FlyteDirectory], v: typing.Union[FlyteDirectory, os.PathLike, str]):
         if isinstance(v, FlyteDirectory) or isinstance(v, str) or isinstance(v, os.PathLike):
             """
-            NOTE: we do not do a isdir check because the given path could be remote reference
+            >[!NOTE]
+            > we do not do a isdir check because the given path could be remote reference
             """
             return
         raise TypeError(

@@ -16,7 +16,7 @@ import threading
 import typing
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from functools import lru_cache
+from functools import lru_cache, reduce
 from types import GenericAlias
 from typing import Any, Dict, List, NamedTuple, Optional, Type, cast
 
@@ -75,10 +75,12 @@ class BatchSize:
     """
     This is used to annotate a FlyteDirectory when we want to download/upload the contents of the directory in batches. For example,
 
+    ```python
     @task
     def t1(directory: Annotated[FlyteDirectory, BatchSize(10)]) -> Annotated[FlyteDirectory, BatchSize(100)]:
         ...
         return FlyteDirectory(...)
+    ```
 
     In the above example flytekit will download all files from the input `directory` in chunks of 10, i.e. first it
     downloads 10 files, loads them to memory, then writes those 10 to local disk, then it loads the next 10, so on
@@ -450,56 +452,55 @@ class RestrictedTypeTransformer(TypeTransformer[T], ABC):
 
 class DataclassTransformer(TypeTransformer[object]):
     """
-    The Dataclass Transformer provides a type transformer for dataclasses.
+        The Dataclass Transformer provides a type transformer for dataclasses.
 
-    The dataclass is converted to and from MessagePack Bytes by the mashumaro library
-    and is transported between tasks using the Binary IDL representation.
-    Also, the type declaration will try to extract the JSON Schema for the
-    object, if possible, and pass it with the definition.
+        The dataclass is converted to and from MessagePack Bytes by the mashumaro library
+        and is transported between tasks using the Binary IDL representation.
+        Also, the type declaration will try to extract the JSON Schema for the
+        object, if possible, and pass it with the definition.
 
-    The lifecycle of the dataclass in the Flyte type system is as follows:
+        The lifecycle of the dataclass in the Flyte type system is as follows:
 
-    1. Serialization: The dataclass transformer converts the dataclass to MessagePack Bytes.
-        (1) Handle dataclass attributes to make them serializable with mashumaro.
-        (2) Use the mashumaro API to serialize the dataclass to MessagePack Bytes.
-        (3) Use MessagePack Bytes to create a Flyte Literal.
-        (4) Serialize the Flyte Literal to a Binary IDL Object.
+        1. Serialization: The dataclass transformer converts the dataclass to MessagePack Bytes.
+            (1) Handle dataclass attributes to make them serializable with mashumaro.
+            (2) Use the mashumaro API to serialize the dataclass to MessagePack Bytes.
+            (3) Use MessagePack Bytes to create a Flyte Literal.
+            (4) Serialize the Flyte Literal to a Binary IDL Object.
 
-    2. Deserialization: The dataclass transformer converts the MessagePack Bytes back to a dataclass.
-        (1) Convert MessagePack Bytes to a dataclass using mashumaro.
-        (2) Handle dataclass attributes to ensure they are of the correct types.
+        2. Deserialization: The dataclass transformer converts the MessagePack Bytes back to a dataclass.
+            (1) Convert MessagePack Bytes to a dataclass using mashumaro.
+            (2) Handle dataclass attributes to ensure they are of the correct types.
 
-    For Json Schema, we use https://github.com/fuhrysteve/marshmallow-jsonschema library.
+        For Json Schema, we use https://github.com/fuhrysteve/marshmallow-jsonschema library.
 
-    Example
+        Example
 
-    .. code-block:: python
-
+        ```python
         @dataclass
         class Test(DataClassJsonMixin):
-           a: int
-           b: str
+            a: int
+            b: str
 
         from marshmallow_jsonschema import JSONSchema
         t = Test(a=10,b="e")
         JSONSchema().dump(t.schema())
+        ```
 
-    Output will look like
+        Output will look like
 
-    .. code-block:: json
-
+        ```python
         {'$schema': 'http://json-schema.org/draft-07/schema#',
-         'definitions': {'TestSchema': {'properties': {'a': {'title': 'a',
-             'type': 'number',
-             'format': 'integer'},
+            'definitions': {'TestSchema': {'properties': {'a': {'title': 'a',
+                'type': 'number',
+                'format': 'integer'},
             'b': {'title': 'b', 'type': 'string'}},
-           'type': 'object',
-           'additionalProperties': False}},
-         '$ref': '#/definitions/TestSchema'}
+            'type': 'object',
+            'additionalProperties': False}},
+            '$ref': '#/definitions/TestSchema'}
+    ```
 
-    .. note::
-
-        The schema support is experimental and is useful for auto-completing in the UI/CLI
+        > [!NOTE]
+        > The schema support is experimental and is useful for auto-completing in the UI/CLI
 
     """
 
@@ -1088,56 +1089,78 @@ class EnumTransformer(TypeTransformer[enum.Enum]):
             raise TypeTransformerFailedError(f"Value {v} is not in Enum {t}")
 
 
-def generate_attribute_list_from_dataclass_json_mixin(schema: dict, schema_name: typing.Any):
+def _handle_json_schema_property(
+    property_key: str,
+    property_val: dict,
+) -> typing.Tuple[str, typing.Any]:
+    """
+    A helper to handle the properties of a JSON schema and returns their equivalent Flyte attribute name and type.
+    """
+
+    # Handle Optional[T] or Union[T1, T2, ...] at the top level for proper recursion
+    if property_val.get("anyOf"):
+        # Sanity check 'anyOf' is not empty
+        assert len(property_val["anyOf"]) > 0
+        # Check that there are no nested Optional or Union types - no need to support that pattern
+        # as it would just add complexity without much benefit
+        # A few examples: Optional[Optional[T]] or Union[T1, T2, Union[T3, T4], etc...]
+        if any(item.get("anyOf") for item in property_val["anyOf"]):
+            raise ValueError(
+                f"The property with name {property_key} has a nested Optional or Union type, this is not allowed for dataclass JSON deserialization."
+            )
+        attr_types = []
+        for item in property_val["anyOf"]:
+            _, attr_type = _handle_json_schema_property(property_key, item)
+            attr_types.append(attr_type)
+
+        # Gather all the types and return a Union[T1, T2, ...]
+        attr_union_type = reduce(lambda x, y: typing.Union[x, y], attr_types)
+        return (property_key, attr_union_type)  # type: ignore
+
+    # Handle enum
+    if property_val.get("enum"):
+        property_type = "enum"
+    else:
+        property_type = property_val["type"]
+
+    # Handle list
+    if property_type == "array":
+        return (property_key, typing.List[_get_element_type(property_val["items"])])  # type: ignore
+    # Handle null types (i.e. None)
+    elif property_type == "null":
+        return (property_key, type(None))  # type: ignore
+    # Handle dataclass and dict
+    elif property_type == "object":
+        # NOTE: No need to handle optional dataclasses here (i.e. checking for property_val.get("anyOf"))
+        # those are handled in the top level of the function with recursion.
+        if property_val.get("additionalProperties"):
+            # For typing.Dict type
+            elem_type = _get_element_type(property_val["additionalProperties"])
+            return (property_key, typing.Dict[str, elem_type])  # type: ignore
+        elif property_val.get("title"):
+            # For nested dataclass
+            sub_schema_name = property_val["title"]
+            return (
+                property_key,
+                typing.cast(GenericAlias, convert_mashumaro_json_schema_to_python_class(property_val, sub_schema_name)),
+            )
+        else:
+            # For untyped dict
+            return (property_key, dict)  # type: ignore
+    elif property_type == "enum":
+        return (property_key, str)  # type: ignore
+    # Handle None, int, float, bool or str
+    else:
+        return (property_key, _get_element_type(property_val))  # type: ignore
+
+
+def generate_attribute_list_from_dataclass_json_mixin(
+    schema: dict,
+    schema_name: typing.Any,
+):
     attribute_list: typing.List[typing.Tuple[Any, Any]] = []
     for property_key, property_val in schema["properties"].items():
-        property_type = ""
-        if property_val.get("anyOf"):
-            property_type = property_val["anyOf"][0]["type"]
-        elif property_val.get("enum"):
-            property_type = "enum"
-        else:
-            property_type = property_val["type"]
-        # Handle list
-        if property_type == "array":
-            attribute_list.append((property_key, typing.List[_get_element_type(property_val["items"])]))  # type: ignore
-        # Handle dataclass and dict
-        elif property_type == "object":
-            if property_val.get("anyOf"):
-                # For optional with dataclass
-                sub_schemea = property_val["anyOf"][0]
-                sub_schemea_name = sub_schemea["title"]
-                attribute_list.append(
-                    (
-                        property_key,
-                        typing.cast(
-                            GenericAlias, convert_mashumaro_json_schema_to_python_class(sub_schemea, sub_schemea_name)
-                        ),
-                    )
-                )
-            elif property_val.get("additionalProperties"):
-                # For typing.Dict type
-                elem_type = _get_element_type(property_val["additionalProperties"])
-                attribute_list.append((property_key, typing.Dict[str, elem_type]))  # type: ignore
-            elif property_val.get("title"):
-                # For nested dataclass
-                sub_schemea_name = property_val["title"]
-                attribute_list.append(
-                    (
-                        property_key,
-                        typing.cast(
-                            GenericAlias, convert_mashumaro_json_schema_to_python_class(property_val, sub_schemea_name)
-                        ),
-                    )
-                )
-            else:
-                # For untyped dict
-                attribute_list.append((property_key, dict))  # type: ignore
-        elif property_type == "enum":
-            attribute_list.append([property_key, str])  # type: ignore
-        # Handle int, float, bool or str
-        else:
-            attribute_list.append([property_key, _get_element_type(property_val)])  # type: ignore
+        attribute_list.append(_handle_json_schema_property(property_key, property_val))
     return attribute_list
 
 

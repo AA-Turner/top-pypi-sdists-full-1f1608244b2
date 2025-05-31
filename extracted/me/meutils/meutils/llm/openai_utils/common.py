@@ -25,13 +25,15 @@ from meutils.schemas.openai_types import CompletionRequest, ChatCompletionReques
 from meutils.schemas.openai_types import ChatCompletion, ChatCompletionChunk, CompletionUsage
 from meutils.schemas.openai_types import chat_completion, chat_completion_chunk, chat_completion_chunk_stop  # todo
 
-from meutils.schemas.image_types import ImageRequest
+from meutils.schemas.image_types import ImageRequest, ImageEditRequest
 
 token_encoder = tiktoken.get_encoding('cl100k_base')
 token_encoder_with_cache = lru_cache(maxsize=1024)(token_encoder.encode)
 
 CHAT_COMPLETION_PARAMS = get_function_params()
 IMAGES_GENERATE_PARAMS = get_function_params(fn=OpenAI(api_key='').images.generate)
+IMAGES_EDIT_PARAMS = get_function_params(fn=OpenAI(api_key='').images.edit)
+
 AUDIO_SPEECH_PARAMS = get_function_params(fn=OpenAI(api_key='').audio.speech.create)
 AUDIO_TRANSCRIPTIONS_PARAMS = get_function_params(fn=OpenAI(api_key='').audio.transcriptions.create)
 
@@ -49,6 +51,8 @@ def to_openai_params(
         PARAMS = CHAT_COMPLETION_PARAMS
     elif isinstance(request, ImageRequest):
         PARAMS = IMAGES_GENERATE_PARAMS
+    elif isinstance(request, ImageEditRequest):
+        PARAMS = IMAGES_EDIT_PARAMS
     elif isinstance(request, TTSRequest):
         PARAMS = AUDIO_SPEECH_PARAMS
     elif isinstance(request, STTRequest):
@@ -271,22 +275,24 @@ if __name__ == '__main__':
     #
     # ChatCompletionToolParam(**{'function': '', 'type': ''})
 
-    async def main():
-        with timer():
-            try:
-                async with ppu_flow(api_key="sk-OYK4YxtTlWauT2TdGR5FTAJpkRmSnDwPly4cve0cAvMcrBkZ", post="api-oss",
-                                    n=1):
-                    logger.debug("消费了哦")
+    # async def main():
+    #     with timer():
+    #         try:
+    #             async with ppu_flow(api_key="sk-OYK4YxtTlWauT2TdGR5FTAJpkRmSnDwPly4cve0cAvMcrBkZ", post="api-oss",
+    #                                 n=1):
+    #                 logger.debug("消费了哦")
+    #
+    #         except Exception as e:
+    #             pass
+    #             logger.error(e)
+    #             # logger.debug(e.response.status_code)
+    #             # logger.debug(e.response.text)
+    #
+    #
+    # arun(main())
+    #
+    # # to_openai_params(ChatCompletionRequest())
+    #
+    # print(token_encoder.encode('hi'))
 
-            except Exception as e:
-                pass
-                logger.error(e)
-                # logger.debug(e.response.status_code)
-                # logger.debug(e.response.text)
-
-
-    arun(main())
-
-    # to_openai_params(ChatCompletionRequest())
-
-    print(token_encoder.encode('hi'))
+    logger.debug(IMAGES_EDIT_PARAMS)

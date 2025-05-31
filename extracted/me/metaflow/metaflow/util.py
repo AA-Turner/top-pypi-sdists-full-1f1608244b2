@@ -418,7 +418,7 @@ def to_pascalcase(obj):
     if isinstance(obj, dict):
         res = obj.__class__()
         for k in obj:
-            res[re.sub("([a-zA-Z])", lambda x: x.groups()[0].upper(), k, 1)] = (
+            res[re.sub("([a-zA-Z])", lambda x: x.groups()[0].upper(), k, count=1)] = (
                 to_pascalcase(obj[k])
             )
     elif isinstance(obj, (list, set, tuple)):
@@ -467,7 +467,4 @@ def to_pod(value):
     return str(value)
 
 
-if sys.version_info[:2] > (3, 5):
-    from metaflow._vendor.packaging.version import parse as version_parse
-else:
-    from distutils.version import LooseVersion as version_parse
+from metaflow._vendor.packaging.version import parse as version_parse

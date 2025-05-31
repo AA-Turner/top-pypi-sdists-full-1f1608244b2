@@ -43,8 +43,9 @@ recommended = [
   "setuptools",
 ]
 test = [
+  # "beartype >= 0.20.0rc0", # PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
   "pytest >= 8.3.4",
-  "pytest-beartype >= 0.1.1",
+  # "pytest-beartype >= 0.1.1",
   "pytest-cov >= 6.0.0",
   "syrupy >= 4.7.2",
 ]
@@ -84,7 +85,9 @@ ignore_patterns = []
 now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
-runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
+# PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
+# runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
+runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--snapshot-update"]
 
 [tool.ruff]
 # Docs: https://github.com/charliermarsh/ruff
@@ -140,6 +143,9 @@ known-first-party = ['mdformat_mkdocs', 'tests']
   'PT004', # flake8-pytest-style: fixture does not return
   'S101', # Use of `assert` detected
 ]
+'tests/format/test_wrap.py' = [
+  'E501', # Line too long (122 > 88)
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -163,6 +169,10 @@ isolated_build = true
 requires = ["tox>=4.20.0"]
 skip_missing_interpreters = false
 
+[tool.tox.env."py312-mdformat"]
+commands = [["mdformat", {default = [], extend = true, replace = "posargs"}]]
+description = "Run development extension with arbitrary mdformat args (e.g. `tox run -e py312-mdformat -- --wrap=80 tmp.md`)"
+
 [tool.tox.env."py312-pre-commit"]
 commands = [["pre-commit", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
 deps = "pre-commit>=4.0.1"
@@ -179,7 +189,9 @@ skip_install = true
 
 [tool.tox.env."py312-test"]
 commands = [["pytest", "--cov=mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
-description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update'"
+# PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
+# description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update'"
+description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --snapshot-update'"
 extras = ["test"]
 
 [tool.tox.env."py312-type"]

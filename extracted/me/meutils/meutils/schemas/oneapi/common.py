@@ -48,7 +48,7 @@ MODEL_PRICE = {
     "kling_virtual_try_on": 1,
     "kling_effects": 1,
 
-    "kling_video": 1.2,
+    "kling_video": 1,
     "kling_extend": 1,
     "kling_lip_sync": 1,
 
@@ -148,6 +148,10 @@ MODEL_PRICE = {
     "flux-pro-1.1-ultra": 0.2,
     "ideogram-ai/ideogram-v2": 0.2,
     "ideogram-ai/ideogram-v2-turbo": 0.1,
+
+    "imagen4": 0.05 * 2,
+    "flux-kontext-pro": 0.04 * 2,
+    "flux-kontext-max": 0.08 * 2,
 
     "api-asr": 0.01,
     "api-stt": 0.01,
@@ -545,6 +549,8 @@ MODEL_RATIO = {
     "farui-plus": 10,  # 法律大模型
     'qwen2-math-72b-instruct': 4.13,
 
+    "qwenlong-l1-32b": 0.5,
+
     # 讯飞 https://xinghuo.xfyun.cn/sparkapi?scr=price
     'spark-lite': 0.05,  # 特价
     'spark-pro': 15 / 5,  # 特价
@@ -586,6 +592,7 @@ MODEL_RATIO = {
     "yi-medium-200k": 6,
 
     # minimax https://platform.minimaxi.com/document/price?id=6433f32294878d408fc8293e
+    "minimax-text-01": 0.5,
     "abab6.5-chat": 15 / 7.5,
     "abab6.5s-chat": 5,
     "abab6.5t-chat": 2.5,
@@ -617,6 +624,8 @@ MODEL_RATIO = {
     'deepseek-reasoner-8k': 1,
     "deepseek-r1-250120": 2,
     "deepseek-r1-0528": 2,
+    "deepseek-r1-250528": 2,
+    "deepseek-r1-250528-qwen3-8b": 0.3,
 
     "deepseek-search": 1,
     'deepseek-r1-search': 2,
@@ -825,6 +834,8 @@ MODEL_RATIO = {
     "gemini-2.5-flash-thinking": 0.075,
     "gemini-2.5-flash-preview-04-17-thinking": 0.075,
     "gemini-2.5-flash-preview-05-20-thinking": 0.075,
+
+    "gemini-2.5-pro-think": 0.625,
     "gemini-2.5-pro-thinking": 0.625,
     "gemini-2.5-pro-exp-03-25-thinking": 0.625,
     "gemini-2.5-pro-preview-03-25-thinking": 0.625,
@@ -949,6 +960,8 @@ MODEL_RATIO = {
 }
 
 COMPLETION_RATIO = {
+    "minimax-text-01": 8,
+
     # 智能体
     "gpt-4-plus": 5,
     "gpt-4o-plus": 5,
@@ -1102,9 +1115,11 @@ COMPLETION_RATIO = {
     "gemini-2.5-flash-preview-04-17-thinking": 23,
     "gemini-2.5-flash-preview-05-20-thinking": 23,
 
-    "gemini-2.5-pro-thinking": 23,
-    "gemini-2.5-pro-exp-03-25-thinking": 23,
-    "gemini-2.5-pro-preview-03-25-thinking": 23,
+    "gemini-2.5-pro-think": 4,
+
+    "gemini-2.5-pro-thinking": 4,
+    "gemini-2.5-pro-exp-03-25-thinking": 4,
+    "gemini-2.5-pro-preview-03-25-thinking": 4,
 
     "hunyuan-a52b-instruct": 5,
     "qwen2.5-coder-32b-instruct": 3,
@@ -1156,6 +1171,7 @@ COMPLETION_RATIO = {
     "qwen3-32b": 4,
     "qwen3-30b-a3b": 4,
     "qwen3-235b-a22b": 3,
+    "qwenlong-l1-32b": 4,
 
     "deepseek-vl2": 4,
     "deepseek-ai/deepseek-vl2": 4,
@@ -1232,6 +1248,9 @@ COMPLETION_RATIO = {
     "deepseek-reasoner-164k": 8,
     "deepseek-r1-250120": 4,
     "deepseek-r1-0528": 4,
+    "deepseek-r1-250528": 4,
+
+    "deepseek-r1-250528-qwen3-8b": 4,
 
     "deepseek-chat:function": 4,
 

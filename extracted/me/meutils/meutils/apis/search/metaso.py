@@ -131,7 +131,7 @@ async def create(request: Union[ChatCompletionRequest, CompletionRequest]):
     logger.debug(request.model_dump_json(indent=4))
 
     headers = {}
-    if "research" in request.mode:  # 登录
+    if "research" in request.mode or model=="fast_thinking":  # 登录
         cookie = await get_next_token_for_polling(FEISHU_URL)
         headers["cookie"] = cookie
         logger.debug(cookie)
@@ -206,9 +206,9 @@ if __name__ == '__main__':
 
         # model="meta-search",
         # model="meta-deepsearch",
-        # model="meta-deepresearch",
+        model="meta-deepresearch",
 
-        model="meta-search:video",
+        # model="meta-search:video",
 
         # model="deepseek-r1-metasearch",
 

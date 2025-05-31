@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: pytest-regressions
-Version: 2.7.0
+Version: 2.8.0
 Summary: Easy to use fixtures to write regression tests.
 Home-page: https://github.com/ESSS/pytest-regressions
 Author: ESSS
@@ -24,7 +24,7 @@ Classifier: License :: OSI Approved :: MIT License
 Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
-Requires-Dist: pytest-datadir>=1.2.0
+Requires-Dist: pytest-datadir>=1.7.0
 Requires-Dist: pytest>=6.2.0
 Requires-Dist: pyyaml
 Provides-Extra: dev
@@ -53,6 +53,7 @@ Dynamic: description
 Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: license
+Dynamic: license-file
 Dynamic: maintainer
 Dynamic: maintainer-email
 Dynamic: provides-extra

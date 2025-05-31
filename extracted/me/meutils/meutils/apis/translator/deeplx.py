@@ -12,12 +12,31 @@ from meutils.pipe import *
 from meutils.schemas.translator_types import DeeplxRequest
 from meutils.decorators.retry import retrying
 
+from meutils.str_utils.regular_expression import has_chinese
+
 from meutils.apis import niutrans
+from meutils.llm.clients import zhipuai_client
 
 
-# niutrans.translate("你好", 'auto', 'en')
+@alru_cache
+async def llm_translate(prompt):
+    if not has_chinese(prompt):
+        # logger.debug("直接返回")
+        return prompt
 
-@alru_cache(ttl=3600)
+    response = await zhipuai_client.chat.completions.create(
+        model="glm-4-flash",
+        messages=[
+            {"role": "system", "content": "将所有输入的文本翻译成英文。请不用解释，直接翻译。"},
+            {"role": "user", "content": f"文本：{prompt}"}
+        ],
+        temperature=0,
+    )
+
+    return response.choices[0].message.content
+
+
+@alru_cache()
 @retrying()
 async def translate(
         request: DeeplxRequest,
@@ -29,7 +48,7 @@ async def translate(
     """
     if not request.text.strip(): return {}
 
-    api_key = api_key or "eoiVGOJW2jiHHRPitnBBAkpZJQGjnA-BfaJI9ndihnU"  # todo
+    api_key = api_key or "pOnI-G2dDExp_DdXlDhPH2gbIx1DTBEo3JHZ3dam3bw"  # todo
 
     url = f"https://api.deeplx.org/{api_key}/translate"
 
@@ -52,5 +71,10 @@ async def translate(
 
 if __name__ == '__main__':
     request = DeeplxRequest(text='讲个故事', source_lang='ZH', target_lang='EN')
-    with timer():
-        arun(translate(request))
+    # with timer():
+    #     arun(translate(request))
+
+    # arun(translate_prompt('把小鸭子放在女人的T恤上面。'))
+
+    # arun(llm_translate("这是一个文本"))
+    arun(llm_translate("你说yes"))

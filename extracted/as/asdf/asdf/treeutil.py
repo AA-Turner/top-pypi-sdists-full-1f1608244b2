@@ -2,12 +2,13 @@
 Utility functions for managing tree-like data structures.
 """
 
+import collections
 import types
 from contextlib import contextmanager
 
 from . import lazy_nodes, tagged
 
-__all__ = ["walk", "iter_tree", "walk_and_modify", "get_children", "is_container", "PendingValue", "RemoveNode"]
+__all__ = ["PendingValue", "RemoveNode", "get_children", "is_container", "iter_tree", "walk", "walk_and_modify"]
 
 
 def walk(top, callback):
@@ -278,7 +279,9 @@ def walk_and_modify(top, callback, postorder=True, _context=None):
         return _handle_generator(result)
 
     def _handle_mapping(node, json_id):
-        if isinstance(node, lazy_nodes.AsdfDictNode):
+        if isinstance(node, lazy_nodes.AsdfOrderedDictNode):
+            result = collections.OrderedDict()
+        elif isinstance(node, lazy_nodes.AsdfDictNode):
             result = {}
         else:
             result = node.__class__()

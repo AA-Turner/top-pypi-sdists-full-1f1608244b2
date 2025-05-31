@@ -87,11 +87,14 @@ from .time_utils import (get_time_stamp,
                          format_timestamp,
                          timestamp_to_milliseconds,
                          parse_timestamp,
-                         get_time_now_iso)
+                         get_time_now_iso,
+                         is_valid_time)
 from .string_clean import (eatInner,
                            eatAll,
                            eatOuter,
-                           url_join)
+                           url_join,
+                           capitalize
+                           )
 from .type_utils import (make_bool,
                          T_or_F_obj_eq,
                          is_number,
@@ -104,7 +107,10 @@ from .type_utils import (make_bool,
                          is_media_type,
                          get_bool_response,
                          get_mime_type,
-                         get_media_exts)
+                         get_media_exts,
+                         if_true_get_string,
+                         find_for_string,
+                         is_strings_in_string)
 from .math_utils import (convert_to_percentage,
                          exponential,
                          get_percentage,
@@ -120,11 +126,14 @@ from .history_utils import HistoryManager
 from .abstract_classes import *
 from .parse_utils import (num_tokens_from_string,
                           chunk_source_code,
-                          chunk_any_to_tokens)
+                          chunk_any_to_tokens,
+                          detect_language_from_text,
+                          chunk_by_language_context,
+                          search_code)
 
 from .log_utils import get_logFile,print_or_log
 from .error_utils import try_func
-from .class_utils import alias
+from .class_utils import alias,get_class_inputs
 
 
 

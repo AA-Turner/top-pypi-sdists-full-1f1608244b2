@@ -1,6 +1,6 @@
 """pynetdicom configuration options"""
 
-from typing import Optional, Tuple, Dict, Callable, Any
+from typing import Callable, Any
 
 from pynetdicom._validators import validate_ae, validate_ui
 
@@ -26,8 +26,6 @@ Examples
 ENFORCE_UID_CONFORMANCE: bool = False
 """Enforce UID conformance
 
-.. versionadded:: 1.3
-
 If ``True`` then UIDs will be checked to ensure they're conformant to the
 DICOM Standard and if not then an appropriate response sent, otherwise
 UIDs will only be checked to ensure they're no longer then 64 characters and
@@ -46,8 +44,6 @@ Examples
 USE_SHORT_DIMSE_AET: bool = True
 """Use short AE titles in DIMSE messages.
 
-.. versionadded:: 1.5
-
 If ``False`` then elements with a VR of AE in DIMSE messages will be padded
 with trailing spaces up to the maximum allowable length (16 bytes), otherwise
 no padding will be added.
@@ -65,8 +61,6 @@ Examples
 LOG_RESPONSE_IDENTIFIERS: bool = True
 """Log incoming C-FIND, C-GET and C-MOVE response *Identifier* datasets.
 
-.. versionadded:: 1.5
-
 If ``True`` then the *Identifier* datasets received in Pending
 responses to C-FIND, C-GET and C-MOVE requests will be logged.
 
@@ -82,8 +76,6 @@ Examples
 
 LOG_REQUEST_IDENTIFIERS: bool = True
 """Log incoming C-FIND, C-GET and C-MOVE request *Identifier* datasets.
-
-.. versionadded:: 1.5
 
 If ``True`` then the *Identifier* datasets received in
 C-FIND, C-GET and C-MOVE requests will be logged.
@@ -170,7 +162,7 @@ Examples
 """
 
 
-WINDOWS_TIMER_RESOLUTION: Optional[float] = 1
+WINDOWS_TIMER_RESOLUTION: float | None = 1
 """Set the minimum timer resolution for Microsoft Windows.
 
 .. versionadded:: 2.0
@@ -195,7 +187,7 @@ Examples
 """
 
 
-CODECS: Tuple[str, ...] = ("ascii",)
+CODECS: tuple[str, ...] = ("ascii",)
 """Customise the codecs used to decode text values.
 
 .. versionadded:: 2.0
@@ -260,7 +252,7 @@ Add UTF-8 as a fallback codec:
 """
 
 
-VALIDATORS: Dict[str, Callable[[Any], Tuple[bool, str]]] = {
+VALIDATORS: dict[str, Callable[[Any], tuple[bool, str]]] = {
     "AE": validate_ae,
     "UI": validate_ui,
 }
@@ -269,7 +261,7 @@ VALIDATORS: Dict[str, Callable[[Any], Tuple[bool, str]]] = {
 .. versionadded:: 2.0
 
 **AE**
-    Function signature: ``def func(value: str) -> Tuple[bool, str]``
+    Function signature: ``def func(value: str) -> tuple[bool, str]``
 
     Where `value` is the AE title to be validated as a :class:`str`.
 
@@ -279,7 +271,7 @@ VALIDATORS: Dict[str, Callable[[Any], Tuple[bool, str]]] = {
     about why validation has failed.
 
 **UI**
-  Function signature: ``def func(value: pydicom.uid.UID) -> Tuple[bool, str]``
+  Function signature: ``def func(value: pydicom.uid.UID) -> tuple[bool, str]``
 
   Where `value` is the :class:`~pydicom.uid.UID` to be validated.
 

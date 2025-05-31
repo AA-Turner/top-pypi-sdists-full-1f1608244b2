@@ -1,9 +1,7 @@
 import typing as t
 
-from connector.oai.base_clients import BaseIntegrationClient
-from connector.oai.capability import Request, get_oauth
-from connector.utils.httpx_auth import BearerAuth
-from connector.utils.client_utils import create_client_response
+from connector.client import BaseIntegrationClient, BearerAuth, get_oauth
+from connector.integration import Request
 
 from {name}.constants import BASE_URL
 

@@ -42,13 +42,15 @@ from pynetdicom.pdu_primitives import (
 )
 from pynetdicom.pdu import P_DATA_TF
 from pynetdicom.sop_class import Verification, CTImageStorage
-from pynetdicom.transport import AssociationSocket
+from pynetdicom.transport import AssociationSocket, AddressInformation
 from .encoded_pdu_items import (
     a_associate_rq,
     a_associate_ac,
     a_release_rq,
     a_release_rp,
     p_data_tf,
+    p_data_tf_rq,
+    p_data_tf_n_event_report,
     a_abort,
     a_p_abort,
 )
@@ -97,14 +99,12 @@ class DummyAssociation:
         self.mode = None
         self.dul = DummyDUL()
         self.requestor = ServiceUser(self, "requestor")
-        self.requestor.port = 11112
         self.requestor.ae_title = "TEST_LOCAL"
-        self.requestor.address = "127.0.0.1"
+        self.requestor.address_info = AddressInformation("127.0.0.1", 11112)
         self.requestor.maximum_length = 31682
         self.acceptor = ServiceUser(self, "acceptor")
         self.acceptor.ae_title = "TEST_REMOTE"
-        self.acceptor.port = 11113
-        self.acceptor.address = "127.0.0.2"
+        self.acceptor.address_info = AddressInformation("127.0.0.2", 11113)
         self.acse_timeout = 11
         self.dimse_timeout = 12
         self.network_timeout = 13
@@ -407,8 +407,8 @@ class TestPrimitiveConstruction:
         assert primitive.application_context_name == "1.2.840.10008.3.1.1.1"
         assert primitive.calling_ae_title == "TEST_LOCAL"
         assert primitive.called_ae_title == "TEST_REMOTE"
-        assert primitive.calling_presentation_address == ("127.0.0.1", 11112)
-        assert primitive.called_presentation_address == ("127.0.0.2", 11113)
+        assert primitive.calling_presentation_address.as_tuple == ("127.0.0.1", 11112)
+        assert primitive.called_presentation_address.as_tuple == ("127.0.0.2", 11113)
 
         cx = primitive.presentation_context_definition_list
         assert len(cx) == 1
@@ -1953,16 +1953,14 @@ class TestNegotiateRelease:
 
         assoc = Association(ae, mode="requestor")
 
-        assoc.set_socket(AssociationSocket(assoc))
+        assoc.set_socket(AssociationSocket(assoc, address=AddressInformation("", 0)))
 
         # Association Acceptor object -> remote AE
         assoc.acceptor.ae_title = "ANY_SCU"
-        assoc.acceptor.address = "localhost"
-        assoc.acceptor.port = 11112
+        assoc.acceptor.address_info = AddressInformation("localhost", 11112)
 
         # Association Requestor object -> local AE
-        assoc.requestor.address = ""
-        assoc.requestor.port = 11113
+        assoc.requestor.address_info = AddressInformation("", 11113)
         assoc.requestor.ae_title = ae.ae_title
         assoc.requestor.maximum_length = 16382
         assoc.requestor.implementation_class_uid = ae.implementation_class_uid
@@ -1992,12 +1990,10 @@ class TestNegotiateRelease:
 
         # Association Acceptor object -> remote AE
         assoc.acceptor.ae_title = "ANY_SCU"
-        assoc.acceptor.address = "localhost"
-        assoc.acceptor.port = 11112
+        assoc.acceptor.address_info = AddressInformation("localhost", 11112)
 
         # Association Requestor object -> local AE
-        assoc.requestor.address = ""
-        assoc.requestor.port = 11113
+        assoc.requestor.address_info = AddressInformation("", 11113)
         assoc.requestor.ae_title = ae.ae_title
         assoc.requestor.maximum_length = 16382
         assoc.requestor.implementation_class_uid = ae.implementation_class_uid
@@ -2067,33 +2063,6 @@ class TestNegotiateRelease:
 
         assert scp.received[1] == a_release_rq
         assert scp.received[2] == a_p_abort[:-1] + b"\x00"
-
-    def test_release_p_data(self, caplog):
-        """Test receiving P-DATA-TF after release."""
-        commands = [
-            ("recv", None),
-            ("send", a_associate_ac),
-            ("recv", None),  # a_release_rq
-            ("send", p_data_tf),
-            ("send", a_release_rp),
-        ]
-        self.scp = scp = self.start_server(commands)
-
-        assoc = self.create_assoc()
-        assoc.start()
-        while not assoc.is_established:
-            time.sleep(0.05)
-
-        with caplog.at_level(logging.DEBUG, logger="pynetdicom"):
-            assoc.release()
-            assert assoc.is_released
-            assert (
-                "P-DATA received after Association release, data has been lost"
-            ) in caplog.text
-
-        scp.shutdown()
-
-        assert scp.received[1] == a_release_rq
 
     def test_coll_acc(self, caplog):
         """Test a simulated A-RELEASE collision on the acceptor side."""
@@ -2193,6 +2162,63 @@ class TestNegotiateRelease:
 
         assert scp.received[1] == a_release_rq
         assert scp.received[2] == a_release_rp
+
+    def test_release_n_event_report(self, caplog):
+        """Test P-DATA (N-EVENT-REPORT) received during release."""
+
+        def handle_ner(event):
+            return 0x0000, None
+
+        commands = [
+            ("recv", None),  # a-associate-rq
+            ("send", a_associate_ac),
+            ("recv", None),  # a-release-rq
+            ("send", p_data_tf_n_event_report),  # n-event-report-rq
+            ("wait", 0.5),
+            ("send", a_release_rp),
+        ]
+        self.scp = scp = self.start_server(commands)
+
+        with caplog.at_level(logging.WARNING, logger="pynetdicom"):
+            assoc = self.create_assoc()
+            assoc.bind(evt.EVT_N_EVENT_REPORT, handle_ner)
+            assoc.start()
+            while not assoc.is_established:
+                time.sleep(0.05)
+
+            assoc.acse.send_release(is_response=False)
+
+        scp.shutdown()
+
+        assert (
+            "N-EVENT-REPORT message received during association release, ignoring"
+        ) in caplog.text
+
+    def test_release_c_echo_request(self, caplog):
+        """Test P-DATA (C-ECHO) received during release."""
+        commands = [
+            ("recv", None),  # a-associate-rq
+            ("send", a_associate_ac),
+            ("recv", None),  # a-release-rq
+            ("send", p_data_tf_rq),  # c-echo-rq
+            ("wait", 0.5),
+            ("send", a_release_rp),
+        ]
+        self.scp = scp = self.start_server(commands)
+
+        with caplog.at_level(logging.WARNING, logger="pynetdicom"):
+            assoc = self.create_assoc()
+            assoc.start()
+            while not assoc.is_established:
+                time.sleep(0.05)
+
+            assoc.acse.send_release(is_response=False)
+
+        scp.shutdown()
+
+        assert (
+            "C-ECHO message received during association release, ignoring"
+        ) in caplog.text
 
 
 class TestEventHandlingAcceptor:

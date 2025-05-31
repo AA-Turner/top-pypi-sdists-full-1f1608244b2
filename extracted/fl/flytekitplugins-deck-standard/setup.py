@@ -16,9 +16,11 @@ extras = {
     "all": ["pandas", "pillow", "ydata-profiling", "markdown", "plotly", "pygments"],
 }
 
-__version__ = "1.15.4"
+__version__ = "v1.16.0"
 
 setup(
+    title="Deck",
+    title_expanded="Flytekit Deck Plugin",
     name=microlib_name,
     version=__version__,
     author="flyteorg",

@@ -88,7 +88,11 @@ class attempt:
     """
 
     def __init__(
-        self, rsp: "DimseServiceType", dimse: "DIMSEServiceProvider", cx_id: int
+        self,
+        rsp: "DimseServiceType",
+        dimse: "DIMSEServiceProvider",
+        cx_id: int,
+        assoc: "Association | None" = None,
     ) -> None:
         self._success = True
         # Should be customised within the context
@@ -98,8 +102,12 @@ class attempt:
         self._rsp = rsp
         self._dimse = dimse
         self._cx_id = cx_id
+        self._assoc = assoc
 
     def __enter__(self) -> "attempt":
+        if self._assoc is not None:
+            setattr(self.assoc, "abort", self.assoc._abort_nonblocking)
+
         return self
 
     def __exit__(
@@ -108,6 +116,9 @@ class attempt:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> bool | None:
+        if self._assoc is not None:
+            setattr(self.assoc, "abort", self.assoc._abort_blocking)
+
         if exc_type is None:
             # No exceptions raised
             return None
@@ -121,6 +132,13 @@ class attempt:
 
         # Suppress any exceptions
         return True
+
+    @property
+    def assoc(self) -> "Association":
+        if not self._assoc:
+            raise ValueError("No association instance has been set")
+
+        return self._assoc
 
     @property
     def success(self) -> bool:
@@ -255,11 +273,11 @@ class ServiceClass:
                 pass
 
         # Try and trigger EVT_C_FIND
-        with attempt(rsp, self.dimse, cx_id) as ctx:
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
             ctx.error_msg = "Exception in handler bound to 'evt.EVT_C_FIND'"
             ctx.error_status = 0xC311
             generator = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_C_FIND,
                 {
                     "request": req,
@@ -391,8 +409,6 @@ class ServiceClass:
 
     def is_cancelled(self, msg_id: int) -> bool:
         """Return True if a C-CANCEL message with `msg_id` has been received.
-
-        .. versionadded:: 1.2
 
         Parameters
         ----------
@@ -576,11 +592,11 @@ class ServiceClass:
         rsp.AffectedSOPInstanceUID = req.RequestedSOPInstanceUID
         rsp.ActionTypeID = req.ActionTypeID
 
-        with attempt(rsp, self.dimse, cx_id) as ctx:
-            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_ACTION"
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
+            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_ACTION'"
             ctx.error_status = 0x0110
             user_response = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_N_ACTION,
                 {"request": req, "context": context.as_tuple},
             )
@@ -728,11 +744,11 @@ class ServiceClass:
         rsp.AffectedSOPClassUID = req.AffectedSOPClassUID
         rsp.AffectedSOPInstanceUID = req.AffectedSOPInstanceUID
 
-        with attempt(rsp, self.dimse, cx_id) as ctx:
-            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_CREATE"
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
+            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_CREATE'"
             ctx.error_status = 0x0110
             user_response = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_N_CREATE,
                 {"request": req, "context": context.as_tuple},
             )
@@ -753,6 +769,22 @@ class ServiceClass:
             # Unknown status
             self.dimse.send_msg(rsp, cx_id)
             return
+
+        # Part 7, 10.1.5.1.4 - Affected SOP Instance UID is required if not in the -RQ
+        if status[0] == STATUS_SUCCESS and req.AffectedSOPInstanceUID is None:
+            if isinstance(ds, Dataset) and "AffectedSOPInstanceUID" in ds:
+                rsp.AffectedSOPInstanceUID = ds.AffectedSOPInstanceUID
+                del ds.AffectedSOPInstanceUID
+            else:
+                LOGGER.error(
+                    "The N-CREATE-RQ has no 'Affected SOP Instance UID' value and the "
+                    "'evt.EVT_N_CREATE' handler doesn't include one in the 'Attribute "
+                    "List' dataset"
+                )
+                # Processing failure
+                rsp.Status = 0x0110
+                self.dimse.send_msg(rsp, cx_id)
+                return
 
         if status[0] in (STATUS_SUCCESS, STATUS_WARNING) and ds:
             # If Success or Warning then there **may** be a dataset
@@ -845,11 +877,11 @@ class ServiceClass:
         rsp.AffectedSOPClassUID = req.RequestedSOPClassUID
         rsp.AffectedSOPInstanceUID = req.RequestedSOPInstanceUID
 
-        with attempt(rsp, self.dimse, cx_id) as ctx:
-            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_DELETE"
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
+            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_DELETE'"
             ctx.error_status = 0x0110
             status = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_N_DELETE,
                 {"request": req, "context": context.as_tuple},
             )
@@ -950,11 +982,11 @@ class ServiceClass:
         rsp.AffectedSOPInstanceUID = req.AffectedSOPInstanceUID
         rsp.EventTypeID = req.EventTypeID
 
-        with attempt(rsp, self.dimse, cx_id) as ctx:
-            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_EVENT_REPORT"
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
+            ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_EVENT_REPORT'"
             ctx.error_status = 0x0110
             user_response = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_N_EVENT_REPORT,
                 {"request": req, "context": context.as_tuple},
             )
@@ -1098,11 +1130,11 @@ class ServiceClass:
         rsp.AffectedSOPClassUID = req.RequestedSOPClassUID
         rsp.AffectedSOPInstanceUID = req.RequestedSOPInstanceUID
 
-        with attempt(rsp, self.dimse, cx_id) as ctx:
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
             ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_GET'"
             ctx.error_status = 0x0110
             user_response = evt.trigger(
-                self.assoc, evt.EVT_N_GET, {"request": req, "context": context.as_tuple}
+                ctx.assoc, evt.EVT_N_GET, {"request": req, "context": context.as_tuple}
             )
 
         # Exception in context or handler aborted/released
@@ -1255,11 +1287,11 @@ class ServiceClass:
         rsp.AffectedSOPClassUID = req.RequestedSOPClassUID
         rsp.AffectedSOPInstanceUID = req.RequestedSOPInstanceUID
 
-        with attempt(rsp, self.dimse, cx_id) as ctx:
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
             ctx.error_msg = "Exception in the handler bound to 'evt.EVT_N_SET'"
             ctx.error_status = 0x0110
             user_response = evt.trigger(
-                self.assoc, evt.EVT_N_SET, {"request": req, "context": context.as_tuple}
+                ctx.assoc, evt.EVT_N_SET, {"request": req, "context": context.as_tuple}
             )
 
         # Exception in context or handler aborted/released
@@ -1428,12 +1460,14 @@ class VerificationServiceClass(ServiceClass):
         rsp.MessageIDBeingRespondedTo = req.MessageID
         rsp.AffectedSOPClassUID = req.AffectedSOPClassUID
 
+        setattr(self.assoc, "abort", self.assoc._abort_nonblocking)
         try:
             status = evt.trigger(
                 self.assoc,
                 evt.EVT_C_ECHO,
                 {"request": req, "context": context.as_tuple},
             )
+
             # Event handler has aborted or released
             if not self.assoc.is_established:
                 return
@@ -1470,6 +1504,8 @@ class VerificationServiceClass(ServiceClass):
             )
             LOGGER.exception(ex)
             rsp.Status = 0x0000
+
+        setattr(self.assoc, "abort", self.assoc._abort_blocking)
 
         # Check Status validity
         if not self.is_valid_status(cast(int, rsp.Status)):
@@ -1508,11 +1544,11 @@ class StorageServiceClass(ServiceClass):
         cx_id = cast(int, context.context_id)
 
         # Try and trigger EVT_C_STORE
-        with attempt(rsp, self.dimse, cx_id) as ctx:
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
             ctx.error_msg = "Exception in handler bound to 'evt.EVT_C_STORE'"
             ctx.error_status = 0xC211
             rsp_status = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_C_STORE,
                 {"request": req, "context": context.as_tuple},
             )
@@ -1668,11 +1704,11 @@ class QueryRetrieveServiceClass(ServiceClass):
                 pass
 
         # Try and trigger EVT_C_GET
-        with attempt(rsp, self.dimse, cx_id) as ctx:
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
             ctx.error_msg = "Exception in handler bound to 'evt.EVT_C_GET'"
             ctx.error_status = 0xC411
             generator = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_C_GET,
                 {
                     "request": req,
@@ -1694,23 +1730,31 @@ class QueryRetrieveServiceClass(ServiceClass):
                 "sub-operations value"
             )
             ctx.error_status = 0xC413
-            no_suboperations = int(next(generator))
+            nr_suboperations = int(next(generator))
 
         if not ctx.success:
             return
 
-        if no_suboperations < 1:
+        if nr_suboperations < 1:
             rsp.Status = 0x0000
-            rsp.NumberOfRemainingSuboperations = 0
             rsp.NumberOfFailedSuboperations = 0
             rsp.NumberOfWarningSuboperations = 0
             rsp.NumberOfCompletedSuboperations = 0
             self.dimse.send_msg(rsp, cx_id)
             return
 
+        if nr_suboperations > 65535:
+            # Since Number of * Suboperations are US and have a maximum value of 65535,
+            #   and Sections C.4.3.2 and C.4.3.3 require them in the final response,
+            #   that implies no more than 65535 matches
+            LOGGER.error("The C-GET request handler yielded more than 65535 matches")
+            rsp.Status = 0xC416
+            self.dimse.send_msg(rsp, cx_id)
+            return
+
         # Track the sub operation results
         #   [remaining, failed, warning, complete]
-        store_results = [no_suboperations, 0, 0, 0]
+        store_results = [nr_suboperations, 0, 0, 0]
 
         # Store the SOP Instance UIDs from any failed C-STORE sub-operations
         failed_instances = []
@@ -1797,7 +1841,6 @@ class QueryRetrieveServiceClass(ServiceClass):
                     f"Get SCP Result {ii + 1}: 0x{rsp.Status:04X} "
                     f"({status[0]} - {status[1]})"
                 )
-                rsp.NumberOfRemainingSuboperations = None
                 rsp.NumberOfFailedSuboperations = store_results[1] + store_results[0]
                 rsp.NumberOfWarningSuboperations = store_results[2]
                 rsp.NumberOfCompletedSuboperations = store_results[3]
@@ -1838,7 +1881,6 @@ class QueryRetrieveServiceClass(ServiceClass):
                     LOGGER.info(f"Get SCP Response {ii + 1}: 0x0000 (Success)")
                     rsp.Identifier = None
 
-                rsp.NumberOfRemainingSuboperations = None
                 rsp.NumberOfFailedSuboperations = store_results[1]
                 rsp.NumberOfWarningSuboperations = store_results[2]
                 rsp.NumberOfCompletedSuboperations = store_results[3]
@@ -1857,6 +1899,7 @@ class QueryRetrieveServiceClass(ServiceClass):
                     rsp.NumberOfFailedSuboperations = store_results[1]
                     rsp.NumberOfWarningSuboperations = store_results[2]
                     rsp.NumberOfCompletedSuboperations = store_results[3]
+
                     self.dimse.send_msg(rsp, cx_id)
                     continue
 
@@ -1961,7 +2004,7 @@ class QueryRetrieveServiceClass(ServiceClass):
             rsp.Status = 0x0000
             rsp.Identifier = None
         else:
-            if no_suboperations == store_results[1]:
+            if nr_suboperations == store_results[1]:
                 # Failure response - all sub-operations failed
                 LOGGER.info(f"Get SCP Response {ii + 2}: 0xA702 (Failure)")
                 rsp.Status = 0xA702  # Unable to perform sub-ops
@@ -1982,7 +2025,6 @@ class QueryRetrieveServiceClass(ServiceClass):
             )
             rsp.Identifier = BytesIO(cast(bytes, bytestream))
 
-        rsp.NumberOfRemainingSuboperations = None
         rsp.NumberOfFailedSuboperations = store_results[1]
         rsp.NumberOfWarningSuboperations = store_results[2]
         rsp.NumberOfCompletedSuboperations = store_results[3]
@@ -2027,11 +2069,11 @@ class QueryRetrieveServiceClass(ServiceClass):
                 pass
 
         # Try and trigger EVT_C_MOVE
-        with attempt(rsp, self.dimse, cx_id) as ctx:
+        with attempt(rsp, self.dimse, cx_id, self.assoc) as ctx:
             ctx.error_msg = "Exception in handler bound to 'evt.EVT_C_MOVE'"
             ctx.error_status = 0xC511
             generator = evt.trigger(
-                self.assoc,
+                ctx.assoc,
                 evt.EVT_C_MOVE,
                 {
                     "request": req,
@@ -2085,18 +2127,26 @@ class QueryRetrieveServiceClass(ServiceClass):
                 "sub-operations value"
             )
             ctx.error_status = 0xC513
-            no_suboperations = int(next(generator))
+            nr_suboperations = int(next(generator))
 
         # Exception in context or handler aborted/released - second yield
         if not ctx.success or not self.assoc.is_established:
             return
 
-        if no_suboperations < 1:
+        if nr_suboperations < 1:
             rsp.Status = 0x0000
-            rsp.NumberOfRemainingSuboperations = 0
             rsp.NumberOfFailedSuboperations = 0
             rsp.NumberOfWarningSuboperations = 0
             rsp.NumberOfCompletedSuboperations = 0
+            self.dimse.send_msg(rsp, cx_id)
+            return
+
+        if nr_suboperations > 65535:
+            # Since Number of * Suboperations are US and have a maximum value of 65535,
+            #   and Sections C.4.2.2 and C.4.2.3 require them in the final response,
+            #   that implies no more than 65535 matches
+            LOGGER.error("The C-MOVE request handler yielded more than 65535 matches")
+            rsp.Status = 0xC516
             self.dimse.send_msg(rsp, cx_id)
             return
 
@@ -2131,7 +2181,7 @@ class QueryRetrieveServiceClass(ServiceClass):
 
         # Track the sub operation results
         #   [remaining, failed, warning, complete]
-        store_results = [no_suboperations, 0, 0, 0]
+        store_results = [nr_suboperations, 0, 0, 0]
 
         # Store the SOP Instance UIDs from any failed C-STORE sub-operations
         failed_instances = []
@@ -2243,7 +2293,6 @@ class QueryRetrieveServiceClass(ServiceClass):
                 )
 
                 rsp.Identifier = BytesIO(cast(bytes, bytestream))
-                rsp.NumberOfRemainingSuboperations = None
                 rsp.NumberOfFailedSuboperations = store_results[1] + store_results[0]
                 rsp.NumberOfWarningSuboperations = store_results[2]
                 rsp.NumberOfCompletedSuboperations = store_results[3]
@@ -2275,7 +2324,6 @@ class QueryRetrieveServiceClass(ServiceClass):
                     LOGGER.info(f"Move SCP Response {ii + 1}: 0x0000 (Success)")
                     rsp.Identifier = None
 
-                rsp.NumberOfRemainingSuboperations = None
                 rsp.NumberOfFailedSuboperations = store_results[1]
                 rsp.NumberOfWarningSuboperations = store_results[2]
                 rsp.NumberOfCompletedSuboperations = store_results[3]
@@ -2367,7 +2415,7 @@ class QueryRetrieveServiceClass(ServiceClass):
             rsp.Status = 0x0000
             rsp.Identifier = None
         else:
-            if no_suboperations == store_results[1]:
+            if nr_suboperations == store_results[1]:
                 # Failure response - all sub-operations failed
                 LOGGER.info(f"Move SCP Response {ii + 2}: 0xA702 (Failure)")
                 rsp.Status = 0xA702  # Unable to perform sub-ops
@@ -2388,7 +2436,6 @@ class QueryRetrieveServiceClass(ServiceClass):
             )
             rsp.Identifier = BytesIO(cast(bytes, bytestream))
 
-        rsp.NumberOfRemainingSuboperations = None
         rsp.NumberOfFailedSuboperations = store_results[1]
         rsp.NumberOfWarningSuboperations = store_results[2]
         rsp.NumberOfCompletedSuboperations = store_results[3]
@@ -2515,6 +2562,7 @@ class RelevantPatientInformationQueryServiceClass(ServiceClass):
                 # The user should deal with decoding failures
                 pass
 
+        setattr(self.assoc, "abort", self.assoc._abort_nonblocking)
         try:
             responses = evt.trigger(
                 self.assoc,
@@ -2528,6 +2576,7 @@ class RelevantPatientInformationQueryServiceClass(ServiceClass):
             responses = cast(Iterator[UserReturnType], responses)
             (rsp_status, rsp_identifier) = next(responses)
         except (StopIteration, TypeError):
+            setattr(self.assoc, "abort", self.assoc._abort_blocking)
             # Event handler has aborted or released - before any yields
             if not self.assoc.is_established:
                 return
@@ -2539,11 +2588,14 @@ class RelevantPatientInformationQueryServiceClass(ServiceClass):
             self.dimse.send_msg(rsp, cx_id)
             return
         except Exception as ex:
+            setattr(self.assoc, "abort", self.assoc._abort_blocking)
             LOGGER.error("Exception in handler bound to 'evt.EVT_C_FIND'")
             LOGGER.exception(ex)
             rsp.Status = 0xC311
             self.dimse.send_msg(rsp, cx_id)
             return
+
+        setattr(self.assoc, "abort", self.assoc._abort_blocking)
 
         # Event handler has aborted or released
         if not self.assoc.is_established:

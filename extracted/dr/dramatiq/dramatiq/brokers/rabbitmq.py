@@ -246,7 +246,7 @@ class RabbitmqBroker(Broker):
             self._ensure_queue(queue_name)
 
     def _ensure_queue(self, queue_name):
-        attempts = 1
+        attempts = 0
         while True:
             try:
                 if queue_name in self.queues_pending:
@@ -321,7 +321,7 @@ class RabbitmqBroker(Broker):
                 },
             )
 
-        attempts = 1
+        attempts = 0
         while True:
             try:
                 self.declare_queue(canonical_queue_name, ensure=True)
@@ -395,9 +395,15 @@ class RabbitmqBroker(Broker):
         Parameters:
           queue_name(str): The queue to flush.
         """
+        # Purge messages from all queues, even from delayed queues and dead letter queues.
+        # The purge operation fails with an exception if the queue doesn't exist. The the underlying
+        # RabbitMQ channel is closed by the broker. We have to reopen the channel to continue
+        # purging other queues.
         for name in (queue_name, dq_name(queue_name), xq_name(queue_name)):
-            if queue_name not in self.queues_pending:
+            try:
                 self.channel.queue_purge(name)
+            except pika.exceptions.AMQPChannelError:
+                del self.channel
 
     def flush_all(self):
         """Drop all messages from all declared queues.

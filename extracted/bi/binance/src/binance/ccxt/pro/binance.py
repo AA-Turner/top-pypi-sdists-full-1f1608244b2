@@ -808,6 +808,7 @@ class binance(binanceAsync):
             orderbook.reset(snapshot)
             # unroll the accumulated deltas
             messages = orderbook.cache
+            orderbook.cache = []
             for i in range(0, len(messages)):
                 messageItem = messages[i]
                 U = self.safe_integer(messageItem, 'U')

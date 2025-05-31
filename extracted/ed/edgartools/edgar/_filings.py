@@ -31,18 +31,21 @@ from rich.text import Text
 from edgar._markdown import text_to_markdown
 from edgar._party import Address
 from edgar.attachments import FilingHomepage, Attachment, Attachments, AttachmentServer
-from edgar.core import (log, display_size, sec_edgar,
-                        filter_by_date,
-                        filter_by_form,
-                        filter_by_cik,
-                        filter_by_exchange,
-                        filter_by_ticker,
-                        filter_by_accession_number,
+from edgar.filtering import (
+    filter_by_date,
+    filter_by_form,
+    filter_by_cik,
+    filter_by_exchange,
+    filter_by_ticker,
+    filter_by_accession_number
+)
+from edgar.dates import InvalidDateException
+from edgar.formatting import display_size
+from edgar.core import (log, sec_edgar,
                         listify,
                         cache_except_none,
                         is_start_of_quarter,
                         is_probably_html,
-                        InvalidDateException,
                         IntString,
                         current_year_and_quarter,
                         Years,
@@ -54,6 +57,7 @@ from edgar.core import (log, display_size, sec_edgar,
                         DataPager,
                         PagingState,
                         parallel_thread_map)
+from edgar.formatting import accession_number_text
 from edgar.files.html import Document
 from edgar.files.html_documents import get_clean_html
 from edgar.files.htmltools import html_sections
@@ -792,7 +796,7 @@ class Filings:
         table.add_column("Ticker", width=6, style="yellow")
         table.add_column("Company", style="bold green", width=38, no_wrap=True)
         table.add_column("Filing Date", width=11)
-        table.add_column("Accession Number", style="dim", width=20)
+        table.add_column("Accession Number", width=20)
 
         # Get current page from data pager
         current_page = self.data_pager.current()
@@ -812,7 +816,7 @@ class Filings:
                 ticker,
                 current_page['company'][i].as_py(),
                 str(current_page['filing_date'][i].as_py()),
-                current_page['accession_number'][i].as_py()
+                accession_number_text(current_page['accession_number'][i].as_py())
             ]
             table.add_row(*row)
 
@@ -906,7 +910,7 @@ def get_filings(year: Optional[Years] = None,
                 amendments: bool = True,
                 filing_date: Optional[str] = None,
                 index="form",
-                priority_forms: Optional[List[str]] = None) -> Optional[Filings]:
+                priority_sorted_forms: Optional[List[str]] = None) -> Optional[Filings]:
     """
     Downloads the filing index for a given year or list of years, and a quarter or list of quarters.
 
@@ -943,6 +947,7 @@ def get_filings(year: Optional[Years] = None,
     :param filing_date The filing date to filter by in YYYY-MM-DD format
                 e.g. filing_date="2022-01-17" or filing_date="2022-01-17:2022-02-28"
     :param index The index type - "form" or "company" or "xbrl"
+    :param priority_sorted_forms: A list of forms to sort by priority. This presents these forms first for each day.
     :return:
     """
     # Check if defaults were used
@@ -952,7 +957,7 @@ def get_filings(year: Optional[Years] = None,
                      amendments is True and
                      filing_date is None and
                      index == "form" and
-                     priority_forms is None)
+                     priority_sorted_forms is None)
     if filing_date:
         if not is_valid_filing_date(filing_date):
             log.warning("""Provide a valid filing date in the format YYYY-MM-DD or YYYY-MM-DD:YYYY-MM-DD""")
@@ -989,13 +994,13 @@ def get_filings(year: Optional[Years] = None,
             previous_quarter = [get_previous_quarter(year, quarter)]
             filing_index = get_filings_for_quarters(previous_quarter, index=index)
             filings = Filings(filing_index)
-            sorted_filing_index = sort_filings_by_priority(filings.data, priority_forms)
+            sorted_filing_index = sort_filings_by_priority(filings.data, priority_sorted_forms)
             return Filings(sorted_filing_index)
         # Return an empty filings object
         return Filings(_empty_filing_index())
 
     # Sort the filings using the separate sort function
-    sorted_filing_index = sort_filings_by_priority(filings.data, priority_forms)
+    sorted_filing_index = sort_filings_by_priority(filings.data, priority_sorted_forms)
 
     return Filings(sorted_filing_index)
 
@@ -1700,6 +1705,7 @@ class Filing:
         filings = company.get_filings(accession_number=self.accession_no)
         if filings and not filings.empty:
             return filings[0]
+        return None
 
     @lru_cache(maxsize=1)
     def related_filings(self):
@@ -1786,7 +1792,7 @@ class Filing:
         filing_info_table = Table("Accession Number", "Filing Date", "Period of Report", "Documents",
                                   header_style="dim",
                                   box=box.SIMPLE_HEAD)
-        filing_info_table.add_row(Text(self.accession_no, "bold deep_sky_blue1"),
+        filing_info_table.add_row(accession_number_text(self.accession_no),
                                   Text(str(self.filing_date), "bold"),
                                   Text(self.period_of_report or "-", "bold"),
                                   f"{len(attachments)}")

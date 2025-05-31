@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: iso4217
-Version: 1.12.20240625
+Version: 1.13.20250512
 Summary: ISO 4217 currency data package for Python
 Home-page: https://github.com/dahlia/iso4217
 Author: Hong Minhee
@@ -12,7 +12,6 @@ Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: License :: Public Domain
 Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python :: 3.5
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
@@ -20,15 +19,15 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Programming Language :: Python :: Implementation :: Stackless
 Classifier: Topic :: Office/Business :: Financial
 Classifier: Topic :: Software Development :: Internationalization
-Requires-Python: !=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7
+Requires-Python: >=3.6
 Description-Content-Type: text/x-rst; charset=UTF-8
 Requires-Dist: importlib-resources; python_version > "3.5" and python_version < "3.9"
-Requires-Dist: importlib-resources<3.3; python_version == "3.5"
 
 ``iso4217``: Currency data package for Python
 =============================================

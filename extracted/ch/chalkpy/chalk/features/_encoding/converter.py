@@ -8,6 +8,7 @@ from io import BytesIO
 from typing import (
     Any,
     Dict,
+    FrozenSet,
     Generic,
     Iterable,
     List,
@@ -29,7 +30,7 @@ import numpy as np
 import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.feather as pf
-from typing_extensions import Final, FrozenSet, get_args, get_origin
+from typing_extensions import Final, get_args, get_origin
 
 from chalk._gen.chalk.arrow.v1 import arrow_pb2 as pb
 from chalk.features._encoding.json import (

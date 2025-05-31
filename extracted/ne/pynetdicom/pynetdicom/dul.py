@@ -7,7 +7,7 @@ import queue
 import struct
 from threading import Thread
 import time
-from typing import TYPE_CHECKING, Optional, Tuple, cast, Dict, Type, Union
+from typing import TYPE_CHECKING, cast, Type
 
 from pynetdicom import evt
 from pynetdicom.fsm import StateMachine
@@ -37,7 +37,8 @@ if TYPE_CHECKING:  # pragma: no cover
     from pynetdicom.association import Association
     from pynetdicom.transport import AssociationSocket
 
-    _QueueType = queue.Queue[Union[_PDUPrimitiveType, T_CONNECT]]
+    _QueueType = queue.Queue[_PDUPrimitiveType | T_CONNECT]
+    _UserQueuePrimitives = A_ASSOCIATE | A_RELEASE | A_ABORT | A_P_ABORT
 
 
 LOGGER = logging.getLogger(__name__)
@@ -75,7 +76,7 @@ class DULServiceProvider(Thread):
         """
         # The association thread
         self._assoc = assoc
-        self.socket: Optional["AssociationSocket"] = None
+        self.socket: "AssociationSocket | None" = None
 
         # Tracks the events the state machine needs to process
         self.event_queue: "queue.Queue[str]" = queue.Queue()
@@ -83,10 +84,12 @@ class DULServiceProvider(Thread):
         #   user and the DUL service provider.
         # An event occurs when the DUL service user adds to
         #   the to_provider_queue
+        # The queue contains A-ASSOCIATE, A-RELEASE, A-ABORT, A-P-ABORT, P-DATA and
+        #   T-CONNECT primitives from the local user that are to be sent to the peer
         self.to_provider_queue: "_QueueType" = queue.Queue()
         # A primitive is sent to the service user when the DUL service provider
         # adds to the to_user_queue.
-        self.to_user_queue: "queue.Queue[_PDUPrimitiveType]" = queue.Queue()
+        self.to_user_queue: "queue.Queue[_UserQueuePrimitives]" = queue.Queue()
 
         # A queue storing PDUs received from the peer
         self._recv_pdu: "queue.Queue[_PDUType]" = queue.Queue()
@@ -112,7 +115,7 @@ class DULServiceProvider(Thread):
         """Return the parent :class:`~pynetdicom.association.Association`."""
         return self._assoc
 
-    def _decode_pdu(self, bytestream: bytearray) -> Tuple[_PDUType, str]:
+    def _decode_pdu(self, bytestream: bytearray) -> tuple[_PDUType, str]:
         """Decode a received PDU.
 
         Parameters
@@ -185,14 +188,14 @@ class DULServiceProvider(Thread):
         self._kill_thread = True
 
     @property
-    def network_timeout(self) -> Optional[float]:
+    def network_timeout(self) -> float | None:
         """Return the network timeout (in seconds)."""
         return self.assoc.network_timeout
 
-    def peek_next_pdu(self) -> Optional[_PDUPrimitiveType]:
+    def peek_next_pdu(self) -> "_UserQueuePrimitives | None":
         """Check the next PDU to be processed."""
         try:
-            return cast(_PDUPrimitiveType, self.to_user_queue.queue[0])
+            return cast("_UserQueuePrimitives", self.to_user_queue.queue[0])
         except (queue.Empty, IndexError):
             return None
 
@@ -331,8 +334,8 @@ class DULServiceProvider(Thread):
         self._recv_pdu.put(pdu)
 
     def receive_pdu(
-        self, wait: bool = False, timeout: Optional[float] = None
-    ) -> Optional[_PDUPrimitiveType]:
+        self, wait: bool = False, timeout: float | None = None
+    ) -> "_UserQueuePrimitives | None":
         """Return an item from the queue if one is available.
 
         Get the next service primitive to be processed out of the queue of items sent
@@ -350,7 +353,7 @@ class DULServiceProvider(Thread):
 
         Returns
         -------
-        Optional[Union[A_ASSOCIATE, A_RELEASE, A_ABORT, A_P_ABORT]]
+        A_ASSOCIATE | A_RELEASE | A_ABORT | A_P_ABORT
             The next primitive in the :attr:`~DULServiceProvider.to_user_queue`, or
             ``None`` if the queue is empty.
         """
@@ -504,7 +507,7 @@ class DULServiceProvider(Thread):
         return False
 
 
-_PDU_TYPES: Dict[bytes, Tuple[Type[_PDUType], str]] = {
+_PDU_TYPES: dict[bytes, tuple[Type[_PDUType], str]] = {
     b"\x01": (A_ASSOCIATE_RQ, "Evt6"),
     b"\x02": (A_ASSOCIATE_AC, "Evt3"),
     b"\x03": (A_ASSOCIATE_RJ, "Evt4"),

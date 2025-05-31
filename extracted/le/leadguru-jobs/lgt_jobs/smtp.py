@@ -4,11 +4,15 @@ import logging as log
 from lgt_jobs.basejobs import BaseBackgroundJobData, BaseBackgroundJob
 from lgt_jobs.env import smtp_login, smtp_password
 from lgt_jobs.lgt_data.enums import ImageName
-from redmail import gmail
+from redmail import EmailSender
 
-gmail.username = smtp_login
-gmail.password = smtp_password
 
+gmail = EmailSender(
+    host="smtp.gmail.com",
+    port=587,
+    username=smtp_login,
+    password=smtp_password
+)
 """
 Send email
 """

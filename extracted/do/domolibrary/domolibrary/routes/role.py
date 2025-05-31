@@ -325,9 +325,12 @@ async def set_default_role(
     debug_num_stacks_to_drop: int = 1,
     parent_class=None,
 ) -> rgd.ResponseGetData:
-    url = f"https://{auth.domo_instance}.domo.com/api/content/v1/customer-states/user.roleid.default"
+    
+    # url = f"https://{auth.domo_instance}.domo.com/api/content/v1/customer-states/user.roleid.default"
+    # body = {"name": "user.roleid.default", "value": role_id}
 
-    body = {"name": "user.roleid.default", "value": role_id}
+    url = f"https://{auth.domo_instance}.domo.com/api/authorization/v1/roles/settings"
+    body = {"defaultRoleId":int(role_id),"allowlistRoleIds": None }
 
     res = await gd.get_data(
         auth=auth,
@@ -350,7 +353,7 @@ async def set_default_role(
 
     return res
 
-# %% ../../nbs/routes/role.ipynb 29
+# %% ../../nbs/routes/role.ipynb 30
 @gd.route_function
 async def update_role_metadata(
     auth: dmda.DomoAuth,
@@ -395,7 +398,7 @@ async def update_role_metadata(
 
     return res
 
-# %% ../../nbs/routes/role.ipynb 32
+# %% ../../nbs/routes/role.ipynb 33
 @gd.route_function
 async def set_role_grants(
     auth: dmda.DomoAuth,
@@ -435,7 +438,7 @@ async def set_role_grants(
 
     return res
 
-# %% ../../nbs/routes/role.ipynb 34
+# %% ../../nbs/routes/role.ipynb 35
 @gd.route_function
 async def role_membership_add_users(
     auth: dmda.DomoAuth,

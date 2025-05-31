@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: mdformat_mkdocs
-Version: 4.1.2
+Version: 4.3.0
 Summary: An mdformat plugin for `mkdocs`.
 Keywords: markdown,markdown-it,mdformat,mdformat_plugin_template
 Author-email: kyleking <dev.act.kyle@gmail.com>
@@ -10,6 +10,7 @@ Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
+License-File: LICENSE
 Requires-Dist: mdformat >= 0.7.19
 Requires-Dist: mdformat-gfm >= 0.3.6
 Requires-Dist: mdit-py-plugins >= 0.4.1
@@ -25,7 +26,6 @@ Requires-Dist: mdformat-web >= 0.2.0 ; extra == "recommended"
 Requires-Dist: mdformat-wikilink >= 0.2.0 ; extra == "recommended"
 Requires-Dist: setuptools ; extra == "recommended"
 Requires-Dist: pytest >= 8.3.4 ; extra == "test"
-Requires-Dist: pytest-beartype >= 0.1.1 ; extra == "test"
 Requires-Dist: pytest-cov >= 6.0.0 ; extra == "test"
 Requires-Dist: syrupy >= 4.7.2 ; extra == "test"
 Project-URL: Bug Tracker, https://github.com/kyleking/mdformat-mkdocs/issues

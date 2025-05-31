@@ -29,8 +29,10 @@ import random
 import signal
 import sys
 import time
+import types
 from itertools import chain
 from threading import Event, Thread
+from typing import Optional, Set
 
 from dramatiq import Broker, ConnectionError, Worker, __version__, get_broker, get_logger
 from dramatiq.canteen import Canteen, canteen_add, canteen_get, canteen_try_init
@@ -139,6 +141,21 @@ def folder_path(value):
     return os.path.abspath(value)
 
 
+def worker_fork_timeout_type(value: str) -> float:
+    try:
+        ms = float(value)
+    except ValueError as e:
+        raise argparse.ArgumentTypeError("worker-fork-timeout be a number.") from e
+
+    if ms < 10:
+        raise argparse.ArgumentTypeError("worker-fork-timeout too small (minimum recommended: 10ms).")
+
+    if ms > 1_800_000:
+        raise argparse.ArgumentTypeError("worker-fork-timeout too large (maximum: 30 minutes).")
+
+    return ms
+
+
 def make_argument_parser():
     parser = argparse.ArgumentParser(
         prog="dramatiq",
@@ -192,6 +209,13 @@ def make_argument_parser():
         help="fork a subprocess to run the given function"
     )
     parser.add_argument(
+        "--worker-fork-timeout", type=worker_fork_timeout_type, default=30_000,
+        help=(
+            "timeout for wait all worker processes to come online before starting the fork processes."
+            "In milliseconds (default: 30 seconds)"
+        )
+    )
+    parser.add_argument(
         "--worker-shutdown-timeout", type=int, default=600000,
         help="timeout for worker shutdown, in milliseconds (default: 10 minutes)"
     )
@@ -237,7 +261,7 @@ def make_argument_parser():
     return parser
 
 
-HANDLED_SIGNALS = {signal.SIGINT, signal.SIGTERM}
+HANDLED_SIGNALS: Set[signal.Signals] = {signal.SIGINT, signal.SIGTERM}
 if hasattr(signal, "SIGHUP"):
     HANDLED_SIGNALS.add(signal.SIGHUP)
 if hasattr(signal, "SIGBREAK"):
@@ -511,13 +535,14 @@ def main(args=None):  # noqa
         worker_pipes.append(read_pipe)
         worker_processes.append(proc)
         worker_process_events.append(event)
+        write_pipe.close()
 
     # Wait for all worker processes to come online before starting the
     # fork processes.  This is required to avoid race conditions like
-    # in #297.
+    # in #297, #701.
     for event in worker_process_events:
         if proc.is_alive():
-            if not event.wait(timeout=30):
+            if not event.wait(timeout=args.worker_fork_timeout / 1000):
                 break
 
     fork_pipes = []
@@ -532,6 +557,7 @@ def main(args=None):  # noqa
         proc.start()
         fork_pipes.append(read_pipe)
         fork_processes.append(proc)
+        write_pipe.close()
 
     parent_read_pipe, parent_write_pipe = multiprocessing.Pipe(duplex=False)
     logger = setup_parent_logging(args, stream=StreamablePipe(parent_write_pipe))
@@ -559,24 +585,26 @@ def main(args=None):  # noqa
     )
     log_watcher.start()
 
-    def stop_subprocesses(signum):
+    def stop_subprocesses(signum: signal.Signals):
         nonlocal running
         running = False
 
         for proc in chain(worker_processes, fork_processes):
             try:
-                os.kill(proc.pid, signum)
+                os.kill(proc.pid, signum.value)
             except OSError:  # pragma: no cover
                 if proc.exitcode is None:
                     logger.warning("Failed to send %r to PID %d.", signum.name, proc.pid)
 
-    def sighandler(signum, frame):
+    def sighandler(signum: int, frame: Optional[types.FrameType]):
         nonlocal reload_process
+        signum = signal.Signals(signum)
+
         reload_process = signum == getattr(signal, "SIGHUP", None)
         if signum == signal.SIGINT:
             signum = signal.SIGTERM
 
-        logger.info("Sending signal %r to subprocesses...", getattr(signum, "name", signum))
+        logger.info("Sending signal %r to subprocesses...", signum.name)
         stop_subprocesses(signum)
 
     retcode = RET_OK

@@ -1502,15 +1502,11 @@ def parse_common_module(
         except ImportError:
             raise ValueError(f"Unsupported module {module_name}")
 
-    elif mod.__name__ == "numpy":
-        import numpy as np
-
-        if mod is np:
+    elif mod.__name__.startswith("numpy"):
+        if check_if_subpackage("numpy", mod.__name__):
             return FunctionCapturedGlobalModule(name=module_name)
-    elif mod.__name__ == "pandas":
-        import pandas as pd
-
-        if mod is pd:
+    elif mod.__name__.startswith("pandas"):
+        if check_if_subpackage("pandas", mod.__name__):
             return FunctionCapturedGlobalModule(name=module_name)
     elif mod.__name__.startswith("polars"):
         if check_if_subpackage("polars", mod.__name__):

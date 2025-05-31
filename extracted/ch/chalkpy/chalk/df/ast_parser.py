@@ -100,6 +100,82 @@ def parse_dataframe_getitem():
     return eval_converted_expr(converted_slice, glbs=func_frame.f_globals, lcls=func_frame.f_locals)
 
 
+class _NotFound:
+    """Dummy class for "failed to parse annotation" since ... and None both are valid in a type annotation"""
+
+    def __bool__(self):
+        return False
+
+
+_NOT_FOUND = _NotFound()
+
+
+def _parse_annotation_for_ast(node: ast.AnnAssign, globals_dict: dict[str, Any]) -> Optional[Any]:
+    """
+    (Factored out for unit testing.)
+    Given an AST node representing a type annotation, attempt parse its value.
+    Currently only supports named (e.g. x: int) and names with a subscript (e.g. x: dict[int, str])
+
+    :param node: The ndoe to parse
+    :param globals_dict: Dictionary of values from which to pull the types. Also looks at builtins if availble
+    """
+
+    def _get_obj_by_name(name: str):
+        if name in globals_dict:
+            return globals_dict[name]
+        elif hasattr(builtins, name):
+            return getattr(builtins, name)
+        return _NOT_FOUND
+
+    def _get_obj_by_node(node: ast.expr) -> Union[_NotFound, Any]:
+        if isinstance(node, ast.Name):
+            return _get_obj_by_name(node.id)
+        if isinstance(node, ast.Constant):
+            return node.value
+        return _NOT_FOUND
+
+    def _visit_binop(node: ast.expr, elements: list[Any | _NotFound]):
+        if isinstance(node, ast.BinOp):
+            if not isinstance(node.op, ast.BitOr):
+                raise TypeError(f"Only binary operation supported for type annotations is `|`, found {node.op}.")
+            _visit_binop(node.left, elements)
+            _visit_binop(node.right, elements)
+            return
+        else:
+            # Base case: it's either a name or a constant. (or we fail to load it)
+            elements.append(_get_obj_by_node(node))
+            return
+
+    if isinstance(node.annotation, ast.Name):
+        return _get_obj_by_name(node.annotation.id) or None
+    if isinstance(node.annotation, ast.Subscript):
+        slice = node.annotation.slice
+        value = node.annotation.value
+        container = _get_obj_by_node(value)
+        if isinstance(container, _NotFound):
+            return None
+        # Case where annotation is of the form 'list[int]'
+        if isinstance(slice, ast.Name):
+            param = _get_obj_by_name(slice.id)
+            if isinstance(param, _NotFound):
+                return None
+            return container[param]
+        # Case where annotation is of the form 'dict[int, str]' or `tuple[a, b, c, ...]`
+        if isinstance(slice, ast.Tuple):
+            slice_elts = [_get_obj_by_node(x) for x in slice.elts]
+            if any(x is _NOT_FOUND for x in slice_elts):
+                return None
+            return container[slice_elts]
+        if isinstance(slice, ast.BinOp):
+            union_elts: list[Any | _NotFound] = []
+            _visit_binop(slice, union_elts)
+            if any(x is _NOT_FOUND for x in union_elts):
+                return None
+            return container[tuple(union_elts)]
+
+    return None
+
+
 def parse_inline_setattr_annotation(key: str) -> Optional[Type[Any]]:
     """Parses the type annotation for inline feature definitions."""
     # Get the frame when the attribute is set
@@ -117,13 +193,7 @@ def parse_inline_setattr_annotation(key: str) -> Optional[Type[Any]]:
         if isinstance(parent_node, ast.AnnAssign) and isinstance(node, ast.Attribute):
             attribute_name = node.attr
             if attribute_name == key:
-                if isinstance(parent_node.annotation, ast.Name):
-                    type_name = parent_node.annotation.id
-
-                    if hasattr(builtins, type_name):
-                        return getattr(builtins, type_name)
-                    elif type_name in frame.f_globals:
-                        return frame.f_globals[type_name]
+                return _parse_annotation_for_ast(parent_node, frame.f_globals)
     except:
         raise TypeError(f"Failed to parse type annotation for feature {key}.")
     return None

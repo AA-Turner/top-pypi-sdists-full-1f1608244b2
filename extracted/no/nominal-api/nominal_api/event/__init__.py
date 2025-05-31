@@ -4,6 +4,8 @@ from .._impl import (
     event_ArchiveEvent as ArchiveEvent,
     event_BatchUpdateDispositionRequest as BatchUpdateDispositionRequest,
     event_BatchUpdateDispositionResponse as BatchUpdateDispositionResponse,
+    event_BatchUpdateEventRequest as BatchUpdateEventRequest,
+    event_BatchUpdateEventResponse as BatchUpdateEventResponse,
     event_CheckOriginMetadata as CheckOriginMetadata,
     event_CreateEvent as CreateEvent,
     event_DataReviewEventOrigin as DataReviewEventOrigin,
@@ -30,6 +32,7 @@ from .._impl import (
     event_TemplateEventOrigin as TemplateEventOrigin,
     event_UpdateDispositionRequest as UpdateDispositionRequest,
     event_UpdateEvent as UpdateEvent,
+    event_UpdateEventRequest as UpdateEventRequest,
     event_WorkbookEventOrigin as WorkbookEventOrigin,
 )
 

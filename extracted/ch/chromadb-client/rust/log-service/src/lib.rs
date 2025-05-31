@@ -34,7 +34,7 @@ use prost::Message;
 use serde::{Deserialize, Serialize};
 use tokio::signal::unix::{signal, SignalKind};
 use tonic::{transport::Server, Code, Request, Response, Status};
-use tracing::Instrument;
+use tracing::{Instrument, Level};
 use uuid::Uuid;
 use wal3::{
     Cursor, CursorName, CursorStore, CursorStoreOptions, Limits, LogPosition, LogReader,
@@ -497,11 +497,6 @@ impl DirtyMarker {
                         None
                     }
                     Ordering::Greater => {
-                        tracing::info!(
-                            "{collection_id} has range ({}, {}]",
-                            record_compaction_position,
-                            record_enumeration_position,
-                        );
                         uncompacted += maximum_log_position - cursor.position;
                         if maximum_log_position - cursor.position >= record_count_backpressure {
                             backpressure.push(*collection_id);
@@ -1228,6 +1223,7 @@ impl LogService for LogServer {
             let offset = witness
                 .map(|x| x.1.position)
                 .unwrap_or(LogPosition::from_offset(0));
+            tracing::event!(Level::INFO, offset = ?offset);
             wal3::copy(
                 &storage,
                 &options,
@@ -1255,6 +1251,7 @@ impl LogService for LogServer {
                     format!("max_offset={:?} < offset={:?}", max_offset, offset),
                 ));
             }
+            tracing::event!(Level::INFO, compaction_offset =? offset.offset(), enumeration_offset =? (max_offset - 1u64).offset());
             Ok(Response::new(ForkLogsResponse {
                 compaction_offset: offset.offset(),
                 enumeration_offset: (max_offset - 1u64).offset(),
@@ -1821,6 +1818,8 @@ pub struct OpenTelemetryConfig {
 pub struct LogServerConfig {
     #[serde(default = "default_port")]
     pub port: u16,
+    #[serde(default = "LogServerConfig::default_my_member_id")]
+    pub my_member_id: String,
     #[serde(default)]
     pub opentelemetry: Option<OpenTelemetryConfig>,
     #[serde(default)]
@@ -1849,6 +1848,10 @@ impl LogServerConfig {
         100
     }
 
+    fn default_my_member_id() -> String {
+        "rust-log-service-0".to_string()
+    }
+
     /// one million records on the log.
     fn default_num_records_before_backpressure() -> u64 {
         1_000_000
@@ -1869,6 +1872,7 @@ impl Default for LogServerConfig {
     fn default() -> Self {
         Self {
             port: default_port(),
+            my_member_id: LogServerConfig::default_my_member_id(),
             opentelemetry: None,
             storage: StorageConfig::default(),
             writer: LogWriterOptions::default(),
@@ -1909,7 +1913,7 @@ impl Configurable<LogServerConfig> for LogServer {
         let dirty_log = LogWriter::open_or_initialize(
             config.writer.clone(),
             Arc::clone(&storage),
-            "dirty",
+            &format!("dirty-{}", config.my_member_id),
             "dirty log writer",
             (),
         )
@@ -1952,6 +1956,7 @@ pub async fn log_entrypoint() {
         Err(_) => RootConfig::load(),
     };
     let config = config.log_service;
+    eprintln!("my_member_id: {}", config.my_member_id);
     let registry = chroma_config::registry::Registry::new();
     if let Some(otel_config) = &config.opentelemetry {
         eprintln!("enabling tracing");

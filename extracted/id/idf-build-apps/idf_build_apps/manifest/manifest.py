@@ -254,8 +254,10 @@ class Manifest:
 
     def __init__(self, rules: t.Iterable[FolderRule], *, root_path: str = os.curdir) -> None:
         self.rules = sorted(rules, key=lambda x: x.folder)
-
         self._root_path = to_absolute_path(root_path)
+
+        # Pre-compute rule paths
+        self._rule_paths = {rule.folder: rule for rule in self.rules}
 
     @classmethod
     def from_files(cls, paths: t.Iterable[PathLike], *, root_path: str = os.curdir) -> 'Manifest':
@@ -383,9 +385,17 @@ class Manifest:
 
     def most_suitable_rule(self, _folder: str) -> FolderRule:
         folder = to_absolute_path(_folder)
-        for rule in self.rules[::-1]:
-            if os.path.commonpath([folder, rule.folder]) == rule.folder:
-                return rule
+
+        while True:
+            if folder in self._rule_paths:
+                return self._rule_paths[folder]
+            folder = os.path.dirname(folder)
+
+            # reached the root path, stop searching
+            if folder == self._root_path:
+                if folder in self._rule_paths:
+                    return self._rule_paths[folder]
+                break
 
         return DefaultRule(folder)
 

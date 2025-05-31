@@ -189,6 +189,29 @@ async def check_token_for_sophnet(api_key, threshold: float = 1):
         return False
 
 
+#
+@retrying()
+async def check_token_for_volc(api_key, threshold: float = 1):
+    if not isinstance(api_key, str):
+        return await check_tokens(api_key, check_token_for_volc)
+
+    try:
+        client = AsyncOpenAI(base_url=os.getenv("VOLC_BASE_URL"), api_key=api_key)
+
+        data = await client.chat.completions.create(
+            model="deepseek-v3-250324",
+            messages=[{"role": "user", "content": "hi"}],
+            max_tokens=1
+        )
+        return True
+    except TimeoutException as e:
+        raise
+
+    except Exception as e:
+        logger.error(f"Error: {e}\n{api_key}")
+        return False
+
+
 if __name__ == '__main__':
     from meutils.config_utils.lark_utils import get_next_token_for_polling, get_series
 
@@ -220,5 +243,6 @@ if __name__ == '__main__':
 
     # arun(check_token_for_sophnet(["gzHpp_zRtGaw1IjpepCiWu_ySyke3Hu5wR5VNNYMLyXwAESqZoZWUZ4T3tiWUxtac6n9Hk-kRRo4_jPQmndo-g"]))
 
+    # arun(check_token_for_ppinfra("sk_F0kgPyCMTzmOH_-VCEJucOK8HIrbnLGYm_IWxBToHZQ"))
 
-    arun(check_token_for_ppinfra("sk_F0kgPyCMTzmOH_-VCEJucOK8HIrbnLGYm_IWxBToHZQ"))
+    arun(check_token_for_volc(os.getenv("VOLC_API_KEY")))

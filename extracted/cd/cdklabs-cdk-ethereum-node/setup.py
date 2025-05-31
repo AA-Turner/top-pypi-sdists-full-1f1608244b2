@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdklabs.cdk-ethereum-node",
-    "version": "0.0.626",
+    "version": "0.0.628",
     "description": "CDK construct to deploy an Ethereum node running on Amazon Managed Blockchain",
     "license": "MIT-0",
     "url": "https://github.com/cdklabs/cdk-ethereum-node.git",
@@ -26,26 +26,25 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdklabs.cdk_ethereum_node._jsii": [
-            "cdk-ethereum-node@0.0.626.jsii.tgz"
+            "cdk-ethereum-node@0.0.628.jsii.tgz"
         ],
         "cdklabs.cdk_ethereum_node": [
             "py.typed"
         ]
     },
-    "python_requires": "~=3.8",
+    "python_requires": "~=3.9",
     "install_requires": [
         "aws-cdk-lib>=2.24.1, <3.0.0",
         "constructs>=10.0.5, <11.0.0",
-        "jsii>=1.103.1, <2.0.0",
+        "jsii>=1.112.0, <2.0.0",
         "publication>=0.0.3",
-        "typeguard>=2.13.3,<5.0.0"
+        "typeguard>=2.13.3,<4.3.0"
     ],
     "classifiers": [
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: JavaScript",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

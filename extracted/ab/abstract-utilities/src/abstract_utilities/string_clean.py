@@ -186,3 +186,5 @@ def url_join(*paths):
     return final_path
        
     
+def capitalize(string):
+    return string[:1].upper() + string[1:].lower() if string else string

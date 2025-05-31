@@ -71,6 +71,7 @@ from ._jiff import datetime as datetime
 from ._jiff import offset as offset
 from ._jiff import time as time
 from ._jiff import timespan as timespan
+from ._jiff import zoned as zoned
 from ._jiter import JsonParseKwargs as JsonParseKwargs
 from ._jiter import JsonPrimitive as JsonPrimitive
 from ._jiter import JsonValue as JsonValue
@@ -78,6 +79,7 @@ from ._jiter import json_cache_clear as json_cache_clear
 from ._jiter import json_cache_usage as json_cache_usage
 from ._jiter import parse_json as parse_json
 from ._jiter import parse_json_bytes as parse_json_bytes
+from ._jiter import parse_jsonl as parse_jsonl
 from ._jiter import read_json as read_json
 from ._quick_maths import quick_maths as quick_maths
 from ._regex import Regex as Regex
@@ -96,6 +98,7 @@ from ._sqlformat import SqlfmtQueryParams as SqlfmtQueryParams
 from ._sqlformat import sqlfmt as sqlfmt
 from ._sqlformat import sqlfmt_params as sqlfmt_params
 from ._std import Duration as Duration
+from ._std import FileReadStream as FileReadStream
 from ._std import FileType as FileType
 from ._std import Instant as Instant
 from ._std import IpAddr as IpAddr
@@ -166,6 +169,7 @@ __build_profile__: str
 __build_timestamp__: str
 __pkg_name__: str
 __description__: str
+__target__: str
 
 # =============================================================================
 # SH

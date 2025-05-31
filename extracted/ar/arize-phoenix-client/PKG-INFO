@@ -1,8 +1,8 @@
 Metadata-Version: 2.4
 Name: arize-phoenix-client
-Version: 1.8.0
+Version: 1.9.0
 Summary: LLM Observability
-Project-URL: Documentation, https://docs.arize.com/phoenix/
+Project-URL: Documentation, https://arize.com/docs/phoenix/
 Project-URL: Issues, https://github.com/Arize-ai/phoenix/issues
 Project-URL: Source, https://github.com/Arize-ai/phoenix
 Author-email: Arize AI <phoenix-devs@arize.com>
@@ -137,4 +137,4 @@ resp = OpenAI().chat.completions.create(**prompt.format(variables=variables))
 print(resp.choices[0].message.content)
 ```
 
-To learn more about prompt engineering using Phenix, see the [Phoenix documentation](https://docs.arize.com/phoenix/prompt-engineering/how-to-prompts).
+To learn more about prompt engineering using Phenix, see the [Phoenix documentation](https://arize.com/docs/phoenix/prompt-engineering/how-to-prompts).

@@ -1,9 +1,8 @@
 from connector.generated import (
-    AssignEntitlementRequest,
-    AssignEntitlementResponse,
     ActivateAccountRequest,
     ActivateAccountResponse,
-    CreateAccountRequest,
+    AssignEntitlementRequest,
+    AssignEntitlementResponse,
     CreateAccountResponse,
     DeactivateAccountRequest,
     DeactivateAccountResponse,
@@ -18,7 +17,8 @@ from connector.generated import (
     UnassignEntitlementRequest,
     UnassignEntitlementResponse,
 )
-from connector.oai.capability import CustomRequest
+from connector.integration import CustomRequest
+
 from {name}.dto.user import CreateAccount
 
 

@@ -4,19 +4,15 @@ import typing as t
 
 import httpx
 from connector.generated import (
-    Error,
-    ErrorCode,
     ErrorResponse,
     ListResources,
     ListResourcesRequest,
     ListResourcesResponse,
+    StandardCapabilityName,
 )
-from connector.utils.test import http_error_message
-
-from tests.common_mock_data import INVALID_AUTH, SETTINGS, VALID_AUTH
 from connector.tests.type_definitions import MockedResponse, ResponseBodyMap
 
-from connector.generated.models.standard_capability_name import StandardCapabilityName
+from tests.common_mock_data import SETTINGS, VALID_AUTH
 
 Case: t.TypeAlias = tuple[
     StandardCapabilityName,

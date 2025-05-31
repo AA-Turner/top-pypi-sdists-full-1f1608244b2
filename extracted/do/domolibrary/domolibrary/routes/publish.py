@@ -6,7 +6,7 @@ __all__ = ['GET_Publish_Error', 'CRUD_Publish_Error', 'search_publications', 'ge
            'get_subscriber_content_details', 'get_subscription_invititations', 'get_subscriber_domains',
            'add_subscriber_domain', 'accept_invite_by_id', 'accept_invite_by_id_v2', 'refresh_publish_jobs']
 
-# %% ../../nbs/routes/publish.ipynb 3
+# %% ../../nbs/routes/publish.ipynb 2
 from typing import List
 import httpx
 
@@ -15,29 +15,22 @@ import domolibrary.client.ResponseGetData as rgd
 import domolibrary.client.DomoAuth as dmda
 import domolibrary.client.DomoError as de
 
-# %% ../../nbs/routes/publish.ipynb 7
-class GET_Publish_Error(de.DomoError):
-    def __init__(self, res: rgd.ResponseGetData):
+# %% ../../nbs/routes/publish.ipynb 6
+class GET_Publish_Error(de.RouteError):
+    def __init__(self, res: rgd.ResponseGetData, message:str = None):
         super().__init__(
-            status=res.status,
-            message=res.response,
-            domo_instance=res.auth.domo_instance,
-            function_name=res.traceback_details.function_name,
-            parent_class=res.parent_class,
+            res = res,
+            message = message
         )
 
 
 class CRUD_Publish_Error(de.DomoError):
-    def __init__(self, res: rgd.ResponseGetData):
+    def __init__(self, res: rgd.ResponseGetData, message : str = None):
         super().__init__(
-            status=res.status,
-            message=res.response,
-            domo_instance=res.auth.domo_instance,
-            function_name=res.traceback_details.function_name,
-            parent_class=res.parent_class,
+            res = res
         )
 
-# %% ../../nbs/routes/publish.ipynb 8
+# %% ../../nbs/routes/publish.ipynb 7
 @gd.route_function
 async def search_publications(
     auth: dmda.DomoAuth,
@@ -89,7 +82,7 @@ async def search_publications(
 
     return res
 
-# %% ../../nbs/routes/publish.ipynb 10
+# %% ../../nbs/routes/publish.ipynb 9
 @gd.route_function
 async def get_publication_by_id(
     auth: dmda.DomoAuth,
@@ -122,7 +115,7 @@ async def get_publication_by_id(
 
 # generate publish body
 
-# %% ../../nbs/routes/publish.ipynb 12
+# %% ../../nbs/routes/publish.ipynb 11
 def generate_publish_body(
     url: str,
     sub_domain_ls: List[str],
@@ -150,7 +143,7 @@ def generate_publish_body(
 
     return body
 
-# %% ../../nbs/routes/publish.ipynb 14
+# %% ../../nbs/routes/publish.ipynb 13
 # Creating publish job for a specific subscriber
 @gd.route_function
 async def create_publish_job(
@@ -179,7 +172,7 @@ async def create_publish_job(
 
     return res
 
-# %% ../../nbs/routes/publish.ipynb 15
+# %% ../../nbs/routes/publish.ipynb 14
 # Updating existing publish job with content
 @gd.route_function
 async def udpate_publish_job(
@@ -210,7 +203,7 @@ async def udpate_publish_job(
     return res
 
 
-# %% ../../nbs/routes/publish.ipynb 17
+# %% ../../nbs/routes/publish.ipynb 16
 @gd.route_function
 async def get_publish_subscriptions(
     auth: dmda.DomoAuth,
@@ -238,7 +231,7 @@ async def get_publish_subscriptions(
 
     return res
 
-# %% ../../nbs/routes/publish.ipynb 19
+# %% ../../nbs/routes/publish.ipynb 18
 @gd.route_function
 async def get_subscription_summaries(
     auth: dmda.DomoAuth,
@@ -265,7 +258,7 @@ async def get_subscription_summaries(
         raise GET_Publish_Error(res)
     return res
 
-# %% ../../nbs/routes/publish.ipynb 23
+# %% ../../nbs/routes/publish.ipynb 22
 @gd.route_function
 async def get_subscriber_content_details(
     auth: dmda.DomoAuth,
@@ -296,7 +289,7 @@ async def get_subscriber_content_details(
 
     return res
 
-# %% ../../nbs/routes/publish.ipynb 25
+# %% ../../nbs/routes/publish.ipynb 24
 @gd.route_function
 async def get_subscription_invititations(
     auth: dmda.DomoAuth,
@@ -323,7 +316,7 @@ async def get_subscription_invititations(
         raise GET_Publish_Error(res)
     return res
 
-# %% ../../nbs/routes/publish.ipynb 26
+# %% ../../nbs/routes/publish.ipynb 25
 @gd.route_function
 async def get_subscriber_domains(
     auth: dmda.DomoAuth,
@@ -379,7 +372,7 @@ async def add_subscriber_domain(
         raise GET_Publish_Error(res)
     return res
 
-# %% ../../nbs/routes/publish.ipynb 29
+# %% ../../nbs/routes/publish.ipynb 28
 @gd.route_function
 async def accept_invite_by_id(
     auth: dmda.DomoAuth,
@@ -407,7 +400,7 @@ async def accept_invite_by_id(
         raise CRUD_Publish_Error(res)
     return res
 
-# %% ../../nbs/routes/publish.ipynb 30
+# %% ../../nbs/routes/publish.ipynb 29
 @gd.route_function
 async def accept_invite_by_id_v2(
     auth: dmda.DomoAuth,
@@ -447,7 +440,7 @@ async def accept_invite_by_id_v2(
 
     return res
 
-# %% ../../nbs/routes/publish.ipynb 31
+# %% ../../nbs/routes/publish.ipynb 30
 @gd.route_function
 async def refresh_publish_jobs(
     auth: dmda.DomoAuth,

@@ -9,13 +9,13 @@ from connector.generated import (
     GetLastActivity,
     GetLastActivityRequest,
     GetLastActivityResponse,
-    LastActivityData
+    LastActivityData,
+    StandardCapabilityName,
 )
-
-from tests.common_mock_data import VALID_AUTH, SETTINGS
 from connector.tests.type_definitions import MockedResponse, ResponseBodyMap
 
-from connector.generated.models.standard_capability_name import StandardCapabilityName
+from tests.common_mock_data import SETTINGS, VALID_AUTH
+
 
 Case: t.TypeAlias = tuple[
     StandardCapabilityName,

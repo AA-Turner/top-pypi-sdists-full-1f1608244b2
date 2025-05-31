@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: onnxscript
-Version: 0.2.7
+Version: 0.3.0
 Summary: Naturally author ONNX functions and models using a subset of Python
 Author-email: Microsoft Corporation <onnx@microsoft.com>
 License: MIT License
@@ -33,21 +33,21 @@ Classifier: Intended Audience :: Developers
 Classifier: Operating System :: POSIX
 Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Operating System :: Microsoft :: Windows
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Classifier: License :: OSI Approved :: MIT License
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: numpy
-Requires-Dist: onnx>=1.16
-Requires-Dist: typing_extensions>=4.10
 Requires-Dist: ml_dtypes
+Requires-Dist: numpy
+Requires-Dist: onnx_ir<2,>=0.1
+Requires-Dist: onnx>=1.16
 Requires-Dist: packaging
+Requires-Dist: typing_extensions>=4.10
 Dynamic: license-file
 Dynamic: project-url
 
@@ -70,8 +70,6 @@ models using a subset of Python. ONNX Script is:
 
 This repo also covers:
 
-* **ONNX IR:** an in-memory IR that supports the full ONNX spec, designed
-  for graph construction, analysis and transformation.
 * **ONNX Script Optimizer:** provides functionality to optimize an ONNX
   model by performing optimizations and clean-ups such as constant folding,
   dead code elimination, etc.
@@ -204,24 +202,6 @@ result = Hardmax(v)
 ```
 
 More examples can be found in the [docs/examples](docs/examples) directory.
-
-## ONNX IR
-
-An in-memory IR that supports the full ONNX spec, designed for graph construction, analysis and transformation.
-
-### Features
-
-* **Full ONNX spec support:** all valid models representable by ONNX protobuf,
-  and a subset of invalid models (so you can load and fix them).
-* **Low memory footprint:** mmap'ed external tensors; unified interface for
-  ONNX TensorProto, Numpy arrays and PyTorch Tensors etc. No tensor size
-  limitation. Zero copies.
-* **Straightforward access patterns:** Access value information and traverse the
-  graph topology at ease.
-* **Robust mutation:** Create as many iterators as you like on the graph while mutating it.
-* **Speed:** Performant graph manipulation, serialization/deserialization to Protobuf.
-* **Pythonic and familiar APIs:** Classes define Pythonic apis and still map to
-  ONNX protobuf concepts in an intuitive way.
 
 ## ONNX Script Tools
 

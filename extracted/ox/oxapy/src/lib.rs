@@ -34,7 +34,6 @@ use tokio::net::TcpListener;
 use tokio::sync::mpsc::{channel, Sender};
 use tokio::sync::Semaphore;
 
-use std::collections::HashMap;
 use std::{
     net::SocketAddr,
     sync::{
@@ -44,6 +43,8 @@ use std::{
 };
 
 use pyo3::{exceptions::PyException, prelude::*};
+
+type MatchRoute<'l> = matchit::Match<'l, 'l, &'l Route>;
 
 use crate::templating::Template;
 
@@ -80,32 +81,10 @@ where
     }
 }
 
-#[derive(Debug)]
-struct MatchRouteInfo {
-    route: Route,
-    params: HashMap<String, serde_json::Value>,
-}
-
-// impl<'r> From<Match<'r, 'r, &'r Route>> for MatchRouteInfo {
-//     fn from(value: Match<'r, 'r, &'r Route>) -> Self {
-//         let params = value.params;
-
-//         Python::with_gil(|py| {
-//             let route = value.value.clone();
-//             let params = value
-//                 .params
-//                 .iter()
-//                 .filter_map(|(k, v)| Some((k.to_string(), v.into_pyobject(py).unwrap())))
-//                 .collect();
-//             Self { route, params }
-//         })
-//     }
-// }
-
 struct ProcessRequest {
     request: Arc<Request>,
     router: Arc<Router>,
-    route_info: MatchRouteInfo,
+    match_route: MatchRoute<'static>,
     response_sender: Sender<Response>,
     cors: Option<Arc<Cors>>,
 }

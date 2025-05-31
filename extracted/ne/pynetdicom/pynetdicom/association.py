@@ -82,6 +82,7 @@ from pynetdicom.sop_class import (  # type: ignore
     Verification,
 )
 from pynetdicom.status import code_to_category, STORAGE_SERVICE_CLASS_STATUS
+from pynetdicom.transport import AddressInformation
 from pynetdicom.utils import make_target, set_timer_resolution, set_ae, decode_bytes
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -159,6 +160,8 @@ class Association(threading.Thread):
 
         # Track whether we've sent an abort or not for the abort() method
         self._sent_abort: bool = False
+        # Track whether we've sent a release or not
+        self._sent_release: bool = False
 
         # Accepted and rejected presentation contexts
         self._accepted_cx: dict[int, PresentationContext] = {}
@@ -201,28 +204,64 @@ class Association(threading.Thread):
         threading.Thread.__init__(self, target=make_target(self.run_reactor))
         self.daemon: bool = True
 
-    def abort(self) -> None:
+    def abort(self, block: bool = True) -> None:
         """Abort the :class:`Association` by sending an A-ABORT to the remote
         AE.
+
+        .. versionchanged:: 3.0
+
+            Added the `block` keyword parameter.
+
+        Parameters
+        ----------
+        block : bool, optional
+
+            * If ``True`` then this function blocks until the A-ABORT PDU has been sent
+              to  the peer, the connection shutdown and the state machine returned to
+              State 1 (idle). This is the default when ``abort()`` is called outside
+              of an event handler.
+            * If ``False`` then the function returns after adding an A-ABORT request
+              primitive to the outgoing queue. This is the default when ``abort()``
+              is called inside an event handler.
         """
+        return self._abort_blocking(block)
+
+    def _abort_blocking(self, block: bool = True) -> None:
+        """Blocking implementation of Association.abort()"""
         # Only allow a single abort message to be sent
         if self._sent_abort:
             return
 
-        if not self.is_released:
-            # Set before restarting the reactor to prevent race condition
-            self._sent_abort = True
-            # Ensure the reactor is running so it can be exited
-            self._reactor_checkpoint.set()
-            LOGGER.info("Aborting Association")
-            self.acse.send_abort(0x00)
+        if self.is_released:
+            return
 
-            # Event handler - association aborted
-            evt.trigger(self, evt.EVT_ABORTED, {})
-            self.kill()
+        # Set before restarting the reactor to prevent race condition
+        self._sent_abort = True
+        # Ensure the reactor is running so it can be exited
+        self._reactor_checkpoint.set()
+        LOGGER.info("Aborting Association")
+        self.acse.send_abort(0x00)
+
+        # Event handler - association aborted
+        evt.trigger(self, evt.EVT_ABORTED, {})
+
+        if block is False:
+            return
+
+        self.kill()
+
+        # Ensure socket is shutdown and closed
+        try:
+            cast(AssociationSocket, self.dul.socket)._shutdown_socket()
+        except Exception:
+            pass
 
         # Add short delay to ensure everything shuts down
         time.sleep(0.1)
+
+    def _abort_nonblocking(self, block: bool = False) -> None:
+        """Non-blocking implementation of Association.abort()"""
+        return self._abort_blocking(block)
 
     @property
     def accepted_contexts(self) -> list[PresentationContext]:
@@ -252,12 +291,6 @@ class Association(threading.Thread):
         self, event: evt.EventType, handler: Callable, args: None | list[Any] = None
     ) -> None:
         """Bind a callable `handler` to an `event`.
-
-        .. versionadded:: 1.3
-
-        .. versionchanged:: 1.5
-
-            Added `args` keyword parameter.
 
         Parameters
         ----------
@@ -334,20 +367,11 @@ class Association(threading.Thread):
             self._dimse_timeout = value
 
     def get_events(self) -> list[evt.EventType]:
-        """Return a :class:`list` of currently bound events.
-
-        .. versionadded:: 1.3
-        """
+        """Return a :class:`list` of currently bound events."""
         return sorted(self._handlers.keys(), key=lambda x: x.name)
 
     def get_handlers(self, event: evt.EventType) -> evt.HandlerArgType:
         """Return the handlers bound to a specific `event`.
-
-        .. versionadded:: 1.3
-
-        .. versionchanged:: 1.5
-
-            Returns a 2-tuple of (callable, args) or list of 2-tuple.
 
         Parameters
         ----------
@@ -378,11 +402,6 @@ class Association(threading.Thread):
         allow_conversion: bool = True,
     ) -> PresentationContext:
         """Return a valid presentation context matching the parameters.
-
-        .. versionchanged:: 1.5
-
-            Changed to prefer an exact matching context over a convertible one
-            and to reject contexts without matching endianness
 
         .. versionchanged:: 2.0
 
@@ -584,13 +603,14 @@ class Association(threading.Thread):
         return self._rejected_cx
 
     def release(self) -> None:
-        """Initiate association release by send an A-RELEASE request."""
+        """Initiate association release by sending an A-RELEASE request."""
         if self.is_established:
             # Ensure the reactor is paused so it doesn't
             #   steal incoming ACSE messages
             self._reactor_checkpoint.clear()
             while not self._is_paused:
                 time.sleep(0.0001)
+
             LOGGER.info("Releasing Association")
             self.acse.negotiate_release()
             # Restart reactor
@@ -710,8 +730,8 @@ class Association(threading.Thread):
             if msg:
                 self._serve_request(msg, cast(int, context_id))
 
-            # Check for release request
-            if self.acse.is_release_requested():
+            # Check for release request from the peer
+            if self.is_established and self.acse.is_release_requested():
                 # Send A-RELEASE response
                 self.acse.send_release(is_response=True)
                 LOGGER.info("Association Released")
@@ -721,7 +741,7 @@ class Association(threading.Thread):
                 self.kill()
                 return
 
-            # Check for abort
+            # Check for abort from either locally or the peer
             if self.acse.is_aborted():
                 log_msg = "Association Aborted"
                 if self.acse.is_aborted("a-p-abort"):
@@ -751,6 +771,7 @@ class Association(threading.Thread):
                     self._is_paused = False
                 else:
                     self.abort()
+
                 self.kill()
                 return
 
@@ -774,8 +795,6 @@ class Association(threading.Thread):
 
     def unbind(self, event: evt.EventType, handler: Callable) -> None:
         """Unbind a callable `handler` from an `event`.
-
-        .. versionadded:: 1.3
 
         Parameters
         ----------
@@ -1050,10 +1069,6 @@ class Association(threading.Thread):
 
         Yields (*status*, *identifier*) pairs for each response from the peer.
 
-        .. versionchanged:: 1.5
-
-            `query_model` now only accepts a UID string
-
         .. versionchanged:: 2.1
 
             Added support for *Repository Query*
@@ -1291,10 +1306,6 @@ class Association(threading.Thread):
         :ref:`SCP/SCU Role Selection Negotiation <user_ae_role_negotiation>`
         must be supported by the :class:`Association`.
 
-        .. versionchanged:: 1.5
-
-            `query_model` now only accepts a UID string
-
         Parameters
         ----------
         dataset : pydicom.dataset.Dataset
@@ -1498,10 +1509,6 @@ class Association(threading.Thread):
         the Move SCP. Once the association has been established, the peer will
         use the C-STORE service to send any matching datasets to the nominated
         Storage SCP.
-
-        .. versionchanged:: 1.5
-
-            `query_model` now only accepts a UID string
 
         .. versionchanged:: 2.0
 
@@ -1892,10 +1899,17 @@ class Association(threading.Thread):
                 tsyntax.is_little_endian,
             )
             # `dataset` might also be created from scratch
-            ds_encoding = getattr(
-                dataset,
-                "original_encoding",
-                (dataset.is_implicit_VR, dataset.is_little_endian),
+            ds_encoding: tuple[bool | None, bool | None] = (
+                (
+                    dataset.is_implicit_VR
+                    if dataset.original_encoding[0] is None
+                    else dataset.original_encoding[0]
+                ),
+                (
+                    dataset.is_little_endian
+                    if dataset.original_encoding[1] is None
+                    else dataset.original_encoding[1]
+                ),
             )
             if None not in ds_encoding and ts_encoding != ds_encoding:
                 s = ("explicit VR", "implicit VR")[cast(bool, ds_encoding[0])]
@@ -2240,10 +2254,6 @@ class Association(threading.Thread):
     ) -> tuple[Dataset, Dataset | None]:
         """Send an N-ACTION request to the peer AE.
 
-        .. versionchanged:: 1.4
-
-            Added `meta_uid` keyword parameter
-
         Parameters
         ----------
         dataset : pydicom.dataset.Dataset or None
@@ -2455,10 +2465,6 @@ class Association(threading.Thread):
         meta_uid: str | UID | None = None,
     ) -> tuple[Dataset, Dataset | None]:
         """Send an N-CREATE request to the peer AE.
-
-        .. versionchanged:: 1.4
-
-            Added `meta_uid` keyword parameter
 
         Parameters
         ----------
@@ -2700,10 +2706,6 @@ class Association(threading.Thread):
     ) -> Dataset:
         """Send an N-DELETE request to the peer AE.
 
-        .. versionchanged:: 1.4
-
-            Added `meta_uid` keyword parameter
-
         Parameters
         ----------
         class_uid : pydicom.uid.UID
@@ -2825,10 +2827,6 @@ class Association(threading.Thread):
         meta_uid: str | UID | None = None,
     ) -> tuple[Dataset, Dataset | None]:
         """Send an N-EVENT-REPORT request to the peer AE.
-
-        .. versionchanged:: 1.4
-
-            Added `meta_uid` keyword parameter
 
         Parameters
         ----------
@@ -3037,10 +3035,6 @@ class Association(threading.Thread):
         meta_uid: str | UID | None = None,
     ) -> tuple[Dataset, Dataset | None]:
         """Send an N-GET request to the peer AE.
-
-        .. versionchanged:: 1.4
-
-            Added `meta_uid` keyword parameter
 
         Parameters
         ----------
@@ -3251,10 +3245,6 @@ class Association(threading.Thread):
         meta_uid: str | UID | None = None,
     ) -> tuple[Dataset, Dataset | None]:
         """Send an N-SET request to the peer AE.
-
-        .. versionchanged:: 1.4
-
-            Added `meta_uid` keyword parameter
 
         Parameters
         ----------
@@ -3508,6 +3498,12 @@ class Association(threading.Thread):
             The ID of the presentation context that the request is being
             made under.
         """
+        if self._sent_release:
+            LOGGER.warning(
+                f"{msg.msg_type} message received during association release, ignoring"
+            )
+            return
+
         # No message or not a service request
         if not msg.is_valid_request:
             LOGGER.warning(f"Received unexpected {msg.msg_type} service message")
@@ -3562,7 +3558,9 @@ class Association(threading.Thread):
             # SCP isn't implemented
             LOGGER.error(
                 "No supported service class available for the SOP "
-                f"Class UID '{class_uid}'"
+                f"Class UID '{class_uid}', please see the "
+                "pynetdicom.sop_class.register_uid() function if you need to add "
+                "support for a private, retired or otherwise unknown SOP Class UID"
             )
             self.abort()
             return
@@ -3607,13 +3605,18 @@ class ServiceUser:
         * Maximum PDU length
         * Implementation class UID
 
+    .. versionchanged:: 3.0
+
+        `address` and `port` have been changed to properties and added the
+        `address_info` attribute.
+
     Attributes
     ----------
-    address : str
-        The TCP/IP address of the AE.
-    port : int
-        The port number of the AE.
-    primitive : None or pdu_primitives.A_ASSOCIATE
+    address_info : pynetdicom.transport.AddressInformation | None
+        The connection properties of the local or remote AE. When the local AE is the
+        requestor the IP address and port should be considered nominal until the
+        connection with the remote is made.
+    primitive : pynetdicom.pdu_primitives.A_ASSOCIATE | None
         The A-ASSOCIATE primitive (request if mode is ``'requestor'``,
         accept/reject if mode is ``'acceptor'``) sent or received by the AE
         during association negotiation.
@@ -3640,8 +3643,8 @@ class ServiceUser:
         self._mode: str = mode
         self._ae_title: str = ""
         self.primitive: A_ASSOCIATE | None = None
-        self.port: int | None = None
-        self.address: str | None = ""
+
+        self.address_info: AddressInformation | None = None
 
         # If Requestor this is the requested contexts, otherwise this is
         #   the supported contexts
@@ -3728,6 +3731,14 @@ class ServiceUser:
             self._ext_neg[type(item)].append(item)
         except KeyError:
             raise TypeError("'item' is not a valid extended negotiation item")
+
+    @property
+    def address(self) -> str:
+        """Get the requestor or acceptor's IP address (if set)."""
+        if self.address_info is None:
+            raise ValueError("No address information has been set")
+
+        return self.address_info.address
 
     @property
     def ae_title(self) -> str:
@@ -4009,13 +4020,11 @@ class ServiceUser:
 
     @property
     def info(self) -> dict[str, Any]:
-        """Return a :class:`dict` with information about the
-        :class:`ServiceUser`.
-        """
+        """Return a :class:`dict` with information about the :class:`ServiceUser`."""
         info = {
             "ae_title": self.ae_title,
-            "address": self.address,
-            "port": self.port,
+            "address": self.address if self.address_info else None,
+            "port": self.port if self.address_info else None,
             "mode": self.mode,
         }
         if not self.writeable:
@@ -4025,16 +4034,12 @@ class ServiceUser:
 
     @property
     def is_acceptor(self) -> bool:
-        """Return ``True`` if the :class:`ServiceUser` is the association
-        acceptor.
-        """
+        """Return ``True`` if the :class:`ServiceUser` is the association acceptor."""
         return self.mode == MODE_ACCEPTOR
 
     @property
     def is_requestor(self) -> bool:
-        """Return ``True`` if the :class:`ServiceUser` is the association
-        requestor.
-        """
+        """Return ``True`` if the :class:`ServiceUser` is the association requestor."""
         return self.mode == MODE_REQUESTOR
 
     @property
@@ -4090,6 +4095,14 @@ class ServiceUser:
         ``'acceptor'``.
         """
         return self._mode
+
+    @property
+    def port(self) -> int:
+        """Get the requestor or acceptor's port number (if set)."""
+        if self.address_info is None:
+            raise ValueError("No address information has been set")
+
+        return self.address_info.port
 
     @property
     def requested_contexts(self) -> list[PresentationContext]:

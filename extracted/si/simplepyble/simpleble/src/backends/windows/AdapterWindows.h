@@ -39,18 +39,18 @@ class AdapterWindows : public AdapterBase {
     virtual std::string identifier() override;
     virtual BluetoothAddress address() override;
 
+    virtual void power_on() override;
+    virtual void power_off() override;
+    virtual bool is_powered() override;
+
     virtual void scan_start() override;
     virtual void scan_stop() override;
     virtual void scan_for(int timeout_ms) override;
     virtual bool scan_is_active() override;
     virtual std::vector<std::shared_ptr<PeripheralBase>> scan_get_results() override;
 
-    virtual void set_callback_on_scan_start(std::function<void()> on_scan_start) override;
-    virtual void set_callback_on_scan_stop(std::function<void()> on_scan_stop) override;
-    virtual void set_callback_on_scan_updated(std::function<void(Peripheral)> on_scan_updated) override;
-    virtual void set_callback_on_scan_found(std::function<void(Peripheral)> on_scan_found) override;
-
     virtual std::vector<std::shared_ptr<PeripheralBase>> get_paired_peripherals() override;
+    virtual std::vector<std::shared_ptr<PeripheralBase>> get_connected_peripherals() override;
 
     virtual bool bluetooth_enabled() override;
 
@@ -62,6 +62,9 @@ class AdapterWindows : public AdapterBase {
     winrt::event_token scanner_received_token_;
     winrt::event_token scanner_stopped_token_;
 
+    Radio radio_;
+    winrt::event_token radio_state_changed_token_;
+
     std::atomic_bool scan_is_active_{false};
     std::condition_variable scan_stop_cv_;
     std::mutex scan_stop_mutex_;
@@ -69,7 +72,8 @@ class AdapterWindows : public AdapterBase {
     std::map<BluetoothAddress, std::shared_ptr<PeripheralWindows>> peripherals_;
     std::map<BluetoothAddress, std::shared_ptr<PeripheralBase>> seen_peripherals_;
 
-    // Event handler methods for scanner events
+    void on_power_state_changed(Radio const& sender, Foundation::IInspectable const&);
+
     void _on_scanner_stopped(
         const Advertisement::BluetoothLEAdvertisementWatcher& watcher,
         const Advertisement::BluetoothLEAdvertisementWatcherStoppedEventArgs args);
@@ -80,11 +84,6 @@ class AdapterWindows : public AdapterBase {
 
     void _scan_stopped_callback();
     void _scan_received_callback(advertising_data_t data);
-
-    kvn::safe_callback<void()> callback_on_scan_start_;
-    kvn::safe_callback<void()> callback_on_scan_stop_;
-    kvn::safe_callback<void(Peripheral)> callback_on_scan_updated_;
-    kvn::safe_callback<void(Peripheral)> callback_on_scan_found_;
 };
 
 }  // namespace SimpleBLE

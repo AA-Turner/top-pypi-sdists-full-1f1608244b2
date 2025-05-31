@@ -99,7 +99,11 @@ properties:
         datatype: int16
       - name: b
         datatype: ['ascii', 16]
-    exact_datatype: true""",
+    exact_datatype: true
+  e:
+    anyOf:
+      - type: "null"
+      - datatype: int16""",
                 "http://nowhere.org/schemas/custom/ndim-1.0.0": """%YAML 1.1
 ---
 $schema: "http://stsci.edu/schemas/asdf/asdf-schema-1.1.0"
@@ -803,6 +807,15 @@ obj: !<tag:nowhere.org:custom/datatype-1.0.0>
     ):
         pass
 
+    content = """
+obj: !<tag:nowhere.org:custom/datatype-1.0.0>
+    e: null
+    """
+    buff = helpers.yaml_to_asdf(content)
+
+    with asdf.open(buff):
+        pass
+
 
 @with_custom_extension()
 def test_structured_datatype_validation(tmp_path):
@@ -812,6 +825,7 @@ obj: !<tag:nowhere.org:custom/datatype-1.0.0>
        data: [[1, 'a'], [2, 'b'], [3, 'c']]
        datatype:
          - name: a
+           description: a description
            datatype: int8
          - name: b
            datatype: ['ascii', 8]
@@ -829,6 +843,7 @@ obj: !<tag:nowhere.org:custom/datatype-1.0.0>
          - name: a
            datatype: int64
          - name: b
+           title: a title
            datatype: ['ascii', 8]
     """
     buff = helpers.yaml_to_asdf(content)

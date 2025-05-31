@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for DataDog/datadog provider version 3.63.0
+# CDKTF prebuilt bindings for DataDog/datadog provider version 3.65.0
 
-This repo builds and publishes the [Terraform datadog provider](https://registry.terraform.io/providers/DataDog/datadog/3.63.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform datadog provider](https://registry.terraform.io/providers/DataDog/datadog/3.65.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform datadog provider version 1
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform datadog provider](https://registry.terraform.io/providers/DataDog/datadog/3.63.0)
+* [Terraform datadog provider](https://registry.terraform.io/providers/DataDog/datadog/3.65.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -138,6 +138,7 @@ __all__ = [
     "child_organization",
     "cloud_configuration_rule",
     "cloud_workload_security_agent_rule",
+    "compliance_custom_framework",
     "csm_threats_agent_rule",
     "dashboard",
     "dashboard_json",
@@ -232,6 +233,9 @@ __all__ = [
     "monitor_json",
     "monitor_notification_rule",
     "observability_pipeline",
+    "on_call_escalation_policy",
+    "on_call_schedule",
+    "on_call_team_routing_rules",
     "openapi_api",
     "organization_settings",
     "powerpack",
@@ -288,6 +292,7 @@ from . import authn_mapping
 from . import child_organization
 from . import cloud_configuration_rule
 from . import cloud_workload_security_agent_rule
+from . import compliance_custom_framework
 from . import csm_threats_agent_rule
 from . import dashboard
 from . import dashboard_json
@@ -382,6 +387,9 @@ from . import monitor_config_policy
 from . import monitor_json
 from . import monitor_notification_rule
 from . import observability_pipeline
+from . import on_call_escalation_policy
+from . import on_call_schedule
+from . import on_call_team_routing_rules
 from . import openapi_api
 from . import organization_settings
 from . import powerpack

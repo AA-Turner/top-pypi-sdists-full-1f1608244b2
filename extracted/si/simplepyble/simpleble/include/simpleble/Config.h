@@ -1,16 +1,23 @@
 #pragma once
+#include <chrono>
 
 namespace SimpleBLE {
 namespace Config {
     namespace SimpleBluez {
-        static void reset() {}
+        inline static std::chrono::steady_clock::duration connection_timeout = std::chrono::seconds(2);
+        inline static std::chrono::steady_clock::duration disconnection_timeout = std::chrono::seconds(1);
+
+        static void reset() {
+            connection_timeout = std::chrono::seconds(2);
+            disconnection_timeout = std::chrono::seconds(1);
+        }
     }
 
     namespace WinRT {
-        inline static bool experimental_use_own_mta_apartment = false;
+        inline static bool experimental_use_own_mta_apartment = true;
 
         static void reset() {
-            experimental_use_own_mta_apartment = false;
+            experimental_use_own_mta_apartment = true;
         }
     }
 
@@ -19,7 +26,19 @@ namespace Config {
     }
 
     namespace Android {
-        static void reset() {}
+        enum class ConnectionPriorityRequest {
+            DISABLED = -1,
+            BALANCED = 0,
+            HIGH = 1,
+            LOW_POWER = 2,
+            DCK = 3
+        };
+
+        inline static ConnectionPriorityRequest connection_priority_request = ConnectionPriorityRequest::DISABLED;
+
+        static void reset() {
+            connection_priority_request = ConnectionPriorityRequest::DISABLED;
+        }
     }
 
     namespace Base {

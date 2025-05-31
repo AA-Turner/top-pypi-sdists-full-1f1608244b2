@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: caldav
-Version: 1.5.0
+Version: 1.6.0
 Summary: CalDAV (RFC4791) client library
 Author-email: Cyril Robert <cyril@hippie.io>
 License: GPL

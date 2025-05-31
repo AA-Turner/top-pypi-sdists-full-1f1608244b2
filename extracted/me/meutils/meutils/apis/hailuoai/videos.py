@@ -392,7 +392,7 @@ async def get_task(task_id: str, token: str):
 
 
 # https://hailuoai.video/v1/api/user/equity?device_platform=web&app_id=3001&version_code=22201&uuid=3de88ad0-8a38-48a9-8ed3-0d63f9c71296&lang=en&device_id=302833759512764417&os_name=Mac&browser_name=chrome&device_memory=8&cpu_core_num=10&browser_language=zh-CN&browser_platform=MacIntel&screen_width=1920&screen_height=1080&unix=1731571578000
-@alru_cache(ttl=3600)
+# @alru_cache(ttl=3600)
 async def check_token(token, threshold: int = 30, **kwargs):
     BASE_URL = get_base_url(token)
 
@@ -453,7 +453,7 @@ if __name__ == '__main__':  # 304752356930580482
     token = None
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQ3MDMwNzIsInVzZXIiOnsiaWQiOiIzMDI4MzM4Njc3NzE5NDkwNTgiLCJuYW1lIjoibWUgYmV0dGVyIiwiYXZhdGFyIjoiIiwiZGV2aWNlSUQiOiIzMDI4MzM3NTk1MTI3NjQ0MTciLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.Mjb64ZjkKyV9pj-_bXyLczU6kU729VLaKbYj9NmrK-4"
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDg3Mzg4MTQsInVzZXIiOnsiaWQiOiIyMjkwODQ3NTA2MDEzODgwMzciLCJuYW1lIjoi5bCP6J665bi9ODAzNyIsImF2YXRhciI6Imh0dHBzOi8vY2RuLmhhaWx1b2FpLmNvbS9wcm9kL3VzZXJfYXZhdGFyLzE3MDYyNjc3MTEyODI3NzA4NzItMTczMTk0NTcwNjY4OTY1ODk2b3ZlcnNpemUucG5nIiwiZGV2aWNlSUQiOiIyNDM3MTMyNTI1NDU5ODY1NjIiLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.o0SoZMSTWkXNHxJjt3Ggby5MJWSfd-rnK_I95T_WMP8"
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAxMjg4NTIsInVzZXIiOnsiaWQiOiIzNzQwMTM3NzUyNzg4ODY5MTciLCJuYW1lIjoiTmFodWVsIE1vbGluYSIsImF2YXRhciI6IiIsImRldmljZUlEIjoiMzEzMzc0MTIyMjEyMjc4MjczIiwiaXNBbm9ueW1vdXMiOmZhbHNlfX0.uxTtDTcPT07piVA-x3N2ms2VrRN3JwcU99g_HJLwqLE"
+    # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAxMjg4NTIsInVzZXIiOnsiaWQiOiIzNzQwMTM3NzUyNzg4ODY5MTciLCJuYW1lIjoiTmFodWVsIE1vbGluYSIsImF2YXRhciI6IiIsImRldmljZUlEIjoiMzEzMzc0MTIyMjEyMjc4MjczIiwiaXNBbm9ueW1vdXMiOmZhbHNlfX0.uxTtDTcPT07piVA-x3N2ms2VrRN3JwcU99g_HJLwqLE"
     request = VideoRequest(
         model="t2v-01",
         # model="S2V-01-live",
@@ -487,4 +487,5 @@ if __name__ == '__main__':  # 304752356930580482
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzUwMTc3ODAsInVzZXIiOnsiaWQiOiIzMTEyOTUzMTkzMjc1NzYwNjQiLCJuYW1lIjoiVUdIUiBKVkJYIiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS3RuR2NjdGZsWV9fR2tiQ1MzdnhzSXdWSEFUX0ZmMFdyb3RvMnN4bFdWZW1KMm53PXM5Ni1jIiwiZGV2aWNlSUQiOiIzMTMzMTU5NTMxMDA0MTA4ODciLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.cyZifq4FQl46P5_acTNT04qu2GVDDeSBbwjw3J1vWPo"
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzUwMzQ1MjcsInVzZXIiOnsiaWQiOiIzMTMzODk5MjA0NjA5MzkyNjgiLCJuYW1lIjoiY2l4ZiB4YmNnIiwiYXZhdGFyIjoiIiwiZGV2aWNlSUQiOiIzMTM0MDgyMjg0NTEwOTg2MjYiLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.eOtAUe3MmarOGNk64j0bfaLNBZ4yxkqwIi1tUhOFD5c"
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAxMjg4NTIsInVzZXIiOnsiaWQiOiIzNzQwMTM3NzUyNzg4ODY5MTciLCJuYW1lIjoiTmFodWVsIE1vbGluYSIsImF2YXRhciI6IiIsImRldmljZUlEIjoiMzEzMzc0MTIyMjEyMjc4MjczIiwiaXNBbm9ueW1vdXMiOmZhbHNlfX0.uxTtDTcPT07piVA-x3N2ms2VrRN3JwcU99g_HJLwqLE"
+    # token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAxMjg4NTIsInVzZXIiOnsiaWQiOiIzNzQwMTM3NzUyNzg4ODY5MTciLCJuYW1lIjoiTmFodWVsIE1vbGluYSIsImF2YXRhciI6IiIsImRldmljZUlEIjoiMzEzMzc0MTIyMjEyMjc4MjczIiwiaXNBbm9ueW1vdXMiOmZhbHNlfX0.uxTtDTcPT07piVA-x3N2ms2VrRN3JwcU99g_HJLwqLE"
     # arun(check_token(token))

@@ -1,7 +1,5 @@
 """Global variables for pynetdicom."""
 
-from typing import List, Optional, Union
-
 from pydicom.uid import UID
 
 
@@ -13,7 +11,7 @@ DEFAULT_MAX_LENGTH: int = 16382
 # DICOM Application Context Name - see Part 7, Annex A.2.1
 APPLICATION_CONTEXT_NAME: str = "1.2.840.10008.3.1.1.1"
 
-DEFAULT_TRANSFER_SYNTAXES: List[str] = [
+DEFAULT_TRANSFER_SYNTAXES: list[str] = [
     "1.2.840.10008.1.2",  # Implicit VR Little Endian,
     "1.2.840.10008.1.2.1",  # Explicit VR Little Endian,
     "1.2.840.10008.1.2.1.99",  # Deflated Explicit VR Little Endian
@@ -27,7 +25,7 @@ DEFAULT_TRANSFER_SYNTAXES: List[str] = [
 * Explicit VR Big Endian (retired)
 """
 
-ALL_TRANSFER_SYNTAXES: List[str] = [
+ALL_TRANSFER_SYNTAXES: list[str] = [
     "1.2.840.10008.1.2",  # Implicit VR Little Endian,
     "1.2.840.10008.1.2.1",  # Explicit VR Little Endian,
     "1.2.840.10008.1.2.1.99",  # Deflated Explicit VR Little Endian
@@ -45,6 +43,7 @@ ALL_TRANSFER_SYNTAXES: List[str] = [
     "1.2.840.10008.1.2.4.94",  # JPIP Referenced
     "1.2.840.10008.1.2.4.95",  # JPIP Referenced Deflate
     "1.2.840.10008.1.2.4.100",  # MPEG2 Main Profile / Main Level
+    "1.2.840.10008.1.2.4.100.1",  # Fragmentable MPEG2 Main Profile / Main Level
     "1.2.840.10008.1.2.4.101",  # MPEG2 Main Profile / High Level
     "1.2.840.10008.1.2.4.101.1",  # Fragmentable MPEG2 Main Profile / High Level
     "1.2.840.10008.1.2.4.102",  # MPEG-4 AVC/H.264 High Profile / Level 4.1
@@ -59,12 +58,19 @@ ALL_TRANSFER_SYNTAXES: List[str] = [
     "1.2.840.10008.1.2.4.106.1",  # Fragmentable MPEG-4 AVC/H.264 Stereo High Profile
     "1.2.840.10008.1.2.4.107",  # HEVC/H.265 Main Profile / Level 5.1
     "1.2.840.10008.1.2.4.108",  # HEVC/H.265 Main 10 Profile / Level 5.1
+    "1.2.840.10008.1.2.4.110",  # JPEG XL Lossless
+    "1.2.840.10008.1.2.4.111",  # JPEG XL JPEG Recompression
+    "1.2.840.10008.1.2.4.112",  # JPEG XL
     "1.2.840.10008.1.2.4.201",  # High-Throughput JPEG 2000 Lossless
     "1.2.840.10008.1.2.4.202",  # High-Throughput JPEG 2000 RPCL
     "1.2.840.10008.1.2.4.203",  # High-Throughput JPEG 2000
     "1.2.840.10008.1.2.4.204",  # JPIP HT2K Referenced
     "1.2.840.10008.1.2.4.205",  # JPIP HTJ2k Referenced Deflate
     "1.2.840.10008.1.2.5",  # RLE Lossless
+    "1.2.840.10008.1.2.7.1",  # SMPTE ST 2110-20 Uncompressed Progressive Active Video
+    "1.2.840.10008.1.2.7.2",  # SMPTE ST 2110-20 Uncompressed Interlaced Active Video
+    "1.2.840.10008.1.2.7.3",  # SMPTE ST 2110-30 PCM Digital Audio
+    "1.2.840.10008.1.2.8.1",  # Deflated Image Frame Compression
 ]
 """All current transfer syntaxes and explicit VR big endian.
 
@@ -100,12 +106,19 @@ ALL_TRANSFER_SYNTAXES: List[str] = [
 * Fragmentable MPEG-4 AVC/H.264 Stereo High Profile
 * HEVC/H.265 Main Profile / Level 5.1
 * HEVC/H.265 Main 10 Profile / Level 5.1
+* JPEG XL Lossless
+* JPEG XL JPEG Recompression
+* JPEG XL
 * High-Throughput JPEG 2000 Lossless
 * High-Throughput JPEG 2000 with RPCL Lossless
 * High-Throughput JPEG 2000
 * JPIP HTK2K Referenced
 * JPIP HTK2K Referenced Deflate
 * RLE Lossless
+* SMPTE ST 2110-20 Uncompressed Progressive Active Video
+* SMPTE ST 2110-20 Uncompressed Interlaced Active Video
+* SMPTE ST 2110-30 PCM Digital Audio
+* Deflated Image Frame Compression
 """
 
 # The association operation modes
@@ -121,8 +134,4 @@ STATUS_PENDING: str = "Pending"
 STATUS_UNKNOWN: str = "Unknown"
 
 
-# The default address that client sockets are bound to
-BIND_ADDRESS = ("", 0)
-
-
-OptionalUIDType = Optional[Union[str, bytes, UID]]
+OptionalUIDType = str | bytes | UID | None

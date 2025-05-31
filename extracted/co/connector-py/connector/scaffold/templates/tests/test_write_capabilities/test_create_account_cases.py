@@ -11,16 +11,13 @@ from connector.generated import (
     Error,
     ErrorCode,
     ErrorResponse,
+    StandardCapabilityName,
 )
-
 from connector.oai.capability import CustomRequest
+from connector.tests.type_definitions import MockedResponse, ResponseBodyMap
 from {name}.dto.user import CreateAccount
 
-
-from tests.common_mock_data import INVALID_AUTH, SETTINGS, VALID_AUTH
-from connector.tests.type_definitions import MockedResponse, ResponseBodyMap
-
-from connector.generated.models.standard_capability_name import StandardCapabilityName
+from tests.common_mock_data import SETTINGS, VALID_AUTH
 
 Case: t.TypeAlias = tuple[
     StandardCapabilityName,

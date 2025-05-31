@@ -5546,6 +5546,52 @@ event_BatchUpdateDispositionResponse.__qualname__ = "BatchUpdateDispositionRespo
 event_BatchUpdateDispositionResponse.__module__ = "nominal_api.event"
 
 
+class event_BatchUpdateEventRequest(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'requests': ConjureFieldDefinition('requests', List[event_UpdateEventRequest])
+        }
+
+    __slots__: List[str] = ['_requests']
+
+    def __init__(self, requests: List["event_UpdateEventRequest"]) -> None:
+        self._requests = requests
+
+    @builtins.property
+    def requests(self) -> List["event_UpdateEventRequest"]:
+        return self._requests
+
+
+event_BatchUpdateEventRequest.__name__ = "BatchUpdateEventRequest"
+event_BatchUpdateEventRequest.__qualname__ = "BatchUpdateEventRequest"
+event_BatchUpdateEventRequest.__module__ = "nominal_api.event"
+
+
+class event_BatchUpdateEventResponse(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'events': ConjureFieldDefinition('events', List[event_Event])
+        }
+
+    __slots__: List[str] = ['_events']
+
+    def __init__(self, events: List["event_Event"]) -> None:
+        self._events = events
+
+    @builtins.property
+    def events(self) -> List["event_Event"]:
+        return self._events
+
+
+event_BatchUpdateEventResponse.__name__ = "BatchUpdateEventResponse"
+event_BatchUpdateEventResponse.__qualname__ = "BatchUpdateEventResponse"
+event_BatchUpdateEventResponse.__module__ = "nominal_api.event"
+
+
 class event_CheckOriginMetadata(ConjureBeanType):
 
     @builtins.classmethod
@@ -6142,6 +6188,39 @@ The Event Service is responsible for creating and retrieving events for a partic
         _decoder = ConjureDecoder()
         return _decoder.decode(_response.json(), event_Event, self._return_none_for_unknown_union_types)
 
+    def batch_update_event(self, auth_header: str, request: "event_BatchUpdateEventRequest") -> "event_BatchUpdateEventResponse":
+        """
+        Updates the fields of an event specified by each request in the batch.
+Empty fields in the UpdateEventRequest are left unchanged.
+        """
+
+        _headers: Dict[str, Any] = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': auth_header,
+        }
+
+        _params: Dict[str, Any] = {
+        }
+
+        _path_params: Dict[str, Any] = {
+        }
+
+        _json: Any = ConjureEncoder().default(request)
+
+        _path = '/event/v1/events/batch-update'
+        _path = _path.format(**_path_params)
+
+        _response: Response = self._request(
+            'POST',
+            self._uri + _path,
+            params=_params,
+            headers=_headers,
+            json=_json)
+
+        _decoder = ConjureDecoder()
+        return _decoder.decode(_response.json(), event_BatchUpdateEventResponse, self._return_none_for_unknown_union_types)
+
     def batch_update_disposition(self, auth_header: str, request: "event_BatchUpdateDispositionRequest") -> "event_BatchUpdateDispositionResponse":
         """
         Updates the disposition of an event.
@@ -6494,6 +6573,7 @@ class event_HistogramFilterQuery(ConjureUnionType):
     _property: Optional["api_Property"] = None
     _and_: Optional[List["event_HistogramFilterQuery"]] = None
     _or_: Optional[List["event_HistogramFilterQuery"]] = None
+    _not_: Optional["event_HistogramFilterQuery"] = None
     _workspace: Optional[str] = None
 
     @builtins.classmethod
@@ -6514,6 +6594,7 @@ class event_HistogramFilterQuery(ConjureUnionType):
             'property': ConjureFieldDefinition('property', api_Property),
             'and_': ConjureFieldDefinition('and', List[event_HistogramFilterQuery]),
             'or_': ConjureFieldDefinition('or', List[event_HistogramFilterQuery]),
+            'not_': ConjureFieldDefinition('not', event_HistogramFilterQuery),
             'workspace': ConjureFieldDefinition('workspace', api_rids_WorkspaceRid)
         }
 
@@ -6534,11 +6615,12 @@ class event_HistogramFilterQuery(ConjureUnionType):
             property: Optional["api_Property"] = None,
             and_: Optional[List["event_HistogramFilterQuery"]] = None,
             or_: Optional[List["event_HistogramFilterQuery"]] = None,
+            not_: Optional["event_HistogramFilterQuery"] = None,
             workspace: Optional[str] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (search_text is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (workspace is not None) != 1:
+            if (search_text is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if search_text is not None:
@@ -6586,6 +6668,9 @@ class event_HistogramFilterQuery(ConjureUnionType):
             if or_ is not None:
                 self._or_ = or_
                 self._type = 'or'
+            if not_ is not None:
+                self._not_ = not_
+                self._type = 'not'
             if workspace is not None:
                 self._workspace = workspace
                 self._type = 'workspace'
@@ -6665,6 +6750,11 @@ class event_HistogramFilterQuery(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._or_ = or_
             self._type = 'or'
+        elif type_of_union == 'not':
+            if not_ is None:
+                raise ValueError('a union value must not be None')
+            self._not_ = not_
+            self._type = 'not'
         elif type_of_union == 'workspace':
             if workspace is None:
                 raise ValueError('a union value must not be None')
@@ -6732,6 +6822,10 @@ class event_HistogramFilterQuery(ConjureUnionType):
         return self._or_
 
     @builtins.property
+    def not_(self) -> Optional["event_HistogramFilterQuery"]:
+        return self._not_
+
+    @builtins.property
     def workspace(self) -> Optional[str]:
         return self._workspace
 
@@ -6768,6 +6862,8 @@ class event_HistogramFilterQuery(ConjureUnionType):
             return visitor._and(self.and_)
         if self._type == 'or' and self.or_ is not None:
             return visitor._or(self.or_)
+        if self._type == 'not' and self.not_ is not None:
+            return visitor._not(self.not_)
         if self._type == 'workspace' and self.workspace is not None:
             return visitor._workspace(self.workspace)
 
@@ -6837,6 +6933,10 @@ class event_HistogramFilterQueryVisitor:
 
     @abstractmethod
     def _or(self, or_: List["event_HistogramFilterQuery"]) -> Any:
+        pass
+
+    @abstractmethod
+    def _not(self, not_: "event_HistogramFilterQuery") -> Any:
         pass
 
     @abstractmethod
@@ -6971,6 +7071,7 @@ class event_SearchQuery(ConjureUnionType):
     _property: Optional["api_Property"] = None
     _and_: Optional[List["event_SearchQuery"]] = None
     _or_: Optional[List["event_SearchQuery"]] = None
+    _not_: Optional["event_SearchQuery"] = None
     _workspace: Optional[str] = None
 
     @builtins.classmethod
@@ -6993,6 +7094,7 @@ class event_SearchQuery(ConjureUnionType):
             'property': ConjureFieldDefinition('property', api_Property),
             'and_': ConjureFieldDefinition('and', List[event_SearchQuery]),
             'or_': ConjureFieldDefinition('or', List[event_SearchQuery]),
+            'not_': ConjureFieldDefinition('not', event_SearchQuery),
             'workspace': ConjureFieldDefinition('workspace', api_rids_WorkspaceRid)
         }
 
@@ -7015,11 +7117,12 @@ class event_SearchQuery(ConjureUnionType):
             property: Optional["api_Property"] = None,
             and_: Optional[List["event_SearchQuery"]] = None,
             or_: Optional[List["event_SearchQuery"]] = None,
+            not_: Optional["event_SearchQuery"] = None,
             workspace: Optional[str] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (search_text is not None) + (after is not None) + (before is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (workspace is not None) != 1:
+            if (search_text is not None) + (after is not None) + (before is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if search_text is not None:
@@ -7073,6 +7176,9 @@ class event_SearchQuery(ConjureUnionType):
             if or_ is not None:
                 self._or_ = or_
                 self._type = 'or'
+            if not_ is not None:
+                self._not_ = not_
+                self._type = 'not'
             if workspace is not None:
                 self._workspace = workspace
                 self._type = 'workspace'
@@ -7162,6 +7268,11 @@ class event_SearchQuery(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._or_ = or_
             self._type = 'or'
+        elif type_of_union == 'not':
+            if not_ is None:
+                raise ValueError('a union value must not be None')
+            self._not_ = not_
+            self._type = 'not'
         elif type_of_union == 'workspace':
             if workspace is None:
                 raise ValueError('a union value must not be None')
@@ -7243,6 +7354,10 @@ class event_SearchQuery(ConjureUnionType):
         return self._or_
 
     @builtins.property
+    def not_(self) -> Optional["event_SearchQuery"]:
+        return self._not_
+
+    @builtins.property
     def workspace(self) -> Optional[str]:
         return self._workspace
 
@@ -7283,6 +7398,8 @@ class event_SearchQuery(ConjureUnionType):
             return visitor._and(self.and_)
         if self._type == 'or' and self.or_ is not None:
             return visitor._or(self.or_)
+        if self._type == 'not' and self.not_ is not None:
+            return visitor._not(self.not_)
         if self._type == 'workspace' and self.workspace is not None:
             return visitor._workspace(self.workspace)
 
@@ -7360,6 +7477,10 @@ class event_SearchQueryVisitor:
 
     @abstractmethod
     def _or(self, or_: List["event_SearchQuery"]) -> Any:
+        pass
+
+    @abstractmethod
+    def _not(self, not_: "event_SearchQuery") -> Any:
         pass
 
     @abstractmethod
@@ -7566,6 +7687,81 @@ If provided, must contain at least one asset rid.
 event_UpdateEvent.__name__ = "UpdateEvent"
 event_UpdateEvent.__qualname__ = "UpdateEvent"
 event_UpdateEvent.__module__ = "nominal_api.event"
+
+
+class event_UpdateEventRequest(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'rid': ConjureFieldDefinition('rid', api_rids_EventRid),
+            'asset_rids': ConjureFieldDefinition('assetRids', OptionalTypeWrapper[List[scout_rids_api_AssetRid]]),
+            'timestamp': ConjureFieldDefinition('timestamp', OptionalTypeWrapper[api_Timestamp]),
+            'duration': ConjureFieldDefinition('duration', OptionalTypeWrapper[scout_run_api_Duration]),
+            'name': ConjureFieldDefinition('name', OptionalTypeWrapper[str]),
+            'description': ConjureFieldDefinition('description', OptionalTypeWrapper[str]),
+            'type': ConjureFieldDefinition('type', OptionalTypeWrapper[event_EventType]),
+            'labels': ConjureFieldDefinition('labels', OptionalTypeWrapper[List[api_Label]]),
+            'properties': ConjureFieldDefinition('properties', OptionalTypeWrapper[Dict[api_PropertyName, api_PropertyValue]])
+        }
+
+    __slots__: List[str] = ['_rid', '_asset_rids', '_timestamp', '_duration', '_name', '_description', '_type', '_labels', '_properties']
+
+    def __init__(self, rid: str, asset_rids: Optional[List[str]] = None, description: Optional[str] = None, duration: Optional["scout_run_api_Duration"] = None, labels: Optional[List[str]] = None, name: Optional[str] = None, properties: Optional[Dict[str, str]] = None, timestamp: Optional["api_Timestamp"] = None, type: Optional["event_EventType"] = None) -> None:
+        self._rid = rid
+        self._asset_rids = asset_rids
+        self._timestamp = timestamp
+        self._duration = duration
+        self._name = name
+        self._description = description
+        self._type = type
+        self._labels = labels
+        self._properties = properties
+
+    @builtins.property
+    def rid(self) -> str:
+        return self._rid
+
+    @builtins.property
+    def asset_rids(self) -> Optional[List[str]]:
+        """
+        If provided, will replace the existing asset rids.
+If provided, must contain at least one asset rid.
+        """
+        return self._asset_rids
+
+    @builtins.property
+    def timestamp(self) -> Optional["api_Timestamp"]:
+        return self._timestamp
+
+    @builtins.property
+    def duration(self) -> Optional["scout_run_api_Duration"]:
+        return self._duration
+
+    @builtins.property
+    def name(self) -> Optional[str]:
+        return self._name
+
+    @builtins.property
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @builtins.property
+    def type(self) -> Optional["event_EventType"]:
+        return self._type
+
+    @builtins.property
+    def labels(self) -> Optional[List[str]]:
+        return self._labels
+
+    @builtins.property
+    def properties(self) -> Optional[Dict[str, str]]:
+        return self._properties
+
+
+event_UpdateEventRequest.__name__ = "UpdateEventRequest"
+event_UpdateEventRequest.__qualname__ = "UpdateEventRequest"
+event_UpdateEventRequest.__module__ = "nominal_api.event"
 
 
 class event_WorkbookEventOrigin(ConjureBeanType):
@@ -53716,16 +53912,16 @@ class scout_compute_resolved_api_RawEnumSeriesNode(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'series': ConjureFieldDefinition('series', scout_compute_api_SeriesSpec)
+            'series': ConjureFieldDefinition('series', scout_compute_resolved_api_ResolvedSeries)
         }
 
     __slots__: List[str] = ['_series']
 
-    def __init__(self, series: "scout_compute_api_SeriesSpec") -> None:
+    def __init__(self, series: "scout_compute_resolved_api_ResolvedSeries") -> None:
         self._series = series
 
     @builtins.property
-    def series(self) -> "scout_compute_api_SeriesSpec":
+    def series(self) -> "scout_compute_resolved_api_ResolvedSeries":
         return self._series
 
 
@@ -53739,16 +53935,16 @@ class scout_compute_resolved_api_RawLogSeriesNode(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'series': ConjureFieldDefinition('series', scout_compute_api_SeriesSpec)
+            'series': ConjureFieldDefinition('series', scout_compute_resolved_api_ResolvedSeries)
         }
 
     __slots__: List[str] = ['_series']
 
-    def __init__(self, series: "scout_compute_api_SeriesSpec") -> None:
+    def __init__(self, series: "scout_compute_resolved_api_ResolvedSeries") -> None:
         self._series = series
 
     @builtins.property
-    def series(self) -> "scout_compute_api_SeriesSpec":
+    def series(self) -> "scout_compute_resolved_api_ResolvedSeries":
         return self._series
 
 
@@ -53762,16 +53958,16 @@ class scout_compute_resolved_api_RawNumericSeriesNode(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'series': ConjureFieldDefinition('series', scout_compute_api_SeriesSpec)
+            'series': ConjureFieldDefinition('series', scout_compute_resolved_api_ResolvedSeries)
         }
 
     __slots__: List[str] = ['_series']
 
-    def __init__(self, series: "scout_compute_api_SeriesSpec") -> None:
+    def __init__(self, series: "scout_compute_resolved_api_ResolvedSeries") -> None:
         self._series = series
 
     @builtins.property
-    def series(self) -> "scout_compute_api_SeriesSpec":
+    def series(self) -> "scout_compute_resolved_api_ResolvedSeries":
         return self._series
 
 
@@ -53785,16 +53981,16 @@ class scout_compute_resolved_api_RawUntypedSeriesNode(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'series': ConjureFieldDefinition('series', scout_compute_api_SeriesSpec)
+            'series': ConjureFieldDefinition('series', scout_compute_resolved_api_ResolvedSeries)
         }
 
     __slots__: List[str] = ['_series']
 
-    def __init__(self, series: "scout_compute_api_SeriesSpec") -> None:
+    def __init__(self, series: "scout_compute_resolved_api_ResolvedSeries") -> None:
         self._series = series
 
     @builtins.property
-    def series(self) -> "scout_compute_api_SeriesSpec":
+    def series(self) -> "scout_compute_resolved_api_ResolvedSeries":
         return self._series
 
 
@@ -75094,12 +75290,12 @@ class scout_workbookcommon_api_EventReference(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'event_uuid': ConjureFieldDefinition('eventUuid', OptionalTypeWrapper[str]),
-            'rid': ConjureFieldDefinition('rid', OptionalTypeWrapper[api_rids_EventRid])
+            'rid': ConjureFieldDefinition('rid', api_rids_EventRid)
         }
 
     __slots__: List[str] = ['_event_uuid', '_rid']
 
-    def __init__(self, event_uuid: Optional[str] = None, rid: Optional[str] = None) -> None:
+    def __init__(self, rid: str, event_uuid: Optional[str] = None) -> None:
         self._event_uuid = event_uuid
         self._rid = rid
 
@@ -75108,9 +75304,9 @@ class scout_workbookcommon_api_EventReference(ConjureBeanType):
         return self._event_uuid
 
     @builtins.property
-    def rid(self) -> Optional[str]:
+    def rid(self) -> str:
         """
-        The event's unique identifier. This will soon be a required field.
+        The event's unique identifier.
         """
         return self._rid
 

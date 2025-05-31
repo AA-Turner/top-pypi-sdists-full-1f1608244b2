@@ -5,14 +5,10 @@ The main user class, represents a DICOM Application Entity
 from copy import deepcopy
 from datetime import datetime
 import logging
+import socket
 from ssl import SSLContext
 import threading
 from typing import (
-    Union,
-    Optional,
-    List,
-    Tuple,
-    Dict,
     cast,
     TypeVar,
     Type,
@@ -32,13 +28,13 @@ from pynetdicom.transport import (
     AssociationSocket,
     AssociationServer,
     ThreadedAssociationServer,
+    AddressInformation,
 )
 from pynetdicom.utils import make_target, set_ae, decode_bytes, set_uid
 from pynetdicom._globals import (
     MODE_REQUESTOR,
     DEFAULT_MAX_LENGTH,
     DEFAULT_TRANSFER_SYNTAXES,
-    BIND_ADDRESS,
 )
 
 
@@ -81,12 +77,12 @@ class ApplicationEntity:
 
         # Default Implementation Class UID and Version Name
         self._implementation_uid: UID = PYNETDICOM_IMPLEMENTATION_UID
-        self._implementation_version: Optional[str] = PYNETDICOM_IMPLEMENTATION_VERSION
+        self._implementation_version: str | None = PYNETDICOM_IMPLEMENTATION_VERSION
 
         # List of PresentationContext
         self._requested_contexts: ListCXType = []
         # {abstract_syntax : PresentationContext}
-        self._supported_contexts: Dict[UID, PresentationContext] = {}
+        self._supported_contexts: dict[UID, PresentationContext] = {}
 
         # Default maximum simultaneous associations
         self._maximum_associations = 10
@@ -95,25 +91,25 @@ class ApplicationEntity:
         self._maximum_pdu_size = DEFAULT_MAX_LENGTH
 
         # Default timeouts - None means no timeout
-        self._acse_timeout: Optional[float] = 30
-        self._connection_timeout: Optional[float] = None
-        self._dimse_timeout: Optional[float] = 30
-        self._network_timeout: Optional[float] = 60
+        self._acse_timeout: float | None = 30
+        self._connection_timeout: float | None = None
+        self._dimse_timeout: float | None = 30
+        self._network_timeout: float | None = 60
 
         # Require Calling/Called AE titles to match if value is non-empty str
-        self._require_calling_aet: List[str] = []
+        self._require_calling_aet: list[str] = []
         self._require_called_aet = False
 
-        self._servers: List[ThreadedAssociationServer] = []
+        self._servers: list[ThreadedAssociationServer] = []
         self._lock: threading.Lock = threading.Lock()
 
     @property
-    def acse_timeout(self) -> Optional[float]:
+    def acse_timeout(self) -> None | float:
         """Get or set the ACSE timeout value (in seconds).
 
         Parameters
         ----------
-        value : Union[int, float, None]
+        value : int | float | None
             The maximum amount of time (in seconds) to wait for association
             related messages. A value of ``None`` means no timeout. (default:
             ``30``)
@@ -121,7 +117,7 @@ class ApplicationEntity:
         return self._acse_timeout
 
     @acse_timeout.setter
-    def acse_timeout(self, value: Optional[float]) -> None:
+    def acse_timeout(self, value: float | None) -> None:
         """Set the ACSE timeout (in seconds)."""
         if value is None:
             self._acse_timeout = None
@@ -135,7 +131,7 @@ class ApplicationEntity:
             assoc.acse_timeout = self.acse_timeout
 
     @property
-    def active_associations(self) -> List[Association]:
+    def active_associations(self) -> list[Association]:
         """Return a list of the AE's active
         :class:`~pynetdicom.association.Association` threads.
 
@@ -152,10 +148,10 @@ class ApplicationEntity:
 
     def add_requested_context(
         self,
-        abstract_syntax: Union[str, UID],
+        abstract_syntax: str | UID,
         transfer_syntax: TSyntaxType = None,
     ) -> None:
-        """Add a :ref:`presentation context<user_presentation>` to be
+        """Add a :doc:`presentation context</user/presentation_requestor>` to be
         proposed when requesting an association.
 
         When an SCU sends an association request to a peer it includes a list
@@ -173,7 +169,7 @@ class ApplicationEntity:
 
         Parameters
         ----------
-        abstract_syntax : str or pydicom.uid.UID
+        abstract_syntax : str | pydicom.uid.UID
             The abstract syntax of the presentation context to request.
         transfer_syntax :  str/pydicom.uid.UID or list of str/pydicom.uid.UID
             The transfer syntax(es) to request (default:
@@ -275,12 +271,12 @@ class ApplicationEntity:
 
     def add_supported_context(
         self,
-        abstract_syntax: Union[str, UID],
+        abstract_syntax: str | UID,
         transfer_syntax: TSyntaxType = None,
-        scu_role: Optional[bool] = None,
-        scp_role: Optional[bool] = None,
+        scu_role: bool | None = None,
+        scp_role: bool | None = None,
     ) -> None:
-        """Add a :ref:`presentation context<user_presentation>` to be
+        """Add a :doc:`presentation context</user/presentation_acceptor>` to be
         supported when accepting association requests.
 
         When an association request is received from a peer it supplies a list
@@ -302,7 +298,7 @@ class ApplicationEntity:
             :attr:`~pynetdicom._globals.DEFAULT_TRANSFER_SYNTAXES`).
         scu_role : bool or None, optional
             If the association requestor includes an
-            :ref:`SCP/SCU Role Selection Negotiation<user_presentation_role>`
+            :doc:`SCP/SCU Role Selection Negotiation</user/presentation_role_selection>`
             item for this context then:
 
             * If ``None`` then ignore the proposal (if either `scp_role` or
@@ -312,7 +308,7 @@ class ApplicationEntity:
             * If ``False`` reject the proposed SCU role
         scp_role : bool or None, optional
             If the association requestor includes an
-            :ref:`SCP/SCU Role Selection Negotiation<user_presentation_role>`
+            :doc:`SCP/SCU Role Selection Negotiation</user/presentation_role_selection>`
             item for this context then:
 
             * If ``None`` then ignore the proposal (if either `scp_role` or
@@ -392,7 +388,7 @@ class ApplicationEntity:
         >>> ae.add_supported_context(CTImageStorage, scu_role=True, scp_role=True)
         """
         if transfer_syntax is None:
-            transfer_syntax = DEFAULT_TRANSFER_SYNTAXES  # List[str]
+            transfer_syntax = DEFAULT_TRANSFER_SYNTAXES  # list[str]
 
         abstract_syntax = UID(abstract_syntax)
 
@@ -462,15 +458,15 @@ class ApplicationEntity:
 
     def associate(
         self,
-        addr: str,
+        addr: str | tuple[str, int, int],
         port: int,
-        contexts: Optional[ListCXType] = None,
+        contexts: ListCXType | None = None,
         ae_title: str = "ANY-SCP",
         max_pdu: int = DEFAULT_MAX_LENGTH,
-        ext_neg: Optional[List[_UI]] = None,
-        bind_address: Tuple[str, int] = BIND_ADDRESS,
-        tls_args: Optional[Tuple[SSLContext, str]] = None,
-        evt_handlers: Optional[List[EventHandlerType]] = None,
+        ext_neg: list[_UI] | None = None,
+        bind_address: tuple[str, int] | tuple[str, int, int, int] | None = None,
+        tls_args: tuple[SSLContext, str] | None = None,
+        evt_handlers: list[EventHandlerType] | None = None,
     ) -> Association:
         """Request an association with a remote AE.
 
@@ -481,26 +477,35 @@ class ApplicationEntity:
         before sending any messages. The returned thread will only be running
         if the association was established.
 
-        .. versionchanged:: 1.2
-
-            Added `bind_address` and `tls_arg` keyword parameters
-
-        .. versionchanged:: 1.3
-
-            Added `evt_handlers` keyword parameter
-
-        .. versionchanged:: 1.5
-
-            `evt_handlers` now takes a list of 2- or 3-tuples
-
         .. versionchanged:: 2.0
 
-            * `ae_title` should now be :class:`str`
+            `ae_title` should now be :class:`str`
+
+        .. versionchanged:: 3.0
+
+            `addr` can be either an IPv4 or IPv6 address str such as ``"192.168.1.2"``
+            or ``"::1"``, or a tuple containing an IPv6 address such as
+            ``("2a00:1450:4001:81c::200e", 0, 0)`` where the last two items are the
+            `flowinfo` and `scope_id`.
+
+        .. versionchanged:: 3.0
+
+            `bind_address` can be either a tuple containing IPv4 or IPv6 address
+            str and port number such as ``("192.168.1.2", 11112)`` or ``("::1", 0)``,
+            or a tuple containing an IPv6 address str and port number such as
+            ``("2a00:1450:4001:81c::200e", 11112, 0, 0)`` where the last two items are
+            the `flowinfo` and `scope_id`.
 
         Parameters
         ----------
-        addr : str
-            The peer AE's TCP/IP address.
+        addr : str | tuple[str, int, int]
+            The peer AE's TCP/IP address, as one of the following:
+
+            * `str`: An IPv4 or IPv6 address, such as ``"192.168.1.2"`` or
+              ``"2a00:1450:4001:81c::200e"``. If using IPv6 then `flowinfo` and
+              `scope_id` will default to ``0``.
+            * `tuple[str, int, int]`: An IPv6 address as ``(address, flowinfo,
+              scope_id)``.
         port : int
             The peer AE's listen port number.
         contexts : list of presentation.PresentationContext, optional
@@ -524,9 +529,13 @@ class ApplicationEntity:
             * :class:`~SOPClassCommonExtendedNegotiation` (0 to N items)
             * :class:`~SOPClassExtendedNegotiation` (0 to N items)
             * :class:`~UserIdentityNegotiation` (0 or 1 item)
-        bind_address : 2-tuple, optional
-            The (host, port) to bind the association's communication socket
-            to, default ``("", 0)``.
+        bind_address : tuple[str, int] | tuple[str, int, int, int], optional
+            The address to bind the association's communication socket to. For IPv4 or
+            IPv6 this may be the ``(str: address, int: port)``, with the `flowinfo` and
+            `scope_id` defaulting to ``0`` for IPv6. Alternatively for IPv6 this
+            may be the ``(str: address, int: port, int: flowinfo, int: scope_id)``.
+            Default: ``("", 0)`` if `addr` uses IPv4 or ``("::0", 0)`` if `addr`
+            uses IPv6.
         tls_args : 2-tuple, optional
             If TLS is required then this should be a 2-tuple containing a
             (`ssl_context`, `server_hostname`), where `ssl_context` is the
@@ -559,11 +568,48 @@ class ApplicationEntity:
             :attr:`~pynetdicom.ae.ApplicationEntity.requested_contexts` is
             empty).
         """
-        if not isinstance(addr, str):
-            raise TypeError("'addr' must be a valid IPv4 string")
+        if not isinstance(addr, (str, tuple)):
+            raise TypeError("'addr' must be str or tuple[str, int, int]")
+
+        if isinstance(addr, tuple) and (
+            not isinstance(addr[0], str)
+            or not isinstance(addr[1], int)
+            or not isinstance(addr[2], int)
+        ):
+            raise TypeError("'addr' must be str or tuple[str, int, int]")
 
         if not isinstance(port, int):
-            raise TypeError("'port' must be a valid port number")
+            raise TypeError("'port' must be int")
+
+        remote_address = AddressInformation.from_addr_port(addr, port)
+
+        if bind_address is None:
+            bind_address = ("", 0)
+            if remote_address.address_family == socket.AF_INET6:
+                bind_address = ("::0", 0)
+
+        if not isinstance(bind_address, (tuple, list)):
+            raise TypeError(
+                "'bind_address' must be tuple[str, int] or tuple[str, int, int, int]"
+            )
+
+        if (
+            len(bind_address) not in (2, 4)
+            or not isinstance(bind_address[0], str)
+            or not isinstance(bind_address[1], int)
+        ):
+            raise TypeError(
+                "'bind_address' must be tuple[str, int] or tuple[str, int, int, int]"
+            )
+
+        if len(bind_address) == 4 and (
+            not isinstance(bind_address[2], int) or not isinstance(bind_address[3], int)
+        ):
+            raise TypeError(
+                "'bind_address' must be tuple[str, int] or tuple[str, int, int, int]"
+            )
+
+        local_address = AddressInformation.from_tuple(bind_address)
 
         # Association
         assoc = Association(self, MODE_REQUESTOR)
@@ -573,18 +619,17 @@ class ApplicationEntity:
         assoc.name = f"RequestorThread@{timestamp}"
 
         # Setup the association's communication socket
-        sock = self._create_socket(assoc, bind_address, tls_args)
+        sock = self._create_socket(assoc, local_address, tls_args)
         assoc.set_socket(sock)
 
         # Association Acceptor object -> remote AE
         # `ae_title` validation is performed by the ServiceUser
         assoc.acceptor.ae_title = ae_title
-        assoc.acceptor.address = addr
-        assoc.acceptor.port = port
+        assoc.acceptor.address_info = remote_address
 
         # Association Requestor object -> local AE
-        assoc.requestor.address = sock.get_local_addr()
-        assoc.requestor.port = bind_address[1]
+        # Nominal address info - will get updated by AssociationSocket.connect()
+        assoc.requestor.address_info = local_address
         assoc.requestor.ae_title = self.ae_title
         assoc.requestor.maximum_length = max_pdu
         assoc.requestor.implementation_class_uid = self.implementation_class_uid
@@ -631,20 +676,19 @@ class ApplicationEntity:
     def _create_socket(
         self,
         assoc: Association,
-        address: Tuple[str, int],
-        tls_args: Optional[Tuple[SSLContext, str]],
+        address: AddressInformation,
+        tls_args: tuple[SSLContext, str] | None,
     ) -> AssociationSocket:
         """Create an :class:`~pynetdicom.transport.AssociationSocket` for the
         current association.
-
-        .. versionadded:: 1.5
         """
+        # Creates and binds to `address` but doesn't connect
         sock = AssociationSocket(assoc, address=address)
         sock.tls_args = tls_args
         return sock
 
     @property
-    def connection_timeout(self) -> Optional[float]:
+    def connection_timeout(self) -> float | None:
         """Get or set the connection timeout (in seconds).
 
         .. versionadded:: 2.0
@@ -663,7 +707,7 @@ class ApplicationEntity:
         return self._connection_timeout
 
     @connection_timeout.setter
-    def connection_timeout(self, value: Optional[float]) -> None:
+    def connection_timeout(self, value: float | None) -> None:
         """Set the connection timeout."""
         if value is None:
             self._connection_timeout = None
@@ -678,7 +722,7 @@ class ApplicationEntity:
             assoc.connection_timeout = self.connection_timeout
 
     @property
-    def dimse_timeout(self) -> Optional[float]:
+    def dimse_timeout(self) -> float | None:
         """Get or set the DIMSE timeout (in seconds).
 
         Parameters
@@ -690,7 +734,7 @@ class ApplicationEntity:
         return self._dimse_timeout
 
     @dimse_timeout.setter
-    def dimse_timeout(self, value: Optional[float]) -> None:
+    def dimse_timeout(self, value: float | None) -> None:
         """Set the DIMSE timeout in seconds."""
         if value is None:
             self._dimse_timeout = None
@@ -726,7 +770,7 @@ class ApplicationEntity:
         self._implementation_uid = uid
 
     @property
-    def implementation_version_name(self) -> Optional[str]:
+    def implementation_version_name(self) -> str | None:
         """Get or set the *Implementation Version Name* as :class:`str`.
 
         Parameters
@@ -744,7 +788,7 @@ class ApplicationEntity:
         return self._implementation_version
 
     @implementation_version_name.setter
-    def implementation_version_name(self, value: Optional[str]) -> None:
+    def implementation_version_name(self, value: str | None) -> None:
         """Set the *Implementation Version Name*"""
         # We allow None, but not an empty str
         if isinstance(value, str) and not value:
@@ -757,17 +801,15 @@ class ApplicationEntity:
 
     def make_server(
         self,
-        address: Tuple[str, int],
-        ae_title: Optional[str] = None,
-        contexts: Optional[ListCXType] = None,
-        ssl_context: Optional[SSLContext] = None,
-        evt_handlers: Optional[List[EventHandlerType]] = None,
-        server_class: Optional[Type[_T]] = None,
+        address: tuple[str, int] | tuple[str, int, int, int],
+        ae_title: str | None = None,
+        contexts: ListCXType | None = None,
+        ssl_context: SSLContext | None = None,
+        evt_handlers: list[EventHandlerType] | None = None,
+        server_class: Type[_T] | None = None,
         **kwargs: Any,
-    ) -> Union[_T, ThreadedAssociationServer]:
+    ) -> _T | ThreadedAssociationServer:
         """Return an association server.
-
-        .. versionadded:: 1.5
 
         Allows the use of a custom association server class.
 
@@ -777,6 +819,14 @@ class ApplicationEntity:
         .. versionchanged:: 2.0
 
             `ae_title` should now be :class:`str`
+
+        .. versionchanged:: 3.0
+
+            `address` can be either a tuple containing IPv4 or IPv6 address
+            str and port number such as ``("192.168.1.2", 11112)`` or ``("::1", 0)``,
+            or a tuple containing an IPv6 address str and port number such as
+            ``("2a00:1450:4001:81c::200e", 11112, 0, 0)`` where the last two items are
+            the `flowinfo` and `scope_id`.
 
         Parameters
         ----------
@@ -887,7 +937,7 @@ class ApplicationEntity:
             LOGGER.warning(f"maximum_pdu_size set to {DEFAULT_MAX_LENGTH}")
 
     @property
-    def network_timeout(self) -> Optional[float]:
+    def network_timeout(self) -> float | None:
         """Get or set the network timeout (in seconds).
 
         Parameters
@@ -899,7 +949,7 @@ class ApplicationEntity:
         return self._network_timeout
 
     @network_timeout.setter
-    def network_timeout(self, value: Optional[float]) -> None:
+    def network_timeout(self, value: float | None) -> None:
         """Set the network timeout."""
         if value is None:
             self._network_timeout = None
@@ -914,7 +964,7 @@ class ApplicationEntity:
 
     def remove_requested_context(
         self,
-        abstract_syntax: Union[str, UID],
+        abstract_syntax: str | UID,
         transfer_syntax: TSyntaxType = None,
     ) -> None:
         """Remove a requested presentation context.
@@ -1042,7 +1092,7 @@ class ApplicationEntity:
 
     def remove_supported_context(
         self,
-        abstract_syntax: Union[str, UID],
+        abstract_syntax: str | UID,
         transfer_syntax: TSyntaxType = None,
     ) -> None:
         """Remove a supported presentation context.
@@ -1236,10 +1286,6 @@ class ApplicationEntity:
         if none match the association will be rejected. If the set value
         is an empty list then the *Called AE Title* will not be checked.
 
-        .. versionchanged:: 1.1
-
-            `require_match` changed to ``bool``
-
         Parameters
         ----------
         require_match : bool
@@ -1256,17 +1302,13 @@ class ApplicationEntity:
         self._require_called_aet = require_match
 
     @property
-    def require_calling_aet(self) -> List[str]:
+    def require_calling_aet(self) -> list[str]:
         """Get or set the required calling AE title as a list of :class:`str`.
 
         When an association request is received the value of the *Calling AE
         Title* supplied by the peer will be compared with the set value and
         if none match the association will be rejected. If the set value
         is an empty list then the *Calling AE Title* will not be checked.
-
-        .. versionchanged:: 1.1
-
-            `ae_titles` changed to :class:`list` of :class:`bytes`
 
         .. versionchanged:: 2.0
 
@@ -1284,7 +1326,7 @@ class ApplicationEntity:
         return self._require_calling_aet
 
     @require_calling_aet.setter
-    def require_calling_aet(self, ae_titles: List[str]) -> None:
+    def require_calling_aet(self, ae_titles: list[str]) -> None:
         """Set the required calling AE title."""
         if any([isinstance(v, bytes) for v in ae_titles]):
             warnings.warn(
@@ -1303,10 +1345,7 @@ class ApplicationEntity:
         self._require_calling_aet = values
 
     def shutdown(self) -> None:
-        """Stop any active association servers and threads.
-
-        .. versionadded:: 1.2
-        """
+        """Stop any active association servers and threads."""
         for assoc in self.active_associations:
             assoc.abort()
 
@@ -1319,43 +1358,43 @@ class ApplicationEntity:
 
     def start_server(
         self,
-        address: Tuple[str, int],
+        address: tuple[str, int] | tuple[str, int, int, int],
         block: bool = True,
-        ssl_context: Optional[SSLContext] = None,
-        evt_handlers: Optional[List[EventHandlerType]] = None,
-        ae_title: Optional[str] = None,
-        contexts: Optional[ListCXType] = None,
-    ) -> Optional[ThreadedAssociationServer]:
+        ssl_context: SSLContext | None = None,
+        evt_handlers: list[EventHandlerType] | None = None,
+        ae_title: str | None = None,
+        contexts: ListCXType | None = None,
+    ) -> ThreadedAssociationServer | None:
         """Start the AE as an association *acceptor*.
-
-        .. versionadded:: 1.2
 
         If set to non-blocking then a running
         :class:`~pynetdicom.transport.ThreadedAssociationServer`
         instance will be returned. This can be stopped using
         :meth:`~pynetdicom.transport.AssociationServer.shutdown`.
 
-        .. versionchanged:: 1.3
-
-            Added `evt_handlers` keyword parameter
-
-        .. versionchanged:: 1.4
-
-            Added `ae_title` and `contexts` keyword parameters
-
-        .. versionchanged:: 1.5
-
-            `evt_handlers` now takes a list of 2- or 3-tuples
-
         .. versionchanged:: 2.0
 
             `ae_title` should now be :class:`str`
 
+        .. versionchanged:: 3.0
+
+            `address` can be either a tuple containing IPv4 or IPv6 address
+            str and port number such as ``("192.168.1.2", 11112)`` or ``("::1", 0)``,
+            or a tuple containing an IPv6 address str and port number such as
+            ``("2a00:1450:4001:81c::200e", 11112, 0, 0)`` where the last two items are
+            the `flowinfo` and `scope_id`.
+
         Parameters
         ----------
-        address : Tuple[str, int]
-            The ``(host: str, port: int)`` to use when listening for incoming
+        address : tuple[str, int] | tuple[str, int, int, int]
+            The host IP address and port number to use when listening for incoming
             association requests.
+
+            * `tuple[str, int]`: An IPv4 or IPv6 address and port number, such as
+              ``("192.168.1.2", 104)`` or ``("2a00:1450:4001:81c::200e", 11112)``.
+              If using IPv6 then `flowinfo` and `scope_id` will default to ``0``.
+            * `tuple[str, int, int, int]`: An IPv6 address as ``(address, port,
+              flowinfo, scope_id)``.
         block : bool, optional
             If ``True`` (default) then the server will be blocking, otherwise
             it will start the server in a new thread and be non-blocking.

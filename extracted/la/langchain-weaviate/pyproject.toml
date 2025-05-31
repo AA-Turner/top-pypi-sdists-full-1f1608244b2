@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "langchain-weaviate"
-version = "0.0.4"
+version = "0.0.5"
 description = "An integration package connecting Weaviate and LangChain"
 authors = []
 readme = "README.md"
@@ -14,7 +14,7 @@ license = "MIT"
 python = ">=3.9,<4.0"
 langchain-core = ">=0.1.33,<0.4"
 weaviate-client = "^4.0.0"
-numpy = "^1.26.2"
+numpy = ">=1.26.2,<3.0"
 simsimd = ">=6.2.1,<7.0.0"
 
 [tool.poetry.group.test]

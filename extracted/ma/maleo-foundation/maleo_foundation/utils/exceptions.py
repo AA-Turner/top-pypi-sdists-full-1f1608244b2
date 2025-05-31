@@ -1,5 +1,6 @@
 import asyncio
 from fastapi import Request, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from functools import wraps
@@ -24,8 +25,9 @@ class BaseExceptions:
 
     @staticmethod
     async def validation_exception_handler(request:Request, exc:RequestValidationError):
+        serialized_error = jsonable_encoder(exc.errors())
         return JSONResponse(
-            content=BaseResponses.ValidationError(other=exc.errors()).model_dump(mode="json"),
+            content=BaseResponses.ValidationError(other=serialized_error).model_dump(mode="json"),
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
 

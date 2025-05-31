@@ -77,9 +77,7 @@ async def generate(request: ImageRequest, api_key: Optional[str] = None):
         return ImagesResponse(**request.model_dump())
 
     if not request.model.startswith(("flux", "black-forest-labs")):  # 自动翻译
-        request.prompt = (
-            await deeplx.translate(DeeplxRequest(text=request.prompt, target_lang="EN"))
-        ).get("data", request.prompt)
+        request.prompt = deeplx.llm_translate(request.prompt)
 
     request.model = MODELS.get(request.model, DEFAULT_MODEL)
     # logger.debug(request)

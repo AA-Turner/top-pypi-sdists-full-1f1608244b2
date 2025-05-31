@@ -6,9 +6,11 @@ microlib_name = f"flytekitplugins-{PLUGIN_NAME}"
 
 plugin_requires = ["cloudpickle", "flyteidl>=1.5.1", "flytekit>=1.6.1", "kubernetes"]
 
-__version__ = "1.15.4"
+__version__ = "v1.16.0"
 
 setup(
+    title="Kubeflow PyTorch",
+    title_expanded="Flytekit Kubeflow PyTorch Plugin",
     name=microlib_name,
     version=__version__,
     author="flyteorg",

@@ -1,49 +1,14 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: asdf
-Version: 4.1.0
+Version: 4.2.0
 Summary: Python implementation of the ASDF Standard
 Author-email: The ASDF Developers <help@stsci.edu>
-License: BSD 3-Clause License
-        
-        Copyright (c) 2021 Association of Universities for Research in Astronomy.
-        All rights reserved.
-        
-        Redistribution and use in source and binary forms, with or without
-        modification, are permitted provided that the following conditions are met:
-        
-        1. Redistributions of source code must retain the above copyright notice, this
-           list of conditions and the following disclaimer.
-        
-        2. Redistributions in binary form must reproduce the above copyright notice,
-           this list of conditions and the following disclaimer in the documentation
-           and/or other materials provided with the distribution.
-        
-        3. Neither the name of the copyright holder nor the names of its
-           contributors may be used to endorse or promote products derived from
-           this software without specific prior written permission.
-        
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-        
 Project-URL: documentation, https://asdf.readthedocs.io/en/stable/
 Project-URL: repository, https://github.com/asdf-format/asdf
 Project-URL: tracker, https://github.com/asdf-format/asdf/issues
 Classifier: Development Status :: 5 - Production/Stable
-Classifier: License :: OSI Approved :: BSD License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.11
-Classifier: Programming Language :: Python :: 3.12
 Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
@@ -57,7 +22,12 @@ Requires-Dist: pyyaml>=5.4.1
 Requires-Dist: semantic_version>=2.8
 Requires-Dist: attrs>=22.2.0
 Provides-Extra: all
-Requires-Dist: lz4>=0.10; extra == "all"
+Requires-Dist: asdf[lz4]; extra == "all"
+Requires-Dist: asdf[http]; extra == "all"
+Provides-Extra: lz4
+Requires-Dist: lz4>=0.10; extra == "lz4"
+Provides-Extra: http
+Requires-Dist: fsspec[http]>=2022.8.2; extra == "http"
 Provides-Extra: docs
 Requires-Dist: sphinx-asdf>=0.2.2; extra == "docs"
 Requires-Dist: graphviz; extra == "docs"
@@ -65,11 +35,13 @@ Requires-Dist: sphinx-inline-tabs; extra == "docs"
 Requires-Dist: tomli; python_version < "3.11" and extra == "docs"
 Requires-Dist: furo; extra == "docs"
 Provides-Extra: tests
-Requires-Dist: fsspec[http]>=2022.8.2; extra == "tests"
-Requires-Dist: lz4>=0.10; extra == "tests"
+Requires-Dist: asdf[all]; extra == "tests"
 Requires-Dist: psutil; extra == "tests"
 Requires-Dist: pytest>=8; extra == "tests"
 Requires-Dist: pytest-remotedata; extra == "tests"
+Provides-Extra: test
+Requires-Dist: asdf[tests]; extra == "test"
+Dynamic: license-file
 
 ASDF - Advanced Scientific Data Format
 ======================================
@@ -119,15 +91,12 @@ information on the ASDF Standard itself can be found
 
 The ASDF format has the following features:
 
-* A hierarchical, human-readable metadata format (implemented using `YAML
-  <http://yaml.org>`__)
-* Numerical arrays are stored as binary data blocks which can be memory
-  mapped. Data blocks can optionally be compressed.
-* The structure of the data can be automatically validated using schemas
-  (implemented using `JSON Schema <http://json-schema.org>`__)
-* Native Python data types (numerical types, strings, dicts, lists) are
-  serialized automatically
-* ASDF can be extended to serialize custom data types
+* Hierarchical and human-readable metadata in `YAML <http://yaml.org>`__ format
+* Efficient binary array storage with support for memory mapping
+  and flexible compression.
+* Content validation using schemas (using `JSON Schema <http://json-schema.org>`__)
+* Native and transparent support for most basic Python data types,
+  with an extension API to add support for any custom Python object.
 
 .. _end-summary-text:
 
@@ -321,13 +290,12 @@ Array data remains unloaded until it is explicitly accessed:
     >>> np.equal(af["powers"]["squares"], expected).all()
     True
 
-By default, uncompressed data blocks are memory mapped for efficient
-access. Memory mapping can be disabled by using the ``memmap``
-option of `open` when reading:
+Memory mapping can be enabled by providing ``memmap=True``
+to `open`:
 
 .. code:: python
 
-    af = asdf.open("example.asdf", memmap=False)
+    af = asdf.open("example.asdf", memmap=True)
 
 .. _end-read-file-text:
 

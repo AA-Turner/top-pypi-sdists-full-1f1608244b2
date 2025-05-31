@@ -65,6 +65,7 @@ __all__ = (
     "CandidateSortByType",
     "CandidateStatusType",
     "CandidateStepTypeType",
+    "CapacityReservationPreferenceType",
     "CapacitySizeTypeType",
     "CaptureModeType",
     "CaptureStatusType",
@@ -734,6 +735,7 @@ CandidateStatusType = Literal["Completed", "Failed", "InProgress", "Stopped", "S
 CandidateStepTypeType = Literal[
     "AWS::SageMaker::ProcessingJob", "AWS::SageMaker::TrainingJob", "AWS::SageMaker::TransformJob"
 ]
+CapacityReservationPreferenceType = Literal["capacity-reservations-only"]
 CapacitySizeTypeType = Literal["CAPACITY_PERCENT", "INSTANCE_COUNT"]
 CaptureModeType = Literal["Input", "InputAndOutput", "Output"]
 CaptureStatusType = Literal["Started", "Stopped"]

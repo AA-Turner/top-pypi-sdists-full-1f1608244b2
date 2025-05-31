@@ -1,380 +1,170 @@
 # coding: UTF-8
 import sys
-bstack1l11_opy_ = sys.version_info [0] == 2
-bstack111l1ll_opy_ = 2048
-bstack11lll1l_opy_ = 7
-def bstack1ll_opy_ (bstack11111ll_opy_):
-    global bstack1lll1l_opy_
-    bstack1ll11_opy_ = ord (bstack11111ll_opy_ [-1])
-    bstack1l1llll_opy_ = bstack11111ll_opy_ [:-1]
-    bstack1l111l1_opy_ = bstack1ll11_opy_ % len (bstack1l1llll_opy_)
-    bstack1l11ll_opy_ = bstack1l1llll_opy_ [:bstack1l111l1_opy_] + bstack1l1llll_opy_ [bstack1l111l1_opy_:]
-    if bstack1l11_opy_:
-        bstack111l1_opy_ = unicode () .join ([unichr (ord (char) - bstack111l1ll_opy_ - (bstack1ll1l11_opy_ + bstack1ll11_opy_) % bstack11lll1l_opy_) for bstack1ll1l11_opy_, char in enumerate (bstack1l11ll_opy_)])
+bstack1111l_opy_ = sys.version_info [0] == 2
+bstack1ll1l11_opy_ = 2048
+bstack11ll1l1_opy_ = 7
+def bstack1l1_opy_ (bstack1l1l1l1_opy_):
+    global bstack1lll111_opy_
+    bstack11l1l11_opy_ = ord (bstack1l1l1l1_opy_ [-1])
+    bstack11ll1ll_opy_ = bstack1l1l1l1_opy_ [:-1]
+    bstack1llllll1_opy_ = bstack11l1l11_opy_ % len (bstack11ll1ll_opy_)
+    bstack1l1l_opy_ = bstack11ll1ll_opy_ [:bstack1llllll1_opy_] + bstack11ll1ll_opy_ [bstack1llllll1_opy_:]
+    if bstack1111l_opy_:
+        bstack1l111_opy_ = unicode () .join ([unichr (ord (char) - bstack1ll1l11_opy_ - (bstack1ll1ll_opy_ + bstack11l1l11_opy_) % bstack11ll1l1_opy_) for bstack1ll1ll_opy_, char in enumerate (bstack1l1l_opy_)])
     else:
-        bstack111l1_opy_ = str () .join ([chr (ord (char) - bstack111l1ll_opy_ - (bstack1ll1l11_opy_ + bstack1ll11_opy_) % bstack11lll1l_opy_) for bstack1ll1l11_opy_, char in enumerate (bstack1l11ll_opy_)])
-    return eval (bstack111l1_opy_)
-import json
-import os
+        bstack1l111_opy_ = str () .join ([chr (ord (char) - bstack1ll1l11_opy_ - (bstack1ll1ll_opy_ + bstack11l1l11_opy_) % bstack11ll1l1_opy_) for bstack1ll1ll_opy_, char in enumerate (bstack1l1l_opy_)])
+    return eval (bstack1l111_opy_)
+from browserstack_sdk.sdk_cli.bstack1lll1l1lll1_opy_ import bstack1lll1lll111_opy_
+from browserstack_sdk.sdk_cli.bstack1111111l11_opy_ import (
+    bstack11111l11ll_opy_,
+    bstack111111ll1l_opy_,
+    bstack11111l1l1l_opy_,
+)
+from browserstack_sdk.sdk_cli.bstack1lll1ll1l11_opy_ import bstack1lll1l1ll11_opy_
+from typing import Tuple, Callable, Any
 import grpc
 from browserstack_sdk import sdk_pb2 as structs
-from packaging import version
-import traceback
-from browserstack_sdk.sdk_cli.bstack1llll1lll1l_opy_ import bstack1ll1llllll1_opy_
-from browserstack_sdk.sdk_cli.bstack1lllllll1l1_opy_ import (
-    bstack11111l11l1_opy_,
-    bstack1llllll1lll_opy_,
-    bstack1llllllllll_opy_,
-)
-from browserstack_sdk.sdk_cli.bstack1lll1ll1ll1_opy_ import bstack1lll111l11l_opy_
-from datetime import datetime
-from typing import Tuple, Any
-from bstack_utils.messages import bstack11ll1llll_opy_
+from browserstack_sdk.sdk_cli.bstack1lll1l1lll1_opy_ import bstack1lll1lll111_opy_
 from bstack_utils.measure import measure
 from bstack_utils.constants import *
-import threading
+import traceback
 import os
-from bstack_utils.bstack1ll1lll1l_opy_ import bstack1lll11l1lll_opy_
-class bstack1lll1ll111l_opy_(bstack1ll1llllll1_opy_):
-    bstack1l1l11l111l_opy_ = bstack1ll_opy_ (u"ࠤࡵࡩ࡬࡯ࡳࡵࡧࡵࡣ࡮ࡴࡩࡵࠤዙ")
-    bstack1l1l11ll1ll_opy_ = bstack1ll_opy_ (u"ࠥࡶࡪ࡭ࡩࡴࡶࡨࡶࡤࡹࡴࡢࡴࡷࠦዚ")
-    bstack1l1l11111l1_opy_ = bstack1ll_opy_ (u"ࠦࡷ࡫ࡧࡪࡵࡷࡩࡷࡥࡳࡵࡱࡳࠦዛ")
-    def __init__(self, bstack1llll11l1l1_opy_):
+import time
+class bstack1lll11ll1l1_opy_(bstack1lll1lll111_opy_):
+    bstack1ll11l1ll1l_opy_ = False
+    def __init__(self):
         super().__init__()
-        bstack1lll111l11l_opy_.bstack1ll1l1l1ll1_opy_((bstack11111l11l1_opy_.bstack111111l11l_opy_, bstack1llllll1lll_opy_.PRE), self.bstack1l1l111l111_opy_)
-        bstack1lll111l11l_opy_.bstack1ll1l1l1ll1_opy_((bstack11111l11l1_opy_.bstack1111111ll1_opy_, bstack1llllll1lll_opy_.PRE), self.bstack1ll11l11l1l_opy_)
-        bstack1lll111l11l_opy_.bstack1ll1l1l1ll1_opy_((bstack11111l11l1_opy_.bstack1111111ll1_opy_, bstack1llllll1lll_opy_.POST), self.bstack1l1l11l11l1_opy_)
-        bstack1lll111l11l_opy_.bstack1ll1l1l1ll1_opy_((bstack11111l11l1_opy_.bstack1111111ll1_opy_, bstack1llllll1lll_opy_.POST), self.bstack1l1l11l1l1l_opy_)
-        bstack1lll111l11l_opy_.bstack1ll1l1l1ll1_opy_((bstack11111l11l1_opy_.QUIT, bstack1llllll1lll_opy_.POST), self.bstack1l1l11lll1l_opy_)
+        bstack1lll1l1ll11_opy_.bstack1ll11ll1l1l_opy_((bstack11111l11ll_opy_.bstack1llllll1111_opy_, bstack111111ll1l_opy_.PRE), self.bstack1ll11l1l111_opy_)
     def is_enabled(self) -> bool:
         return True
-    def bstack1l1l111l111_opy_(
+    def bstack1ll11l1l111_opy_(
         self,
-        f: bstack1lll111l11l_opy_,
+        f: bstack1lll1l1ll11_opy_,
         driver: object,
-        exec: Tuple[bstack1llllllllll_opy_, str],
-        bstack111111ll1l_opy_: Tuple[bstack11111l11l1_opy_, bstack1llllll1lll_opy_],
+        exec: Tuple[bstack11111l1l1l_opy_, str],
+        bstack1llllll1l1l_opy_: Tuple[bstack11111l11ll_opy_, bstack111111ll1l_opy_],
         result: Any,
         *args,
         **kwargs,
     ):
-        instance, method_name = exec
-        if method_name != bstack1ll_opy_ (u"ࠧࡥ࡟ࡪࡰ࡬ࡸࡤࡥࠢዜ"):
+        hub_url = f.hub_url(driver)
+        if f.bstack1ll11l11ll1_opy_(hub_url):
+            if not bstack1lll11ll1l1_opy_.bstack1ll11l1ll1l_opy_:
+                self.logger.warning(bstack1l1_opy_ (u"ࠥࡰࡴࡩࡡ࡭ࠢࡶࡩࡱ࡬࠭ࡩࡧࡤࡰࠥ࡬࡬ࡰࡹࠣࡨ࡮ࡹࡡࡣ࡮ࡨࡨࠥ࡬࡯ࡳࠢࡅࡶࡴࡽࡳࡦࡴࡖࡸࡦࡩ࡫ࠡ࡫ࡱࡪࡷࡧࠠࡴࡧࡶࡷ࡮ࡵ࡮ࡴࠢ࡫ࡹࡧࡥࡵࡳ࡮ࡀࠦᆟ") + str(hub_url) + bstack1l1_opy_ (u"ࠦࠧᆠ"))
+                bstack1lll11ll1l1_opy_.bstack1ll11l1ll1l_opy_ = True
             return
-        def wrapped(driver, init, *args, **kwargs):
-            url = None
-            try:
-                if isinstance(kwargs.get(bstack1ll_opy_ (u"ࠨࡣࡰ࡯ࡰࡥࡳࡪ࡟ࡦࡺࡨࡧࡺࡺ࡯ࡳࠤዝ")), str):
-                    url = kwargs.get(bstack1ll_opy_ (u"ࠢࡤࡱࡰࡱࡦࡴࡤࡠࡧࡻࡩࡨࡻࡴࡰࡴࠥዞ"))
-                elif hasattr(kwargs.get(bstack1ll_opy_ (u"ࠣࡥࡲࡱࡲࡧ࡮ࡥࡡࡨࡼࡪࡩࡵࡵࡱࡵࠦዟ")), bstack1ll_opy_ (u"ࠩࡢࡧࡱ࡯ࡥ࡯ࡶࡢࡧࡴࡴࡦࡪࡩࠪዠ")):
-                    url = kwargs.get(bstack1ll_opy_ (u"ࠥࡧࡴࡳ࡭ࡢࡰࡧࡣࡪࡾࡥࡤࡷࡷࡳࡷࠨዡ"))._client_config.remote_server_addr
-                else:
-                    url = kwargs.get(bstack1ll_opy_ (u"ࠦࡨࡵ࡭࡮ࡣࡱࡨࡤ࡫ࡸࡦࡥࡸࡸࡴࡸࠢዢ"))._url
-            except Exception as e:
-                url = bstack1ll_opy_ (u"ࠬ࠭ዣ")
-                self.logger.error(bstack1ll_opy_ (u"ࠨࡅࡳࡴࡲࡶࠥࡽࡨࡪ࡮ࡨࠤ࡬࡫ࡴࡵ࡫ࡱ࡫ࠥࡻࡲ࡭ࠢࡩࡶࡴࡳࠠࡥࡴ࡬ࡺࡪࡸ࠺ࠡࡽࢀࠦዤ").format(e))
-            self.logger.info(bstack1ll_opy_ (u"ࠢࡓࡧࡰࡳࡹ࡫ࠠࡔࡧࡵࡺࡪࡸࠠࡂࡦࡧࡶࡪࡹࡳࠡࡤࡨ࡭ࡳ࡭ࠠࡱࡣࡶࡷࡪࡪࠠࡢࡵࠣ࠾ࠥࢁࡽࠣዥ").format(str(url)))
-            self.bstack1l1l111ll1l_opy_(instance, url, f, kwargs)
-            self.logger.info(bstack1ll_opy_ (u"ࠣࡦࡵ࡭ࡻ࡫ࡲ࠯ࡽࡰࡩࡹ࡮࡯ࡥࡡࡱࡥࡲ࡫ࡽࠡࡲ࡯ࡥࡹ࡬࡯ࡳ࡯ࡢ࡭ࡳࡪࡥࡹ࠿ࡾࡴࡱࡧࡴࡧࡱࡵࡱࡤ࡯࡮ࡥࡧࡻࢁ࠿ࠦࡡࡳࡩࡶࡁࢀࡧࡲࡨࡵࢀࠤࡰࡽࡡࡳࡩࡶࡁࢀࡱࡷࡢࡴࡪࡷࢂࠨዦ").format(method_name=method_name, platform_index=f.platform_index, args=args, kwargs=kwargs))
-            threading.current_thread().bstackSessionDriver = driver
-            return init(driver, *args, **kwargs)
-        return wrapped
-    def bstack1ll11l11l1l_opy_(
-        self,
-        f: bstack1lll111l11l_opy_,
-        driver: object,
-        exec: Tuple[bstack1llllllllll_opy_, str],
-        bstack111111ll1l_opy_: Tuple[bstack11111l11l1_opy_, bstack1llllll1lll_opy_],
-        result: Any,
-        *args,
-        **kwargs,
-    ):
-        instance, method_name = exec
-        if f.bstack1111111lll_opy_(instance, bstack1lll1ll111l_opy_.bstack1l1l11l111l_opy_, False):
-            return
-        if not f.bstack11111l1ll1_opy_(instance, bstack1lll111l11l_opy_.bstack1ll1l1l111l_opy_):
-            return
-        platform_index = f.bstack1111111lll_opy_(instance, bstack1lll111l11l_opy_.bstack1ll1l1l111l_opy_)
-        if f.bstack1ll1l111l11_opy_(method_name, *args) and len(args) > 1:
-            bstack1lll1ll11_opy_ = datetime.now()
-            hub_url = bstack1lll111l11l_opy_.hub_url(driver)
-            self.logger.warning(bstack1ll_opy_ (u"ࠤ࡫ࡹࡧࡥࡵࡳ࡮ࡀࠦዧ") + str(hub_url) + bstack1ll_opy_ (u"ࠥࠦየ"))
-            bstack1l1l111ll11_opy_ = args[1][bstack1ll_opy_ (u"ࠦࡨࡧࡰࡢࡤ࡬ࡰ࡮ࡺࡩࡦࡵࠥዩ")] if isinstance(args[1], dict) and bstack1ll_opy_ (u"ࠧࡩࡡࡱࡣࡥ࡭ࡱ࡯ࡴࡪࡧࡶࠦዪ") in args[1] else None
-            bstack1l1l11l1111_opy_ = bstack1ll_opy_ (u"ࠨࡡ࡭ࡹࡤࡽࡸࡓࡡࡵࡥ࡫ࠦያ")
-            if isinstance(bstack1l1l111ll11_opy_, dict):
-                bstack1lll1ll11_opy_ = datetime.now()
-                r = self.bstack1l1l11l11ll_opy_(
-                    instance.ref(),
-                    platform_index,
-                    f.framework_name,
-                    f.framework_version,
-                    hub_url
-                )
-                instance.bstack11ll1l11l1_opy_(bstack1ll_opy_ (u"ࠢࡨࡴࡳࡧ࠿ࡸࡥࡨ࡫ࡶࡸࡪࡸ࡟ࡪࡰ࡬ࡸࠧዬ"), datetime.now() - bstack1lll1ll11_opy_)
-                try:
-                    if not r.success:
-                        self.logger.info(bstack1ll_opy_ (u"ࠣࡵࡲࡱࡪࡺࡨࡪࡰࡪࠤࡼ࡫࡮ࡵࠢࡺࡶࡴࡴࡧ࠻ࠢࠥይ") + str(r) + bstack1ll_opy_ (u"ࠤࠥዮ"))
-                        return
-                    if r.hub_url:
-                        f.bstack1l1l1111lll_opy_(instance, driver, r.hub_url)
-                        f.bstack111111l1l1_opy_(instance, bstack1lll1ll111l_opy_.bstack1l1l11l111l_opy_, True)
-                except Exception as e:
-                    self.logger.error(bstack1ll_opy_ (u"ࠥࡩࡷࡸ࡯ࡳࠤዯ"), e)
-    def bstack1l1l11l11l1_opy_(
-        self,
-        f: bstack1lll111l11l_opy_,
-        driver: object,
-        exec: Tuple[bstack1llllllllll_opy_, str],
-        bstack111111ll1l_opy_: Tuple[bstack11111l11l1_opy_, bstack1llllll1lll_opy_],
-        result: Any,
-        *args,
-        **kwargs,
-    ):
-            session_id = bstack1lll111l11l_opy_.session_id(driver)
-            if session_id:
-                bstack1l1l11l1lll_opy_ = bstack1ll_opy_ (u"ࠦࢀࢃ࠺ࡴࡶࡤࡶࡹࠨደ").format(session_id)
-                bstack1lll11l1lll_opy_.mark(bstack1l1l11l1lll_opy_)
-    def bstack1l1l11l1l1l_opy_(
-        self,
-        f: bstack1lll111l11l_opy_,
-        driver: object,
-        exec: Tuple[bstack1llllllllll_opy_, str],
-        bstack111111ll1l_opy_: Tuple[bstack11111l11l1_opy_, bstack1llllll1lll_opy_],
-        result: Any,
-        *args,
-        **kwargs,
-    ):
-        instance = exec[0]
-        if f.bstack1111111lll_opy_(instance, bstack1lll1ll111l_opy_.bstack1l1l11ll1ll_opy_, False):
-            return
-        ref = instance.ref()
-        hub_url = bstack1lll111l11l_opy_.hub_url(driver)
-        if not hub_url:
-            self.logger.warning(bstack1ll_opy_ (u"ࠧ࡬ࡡࡪ࡮ࡨࡨࠥࡺ࡯ࠡࡲࡤࡶࡸ࡫ࠠࡩࡷࡥࡣࡺࡸ࡬࠾ࠤዱ") + str(hub_url) + bstack1ll_opy_ (u"ࠨࠢዲ"))
-            return
-        framework_session_id = bstack1lll111l11l_opy_.session_id(driver)
-        if not framework_session_id:
-            self.logger.warning(bstack1ll_opy_ (u"ࠢࡧࡣ࡬ࡰࡪࡪࠠࡵࡱࠣࡴࡦࡸࡳࡦࠢࡩࡶࡦࡳࡥࡸࡱࡵ࡯ࡤࡹࡥࡴࡵ࡬ࡳࡳࡥࡩࡥ࠿ࠥዳ") + str(framework_session_id) + bstack1ll_opy_ (u"ࠣࠤዴ"))
-            return
-        if bstack1lll111l11l_opy_.bstack1l1l11ll111_opy_(*args) == bstack1lll111l11l_opy_.bstack1l1l11111ll_opy_:
-            bstack1l1l11ll11l_opy_ = bstack1ll_opy_ (u"ࠤࡾࢁ࠿࡫࡮ࡥࠤድ").format(framework_session_id)
-            bstack1l1l11l1lll_opy_ = bstack1ll_opy_ (u"ࠥࡿࢂࡀࡳࡵࡣࡵࡸࠧዶ").format(framework_session_id)
-            bstack1lll11l1lll_opy_.end(
-                label=bstack1ll_opy_ (u"ࠦࡸࡪ࡫࠻ࡦࡵ࡭ࡻ࡫ࡲ࠻ࡲࡲࡷࡹ࠳ࡩ࡯࡫ࡷ࡭ࡦࡲࡩࡻࡣࡷ࡭ࡴࡴࠢዷ"),
-                start=bstack1l1l11l1lll_opy_,
-                end=bstack1l1l11ll11l_opy_,
-                status=True,
-                failure=None
-            )
-            bstack1lll1ll11_opy_ = datetime.now()
-            r = self.bstack1l1l111l11l_opy_(
-                ref,
-                f.bstack1111111lll_opy_(instance, bstack1lll111l11l_opy_.bstack1ll1l1l111l_opy_, 0),
-                f.framework_name,
-                f.framework_version,
-                framework_session_id,
-                hub_url,
-            )
-            instance.bstack11ll1l11l1_opy_(bstack1ll_opy_ (u"ࠧ࡭ࡲࡱࡥ࠽ࡶࡪ࡭ࡩࡴࡶࡨࡶࡤࡹࡴࡢࡴࡷࠦዸ"), datetime.now() - bstack1lll1ll11_opy_)
-            f.bstack111111l1l1_opy_(instance, bstack1lll1ll111l_opy_.bstack1l1l11ll1ll_opy_, r.success)
-    def bstack1l1l11lll1l_opy_(
-        self,
-        f: bstack1lll111l11l_opy_,
-        driver: object,
-        exec: Tuple[bstack1llllllllll_opy_, str],
-        bstack111111ll1l_opy_: Tuple[bstack11111l11l1_opy_, bstack1llllll1lll_opy_],
-        result: Any,
-        *args,
-        **kwargs,
-    ):
-        instance = exec[0]
-        if f.bstack1111111lll_opy_(instance, bstack1lll1ll111l_opy_.bstack1l1l11111l1_opy_, False):
-            return
-        ref = instance.ref()
-        framework_session_id = bstack1lll111l11l_opy_.session_id(driver)
-        hub_url = bstack1lll111l11l_opy_.hub_url(driver)
-        bstack1lll1ll11_opy_ = datetime.now()
-        r = self.bstack1l1l111l1ll_opy_(
-            ref,
-            f.bstack1111111lll_opy_(instance, bstack1lll111l11l_opy_.bstack1ll1l1l111l_opy_, 0),
-            f.framework_name,
-            f.framework_version,
-            framework_session_id,
-            hub_url,
-        )
-        instance.bstack11ll1l11l1_opy_(bstack1ll_opy_ (u"ࠨࡧࡳࡲࡦ࠾ࡷ࡫ࡧࡪࡵࡷࡩࡷࡥࡳࡵࡱࡳࠦዹ"), datetime.now() - bstack1lll1ll11_opy_)
-        f.bstack111111l1l1_opy_(instance, bstack1lll1ll111l_opy_.bstack1l1l11111l1_opy_, r.success)
-    @measure(event_name=EVENTS.bstack111l11ll1_opy_, stage=STAGE.bstack1llll11lll_opy_)
-    def bstack1l1ll1111l1_opy_(self, platform_index: int, url: str, ref, user_input_params: bytes):
-        req = structs.DriverInitRequest()
-        req.bin_session_id = self.bin_session_id
-        req.platform_index = platform_index
-        req.user_input_params = user_input_params
-        req.ref = ref
-        req.hub_url = url
-        self.logger.debug(bstack1ll_opy_ (u"ࠢࡳࡧࡪ࡭ࡸࡺࡥࡳࡡࡺࡩࡧࡪࡲࡪࡸࡨࡶࡤ࡯࡮ࡪࡶ࠽ࠤࠧዺ") + str(req) + bstack1ll_opy_ (u"ࠣࠤዻ"))
-        try:
-            r = self.bstack1ll1lll1ll1_opy_.DriverInit(req)
-            if not r.success:
-                self.logger.debug(bstack1ll_opy_ (u"ࠤࡵࡩࡨ࡫ࡩࡷࡧࡧࠤ࡫ࡸ࡯࡮ࠢࡶࡩࡷࡼࡥࡳ࠼ࠣࡷࡺࡩࡣࡦࡵࡶࡁࠧዼ") + str(r.success) + bstack1ll_opy_ (u"ࠥࠦዽ"))
-            return r
-        except grpc.RpcError as e:
-            self.logger.error(bstack1ll_opy_ (u"ࠦࡷࡶࡣ࠮ࡧࡵࡶࡴࡸ࠺ࠡࠤዾ") + str(e) + bstack1ll_opy_ (u"ࠧࠨዿ"))
-            traceback.print_exc()
-            raise e
-    @measure(event_name=EVENTS.bstack1l1l11ll1l1_opy_, stage=STAGE.bstack1llll11lll_opy_)
-    def bstack1l1l11l11ll_opy_(
-        self,
-        ref: str,
-        platform_index: int,
-        framework_name: str,
-        framework_version: str,
-        hub_url: str
-    ):
-        self.bstack1ll1l1l1lll_opy_()
-        req = structs.AutomationFrameworkInitRequest()
-        req.ref = ref
-        req.bin_session_id = self.bin_session_id
-        req.platform_index = platform_index
-        req.framework_name = framework_name
-        req.framework_version = framework_version
-        req.hub_url = hub_url
-        self.logger.debug(bstack1ll_opy_ (u"ࠨࡲࡦࡩ࡬ࡷࡹ࡫ࡲࡠ࡫ࡱ࡭ࡹࡀࠠࠣጀ") + str(req) + bstack1ll_opy_ (u"ࠢࠣጁ"))
-        try:
-            r = self.bstack1ll1lll1ll1_opy_.AutomationFrameworkInit(req)
-            if not r.success:
-                self.logger.debug(bstack1ll_opy_ (u"ࠣࡴࡨࡧࡪ࡯ࡶࡦࡦࠣࡪࡷࡵ࡭ࠡࡵࡨࡶࡻ࡫ࡲ࠻ࠢࡶࡹࡨࡩࡥࡴࡵࡀࠦጂ") + str(r.success) + bstack1ll_opy_ (u"ࠤࠥጃ"))
-            return r
-        except grpc.RpcError as e:
-            self.logger.error(bstack1ll_opy_ (u"ࠥࡶࡵࡩ࠭ࡦࡴࡵࡳࡷࡀࠠࠣጄ") + str(e) + bstack1ll_opy_ (u"ࠦࠧጅ"))
-            traceback.print_exc()
-            raise e
-    @measure(event_name=EVENTS.bstack1l1l111llll_opy_, stage=STAGE.bstack1llll11lll_opy_)
-    def bstack1l1l111l11l_opy_(
-        self,
-        ref: str,
-        platform_index: int,
-        framework_name: str,
-        framework_version: str,
-        framework_session_id: str,
-        hub_url: str,
-    ):
-        self.bstack1ll1l1l1lll_opy_()
-        req = structs.AutomationFrameworkStartRequest()
-        req.ref = ref
-        req.bin_session_id = self.bin_session_id
-        req.platform_index = platform_index
-        req.framework_name = framework_name
-        req.framework_version = framework_version
-        req.framework_session_id = framework_session_id
-        req.hub_url = hub_url
-        self.logger.debug(bstack1ll_opy_ (u"ࠧࡸࡥࡨ࡫ࡶࡸࡪࡸ࡟ࡴࡶࡤࡶࡹࡀࠠࠣጆ") + str(req) + bstack1ll_opy_ (u"ࠨࠢጇ"))
-        try:
-            r = self.bstack1ll1lll1ll1_opy_.AutomationFrameworkStart(req)
-            if not r.success:
-                self.logger.debug(bstack1ll_opy_ (u"ࠢࡳࡧࡦࡩ࡮ࡼࡥࡥࠢࡩࡶࡴࡳࠠࡴࡧࡵࡺࡪࡸ࠺ࠡࠤገ") + str(r) + bstack1ll_opy_ (u"ࠣࠤጉ"))
-            return r
-        except grpc.RpcError as e:
-            self.logger.error(bstack1ll_opy_ (u"ࠤࡵࡴࡨ࠳ࡥࡳࡴࡲࡶ࠿ࠦࠢጊ") + str(e) + bstack1ll_opy_ (u"ࠥࠦጋ"))
-            traceback.print_exc()
-            raise e
-    @measure(event_name=EVENTS.bstack1l1l111lll1_opy_, stage=STAGE.bstack1llll11lll_opy_)
-    def bstack1l1l111l1ll_opy_(
-        self,
-        ref: str,
-        platform_index: int,
-        framework_name: str,
-        framework_version: str,
-        framework_session_id: str,
-        hub_url: str,
-    ):
-        self.bstack1ll1l1l1lll_opy_()
-        req = structs.AutomationFrameworkStopRequest()
-        req.ref = ref
-        req.bin_session_id = self.bin_session_id
-        req.platform_index = platform_index
-        req.framework_name = framework_name
-        req.framework_version = framework_version
-        req.framework_session_id = framework_session_id
-        req.hub_url = hub_url
-        self.logger.debug(bstack1ll_opy_ (u"ࠦࡷ࡫ࡧࡪࡵࡷࡩࡷࡥࡳࡵࡱࡳ࠾ࠥࠨጌ") + str(req) + bstack1ll_opy_ (u"ࠧࠨግ"))
-        try:
-            r = self.bstack1ll1lll1ll1_opy_.AutomationFrameworkStop(req)
-            if not r.success:
-                self.logger.debug(bstack1ll_opy_ (u"ࠨࡲࡦࡥࡨ࡭ࡻ࡫ࡤࠡࡨࡵࡳࡲࠦࡳࡦࡴࡹࡩࡷࡀࠠࠣጎ") + str(r) + bstack1ll_opy_ (u"ࠢࠣጏ"))
-            return r
-        except grpc.RpcError as e:
-            self.logger.error(bstack1ll_opy_ (u"ࠣࡴࡳࡧ࠲࡫ࡲࡳࡱࡵ࠾ࠥࠨጐ") + str(e) + bstack1ll_opy_ (u"ࠤࠥ጑"))
-            traceback.print_exc()
-            raise e
-    @measure(event_name=EVENTS.bstack1l1ll1lll1_opy_, stage=STAGE.bstack1llll11lll_opy_)
-    def bstack1l1l111ll1l_opy_(self, instance: bstack1llllllllll_opy_, url: str, f: bstack1lll111l11l_opy_, kwargs):
-        bstack1l1l1111l1l_opy_ = version.parse(f.framework_version)
-        bstack1l1l11l1l11_opy_ = kwargs.get(bstack1ll_opy_ (u"ࠥࡳࡵࡺࡩࡰࡰࡶࠦጒ"))
-        bstack1l1l1111l11_opy_ = kwargs.get(bstack1ll_opy_ (u"ࠦࡩ࡫ࡳࡪࡴࡨࡨࡤࡩࡡࡱࡣࡥ࡭ࡱ࡯ࡴࡪࡧࡶࠦጓ"))
-        bstack1l1l1ll1ll1_opy_ = {}
-        bstack1l1l11l1ll1_opy_ = {}
-        bstack1l1l1111ll1_opy_ = None
-        bstack1l1l11lll11_opy_ = {}
-        if bstack1l1l1111l11_opy_ is not None or bstack1l1l11l1l11_opy_ is not None: # check top level caps
-            if bstack1l1l1111l11_opy_ is not None:
-                bstack1l1l11lll11_opy_[bstack1ll_opy_ (u"ࠬࡪࡥࡴ࡫ࡵࡩࡩࡥࡣࡢࡲࡤࡦ࡮ࡲࡩࡵ࡫ࡨࡷࠬጔ")] = bstack1l1l1111l11_opy_
-            if bstack1l1l11l1l11_opy_ is not None and callable(getattr(bstack1l1l11l1l11_opy_, bstack1ll_opy_ (u"ࠨࡴࡰࡡࡦࡥࡵࡧࡢࡪ࡮࡬ࡸ࡮࡫ࡳࠣጕ"))):
-                bstack1l1l11lll11_opy_[bstack1ll_opy_ (u"ࠧࡰࡲࡷ࡭ࡴࡴࡳࡠࡣࡶࡣࡨࡧࡰࡢࡤ࡬ࡰ࡮ࡺࡩࡦࡵࠪ጖")] = bstack1l1l11l1l11_opy_.to_capabilities()
-        response = self.bstack1l1ll1111l1_opy_(f.platform_index, url, instance.ref(), json.dumps(bstack1l1l11lll11_opy_).encode(bstack1ll_opy_ (u"ࠣࡷࡷࡪ࠲࠾ࠢ጗")))
-        if response is not None and response.capabilities:
-            bstack1l1l1ll1ll1_opy_ = json.loads(response.capabilities.decode(bstack1ll_opy_ (u"ࠤࡸࡸ࡫࠳࠸ࠣጘ")))
-            if not bstack1l1l1ll1ll1_opy_: # empty caps bstack1l1ll11111l_opy_ bstack1l1l1ll1lll_opy_ bstack1l1l1ll11l1_opy_ bstack1lll1l1l1l1_opy_ or error in processing
+        bstack1ll11lll11l_opy_ = f.bstack1ll1l111l1l_opy_(*args)
+        bstack1ll11l1l1ll_opy_ = f.bstack1ll11l1l11l_opy_(*args)
+        if bstack1ll11lll11l_opy_ and bstack1ll11lll11l_opy_.lower() == bstack1l1_opy_ (u"ࠧ࡬ࡩ࡯ࡦࡨࡰࡪࡳࡥ࡯ࡶࠥᆡ") and bstack1ll11l1l1ll_opy_:
+            framework_session_id = f.session_id(driver)
+            locator_type, locator_value = bstack1ll11l1l1ll_opy_.get(bstack1l1_opy_ (u"ࠨࡵࡴ࡫ࡱ࡫ࠧᆢ"), None), bstack1ll11l1l1ll_opy_.get(bstack1l1_opy_ (u"ࠢࡷࡣ࡯ࡹࡪࠨᆣ"), None)
+            if not framework_session_id or not locator_type or not locator_value:
+                self.logger.warning(bstack1l1_opy_ (u"ࠣࡽࡦࡳࡲࡳࡡ࡯ࡦࡢࡲࡦࡳࡥࡾ࠼ࠣࡱ࡮ࡹࡳࡪࡰࡪࠤ࡫ࡸࡡ࡮ࡧࡺࡳࡷࡱ࡟ࡴࡧࡶࡷ࡮ࡵ࡮ࡠ࡫ࡧࠤࡴࡸࠠࡢࡴࡪࡷ࠳ࡻࡳࡪࡰࡪࡁࢀࡲ࡯ࡤࡣࡷࡳࡷࡥࡴࡺࡲࡨࢁࠥࡵࡲࠡࡣࡵ࡫ࡸ࠴ࡶࡢ࡮ࡸࡩࡂࠨᆤ") + str(locator_value) + bstack1l1_opy_ (u"ࠤࠥᆥ"))
                 return
-            bstack1l1l1111ll1_opy_ = f.bstack1llll111l11_opy_[bstack1ll_opy_ (u"ࠥࡧࡷ࡫ࡡࡵࡧࡢࡳࡵࡺࡩࡰࡰࡶࡣ࡫ࡸ࡯࡮ࡡࡦࡥࡵࡹࠢጙ")](bstack1l1l1ll1ll1_opy_)
-        if bstack1l1l11l1l11_opy_ is not None and bstack1l1l1111l1l_opy_ >= version.parse(bstack1ll_opy_ (u"ࠫ࠸࠴࠸࠯࠲ࠪጚ")):
-            bstack1l1l11l1ll1_opy_ = None
-        if (
-                not bstack1l1l11l1l11_opy_ and not bstack1l1l1111l11_opy_
-        ) or (
-                bstack1l1l1111l1l_opy_ < version.parse(bstack1ll_opy_ (u"ࠬ࠹࠮࠹࠰࠳ࠫጛ"))
-        ):
-            bstack1l1l11l1ll1_opy_ = {}
-            bstack1l1l11l1ll1_opy_.update(bstack1l1l1ll1ll1_opy_)
-        self.logger.info(bstack11ll1llll_opy_)
-        if os.environ.get(bstack1ll_opy_ (u"ࠨࡂࡓࡑ࡚ࡗࡊࡘࡓࡕࡃࡆࡏࡤࡇࡕࡕࡑࡐࡅ࡙ࡏࡏࡏࠤጜ")).lower().__eq__(bstack1ll_opy_ (u"ࠢࡵࡴࡸࡩࠧጝ")):
-            kwargs.update(
-                {
-                    bstack1ll_opy_ (u"ࠣࡥࡲࡱࡲࡧ࡮ࡥࡡࡨࡼࡪࡩࡵࡵࡱࡵࠦጞ"): f.bstack1l1l111l1l1_opy_,
-                }
+            def bstack1lllllll111_opy_(driver, bstack1ll11l1ll11_opy_, *args, **kwargs):
+                from selenium.common.exceptions import NoSuchElementException
+                try:
+                    result = bstack1ll11l1ll11_opy_(driver, *args, **kwargs)
+                    response = self.bstack1ll11l1l1l1_opy_(
+                        framework_session_id=framework_session_id,
+                        is_success=True,
+                        locator_type=locator_type,
+                        locator_value=locator_value,
+                    )
+                    if response and response.execute_script:
+                        driver.execute_script(response.execute_script)
+                        self.logger.info(bstack1l1_opy_ (u"ࠥࡷࡺࡩࡣࡦࡵࡶ࠱ࡸࡩࡲࡪࡲࡷ࠾ࠥࡲ࡯ࡤࡣࡷࡳࡷࡥࡴࡺࡲࡨࡁࢀࡲ࡯ࡤࡣࡷࡳࡷࡥࡴࡺࡲࡨࢁࠥࡲ࡯ࡤࡣࡷࡳࡷࡥࡶࡢ࡮ࡸࡩࡂࠨᆦ") + str(locator_value) + bstack1l1_opy_ (u"ࠦࠧᆧ"))
+                    else:
+                        self.logger.warning(bstack1l1_opy_ (u"ࠧࡹࡵࡤࡥࡨࡷࡸ࠳࡮ࡰ࠯ࡶࡧࡷ࡯ࡰࡵ࠼ࠣࡰࡴࡩࡡࡵࡱࡵࡣࡹࡿࡰࡦ࠿ࡾࡰࡴࡩࡡࡵࡱࡵࡣࡹࡿࡰࡦࡿࠣࡰࡴࡩࡡࡵࡱࡵࡣࡻࡧ࡬ࡶࡧࡀࡿࡱࡵࡣࡢࡶࡲࡶࡤࡼࡡ࡭ࡷࡨࢁࠥࡸࡥࡴࡲࡲࡲࡸ࡫࠽ࠣᆨ") + str(response) + bstack1l1_opy_ (u"ࠨࠢᆩ"))
+                    return result
+                except NoSuchElementException as e:
+                    locator = (locator_type, locator_value)
+                    return self.__1ll11l111ll_opy_(
+                        driver, bstack1ll11l1ll11_opy_, e, framework_session_id, locator, *args, **kwargs
+                    )
+            bstack1lllllll111_opy_.__name__ = bstack1ll11lll11l_opy_
+            return bstack1lllllll111_opy_
+    def __1ll11l111ll_opy_(
+        self,
+        driver,
+        bstack1ll11l1ll11_opy_: Callable,
+        exception,
+        framework_session_id: str,
+        locator: Tuple[str, str],
+        *args,
+        **kwargs,
+    ):
+        try:
+            locator_type, locator_value = locator
+            response = self.bstack1ll11l1l1l1_opy_(
+                framework_session_id=framework_session_id,
+                is_success=False,
+                locator_type=locator_type,
+                locator_value=locator_value,
             )
-        if bstack1l1l1111l1l_opy_ >= version.parse(bstack1ll_opy_ (u"ࠩ࠷࠲࠶࠶࠮࠱ࠩጟ")):
-            if bstack1l1l1111l11_opy_ is not None:
-                del kwargs[bstack1ll_opy_ (u"ࠥࡨࡪࡹࡩࡳࡧࡧࡣࡨࡧࡰࡢࡤ࡬ࡰ࡮ࡺࡩࡦࡵࠥጠ")]
-            kwargs.update(
-                {
-                    bstack1ll_opy_ (u"ࠦࡴࡶࡴࡪࡱࡱࡷࠧጡ"): bstack1l1l1111ll1_opy_,
-                    bstack1ll_opy_ (u"ࠧࡱࡥࡦࡲࡢࡥࡱ࡯ࡶࡦࠤጢ"): True,
-                    bstack1ll_opy_ (u"ࠨࡦࡪ࡮ࡨࡣࡩ࡫ࡴࡦࡥࡷࡳࡷࠨጣ"): None,
-                }
-            )
-        elif bstack1l1l1111l1l_opy_ >= version.parse(bstack1ll_opy_ (u"ࠧ࠴࠰࠻࠲࠵࠭ጤ")):
-            kwargs.update(
-                {
-                    bstack1ll_opy_ (u"ࠣࡦࡨࡷ࡮ࡸࡥࡥࡡࡦࡥࡵࡧࡢࡪ࡮࡬ࡸ࡮࡫ࡳࠣጥ"): bstack1l1l11l1ll1_opy_,
-                    bstack1ll_opy_ (u"ࠤࡲࡴࡹ࡯࡯࡯ࡵࠥጦ"): bstack1l1l1111ll1_opy_,
-                    bstack1ll_opy_ (u"ࠥ࡯ࡪ࡫ࡰࡠࡣ࡯࡭ࡻ࡫ࠢጧ"): True,
-                    bstack1ll_opy_ (u"ࠦ࡫࡯࡬ࡦࡡࡧࡩࡹ࡫ࡣࡵࡱࡵࠦጨ"): None,
-                }
-            )
-        elif bstack1l1l1111l1l_opy_ >= version.parse(bstack1ll_opy_ (u"ࠬ࠸࠮࠶࠵࠱࠴ࠬጩ")):
-            kwargs.update(
-                {
-                    bstack1ll_opy_ (u"ࠨࡤࡦࡵ࡬ࡶࡪࡪ࡟ࡤࡣࡳࡥࡧ࡯࡬ࡪࡶ࡬ࡩࡸࠨጪ"): bstack1l1l11l1ll1_opy_,
-                    bstack1ll_opy_ (u"ࠢ࡬ࡧࡨࡴࡤࡧ࡬ࡪࡸࡨࠦጫ"): True,
-                    bstack1ll_opy_ (u"ࠣࡨ࡬ࡰࡪࡥࡤࡦࡶࡨࡧࡹࡵࡲࠣጬ"): None,
-                }
-            )
-        else:
-            kwargs.update(
-                {
-                    bstack1ll_opy_ (u"ࠤࡧࡩࡸ࡯ࡲࡦࡦࡢࡧࡦࡶࡡࡣ࡫࡯࡭ࡹ࡯ࡥࡴࠤጭ"): bstack1l1l11l1ll1_opy_,
-                    bstack1ll_opy_ (u"ࠥ࡯ࡪ࡫ࡰࡠࡣ࡯࡭ࡻ࡫ࠢጮ"): True,
-                    bstack1ll_opy_ (u"ࠦ࡫࡯࡬ࡦࡡࡧࡩࡹ࡫ࡣࡵࡱࡵࠦጯ"): None,
-                }
-            )
+            if response and response.execute_script:
+                driver.execute_script(response.execute_script)
+                self.logger.info(bstack1l1_opy_ (u"ࠢࡧࡣ࡬ࡰࡺࡸࡥ࠮ࡪࡨࡥࡱ࡯࡮ࡨ࠯ࡷࡶ࡮࡭ࡧࡦࡴࡨࡨ࠿ࠦ࡬ࡰࡥࡤࡸࡴࡸ࡟ࡵࡻࡳࡩࡂࢁ࡬ࡰࡥࡤࡸࡴࡸ࡟ࡵࡻࡳࡩࢂࠦ࡬ࡰࡥࡤࡸࡴࡸ࡟ࡷࡣ࡯ࡹࡪࡃࠢᆪ") + str(locator_value) + bstack1l1_opy_ (u"ࠣࠤᆫ"))
+                bstack1ll11l111l1_opy_ = self.bstack1ll11l11l11_opy_(
+                    framework_session_id=framework_session_id,
+                    locator_type=locator_type,
+                )
+                self.logger.info(bstack1l1_opy_ (u"ࠤࡩࡥ࡮ࡲࡵࡳࡧ࠰࡬ࡪࡧ࡬ࡪࡰࡪ࠱ࡷ࡫ࡳࡶ࡮ࡷ࠾ࠥࡲ࡯ࡤࡣࡷࡳࡷࡥࡴࡺࡲࡨࡁࢀࡲ࡯ࡤࡣࡷࡳࡷࡥࡴࡺࡲࡨࢁࠥࡲ࡯ࡤࡣࡷࡳࡷࡥࡶࡢ࡮ࡸࡩࡂࢁ࡬ࡰࡥࡤࡸࡴࡸ࡟ࡷࡣ࡯ࡹࡪࢃࠠࡩࡧࡤࡰ࡮ࡴࡧࡠࡴࡨࡷࡺࡲࡴ࠾ࠤᆬ") + str(bstack1ll11l111l1_opy_) + bstack1l1_opy_ (u"ࠥࠦᆭ"))
+                if bstack1ll11l111l1_opy_.success and args and len(args) > 1:
+                    args[1].update(
+                        {
+                            bstack1l1_opy_ (u"ࠦࡺࡹࡩ࡯ࡩࠥᆮ"): bstack1ll11l111l1_opy_.locator_type,
+                            bstack1l1_opy_ (u"ࠧࡼࡡ࡭ࡷࡨࠦᆯ"): bstack1ll11l111l1_opy_.locator_value,
+                        }
+                    )
+                    return bstack1ll11l1ll11_opy_(driver, *args, **kwargs)
+                elif os.environ.get(bstack1l1_opy_ (u"ࠨࡂࡓࡑ࡚ࡗࡊࡘࡓࡕࡃࡆࡏࡤࡇࡉࡠࡆࡈࡆ࡚ࡍࠢᆰ"), False):
+                    self.logger.info(bstack1ll1llllll1_opy_ (u"ࠢࡧࡣ࡬ࡰࡺࡸࡥ࠮ࡪࡨࡥࡱ࡯࡮ࡨ࠯ࡵࡩࡸࡻ࡬ࡵ࠯ࡰ࡭ࡸࡹࡩ࡯ࡩ࠽ࠤࡸࡲࡥࡦࡲࠫ࠷࠵࠯ࠠ࡭ࡧࡷࡸ࡮ࡴࡧࠡࡻࡲࡹࠥ࡯࡮ࡴࡲࡨࡧࡹࠦࡴࡩࡧࠣࡦࡷࡵࡷࡴࡧࡵࠤࡪࡾࡴࡦࡰࡶ࡭ࡴࡴࠠ࡭ࡱࡪࡷࠧᆱ"))
+                    time.sleep(300)
+            else:
+                self.logger.warning(bstack1l1_opy_ (u"ࠣࡨࡤ࡭ࡱࡻࡲࡦ࠯ࡱࡳ࠲ࡹࡣࡳ࡫ࡳࡸ࠿ࠦ࡬ࡰࡥࡤࡸࡴࡸ࡟ࡵࡻࡳࡩࡂࢁ࡬ࡰࡥࡤࡸࡴࡸ࡟ࡵࡻࡳࡩࢂࠦ࡬ࡰࡥࡤࡸࡴࡸ࡟ࡷࡣ࡯ࡹࡪࡃࡻ࡭ࡱࡦࡥࡹࡵࡲࡠࡸࡤࡰࡺ࡫ࡽࠡࡴࡨࡷࡵࡵ࡮ࡴࡧࡀࠦᆲ") + str(response) + bstack1l1_opy_ (u"ࠤࠥᆳ"))
+        except Exception as err:
+            self.logger.warning(bstack1l1_opy_ (u"ࠥࡪࡦ࡯࡬ࡶࡴࡨ࠱࡭࡫ࡡ࡭࡫ࡱ࡫࠲ࡸࡥࡴࡷ࡯ࡸ࠿ࠦࡥࡳࡴࡲࡶ࠿ࠦࠢᆴ") + str(err) + bstack1l1_opy_ (u"ࠦࠧᆵ"))
+        raise exception
+    @measure(event_name=EVENTS.bstack1ll11l11l1l_opy_, stage=STAGE.bstack1111lll11_opy_)
+    def bstack1ll11l1l1l1_opy_(
+        self,
+        framework_session_id: str,
+        is_success: bool,
+        locator_type: str,
+        locator_value: str,
+        platform_index=bstack1l1_opy_ (u"ࠧ࠶ࠢᆶ"),
+    ):
+        self.bstack1ll1l111111_opy_()
+        req = structs.AISelfHealStepRequest()
+        req.bin_session_id = self.bin_session_id
+        req.platform_index = platform_index
+        req.framework_session_id = framework_session_id
+        req.is_success = is_success
+        req.test_name = bstack1l1_opy_ (u"ࠨࠢᆷ")
+        req.locator_type = locator_type
+        req.locator_value = locator_value
+        try:
+            r = self.bstack1lll1l111ll_opy_.AISelfHealStep(req)
+            self.logger.info(bstack1l1_opy_ (u"ࠢࡳࡧࡦࡩ࡮ࡼࡥࡥࠢࡩࡶࡴࡳࠠࡴࡧࡵࡺࡪࡸ࠺ࠡࠤᆸ") + str(r) + bstack1l1_opy_ (u"ࠣࠤᆹ"))
+            return r
+        except grpc.RpcError as e:
+            self.logger.error(bstack1l1_opy_ (u"ࠤࡵࡴࡨ࠳ࡥࡳࡴࡲࡶ࠿ࠦࠢᆺ") + str(e) + bstack1l1_opy_ (u"ࠥࠦᆻ"))
+            traceback.print_exc()
+            raise e
+    @measure(event_name=EVENTS.bstack1ll11l11lll_opy_, stage=STAGE.bstack1111lll11_opy_)
+    def bstack1ll11l11l11_opy_(self, framework_session_id: str, locator_type: str, platform_index=bstack1l1_opy_ (u"ࠦ࠵ࠨᆼ")):
+        self.bstack1ll1l111111_opy_()
+        req = structs.AISelfHealGetRequest()
+        req.bin_session_id = self.bin_session_id
+        req.platform_index = platform_index
+        req.framework_session_id = framework_session_id
+        req.locator_type = locator_type
+        try:
+            r = self.bstack1lll1l111ll_opy_.AISelfHealGetResult(req)
+            self.logger.info(bstack1l1_opy_ (u"ࠧࡸࡥࡤࡧ࡬ࡺࡪࡪࠠࡧࡴࡲࡱࠥࡹࡥࡳࡸࡨࡶ࠿ࠦࠢᆽ") + str(r) + bstack1l1_opy_ (u"ࠨࠢᆾ"))
+            return r
+        except grpc.RpcError as e:
+            self.logger.error(bstack1l1_opy_ (u"ࠢࡳࡲࡦ࠱ࡪࡸࡲࡰࡴ࠽ࠤࠧᆿ") + str(e) + bstack1l1_opy_ (u"ࠣࠤᇀ"))
+            traceback.print_exc()
+            raise e

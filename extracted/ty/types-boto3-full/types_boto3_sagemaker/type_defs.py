@@ -918,6 +918,7 @@ __all__ = (
     "EFSFileSystemTypeDef",
     "EMRStepMetadataTypeDef",
     "EbsStorageSettingsTypeDef",
+    "Ec2CapacityReservationTypeDef",
     "EdgeDeploymentConfigTypeDef",
     "EdgeDeploymentModelConfigTypeDef",
     "EdgeDeploymentPlanSummaryTypeDef",
@@ -1562,6 +1563,8 @@ __all__ = (
     "ProcessingS3InputTypeDef",
     "ProcessingS3OutputTypeDef",
     "ProcessingStoppingConditionTypeDef",
+    "ProductionVariantCapacityReservationConfigTypeDef",
+    "ProductionVariantCapacityReservationSummaryTypeDef",
     "ProductionVariantCoreDumpConfigTypeDef",
     "ProductionVariantManagedInstanceScalingTypeDef",
     "ProductionVariantRoutingConfigTypeDef",
@@ -3904,6 +3907,7 @@ class UnifiedStudioSettingsTypeDef(TypedDict):
     ProjectId: NotRequired[str]
     EnvironmentId: NotRequired[str]
     ProjectS3Path: NotRequired[str]
+    SingleSignOnApplicationArn: NotRequired[str]
 
 
 class FileSourceTypeDef(TypedDict):
@@ -3921,6 +3925,13 @@ class EMRStepMetadataTypeDef(TypedDict):
 
 class EbsStorageSettingsTypeDef(TypedDict):
     EbsVolumeSizeInGb: int
+
+
+class Ec2CapacityReservationTypeDef(TypedDict):
+    Ec2CapacityReservationId: NotRequired[str]
+    TotalInstanceCount: NotRequired[int]
+    AvailableInstanceCount: NotRequired[int]
+    UsedByCurrentEndpoint: NotRequired[int]
 
 
 class EdgeDeploymentPlanSummaryTypeDef(TypedDict):
@@ -4972,6 +4983,11 @@ class ProcessingS3OutputTypeDef(TypedDict):
     S3Uri: str
     S3UploadMode: ProcessingS3UploadModeType
     LocalPath: NotRequired[str]
+
+
+class ProductionVariantCapacityReservationConfigTypeDef(TypedDict):
+    CapacityReservationPreference: NotRequired[Literal["capacity-reservations-only"]]
+    MlReservationArn: NotRequired[str]
 
 
 class ProductionVariantCoreDumpConfigTypeDef(TypedDict):
@@ -8251,6 +8267,15 @@ class SpaceStorageSettingsTypeDef(TypedDict):
     EbsStorageSettings: NotRequired[EbsStorageSettingsTypeDef]
 
 
+class ProductionVariantCapacityReservationSummaryTypeDef(TypedDict):
+    MlReservationArn: NotRequired[str]
+    CapacityReservationPreference: NotRequired[Literal["capacity-reservations-only"]]
+    TotalInstanceCount: NotRequired[int]
+    AvailableInstanceCount: NotRequired[int]
+    UsedByCurrentEndpoint: NotRequired[int]
+    Ec2CapacityReservations: NotRequired[List[Ec2CapacityReservationTypeDef]]
+
+
 class ListEdgeDeploymentPlansResponseTypeDef(TypedDict):
     EdgeDeploymentPlanSummaries: List[EdgeDeploymentPlanSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -9704,20 +9729,6 @@ class PendingProductionVariantSummaryTypeDef(TypedDict):
     RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
 
 
-class ProductionVariantSummaryTypeDef(TypedDict):
-    VariantName: str
-    DeployedImages: NotRequired[List[DeployedImageTypeDef]]
-    CurrentWeight: NotRequired[float]
-    DesiredWeight: NotRequired[float]
-    CurrentInstanceCount: NotRequired[int]
-    DesiredInstanceCount: NotRequired[int]
-    VariantStatus: NotRequired[List[ProductionVariantStatusTypeDef]]
-    CurrentServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
-    DesiredServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
-    ManagedInstanceScaling: NotRequired[ProductionVariantManagedInstanceScalingTypeDef]
-    RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
-
-
 class SchedulerConfigOutputTypeDef(TypedDict):
     PriorityClasses: NotRequired[List[PriorityClassTypeDef]]
     FairShare: NotRequired[FairShareType]
@@ -9755,6 +9766,7 @@ class ProductionVariantTypeDef(TypedDict):
     ManagedInstanceScaling: NotRequired[ProductionVariantManagedInstanceScalingTypeDef]
     RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
     InferenceAmiVersion: NotRequired[ProductionVariantInferenceAmiVersionType]
+    CapacityReservationConfig: NotRequired[ProductionVariantCapacityReservationConfigTypeDef]
 
 
 ProfilerConfigUnionTypeDef = Union[ProfilerConfigTypeDef, ProfilerConfigOutputTypeDef]
@@ -10422,6 +10434,21 @@ class DriftCheckBaselinesTypeDef(TypedDict):
 class SpaceSettingsSummaryTypeDef(TypedDict):
     AppType: NotRequired[AppTypeType]
     SpaceStorageSettings: NotRequired[SpaceStorageSettingsTypeDef]
+
+
+class ProductionVariantSummaryTypeDef(TypedDict):
+    VariantName: str
+    DeployedImages: NotRequired[List[DeployedImageTypeDef]]
+    CurrentWeight: NotRequired[float]
+    DesiredWeight: NotRequired[float]
+    CurrentInstanceCount: NotRequired[int]
+    DesiredInstanceCount: NotRequired[int]
+    VariantStatus: NotRequired[List[ProductionVariantStatusTypeDef]]
+    CurrentServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
+    DesiredServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
+    ManagedInstanceScaling: NotRequired[ProductionVariantManagedInstanceScalingTypeDef]
+    RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
+    CapacityReservationConfig: NotRequired[ProductionVariantCapacityReservationSummaryTypeDef]
 
 
 class InferenceRecommendationTypeDef(TypedDict):

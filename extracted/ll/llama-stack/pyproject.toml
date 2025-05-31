@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llama_stack"
-version = "0.2.8"
+version = "0.2.9"
 authors = [{ name = "Meta Llama", email = "llama-oss@meta.com" }]
 description = "Llama Stack"
 readme = "README.md"
@@ -21,12 +21,13 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Information Analysis",
 ]
 dependencies = [
+    "aiohttp",
     "fire",
     "httpx",
     "huggingface-hub",
     "jinja2>=3.1.6",
     "jsonschema",
-    "llama-stack-client>=0.2.8",
+    "llama-stack-client>=0.2.9",
     "openai>=1.66",
     "prompt-toolkit",
     "python-dotenv",
@@ -35,6 +36,7 @@ dependencies = [
     "requests",
     "rich",
     "setuptools",
+    "starlette",
     "termcolor",
     "tiktoken",
     "pillow",
@@ -42,6 +44,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+ui = [
+    "streamlit",
+    "pandas",
+    "llama-stack-client>=0.2.9",
+    "streamlit-option-menu",
+]
+
+[dependency-groups]
 dev = [
     "pytest",
     "pytest-timeout",
@@ -76,7 +86,7 @@ unit = [
 ]
 # These are the core dependencies required for running integration tests. They are shared across all
 # providers. If a provider requires additional dependencies, please add them to your environment
-# separately. If you are using "uv" to execute your tests, you can use the "--with" flag to specify extra
+# separately. If you are using "uv" to execute your tests, you can use the "--group" flag to specify extra
 # dependencies.
 test = [
     "openai",
@@ -112,12 +122,6 @@ docs = [
     "sphinxcontrib.openapi",
 ]
 codegen = ["rich", "pydantic", "jinja2>=3.1.6"]
-ui = [
-    "streamlit",
-    "pandas",
-    "llama-stack-client>=0.2.8",
-    "streamlit-option-menu",
-]
 
 [project.urls]
 Homepage = "https://github.com/meta-llama/llama-stack"

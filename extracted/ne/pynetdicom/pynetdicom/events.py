@@ -8,7 +8,7 @@ import inspect
 import logging
 from pathlib import Path
 import sys
-from typing import Callable, Any, NamedTuple, TYPE_CHECKING, cast, Iterator, Union
+from typing import Callable, Any, NamedTuple, TYPE_CHECKING, cast, Iterator, TypeAlias
 
 from pydicom.dataset import Dataset, FileMetaDataset
 from pynetdicom.dimse_primitives import C_STORE
@@ -55,7 +55,7 @@ if TYPE_CHECKING:  # pragma: no cover
 LOGGER = logging.getLogger(__name__)
 
 
-EventType = Union["NotificationEvent", "InterventionEvent"]
+EventType: TypeAlias = "NotificationEvent | InterventionEvent"
 EventHandlerType = tuple[EventType, Callable] | tuple[EventType, Callable, list[Any]]
 _BasicReturnType = Dataset | int
 _DatasetReturnType = tuple[_BasicReturnType, Dataset | None]
@@ -66,8 +66,6 @@ _IteratorType = Iterator[tuple[_BasicReturnType, Dataset | None]]
 #   No returns/yields needed, can have multiple handlers per event
 class NotificationEvent(NamedTuple):
     """Representation of a notification event.
-
-    .. versionadded:: 1.3
 
     Possible notification events are:
 
@@ -136,8 +134,6 @@ EVT_REQUESTED = NotificationEvent("EVT_REQUESTED", "Association requested")
 #   Returns/yields needed if bound, can only have one handler per event
 class InterventionEvent(NamedTuple):
     """Representation of an intervention event.
-
-    .. versionadded:: 1.3
 
     Possible intervention events are:
 
@@ -277,10 +273,7 @@ def _remove_handler(
 
 
 def get_default_handler(event: InterventionEvent) -> Callable[["Event"], Any]:
-    """Return the default handler for an intervention `event`.
-
-    .. versionadded:: 1.3
-    """
+    """Return the default handler for an intervention `event`."""
     handlers = {
         EVT_ASYNC_OPS: _async_ops_handler,
         EVT_SOP_COMMON: _sop_common_handler,
@@ -305,8 +298,6 @@ def trigger(
     assoc: "Association", event: EventType, attrs: dict[str, Any] | None = None
 ) -> Any | None:
     """Trigger an `event` and call any bound handler(s).
-
-    .. versionadded:: 1.3
 
     Notification events can be bound to multiple handlers, intervention events
     can only be bound to a single handler.
@@ -357,6 +348,11 @@ def trigger(
     if not handlers or handlers[0] is None:
         return None
 
+    # Use the non-blocking abort during during notification event handlers
+    #   The trigger for intervention event handlers sets the abort method
+    if isinstance(event, NotificationEvent):
+        setattr(assoc, "abort", assoc._abort_nonblocking)
+
     evt = Event(assoc, event, attrs or {})
 
     try:
@@ -376,6 +372,8 @@ def trigger(
             else:
                 func(evt)
     except Exception as exc:
+        setattr(assoc, "abort", assoc._abort_blocking)
+
         # Intervention exceptions get raised
         if isinstance(event, InterventionEvent):
             raise
@@ -387,13 +385,13 @@ def trigger(
         )
         LOGGER.exception(exc)
 
+    setattr(assoc, "abort", assoc._abort_blocking)
+
     return None
 
 
 class Event:
     """Representation of an event.
-
-    .. versionadded:: 1.3
 
     .. warning::
 
@@ -487,8 +485,6 @@ class Event:
     @property
     def action_type(self) -> int | None:
         """Return an N-ACTION request's `Action Type ID` as an :class:`int`.
-
-        .. versionadded:: 1.4
 
         Returns
         -------
@@ -690,10 +686,6 @@ class Event:
     def event(self) -> EventType:
         """Return the corresponding event.
 
-        .. versionadded:: 1.4
-
-        Returns
-        -------
         events.InterventionEvent or events.NotificationEvent
             The corresponding event as a
             :func:`namedtuple<collections.namedtuple>`.
@@ -731,8 +723,6 @@ class Event:
     def event_type(self) -> int | None:
         """Return an N-EVENT-REPORT request's `Event Type ID` as an
         :class:`int`.
-
-        .. versionadded:: 1.4
 
         Returns
         -------
@@ -868,8 +858,7 @@ class Event:
                     t_syntax.is_deflated,
                 )
 
-                ds.is_little_endian = t_syntax.is_little_endian
-                ds.is_implicit_VR = t_syntax.is_implicit_VR
+                ds.set_original_encoding(t_syntax.is_implicit_VR, t_syntax.is_little_endian)
 
                 # Store the decoded dataset in case its accessed again
                 self._decoded = ds
@@ -939,10 +928,6 @@ class Event:
     def message_id(self) -> int:
         """Return a DIMSE service request's `Message ID` as :class:`int`.
 
-        .. versionadded:: 1.5
-
-        Returns
-        -------
         int
             The request's (0000,0110) *Message ID* value.
 
@@ -990,8 +975,6 @@ class Event:
     @property
     def move_destination(self) -> str | None:
         """Return a C-MOVE request's `Move Destination` as :class:`str`.
-
-        .. versionadded:: 1.4
 
         .. versionchanged:: 2.0
 
