@@ -1,10 +1,7 @@
 import json
 
 import pydantic
-from connector.generated import (
-    ErrorResponse,
-)
-from connector.oai.capability import StandardCapabilityName
+from connector.generated import ErrorResponse, StandardCapabilityName
 from connector.tests.gather_cases import gather_cases
 from connector.tests.mock_httpx import mock_requests
 from connector.tests.type_definitions import ResponseBodyMap

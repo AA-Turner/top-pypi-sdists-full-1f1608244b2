@@ -155,6 +155,37 @@ class ListExperimentsResponseBody(TypedDict):
     data: Sequence[Experiment]
 
 
+class LocalUserData(TypedDict):
+    email: str
+    username: str
+    role: Literal["SYSTEM", "ADMIN", "MEMBER"]
+    auth_method: Literal["LOCAL"]
+    password: NotRequired[str]
+
+
+class LocalUser(LocalUserData):
+    id: str
+    created_at: str
+    updated_at: str
+    password_needs_reset: bool
+
+
+class OAuth2UserData(TypedDict):
+    email: str
+    username: str
+    role: Literal["SYSTEM", "ADMIN", "MEMBER"]
+    auth_method: Literal["OAUTH2"]
+    oauth2_client_id: NotRequired[str]
+    oauth2_user_id: NotRequired[str]
+
+
+class OAuth2User(OAuth2UserData):
+    id: str
+    created_at: str
+    updated_at: str
+    profile_picture_url: NotRequired[str]
+
+
 class OtlpStatus(TypedDict):
     code: NotRequired[int]
     message: NotRequired[str]
@@ -275,6 +306,17 @@ class PromptVersionTagData(TypedDict):
     description: NotRequired[str]
 
 
+class PromptXAIInvocationParametersContent(TypedDict):
+    temperature: NotRequired[float]
+    max_tokens: NotRequired[int]
+    max_completion_tokens: NotRequired[int]
+    frequency_penalty: NotRequired[float]
+    presence_penalty: NotRequired[float]
+    top_p: NotRequired[float]
+    seed: NotRequired[int]
+    reasoning_effort: NotRequired[Literal["low", "medium", "high"]]
+
+
 class SpanAnnotationResult(TypedDict):
     label: NotRequired[str]
     score: NotRequired[float]
@@ -308,6 +350,7 @@ class UpdateProjectResponseBody(TypedDict):
 
 class UploadDatasetData(TypedDict):
     dataset_id: str
+    version_id: str
 
 
 class UploadDatasetResponseBody(TypedDict):
@@ -392,6 +435,15 @@ class CreateProjectResponseBody(TypedDict):
     data: Project
 
 
+class CreateUserRequestBody(TypedDict):
+    user: Union[LocalUserData, OAuth2UserData]
+    send_welcome_email: NotRequired[bool]
+
+
+class CreateUserResponseBody(TypedDict):
+    data: Union[LocalUser, OAuth2User]
+
+
 class DeleteAnnotationConfigResponseBody(TypedDict):
     data: Union[CategoricalAnnotationConfig, ContinuousAnnotationConfig, FreeformAnnotationConfig]
 
@@ -423,6 +475,11 @@ class GetPromptVersionTagsResponseBody(TypedDict):
 
 class GetPromptsResponseBody(TypedDict):
     data: Sequence[Prompt]
+    next_cursor: Optional[str]
+
+
+class GetUsersResponseBody(TypedDict):
+    data: Sequence[Union[LocalUser, OAuth2User]]
     next_cursor: Optional[str]
 
 
@@ -484,6 +541,11 @@ class PromptTools(TypedDict):
     disable_parallel_tool_calls: NotRequired[bool]
 
 
+class PromptXAIInvocationParameters(TypedDict):
+    type: Literal["xai"]
+    xai: PromptXAIInvocationParametersContent
+
+
 class SpanAnnotationData(TypedDict):
     span_id: str
     name: str
@@ -542,7 +604,7 @@ class PromptChatTemplate(TypedDict):
 
 
 class PromptVersionData(TypedDict):
-    model_provider: Literal["OPENAI", "AZURE_OPENAI", "ANTHROPIC", "GOOGLE", "DEEPSEEK"]
+    model_provider: Literal["OPENAI", "AZURE_OPENAI", "ANTHROPIC", "GOOGLE", "DEEPSEEK", "XAI"]
     model_name: str
     template: Union[PromptChatTemplate, PromptStringTemplate]
     template_type: Literal["STR", "CHAT"]
@@ -553,6 +615,7 @@ class PromptVersionData(TypedDict):
         PromptAnthropicInvocationParameters,
         PromptGoogleInvocationParameters,
         PromptDeepSeekInvocationParameters,
+        PromptXAIInvocationParameters,
     ]
     description: NotRequired[str]
     tools: NotRequired[PromptTools]

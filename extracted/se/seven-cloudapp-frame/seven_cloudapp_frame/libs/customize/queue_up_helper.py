@@ -2,7 +2,7 @@
 """
 @Author: HuangJianYi
 @Date: 2021-08-30 09:22:51
-@LastEditTime: 2024-05-27 14:09:03
+@LastEditTime: 2025-05-26 10:23:53
 @LastEditors: HuangJianYi
 @Description: 排队系统帮助类
 """
@@ -17,6 +17,7 @@ class QueueUpHelper:
     :description: 排队系统帮助类 提供获取小程序总排队人数、获取用户当前排队数、获取用户正在办理中的队列信息、加入排队、退出排队、查询单个排队情况、批量查询某用户排队情况(只包含已排队的信息)、批量查询某用户排队情况(包含已排队和未排队的信息)、更新可操作时间、签到等功能；
     踢人规则1：第一个在办理中，第二个用户的过期时间=第一个结束时间+8*1，第三个=第一个结束时间+8*2，以此类推；第一个没在办理中，第一个过期时间是8*1，第二个是8*2，第三个是8*3，以此类推；
     踢人规则2：如果都没有正在办理中，那么取上次办理人退出的时间作为排在第一位人员的开始时间，进行倒计时，没有上次办理人退出时间的话，则取当前第一位人员的入队时间进行倒计时；
+    用户信息存在hash,排行信息存在zset,排队次数存在user_zset
     """
     logger_error = Logger.get_logger_by_name("log_error")
     logger_info = Logger.get_logger_by_name("log_info")
@@ -24,7 +25,7 @@ class QueueUpHelper:
     @classmethod
     def _get_zset_name(self, app_id, queue_name):
         """
-        :description: 获取排行集合名称，集合用于排行榜，排第一的优先操作
+        :description: 排行信息集合名称（集合用于排行榜，排第一的优先操作）
         :param app_id：应用标识
         :param queue_name：队列名称
         :return: 
@@ -56,7 +57,7 @@ class QueueUpHelper:
     @classmethod
     def _get_user_hash_name(self, app_id):
         """
-        :description: 获取用户关联队列名称
+        :description: 用户关联队列的hash名称
         :param app_id：应用标识
         :return: 
         :last_editors: HuangJianYi
@@ -69,7 +70,7 @@ class QueueUpHelper:
     @classmethod
     def _get_user_zset_name(self, app_id):
         """
-        :description: 用户在小程序内的排队次数信息
+        :description: 用户在小程序内的排队次数集合名称
         :param app_id：应用标识
         :return: 
         :last_editors: HuangJianYi
@@ -232,20 +233,20 @@ class QueueUpHelper:
                 start_timestamp = TimeHelper.get_now_timestamp()
 
                 hash_value = {}
-                hash_value["queue_name"] = queue_name  #排队名称
-                hash_value["queue_no"] = queue_no  #排队号
-                hash_value["user_id"] = data  #用户标识
-                hash_value["user_nick"] = user_nick  #用户昵称
-                hash_value["avatar"] = avatar  #头像
-                hash_value["progress_status"] = 1  #进度0未排队1已排队2办理中
-                hash_value["queue_timestamp"] = start_timestamp  #入队时间搓
-                hash_value["queue_date"] = TimeHelper.timestamp_to_format_time(start_timestamp)  #入队时间
+                hash_value["queue_name"] = queue_name  # 排队名称
+                hash_value["queue_no"] = queue_no  # 排队号
+                hash_value["user_id"] = data  # 用户标识
+                hash_value["user_nick"] = user_nick  # 用户昵称
+                hash_value["avatar"] = avatar  # 头像
+                hash_value["progress_status"] = 1  # 进度0未排队1已排队2办理中
+                hash_value["queue_timestamp"] = start_timestamp  # 入队时间搓
+                hash_value["queue_date"] = TimeHelper.timestamp_to_format_time(start_timestamp)  # 入队时间
                 hash_value["info_json"] = info_dict
 
-                queue_index =SevenHelper.to_int(redis_init.zrank(zset_name, data)) + 1
+                queue_index = SevenHelper.to_int(redis_init.zrank(zset_name, data)) + 1
                 if queue_index == 1:
                     redis_init.hdel(self._get_popdate_hash_name(app_id), zset_name)
-                #添加排队信息
+                # 添加排队信息
                 hash_name = self._get_user_hash_name(app_id)
                 hash_key = f"userid_{data}_queuename_{queue_name}"
                 redis_init.hsetnx(hash_name, hash_key, SevenHelper.json_dumps(hash_value))
@@ -275,7 +276,7 @@ class QueueUpHelper:
             return invoke_result_data
 
     @classmethod
-    def _set_last_pop_date(self,app_id, redis_init, hash_key):
+    def _set_last_pop_date(self, app_id, redis_init, hash_key):
         """
         :description: 设置办理中的用户退出队列的时间
         :param app_id：应用标识
@@ -347,7 +348,7 @@ class QueueUpHelper:
                 redis_init = SevenHelper.redis_init()
                 #删除用户排队次数小于等于0的数据
                 redis_init.zremrangebyscore(self._get_user_zset_name(app_id), -10, 0)
-                
+
                 zset_name = self._get_zset_name(app_id, queue_name)
                 hash_name = self._get_user_hash_name(app_id)
                 value_list = redis_init.zrange(zset_name, 0, 1000)
@@ -503,7 +504,7 @@ class QueueUpHelper:
         invoke_result_data.data = []
         zset_name = QueueUpHelper._get_zset_name(app_id, queue_name)
         redis_init = SevenHelper.redis_init()
-        user_id_list = redis_init.zrange(zset_name,0,-1)
+        user_id_list = redis_init.zrange(zset_name, 0, -1)
         if len(user_id_list) <= 0:
             return invoke_result_data
         key_list = []
@@ -511,11 +512,11 @@ class QueueUpHelper:
             key = f"userid_{user_id}_queuename_{queue_name}"
             key_list.append(key)
         # 用户列表
-        user_list = [] 
+        user_list = []
         # 踢掉过期用户
         QueueUpHelper.pop_by_queue_name(app_id, queue_name)
         # 总排队人数
-        total_num = QueueUpHelper._get_queue_num(app_id, queue_name)  
+        total_num = QueueUpHelper._get_queue_num(app_id, queue_name)
         hash_value_list = redis_init.hmget(QueueUpHelper._get_user_hash_name(app_id), key_list)
         for item in hash_value_list:
             hash_value = SevenHelper.json_loads(item) if item else {}
@@ -558,12 +559,12 @@ class QueueUpHelper:
         user_id_list = redis_init.zrange(zset_name,0,limit)
         if len(user_id_list) <= 0:
             return invoke_result_data
-        
+
         result = {}
         result["queue_name"] = queue_name  #队列名称
         result["user_list"] = [] # 用户列表
         result["current_user"] = {} # 当前用户
-        
+
         query_invoke_result_data = self.query(app_id, queue_name, user_id, is_pop)
         if query_invoke_result_data.success == True:
             result["current_user"] = query_invoke_result_data.data

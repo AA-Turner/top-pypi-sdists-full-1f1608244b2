@@ -12,7 +12,7 @@ from ansys.fluent.core.solver.flobject import (
     _InOutFile,
 )
 
-SHASH = "ecd8273c09ee749503e43e373a8c3b5a430996abcf6df4b070f45612150c0c0a"
+SHASH = "9cb5a5b2564281c0f9101bc53b361f350d27668fb17ceca2fcddecf6d5642bd2"
 
 class single_precision_coordinates(Boolean):
     """
@@ -63665,19 +63665,31 @@ class export_boundary_mesh(Command):
         filename=('file_name', 'filename'),
     )
 
-class turbo_models(Group):
+class models_1(Group):
     """
     The turbo-models settings.
     """
     _version = '261'
-    fluent_name = 'turbo-models'
-    _python_name = 'turbo_models'
+    fluent_name = 'models'
+    _python_name = 'models'
     child_names = ['enabled', 'general_turbo_interface']
     command_names = ['export_boundary_mesh']
     _child_classes = dict(
         enabled=enabled_62,
         general_turbo_interface=general_turbo_interface,
         export_boundary_mesh=export_boundary_mesh,
+    )
+
+class turbomachinery(Group):
+    """
+    The turbomachinery models.
+    """
+    _version = '261'
+    fluent_name = 'turbomachinery'
+    _python_name = 'turbomachinery'
+    child_names = ['models']
+    _child_classes = dict(
+        models=models_1,
     )
 
 class auto_compile_compiled_functions(Boolean):
@@ -64908,7 +64920,7 @@ class setup(Group):
     _version = '261'
     fluent_name = 'setup'
     _python_name = 'setup'
-    child_names = ['general', 'models', 'materials', 'cell_zone_conditions', 'model_topology', 'physics', 'boundary_conditions', 'mesh_interfaces', 'dynamic_mesh', 'reference_values', 'reference_frames', 'named_expressions', 'turbo_models', 'user_defined', 'profiles']
+    child_names = ['general', 'models', 'materials', 'cell_zone_conditions', 'model_topology', 'physics', 'boundary_conditions', 'mesh_interfaces', 'dynamic_mesh', 'reference_values', 'reference_frames', 'named_expressions', 'turbomachinery', 'user_defined', 'profiles']
     _child_classes = dict(
         general=general,
         models=models,
@@ -64922,12 +64934,13 @@ class setup(Group):
         reference_values=reference_values,
         reference_frames=reference_frames,
         named_expressions=named_expressions,
-        turbo_models=turbo_models,
+        turbomachinery=turbomachinery,
         user_defined=user_defined_1,
         profiles=profiles,
     )
     _child_aliases = dict(
         geometry=('model_topology', 'geometry'),
+        turbo_models=('turbomachinery/models', 'turbo-models'),
     )
 
 class axis_stabilization(Boolean):
@@ -68486,7 +68499,7 @@ class ramp_scalars(Boolean):
     fluent_name = 'ramp-scalars?'
     _python_name = 'ramp_scalars'
 
-class models_1(Group):
+class models_2(Group):
     """
     Flexible numerics object.
     """
@@ -68625,7 +68638,7 @@ class contact_solution_controls(Group):
         spatial=spatial,
         transient=transient,
         amg=amg,
-        models=models_1,
+        models=models_2,
         methods=methods_3,
         miscellaneous=miscellaneous,
         set_settings_to_default=set_settings_to_default,

@@ -1,5 +1,4 @@
-from connector.generated.models.auth_credential import AuthCredential
-from connector.generated.models.o_auth_credential import OAuthCredential
+from connector.generated import AuthCredential, OAuthCredential
 from {name}.settings import {pascal}Settings
 
 VALID_AUTH = AuthCredential(

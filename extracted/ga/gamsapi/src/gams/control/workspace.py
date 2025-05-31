@@ -739,7 +739,13 @@ class GamsWorkspace(object):
         @brief Closes down all network sessions of all GamsModelInstances belonging to the current GamsWorkspace
         """
         import gc
-        model_instances = [obj for obj in gc.get_objects() if isinstance(obj, GamsModelInstance) and obj.sync_db.workspace is self]
+        model_instances = []
+        for obj in gc.get_objects():
+            try:
+                if isinstance(obj, GamsModelInstance) and obj.sync_db.workspace is self:
+                    model_instances.append(obj)
+            except ReferenceError:  # silently skip objects that cause a ReferenceError in isinstance(), e.g. weakref
+                pass
         for mi in model_instances:
             mi.cleanup()
 

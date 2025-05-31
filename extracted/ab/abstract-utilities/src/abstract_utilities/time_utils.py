@@ -376,6 +376,11 @@ def format_timestamp(ms):
 
 def get_time_now_iso():
     return datetime.now().isoformat()
+def is_valid_time(comp_timestamp, timestamp=None, before=True):
+    if timestamp is None:
+        return True
+    return (timestamp >= comp_timestamp) if before else (timestamp <= comp_timestamp)
+
 # Function: get_time_stamp
 # Function: get_milisecond_time_stamp
 # Function: get_day

@@ -1,19 +1,15 @@
-import sys
 from pathlib import Path
+import acres.typ as at
 from acres import Loader
-from .data import load_resource
 
-if sys.version_info >= (3, 11):
-    from importlib.resources.abc import Traversable
-else:
-    from importlib_resources.abc import Traversable
+from .data import load_resource
 
 
 def test_acres() -> None:
     assert isinstance(load_resource, Loader)
 
     text_resource = load_resource.readable('text_file')
-    assert isinstance(text_resource, Traversable)
+    assert isinstance(text_resource, at.Traversable)
     assert text_resource.read_text() == 'A file with some text.\n'
     # New object is created
     assert load_resource.readable('text_file') is not text_resource

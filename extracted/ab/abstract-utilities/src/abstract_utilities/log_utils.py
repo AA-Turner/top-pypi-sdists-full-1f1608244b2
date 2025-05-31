@@ -1,8 +1,11 @@
 import logging
 import os
+import inspect
 from .path_utils import mkdirs
 from logging.handlers import RotatingFileHandler
 from .abstract_classes import SingletonMeta
+
+
 # from abstract_utilities import get_logFile  # Potential conflict - consider removing or renaming
 
 
@@ -70,73 +73,105 @@ class AbstractLogManager(metaclass=SingletonMeta):
         """Return the configured logger instance."""
         return self.logger
 
-def get_logFile(bpName: str=None, maxBytes: int = 100000, backupCount: int = 3) -> logging.Logger:
-    """Return a logger that writes messages at INFO level or above to a rotating file."""
-    # Create logs directory if it doesn't exist
-    bpName = bpName or 'default'
-    log_dir = mkdirs('logs')
-    log_path = os.path.join(log_dir, f'{bpName}.log')
 
-    # Create or get the named logger
+def get_logFile(bpName: str = None, maxBytes: int = 100_000, backupCount: int = 3) -> logging.Logger:
+    """
+    If bpName is None, use the “caller module’s basename” as the logger name.
+    Otherwise, use the explicitly provided bpName.
+    """
+    if bpName is None:
+        # Find the first frame outside logging_utils.py
+        frame_idx = _find_caller_frame_index()
+        frame_info = inspect.stack()[frame_idx]
+        caller_path = frame_info.filename  # e.g. "/home/joe/project/app/routes.py"
+        bpName = os.path.splitext(os.path.basename(caller_path))[0]
+        del frame_info
+
+    log_dir = mkdirs("logs")
+    log_path = os.path.join(log_dir, f"{bpName}.log")
+
     logger = logging.getLogger(bpName)
     logger.setLevel(logging.INFO)
 
-    # Check if logger already has a handler to avoid duplicate logs on multiple calls.
     if not logger.handlers:
-        # Configure the rotating file handler
-        log_handler = RotatingFileHandler(log_path, maxBytes=maxBytes, backupCount=backupCount)
-        log_handler.setLevel(logging.INFO)
-        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        log_handler.setFormatter(formatter)
-        logger.addHandler(log_handler)
-        
-        # (Optional) Also add a console handler if desired:
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.INFO)
-        console_handler.setFormatter(formatter)
-        logger.addHandler(console_handler)
+        handler = RotatingFileHandler(log_path, maxBytes=maxBytes, backupCount=backupCount)
+        handler.setLevel(logging.INFO)
+
+        fmt = "%(asctime)s - %(levelname)s - %(pathname)s - %(message)s"
+        formatter = logging.Formatter(fmt)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+        console = logging.StreamHandler()
+        console.setLevel(logging.INFO)
+        console.setFormatter(formatter)
+        logger.addHandler(console)
 
     return logger
 
+def _find_caller_frame_index():
+    """
+    Scan up the call stack until we find a frame whose module is NOT logging_utils.
+    Return that index in inspect.stack().
+    """
+    for idx, frame_info in enumerate(inspect.stack()):
+        # Ignore the very first frame (idx=0), which is this function itself.
+        if idx == 0:
+            continue
+        module = inspect.getmodule(frame_info.frame)
+        # If module is None (e.g. interactive), skip it;
+        # else get module.__name__ and compare:
+        module_name = module.__name__ if module else None
+
+        # Replace 'yourpackage.logging_utils' with whatever your actual module path is:
+        if module_name != __name__ and not module_name.startswith("logging"):
+            # We found a frame that isn’t in this helper module or the stdlib logging.
+            return idx
+    # Fallback to 1 (the immediate caller) if nothing else matches:
+    return 1
 
 
-def get_logger_callable(logger, level='info'):
-    """
-    Determine the logging callable from a logger or logger method.
-    
-    Args:
-        logger: Logger object, logger method (e.g., logger.info), or None.
-        default_level (str): Logging level to use if logger is a Logger object (e.g., 'info', 'error').
-    
-    Returns:
-        callable: Function to call for logging (e.g., logger.info or logger).
-        None: If logger is None or invalid.
-    """
+def get_logger_callable(logger, level="info"):
     if logger is None:
         return None
     elif isinstance(logger, logging.Logger):
-        # Logger object, return the specified method (e.g., logger.info)
         return getattr(logger, level.lower(), None)
-    elif callable(logger) and hasattr(logger, '__self__') and isinstance(logger.__self__, logging.Logger):
-        # Bound method (e.g., logger.info)
+    elif callable(logger) and hasattr(logger, "__self__") and isinstance(logger.__self__, logging.Logger):
         return logger
     else:
-        # Invalid logger, treat as None
         return None
-    
-def print_or_log(message, logger=True, level='info'):
+
+
+def print_or_log(message, logger=True, level="info"):
     """
-    Print or log a message based on the logger provided.
-    
-    Args:
-        message (str): Message to print or log.
-        logger: Logger object, logger method (e.g., logger.info), or None.
-        level (str): Logging level if logger is a Logger object (e.g., 'info', 'error').
+    Print or log a message. If logger=True, find the first caller outside this module
+    and name the logger after that caller’s basename. Then emit the log with a
+    stacklevel that points directly at that same caller.
     """
-    if logger == True:
-        logger =get_logFile('default')
+    # 1) Find the first frame index outside logging_utils (and also outside the logging stdlib).
+    caller_idx = _find_caller_frame_index()
+    stack = inspect.stack()
+    caller_frame = stack[caller_idx]
+    caller_path = caller_frame.filename
+    # e.g. "/home/joe/project/app/routes.py"
+    bpName = os.path.splitext(os.path.basename(caller_path))[0]
+    del caller_frame
+    del stack
+
+    if logger is True:
+        # 2) Now get (or create) a logger named after the original caller’s basename:
+        logger = get_logFile(bpName)
+
     log_callable = get_logger_callable(logger, level=level)
     if log_callable:
-        log_callable(message)
+        # 3) Use the same index as stacklevel, so that the LogRecord’s pathname
+        #    is exactly caller_path.
+        log_callable(message, stacklevel=caller_idx + 1)
+        # Explanation:
+        #   - stacklevel=1 => log record’s pathname points to log_callable() itself
+        #   - stacklevel=2 => pathname points to print_or_log()
+        #   - stacklevel=3 => pathname points to initialize_call_log() (if called)
+        #   - ...
+        #   - stacklevel=caller_idx+1 => pathname points exactly to stack[caller_idx].filename
     else:
         print(message)

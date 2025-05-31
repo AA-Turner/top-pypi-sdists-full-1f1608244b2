@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-aws",
-    "version": "19.65.0",
+    "version": "19.65.1",
     "description": "Prebuilt aws Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-aws.git",
@@ -2149,7 +2149,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_aws._jsii": [
-            "provider-aws@19.65.0.jsii.tgz"
+            "provider-aws@19.65.1.jsii.tgz"
         ],
         "cdktf_cdktf_provider_aws": [
             "py.typed"

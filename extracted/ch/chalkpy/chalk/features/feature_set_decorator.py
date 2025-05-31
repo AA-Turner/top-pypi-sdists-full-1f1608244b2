@@ -36,7 +36,6 @@ from chalk.utils import notebook
 from chalk.utils.collections import ensure_tuple
 from chalk.utils.duration import Duration, parse_chalk_duration, parse_chalk_duration_s
 from chalk.utils.metaprogramming import MISSING, set_new_attribute
-from chalk.utils.notebook import is_notebook
 from chalk.utils.string import to_snake_case
 
 T = TypeVar("T")
@@ -225,14 +224,6 @@ def features(
             singleton=singleton,
         )
         assert issubclass(updated_class, Features)
-        if previous_features_class is not None:
-            new_feature_fqns = {x.root_fqn for x in updated_class.__chalk_features_raw__}
-            previous_feature_fqns = {x.root_fqn for x in previous_features_class.__chalk_features_raw__}
-            missing_fqns = previous_feature_fqns - new_feature_fqns
-            if len(missing_fqns) > 0:
-                raise ValueError(
-                    f"New feature class definitions must include existing features. The missing features are: {sorted(missing_fqns)}"
-                )
         FeatureSetBase.registry[updated_class.__chalk_namespace__] = updated_class
 
         if updated_class.__chalk_is_singleton__:
@@ -1336,13 +1327,14 @@ def _class_setattr(
         type.__setattr__(cls, key, value)
         return
     f = None
+    is_notebook_defined_feature = False
     if isinstance(value, Underscore):
         from chalk.df.ast_parser import parse_inline_setattr_annotation
 
         fqn = build_namespaced_name(name=f"{cls.namespace}.{key}")
         existing_feature = next((f for f in cls.features if f.fqn == fqn), None)
 
-        is_notebook_expression: bool = is_notebook()
+        is_notebook_expression: bool = notebook.is_notebook()
         if is_notebook_expression:
             # In notebooks, newly-defined underscores are stored separately, as "feature expressions".
             # These don't correspond to real features
@@ -1372,7 +1364,35 @@ def _class_setattr(
                     underscore_expression=value,
                 )
     elif isinstance(value, Feature):
+        # Handle the case of `User.new_feat = feature(....)` in a notebook
         f = value
+        if notebook.is_notebook():
+            # Note: Can't really distinguish between features declared like this in a notebook cell
+            # vs. features declared like this in code imported from a notebook cell (e.g. customer code)
+            # Gonna treat both the same since this code only runs in a notebook context
+            # (e.g. customers can't use this pattern as part of their deployment code)
+            is_notebook_defined_feature = True
+            existing_feature = next((ff for ff in cls.features if ff.unversioned_attribute_name == key), None)
+            if notebook.is_defined_in_module(cls) and key not in FeatureSetBase.__chalk_notebook_defined_feature_fields__.get(cls.namespace, set()):
+                if existing_feature is not None:
+                    raise ValueError(f"Can't overwrite feature '{cls.namespace}.{key}' because it already exists in the deployment source.")
+            # Get the type annotation
+            parsed_annotation: Optional[ParsedAnnotation] = None
+            if existing_feature is not None:
+                parsed_annotation = ParsedAnnotation(underlying=existing_feature.typ.parsed_annotation)
+            from chalk.df.ast_parser import parse_inline_setattr_annotation
+            typ = parse_inline_setattr_annotation(key)
+            if typ is not None:
+                parsed_annotation = ParsedAnnotation(underlying=typ)
+            if parsed_annotation is None:
+                raise TypeError(f"Please define a type annotation for feature '{cls.namespace}.{key}'")
+            # Set some attributes that usually get set when the feature is created inside the class definition
+            f.attribute_name = key
+            f.unversioned_attribute_name = key
+            if getattr(f, 'name', None) is None:
+                f.name = key
+            f.namespace = cls.namespace
+            f.typ = parsed_annotation
     else:
         # Passing a feature in directly is used internally, so not mentioning that in the error message
         raise TypeError(
@@ -1397,6 +1417,9 @@ def _class_setattr(
         cls.features.append(f)
         wrapped_feature = FeatureWrapper(f)
         type.__setattr__(cls, key, wrapped_feature)
+        if is_notebook_defined_feature:
+            assert f.unversioned_attribute_name is not None # for pyright
+            FeatureSetBase.__chalk_notebook_defined_feature_fields__[cls.namespace].add(f.unversioned_attribute_name)
     # Update graph in notebook for inline feature definition
     if FeatureSetBase.hook:
         FeatureSetBase.hook(cls)

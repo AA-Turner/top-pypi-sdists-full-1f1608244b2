@@ -922,7 +922,7 @@ class ToProtoConverter:
     @staticmethod
     def _convert_feature(o: Feature) -> pb.FeatureType:
         if o.path:
-            raise ValueError("Features with `path` not supported yet")
+            raise ValueError(f"Features with `path` not supported yet (feature={o})")
         elif o.group_by_windowed is not None:
             return ToProtoConverter.convert_group_by_feature(o)
         elif o.is_scalar:

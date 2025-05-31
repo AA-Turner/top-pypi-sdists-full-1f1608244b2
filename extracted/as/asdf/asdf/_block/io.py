@@ -13,6 +13,7 @@ import yaml
 
 from asdf import _compression as mcompression
 from asdf import constants, util
+from asdf.versioning import _yaml_base_loader as BaseLoader
 
 from .exceptions import BlockIndexError
 
@@ -33,7 +34,7 @@ def calculate_block_checksum(data):
         data = data.ravel(order="K")
     # The following line is safe because we're only using
     # the MD5 as a checksum.
-    m = hashlib.new("md5")  # noqa: S324
+    m = hashlib.new("md5", usedforsecurity=False)
     m.update(data)
     return m.digest()
 
@@ -479,7 +480,10 @@ def read_block_index(fd, offset=None):
         msg = "Failed to read block index header at offset {offset}"
         raise BlockIndexError(msg)
     try:
-        block_index = yaml.load(fd.read(-1), yaml.SafeLoader)
+        # the noqa is needed here since the linter doesn't know
+        # that BaseLoader here is either SafeLoader or CSafeLoader
+        # both of which do not violate S506.
+        block_index = yaml.load(fd.read(-1), BaseLoader)  # noqa: S506
     except yaml.error.YAMLError:
         raise BlockIndexError("Failed to parse block index as yaml")
     if (

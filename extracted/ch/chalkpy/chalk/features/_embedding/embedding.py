@@ -20,7 +20,10 @@ from chalk.features.underscore import Underscore, UnderscoreFunction
 from chalk.serialization.parsed_annotation import ParsedAnnotation
 from chalk.utils.collections import ensure_tuple
 
-SUPPORTED_LOCAL_MODELS = {"all-MiniLM-L6-v2"}
+SUPPORTED_LOCAL_MODELS = {
+    "all-MiniLM-L6-v2",  # https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+    "sample-bert",  # For internal Chalk use
+}
 
 
 def _get_provider(provider: str, model: str, dimensions: int | None = None) -> EmbeddingProvider:

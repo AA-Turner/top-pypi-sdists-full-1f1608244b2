@@ -100,6 +100,10 @@ class DomoDataflow:
 
         return domo_dataflow
 
+
+    def display_url(self):
+        return f"https://{self.auth.domo_instance}.domo.com/datacenter/dataflows/{self.id}/details"
+
 # %% ../../nbs/classes/50_DomoDataflow.ipynb 7
 @patch_to(DomoDataflow, cls_method=True)
 async def get_by_id(

@@ -9,9 +9,11 @@ plugin_requires = [
     "kubernetes>=12.0.1",
 ]
 
-__version__ = "1.15.4"
+__version__ = "v1.16.0"
 
 setup(
+    title="Kubernetes Pod",
+    title_expanded="Flytekit Kubernetes Pod Plugin",
     name=microlib_name,
     version=__version__,
     author="flyteorg",

@@ -113,7 +113,7 @@ async def selecionar_xml(cte):
     #  Selecionar nota baixada
     send_keys(path_to_xml)
 
-    await worker_sleep(2)
+    await worker_sleep(3)
 
     # Tenta clicar no botão abrir apos digitar caminho do XML
     max_tentativas = 3
@@ -360,18 +360,31 @@ async def desmarcar_flag():
         raise Exception(f"Erro ao clicar em Valores: {e}")
 
     await worker_sleep(3)
+    try:
+        app = Application(backend="win32").connect(title="Informação", found_index=0)
+        main_window = app["Informação"]
 
-    app = Application(backend="win32").connect(title="Informação", found_index=0)
-    main_window = app["Informação"]
-
-    # Clicar em OK
-    main_window.child_window(title="OK", found_index=0).click()
+        # Clicar em OK
+        main_window.child_window(title="OK", found_index=0).click()
+    except:
+        pass
 
 
 async def importar_cte_xml(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
     try:
         config = await get_config_by_name("login_emsys")
         cte = task.configEntrada
+
+        # Verifica se a nota já foi lançada
+        status_nf_emsys = await get_status_cte_emsys(cte["chaveCte"])
+        status = status_nf_emsys["status"]
+        print(f"Status da nota:  {status}")
+        if status == "Lançada":
+            return RpaRetornoProcessoDTO(
+                sucesso=False,
+                retorno=f"Nota: {cte['chaveCte']} já foi lançada",
+                status=RpaHistoricoStatusEnum.Descartado,
+            )
 
         await kill_all_emsys()
 

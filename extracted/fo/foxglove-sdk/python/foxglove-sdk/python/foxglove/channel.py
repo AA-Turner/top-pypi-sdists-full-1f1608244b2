@@ -17,9 +17,8 @@ class Channel:
     A channel that can be used to log binary messages or JSON messages.
     """
 
-    __slots__ = ["base", "message_encoding"]
+    __slots__ = ["base"]
     base: _foxglove.BaseChannel
-    message_encoding: str
 
     def __init__(
         self,
@@ -45,8 +44,6 @@ class Channel:
         """
         message_encoding, schema = _normalize_schema(message_encoding, schema)
 
-        self.message_encoding = message_encoding
-
         if context is not None:
             self.base = context._create_channel(
                 topic, message_encoding=message_encoding, schema=schema
@@ -71,9 +68,36 @@ class Channel:
         """The topic name of the channel"""
         return self.base.topic()
 
+    @property
+    def message_encoding(self) -> str:
+        """The message encoding for the channel"""
+        return self.base.message_encoding
+
+    def metadata(self) -> Dict[str, str]:
+        """
+        Returns a copy of the channel's metadata.
+
+        Note that changes made to the returned dictionary will not be applied to
+        the channel's metadata.
+        """
+        return self.base.metadata()
+
+    def schema(self) -> Optional[_foxglove.Schema]:
+        """
+        Returns a copy of the channel's metadata.
+
+        Note that changes made to the returned object will not be applied to
+        the channel's schema.
+        """
+        return self.base.schema()
+
     def schema_name(self) -> Optional[str]:
         """The name of the schema for the channel"""
         return self.base.schema_name()
+
+    def has_sinks(self) -> bool:
+        """Returns true if at least one sink is subscribed to this channel"""
+        return self.base.has_sinks()
 
     def log(
         self,

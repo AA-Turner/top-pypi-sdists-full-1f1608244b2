@@ -48,7 +48,7 @@ class Registry:
         self,
         hostname: Optional[str] = None,
         insecure: bool = False,
-        tls_verify: bool = True,
+        tls_verify: Union[bool, str] = True,
         auth_backend: str = "token",
     ):
         """
@@ -58,10 +58,12 @@ class Registry:
 
         :param hostname: the hostname of the registry to ping
         :type hostname: str
-        :param registry: if provided, use this custom provider instead of default
-        :type registry: oras.provider.Registry or None
         :param insecure: use http instead of https
         :type insecure: bool
+        :param tls_verify: enable/disable tls verification or use a custom CA-Bundle
+        :type tls_verify: bool
+        :param auth_backend: name of the auth backend to use
+        :type auth_backend: str
         """
         self.hostname: Optional[str] = hostname
         self.headers: dict = {}
@@ -944,12 +946,17 @@ class Registry:
         :param allowed_media_type: one or more allowed media types
         :type allowed_media_type: str
         """
+        # Load authentication configs for the container's registry
+        # This ensures credentials are available for authenticated registries
+        self.auth.load_configs(container)
+
         if not allowed_media_type:
             allowed_media_type = [oras.defaults.default_manifest_media_type]
         headers = {"Accept": ";".join(allowed_media_type)}
 
         get_manifest = f"{self.prefix}://{container.manifest_url()}"  # type: ignore
         response = self.do_request(get_manifest, "GET", headers=headers)
+
         self._check_200_response(response)
         manifest = response.json()
         jsonschema.validate(manifest, schema=oras.schemas.manifest)

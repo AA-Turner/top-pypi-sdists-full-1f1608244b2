@@ -62,8 +62,7 @@ def create_file_meta(
     file_meta.ImplementationVersionName = implementation_version
 
     # File Meta Information is always encoded as Explicit VR Little Endian
-    file_meta.is_little_endian = True
-    file_meta.is_implicit_VR = False
+    file_meta.set_original_encoding(False, True)
 
     return file_meta
 
@@ -75,10 +74,6 @@ def decode(
     deflated: bool = False,
 ) -> Dataset:
     """Decode `bytestring` to a *pydicom* :class:`~pydicom.dataset.Dataset`.
-
-    .. versionchanged:: 1.5
-
-        Added `deflated` keyword parameter
 
     Parameters
     ----------
@@ -129,10 +124,6 @@ def encode(
     ds: Dataset, is_implicit_vr: bool, is_little_endian: bool, deflated: bool = False
 ) -> bytes | None:
     """Encode a *pydicom* :class:`~pydicom.dataset.Dataset` `ds`.
-
-    .. versionchanged:: 1.5
-
-        Added `deflated` keyword parameter
 
     Parameters
     ----------
@@ -198,8 +189,6 @@ def encode_file_meta(file_meta: FileMetaDataset) -> bytes:
 def pretty_dataset(ds: Dataset, indent: int = 0, indent_char: str = "  ") -> list[str]:
     """Return a list of pretty dataset strings.
 
-    .. versionadded:: 1.5
-
     Parameters
     ----------
     ds : pydicom.dataset.Dataset
@@ -229,8 +218,6 @@ def pretty_dataset(ds: Dataset, indent: int = 0, indent_char: str = "  ") -> lis
 
 def pretty_element(elem: DataElement) -> str:
     """Return a pretty element string.
-
-    .. versionadded:: 1.5
 
     Parameters
     ----------
@@ -268,11 +255,11 @@ def pretty_element(elem: DataElement) -> str:
                 value = "\\".join([str(ii) for ii in elem.value])
                 value = f"[{value}]"
         elif elem.VR == "SQ":
-            # Sequence elements
-            if elem.VM == 1:
-                value = f"(Sequence with {len(elem.value)} item)"
+            length = len(elem.value)
+            if length == 1:
+                value = f"(Sequence with {length} item)"
             else:
-                value = f"(Sequence with {len(elem.value)} items)"
+                value = f"(Sequence with {length} items)"
 
     except Exception:
         value = "(pynetdicom failed to beautify value)"

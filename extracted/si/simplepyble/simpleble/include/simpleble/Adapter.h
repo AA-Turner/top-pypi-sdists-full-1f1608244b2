@@ -44,6 +44,19 @@ class SIMPLEBLE_EXPORT Adapter {
     std::string identifier();
     BluetoothAddress address();
 
+    /**
+     * Control the power state of the adapter.
+     *
+     * NOTE: The power on/off functionality is only supported on Windows and Linux (implementation pending).
+     *       On other platforms, this method will do nothing.
+     * NOTE: Callbacks are currently a placeholder for future implementation.
+     */
+    void power_on();
+    void power_off();
+    bool is_powered();
+    void set_callback_on_power_on(std::function<void()> on_power_on);
+    void set_callback_on_power_off(std::function<void()> on_power_off);
+
     void scan_start();
     void scan_stop();
     void scan_for(int timeout_ms);
@@ -55,7 +68,19 @@ class SIMPLEBLE_EXPORT Adapter {
     void set_callback_on_scan_updated(std::function<void(Peripheral)> on_scan_updated);
     void set_callback_on_scan_found(std::function<void(Peripheral)> on_scan_found);
 
+    /**
+     * Retrieve a list of all paired peripherals.
+     *
+     * NOTE:This method is currently only supported by the Linux, Windows and Android backends.
+     */
     std::vector<Peripheral> get_paired_peripherals();
+
+    /**
+     * Retrieve a list of all connected peripherals.
+     *
+     * NOTE: This method is currently only supported by the Windows backend. (More backends coming soon.)
+     */
+    std::vector<Peripheral> get_connected_peripherals();
 
     static bool bluetooth_enabled();
 

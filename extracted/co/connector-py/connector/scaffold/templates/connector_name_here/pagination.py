@@ -2,14 +2,9 @@
 
 import typing as t
 
-from connector.utils.pagination import (
-    NextPageTokenInterface,
-    PaginationBase,
-    create_next_page_token,
-)
+from connector.client import NextPageTokenInterface, PaginationBase, create_next_page_token
 
-DEFAULT_PAGE_SIZE = 5
-MAX_PAGE_SIZE = 500
+DEFAULT_PAGE_SIZE = 100
 
 
 class Pagination(PaginationBase):

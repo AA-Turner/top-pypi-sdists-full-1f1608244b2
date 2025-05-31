@@ -437,7 +437,7 @@ impl PyWebSocketServer {
     /// Explicitly stop the server.
     pub fn stop(&mut self, py: Python<'_>) {
         if let Some(server) = self.0.take() {
-            py.allow_threads(|| server.stop())
+            py.allow_threads(|| server.stop().wait_blocking())
         }
     }
 
@@ -445,6 +445,26 @@ impl PyWebSocketServer {
     #[getter]
     pub fn port(&self) -> u16 {
         self.0.as_ref().map_or(0, |handle| handle.port())
+    }
+
+    /// Returns an app URL to open the websocket as a data source.
+    ///
+    /// Returns None if the server has been stopped.
+    ///
+    /// :param layout_id: An optional layout ID to include in the URL.
+    /// :param open_in_desktop: Opens the foxglove desktop app.
+    #[pyo3(signature = (*, layout_id=None, open_in_desktop=false))]
+    pub fn app_url(&self, layout_id: Option<&str>, open_in_desktop: bool) -> Option<String> {
+        self.0.as_ref().map(|s| {
+            let mut url = s.app_url();
+            if let Some(layout_id) = layout_id {
+                url = url.with_layout_id(layout_id);
+            }
+            if open_in_desktop {
+                url = url.with_open_in_desktop();
+            }
+            url.to_string()
+        })
     }
 
     /// Sets a new session ID and notifies all clients, causing them to reset their state.
@@ -1009,7 +1029,7 @@ impl<'py> FromPyObject<'py> for ParameterValueConverter {
             Ok(Self(PyParameterValue::Dict(values)))
         } else {
             Err(PyErr::new::<PyTypeError, _>(format!(
-                "Unsupported type for ParamaterValue: {}",
+                "Unsupported type for ParameterValue: {}",
                 obj.get_type().name()?
             )))
         }
@@ -1061,7 +1081,7 @@ impl<'py> FromPyObject<'py> for ParameterTypeValueConverter {
             ))
         } else {
             Err(PyErr::new::<PyTypeError, _>(format!(
-                "Unsupported type for ParamaterValue: {}",
+                "Unsupported type for ParameterValue: {}",
                 obj.get_type().name()?
             )))
         }

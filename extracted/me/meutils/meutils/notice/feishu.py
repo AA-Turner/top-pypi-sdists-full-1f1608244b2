@@ -14,7 +14,7 @@ DEFAULT = "https://open.feishu.cn/open-apis/bot/v2/hook/f7cf6f2a-30da-4e7a-ae6f-
 IMAGES = "https://open.feishu.cn/open-apis/bot/v2/hook/c903e9a7-ece0-4b98-b395-0e1f6a1fb31e"
 VIDEOS = "https://open.feishu.cn/open-apis/bot/v2/hook/0f926e89-90de-4211-90c5-fd99e8db8ea3"
 LLM = "https://open.feishu.cn/open-apis/bot/v2/hook/3c4f3756-c824-4942-9f8f-561a74e7c6e9"
-LLM_REVERSE = "https://open.feishu.cn/open-apis/bot/v2/hook/cd5c9126-a882-4a24-9f1b-145cd1dcc769"
+DYNAMIC_ROUTER = "https://open.feishu.cn/open-apis/bot/v2/hook/cd5c9126-a882-4a24-9f1b-145cd1dcc769"
 
 Vison = ""
 # AUDIOS_TTS = "https://open.feishu.cn/open-apis/bot/v2/hook/ff7d4b86-d238-436c-9447-f88cf603454d"
@@ -110,6 +110,8 @@ def catch(
 
 send_message_for_images = partial(send_message, url=IMAGES)
 send_message_for_kling = partial(send_message, url=KLING)
+
+send_message_for_dynamic_router = partial(send_message, url=DYNAMIC_ROUTER)
 
 http_feishu_url = "https://open.feishu.cn/open-apis/bot/v2/hook/d1c7b67d-b0f8-4067-a2f5-109f20eeb696"
 send_message_for_http = partial(send_message, url=http_feishu_url)

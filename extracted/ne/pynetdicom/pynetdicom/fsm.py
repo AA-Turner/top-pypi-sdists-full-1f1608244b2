@@ -17,7 +17,7 @@ from pynetdicom.pdu import (
     A_ABORT_RQ,
 )
 from pynetdicom.pdu_primitives import A_P_ABORT, A_ABORT
-from pynetdicom.transport import T_CONNECT
+from pynetdicom.transport import T_CONNECT, AssociationSocket, AddressInformation
 
 if TYPE_CHECKING:  # pragma: no cover
     from pynetdicom.dul import DULServiceProvider
@@ -264,9 +264,8 @@ def AE_4(dul: "DULServiceProvider") -> str:
 
     assoc = dul.assoc
     remote = assoc.acceptor if assoc.is_requestor else assoc.requestor
-
-    address = (remote.address, remote.port)
-    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": address})
+    conn_info = cast(AddressInformation, remote.address_info).as_tuple
+    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": conn_info})
 
     dul.kill_dul()
 
@@ -503,7 +502,7 @@ def AR_2(dul: "DULServiceProvider") -> str:
         ``'Sta8'``, the next state of the state machine
     """
     # A-RELEASE-RQ PDU received from peer
-    pdu = dul._recv_pdu.get(False)
+    pdu = cast("A_RELEASE_RQ", dul._recv_pdu.get(False))
 
     # Send A-RELEASE indication primitive
     dul.to_user_queue.put(pdu.to_primitive())
@@ -530,7 +529,7 @@ def AR_3(dul: "DULServiceProvider") -> str:
         ``'Sta1'``, the next state of the state machine
     """
     # A-RELEASE-RP PDU received from peer
-    pdu = dul._recv_pdu.get(False)
+    pdu = cast("A_RELEASE_RP", dul._recv_pdu.get(False))
 
     # Issue A-RELEASE confirmation primitive and close transport connection
     dul.to_user_queue.put(pdu.to_primitive())
@@ -539,9 +538,8 @@ def AR_3(dul: "DULServiceProvider") -> str:
 
     assoc = dul.assoc
     remote = assoc.acceptor if assoc.is_requestor else assoc.requestor
-
-    address = (remote.address, remote.port)
-    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": address})
+    conn_info = cast(AddressInformation, remote.address_info).as_tuple
+    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": conn_info})
 
     dul.kill_dul()
 
@@ -593,11 +591,16 @@ def AR_5(dul: "DULServiceProvider") -> str:
     str
         ``'Sta1'``, the next state of the state machine
     """
+    # Ensure socket is closed
+    try:
+        cast(AssociationSocket, dul.socket)._shutdown_socket()
+    except Exception:
+        pass
+
     assoc = dul.assoc
     remote = assoc.acceptor if assoc.is_requestor else assoc.requestor
-
-    address = (remote.address, remote.port)
-    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": address})
+    conn_info = cast(AddressInformation, remote.address_info).as_tuple
+    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": conn_info})
 
     # Stop ARTIM timer
     dul.artim_timer.stop()
@@ -628,7 +631,7 @@ def AR_6(dul: "DULServiceProvider") -> str:
     pdu = cast("P_DATA_TF", dul._recv_pdu.get(False))
 
     # Issue P-DATA indication
-    dul.to_user_queue.put(pdu.to_primitive())
+    dul.assoc.dimse.receive_primitive(pdu.to_primitive())
 
     return "Sta7"
 
@@ -762,6 +765,7 @@ def AA_1(dul: "DULServiceProvider") -> str:
     """
     # Received invalid PDU from peer or an A-ABORT primitive from local user
     try:
+        # A-ABORT or A-P-ABORT from local user
         primitive = dul.to_provider_queue.queue[0]
         if isinstance(primitive, (A_ABORT, A_P_ABORT)):
             primitive = dul.to_provider_queue.get(False)
@@ -811,8 +815,8 @@ def AA_2(dul: "DULServiceProvider") -> str:
     assoc.dimse.msg_queue.put((None, None))
 
     remote = assoc.acceptor if assoc.is_requestor else assoc.requestor
-    address = (remote.address, remote.port)
-    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": address})
+    conn_info = cast(AddressInformation, remote.address_info).as_tuple
+    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": conn_info})
 
     dul.kill_dul()
 
@@ -854,8 +858,8 @@ def AA_3(dul: "DULServiceProvider") -> str:
     assoc.dimse.msg_queue.put((None, None))
 
     remote = assoc.acceptor if assoc.is_requestor else assoc.requestor
-    address = (remote.address, remote.port)
-    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": address})
+    conn_info = cast(AddressInformation, remote.address_info).as_tuple
+    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": conn_info})
 
     dul.kill_dul()
 
@@ -880,12 +884,18 @@ def AA_4(dul: "DULServiceProvider") -> str:
     str
         ``'Sta1'``, the next state of the state machine
     """
+    # Ensure socket is closed
+    try:
+        cast(AssociationSocket, dul.socket)._shutdown_socket()
+    except Exception:
+        pass
+
     assoc = dul.assoc
     assoc.dimse.msg_queue.put((None, None))
 
     remote = assoc.acceptor if assoc.is_requestor else assoc.requestor
-    address = (remote.address, remote.port)
-    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": address})
+    conn_info = cast(AddressInformation, remote.address_info).as_tuple
+    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": conn_info})
 
     # Issue A-P-ABORT indication primitive.
     primitive = A_P_ABORT()
@@ -914,11 +924,16 @@ def AA_5(dul: "DULServiceProvider") -> str:
     str
         ``'Sta1'``, the next state of the state machine
     """
+    # Ensure socket is closed
+    try:
+        cast(AssociationSocket, dul.socket)._shutdown_socket()
+    except Exception:
+        pass
+
     assoc = dul.assoc
     remote = assoc.acceptor if assoc.is_requestor else assoc.requestor
-
-    address = (remote.address, remote.port)
-    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": address})
+    conn_info = cast(AddressInformation, remote.address_info).as_tuple
+    evt.trigger(dul.assoc, evt.EVT_CONN_CLOSE, {"address": conn_info})
 
     # Stop ARTIM timer.
     dul.artim_timer.stop()

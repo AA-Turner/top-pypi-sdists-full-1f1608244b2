@@ -47277,7 +47277,7 @@ class general_turbo_interface(Group):
     child_names: list[str]
     expert: expert_5
     mixing_plane_model: mixing_plane_model
-class turbo_models(Group):
+class models_1(Group):
     _version: str
     fluent_name: str
     _python_name: str
@@ -47298,6 +47298,12 @@ class turbo_models(Group):
             global_ : bool
                 Enable/disable output of mesh global number.
         """
+class turbomachinery(Group):
+    _version: str
+    fluent_name: str
+    _python_name: str
+    child_names: list[str]
+    models: models_1
 class auto_compile_compiled_functions(Boolean):
     _version: str
     fluent_name: str
@@ -47829,7 +47835,7 @@ class setup(Group):
     reference_values: reference_values
     reference_frames: reference_frames
     named_expressions: named_expressions
-    turbo_models: turbo_models
+    turbomachinery: turbomachinery
     user_defined: user_defined_1
     profiles: profiles
     _child_aliases: dict
@@ -50206,7 +50212,7 @@ class ramp_scalars(Boolean):
     _version: str
     fluent_name: str
     _python_name: str
-class models_1(Group):
+class models_2(Group):
     _version: str
     fluent_name: str
     _python_name: str
@@ -50279,7 +50285,7 @@ class contact_solution_controls(Group):
     spatial: spatial
     transient: transient
     amg: amg
-    models: models_1
+    models: models_2
     methods: methods_3
     miscellaneous: miscellaneous
     def set_settings_to_default(self):

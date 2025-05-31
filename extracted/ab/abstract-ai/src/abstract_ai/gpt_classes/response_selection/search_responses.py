@@ -1,35 +1,68 @@
-import os,re
+import os
+import re
+from collections import defaultdict
 from abstract_utilities import *
 from abstract_solcatcher_database import get_timestamp_from_data
+
+
 def detect_language_from_text(text: str):
-    ts_patterns = [
-        r'\binterface\s+\w+\s*{', 
-        r'\btype\s+\w+\s*=', 
-        r'\blet\s+\w+:\s+\w+', 
-        r'\bfunction\s+\w+\s*\(', 
-        r'\bimport\s+.*\s+from\s+[\'"]', 
-        r'\bexport\s+(default|function|const|class)'
-    ]
-    py_patterns = [
-        r'\bdef\s+\w+\(', 
-        r'\bclass\s+\w+\s*:', 
-        r'\bimport\s+\w+', 
-        r'\bfrom\s+\w+\s+import\s+\w+', 
-        r'\bif\s+__name__\s*==\s*["\']__main__["\']', 
-        r'@\w+', 
-        r'\blambda\s+'
-    ]
+    patterns = {
+        'js': [
+            r'\binterface\s+\w+\s*{',
+            r'\btype\s+\w+\s*=',
+            r'\blet\s+\w+:\s+\w+',
+            r'\bfunction\s+\w+\s*\(.*:\s*\w+\)',
+            r'\bimport\s+.*\s+from\s+[\'"]',
+            r'\bexport\s+(default|function|const|class)'
+        ],
+        'python': [
+            r'\bdef\s+\w+\(',
+            r'\bclass\s+\w+\s*:',
+            r'\bimport\s+\w+',
+            r'\bfrom\s+\w+\s+import\s+\w+',
+            r'\bif\s+__name__\s*==\s*[\'"]__main__[\'"]',
+            r'@\w+',
+            r'\blambda\s+'
+        ],
+        'html': [
+            r'<!DOCTYPE\s+html>',
+            r'<html[^>]*>',
+            r'<head>',
+            r'<body>',
+            r'<div[^>]*>',
+            r'<script[^>]*>',
+            r'</\w+>'
+        ],
+        'php': [
+            r'<\?php',
+            r'\$\w+\s*=',
+            r'echo\s+["\']',
+            r'->\w+\(',
+            r'function\s+\w+\s*\(',
+            r'\bclass\s+\w+\s*{'
+        ],
+        'bash': [
+            r'#!/bin/bash',
+            r'\becho\s+["\']',
+            r'\bif\s+\[\[?',
+            r'\bthen\b',
+            r'\bfi\b',
+            r'\bfor\s+\w+\s+in\b',
+            r'\bdo\b',
+            r'\bdone\b'
+        ]
+    }
     text = str(text)
-    ts_score = sum(1 for pattern in ts_patterns if re.search(pattern, text))
-    py_score = sum(1 for pattern in py_patterns if re.search(pattern, text))
-    if ts_score > py_score and ts_score > 0:
-        return "typescript"
-    elif py_score > ts_score and py_score > 0:
-        return "python"
-    elif ts_score == py_score == 0:
-        return "neither"
-    else:
-        return "uncertain"
+    scores = {lang: sum(bool(re.search(p, text)) for p in pats) for lang, pats in patterns.items()}
+    max_score = max(scores.values(), default=0)
+
+    if max_score == 0:
+        return 'neither'
+
+    likely = [lang for lang, score in scores.items() if score == max_score]
+    return likely[0] if len(likely) == 1 else 'uncertain'
+
+
 class PathManager:
     @staticmethod
     def get_abs_path():
@@ -54,28 +87,38 @@ class PathManager:
     @staticmethod
     def get_conversation_path():
         filename = 'conversations.json'
-        # Priority: abs dir, cwd, ~/Documents
-        abs_dir = PathManager.get_abs_dir()
-        cwd = os.getcwd()
-        docs = os.path.expanduser('~/Documents')
-
-        # Try non-recursive checks first
-        for location in [abs_dir, cwd, docs]:
+        for location in [PathManager.get_abs_dir(), os.getcwd(), os.path.expanduser('~/Documents')]:
             candidate = os.path.join(location, filename)
             if os.path.isfile(candidate):
                 return candidate
+        # Recursive search
+        found = PathManager.search_for_file(filename, [os.path.expanduser('~/Documents')])
+        if found:
+            return found
+        raise FileNotFoundError(f"'{filename}' not found.")
 
-        # Fall back to recursive search in ~/Documents
-        found_path = PathManager.search_for_file(filename, [docs])
-        if found_path:
-            return found_path
 
-        raise FileNotFoundError(f"'{filename}' not found in script dir, CWD, or ~/Documents.")
+def get_convo_path(file_path=None):
+    return file_path or PathManager.get_conversation_path()
 
 
 def get_conversation_data(file_path=None):
-    file_path = get_convo_path(file_path=file_path)
-    return safe_read_from_json(file_path)
+    return safe_read_from_json(get_convo_path(file_path))
+
+
+class ConversationManager(metaclass=SingletonMeta):
+    def __init__(self, file_path=None):
+        self.original_file_path = file_path
+        self.convo_path = get_convo_path(file_path)
+        self.conversation_data = get_conversation_data(self.convo_path)
+
+
+def get_conversation_manager(file_path=None):
+    return ConversationManager(file_path=file_path)
+
+
+def get_convo_data(file_path=None):
+    return get_conversation_manager(file_path).conversation_data
 
 
 def is_valid_time(comp_timestamp, timestamp=None, before=True):
@@ -89,8 +132,6 @@ def find_for_string(string, parts):
 
 
 def is_strings_in_string(strings, parts):
-    if not strings:
-        return parts
     strings = make_list(strings)
     for string in strings:
         parts = find_for_string(string, parts)
@@ -107,67 +148,65 @@ def get_parts(data):
             parts_value = get_value_from_path(message_value, sub_path)
             parts.extend([p for p in parts_value if p])
     return parts
-def get_convo_path(file_path=None):
-    file_path = file_path or PathManager.get_conversation_path()
-    return file_path
-class ConversationManager(metaclass=SingletonMeta):
-    def __init__(self,file_path=None):
-        
-        if not hasattr(self, 'initialized') or self.initialized == False:
-            self.initialized = True
-            self.original_file_path = file_path
-            self.convo_path = get_convo_path(file_path=file_path)
-            self.conversation_data = get_conversation_data(self.convo_path)
-        
-def get_conversation_manager(file_path=None):
-    conversation_mgr = ConversationManager(file_path=file_path)
-    if conversation_mgr.original_file_path != file_path:
-        conversation_mgr.initialized = False
-        conversation_mgr = ConversationManager(file_path=file_path)
-    return conversation_mgr
 
-def get_convo_data(file_path=None):
-    conversation_mgr = get_conversation_manager(file_path=file_path)
-    return conversation_mgr.conversation_data
-def search_code(code,parts):
-    found_code = []
-    for datas in parts:
-        for data in make_list(datas):
-            if detect_language_from_text(data) in make_list(code):
-                found_code.append(data)
-    return found_code
+
 def capitalize(string):
-    if not string:
-        return string
-    string = str(string)
-    if len(string)>1:
-        init = string[0].upper()
-        rest = string[1:].lower()
-        string = f"{init}{rest}"
-    else:
-        string = string.upper()
-    return string
-def if_true_get_string(data,key):
-    if data.get(key):
-       return key
+    return string[:1].upper() + string[1:].lower() if string else string
+
+
+def if_true_get_string(data, key):
+    return key if data.get(key) else None
+
+
+def split_language(text, **lang_flags):
+    enabled = [lang for lang, active in lang_flags.items() if active]
+    if not enabled:
+        return {}
+    pattern = re.compile(rf'```({"|".join(enabled)})\s*(.*?)```', re.DOTALL)
+    results = defaultdict(list)
+    for lang, code in pattern.findall(text):
+        results[lang].append(code.strip())
+    return dict(results)
+
+
+def search_code(code_languages, parts):
+    return [data for datas in parts for data in make_list(datas)
+            if detect_language_from_text(data) in code_languages]
+
+
 def search_in_conversation(strings=None, *args, **kwargs):
     strings = make_list(strings or '')
     timestamp = get_timestamp_from_data(kwargs)
     before = kwargs.get('before', True)
-    code = []
-    for language in ['neither','uncertain','typescript','python']:
-        language = if_true_get_string(kwargs,language)
-        if language:
-            code.append(language)
-    file_path = kwargs.get('file_path', None)
-    results = []
-    for convo in get_convo_data(file_path=file_path):
+    file_path = kwargs.get('file_path')
+
+    convo_data = get_convo_data(file_path)
+    raw_results = []
+
+    for convo in convo_data:
         create_time = make_list(get_any_value(convo, 'create_time'))[0]
-        if is_valid_time(comp_timestamp=create_time, timestamp=timestamp, before=before):
+        if is_valid_time(create_time, timestamp, before):
             parts = get_parts(convo)
-            matched_parts = is_strings_in_string(strings, parts)
-            if matched_parts:
-                results.append(matched_parts)
-    if code:
-        results = search_code(code,results)
-    return results
+            matched = is_strings_in_string(strings, parts)
+            if matched:
+                raw_results.append(matched)
+
+    # Language filtering
+    requested_langs = [
+        lang for lang in ['neither', 'uncertain', 'js', 'python', 'bash', 'html', 'php']
+        if if_true_get_string(kwargs, lang)
+    ]
+    split_requested = kwargs.get('split_code', False)
+
+    if requested_langs:
+        filtered = search_code(requested_langs, raw_results)
+        if split_requested:
+            split_by_lang = defaultdict(list)
+            for chunk in filtered:
+                split_result = split_language(chunk, **{lang: True for lang in requested_langs})
+                for lang, blocks in split_result.items():
+                    split_by_lang[lang].extend(blocks)
+            return dict(split_by_lang)
+        return filtered
+
+    return raw_results

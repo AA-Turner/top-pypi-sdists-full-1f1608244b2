@@ -6,7 +6,7 @@ from io import BytesIO
 import logging
 import queue
 import threading
-from typing import TYPE_CHECKING, Tuple, Optional, Dict, Union, cast
+from typing import TYPE_CHECKING, cast
 
 from pynetdicom import evt
 
@@ -93,15 +93,11 @@ _RSP_TO_MESSAGE = {
     N_DELETE: N_DELETE_RSP,
 }
 
-_QueueItem = Union[Tuple[None, None], Tuple[int, DimseServiceType]]
+_QueueItem = tuple[None, None] | tuple[int, DimseServiceType]
 
 
 class DIMSEServiceProvider:
     """The DIMSE service provider.
-
-    .. versionchanged:: 1.2
-
-        Added `msg_queue` attribute
 
     **Messages**
 
@@ -176,10 +172,6 @@ class DIMSEServiceProvider:
     def __init__(self, assoc: "Association") -> None:
         """Initialise the DIMSE service provider.
 
-        .. versionchanged:: 1.3
-
-            Class initialisation now only takes `assoc` parameter.
-
         Parameters
         ----------
         assoc : association.Association
@@ -187,20 +179,17 @@ class DIMSEServiceProvider:
         """
         self._assoc = assoc
 
-        self.cancel_req: Dict[int, C_CANCEL] = {}
-        self.message: Optional[DIMSEMessage] = None
+        self.cancel_req: dict[int, C_CANCEL] = {}
+        self.message: DIMSEMessage | None = None
         self.msg_queue: "queue.Queue[_QueueItem]" = queue.Queue()
 
     @property
     def assoc(self) -> "Association":
-        """Return the parent :class:`~pynetdicom.association.Association`.
-
-        .. versionadded:: 1.3
-        """
+        """Return the parent :class:`~pynetdicom.association.Association`."""
         return self._assoc
 
     @property
-    def dimse_timeout(self) -> Optional[float]:
+    def dimse_timeout(self) -> float | None:
         """Return the DIMSE timeout as numeric or ``None``."""
         return self.assoc.dimse_timeout
 
@@ -211,13 +200,6 @@ class DIMSEServiceProvider:
 
     def get_msg(self, block: bool = False) -> _QueueItem:
         """Get the next available DIMSE message.
-
-        .. versionadded:: 1.2
-
-        .. versionchanged:: 1.5
-
-            Changed to also return ``(None, None)`` if the peer aborts the
-            association or the connection is closed.
 
         Parameters
         ----------
@@ -251,8 +233,6 @@ class DIMSEServiceProvider:
     def peek_msg(self) -> _QueueItem:
         """Return the first message in the message queue or ``None``.
 
-        .. versionadded:: 1.2
-
         Returns
         -------
         (int, dimse_messages.DIMSEMessage) or (None, None)
@@ -267,8 +247,6 @@ class DIMSEServiceProvider:
 
     def receive_primitive(self, primitive: "P_DATA") -> None:
         """Process a P-DATA primitive received from the remote.
-
-        .. versionadded:: 1.2
 
         A DIMSE message is split into one or more P-DATA primitives, which
         must be sent in sequential order. While waiting for all the P-DATA

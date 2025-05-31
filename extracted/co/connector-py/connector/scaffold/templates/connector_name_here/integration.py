@@ -1,14 +1,11 @@
 import httpx
-from connector.generated import OAuthCredential
-from connector.oai.capability import StandardCapabilityName
-from connector.oai.errors import HTTPHandler
-from connector.oai.integration import DescriptionData, Integration
+from connector.error import HTTPHandler
+from connector.integration import DescriptionData, Integration, OAuthCredential, StandardCapabilityName
 
+from {name} import capabilities_read
 from {name}.__about__ import __version__
 from {name}.enums import entitlement_types, resource_types
 from {name}.settings import {pascal}Settings
-from {name} import capabilities_read, capabilities_write
-
 
 integration = Integration(
     app_id="{hyphenated_name}",

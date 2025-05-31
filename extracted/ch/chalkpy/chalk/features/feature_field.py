@@ -838,7 +838,12 @@ class Feature(Generic[_TPrim, _TRich]):
         return NotImplemented
 
     def __repr__(self):
-        return f"Feature(fqn={self.root_fqn}, typ={self.typ})"
+        try:
+            return f"Feature(fqn={self.root_fqn}, typ={self.typ})"
+        except:
+            # The above repr requires info that's only set after the feature() object
+            # has been attached to a Features class, so fall back to the default repr instead of throwing
+            return object.__repr__(self)
 
     @property
     def is_has_one(self) -> bool:

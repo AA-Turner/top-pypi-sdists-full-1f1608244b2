@@ -1,3 +1,4 @@
+from connector.client import get_page
 from connector.generated import (
     FindEntitlementAssociationsRequest,
     FindEntitlementAssociationsResponse,
@@ -6,10 +7,10 @@ from connector.generated import (
     GetLastActivityResponse,
     ListAccountsRequest,
     ListAccountsResponse,
-    ListEntitlementsRequest,
-    ListEntitlementsResponse,
     ListCustomAttributesSchemaRequest,
     ListCustomAttributesSchemaResponse,
+    ListEntitlementsRequest,
+    ListEntitlementsResponse,
     ListResourcesRequest,
     ListResourcesResponse,
     Page,
@@ -17,18 +18,16 @@ from connector.generated import (
     ValidateCredentialsResponse,
     ValidatedCredentials,
 )
-from connector.oai.capability import get_page, get_settings
 
-
-from {name}.pagination import DEFAULT_PAGE_SIZE, NextPageToken, Pagination
-from {name}.settings import {pascal}Settings
 from {name}.client import {pascal}Client
+from {name}.pagination import DEFAULT_PAGE_SIZE, NextPageToken, Pagination
+
 
 async def validate_credentials(
     args: ValidateCredentialsRequest,
 ) -> ValidateCredentialsResponse:
     async with {pascal}Client(args) as client:
-        #_ = await client.get_users()
+        # _ = await client.get_users()
 
         return ValidateCredentialsResponse(
             response=ValidatedCredentials(
@@ -48,7 +47,8 @@ async def list_accounts(args: ListAccountsRequest) -> ListAccountsResponse:
     page_size = get_page(args).size or DEFAULT_PAGE_SIZE
     async with {pascal}Client(args) as client:
         response = await client.get_users(
-            limit=page_size, offset=current_pagination.offset,
+            limit=page_size,
+            offset=current_pagination.offset,
         )
         accounts: list[FoundAccountData] = response.to_accounts()
 

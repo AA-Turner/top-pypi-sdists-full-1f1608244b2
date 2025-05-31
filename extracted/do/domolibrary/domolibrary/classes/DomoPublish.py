@@ -65,6 +65,12 @@ class DomoPublication_Subscription:
         debug_num_stacks_to_drop=2,
         session: httpx.AsyncClient = None,
     ):
+
+        if not self.parent:
+            raise dmde.DomoError(
+                """The .parent attribute (DomoPublication) is required to get content details.
+                must call from the publication instance.  Cannot call from the subscriber"""
+            )
         
         publication_content = self.parent.content
 

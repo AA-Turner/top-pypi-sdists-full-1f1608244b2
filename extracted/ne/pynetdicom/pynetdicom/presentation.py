@@ -1,17 +1,7 @@
 """Implementation of the Presentation service."""
 
 import logging
-from typing import (
-    Union,
-    Optional,
-    List,
-    Any,
-    TYPE_CHECKING,
-    NamedTuple,
-    cast,
-    Dict,
-    Tuple,
-)
+from typing import Any, TYPE_CHECKING, NamedTuple, cast
 
 from pydicom.uid import UID
 
@@ -65,9 +55,9 @@ DEFAULT_ROLE = (True, False, False, True)
 BOTH_SCU_SCP_ROLE = (True, True, True, True)
 CONTEXT_REJECTED = (False, False, False, False)
 INVERTED_ROLE = (False, True, True, False)
-_RoleType = Dict[
-    Tuple[Optional[bool], Optional[bool]],
-    Dict[Tuple[Optional[bool], Optional[bool]], Tuple[bool, bool, bool, bool]],
+_RoleType = dict[
+    tuple[bool | None, bool | None],
+    dict[tuple[None | bool, None | bool], tuple[bool, bool, bool, bool]],
 ]
 SCP_SCU_ROLES: _RoleType = {
     # (Requestor role, Acceptor role) : Outcome
@@ -226,21 +216,21 @@ class PresentationContext:
 
     def __init__(self) -> None:
         """Create a new object."""
-        self._context_id: Optional[int] = None
-        self._abstract_syntax: Optional[UID] = None
-        self._transfer_syntax: List[UID] = []
-        self.result: Optional[int] = None
+        self._context_id: None | int = None
+        self._abstract_syntax: None | UID = None
+        self._transfer_syntax: list[UID] = []
+        self.result: None | int = None
 
         # Used with SCP/SCU Role Selection negotiation
-        self._scu_role: Optional[bool] = None
-        self._scp_role: Optional[bool] = None
+        self._scu_role: None | bool = None
+        self._scp_role: None | bool = None
 
         # Used to track the allowed use of the context
-        self._as_scp: Optional[bool] = None
-        self._as_scu: Optional[bool] = None
+        self._as_scp: None | bool = None
+        self._as_scu: None | bool = None
 
     @property
-    def abstract_syntax(self) -> Optional[UID]:
+    def abstract_syntax(self) -> None | UID:
         """Get or set the context's *Abstract Syntax* as
         :class:`~pydicom.uid.UID`.
 
@@ -252,11 +242,11 @@ class PresentationContext:
         return self._abstract_syntax
 
     @abstract_syntax.setter
-    def abstract_syntax(self, value: Union[str, bytes, UID]) -> None:
+    def abstract_syntax(self, value: str | bytes | UID | None) -> None:
         """Set the context's *Abstract Syntax*."""
         self._abstract_syntax = set_uid(value, "abstract_syntax", True, False, True)
 
-    def add_transfer_syntax(self, syntax: Union[None, str, bytes, UID]) -> None:
+    def add_transfer_syntax(self, syntax: None | str | bytes | UID) -> None:
         """Append a transfer syntax to the presentation context.
 
         Parameters
@@ -302,7 +292,7 @@ class PresentationContext:
             self._transfer_syntax.append(syntax)
 
     @property
-    def as_scp(self) -> Optional[bool]:
+    def as_scp(self) -> None | bool:
         """Return ``True`` if can act as an SCP for the context.
 
         If ``True`` then the association *Acceptor* can act as SCP for the
@@ -312,7 +302,7 @@ class PresentationContext:
         return self._as_scp
 
     @property
-    def as_scu(self) -> Optional[bool]:
+    def as_scu(self) -> None | bool:
         """Return ``True`` if can act as an SCU for the context.
 
         If ``True`` then the association *Acceptor* can act as SCU for the
@@ -341,12 +331,12 @@ class PresentationContext:
         )
 
     @property
-    def context_id(self) -> Optional[int]:
+    def context_id(self) -> None | int:
         """Return the context's *ID* parameter as an :class:`int`."""
         return self._context_id
 
     @context_id.setter
-    def context_id(self, value: Optional[int]) -> None:
+    def context_id(self, value: None | int) -> None:
         """Set the context's *ID* parameter.
 
         Parameters
@@ -392,7 +382,7 @@ class PresentationContext:
         return cast(UID, self.abstract_syntax).name
 
     @property
-    def scp_role(self) -> Optional[bool]:
+    def scp_role(self) -> None | bool:
         """Get or set if a proposed SCP role will be accepted.
 
         Parameters
@@ -407,7 +397,7 @@ class PresentationContext:
         return self._scp_role
 
     @scp_role.setter
-    def scp_role(self, val: Optional[bool]) -> None:
+    def scp_role(self, val: None | bool) -> None:
         """Set whether to accept the proposed SCP role (as *Acceptor*)."""
         if not isinstance(val, (bool, type(None))):
             raise TypeError("'scp_role' must be a bool or None")
@@ -415,7 +405,7 @@ class PresentationContext:
         self._scp_role = val
 
     @property
-    def scu_role(self) -> Optional[bool]:
+    def scu_role(self) -> None | bool:
         """Get or set if a proposed SCU role will be accepted.
 
         Parameters
@@ -430,7 +420,7 @@ class PresentationContext:
         return self._scu_role
 
     @scu_role.setter
-    def scu_role(self, val: Optional[bool]) -> None:
+    def scu_role(self, val: None | bool) -> None:
         """Set whether to accept the proposed SCU role (as *Acceptor*)."""
         if not isinstance(val, (bool, type(None))):
             raise TypeError("'scu_role' must be a bool or None")
@@ -490,7 +480,7 @@ class PresentationContext:
         return "\n".join(s)
 
     @property
-    def transfer_syntax(self) -> List[UID]:
+    def transfer_syntax(self) -> list[UID]:
         """Get or set the context's *Transfer Syntaxes* as a :class:`list`.
 
         Returns
@@ -501,7 +491,7 @@ class PresentationContext:
         return self._transfer_syntax
 
     @transfer_syntax.setter
-    def transfer_syntax(self, syntaxes: List[Union[str, bytes, UID]]) -> None:
+    def transfer_syntax(self, syntaxes: list[str | bytes | UID]) -> None:
         """Set the context's *Transfer Syntaxes*.
 
         Parameters
@@ -518,10 +508,10 @@ class PresentationContext:
             self.add_transfer_syntax(syntax)
 
 
-RoleType = Optional[Dict[UID, Tuple[Optional[bool], Optional[bool]]]]
-ListCXType = List[PresentationContext]
-CXNegotiationReturn = Tuple[
-    List[PresentationContext], List["SCP_SCU_RoleSelectionNegotiation"]
+RoleType = None | dict[UID, tuple[None | bool, None | bool]]
+ListCXType = list[PresentationContext]
+CXNegotiationReturn = tuple[
+    list[PresentationContext], list["SCP_SCU_RoleSelectionNegotiation"]
 ]
 
 
@@ -561,9 +551,9 @@ def negotiate_unrestricted(
     from pynetdicom.pdu_primitives import SCP_SCU_RoleSelectionNegotiation
 
     roles = roles or {}
-    storage_contexts: List[PresentationContext] = []
-    non_storage_contexts: List[PresentationContext] = []
-    reply_roles: Dict[UID, SCP_SCU_RoleSelectionNegotiation] = {}
+    storage_contexts: list[PresentationContext] = []
+    non_storage_contexts: list[PresentationContext] = []
+    reply_roles: dict[UID, SCP_SCU_RoleSelectionNegotiation] = {}
     storage_uids = _STORAGE_CLASSES.values()
 
     # Split out private/unknown/storage cx's from everything else
@@ -653,8 +643,8 @@ def negotiate_as_acceptor(
     from pynetdicom.pdu_primitives import SCP_SCU_RoleSelectionNegotiation
 
     roles = roles or {}
-    result_contexts: List[PresentationContext] = []
-    reply_roles: Dict[UID, SCP_SCU_RoleSelectionNegotiation] = {}
+    result_contexts: list[PresentationContext] = []
+    reply_roles: dict[UID, SCP_SCU_RoleSelectionNegotiation] = {}
 
     # No requestor presentation contexts
     if not rq_contexts:
@@ -699,7 +689,7 @@ def negotiate_as_acceptor(
             ab_syntax = cast(UID, ab_syntax)
             ac_context = acceptor_contexts[ab_syntax]
             ac_roles = (ac_context.scu_role, ac_context.scp_role)
-            rq_roles: Tuple[Optional[bool], Optional[bool]]
+            rq_roles: tuple[None | bool, None | bool]
             try:
                 rq_roles = roles[ab_syntax]
                 has_role = True
@@ -857,7 +847,7 @@ def negotiate_as_requestor(
 
             # SCP/SCU Role Selection Negotiation
             rq_roles = (rq_context.scu_role, rq_context.scp_role)
-            ac_roles: Tuple[Optional[bool], Optional[bool]]
+            ac_roles: tuple[None | bool, None | bool]
             try:
                 ac_roles = roles[cast(UID, context.abstract_syntax)]
             except KeyError:
@@ -885,8 +875,8 @@ def negotiate_as_requestor(
 
 
 def build_context(
-    abstract_syntax: Union[str, UID],
-    transfer_syntax: Optional[Union[str, UID, List[Union[str, UID]]]] = None,
+    abstract_syntax: str | UID,
+    transfer_syntax: None | str | UID | list[str | UID] = None,
 ) -> PresentationContext:
     """Return a :class:`PresentationContext` built from the `abstract_syntax`.
 
@@ -962,11 +952,9 @@ def build_context(
 
 
 def build_role(
-    uid: Union[str, UID], scu_role: bool = False, scp_role: bool = False
+    uid: str | UID, scu_role: bool = False, scp_role: bool = False
 ) -> "SCP_SCU_RoleSelectionNegotiation":
     """Return a SCP/SCU Role Selection Negotiation item.
-
-    .. versionadded:: 1.2
 
     Parameters
     ----------
@@ -1093,139 +1081,132 @@ AllStoragePresentationContexts = [
 """Pre-built presentation contexts for :dcm:`Storage<part04/chapter_B.html>` containing all SOP Classes."""
 
 _storage = [
-    "1.2.840.10008.5.1.4.1.1.1",  # ComputedRadiographyImageStorage
-    "1.2.840.10008.5.1.4.1.1.2",  # "CTImageStorage":
-    "1.2.840.10008.5.1.4.1.1.2.1",  # "EnhancedCTImageStorage":
-    "1.2.840.10008.5.1.4.1.1.3.1",  # "UltrasoundMultiFrameImageStorage":
-    "1.2.840.10008.5.1.4.1.1.4",  # "MRImageStorage":
-    "1.2.840.10008.5.1.4.1.1.4.1",  # "EnhancedMRImageStorage":
-    "1.2.840.10008.5.1.4.1.1.4.2",  # "MRSpectroscopyStorage":
-    "1.2.840.10008.5.1.4.1.1.4.3",  # "EnhancedMRColorImageStorage":
-    "1.2.840.10008.5.1.4.1.1.6.1",  # "UltrasoundImageStorage":
-    "1.2.840.10008.5.1.4.1.1.6.2",  # "EnhancedUSVolumeStorage":
-    "1.2.840.10008.5.1.4.1.1.6.3",  # "PhotoacousticImageStorage":
-    "1.2.840.10008.5.1.4.1.1.7",  # "SecondaryCaptureImageStorage":
-    "1.2.840.10008.5.1.4.1.1.7.1",  # "MultiFrameSingleBitSecondaryCaptureImageStorage":
-    "1.2.840.10008.5.1.4.1.1.7.2",  # "MultiFrameGrayscaleByteSecondaryCaptureImageStorage":
-    "1.2.840.10008.5.1.4.1.1.7.3",  # MultiFrameGrayscaleWordSecondaryCaptureImageStorage
-    "1.2.840.10008.5.1.4.1.1.7.4",  # MultiFrameTrueColorSecondaryCaptureImageStorage
-    "1.2.840.10008.5.1.4.1.1.9.1.1",  # TwelveLeadECGWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.1.2",  # GeneralECGWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.1.3",  # AmbulatoryECGWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.1.4",  # General32bitECGWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.2.1",  # HemodynamicWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.3.1",  # CardiacElectrophysiologyWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.4.1",  # BasicVoiceAudioWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.4.2",  # GeneralAudioWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.5.1",  # ArterialPulseWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.6.1",  # RespiratoryWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.6.2",  # MultichannelRespiratoryWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.7.1",  # RoutineScalpElectroencephalogramWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.7.2",  # ElectromyogramWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.7.3",  # ElectrooculogramWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.7.4",  # SleepElectroencephalogramWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.9.8.1",  # BodyPositionWaveformStorage
-    "1.2.840.10008.5.1.4.1.1.12.1",  # XRayAngiographicImageStorage
-    "1.2.840.10008.5.1.4.1.1.12.1.1",  # EnhancedXAImageStorage
-    "1.2.840.10008.5.1.4.1.1.12.2",  # XRayRadiofluoroscopicImageStorage
-    "1.2.840.10008.5.1.4.1.1.12.2.1",  # EnhancedXRFImageStorage
-    "1.2.840.10008.5.1.4.1.1.13.1.1",  # XRay3DAngiographicImageStorage
-    "1.2.840.10008.5.1.4.1.1.13.1.2",  # XRay3DCraniofacialImageStorage
-    "1.2.840.10008.5.1.4.1.1.13.1.3",  # BreastTomosynthesisImageStorage
-    "1.2.840.10008.5.1.4.1.1.20",  # NuclearMedicineImageStorage
-    "1.2.840.10008.5.1.4.1.1.30",  # ParametricMapStorage
-    "1.2.840.10008.5.1.4.1.1.66",  # RawDataStorage
-    "1.2.840.10008.5.1.4.1.1.66.1",  # SpatialRegistrationStorage
-    "1.2.840.10008.5.1.4.1.1.66.2",  # SpatialFiducialsStorage
-    "1.2.840.10008.5.1.4.1.1.66.3",  # DeformableSpatialRegistrationStorage
-    "1.2.840.10008.5.1.4.1.1.66.4",  # SegmentationStorage
-    "1.2.840.10008.5.1.4.1.1.66.5",  # SurfaceSegmentationStorage
-    "1.2.840.10008.5.1.4.1.1.66.6",  # TractographyResultsStorage
-    "1.2.840.10008.5.1.4.1.1.67",  # RealWorldValueMappingStorage
-    "1.2.840.10008.5.1.4.1.1.68.1",  # SurfaceScanMeshStorage
-    "1.2.840.10008.5.1.4.1.1.68.2",  # SurfaceScanPointCloudStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.1",  # VLEndoscopicImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.1.1",  # VideoEndoscopicImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.2",  # VLMicroscopicImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.2.1",  # VideoMicroscopicImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.3",  # VLSlideCoordinatesMicroscopicImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.4",  # VLPhotographicImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.4.1",  # VideoPhotographicImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.1",  # OphthalmicPhotography8BitImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.2",  # OphthalmicPhotography16BitImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.3",  # StereometricRelationshipStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.4",  # OphthalmicTomographyImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.5",  # WideFieldOphthalmicPhotographyStereographicProjectionImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.6",  # WideFieldOphthalmicPhotography3DCoordinatesImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.7",  # OphthalmicOpticalCoherenceTomographyEnFaceImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.5.8",  # OphthlamicOpticalCoherenceTomographyBscanVolumeAnalysisStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.6",  # VLWholeSlideMicroscopyImageStorage
-    "1.2.840.10008.5.1.4.1.1.77.1.7",  # DermoscopicPhotographyImageStorage
-    "1.2.840.10008.5.1.4.1.1.78.1",  # LensometryMeasurementsStorage
-    "1.2.840.10008.5.1.4.1.1.78.2",  # AutorefractionMeasurementsStorage
-    "1.2.840.10008.5.1.4.1.1.78.3",  # KeratometryMeasurementsStorage
-    "1.2.840.10008.5.1.4.1.1.78.4",  # SubjectiveRefractionMeasurementsStorage
-    "1.2.840.10008.5.1.4.1.1.78.5",  # VisualAcuityMeasurementsStorage
-    "1.2.840.10008.5.1.4.1.1.78.6",  # SpectaclePrescriptionReportStorage
-    "1.2.840.10008.5.1.4.1.1.78.7",  # OphthalmicAxialMeasurementsStorage
-    "1.2.840.10008.5.1.4.1.1.78.8",  # IntraocularLensCalculationsStorage
-    "1.2.840.10008.5.1.4.1.1.79.1",  # MacularGridThicknessAndVolumeReportStorage
-    "1.2.840.10008.5.1.4.1.1.80.1",  # OphthalmicVisualFieldStaticPerimetryMeasurementsStorage
-    "1.2.840.10008.5.1.4.1.1.81.1",  # OphthalmicThicknessMapStorage
-    "1.2.840.10008.5.1.4.1.1.82.1",  # CornealTopographyMapStorage
-    "1.2.840.10008.5.1.4.1.1.88.11",  # BasicTextSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.22",  # EnhancedSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.33",  # ComprehensiveSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.34",  # Comprehensive3DSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.35",  # ExtensibleSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.50",  # MammographyCADSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.65",  # ChestCADSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.67",  # XRayRadiationDoseSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.68",  # RadiopharmaceuticalRadiationDoseSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.69",  # ColonCADSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.70",  # ImplantationPlanSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.71",  # AcquisitionContextSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.72",  # SimplifiedAdultEchoSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.73",  # PatientRadiationDoseSRStorage
-    "1.2.840.10008.5.1.4.1.1.88.76",  # EnhancedXRayRadiationDoseSRStorage
-    "1.2.840.10008.5.1.4.1.1.91.1",  # MicroscopyBulkSimpleAnnotationsStorage
-    "1.2.840.10008.5.1.4.1.1.104.1",  # EncapsulatedPDFStorage
-    "1.2.840.10008.5.1.4.1.1.104.2",  # EncapsulatedCDAStorage
-    "1.2.840.10008.5.1.4.1.1.104.3",  # EncapsulatedSTLStorage
-    "1.2.840.10008.5.1.4.1.1.104.4",  # EncapsulatedOBJStorage
-    "1.2.840.10008.5.1.4.1.1.104.5",  # EncapsulatedMTLStorage
-    "1.2.840.10008.5.1.4.1.1.128",  # PositronEmissionTomographyImageStorage
-    "1.2.840.10008.5.1.4.1.1.130",  # EnhancedPETImageStorage
-    "1.2.840.10008.5.1.4.1.1.481.1",  # RTImageStorage
-    "1.2.840.10008.5.1.4.1.1.481.2",  # RTDoseStorage
-    "1.2.840.10008.5.1.4.1.1.481.3",  # RTStructureSetStorage
-    "1.2.840.10008.5.1.4.1.1.481.4",  # RTBeamsTreatmentRecordStorage
-    "1.2.840.10008.5.1.4.1.1.481.5",  # RTPlanStorage
-    "1.2.840.10008.5.1.4.1.1.481.6",  # RTBrachyTreatmentRecordStorage
-    "1.2.840.10008.5.1.4.1.1.481.7",  # RTTreatmentSummaryRecordStorage
-    "1.2.840.10008.5.1.4.1.1.481.8",  # RTIonPlanStorage
-    "1.2.840.10008.5.1.4.1.1.481.9",  # RTIonBeamsTreatmentRecordStorage
-    "1.2.840.10008.5.1.4.1.1.481.10",  # RTPhysicianIntentStorage
-    "1.2.840.10008.5.1.4.1.1.481.11",  # RTSegmentAnnotationStorage
-    "1.2.840.10008.5.1.4.1.1.481.12",  # RTRadiationSetStorage
-    "1.2.840.10008.5.1.4.1.1.481.13",  # CArmPhotonElectronRadiationStorage
-    "1.2.840.10008.5.1.4.1.1.481.14",  # TomotherapeuticRadiationStorage
-    "1.2.840.10008.5.1.4.1.1.481.15",  # RoboticArmRadiationStorage
-    "1.2.840.10008.5.1.4.1.1.481.18",  # TomotherapeuticRadiationRecordStorage
-    "1.2.840.10008.5.1.4.1.1.481.19",  # CArmPhotonElectronRadiationRecordStorage
-    "1.2.840.10008.5.1.4.1.1.481.20",  # RoboticArmRadiationRecordStorage
-    "1.2.840.10008.5.1.4.1.1.481.21",  # RTRadiationSetDeliveryInstructionStorage
-    "1.2.840.10008.5.1.4.1.1.481.22",  # RTTreatmentPreparationStorage
-    "1.2.840.10008.5.1.4.1.1.481.23",  # EnhancedRTImageStorage
-    "1.2.840.10008.5.1.4.1.1.481.24",  # EnhancedContinuousRTImageStorage
-    "1.2.840.10008.5.1.4.1.1.481.25",  # RTPatientPositionAcquisitionInstructionStorage
-    "1.2.840.10008.5.1.4.34.7",  # RTBeamsDeliveryInstructionStorage
-    "1.2.840.10008.5.1.4.34.10",  # RTBrachyApplicationSetupDeliveryInstructionsStorage
+    "1.2.840.10008.5.1.4.1.1.9.1.3", # AmbulatoryECGWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.9.5.1", # ArterialPulseWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.78.2", # AutorefractionMeasurementsStorage
+    "1.2.840.10008.5.1.4.1.1.131", # BasicStructuredDisplayStorage
+    "1.2.840.10008.5.1.4.1.1.88.11", # BasicTextSRStorage
+    "1.2.840.10008.5.1.4.1.1.9.4.1", # BasicVoiceAudioWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.11.4", # BlendingSoftcopyPresentationStateStorage
+    "1.2.840.10008.5.1.4.1.1.13.1.3", # BreastTomosynthesisImageStorage
+    "1.2.840.10008.5.1.4.1.1.9.3.1", # CardiacElectrophysiologyWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.88.65", # ChestCADSRStorage
+    "1.2.840.10008.5.1.4.1.1.88.69", # ColonCADSRStorage
+    "1.2.840.10008.5.1.4.1.1.11.2", # ColorSoftcopyPresentationStateStorage
+    "1.2.840.10008.5.1.4.1.1.88.34", # Comprehensive3DSRStorage
+    "1.2.840.10008.5.1.4.1.1.88.33", # ComprehensiveSRStorage
+    "1.2.840.10008.5.1.4.1.1.1", # ComputedRadiographyImageStorage
+    "1.2.840.10008.5.1.4.1.1.2", # CTImageStorage
+    "1.2.840.10008.5.1.4.1.1.66.3", # DeformableSpatialRegistrationStorage
+    "1.2.840.10008.5.1.4.1.1.1.3", # DigitalIntraOralXRayImageStorageForPresentation
+    "1.2.840.10008.5.1.4.1.1.1.3.1", # DigitalIntraOralXRayImageStorageForProcessing
+    "1.2.840.10008.5.1.4.1.1.1.2", # DigitalMammographyXRayImageStorageForPresentation
+    "1.2.840.10008.5.1.4.1.1.1.2.1", # DigitalMammographyXRayImageStorageForProcessing
+    "1.2.840.10008.5.1.4.1.1.1.1", # DigitalXRayImageStorageForPresentation
+    "1.2.840.10008.5.1.4.1.1.1.1.1", # DigitalXRayImageStorageForProcessing
+    "1.2.840.10008.5.1.4.1.1.104.2", # EncapsulatedCDAStorage
+    "1.2.840.10008.5.1.4.1.1.104.1", # EncapsulatedPDFStorage
+    "1.2.840.10008.5.1.4.1.1.2.1", # EnhancedCTImageStorage
+    "1.2.840.10008.5.1.4.1.1.4.3", # EnhancedMRColorImageStorage
+    "1.2.840.10008.5.1.4.1.1.4.1", # EnhancedMRImageStorage
+    "1.2.840.10008.5.1.4.1.1.130", # EnhancedPETImageStorage
+    "1.2.840.10008.5.1.4.1.1.88.22", # EnhancedSRStorage
+    "1.2.840.10008.5.1.4.1.1.6.2", # EnhancedUSVolumeStorage
+    "1.2.840.10008.5.1.4.1.1.12.1.1", # EnhancedXAImageStorage
+    "1.2.840.10008.5.1.4.1.1.12.2.1", # EnhancedXRFImageStorage
+    "1.2.840.10008.5.1.4.1.1.9.4.2", # GeneralAudioWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.9.1.2", # GeneralECGWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.11.1", # GrayscaleSoftcopyPresentationStateStorage
+    "1.2.840.10008.5.1.4.1.1.9.2.1", # HemodynamicWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.88.70", # ImplantationPlanSRStorage
+    "1.2.840.10008.5.1.4.1.1.78.8", # IntraocularLensCalculationsStorage
+    "1.2.840.10008.5.1.4.1.1.14.1", # IntravascularOpticalCoherenceTomographyImageStorageForPresentation
+    "1.2.840.10008.5.1.4.1.1.14.2", # IntravascularOpticalCoherenceTomographyImageStorageForProcessing
+    "1.2.840.10008.5.1.4.1.1.78.3", # KeratometryMeasurementsStorage
+    "1.2.840.10008.5.1.4.1.1.88.59", # KeyObjectSelectionDocumentStorage
+    "1.2.840.10008.5.1.4.1.1.2.2", # LegacyConvertedEnhancedCTImageStorage
+    "1.2.840.10008.5.1.4.1.1.4.4", # LegacyConvertedEnhancedMRImageStorage
+    "1.2.840.10008.5.1.4.1.1.128.1", # LegacyConvertedEnhancedPETImageStorage
+    "1.2.840.10008.5.1.4.1.1.78.1", # LensometryMeasurementsStorage
+    "1.2.840.10008.5.1.4.1.1.79.1", # MacularGridThicknessAndVolumeReportStorage
+    "1.2.840.10008.5.1.4.1.1.88.50", # MammographyCADSRStorage
+    "1.2.840.10008.5.1.4.1.1.4", # MRImageStorage
+    "1.2.840.10008.5.1.4.1.1.4.2", # MRSpectroscopyStorage
+    "1.2.840.10008.5.1.4.1.1.7.2", # MultiframeGrayscaleByteSecondaryCaptureImageStorage
+    "1.2.840.10008.5.1.4.1.1.7.3", # MultiframeGrayscaleWordSecondaryCaptureImageStorage
+    "1.2.840.10008.5.1.4.1.1.7.1", # MultiframeSingleBitSecondaryCaptureImageStorage
+    "1.2.840.10008.5.1.4.1.1.7.4", # MultiframeTrueColorSecondaryCaptureImageStorage
+    "1.2.840.10008.5.1.4.1.1.20", # NuclearMedicineImageStorage
+    "1.2.840.10008.5.1.4.1.1.78.7", # OphthalmicAxialMeasurementsStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.5.2", # OphthalmicPhotography16BitImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.5.1", # OphthalmicPhotography8BitImageStorage
+    "1.2.840.10008.5.1.4.1.1.81.1", # OphthalmicThicknessMapStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.5.4", # OphthalmicTomographyImageStorage
+    "1.2.840.10008.5.1.4.1.1.80.1", # OphthalmicVisualFieldStaticPerimetryMeasurementsStorage
+    "1.2.840.10008.5.1.4.1.1.128", # PositronEmissionTomographyImageStorage
+    "1.2.840.10008.5.1.4.1.1.88.40", # ProcedureLogStorage
+    "1.2.840.10008.5.1.4.1.1.11.3", # PseudoColorSoftcopyPresentationStateStorage
+    "1.2.840.10008.5.1.4.1.1.66", # RawDataStorage
+    "1.2.840.10008.5.1.4.1.1.67", # RealWorldValueMappingStorage
+    "1.2.840.10008.5.1.4.1.1.9.6.1", # RespiratoryWaveformStorage
+    "1.2.840.10008.5.1.4.34.7", # RTBeamsDeliveryInstructionStorage
+    "1.2.840.10008.5.1.4.1.1.481.4", # RTBeamsTreatmentRecordStorage
+    "1.2.840.10008.5.1.4.1.1.481.6", # RTBrachyTreatmentRecordStorage
+    "1.2.840.10008.5.1.4.1.1.481.2", # RTDoseStorage
+    "1.2.840.10008.5.1.4.1.1.481.1", # RTImageStorage
+    "1.2.840.10008.5.1.4.1.1.481.9", # RTIonBeamsTreatmentRecordStorage
+    "1.2.840.10008.5.1.4.1.1.481.8", # RTIonPlanStorage
+    "1.2.840.10008.5.1.4.1.1.481.5", # RTPlanStorage
+    "1.2.840.10008.5.1.4.1.1.481.3", # RTStructureSetStorage
+    "1.2.840.10008.5.1.4.1.1.481.7", # RTTreatmentSummaryRecordStorage
+    "1.2.840.10008.5.1.4.1.1.7", # SecondaryCaptureImageStorage
+    "1.2.840.10008.5.1.4.1.1.66.4", # SegmentationStorage
+    "1.2.840.10008.5.1.4.1.1.66.2", # SpatialFiducialsStorage
+    "1.2.840.10008.5.1.4.1.1.66.1", # SpatialRegistrationStorage
+    "1.2.840.10008.5.1.4.1.1.78.6", # SpectaclePrescriptionReportStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.5.3", # StereometricRelationshipStorage
+    "1.2.840.10008.5.1.4.1.1.78.4", # SubjectiveRefractionMeasurementsStorage
+    "1.2.840.10008.5.1.4.1.1.68.1", # SurfaceScanMeshStorage
+    "1.2.840.10008.5.1.4.1.1.68.2", # SurfaceScanPointCloudStorage
+    "1.2.840.10008.5.1.4.1.1.66.5", # SurfaceSegmentationStorage
+    "1.2.840.10008.5.1.4.1.1.9.1.1", # TwelveLeadECGWaveformStorage
+    "1.2.840.10008.5.1.4.1.1.6.1", # UltrasoundImageStorage
+    "1.2.840.10008.5.1.4.1.1.3.1", # UltrasoundMultiframeImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.1.1", # VideoEndoscopicImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.2.1", # VideoMicroscopicImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.4.1", # VideoPhotographicImageStorage
+    "1.2.840.10008.5.1.4.1.1.78.5", # VisualAcuityMeasurementsStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.1", # VLEndoscopicImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.2", # VLMicroscopicImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.4", # VLPhotographicImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.3", # VLSlideCoordinatesMicroscopicImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.1.6", # VLWholeSlideMicroscopyImageStorage
+    "1.2.840.10008.5.1.4.1.1.11.5", # XAXRFGrayscaleSoftcopyPresentationStateStorage
+    "1.2.840.10008.5.1.4.1.1.13.1.1", # XRay3DAngiographicImageStorage
+    "1.2.840.10008.5.1.4.1.1.13.1.2", # XRay3DCraniofacialImageStorage
+    "1.2.840.10008.5.1.4.1.1.12.1", # XRayAngiographicImageStorage
+    "1.2.840.10008.5.1.4.1.1.88.67", # XRayRadiationDoseSRStorage
+    "1.2.840.10008.5.1.4.1.1.12.2", # XRayRadiofluoroscopicImageStorage
+    ## retired but still in use
+    "1.2.840.10008.5.1.1.30", # HardcopyColorImageStorage
+    "1.2.840.10008.5.1.1.29", # HardcopyGrayscaleImageStorage
+    "1.2.840.10008.5.1.4.1.1.5", # NuclearMedicineImageStorageRetired
+    "1.2.840.10008.5.1.4.1.1.9", # StandaloneCurveStorage
+    "1.2.840.10008.5.1.4.1.1.10", # StandaloneModalityLUTStorage
+    "1.2.840.10008.5.1.4.1.1.8", # StandaloneOverlayStorage
+    "1.2.840.10008.5.1.4.1.1.129", # StandalonePETCurveStorage
+    "1.2.840.10008.5.1.4.1.1.11", # StandaloneVOILUTStorage
+    "1.2.840.10008.5.1.1.27", # StoredPrintStorage
+    "1.2.840.10008.5.1.4.1.1.6", # UltrasoundImageStorageRetired
+    "1.2.840.10008.5.1.4.1.1.3", # UltrasoundMultiframeImageStorageRetired
+    "1.2.840.10008.5.1.4.1.1.77.1", # VLImageStorage
+    "1.2.840.10008.5.1.4.1.1.77.2", # VLMultiframeImageStorage
+    "1.2.840.10008.5.1.4.1.1.12.3", # XRayAngiographicBiPlaneImageStorage
 ]
-assert len(_storage) <= 128
+assert len(_storage) <= 120
 
 StoragePresentationContexts = [build_context(uid) for uid in sorted(_storage)]
-"""Pre-built presentation contexts for :dcm:`Storage<part04/chapter_B.html>` containing 128 selected SOP Classes."""
+"""Pre-built presentation contexts for :dcm:`Storage<part04/chapter_B.html>` containing 120 selected SOP Classes."""
 
 StorageCommitmentPresentationContexts = [
     build_context(uid) for uid in sorted(_STORAGE_COMMITMENT_CLASSES.values())

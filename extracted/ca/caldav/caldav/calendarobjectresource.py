@@ -129,6 +129,28 @@ class CalendarObjectResource(DAVObject):
                 old_id = self.icalendar_component.pop("UID", None)
                 self.icalendar_component.add("UID", id)
 
+    def set_end(self, end, move_dtstart=False):
+        """The RFC specifies that a VEVENT/VTODO cannot have both
+        dtend/due and duration, so when setting dtend/due, the duration
+        field must be evicted
+
+        WARNING: this method is likely to be deprecated and parts of
+        it moved to the icalendar library.  If you decide to use it,
+        please put caldav<3.0 in the requirements.
+        """
+        i = self.icalendar_component
+        if hasattr(end, "tzinfo") and not end.tzinfo:
+            end = end.astimezone(timezone.utc)
+        duration = self.get_duration()
+        i.pop("DURATION", None)
+        i.pop(self._ENDPARAM, None)
+
+        if move_dtstart and duration and "DTSTART" in i:
+            i.pop("DTSTART")
+            i.add("DTSTART", end - duration)
+
+        i.add(self._ENDPARAM, end)
+
     def add_organizer(self) -> None:
         """
         goes via self.client, finds the principal, figures out the right attendee-format and adds an
@@ -168,11 +190,8 @@ class CalendarObjectResource(DAVObject):
         RRULE set and into a "recurrence set" with RECURRENCE-ID set
         and no RRULE set.  The main usage is for client-side expansion
         in case the calendar server does not support server-side
-        expansion.  It should be safe to save back to the server, the
-        server should recognize it as recurrences and should not edit
-        the "master copy".  If doing a `self.load`, the calendar
-        content will be replaced with the "master copy".  However, as
-        of 2022-10 there is no test code verifying this.
+        expansion.  If doing a `self.load`, the calendar
+        content will be replaced with the "master copy".
 
         :param event: Event
         :param start: datetime
@@ -184,24 +203,16 @@ class CalendarObjectResource(DAVObject):
         recurrings = recurring_ical_events.of(
             self.icalendar_instance, components=["VJOURNAL", "VTODO", "VEVENT"]
         ).between(start, end)
-        recurrence_properties = ["exdate", "exrule", "rdate", "rrule"]
-        # FIXME too much copying
-        stripped_event = self.copy(keep_uid=True)
 
-        ## TODO: use icalendar_instance instead
-        if stripped_event.vobject_instance is None:
-            raise ValueError(
-                "Unexpected value None for stripped_event.vobject_instance"
-            )
+        recurrence_properties = {"exdate", "exrule", "rdate", "rrule"}
 
-        # remove all recurrence properties
-        for component in stripped_event.vobject_instance.components():  # type: ignore
-            if component.name in ("VEVENT", "VTODO"):
-                for key in recurrence_properties:
-                    try:
-                        del component.contents[key]
-                    except KeyError:
-                        pass
+        if any(
+            x for x in recurrings if not recurrence_properties.isdisjoint(set(x.keys()))
+        ):
+            ## I think we should not end up here.  And if we do, then it's needed to reinsert the code section I just removed ...
+            import pdb
+
+            pdb.set_trace()
 
         calendar = self.icalendar_instance
         calendar.subcomponents = []
@@ -214,12 +225,8 @@ class CalendarObjectResource(DAVObject):
             ):
                 continue
             if "RECURRENCE-ID" not in occurrence:
-                occurrence.add("RECURRENCE-ID", occurrence.get("DTSTART"))
+                occurrence.add("RECURRENCE-ID", occurrence.get("DTSTART").dt)
             calendar.add_component(occurrence)
-        # add other components (except for the VEVENT itself and VTIMEZONE which is not allowed on occurrence events)
-        for component in stripped_event.icalendar_instance.subcomponents:
-            if component.name not in ("VEVENT", "VTODO", "VTIMEZONE"):
-                calendar.add_component(component)
 
     def set_relation(
         self, other, reltype=None, set_reverse=True
@@ -543,6 +550,10 @@ class CalendarObjectResource(DAVObject):
         self.load(only_if_unloaded=True)
         return self.icalendar_instance.get("method", None) == "REQUEST"
 
+    def is_invite_reply(self) -> bool:
+        self.load(only_if_unloaded=True)
+        return self.icalendar_instance.get("method", None) == "REPLY"
+
     def accept_invite(self, calendar: Optional["Calendar"] = None) -> None:
         self._reply_to_invite_request("ACCEPTED", calendar)
 
@@ -708,9 +719,7 @@ class CalendarObjectResource(DAVObject):
                 raise error.PutError(errmsg(r))
 
     def _create(self, id=None, path=None, retry_on_failure=True) -> None:
-        ## We're efficiently running the icalendar code through the icalendar
-        ## library.  This may cause data modifications and may "unfix"
-        ## https://github.com/python-caldav/caldav/issues/43
+        ## TODO: Find a better method name
         self._find_id_path(id=id, path=path)
         self._put()
 
@@ -729,7 +738,7 @@ class CalendarObjectResource(DAVObject):
             if self.client is None:
                 raise ValueError("Unexpected value None for self.client")
 
-            attendee = self.client.principal_address or self.client.principal()
+            attendee = self.client.principal()
 
         cnt = 0
 
@@ -769,9 +778,10 @@ class CalendarObjectResource(DAVObject):
         obj_type: Optional[str] = None,
         increase_seqno: bool = True,
         if_schedule_tag_match: bool = False,
+        only_this_recurrence: bool = True,
+        all_recurrences: bool = False,
     ) -> Self:
-        """
-        Save the object, can be used for creation and update.
+        """Save the object, can be used for creation and update.
 
         no_overwrite and no_create will check if the object exists.
         Those two are mutually exclusive.  Some servers don't support
@@ -780,10 +790,36 @@ class CalendarObjectResource(DAVObject):
         obj_type is only used in conjunction with no_overwrite and
         no_create.
 
+        is_schedule_tag_match is currently ignored. (TODO - fix or remove)
+
+        The SEQUENCE should be increased when saving a new version of
+        the object.  If this behaviour is unwanted, then
+        increase_seqno should be set to False.  Also, if SEQUENCE is
+        not set, then this will be ignored.
+
+        The behaviour when saving a single recurrence object to the
+        server is as far as I can understand not defined in the RFCs,
+        but all servers I've tested against will overwrite the full
+        event with the recurrence instance (effectively deleting the
+        recurrence rule).  That's almost for sure not what the caller
+        intended.  only_this_recurrence and all_recurrences only
+        applies when trying to save a recurrence object.  They are by
+        nature mutually exclusive, but since only_this_recurrence is
+        True by default, it will be ignored if all_recurrences is set.
+
+        If you want to sent the recurrence as it is to the server,
+        you should set both all_recurrences and only_this_recurrence
+        to False.
+
         Returns:
          * self
 
         """
+        ## Rather than passing the icalendar data verbatimely, we're
+        ## efficiently running the icalendar code through the icalendar
+        ## library.  This may cause data modifications and may "unfix"
+        ## https://github.com/python-caldav/caldav/issues/43
+        ## TODO: think more about this
         if not obj_type:
             obj_type = self.__class__.__name__.lower()
         if (
@@ -797,6 +833,18 @@ class CalendarObjectResource(DAVObject):
 
         path = self.url.path if self.url else None
 
+        def get_self():
+            self.id = self.id or self.icalendar_component.get("uid")
+            if self.id:
+                try:
+                    if obj_type:
+                        return getattr(self.parent, "%s_by_uid" % obj_type)(self.id)
+                    else:
+                        return self.parent.object_by_uid(self.id)
+                except error.NotFoundError:
+                    return None
+            return None
+
         if no_overwrite or no_create:
             ## SECURITY TODO: path names on the server does not
             ## necessarily map cleanly to UUIDs.  We need to do quite
@@ -809,43 +857,86 @@ class CalendarObjectResource(DAVObject):
             ## to do a PUT instead of POST when creating new data).
             ## TODO: the "find id"-logic is duplicated in _create,
             ## should be refactored
-            if not self.id:
-                for component in self.vobject_instance.getChildren():
-                    if hasattr(component, "uid"):
-                        self.id = component.uid.value
+            existing = get_self()
             if not self.id and no_create:
                 raise error.ConsistencyError("no_create flag was set, but no ID given")
-            existing = None
-            ## some servers require one to explicitly search for the right kind of object.
-            ## todo: would arguably be nicer to verify the type of the object and take it from there
-            if not self.id:
-                methods = []
-            elif obj_type:
-                methods = (getattr(self.parent, "%s_by_uid" % obj_type),)
-            else:
-                methods = (
-                    self.parent.object_by_uid,
-                    self.parent.event_by_uid,
-                    self.parent.todo_by_uid,
-                    self.parent.journal_by_uid,
+            if no_overwrite and existing:
+                raise error.ConsistencyError(
+                    "no_overwrite flag was set, but object already exists"
                 )
-            for method in methods:
-                try:
-                    existing = method(self.id)
-                    if no_overwrite:
-                        raise error.ConsistencyError(
-                            "no_overwrite flag was set, but object already exists"
-                        )
-                    break
-                except error.NotFoundError:
-                    pass
 
             if no_create and not existing:
                 raise error.ConsistencyError(
                     "no_create flag was set, but object does not exists"
                 )
 
-        if increase_seqno and b"SEQUENCE" in to_wire(self.data):
+        ## Save a single recurrence-id and all calendars servers seems
+        ## to overwrite the full object, effectively deleting the
+        ## RRULE.  I can't find this behaviour specified in the RFC.
+        ## That's probably not what the caller intended intended.
+        if (
+            only_this_recurrence or all_recurrences
+        ) and "RECURRENCE-ID" in self.icalendar_component:
+            obj = get_self()  ## get the full object, not only the recurrence
+            ici = obj.icalendar_instance  # ical instance
+            if all_recurrences:
+                occ = obj.icalendar_component  ## original calendar component
+                ncc = self.icalendar_component.copy()  ## new calendar component
+                for prop in ["exdate", "exrule", "rdate", "rrule"]:
+                    if prop in occ:
+                        ncc[prop] = occ[prop]
+
+                ## dtstart_diff = how much we've moved the time
+                ## TODO: we may easily have timezone problems here and events shifting some hours ...
+                dtstart_diff = (
+                    ncc.start.astimezone() - ncc["recurrence-id"].dt.astimezone()
+                )
+                new_duration = ncc.duration
+                ncc.pop("dtstart")
+                ncc.add("dtstart", occ.start + dtstart_diff)
+                for ep in ("duration", "dtend"):
+                    if ep in ncc:
+                        ncc.pop(ep)
+                ncc.add("dtend", ncc.start + new_duration)
+                ncc.pop("recurrence-id")
+                s = ici.subcomponents
+
+                ## Replace the "root" subcomponent
+                comp_idxes = (
+                    i
+                    for i in range(0, len(s))
+                    if not isinstance(s[i], icalendar.Timezone)
+                )
+                comp_idx = next(comp_idxes)
+                s[comp_idx] = ncc
+
+                ## The recurrence-ids of all objects has to be
+                ## recalculated (this is probably not quite right.  If
+                ## we move the time of a daily meeting from 8 to 10,
+                ## then we need to do this.  If we move the date of
+                ## the first instance, then probably we shouldn't
+                ## ... oh well ... so many complications)
+                if dtstart_diff:
+                    for i in comp_idxes:
+                        rid = s[i].pop("recurrence-id")
+                        s[i].add("recurrence-id", rid.dt + dtstart_diff)
+
+                return obj.save(increase_seqno=increase_seqno)
+            if only_this_recurrence:
+                existing_idx = [
+                    i
+                    for i in range(0, len(ici.subcomponents))
+                    if ici.subcomponents[i].get("recurrence-id")
+                    == self.icalendar_component["recurrence-id"]
+                ]
+                error.assert_(len(existing_idx) <= 1)
+                if existing_idx:
+                    ici.subcomponents[existing_idx[0]] = self.icalendar_component
+                else:
+                    ici.add_component(self.icalendar_component)
+                return obj.save(increase_seqno=increase_seqno)
+
+        if "SEQUENCE" in self.icalendar_component:
             seqno = self.icalendar_component.pop("SEQUENCE", None)
             if seqno is not None:
                 self.icalendar_component.add("SEQUENCE", seqno + 1)
@@ -1023,13 +1114,13 @@ class Event(CalendarObjectResource):
     """
     The `Event` object is used to represent an event (VEVENT).
 
-    As of 2020-12 it adds nothing to the inheritated class.  (I have
+    As of 2020-12 it adds very little to the inheritated class.  (I have
     frequently asked myself if we need those subclasses ... perhaps
     not)
     """
 
+    set_dtend = CalendarObjectResource.set_end
     _ENDPARAM = "DTEND"
-    pass
 
 
 class Journal(CalendarObjectResource):
@@ -1069,9 +1160,13 @@ class FreeBusy(CalendarObjectResource):
 
 class Todo(CalendarObjectResource):
     """The `Todo` object is used to represent a todo item (VTODO).  A
-    Todo-object can be completed.  Extra logic for different ways to
-    complete one recurrence of a recurrent todo.  Extra logic to
-    handle due vs duration.
+    Todo-object can be completed.
+
+    There is some extra logic here - arguably none of it belongs to
+    the caldav library, and should be moved either to the icalendar
+    library or to the plann library (plann is a cli-tool, should
+    probably be split up into one library for advanced calendaring
+    operations and the cli-tool as separate packages)
     """
 
     _ENDPARAM = "DUE"
@@ -1364,11 +1459,11 @@ class Todo(CalendarObjectResource):
         """Undo completion - marks a completed task as not completed"""
         ### TODO: needs test code for code coverage!
         ## (it has been tested through the calendar-cli test code)
-        if not hasattr(self.vobject_instance.vtodo, "status"):
-            self.vobject_instance.vtodo.add("status")
-        self.vobject_instance.vtodo.status.value = "NEEDS-ACTION"
-        if hasattr(self.vobject_instance.vtodo, "completed"):
-            self.vobject_instance.vtodo.remove(self.vobject_instance.vtodo.completed)
+        if "status" in self.icalendar_component:
+            self.icalendar_component.pop("status")
+        self.icalendar_component.add("status", "NEEDS-ACTION")
+        if "completed" in self.icalendar_component:
+            self.icalendar_component.pop("completed")
         self.save()
 
     ## TODO: should be moved up to the base class
@@ -1417,7 +1512,7 @@ class Todo(CalendarObjectResource):
         please put caldav<2.0 in the requirements.
 
         WARNING: the check_dependent-logic may be rewritten to support
-        RFC9253 in 1.x already
+        RFC9253 in 3.x
         """
         i = self.icalendar_component
         if hasattr(due, "tzinfo") and not due.tzinfo:
@@ -1436,12 +1531,6 @@ class Todo(CalendarObjectResource):
                     raise error.ConsistencyError(
                         "parent object has due/end %s, cannot procrastinate child object without first procrastinating parent object"
                     )
-        duration = self.get_duration()
-        i.pop("DURATION", None)
-        i.pop("DUE", None)
+        CalendarObjectResource.set_end(self, due, move_dtstart)
 
-        if move_dtstart and duration and "DTSTART" in i:
-            i.pop("DTSTART")
-            i.add("DTSTART", due - duration)
-
-        i.add("DUE", due)
+    set_end = set_due

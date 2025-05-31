@@ -119,7 +119,7 @@ async def get_entity_lineage_upstream(
         entity_type=self.parent_type,
         entity_id=self.parent_id or self.parent.id,
         session=session,
-        debug_api=debug_api,
+        debug_api=debug_api, 
     )
 
     if return_raw:
@@ -128,7 +128,7 @@ async def get_entity_lineage_upstream(
     self.upstream_lineage_ls = await dmce.gather_with_concurrency(
         *[
             DomoLineage_Type[obj["type"]].value(entity_id=obj["id"], auth=self.auth)
-            for key, obj in res.response.items()
+            for key, obj in res.response.items() if str(obj['id']) != str(self.parent_id)
         ],
         n=10
     )

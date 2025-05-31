@@ -37,34 +37,9 @@ including interpreter-lifetime caching.
 
 from __future__ import annotations
 
-import atexit
-import sys
-from contextlib import AbstractContextManager, ExitStack
-from functools import cached_property
-from pathlib import Path
-from types import ModuleType
-
-from functools import cache
-
-if sys.version_info >= (3, 11):
-    from importlib.resources import as_file, files
-    from importlib.resources.abc import Traversable
-else:
-    from importlib_resources import as_file, files
-    from importlib_resources.abc import Traversable
+from . import typ as t
 
 __all__ = ['Loader']
-
-
-# Use one global exit stack
-EXIT_STACK = ExitStack()
-atexit.register(EXIT_STACK.close)
-
-
-@cache
-def _cache_resource(anchor: str | ModuleType, segments: tuple[str]) -> Path:
-    # PY310(importlib_resources): no-any-return, PY311+(importlib.resources): unused-ignore
-    return EXIT_STACK.enter_context(as_file(files(anchor).joinpath(*segments)))  # type: ignore[no-any-return,unused-ignore]
 
 
 class Loader:
@@ -131,21 +106,13 @@ class Loader:
 
         with as_file(files(other_package) / 'data') as pkgdata:
             func(pkgdata)
-
-    .. automethod:: readable
-
-    .. automethod:: as_path
-
-    .. automethod:: cached
     """
 
-    def __init__(self, anchor: str | ModuleType):
+    def __init__(self, anchor: str | t.ModuleType):
         self._anchor = anchor
-        self.files = files(anchor)
         # Allow class to have a different docstring from instances
-        self.__doc__ = self._doc
+        self.__doc__ = self._doc()
 
-    @cached_property
     def _doc(self) -> str:
         """Construct docstring for instances
 
@@ -153,9 +120,11 @@ class Loader:
         non-public means has a `.` or `_` prefix or is a 'tests'
         directory.
         """
+        from ._compat import files
+
         top_level = sorted(
             f'{p.name}/' if p.is_dir() else p.name
-            for p in self.files.iterdir()
+            for p in files(self._anchor).iterdir()
             if p.name[0] not in ('.', '_') and p.name != 'tests'
         )
         doclines = [
@@ -168,7 +137,7 @@ class Loader:
 
         return '\n'.join(doclines)
 
-    def readable(self, *segments: str) -> Traversable:
+    def readable(self, *segments: str) -> t.Traversable:
         """Provide read access to a resource through a Path-like interface.
 
         This file may or may not exist on the filesystem, and may be
@@ -177,10 +146,11 @@ class Loader:
         This result is not cached or copied to the filesystem in cases where
         that would be necessary.
         """
-        # PY310(importlib_resources): no-any-return, PY311+(importlib.resources): unused-ignore
-        return self.files.joinpath(*segments)  # type: ignore[no-any-return,unused-ignore]
+        from ._compat import files
 
-    def as_path(self, *segments: str) -> AbstractContextManager[Path]:
+        return files(self._anchor).joinpath(*segments)
+
+    def as_path(self, *segments: str) -> t.AbstractContextManager[t.Path]:
         """Ensure data is available as a :class:`~pathlib.Path`.
 
         This method generates a context manager that yields a Path when
@@ -189,10 +159,11 @@ class Loader:
         This result is not cached, and any temporary files that are created
         are deleted when the context is exited.
         """
-        # PY310(importlib_resources): no-any-return, PY311+(importlib.resources): unused-ignore
-        return as_file(self.files.joinpath(*segments))  # type: ignore[no-any-return,unused-ignore]
+        from ._compat import as_file, files
 
-    def cached(self, *segments: str) -> Path:
+        return as_file(files(self._anchor).joinpath(*segments))
+
+    def cached(self, *segments: str) -> t.Path:
         """Ensure data resource is available as a :class:`~pathlib.Path`.
 
         Any temporary files that are created remain available throughout
@@ -202,8 +173,8 @@ class Loader:
         data multiple times, but directories and their contents being
         requested separately may result in some duplication.
         """
-        # Use self._anchor and segments to ensure the cache does not depend on id(self.files)
-        # PY310(importlib_resources): unused-ignore, PY311+(importlib.resources) arg-type
-        return _cache_resource(self._anchor, segments)  # type: ignore[arg-type,unused-ignore]
+        from .cache import cached_resource
+
+        return cached_resource(self._anchor, segments)
 
     __call__ = cached

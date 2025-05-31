@@ -52,7 +52,7 @@ from chalk.sql.finalized_query import Finalizer
 from chalk.streams import KafkaSource, get_resolver_error_builder
 from chalk.streams.base import StreamSource
 from chalk.streams.types import StreamResolverSignature
-from chalk.utils import MachineType
+from chalk.utils import MachineType, notebook
 from chalk.utils.collections import get_unique_item, get_unique_item_if_exists
 from chalk.utils.duration import CronTab, Duration, parse_chalk_duration, timedelta_to_duration
 from chalk.utils.missing_dependency import missing_dependency_exception
@@ -1513,7 +1513,7 @@ class GeneratedSQLFileResolverRegistry:
         self.resolver_name_to_generated_infos: Dict[str, GeneratedSQLFileResolverInfo] = {}
 
     def add_sql_file_resolver(self, name: str, filepath: str, sql_string: str, comment_dict: CommentDict):
-        if name in self.resolver_name_to_generated_infos:
+        if name in self.resolver_name_to_generated_infos and filepath != "<notebook>":
             raise ValueError(f"A SQL file resolver already exists with name '{name}'. They must have unique names.")
         self.resolver_name_to_generated_infos[name] = GeneratedSQLFileResolverInfo(
             filepath=filepath,
@@ -1534,6 +1534,9 @@ class GeneratedSQLFileResolverRegistry:
 
 
 _GENERATED_SQL_FILE_RESOLVER_REGISTRY = GeneratedSQLFileResolverRegistry()
+
+# name --> resolver
+NOTEBOOK_DEFINED_SQL_RESOLVERS: Dict[str, ResolverResult] = {}
 
 
 def make_sql_file_resolver(
@@ -1687,13 +1690,21 @@ def make_sql_file_resolver(
         name = name.replace(CHALK_SQL_FILE_RESOLVER_FILENAME_SUFFIX, "")
     frame = inspect.stack()[1]
     module = inspect.getmodule(frame[0])
-    if module is None:
-        raise ValueError("Could not get caller module for 'make_sql_file_resolver'")
-    module_file = module.__file__
-    if module_file is None:
-        raise ValueError("Could not get caller file for 'make_sql_file_resolver'")
-
-    filename = module_file  # the resolver filename will be where 'make_sql_file_resolver' was called
+    is_defined_in_notebook: bool = False
+    if notebook.is_notebook():
+        if module is not None:
+            filename = module.__name__
+        else:
+            filename = "<notebook>"
+            is_defined_in_notebook = True
+    else:
+        # the resolver filename will be where 'make_sql_file_resolver' was called
+        if module is None:
+            raise ValueError("Could not get caller module for 'make_sql_file_resolver'")
+        module_file = module.__file__
+        if module_file is None:
+            raise ValueError("Could not get caller file for 'make_sql_file_resolver'")
+        filename = module_file
 
     comment_dict = CommentDict(
         source=source if isinstance(source, str) or source is None else source.name,
@@ -1727,6 +1738,52 @@ def make_sql_file_resolver(
         comment_dict=comment_dict,
         name=name,
     )
+    if is_defined_in_notebook:
+        from chalk.sql import SQLSourceGroup
+
+        current_sql_sources: List[BaseSQLSource | SQLSourceGroup] = [
+            *BaseSQLSource.registry,
+            *SQLSourceGroup.registry,
+        ]
+        if isinstance(source, str):
+            source_names = {s.name for s in current_sql_sources}
+            if source not in _SOURCES:
+                if source not in source_names:
+                    msg = f"Unable to create SQL resolver '{name}' since a SQL source with the name '{source}' was not found. Please make sure the SQL source exists & is imported in the current environment."
+                    if len(source_names) <= 10:
+                        msg += f" Currently loaded SQL sources: {source_names}"
+                    raise RuntimeError(msg)
+            else:
+                source_type = _SOURCES[source]
+                possible_sources = [s for s in current_sql_sources if isinstance(s, source_type)]
+                if len(possible_sources) == 0:
+                    msg = f"Unable to create SQL resolver '{name}' since no SQL sources of type '{source}' were found. Please make sure the SQL source exists & is imported in the current environment."
+                    if len(source_names) <= 10:
+                        msg += f" Currently loaded SQL sources: {source_names}"
+                    raise RuntimeError(msg)
+                elif len(possible_sources) > 1:
+                    msg = f"Unable to create SQL resolver '{name}' since multiple SQL sources of type '{source}' were found: {[x.name for x in possible_sources]} Please refer to the SQL source by name (e.g. '{possible_sources[0].name}') instead of by type."
+                    raise RuntimeError(msg)
+
+        generated_info = _GENERATED_SQL_FILE_RESOLVER_REGISTRY.resolver_name_to_generated_infos[name]
+        info = SQLStringResult(
+            path=generated_info.filepath,
+            sql_string=generated_info.sql_string,
+            error=None,
+            override_comment_dict=generated_info.comment_dict,
+            override_name=name,
+            autogenerated=True,
+        )
+        resolver_result = get_sql_file_resolver(
+            sources=current_sql_sources, sql_string_result=info, has_import_errors=False
+        )
+        if resolver_result.errors:
+            errs = [e.display for e in resolver_result.errors]
+            err_message = "\n".join(errs)
+            raise RuntimeError(
+                f"Failed to parse notebook-defined SQL resolver '{name}'. Found the following errors:\n{err_message}"
+            )
+        NOTEBOOK_DEFINED_SQL_RESOLVERS[name] = resolver_result
 
 
 def _convert_incremental_settings(settings: IncrementalSettings) -> IncrementalSettingsSQLFileResolver:
