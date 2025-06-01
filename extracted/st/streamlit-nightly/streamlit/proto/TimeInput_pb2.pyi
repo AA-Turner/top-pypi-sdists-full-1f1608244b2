@@ -21,7 +21,6 @@ import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
 import streamlit.proto.LabelVisibilityMessage_pb2
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -40,7 +39,6 @@ class TimeInput(google.protobuf.message.Message):
     DISABLED_FIELD_NUMBER: builtins.int
     LABEL_VISIBILITY_FIELD_NUMBER: builtins.int
     STEP_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     id: builtins.str
     label: builtins.str
     default: builtins.str
@@ -52,8 +50,6 @@ class TimeInput(google.protobuf.message.Message):
     step: builtins.int
     @property
     def label_visibility(self) -> streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage: ...
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
     def __init__(
         self,
         *,
@@ -67,15 +63,12 @@ class TimeInput(google.protobuf.message.Message):
         disabled: builtins.bool = ...,
         label_visibility: streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage | None = ...,
         step: builtins.int = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "_width_config", b"_width_config", "default", b"default", "label_visibility", b"label_visibility", "value", b"value", "width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "_width_config", b"_width_config", "default", b"default", "disabled", b"disabled", "form_id", b"form_id", "help", b"help", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "set_value", b"set_value", "step", b"step", "value", b"value", "width_config", b"width_config"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "default", b"default", "label_visibility", b"label_visibility", "value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "default", b"default", "disabled", b"disabled", "form_id", b"form_id", "help", b"help", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "set_value", b"set_value", "step", b"step", "value", b"value"]) -> None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_default", b"_default"]) -> typing.Literal["default"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_value", b"_value"]) -> typing.Literal["value"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
 
 global___TimeInput = TimeInput

@@ -1,11 +1,7 @@
-#
-# coding=utf-8
-
 import os
 
 import setuptools
 
-#
 # get the long description from the README file
 here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
@@ -13,7 +9,7 @@ with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setuptools.setup(
     name='cmd2-myplugin',
-    # use_scm_version=True,  # use_scm_version doesn't work if setup.py isn't in the repository root
+    # use_scm_version=True,  # use_scm_version doesn't work if setup.py isn't in the repository root  # noqa: ERA001
     version='2.0.0',
     description='A template used to build plugins for cmd2',
     long_description=long_description,
@@ -24,7 +20,7 @@ setuptools.setup(
     url='https://github.com/python-cmd2/cmd2-plugin-template',
     license='MIT',
     packages=['cmd2_myplugin'],
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     install_requires=['cmd2 >= 2, <3'],
     setup_requires=['setuptools_scm'],
     classifiers=[
@@ -34,11 +30,12 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
     ],
     # dependencies for development and testing
     # $ pip install -e .[dev]

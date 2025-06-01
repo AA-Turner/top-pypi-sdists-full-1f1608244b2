@@ -20,7 +20,6 @@ limitations under the License.
 import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -32,7 +31,6 @@ class Json(google.protobuf.message.Message):
     BODY_FIELD_NUMBER: builtins.int
     EXPANDED_FIELD_NUMBER: builtins.int
     MAX_EXPAND_DEPTH_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     body: builtins.str
     """Content to display."""
     expanded: builtins.bool
@@ -41,20 +39,15 @@ class Json(google.protobuf.message.Message):
     """
     max_expand_depth: builtins.int
     """The maximum depth to expand the JSON object."""
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig:
-        """Width configuration"""
-
     def __init__(
         self,
         *,
         body: builtins.str = ...,
         expanded: builtins.bool = ...,
         max_expand_depth: builtins.int | None = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_max_expand_depth", b"_max_expand_depth", "max_expand_depth", b"max_expand_depth", "width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_max_expand_depth", b"_max_expand_depth", "body", b"body", "expanded", b"expanded", "max_expand_depth", b"max_expand_depth", "width_config", b"width_config"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_max_expand_depth", b"_max_expand_depth", "max_expand_depth", b"max_expand_depth"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_max_expand_depth", b"_max_expand_depth", "body", b"body", "expanded", b"expanded", "max_expand_depth", b"max_expand_depth"]) -> None: ...
     def WhichOneof(self, oneof_group: typing.Literal["_max_expand_depth", b"_max_expand_depth"]) -> typing.Literal["max_expand_depth"] | None: ...
 
 global___Json = Json

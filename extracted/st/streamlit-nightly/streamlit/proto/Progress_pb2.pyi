@@ -20,7 +20,6 @@ limitations under the License.
 import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -31,19 +30,14 @@ class Progress(google.protobuf.message.Message):
 
     VALUE_FIELD_NUMBER: builtins.int
     TEXT_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     value: builtins.int
     text: builtins.str
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
     def __init__(
         self,
         *,
         value: builtins.int = ...,
         text: builtins.str = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["text", b"text", "value", b"value", "width_config", b"width_config"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["text", b"text", "value", b"value"]) -> None: ...
 
 global___Progress = Progress

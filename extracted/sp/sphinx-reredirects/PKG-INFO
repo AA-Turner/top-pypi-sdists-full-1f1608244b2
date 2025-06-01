@@ -1,72 +1,90 @@
 Metadata-Version: 2.4
-Name: sphinx_reredirects
-Version: 0.1.6
-Summary: Handles redirects for moved pages in Sphinx documentation projects
-Home-page: https://documatt.com/sphinx-reredirects/
-Author: Documatt.com
-Author-email: hello@documatt.com
-License: BSD3
-Classifier: Development Status :: 5 - Production/Stable
-Classifier: Environment :: Console
-Classifier: Environment :: Web Environment
+Name: sphinx-reredirects
+Version: 1.0.0
+Summary: The extension for Sphinx documentation projects that handle redirects for moved pages. It generates HTML pages with meta refresh redirects to the new page location to prevent 404 errors if you rename or move your documents.
+Maintainer-email: Libor Jelínek <liborjelinek@documatt.com>
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-Expression: MIT
 Classifier: Framework :: Sphinx :: Extension
-Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: BSD License
+Classifier: Framework :: Sphinx
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3.5
+Classifier: Intended Audience :: Developers
 Classifier: Topic :: Documentation
+Classifier: Topic :: Software Development :: Documentation
 Classifier: Topic :: Documentation :: Sphinx
 Classifier: Topic :: Utilities
-Requires-Python: >=3.5
-Description-Content-Type: text/x-rst
 License-File: LICENSE
-Requires-Dist: sphinx>=7.1
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: license
-Dynamic: license-file
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
+Requires-Dist: sphinx>=7.4,<9.0
+Project-URL: homepage, https://documatt.com/sphinx-reredirects/
+Project-URL: repository, https://github.com/documatt/sphinx-reredirects
 
-##################
-sphinx-reredirects
-##################
+<div align="center">
 
-.. image:: https://raw.githubusercontent.com/documatt/sphinx-reredirects/main/logo.png
-   :align: right
+![Project hero image](https://github.com/documatt/sphinx-reredirects/blob/main/docs/_static/hero.svg?raw=true)
 
-.. image:: https://github.com/documatt/sphinx-reredirects/actions/workflows/tests.yml/badge.svg
-   :target: https://github.com/documatt/sphinx-reredirects/actions/workflows/tests.yml
+# sphinx-reredirects
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/psf/black
+<!-- Major intro -->
 
-.. image:: https://img.shields.io/pypi/v/sphinx-reredirects
-   :target: https://pypi.org/project/sphinx-reredirects/
+**The extension for Sphinx documentation projects that handle redirects for moved pages. It generates HTML pages with meta refresh redirects to the new page location to prevent 404 errors if you rename or move your documents.**
 
-sphinx-reredirects is the extension for `Sphinx documentation <https://www.sphinx-doc.org/>`_ projects that handles redirects for moved pages. It generates HTML pages with meta refresh redirects to the new page location to prevent 404 errors if you rename or move your documents.
+<!-- Minor intro -->
 
-* docs: https://documatt.com/sphinx-reredirects
-* code: https://github.com/documatt/sphinx-reredirects where issues and contributions are welcome
+The sphinx-reredirects started from the urge to manage redirects for all documents after moving our _Tech writer at work_ blog to the new address at https://documatt.com/blog/.
 
-Good URLs are never changing URLs. But if you must, sphinx-reredirects helps you manage redirects with ease and from the single place in project's ``conf.py``.  For example, if you rename document ``start`` to ``intro``, and tell it to sphinx-reredirects, it will generate HTML page ``start.html`` with ``<meta http-equiv="refresh" content="0; url=intro.html">``. The extension supports wildcards and moving to different domain too.
+<!-- Highlights in points -->
 
-*****
-About
-*****
+_Prevents 404 errors · Wildcard matching · Dynamic placeholders_\
+_Cross-domain redirects · Centralized configuration in `conf.py`_\
+_Easy to use · Works seamlessly with Sphinx_\
+_[📚 Documentation](https://documatt.com/sphinx-reredirects) · [📟 Source code](https://github.com/documatt/sphinx-reredirects)_
 
-sphinx-reredirects started from the urge to manage redirects for all documents during moving our *Tech writer at work blog* to the new address at https://documatt.com/blog/.
+<!-- Badges -->
 
-*****
-Legal
-*****
+[![GitHub Repo stars](https://img.shields.io/github/stars/documatt/sphinx-reredirects?style=flat&logo=github&labelColor=097cba&color=163B36)](https://github.com/documatt/sphinx-reredirects)
+[![GitHub tests](https://github.com/documatt/sphinx-reredirects/actions/workflows/test.yml/badge.svg)](https://github.com/documatt/sphinx-reredirects/actions/workflows/test.yml)
+[![PyPI version](https://img.shields.io/pypi/v/sphinx-reredirects?labelColor=097cba&color=163B36)](https://pypi.org/project/sphinx-reredirects/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/sphinx-reredirects?labelColor=097cba&color=163B36)](https://pypi.org/project/sphinx-reredirects/)
+[![MIT licence](https://img.shields.io/badge/license-MIT-blue?labelColor=097cba&color=163B36)](https://raw.githubusercontent.com/documatt/sphinx-reredirects/refs/heads/main/LICENSE)
+[![Nox](https://img.shields.io/badge/%F0%9F%A6%8A-Nox-D85E00.svg)](https://github.com/wntrblm/nox)
 
-sphinx-reredirects is licensed under BSD3.
+</div>
 
-Forward Arrow icon by `Icons8 <https://icons8.com>`_.
+<!-- Very short intro -->
+
+Good URLs are never changing URLs. But if you must, sphinx-reredirects helps you manage redirects with ease and from a single place in the project's `conf.py`.
+
+For example, if you rename document `start` to `intro`, and tell it to sphinx-reredirects, it will generate the HTML page `start.html` with client-side redirect (requires no server-side configuration).
+
+The extension supports wildcards and moving to different domains, too.
+
+<!-- Screenshot / video -->
+
+![Terminal showing `cat images.html` ( content of generated redirect HTML file)](https://github.com/documatt/sphinx-reredirects/blob/main/docs/_static/screenshot.png?raw=true)
+
+## Community
+
+Connect with other fellows who are building with Sphinx. Share knowledge, get help,
+and contribute to the open-source project. Check out
+our [Documatt Community](https://documatt.com/community) page to see featured material and upcoming events.
+
+Join our community here:
+
+- 🌟 [Explore our GitHub](https://github.com/documatt)
+- 📥 [Subscribe to our newsletter](https://documatt.com/newsletter-signup/)
+- 🐦 [Follow us on X](https://x.com/documattcom)
+- 🕴️ [Follow us on LinkedIn](https://www.linkedin.com/company/documattcom)
+- 📺 [Subscribe to our YouTube channel](https://www.youtube.com/@Documatt)
+- 📚 [Read our blog posts](https://documatt.com/blog)
+
+## Legal
+
+sphinx-reredirects is [MIT licensed](https://raw.githubusercontent.com/documatt/sphinx-reredirects/refs/heads/main/LICENSE).
+
+Icon "route-alt-right" by [TabletIcons](https://tablericons.com/icon/route-alt-right).
+

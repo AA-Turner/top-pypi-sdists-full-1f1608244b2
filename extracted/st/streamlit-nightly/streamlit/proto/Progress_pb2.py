@@ -12,10 +12,9 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-from streamlit.proto import WidthConfig_pb2 as streamlit_dot_proto_dot_WidthConfig__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1estreamlit/proto/Progress.proto\x1a!streamlit/proto/WidthConfig.proto\"U\n\x08Progress\x12\r\n\x05value\x18\x01 \x01(\r\x12\x0c\n\x04text\x18\x02 \x01(\t\x12,\n\x0cwidth_config\x18\x03 \x01(\x0b\x32\x16.streamlit.WidthConfigB-\n\x1c\x63om.snowflake.apps.streamlitB\rProgressProtob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1estreamlit/proto/Progress.proto\"\'\n\x08Progress\x12\r\n\x05value\x18\x01 \x01(\r\x12\x0c\n\x04text\x18\x02 \x01(\tB-\n\x1c\x63om.snowflake.apps.streamlitB\rProgressProtob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -23,6 +22,6 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'streamlit.proto.Progress_pb
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\034com.snowflake.apps.streamlitB\rProgressProto'
-  _globals['_PROGRESS']._serialized_start=69
-  _globals['_PROGRESS']._serialized_end=154
+  _globals['_PROGRESS']._serialized_start=34
+  _globals['_PROGRESS']._serialized_end=73
 # @@protoc_insertion_point(module_scope)

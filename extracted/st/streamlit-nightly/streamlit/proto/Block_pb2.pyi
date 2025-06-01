@@ -88,7 +88,6 @@ class Block(google.protobuf.message.Message):
         HORIZONTAL: Block.FlexContainer.Direction.ValueType  # 2
 
         BORDER_FIELD_NUMBER: builtins.int
-        HEIGHT_CONFIG_FIELD_NUMBER: builtins.int
         GAP_CONFIG_FIELD_NUMBER: builtins.int
         SCALE_FIELD_NUMBER: builtins.int
         DIRECTION_FIELD_NUMBER: builtins.int
@@ -98,23 +97,18 @@ class Block(google.protobuf.message.Message):
         direction: global___Block.FlexContainer.Direction.ValueType
         wrap: builtins.bool
         @property
-        def height_config(self) -> streamlit.proto.HeightConfig_pb2.HeightConfig:
-            """TODO (lwilby): move this to use block level field."""
-
-        @property
         def gap_config(self) -> streamlit.proto.GapSize_pb2.GapConfig: ...
         def __init__(
             self,
             *,
             border: builtins.bool = ...,
-            height_config: streamlit.proto.HeightConfig_pb2.HeightConfig | None = ...,
             gap_config: streamlit.proto.GapSize_pb2.GapConfig | None = ...,
             scale: builtins.float = ...,
             direction: global___Block.FlexContainer.Direction.ValueType = ...,
             wrap: builtins.bool = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["gap_config", b"gap_config", "height_config", b"height_config"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["border", b"border", "direction", b"direction", "gap_config", b"gap_config", "height_config", b"height_config", "scale", b"scale", "wrap", b"wrap"]) -> None: ...
+        def HasField(self, field_name: typing.Literal["gap_config", b"gap_config"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing.Literal["border", b"border", "direction", b"direction", "gap_config", b"gap_config", "scale", b"scale", "wrap", b"wrap"]) -> None: ...
 
     @typing.final
     class Column(google.protobuf.message.Message):
@@ -308,25 +302,17 @@ class Block(google.protobuf.message.Message):
         NAME_FIELD_NUMBER: builtins.int
         AVATAR_FIELD_NUMBER: builtins.int
         AVATAR_TYPE_FIELD_NUMBER: builtins.int
-        WIDTH_CONFIG_FIELD_NUMBER: builtins.int
         name: builtins.str
         avatar: builtins.str
         avatar_type: global___Block.ChatMessage.AvatarType.ValueType
-        @property
-        def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig:
-            """TODO (lwilby): move this to use block level field."""
-
         def __init__(
             self,
             *,
             name: builtins.str = ...,
             avatar: builtins.str = ...,
             avatar_type: global___Block.ChatMessage.AvatarType.ValueType = ...,
-            width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["_width_config", b"_width_config", "width_config", b"width_config"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["_width_config", b"_width_config", "avatar", b"avatar", "avatar_type", b"avatar_type", "name", b"name", "width_config", b"width_config"]) -> None: ...
-        def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
+        def ClearField(self, field_name: typing.Literal["avatar", b"avatar", "avatar_type", b"avatar_type", "name", b"name"]) -> None: ...
 
     VERTICAL_FIELD_NUMBER: builtins.int
     HORIZONTAL_FIELD_NUMBER: builtins.int

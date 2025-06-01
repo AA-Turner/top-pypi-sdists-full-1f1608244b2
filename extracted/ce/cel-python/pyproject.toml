@@ -13,21 +13,9 @@
 # limitations under the License.
 #
 
-[tool.pytest.ini_options]
-markers = [
-    "refactor: tests that need to be refactored to use celfilter_instance"
-]
-
-[tool.isort]
-src_paths = ["src", "tests", "tools", "features/steps", "features/environment.py"]
-skip = [
-  ".bzr", ".direnv", ".eggs", ".git", ".hg", ".mypy_cache", ".nox", ".pants.d", ".svn", ".tox", ".venv",
-  "_build", "buck-out", "build", "dist", "node_modules", "venv", "*.feature", "*.textproto", "*.rst"
-  ]
-
 [tool.poetry]
 name = "cel-python"
-version = "0.2.0"
+version = "0.3.0"
 description = "Pure Python implementation of Google Common Expression Language"
 authors = ["S. Lott <slott56@gmail.com>"]
 readme = "README.rst"
@@ -39,25 +27,39 @@ classifiers = [
 packages = [{ include = "celpy", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
+lark = "^0.12"
+
+# specify as optional for pip install cel-python[c7n] or poetry install -e behavior
+jmespath = { version = "^1.0.1", optional = true }
+
+# specify as a non default group for building automatically in ci without -e
+pendulum = "^3.1.0"
+pyyaml = "^6.0.2"
+types-pyyaml = "^6.0.12.20250516"
+[tool.poetry.group.c7n.dependencies]
 jmespath = "^1.0.1"
-lark = "^0.12.0"
-python-dateutil = "^2.9.0.post0"
-pyyaml = "^6.0.1"
-types-pyyaml = "^6.0.12.20240311"
-types-python-dateutil = "^2.9.0.20240316"
+google-re2 = { version = "^1.0", optional = true }
+
+[tool.poetry.extras]
+re2 = ["google-re2"]
 
 [tool.poetry.group.dev.dependencies]
 behave = "^1.2.6"
-ruff = "^0.4.4"
-isort = "^5.13.2"
+ruff = "^0.9.6"
 mypy = "^1.10.0"
 pytest = "^8.2.1"
 pytest-cov = "^5.0.0"
 sphinx = "^6.0"
 tox = "^4.15.0"
 pre-commit = "^3.5"
+google-re2-stubs = "^0.1.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "refactor: tests that need to be refactored to use celfilter_instance"
+]

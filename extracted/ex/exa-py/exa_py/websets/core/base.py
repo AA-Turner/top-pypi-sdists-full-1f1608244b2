@@ -29,7 +29,7 @@ class ExaBaseModel(BaseModel):
         str_to_upper=False,  # Don't convert strings to uppercase
         from_attributes=True,  # Allow initialization from attributes
         validate_assignment=True,  # Validate on assignment
-        extra='forbid',  # Forbid extra fields
+        extra='allow',
         json_encoders={AnyUrl: str}  # Convert AnyUrl to string when serializing to JSON
     )
 
@@ -92,5 +92,9 @@ class WebsetsBaseClient:
             # If data is a model instance, convert it to a dict
             data = data.model_dump(by_alias=True, exclude_none=True)
             
+        # Ensure proper URL construction by removing leading slash from endpoint if present
+        if endpoint.startswith("/"):
+            endpoint = endpoint[1:]
+            
         return self._client.request("/websets/" + endpoint, data=data, method=method, params=params) 
-    
+

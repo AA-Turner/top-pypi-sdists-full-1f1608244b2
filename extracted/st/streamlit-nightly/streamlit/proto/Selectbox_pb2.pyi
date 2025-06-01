@@ -23,7 +23,6 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import streamlit.proto.LabelVisibilityMessage_pb2
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -45,7 +44,6 @@ class Selectbox(google.protobuf.message.Message):
     LABEL_VISIBILITY_FIELD_NUMBER: builtins.int
     PLACEHOLDER_FIELD_NUMBER: builtins.int
     ACCEPT_NEW_OPTIONS_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     id: builtins.str
     label: builtins.str
     default: builtins.int
@@ -64,8 +62,6 @@ class Selectbox(google.protobuf.message.Message):
     def options(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
     @property
     def label_visibility(self) -> streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage: ...
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
     def __init__(
         self,
         *,
@@ -82,10 +78,9 @@ class Selectbox(google.protobuf.message.Message):
         label_visibility: streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage | None = ...,
         placeholder: builtins.str = ...,
         accept_new_options: builtins.bool | None = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_accept_new_options", b"_accept_new_options", "_default", b"_default", "_raw_value", b"_raw_value", "_value", b"_value", "_width_config", b"_width_config", "accept_new_options", b"accept_new_options", "default", b"default", "label_visibility", b"label_visibility", "raw_value", b"raw_value", "value", b"value", "width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_accept_new_options", b"_accept_new_options", "_default", b"_default", "_raw_value", b"_raw_value", "_value", b"_value", "_width_config", b"_width_config", "accept_new_options", b"accept_new_options", "default", b"default", "disabled", b"disabled", "form_id", b"form_id", "help", b"help", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "options", b"options", "placeholder", b"placeholder", "raw_value", b"raw_value", "set_value", b"set_value", "value", b"value", "width_config", b"width_config"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_accept_new_options", b"_accept_new_options", "_default", b"_default", "_raw_value", b"_raw_value", "_value", b"_value", "accept_new_options", b"accept_new_options", "default", b"default", "label_visibility", b"label_visibility", "raw_value", b"raw_value", "value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_accept_new_options", b"_accept_new_options", "_default", b"_default", "_raw_value", b"_raw_value", "_value", b"_value", "accept_new_options", b"accept_new_options", "default", b"default", "disabled", b"disabled", "form_id", b"form_id", "help", b"help", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "options", b"options", "placeholder", b"placeholder", "raw_value", b"raw_value", "set_value", b"set_value", "value", b"value"]) -> None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_accept_new_options", b"_accept_new_options"]) -> typing.Literal["accept_new_options"] | None: ...
     @typing.overload
@@ -94,7 +89,5 @@ class Selectbox(google.protobuf.message.Message):
     def WhichOneof(self, oneof_group: typing.Literal["_raw_value", b"_raw_value"]) -> typing.Literal["raw_value"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_value", b"_value"]) -> typing.Literal["value"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
 
 global___Selectbox = Selectbox

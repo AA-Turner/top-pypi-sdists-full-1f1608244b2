@@ -22,7 +22,6 @@ import google.protobuf.descriptor
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import streamlit.proto.LabelVisibilityMessage_pb2
-import streamlit.proto.WidthConfig_pb2
 import sys
 import typing
 
@@ -68,7 +67,6 @@ class TextInput(google.protobuf.message.Message):
     DISABLED_FIELD_NUMBER: builtins.int
     LABEL_VISIBILITY_FIELD_NUMBER: builtins.int
     ICON_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     id: builtins.str
     label: builtins.str
     default: builtins.str
@@ -84,8 +82,6 @@ class TextInput(google.protobuf.message.Message):
     icon: builtins.str
     @property
     def label_visibility(self) -> streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage: ...
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
     def __init__(
         self,
         *,
@@ -103,15 +99,12 @@ class TextInput(google.protobuf.message.Message):
         disabled: builtins.bool = ...,
         label_visibility: streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage | None = ...,
         icon: builtins.str = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "_width_config", b"_width_config", "default", b"default", "label_visibility", b"label_visibility", "value", b"value", "width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "_width_config", b"_width_config", "autocomplete", b"autocomplete", "default", b"default", "disabled", b"disabled", "form_id", b"form_id", "help", b"help", "icon", b"icon", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "max_chars", b"max_chars", "placeholder", b"placeholder", "set_value", b"set_value", "type", b"type", "value", b"value", "width_config", b"width_config"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "default", b"default", "label_visibility", b"label_visibility", "value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_default", b"_default", "_value", b"_value", "autocomplete", b"autocomplete", "default", b"default", "disabled", b"disabled", "form_id", b"form_id", "help", b"help", "icon", b"icon", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "max_chars", b"max_chars", "placeholder", b"placeholder", "set_value", b"set_value", "type", b"type", "value", b"value"]) -> None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_default", b"_default"]) -> typing.Literal["default"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing.Literal["_value", b"_value"]) -> typing.Literal["value"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
 
 global___TextInput = TextInput

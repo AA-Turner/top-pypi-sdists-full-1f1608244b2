@@ -187,7 +187,7 @@ async def entrada_de_notas_9(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoD
         # INTERAGINDO COM A NATUREZA DA OPERACAO
         cfop = int(nota.get("cfop"))
         console.print(f"Inserindo a informação da CFOP, caso se aplique {cfop} ...\n")
-        if cfop == 5655:
+        if cfop == 5655 or cfop == 5656:
             combo_box_natureza_operacao = main_window.child_window(
                 class_name="TDBIComboBox", found_index=0
             )

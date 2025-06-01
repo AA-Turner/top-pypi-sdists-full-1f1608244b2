@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: liger_kernel_nightly
-Version: 0.5.10.dev20250528223524
+Version: 0.5.10.dev20250601024230
 Summary: Efficient Triton kernels for LLM Training
 License: BSD 2-CLAUSE LICENSE
         Copyright 2024 LinkedIn Corporation 
@@ -325,6 +325,8 @@ loss.backward()
 | GeGLU                           | `liger_kernel.transformers.LigerGEGLUMLP`                   |
 | CrossEntropy                    | `liger_kernel.transformers.LigerCrossEntropyLoss`           |
 | Fused Linear CrossEntropy       | `liger_kernel.transformers.LigerFusedLinearCrossEntropyLoss`|
+| Multi Token Attention           | `liger_kernel.transformers.LigerMultiTokenAttention`        |
+| Softmax                         | `liger_kernel.transformers.LigerSoftmax`                    |
 | Sparsemax                       | `liger_kernel.transformers.LigerSparsemax`                  |
 
 

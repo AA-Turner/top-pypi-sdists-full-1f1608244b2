@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: find_libpython
-Version: 0.4.0
+Version: 0.4.1
 Summary: Finds the libpython associated with your environment, wherever it may be hiding
 Home-page: https://github.com/ktbarrett/find_libpython
 Author: Takafumi Arakaki
@@ -13,6 +13,7 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Software Development :: Libraries
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Dynamic: license-file
 
 # find_libpython
 
