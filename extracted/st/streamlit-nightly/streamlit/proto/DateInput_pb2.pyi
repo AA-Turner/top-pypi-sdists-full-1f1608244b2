@@ -23,7 +23,6 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import streamlit.proto.LabelVisibilityMessage_pb2
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -45,7 +44,6 @@ class DateInput(google.protobuf.message.Message):
     DISABLED_FIELD_NUMBER: builtins.int
     LABEL_VISIBILITY_FIELD_NUMBER: builtins.int
     FORMAT_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     id: builtins.str
     label: builtins.str
     min: builtins.str
@@ -62,8 +60,6 @@ class DateInput(google.protobuf.message.Message):
     def value(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
     @property
     def label_visibility(self) -> streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage: ...
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
     def __init__(
         self,
         *,
@@ -80,10 +76,8 @@ class DateInput(google.protobuf.message.Message):
         disabled: builtins.bool = ...,
         label_visibility: streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage | None = ...,
         format: builtins.str = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_width_config", b"_width_config", "label_visibility", b"label_visibility", "width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_width_config", b"_width_config", "default", b"default", "disabled", b"disabled", "form_id", b"form_id", "format", b"format", "help", b"help", "id", b"id", "is_range", b"is_range", "label", b"label", "label_visibility", b"label_visibility", "max", b"max", "min", b"min", "set_value", b"set_value", "value", b"value", "width_config", b"width_config"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
+    def HasField(self, field_name: typing.Literal["label_visibility", b"label_visibility"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["default", b"default", "disabled", b"disabled", "form_id", b"form_id", "format", b"format", "help", b"help", "id", b"id", "is_range", b"is_range", "label", b"label", "label_visibility", b"label_visibility", "max", b"max", "min", b"min", "set_value", b"set_value", "value", b"value"]) -> None: ...
 
 global___DateInput = DateInput

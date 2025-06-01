@@ -23,7 +23,6 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
 import streamlit.proto.LabelVisibilityMessage_pb2
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -43,7 +42,6 @@ class FileUploader(google.protobuf.message.Message):
     FORM_ID_FIELD_NUMBER: builtins.int
     DISABLED_FIELD_NUMBER: builtins.int
     LABEL_VISIBILITY_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     id: builtins.str
     """The widget id"""
     label: builtins.str
@@ -61,8 +59,6 @@ class FileUploader(google.protobuf.message.Message):
 
     @property
     def label_visibility(self) -> streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage: ...
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
     def __init__(
         self,
         *,
@@ -75,10 +71,8 @@ class FileUploader(google.protobuf.message.Message):
         form_id: builtins.str = ...,
         disabled: builtins.bool = ...,
         label_visibility: streamlit.proto.LabelVisibilityMessage_pb2.LabelVisibilityMessage | None = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_width_config", b"_width_config", "label_visibility", b"label_visibility", "width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_width_config", b"_width_config", "disabled", b"disabled", "form_id", b"form_id", "help", b"help", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "max_upload_size_mb", b"max_upload_size_mb", "multiple_files", b"multiple_files", "type", b"type", "width_config", b"width_config"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
+    def HasField(self, field_name: typing.Literal["label_visibility", b"label_visibility"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["disabled", b"disabled", "form_id", b"form_id", "help", b"help", "id", b"id", "label", b"label", "label_visibility", b"label_visibility", "max_upload_size_mb", b"max_upload_size_mb", "multiple_files", b"multiple_files", "type", b"type"]) -> None: ...
 
 global___FileUploader = FileUploader

@@ -20,27 +20,6 @@ from torch.nn import Module, ModuleList
 
 from .global_groups import get_all2all_group, get_moe_group
 
-try:
-    from fairseq.modules.moe import MOELayer
-
-    has_fairseq = True
-    Base = MOELayer
-except ModuleNotFoundError:
-    Base = Module
-    has_fairseq = False
-
-try:
-    # To enable Tutel MoE optimizations:
-    # python3 -m pip install --user --upgrade
-    # git+https://github.com/Agora/tutel@v0.1.x
-    from tutel import moe as tutel_moe
-
-    has_tutel, fused_cumsum_sub_one = True, tutel_moe.fast_cumsum_sub_one
-except ModuleNotFoundError:
-    has_tutel, fused_cumsum_sub_one = (
-        False,
-        lambda mask: torch.cumsum(mask, dim=0) - 1,
-    )
 
 logger = logging.getLogger(__name__)
 

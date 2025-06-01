@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: UnityPy
-Version: 1.22.4
+Version: 1.22.5
 Summary: A Unity extraction and patching package
 Author-email: Rudolf Kolbe <rkolbe96@gmail.com>
 License: MIT License
@@ -40,6 +40,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Games/Entertainment
 Classifier: Topic :: Multimedia :: Graphics

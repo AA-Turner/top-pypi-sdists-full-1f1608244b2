@@ -63,11 +63,19 @@ class QrackAceBackend:
         self.long_range_columns = long_range_columns
         self._is_init = [False] * qubit_count
 
-        col_seq = [True] * long_range_columns + [False]
-        len_col_seq = len(col_seq)
-        self._is_col_long_range = (col_seq * ((self.row_length + len_col_seq - 1) // len_col_seq))[:self.row_length]
-        if long_range_columns < self.row_length:
-             self._is_col_long_range[-1] = False
+        # If there's only one or zero "False" columns,
+        # the entire simulator is connected, anyway.
+        if (long_range_columns + 1) >= self.row_length:
+            self._is_col_long_range = [True] * long_range_columns
+        else:
+            col_seq = [True] * long_range_columns + [False]
+            len_col_seq = len(col_seq)
+            self._is_col_long_range = (
+                col_seq * ((self.row_length + len_col_seq - 1) // len_col_seq)
+            )[: self.row_length]
+            if long_range_columns < self.row_length:
+                self._is_col_long_range[-1] = False
+
         self._hardware_offset = []
         tot_qubits = 0
         for _ in range(self.col_length):
@@ -142,6 +150,26 @@ class QrackAceBackend:
         self._cy_shadow(c, t)
         self.sim.x(t)
 
+    def _ccz_shadow(self, c1, q2, q3):
+        self.sim.mcx([q2], q3)
+        self.sim.adjt(q3)
+        self._cx_shadow(c1, q3)
+        self.sim.t(q3)
+        self.sim.mcx([q2], q3)
+        self.sim.adjt(q3)
+        self._cx_shadow(c1, q3)
+        self.sim.t(q3)
+        self.sim.t(q2)
+        self._cx_shadow(c1, q2)
+        self.sim.adjt(q2)
+        self.sim.t(c1)
+        self._cx_shadow(c1, q2)
+
+    def _ccx_shadow(self, c1, q2, q3):
+        self.sim.h(q3)
+        self._ccz_shadow(c1, q2, q3)
+        self.sim.h(q3)
+
     def _unpack(self, lq, reverse=False):
         offset = self._hardware_offset[lq]
 
@@ -198,6 +226,13 @@ class QrackAceBackend:
 
         single_bit_value = self.sim.prob(hq[single_bit])
         single_bit_polarization = max(single_bit_value, 1 - single_bit_value)
+
+        # Suggestion from Elara (the custom OpenAI GPT):
+        # Create phase parity tie before measurement.
+        self._ccx_shadow(hq[single_bit], hq[other_bits[0]], self._ancilla)
+        self.sim.mcx([hq[other_bits[1]]], self._ancilla)
+        self.sim.force_m(self._ancilla, False)
+
         samples = self.sim.measure_shots([hq[other_bits[0]], hq[other_bits[1]]], shots)
 
         syndrome_indices = (
@@ -426,8 +461,32 @@ class QrackAceBackend:
 
         lq1_lr = self._is_col_long_range[lq1 % self.row_length]
         lq2_lr = self._is_col_long_range[lq2 % self.row_length]
+
+        lq1_row = lq1 // self.row_length
+        lq1_col = lq1 % self.row_length
+        lq2_row = lq2 // self.row_length
+        lq2_col = lq2 % self.row_length
+
+        connected_cols = []
+        c = (lq1_col - 1) % self.row_length
+        while self._is_col_long_range[c] and (len(connected_cols) < (self.row_length - 1)):
+            connected_cols.append(c)
+            c = (c - 1) % self.row_length
+        if len(connected_cols) < self.row_length:
+            connected_cols.append(c)
+        boundary = len(connected_cols)
+        c = (lq1_col + 1) % self.row_length
+        while self._is_col_long_range[c] and (len(connected_cols) < (self.row_length - 1)):
+            connected_cols.append(c)
+            c = (c + 1) % self.row_length
+        if len(connected_cols) < self.row_length:
+            connected_cols.append(c)
+
         if lq1_lr and lq2_lr:
-            gate(self._unpack(lq1), self._unpack(lq2)[0])
+            if lq2_col in connected_cols:
+                gate(self._unpack(lq1), self._unpack(lq2)[0])
+            else:
+                shadow(self._unpack(lq1)[0], self._unpack(lq2)[0])
             return
 
         self._correct(lq1)
@@ -439,7 +498,7 @@ class QrackAceBackend:
                 self._decode(lq2, hq2)
                 gate(hq1, hq2[0])
                 self._encode(lq2, hq2)
-            elif lq1_lr:
+            elif lq2_lr:
                 self._decode(lq1, hq1)
                 gate([hq1[0]], hq2[0])
                 self._encode(lq1, hq1)
@@ -450,14 +509,9 @@ class QrackAceBackend:
 
             return
 
-        lq1_row = lq1 // self.row_length
-        lq1_col = lq1 % self.row_length
-        lq2_row = lq2 // self.row_length
-        lq2_col = lq2 % self.row_length
-
         hq1 = None
         hq2 = None
-        if (lq2_row == lq1_row) and (((lq1_col + 1) % self.row_length) == lq2_col):
+        if (lq2_col in connected_cols) and (connected_cols.index(lq2_col) < boundary):
             if lq1_lr:
                 self._correct(lq2)
                 hq1 = self._unpack(lq1)
@@ -480,7 +534,7 @@ class QrackAceBackend:
                 gate([hq1[0]], hq2[0])
                 self._encode(lq2, hq2, False)
                 self._encode(lq1, hq1, True)
-        elif (lq1_row == lq2_row) and (((lq2_col + 1) % self.row_length) == lq1_col):
+        elif lq2_col in connected_cols:
             if lq1_lr:
                 self._correct(lq2)
                 hq2 = self._unpack(lq2, True)
@@ -503,7 +557,7 @@ class QrackAceBackend:
                 gate([hq1[0]], hq2[0])
                 self._encode(lq1, hq1, False)
                 self._encode(lq2, hq2, True)
-        else:
+        elif lq1_col == lq2_col:
             hq1 = self._unpack(lq1)
             hq2 = self._unpack(lq2)
             if lq1_lr:
@@ -522,6 +576,22 @@ class QrackAceBackend:
                 else:
                     gate([hq1[1]], hq2[1])
                 gate([hq1[2]], hq2[2])
+        else:
+            hq1 = self._unpack(lq1)
+            hq2 = self._unpack(lq2)
+            if lq1_lr:
+                self._correct(lq2)
+                self._decode(lq2, hq2)
+                shadow(hq1[0], hq2[0])
+                self._encode(lq2, hq2)
+            elif lq2_lr:
+                self._decode(lq1, hq1)
+                shadow(hq1[0], hq2[0])
+                self._encode(lq1, hq1)
+            else:
+                shadow(hq1[0], hq2[0])
+                shadow(hq1[1], hq2[1])
+                shadow(hq1[2], hq2[2])
 
     def cx(self, lq1, lq2):
         self._cpauli(lq1, lq2, False, Pauli.PauliX)
@@ -989,3 +1059,68 @@ class QrackAceBackend:
         del self._sim
 
         return _data
+
+    def get_qiskit_basis_gates():
+        return [
+            "id",
+            "u",
+            "u1",
+            "u2",
+            "u3",
+            "r",
+            "rx",
+            "ry",
+            "rz",
+            "h",
+            "x",
+            "y",
+            "z",
+            "s",
+            "sdg",
+            "sx",
+            "sxdg",
+            "p",
+            "t",
+            "tdg",
+            "cx",
+            "cy",
+            "cz",
+            "swap",
+            "iswap",
+            "reset",
+            "measure",
+        ]
+
+    # Mostly written by Dan, but with a little help from Elara (custom OpenAI GPT)
+    def get_logical_coupling_map(self):
+        coupling_map = set()
+        rows, cols = self.row_length, self.col_length
+
+        # Map each column index to its full list of logical qubit indices
+        def logical_index(row, col):
+            return row * cols + col
+
+        for col in range(cols):
+            connected_cols = [col]
+            c = (col - 1) % cols
+            while self._is_col_long_range[c] and (len(connected_cols) < self.row_length):
+                connected_cols.append(c)
+                c = (c - 1) % cols
+            if len(connected_cols) < self._row_length:
+                connected_cols.append(c)
+            c = (col + 1) % cols
+            while self._is_col_long_range[c] and (len(connected_cols) < self.row_length):
+                connected_cols.append(c)
+                c = (c + 1) % cols
+            if len(connected_cols) < self._row_length:
+                connected_cols.append(c)
+
+            for row in range(rows):
+                a = logical_index(row, col)
+                for c in connected_cols:
+                    for r in range(0, rows):
+                        b = logical_index(r, c)
+                        if a != b:
+                            coupling_map.add((a, b))
+
+        return sorted(coupling_map)

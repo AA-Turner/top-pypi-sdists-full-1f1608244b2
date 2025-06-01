@@ -673,6 +673,9 @@ class _Batch(_RequestBase[List[_Response]], Iterable[_Request]):
     def __len__(self) -> int:
         return len(self.calls)
 
+    def __await__(self) -> Generator[Any, None, _Response]:
+        return self._task.__await__()
+
     @property
     def bisected(self) -> Generator[Tuple[_Request, ...], None, None]:
         # set `self.calls` output to var so its only computed once
@@ -687,6 +690,7 @@ class _Batch(_RequestBase[List[_Response]], Iterable[_Request]):
 
     @cached_property
     def _task(self) -> "Task[None]":
+        self._awaited = True
         return create_task(
             self.get_response(), name=f"{type(self).__name__} {self.uid} get_response"
         )
@@ -889,11 +893,6 @@ class Multicall(_Batch[RPCResponse, eth_call]):
                     controller._pending_eth_calls_pop(self.block, None)
 
     async def get_response(self) -> None:  # type: ignore [override]
-        if self._awaited:
-            raise RuntimeError(f"{self} already awaited", current_task())
-
-        self._awaited = True
-
         # create a strong ref to all calls we will execute so they cant get gced mid execution and mess up response ordering
         calls = tuple(self.calls)
 
@@ -1214,14 +1213,6 @@ class JSONRPCBatch(_Batch[RPCResponse, Union[Multicall, eth_call, RPCRequest]]):
                 self.controller._start_new_batch()
 
     async def get_response(self) -> None:  # type: ignore [override]
-        if self._awaited:
-            raise RuntimeError(
-                f"{self} was already awaited. This shouldn't really happen bro",
-                f"task that awaited the 2nd time: {current_task()}",
-            )
-
-        self._awaited = True
-
         if not self.calls:
             # TODO: figure out why this can happen and prevent it upstream
             self._done.set()

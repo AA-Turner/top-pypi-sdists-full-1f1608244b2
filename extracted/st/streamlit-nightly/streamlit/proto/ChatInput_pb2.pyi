@@ -23,7 +23,6 @@ import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
-import streamlit.proto.WidthConfig_pb2
 import sys
 import typing
 
@@ -77,7 +76,6 @@ class ChatInput(google.protobuf.message.Message):
     ACCEPT_FILE_FIELD_NUMBER: builtins.int
     FILE_TYPE_FIELD_NUMBER: builtins.int
     MAX_UPLOAD_SIZE_MB_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     id: builtins.str
     placeholder: builtins.str
     max_chars: builtins.int
@@ -93,10 +91,6 @@ class ChatInput(google.protobuf.message.Message):
     def file_type(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """Supported file types: For example: ["png","jpg","img"]"""
 
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig:
-        """Optional width configuration for the ChatInput"""
-
     def __init__(
         self,
         *,
@@ -111,10 +105,7 @@ class ChatInput(google.protobuf.message.Message):
         accept_file: global___ChatInput.AcceptFile.ValueType = ...,
         file_type: collections.abc.Iterable[builtins.str] | None = ...,
         max_upload_size_mb: builtins.int = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_width_config", b"_width_config", "width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_width_config", b"_width_config", "accept_file", b"accept_file", "default", b"default", "disabled", b"disabled", "file_type", b"file_type", "id", b"id", "max_chars", b"max_chars", "max_upload_size_mb", b"max_upload_size_mb", "placeholder", b"placeholder", "position", b"position", "set_value", b"set_value", "value", b"value", "width_config", b"width_config"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
+    def ClearField(self, field_name: typing.Literal["accept_file", b"accept_file", "default", b"default", "disabled", b"disabled", "file_type", b"file_type", "id", b"id", "max_chars", b"max_chars", "max_upload_size_mb", b"max_upload_size_mb", "placeholder", b"placeholder", "position", b"position", "set_value", b"set_value", "value", b"value"]) -> None: ...
 
 global___ChatInput = ChatInput

@@ -470,6 +470,6 @@ __all__ = [
     "MixtureFlowConfig",
     "FlowTransformerConfig",
     "FlowMLP",
-    "FlowTransformer",  
-    "FlowConfig",  
+    "FlowTransformer",
+    "FlowConfig",
 ]

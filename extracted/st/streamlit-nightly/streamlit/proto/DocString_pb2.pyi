@@ -22,7 +22,6 @@ import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import streamlit.proto.WidthConfig_pb2
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
@@ -38,7 +37,6 @@ class DocString(google.protobuf.message.Message):
     NAME_FIELD_NUMBER: builtins.int
     VALUE_FIELD_NUMBER: builtins.int
     MEMBERS_FIELD_NUMBER: builtins.int
-    WIDTH_CONFIG_FIELD_NUMBER: builtins.int
     doc_string: builtins.str
     """The doc string."""
     type: builtins.str
@@ -51,10 +49,6 @@ class DocString(google.protobuf.message.Message):
     def members(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Member]:
         """List of this object's methods and member variables."""
 
-    @property
-    def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig:
-        """Indicates the width setting: "stetch" or a pixel value."""
-
     def __init__(
         self,
         *,
@@ -63,10 +57,8 @@ class DocString(google.protobuf.message.Message):
         name: builtins.str = ...,
         value: builtins.str = ...,
         members: collections.abc.Iterable[global___Member] | None = ...,
-        width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["width_config", b"width_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["doc_string", b"doc_string", "members", b"members", "name", b"name", "type", b"type", "value", b"value", "width_config", b"width_config"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["doc_string", b"doc_string", "members", b"members", "name", b"name", "type", b"type", "value", b"value"]) -> None: ...
 
 global___DocString = DocString
 

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: types-reportlab
-Version: 4.4.1.20250527
+Version: 4.4.1.20250601
 Summary: Typing stubs for reportlab
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://github.com/python/typeshed
@@ -40,4 +40,4 @@ mypy 1.15.0,
 pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`d574139e6cd46b6b852ef0204e9f9aa6a8e316f0`](https://github.com/python/typeshed/commit/d574139e6cd46b6b852ef0204e9f9aa6a8e316f0).
+[`5a3c495d2f6fa9b68cd99f39feba4426e4d17ea9`](https://github.com/python/typeshed/commit/5a3c495d2f6fa9b68cd99f39feba4426e4d17ea9).

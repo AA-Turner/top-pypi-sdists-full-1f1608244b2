@@ -211,7 +211,7 @@ mod document_link_tests {
 
         test_document_link!(
             #[tokio::test]
-            async fn tombi_schema_catalog_path(
+            async fn tombi_schema_catalog_paths(
                 r#"
                 [schema]
                 catalog = { path = "https://www.schemastore.org/api/json/catalog.json" }
@@ -221,6 +221,23 @@ mod document_link_tests {
                 {
                     url: "https://www.schemastore.org/api/json/catalog.json",
                     range: 1:20..1:69,
+                    tooltip: tombi_extension_tombi::DocumentLinkToolTip::Catalog,
+                }
+            ]));
+        );
+
+        test_document_link!(
+            #[tokio::test]
+            async fn tombi_schema_catalog_path(
+                r#"
+                [schema]
+                catalog = { paths = ["https://www.schemastore.org/api/json/catalog.json"] }
+                "#,
+                project_root_path().join("tombi.toml"),
+            ) -> Ok(Some(vec![
+                {
+                    url: "https://www.schemastore.org/api/json/catalog.json",
+                    range: 1:22..1:71,
                     tooltip: tombi_extension_tombi::DocumentLinkToolTip::Catalog,
                 }
             ]));
@@ -393,6 +410,19 @@ macro_rules! test_document_link {
             let result = handle_document_link(&backend, params).await;
 
             tracing::debug!("document_link result: {:#?}", result);
+
+            let result = result.map(|result| result.map(|document_links| {
+                document_links
+                    .into_iter()
+                    .map(|mut  document_link| {
+                        document_link.target.as_mut().map(| target| {
+                            target.set_fragment(None);
+                            target
+                        });
+                        document_link
+                    })
+                    .collect::<Vec<_>>()
+            }));
 
             pretty_assertions::assert_eq!(result, Ok($expected_links));
 

@@ -10,7 +10,9 @@ from datetime import datetime
 import json
 import logging  # Add logging
 import re
-from typing import AsyncGenerator, Dict, List, Literal, Optional, Any, Union
+from typing import AsyncGenerator, Dict, List, Literal, Optional, Any, Type, Union
+
+from pydantic import BaseModel
 
 from solana_agent.interfaces.services.agent import AgentService as AgentServiceInterface
 from solana_agent.interfaces.providers.llm import LLMProvider
@@ -229,8 +231,9 @@ class AgentService(AgentServiceInterface):
             "mp3", "opus", "aac", "flac", "wav", "pcm"
         ] = "aac",
         prompt: Optional[str] = None,
-    ) -> AsyncGenerator[Union[str, bytes], None]:  # pragma: no cover
-        """Generate a response using OpenAI function calling (tools API) via generate_text."""
+        output_model: Optional[Type[BaseModel]] = None,
+    ) -> AsyncGenerator[Union[str, bytes, BaseModel], None]:  # pragma: no cover
+        """Generate a response using OpenAI function calling (tools API) or structured output."""
 
         agent = next((a for a in self.agents if a.name == agent_name), None)
         if not agent:
@@ -252,42 +255,68 @@ class AgentService(AgentServiceInterface):
         system_prompt = self.get_agent_system_prompt(agent_name)
         user_content = str(query)
         if images:
-            user_content += (
-                "\n\n[Images attached]"  # Optionally, handle images as needed
-            )
+            user_content += "\n\n[Images attached]"
 
         # Compose the prompt for generate_text
         full_prompt = ""
         if memory_context:
-            full_prompt += f"CONVERSATION HISTORY:\n{memory_context}\n\n"
+            full_prompt += f"CONVERSATION HISTORY:\n{memory_context}\n\n Always use your tools to perform actions and don't rely on your memory!\n\n"
         if prompt:
             full_prompt += f"ADDITIONAL PROMPT:\n{prompt}\n\n"
         full_prompt += user_content
         full_prompt += f"USER IDENTIFIER: {user_id}"
 
         # Get OpenAI function schemas for this agent's tools
-        functions = []
-        for tool in self.get_agent_tools(agent_name):
-            functions.append(
-                {
+        tools = [
+            {
+                "type": "function",
+                "function": {
                     "name": tool["name"],
                     "description": tool.get("description", ""),
                     "parameters": tool.get("parameters", {}),
-                }
-            )
+                    "strict": True,
+                },
+            }
+            for tool in self.get_agent_tools(agent_name)
+        ]
 
-        response_text = ""
         try:
-            while True:
-                response = await self.llm_provider.generate_text(
+            if output_model is not None:
+                # --- Structured output with tool support ---
+                model_instance = await self.llm_provider.parse_structured_output(
                     prompt=full_prompt,
                     system_prompt=system_prompt,
-                    functions=functions if functions else None,
-                    function_call="auto" if functions else None,
+                    model_class=output_model,
                     api_key=self.api_key,
                     base_url=self.base_url,
                     model=self.model,
+                    tools=tools if tools else None,
                 )
+                yield model_instance
+                return
+
+            # --- Streaming text/audio with tool support (as before) ---
+            response_text = ""
+            while True:
+                if not images:
+                    response = await self.llm_provider.generate_text(
+                        prompt=full_prompt,
+                        system_prompt=system_prompt,
+                        api_key=self.api_key,
+                        base_url=self.base_url,
+                        model=self.model,
+                        tools=tools if tools else None,
+                    )
+                else:
+                    response = await self.llm_provider.generate_text_with_images(
+                        prompt=full_prompt,
+                        system_prompt=system_prompt,
+                        api_key=self.api_key,
+                        base_url=self.base_url,
+                        model=self.model,
+                        tools=tools if tools else None,
+                        images=images,
+                    )
                 if (
                     not response
                     or not hasattr(response, "choices")
@@ -298,30 +327,26 @@ class AgentService(AgentServiceInterface):
                     break
 
                 choice = response.choices[0]
-                message = getattr(
-                    choice, "message", choice
-                )  # Support both OpenAI and instructor
+                message = getattr(choice, "message", choice)
 
-                # If the model wants to call a function/tool
-                if hasattr(message, "function_call") and message.function_call:
-                    function_name = message.function_call.name
-                    arguments = json.loads(message.function_call.arguments)
-                    logger.info(
-                        f"Model requested tool '{function_name}' with args: {arguments}"
-                    )
-
-                    # Execute the tool (async)
-                    tool_result = await self.execute_tool(
-                        agent_name, function_name, arguments
-                    )
-
-                    # Add the tool result to the prompt for the next round
-                    # (You may want to format this differently for your use case)
-                    full_prompt += (
-                        f"\n\nTool '{function_name}' was called with arguments {arguments}.\n"
-                        f"Result: {tool_result}\n"
-                    )
-                    continue  # Loop again, LLM will see tool result and may call another tool or finish
+                if hasattr(message, "tool_calls") and message.tool_calls:
+                    for tool_call in message.tool_calls:
+                        if tool_call.type == "function":
+                            function_name = tool_call.function.name
+                            arguments = json.loads(tool_call.function.arguments)
+                            logger.info(
+                                f"Model requested tool '{function_name}' with args: {arguments}"
+                            )
+                            # Execute the tool (async)
+                            tool_result = await self.execute_tool(
+                                agent_name, function_name, arguments
+                            )
+                            # Add the tool result to the prompt for the next round
+                            full_prompt += (
+                                f"\n\nTool '{function_name}' was called with arguments {arguments}.\n"
+                                f"Result: {tool_result}\n"
+                            )
+                    continue
 
                 # Otherwise, it's a normal message (final answer)
                 response_text = message.content
@@ -381,6 +406,7 @@ class AgentService(AgentServiceInterface):
 
         if not text:
             return ""
+        text = text.replace("’", "'").replace("‘", "'")
         text = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", text)
         text = re.sub(r"`([^`]+)`", r"\1", text)
         text = re.sub(r"(\*\*|__)(.*?)\1", r"\2", text)
@@ -411,9 +437,7 @@ class AgentService(AgentServiceInterface):
             flags=re.UNICODE,
         )
         text = emoji_pattern.sub(r" ", text)
-        text = re.sub(
-            r"[^\w\s\.\,\;\:\?\!\'\"\-\(\)]", " ", text
-        )  # Keep basic punctuation
+        text = re.sub(r"[^\w\s\.\,\;\:\?\!\'\"\-\(\)]", " ", text)
         text = re.sub(r"\s+", " ", text)
         return text.strip()
 

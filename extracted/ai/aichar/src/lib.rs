@@ -33,7 +33,7 @@ use std::io::{Read, Write, Cursor, BufReader, Seek, SeekFrom};
 
 static PROGRAM_INFO: ProgramInfo = ProgramInfo {
     name: "aichar Python library",
-    version: "1.0.4",
+    version: "1.0.5",
     url: "https://github.com/Hukasx0/aichar",
 };
 
@@ -809,6 +809,7 @@ fn license() -> &'static str {
 
 #[pymodule]
 fn aichar(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_class::<CharacterClass>()?;
     m.add_function(wrap_pyfunction!(create_character, m)?)?;
     m.add_function(wrap_pyfunction!(load_character_json, m)?)?;
     m.add_function(wrap_pyfunction!(load_character_json_file, m)?)?;
