@@ -46,7 +46,10 @@ TEST(MimirTests, SearchApplicableActionGeneratorsLiftedTest)
     const auto brfs_event_handler = brfs::DefaultEventHandlerImpl::create(problem);
     const auto search_context = SearchContextImpl::create(problem, applicable_action_generator, state_repository);
 
-    const auto result = brfs::find_solution(search_context, nullptr, brfs_event_handler);
+    auto brfs_options = brfs::Options();
+    brfs_options.event_handler = brfs_event_handler;
+
+    const auto result = brfs::find_solution(search_context, brfs_options);
     EXPECT_EQ(result.status, SearchStatus::SOLVED);
 
     const auto& applicable_action_generator_statistics = applicable_action_generator_event_handler->get_statistics();
@@ -55,7 +58,7 @@ TEST(MimirTests, SearchApplicableActionGeneratorsLiftedTest)
 
     const auto& axiom_evaluator_statistics = axiom_evaluator_event_handler->get_statistics();
     EXPECT_EQ(axiom_evaluator_statistics.get_num_ground_axiom_cache_hits_per_search_layer().back(), 472);
-    EXPECT_EQ(axiom_evaluator_statistics.get_num_ground_axiom_cache_misses_per_search_layer().back(), 16);
+    EXPECT_EQ(axiom_evaluator_statistics.get_num_ground_axiom_cache_misses_per_search_layer().back(), 15);
 
     const auto& brfs_statistics = brfs_event_handler->get_statistics();
     EXPECT_EQ(brfs_statistics.get_num_generated_until_g_value().back(), 105);

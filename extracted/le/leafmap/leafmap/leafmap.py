@@ -2165,8 +2165,7 @@ class Map(ipyleaflet.Map):
         )
         with output:
             output.clear_output()
-            output.outputs = ()
-            output.append_display_data(
+            with output:
                 plot_colormap(
                     cmap,
                     colors,
@@ -2182,7 +2181,6 @@ class Map(ipyleaflet.Map):
                     font_size,
                     **kwargs,
                 )
-            )
 
         self.colorbar = colormap_ctrl
         self.add(colormap_ctrl)
@@ -5497,7 +5495,7 @@ class Map(ipyleaflet.Map):
         widget_control = ipyleaflet.WidgetControl(
             widget=attribute_editor, position="topright"
         )
-        self.add_control(widget_control)
+        self.add(widget_control)
 
         def close_widget_control(_):
             self.remove(widget_control)
@@ -5738,7 +5736,7 @@ class Map(ipyleaflet.Map):
         widget_control = ipyleaflet.WidgetControl(
             widget=attribute_editor, position="topright"
         )
-        self.add_control(widget_control)
+        self.add(widget_control)
 
         def close_widget_control(_):
             self.remove(widget_control)

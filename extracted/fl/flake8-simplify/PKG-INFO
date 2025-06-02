@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: flake8_simplify
-Version: 0.21.0
+Version: 0.22.0
 Summary: flake8 plugin which checks for code that can be simplified
 Keywords: flake8
 Author-email: Martin Thoma <info@martin-thoma.de>
@@ -21,6 +21,7 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Topic :: Software Development
 Classifier: Framework :: Flake8
+License-File: LICENSE
 Requires-Dist: astor>=0.1
 Requires-Dist: flake8>=3.7
 Requires-Dist: importlib-metadata>=0.9; python_version < "3.8"

@@ -29,110 +29,89 @@ AddHeuristicImpl::AddHeuristicImpl(const DeleteRelaxedProblemExplorator& delete_
 
 AddHeuristic AddHeuristicImpl::create(const DeleteRelaxedProblemExplorator& delete_relaxation) { return std::make_shared<AddHeuristicImpl>(delete_relaxation); }
 
-void AddHeuristicImpl::initialize_and_annotations_impl()
+void AddHeuristicImpl::initialize_and_annotations_impl(const Action& action)
 {
-    this->m_action_annotations.resize(this->m_unary_actions.size());
-    for (size_t i = 0; i < this->m_unary_actions.size(); ++i)
+    auto& annotations = get<Action>(this->get_structures_annotations())[action.get_index()];
+    get_cost(annotations) = 0;
+    get_num_unsatisfied_preconditions(annotations) = action.get_num_preconditions();
+}
+
+void AddHeuristicImpl::initialize_and_annotations_impl(const Axiom& axiom)
+{
+    auto& annotations = get<Axiom>(this->get_structures_annotations())[axiom.get_index()];
+    get_cost(annotations) = 0;
+    get_num_unsatisfied_preconditions(annotations) = axiom.get_num_preconditions();
+}
+
+void AddHeuristicImpl::initialize_or_annotations_impl(const Proposition& proposition)
+{
+    auto& annotations = this->get_proposition_annotations()[proposition.get_index()];
+    get_cost(annotations) = MAX_DISCRETE_COST;
+}
+
+void AddHeuristicImpl::initialize_or_annotations_and_queue_impl(const Proposition& proposition)
+{
+    auto& annotations = this->get_proposition_annotations()[proposition.get_index()];
+    get_cost(annotations) = 0;
+    this->m_queue.insert(0, QueueEntry { proposition.get_index(), 0 });
+}
+
+void AddHeuristicImpl::update_and_annotation_impl(const Proposition& proposition, const Action& action)
+{
+    auto& proposition_annotations = this->get_proposition_annotations()[proposition.get_index()];
+    auto& action_annotations = get<Action>(this->get_structures_annotations())[action.get_index()];
+
+    get_cost(action_annotations) += get_cost(proposition_annotations);
+}
+
+void AddHeuristicImpl::update_and_annotation_impl(const Proposition& proposition, const Axiom& axiom)
+{
+    auto& proposition_annotations = this->get_proposition_annotations()[proposition.get_index()];
+    auto& axiom_annotations = get<Axiom>(this->get_structures_annotations())[axiom.get_index()];
+
+    get_cost(axiom_annotations) = std::max(get_cost(proposition_annotations), get_cost(axiom_annotations));
+}
+
+void AddHeuristicImpl::update_or_annotation_impl(const Action& action, const Proposition& proposition)
+{
+    const auto& action_annotations = get<Action>(this->get_structures_annotations())[action.get_index()];
+    auto& proposition_annotations = this->get_proposition_annotations()[proposition.get_index()];
+
+    const auto firing_cost = get_cost(action_annotations) + 1;
+
+    if (firing_cost < get_cost(proposition_annotations))
     {
-        auto& annotation = this->m_action_annotations[i];
-        const auto& action = this->m_unary_actions[i];
-        get_cost(annotation) = 0;
-        get_num_unsatisfied_preconditions(annotation) = action.get_num_preconditions();
-    }
-    this->m_axiom_annotations.resize(this->m_unary_axioms.size());
-    for (size_t i = 0; i < this->m_unary_axioms.size(); ++i)
-    {
-        auto& annotation = this->m_axiom_annotations[i];
-        const auto& axiom = this->m_unary_axioms[i];
-        get_cost(annotation) = 0;
-        get_num_unsatisfied_preconditions(annotation) = axiom.get_num_preconditions();
+        get_cost(proposition_annotations) = firing_cost;
+        this->m_queue.insert(get_cost(proposition_annotations), QueueEntry { proposition.get_index(), get_cost(proposition_annotations) });
     }
 }
 
-void AddHeuristicImpl::initialize_or_annotations_impl(State state)
+void AddHeuristicImpl::update_or_annotation_impl(const Axiom& axiom, const Proposition& proposition)
 {
-    this->m_proposition_annotations.resize(this->m_propositions.size());
-    for (size_t i = 0; i < this->m_propositions.size(); ++i)
+    const auto& axiom_annotations = get<Axiom>(this->get_structures_annotations())[axiom.get_index()];
+    auto& proposition_annotations = this->get_proposition_annotations()[proposition.get_index()];
+
+    if (get_cost(axiom_annotations) < get_cost(proposition_annotations))
     {
-        auto& annotation = this->m_proposition_annotations[i];
-        get_cost(annotation) = MAX_DISCRETE_COST;
-    }
-
-    this->m_queue.clear();
-
-    for (const auto atom_index : state->get_atoms<formalism::FluentTag>())
-    {
-        const auto proposition_index = this->m_fluent_offsets[atom_index];
-        auto& annotation = this->m_proposition_annotations[proposition_index];
-        get_cost(annotation) = 0;
-        this->m_queue.insert(0, QueueEntry { proposition_index, 0 });
-    }
-    for (const auto atom_index : state->get_atoms<formalism::DerivedTag>())
-    {
-        const auto proposition_index = this->m_derived_offsets[atom_index];
-        auto& annotation = this->m_proposition_annotations[proposition_index];
-        get_cost(annotation) = 0;
-        this->m_queue.insert(0, QueueEntry { proposition_index, 0 });
-    }
-    // Trivial dummy proposition to trigger actions and axioms without preconditions
-    auto& annotation = this->m_proposition_annotations[0];
-    get_cost(annotation) = 0;
-    this->m_queue.insert(0, QueueEntry { 0, 0 });
-}
-
-void AddHeuristicImpl::update_and_annotation_impl(const Proposition& proposition, const UnaryGroundAction& action)
-{
-    auto& proposition_annotation = this->m_proposition_annotations[proposition.get_index()];
-    auto& action_annotation = this->m_action_annotations[action.get_index()];
-
-    get_cost(action_annotation) += get_cost(proposition_annotation);
-}
-
-void AddHeuristicImpl::update_and_annotation_impl(const Proposition& proposition, const UnaryGroundAxiom& axiom)
-{
-    auto& proposition_annotation = this->m_proposition_annotations[proposition.get_index()];
-    auto& axiom_annotation = this->m_axiom_annotations[axiom.get_index()];
-
-    get_cost(axiom_annotation) = get_cost(proposition_annotation);
-}
-
-void AddHeuristicImpl::update_or_annotation_impl(const UnaryGroundAction& action, const Proposition& proposition)
-{
-    const auto& action_annotation = this->m_action_annotations[action.get_index()];
-    auto& proposition_annotation = this->m_proposition_annotations[proposition.get_index()];
-
-    const auto cost = get_cost(action_annotation) + 1;
-
-    if (cost < get_cost(proposition_annotation))
-    {
-        get_cost(proposition_annotation) = cost;
-        this->m_queue.insert(get_cost(proposition_annotation), QueueEntry { proposition.get_index(), get_cost(proposition_annotation) });
+        get_cost(proposition_annotations) = get_cost(axiom_annotations);
+        this->m_queue.insert(get_cost(proposition_annotations), QueueEntry { proposition.get_index(), get_cost(proposition_annotations) });
     }
 }
 
-void AddHeuristicImpl::update_or_annotation_impl(const UnaryGroundAxiom& axiom, const Proposition& proposition)
-{
-    const auto& axiom_annotation = this->m_axiom_annotations[axiom.get_index()];
-    auto& proposition_annotation = this->m_proposition_annotations[proposition.get_index()];
-
-    if (get_cost(axiom_annotation) < get_cost(proposition_annotation))
-    {
-        get_cost(proposition_annotation) = get_cost(axiom_annotation);
-        this->m_queue.insert(get_cost(proposition_annotation), QueueEntry { proposition.get_index(), get_cost(proposition_annotation) });
-    }
-}
-
-DiscreteCost AddHeuristicImpl::extract_impl()
+DiscreteCost AddHeuristicImpl::extract_impl(State)
 {
     // Ensure that this function is called only if the goal is satisfied in the relaxed exploration.
     assert(this->m_num_unsat_goals == 0);
 
     auto total_cost = DiscreteCost(0);
-    for (const auto proposition_index : this->m_goal_propositions)
+    for (const auto proposition_index : this->get_goal_propositions())
     {
-        const auto& annotation = this->m_proposition_annotations[proposition_index];
-        total_cost += get_cost(annotation);
+        const auto& annotations = this->get_proposition_annotations()[proposition_index];
+        total_cost += get_cost(annotations);
     }
+
+    // std::cout << "Total cost: " << total_cost << std::endl;
+
     return total_cost;
 }
 

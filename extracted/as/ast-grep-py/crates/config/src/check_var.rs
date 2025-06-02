@@ -1,4 +1,4 @@
-use crate::fixer::Fixer;
+use crate::fixer::{Fixer, FixerError};
 use crate::rule::referent_rule::RuleRegistration;
 use crate::rule::Rule;
 use crate::rule_config::RuleConfigError;
@@ -23,7 +23,7 @@ pub fn check_rule_with_hint<'r>(
   utils: &'r RuleRegistration,
   constraints: &'r HashMap<String, Rule>,
   transform: &'r Option<Transform>,
-  fixer: &Option<Fixer>,
+  fixer: &Vec<Fixer>,
   hint: CheckHint<'r>,
 ) -> RResult<()> {
   match hint {
@@ -37,6 +37,9 @@ pub fn check_rule_with_hint<'r>(
     }
     // upper_vars is needed to check metavar defined in containing vars
     CheckHint::Rewriter(upper_vars) => {
+      if fixer.is_empty() {
+        return Err(RuleCoreError::Fixer(FixerError::InvalidRewriter));
+      }
       check_utils_defined(rule, constraints)?;
       check_vars_in_rewriter(rule, utils, constraints, transform, fixer, upper_vars)?;
     }
@@ -49,7 +52,7 @@ fn check_vars_in_rewriter<'r>(
   utils: &'r RuleRegistration,
   constraints: &'r HashMap<String, Rule>,
   transform: &'r Option<Transform>,
-  fixer: &Option<Fixer>,
+  fixer: &Vec<Fixer>,
   upper_var: &HashSet<&str>,
 ) -> RResult<()> {
   let vars = get_vars_from_rules(rule, utils);
@@ -75,7 +78,7 @@ fn check_vars<'r>(
   utils: &'r RuleRegistration,
   constraints: &'r HashMap<String, Rule>,
   transform: &'r Option<Transform>,
-  fixer: &Option<Fixer>,
+  fixer: &Vec<Fixer>,
 ) -> RResult<()> {
   let vars = get_vars_from_rules(rule, utils);
   let vars = check_var_in_constraints(vars, constraints)?;
@@ -140,13 +143,12 @@ fn check_var_in_transform<'r>(
   Ok(vars)
 }
 
-fn check_var_in_fix(vars: HashSet<&str>, fixer: &Option<Fixer>) -> RResult<()> {
-  let Some(fixer) = fixer else {
-    return Ok(());
-  };
-  for var in fixer.used_vars() {
-    if !vars.contains(&var) {
-      return Err(RuleCoreError::UndefinedMetaVar(var.to_string(), "fix"));
+fn check_var_in_fix(vars: HashSet<&str>, fixers: &Vec<Fixer>) -> RResult<()> {
+  for fixer in fixers {
+    for var in fixer.used_vars() {
+      if !vars.contains(&var) {
+        return Err(RuleCoreError::UndefinedMetaVar(var.to_string(), "fix"));
+      }
     }
   }
   Ok(())

@@ -558,6 +558,15 @@ l_bot_mention_in_story = {
     'zh': ": 1",
     'ar': ": 1 الزناد",
 }
+l_boost_parse = {
+    'ru': "👩🏽‍💻 <b>Boost</b> список",
+    'en': "👩🏽‍💻 <b>Boost</b> list",
+    'es': "👩🏽‍💻 Lista de <b>Boost</b>",
+    'fr': "👩🏽‍💻 Liste <b>Boost</b>",
+    'zh': "👩🏽‍💻 <b>Boost</b> 列表",
+    'ar': "👩🏽‍💻 قائمة <b>Boost</b>",
+}
+
 # endregion
 
 
@@ -10851,28 +10860,13 @@ l_post_btn2 = {
 }
 l_post_welcome = {
     'ru': "🌱 <b>{0}</b>, добро пожаловать в <i>@tg-приложение</i> создания креативных постов:\n\n<blockquote>▪️<b>кнопочный</b> счетчик\n▪️инлайн-<b>телескопы</b>\n▪️парсинг/уведомления о <b>кликах</b>\n▪️<b>шёпот</b>-сообщения</blockquote>",
-    'en': "🌱 <b>{0}</b>, welcome to the <i>landing bot</i> for creating creative posts:\n\n▪️<b>button</b> counter\n▪️inline-<b >telescopes</b>\n▪️parsing/<b>click notifications</b>\n▪️<b>whisper</b>-messages",
-    'es': "🌱 <b>{0}</b>, bienvenido al <i>bot de aterrizaje</i> para crear publicaciones creativas:\n\n▪️<b>botón</b> contador\n▪️inline-<b >telescopios</b>\n▪️análisis/<b>notificaciones de clic</b>\n▪️<b>susurros</b>-mensajes",
-    'fr': "🌱 <b>{0}</b>, bienvenue sur le <i>landing bot</i> pour créer des publications créatives :\n\nwithout >télescopes</b>\nƒ️analyse/<b>notifications de clic</b>\nƒ️<b>chuchotement</b>-messages",
-    'zh': "🌱 <b>{0}</b>，欢迎使用<i>登陆机器人</i>来创建创意帖子：\n\n▪️<b>按钮</b>计数器\n▪️内联-<b >望远镜</b>\n▪️解析/<b>点击通知</b>\n▪️<b>窃窃私语</b>-消息",
-    'ar': "🌱 <b>{0}</b>، مرحبًا بك في <i>الروبوت المقصود</i> لإنشاء مشاركات إبداعية:\n\n▪️<b>زر</b> عداد\n▪️inline-<b >التلسكوبات</b>\n▪️parsing/<b>انقر فوق الإشعارات</b>\n▪️<b>whisper</b>-الرسائل\n\n❗️<b>بانتظام</b>-يتم التحديث / المحتوى",
+    'en': "🌱 <b>{0}</b>, welcome to the <i>@tg-app</i> for creating creative posts:\n\n<blockquote>▪️<b>button</b> counter\n▪️inline-<b>telescopes</b>\n▪️parsing/notifications about <b>clicks</b>\n▪️<b>whisper</b> messages</blockquote>",
+    'es': "🌱 <b>{0}</b>, bienvenido a la <i>@tg-aplicación</i> para crear publicaciones creativas:\n\n<blockquote>▪️contador de <b>botón</b>\n▪️<b>telescopios</b> en línea\n▪️análisis/notificaciones de <b>clics</b>\n▪️mensajes de <b>susurro</b></blockquote>",
+    'fr': "🌱 <b>{0}</b>, bienvenue dans l’<i>@tg-application</i> de création de publications créatives :\n\n<blockquote>▪️compteur <b>à bouton</b>\n▪️<b>télescopes</b> en ligne\n▪️analyse/notifications de <b>clics</b>\n▪️messages <b>chuchotés</b></blockquote>",
+    'zh': "🌱 <b>{0}</b>，欢迎使用<i>@tg-应用</i>创建创意帖子：\n\n<blockquote>▪️<b>按钮</b>计数器\n▪️内联<b>望远镜</b>\n▪️解析/<b>点击</b>通知\n▪️<b>耳语</b>消息</blockquote>",
+    'ar': "🌱 <b>{0}</b>، مرحبًا بك في <i>@tg-تطبيق</i> لإنشاء منشورات إبداعية:\n\n<blockquote>▪️عداد <b>زر</b>\n▪️<b>تلسكوبات</b> مضمنة\n▪️تحليل/إشعارات <b>النقر</b>\n▪️رسائل <b>همس</b></blockquote>",
 }
-l_post_welcome_instruction = {
-    'ru': 'https://telegra.ph/FereyPostBot-11-15',
-    'en': 'https://telegra.ph/FereyBotBot-11-13',
-    'es': 'https://telegra.ph/FereyBotBot-11-13',
-    'fr': 'https://telegra.ph/FereyBotBot-11-13',
-    'zh': 'https://telegra.ph/FereyBotBot-11-13',
-    'ar': 'https://telegra.ph/FereyBotBot-11-13',
-}
-l_subscribe_post = {
-    'ru': "👩🏽‍💻 <b>Оформи</b> ежемесячную подписку:\n\n¹ [<b>Все боты</b> и проекты (-<u>22</u>%)]\n² [@{0}-бот]:\n<blockquote>▪️<b>нотис</b>-уведомления о кликах\n(<i>ссылка на пользователя</i>)</blockquote>",
-    'en': "👩🏽‍💻 <b>Subscribe</b> to a monthly subscription:\n\n¹ [<b>All bots</b> and projects (-<u>22</u>%)]\n² [@{0 }-bot]:\n▪️<b>notice</b>-click notifications\n(<i>user link</i>)",
-    'es': "👩🏽‍💻 <b>Suscríbete</b> a una suscripción mensual:\n\n¹ [<b>Todos los bots</b> y proyectos (-<u>22</u>%)]\n² [@ {0 }-bot]:\n▪️<b>aviso</b>-notificaciones de clic\n(<i>enlace de usuario</i>)\n\n👩🏽‍💻 /saldo",
-    'fr': "👩🏽‍💻 <b>S'abonner</b> à un abonnement mensuel :\n\n¹ [<b>Tous les robots</b> et projets (-<u>22</u>%)]\n² [@ {0 }-bot] :\nnoyance<b>notification</b>-notifications de clic\n(<i>lien utilisateur</i>)\n\n👩🏽‍💻 /solde",
-    'zh': "👩🏽‍💻<b>订阅</b>按月订阅：\n\n1 [<b>所有机器人</b>和项目 (-<u>22</u>%)]\n² [@ {0 }-bot]：\n▪️<b>通知</b>-点击通知\n（<i>用户链接</i>）",
-    'ar': "👩🏽‍💻 <b>اشترك</b> في اشتراك شهري:\n\n¹ [<b>جميع الروبوتات</b> والمشاريع (-<u>22</u>%)]\n² [@ {0 }-bot]:\n▪️<b>إشعار</b>-انقر على الإشعارات\n(<i>رابط المستخدم</i>)",
-}
+
 
 l_post_bot_button_push = {
     'ru': "👩🏽‍💻 <b>Пользователь</b>: {0} нажал на: [{1}] (пост #<u>{2}</u>)\n\n<code>/parse {3}</code> - все клики поста",
@@ -10900,12 +10894,13 @@ l_post_whisper_btn = {
 }
 l_post_whisper_message_text = {
     'ru': "👩🏽‍💻 <b>Секретный</b> шёпот только для: ",
-    'en': "👩🏽‍💻 <b>Secret</b> whisper only for:",
-    'es': "👩🏽‍💻 Susurro <b>Secreto</b> solo para:",
-    'fr': "👩🏽‍💻 <b>Secret</b> murmure uniquement pour :",
-    'zh': "👩🏽‍💻<b>秘密</b>耳语仅适用于：",
-    'ar': "👩🏽‍💻 همس <b>سري</b> فقط لـ:",
+    'en': "👩🏽‍💻 <b>Secret</b> whisper only for: ",
+    'es': "👩🏽‍💻 <b>Secreto</b> susurro solo para: ",
+    'fr': "👩🏽‍💻 <b>Secret</b> murmure uniquement pour : ",
+    'zh': "👩🏽‍💻 <b>秘密</b>耳语仅适用于：",
+    'ar': "👩🏽‍💻 <b>سري</b> همس فقط لـ: ",
 }
+
 l_post_whisper_title = {
     'ru': "👩🏽‍💻 Шёпот",
     'en': "👩🏽‍💻 Whisper",
@@ -10925,60 +10920,57 @@ l_post_whisper_deleted = {
 l_post_whisper_outdate = {
     'ru': "👩🏽‍💻 Шёпот просрочен после 3х дней",
     'en': "👩🏽‍💻 Whisper expired after 3 days",
-    'es': "👩🏽‍💻 Whisper expiró después de 3 días",
-    'fr': "👩🏽‍💻 Whisper a expiré après 3 jours",
-    'zh': "👩🏽‍💻 Whisper 3 天后过期",
+    'es': "👩🏽‍💻 El susurro expiró después de 3 días",
+    'fr': "👩🏽‍💻 Le chuchotement a expiré après 3 jours",
+    'zh': "👩🏽‍💻 私语在 3 天后过期",
     'ar': "👩🏽‍💻 انتهت صلاحية الهمس بعد 3 أيام",
 }
+
 l_post_whisper_skip = {
     'ru': "👩🏽‍💻 Ты не видишь этот шёпот, потому что он был отправлен не тебе",
-    'en': "👩🏽‍💻 You don’t see this whisper because it was not sent to you",
-    'es': "👩🏽‍💻 No ves este susurro porque no te lo enviaron",
-    'fr': "👩🏽‍💻 Vous ne voyez pas ce murmure car il ne vous a pas été envoyé",
-    'zh': "👩🏽‍💻 您看不到这条私语，因为它不是发送给您的",
-    'ar': "👩🏽‍💻 أنت لا ترى هذا الهمس لأنه لم يُرسل إليك",
+    'en': "👩🏽‍💻 You don’t see this whisper because it wasn’t sent to you",
+    'es': "👩🏽‍💻 No puedes ver este susurro porque no fue enviado a ti",
+    'fr': "👩🏽‍💻 Vous ne voyez pas ce chuchotement car il ne vous était pas destiné",
+    'zh': "👩🏽‍💻 你看不到这条私语，因为它不是发给你的",
+    'ar': "👩🏽‍💻 لا يمكنك رؤية هذا الهمس لأنه لم يُرسل إليك",
 }
+
 l_post_whisper_alert = {
     'ru': "👩🏽‍💻 <b>Пользователь</b>: {0} прочитал шёпот: [{1}]",
     'en': "👩🏽‍💻 <b>User</b>: {0} read the whisper: [{1}]",
-    'es': "👩🏽‍💻 <b>Usuario</b>: {0} lee el susurro: [{1}]",
-    'fr': "👩🏽‍💻 <b>Utilisateur</b> : {0} lit le murmure : [{1}]",
-    'zh': "👩🏽‍💻<b>用户</b>：{0}阅读私语：[{1}]",
-    'ar': "👩🏽‍💻 <b>المستخدم</b>: {0} اقرأ الهمس: [{1}]",
-}
-l_post_whisper_text = {
-    'ru': "👩🏽‍💻 <b>Шепот</b> - секретные сообщения для заданного количества пользователей в группе, которые открываются нажатием на кнопку",
-    'en': "👩🏽‍💻 <b>User</b>: {0} read the whisper: [{1}]",
-    'es': "👩🏽‍💻 <b>Usuario</b>: {0} lee el susurro: [{1}]",
-    'fr': "👩🏽‍💻 <b>Utilisateur</b> : {0} lit le murmure : [{1}]",
-    'zh': "👩🏽‍💻<b>用户</b>：{0}阅读私语：[{1}]",
-    'ar': "👩🏽‍💻 <b>المستخدم</b>: {0} اقرأ الهمس: [{1}]",
-}
-l_post_whisper_txt = {
-    'ru': "посмотри личные сообщения",
-    'en': "👩🏽‍💻 <b>User</b>: {0} read the whisper: [{1}]",
-    'es': "👩🏽‍💻 <b>Usuario</b>: {0} lee el susurro: [{1}]",
-    'fr': "👩🏽‍💻 <b>Utilisateur</b> : {0} lit le murmure : [{1}]",
-    'zh': "👩🏽‍💻<b>用户</b>：{0}阅读私语：[{1}]",
-    'ar': "👩🏽‍💻 <b>المستخدم</b>: {0} اقرأ الهمس: [{1}]",
-}
-l_post_whisper_example = {
-    'ru': "💨 Например",
-    'en': "👩🏽‍💻 <b>User</b>: {0} read the whisper: [{1}]",
-    'es': "👩🏽‍💻 <b>Usuario</b>: {0} lee el susurro: [{1}]",
-    'fr': "👩🏽‍💻 <b>Utilisateur</b> : {0} lit le murmure : [{1}]",
-    'zh': "👩🏽‍💻<b>用户</b>：{0}阅读私语：[{1}]",
-    'ar': "👩🏽‍💻 <b>المستخدم</b>: {0} اقرأ الهمس: [{1}]",
+    'es': "👩🏽‍💻 <b>Usuario</b>: {0} leyó el susurro: [{1}]",
+    'fr': "👩🏽‍💻 <b>Utilisateur</b> : {0} a lu le chuchotement : [{1}]",
+    'zh': "👩🏽‍💻 <b>用户</b>：{0} 阅读了私语：[{1}]",
+    'ar': "👩🏽‍💻 <b>المستخدم</b>: {0} قرأ الهمس: [{1}]",
 }
 
-l_boost_parse = {
-    'ru': "👩🏽‍💻 <b>Boost</b> список",
-    'en': "👩🏽‍💻 <b>List</b> of post #{0} clicks: <u>{1}</u>\n\n👩🏽‍💻 <b>Check out</b> <a href=' {2}'>💨Subscribe</a> to receive usernames",
-    'es': "👩🏽‍💻 <b>Lista</b> de publicaciones #{0} clics: <u>{1}</u>\n\n👩🏽‍💻 <b>Consultar</b> <a href =' {2}'>💨Suscríbete</a> para recibir nombres de usuario",
-    'fr': "👩🏽‍💻 <b>Liste</b> des publications #{0} clics : <u>{1}</u>\n\n👩🏽‍💻 <b>Découvrez</b> <a href =' {2}'>💨Abonnez-vous</a> pour recevoir les noms d'utilisateurs",
-    'zh': "👩🏽‍💻 <b>列表</b>，帖子 #{0} 次点击：<u>{1}</u>\n\n👩🏽‍💻 <b>查看</b> <a href =' {2}'>💨订阅</a>以接收用户名",
-    'ar': "👩🏽‍💻 <b>قائمة</b> المنشورات التي #{0} نقرات: <u>{1}</u>\n\n👩🏽‍💻 <b>الخروج</b> <a href =' {2}'>💨اشترك</a> لتلقي أسماء المستخدمين",
+l_post_whisper_text = {
+    'ru': "👩🏽‍💻 <b>Шепот</b> - секретные сообщения для заданного количества пользователей в группе, которые открываются нажатием на кнопку",
+    'en': "👩🏽‍💻 <b>Whisper</b> - secret messages for a specified number of users in a group, opened by pressing a button",
+    'es': "👩🏽‍💻 <b>Susurro</b>: mensajes secretos para un número determinado de usuarios en el grupo, que se abren al pulsar un botón",
+    'fr': "👩🏽‍💻 <b>Chuchotement</b> – messages secrets pour un nombre défini d’utilisateurs dans un groupe, accessibles par un clic sur un bouton",
+    'zh': "👩🏽‍💻 <b>耳语</b> - 面向群组中指定数量用户的私密消息，点击按钮即可查看",
+    'ar': "👩🏽‍💻 <b>همس</b> - رسائل سرية لعدد محدد من المستخدمين في المجموعة تُفتح عند الضغط على الزر",
 }
+
+l_post_whisper_txt = {
+    'ru': "посмотри личные сообщения",
+    'en': "check private messages",
+    'es': "revisa los mensajes privados",
+    'fr': "regarde les messages privés",
+    'zh': "查看私密消息",
+    'ar': "تحقق من الرسائل الخاصة",
+}
+
+l_post_whisper_example = {
+    'ru': "💨 Например",
+    'en': "💨 For example",
+    'es': "💨 Por ejemplo",
+    'fr': "💨 Par exemple",
+    'zh': "💨 例如",
+    'ar': "💨 على سبيل المثال",
+}
+
 # endregion
 
 
@@ -13942,7 +13934,7 @@ l_kind_5 = {
     'ar': "<b>👩🏽‍💻 @FereyUserBot </b>-أتمتة الحساب\n\n▪️<b>تلقائي</b>-ترجمة/نسخ\n▪️<b>روبوت التوليد العصبي</b>\n▪️ <b>مراقبة</b> الموقع الجغرافي/الكلمات\n▪️<b>التنسيق التلقائي</b> والبودكاست\n▪️<b>تطبيق الويب/العصبي</b>-النشر",
 }
 l_kind_6 = {
-    'ru': "<b>👩🏽‍💻@FereyPostBot</b> - приватные посты\n\n<blockquote>▪️<b>кнопочный</b> счетчик\n▪️инлайн-<b>телескопы</b>\n▪️парсинг/уведомления о <b>кликах</b>\n▪️<b>шёпот</b>-сообщения</blockquote>",
+    'ru': "<b>👩🏽‍💻@FereyPostBot</b> - приватные посты\n\n<blockquote>▪️<b>кнопочный</b> счетчик\n▪️инлайн-<b>телескопы</b>\n▪️<b>клик</b>\n▪️<b>шёпот</b>-сообщения</blockquote>",
     'en': "<b>👩🏽‍💻 @FereyPostBot </b>-private posts\n\n▪️<b>button</b> counter\n▪️inline-<b>telescopes</b>\n▪️parsing/notifications <b>clicks</b>\n▪️<b>whispers</b>-messages",
     'es': "<b>👩🏽‍💻 @FereyPostBot </b>-publicaciones privadas\n\n▪️<b>botón</b> contador\n▪️en línea-<b>telescopios</b>\n▪️análisis/notificaciones <b>clics</b>\n▪️<b>susurros</b>-mensajes",
     'fr': "<b>👩🏽‍💻 @FereyPostBot </b>-messages privés\n\nnoyer<b>compteur de boutons</b>\nArmoires en ligne-<b>télescopes</b>\n▪️analyse/notifications <b>clics</b>\n▪️<b>chuchotements</b>-messages",

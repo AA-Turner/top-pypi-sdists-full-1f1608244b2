@@ -13,6 +13,28 @@ class DictUtils:
     """
 
     @staticmethod
+    def add_array_element(dictionnary, key):
+        """
+        Add a [] as key element if not exist
+
+        Parameters:
+        -----------
+        dictionnary: dict
+            dictionnary to be updated
+        key: string
+            key to be added
+
+        Returns:
+        --------
+        Bool
+          True if the key element has been added
+        """
+        if key not in dictionnary:
+            dictionnary[key] = []
+            return True
+        return False
+
+    @staticmethod
     def read_dict_from_file(filename, fatal=False):
         """
         Read a dictionary from a file and raise an exception if something goes wrong.
@@ -27,13 +49,13 @@ class DictUtils:
         try:
             logging.debug("Reading json from %s", filename)
             from collections import OrderedDict
-            with open(filename, 'r') as file:
+            with open(filename) as file:
                 return json.load(file, object_pairs_hook=OrderedDict)
         except Exception as exception:
             if fatal:
-                raise MivotError("reading {}".format(filename))
+                raise MivotError(f"reading {filename}")
             else:
-                logging.error("{} reading {}".format(exception, filename))
+                logging.error(f"{exception} reading {filename}")
 
     @staticmethod
     def _get_pretty_json(dictionary):

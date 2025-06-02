@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: evolutionary-policy-optimization
-Version: 0.2.10
+Version: 0.2.11
 Summary: EPO - Pytorch
 Project-URL: Homepage, https://pypi.org/project/evolutionary-policy-optimization/
 Project-URL: Repository, https://github.com/lucidrains/evolutionary-policy-optimization

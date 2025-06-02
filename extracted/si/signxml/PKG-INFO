@@ -1,38 +1,48 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: signxml
-Version: 4.0.3
+Version: 4.0.4
 Summary: Python XML Signature and XAdES library
-Home-page: https://github.com/kislyuk/signxml
+Project-URL: Homepage, https://github.com/XML-Security/signxml
+Project-URL: Documentation, https://xml-security.github.io/signxml/
+Project-URL: Source Code, https://github.com/XML-Security/signxml
+Project-URL: Issue Tracker, https://github.com/XML-Security/signxml/issues
+Project-URL: Change Log, https://github.com/XML-Security/signxml/blob/main/Changes.rst
 Author: Andrey Kislyuk
 Author-email: kislyuk@gmail.com
+Maintainer: Andrey Kislyuk
+Maintainer-email: kislyuk@gmail.com
 License: Apache Software License
-Platform: MacOS X
-Platform: Posix
+License-File: LICENSE
+License-File: NOTICE
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Operating System :: POSIX
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Software Development
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Requires-Python: >=3.7
-License-File: LICENSE
-License-File: NOTICE
-Requires-Dist: lxml<6,>=5.2.1
-Requires-Dist: cryptography>=43
+Requires-Python: >=3.8
 Requires-Dist: certifi>=2023.11.17
-Provides-Extra: tests
-Requires-Dist: ruff; extra == "tests"
-Requires-Dist: coverage; extra == "tests"
-Requires-Dist: build; extra == "tests"
-Requires-Dist: wheel; extra == "tests"
-Requires-Dist: mypy; extra == "tests"
-Requires-Dist: lxml-stubs; extra == "tests"
+Requires-Dist: cryptography>=43
+Requires-Dist: lxml<6,>=5.2.1
+Provides-Extra: test
+Requires-Dist: build; extra == 'test'
+Requires-Dist: coverage; extra == 'test'
+Requires-Dist: lxml-stubs; extra == 'test'
+Requires-Dist: mypy; extra == 'test'
+Requires-Dist: ruff; extra == 'test'
+Requires-Dist: wheel; extra == 'test'
+Description-Content-Type: text/x-rst
 
 SignXML: XML Signature and XAdES in Python
 ==========================================
@@ -122,8 +132,9 @@ Assuming ``metadata.xml`` contains SAML metadata for the assertion source:
  It is important to understand and follow the best practice rule of "See what is signed" when verifying XML
  signatures. The gist of this rule is: if your application neglects to verify that the information it trusts is
  what was actually signed, the attacker can supply a valid signature but point you to malicious data that wasn't signed
- by that signature. Failure to follow this rule can lead to vulnerability against attacks like
- `SAML signature wrapping <https://www.usenix.org/system/files/conference/usenixsecurity12/sec12-final91.pdf>`_.
+ by that signature. Failure to follow this rule can lead to vulnerabilities against attacks like
+ `SAML signature wrapping <https://www.usenix.org/system/files/conference/usenixsecurity12/sec12-final91.pdf>`_ and
+ `XML comment canonicalization induced text element truncation <https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations>`_.
 
  In SignXML, you can ensure that the information signed is what you expect to be signed by only trusting the
  data returned by ``XMLVerifier.verify()``. The ``signed_xml`` attribute of the return value is the XML node or string
@@ -138,7 +149,9 @@ Assuming ``metadata.xml`` contains SAML metadata for the assertion source:
  **Recommended reading:** `W3C XML Signature Best Practices for Applications
  <http://www.w3.org/TR/xmldsig-bestpractices/#practices-applications>`_, `On Breaking SAML: Be Whoever You Want to Be
  <https://www.usenix.org/system/files/conference/usenixsecurity12/sec12-final91.pdf>`_, `Duo Finds SAML Vulnerabilities
- Affecting Multiple Implementations <https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations>`_
+ Affecting Multiple Implementations <https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations>`_,
+ `Sign in as anyone: Bypassing SAML SSO authentication with parser differentials
+ <https://github.blog/security/sign-in-as-anyone-bypassing-saml-sso-authentication-with-parser-differentials/>`_
 
 .. admonition:: Establish trust
 
@@ -274,8 +287,8 @@ Please report bugs, issues, feature requests, etc. on `GitHub <https://github.co
 Versioning
 ~~~~~~~~~~
 This package follows the `Semantic Versioning 2.0.0 <http://semver.org/>`_ standard. To control changes, it is
-recommended that application developers pin the package version and manage it using `pip-tools
-<https://github.com/jazzband/pip-tools>`_ or similar. For library developers, pinning the major version is
+recommended that application developers pin the package version and manage it using `uv
+<https://github.com/astral-sh/uv>`_ or similar. For library developers, pinning the major version is
 recommended.
 
 License

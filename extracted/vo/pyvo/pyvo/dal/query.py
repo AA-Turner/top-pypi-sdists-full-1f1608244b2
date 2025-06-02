@@ -130,7 +130,7 @@ class DALService:
         """
         describe the general information about the DAL service
         """
-        print('DAL Service at {}'.format(self.baseurl))
+        print(f'DAL Service at {self.baseurl}')
 
 
 class DALQuery(dict):
@@ -552,7 +552,7 @@ class DALResults:
 
             return self.resultstable.array[name]
         except KeyError:
-            raise KeyError("No such column: {}".format(name))
+            raise KeyError(f"No such column: {name}")
 
     def getrecord(self, index):
         """
@@ -687,7 +687,7 @@ class Record(Mapping):
 
             return self._mapping[key]
         except KeyError:
-            raise KeyError("No such column: {}".format(key))
+            raise KeyError(f"No such column: {key}")
 
     def __iter__(self):
         return iter(self._mapping)
@@ -890,7 +890,7 @@ class Record(Mapping):
         if not os.path.exists(dir):
             os.mkdir(dir)
         if not os.path.isdir(dir):
-            raise ValueError("{}: not a directory".format(dir))
+            raise ValueError(f"{dir}: not a directory")
 
         if not base:
             base = self.suggest_dataset_basename()
@@ -905,7 +905,7 @@ class Record(Mapping):
         n = self._dsname_no
 
         def mkpath(i):
-            return os.path.join(dir, "{}-{}.{}".format(base, i, ext))
+            return os.path.join(dir, f"{base}-{i}.{ext}")
 
         if n > 0:
             # find the last file written of the form, base-n.ext
@@ -915,7 +915,7 @@ class Record(Mapping):
             n += 1
         if n == 0:
             # never wrote a file of form, base-n.ext; try base.ext
-            path = os.path.join(dir, "{}.{}".format(base, ext))
+            path = os.path.join(dir, f"{base}.{ext}")
             if not os.path.exists(path):
                 return path
             n += 1

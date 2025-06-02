@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: types-WTForms
-Version: 3.2.1.20250401
+Version: 3.2.1.20250602
 Summary: Typing stubs for WTForms
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://github.com/python/typeshed
@@ -37,8 +37,8 @@ for more details. The source for this package can be found in the
 directory.
 
 This package was tested with
-mypy 1.15.0,
-pyright 1.1.398,
+mypy 1.16.0,
+pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`bfd032156c59bbf851f62174014f24f4f89b96af`](https://github.com/python/typeshed/commit/bfd032156c59bbf851f62174014f24f4f89b96af).
+[`eb495ff1353a538a5021341b3c905c35a2284899`](https://github.com/python/typeshed/commit/eb495ff1353a538a5021341b3c905c35a2284899).

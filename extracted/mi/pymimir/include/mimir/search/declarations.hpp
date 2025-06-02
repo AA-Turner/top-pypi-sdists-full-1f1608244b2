@@ -132,8 +132,8 @@ using DefaultEventHandler = std::shared_ptr<DefaultEventHandlerImpl>;
 /* Heuristics */
 class IHeuristic;
 using Heuristic = std::shared_ptr<IHeuristic>;
-class HStarHeuristicImpl;
-using HStarHeuristic = std::shared_ptr<HStarHeuristicImpl>;
+class PerfectHeuristicImpl;
+using PerfectHeuristic = std::shared_ptr<PerfectHeuristicImpl>;
 class BlindHeuristicImpl;
 using BlindHeuristic = std::shared_ptr<BlindHeuristicImpl>;
 class MaxHeuristicImpl;
@@ -164,9 +164,22 @@ class IGoalStrategy;
 using GoalStrategy = std::shared_ptr<IGoalStrategy>;
 class ProblemGoalStrategyImpl;
 using ProblemGoalStrategy = std::shared_ptr<ProblemGoalStrategyImpl>;
+class IExplorationStrategy;
+using ExplorationStategy = std::shared_ptr<IExplorationStrategy>;
 
-// AStar
-namespace astar
+// AStar_EAGER
+namespace astar_eager
+{
+class IEventHandler;
+using EventHandler = std::shared_ptr<IEventHandler>;
+class DebugEventHandlerImpl;
+using DebugEventHandler = std::shared_ptr<DebugEventHandlerImpl>;
+class DefaultEventHandlerImpl;
+using DefaultEventHandler = std::shared_ptr<DefaultEventHandlerImpl>;
+}
+
+// AStar_LAZY
+namespace astar_lazy
 {
 class IEventHandler;
 using EventHandler = std::shared_ptr<IEventHandler>;
@@ -187,8 +200,19 @@ class DefaultEventHandlerImpl;
 using DefaultEventHandler = std::shared_ptr<DefaultEventHandlerImpl>;
 }
 
-// GBFS
-namespace gbfs
+// GBFS_EAGER
+namespace gbfs_eager
+{
+class IEventHandler;
+using EventHandler = std::shared_ptr<IEventHandler>;
+class DebugEventHandlerImpl;
+using DebugEventHandler = std::shared_ptr<DebugEventHandlerImpl>;
+class DefaultEventHandlerImpl;
+using DefaultEventHandler = std::shared_ptr<DefaultEventHandlerImpl>;
+}
+
+// GBFS_LAZY
+namespace gbfs_lazy
 {
 class IEventHandler;
 using EventHandler = std::shared_ptr<IEventHandler>;

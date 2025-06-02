@@ -68,7 +68,15 @@ public:
     {
     }
 
-    SearchResult find_solution() { return iw::find_solution(m_search_context, nullptr, m_arity, m_iw_event_handler, m_brfs_event_handler); }
+    SearchResult find_solution()
+    {
+        auto iw_options = iw::Options();
+        iw_options.max_arity = m_arity;
+        iw_options.iw_event_handler = m_iw_event_handler;
+        iw_options.brfs_event_handler = m_brfs_event_handler;
+
+        return iw::find_solution(m_search_context, iw_options);
+    }
 
     const iw::Statistics& get_iw_statistics() const { return m_iw_event_handler->get_statistics(); }
 
@@ -114,7 +122,15 @@ public:
     {
     }
 
-    SearchResult find_solution() { return iw::find_solution(m_search_context, nullptr, m_arity, m_iw_event_handler, m_brfs_event_handler); }
+    SearchResult find_solution()
+    {
+        auto iw_options = iw::Options();
+        iw_options.max_arity = m_arity;
+        iw_options.iw_event_handler = m_iw_event_handler;
+        iw_options.brfs_event_handler = m_brfs_event_handler;
+
+        return iw::find_solution(m_search_context, iw_options);
+    }
 
     const iw::Statistics& get_iw_statistics() const { return m_iw_event_handler->get_statistics(); }
 
@@ -385,7 +401,7 @@ TEST(MimirTests, SearchAlgorithmsIWLiftedMiconicFullAdlTest)
     EXPECT_EQ(applicable_action_generator_statistics.get_num_ground_action_cache_misses_per_search_layer().back(), 10);
 
     EXPECT_EQ(axiom_evaluator_statistics.get_num_ground_axiom_cache_hits_per_search_layer().back(), 345);
-    EXPECT_EQ(axiom_evaluator_statistics.get_num_ground_axiom_cache_misses_per_search_layer().back(), 16);
+    EXPECT_EQ(axiom_evaluator_statistics.get_num_ground_axiom_cache_misses_per_search_layer().back(), 15);
 
     const auto& iw_statistics = iw.get_iw_statistics();
 

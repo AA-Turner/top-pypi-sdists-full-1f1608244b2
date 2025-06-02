@@ -383,7 +383,14 @@ async def set_user_subscription(
 def subscription_to_state(subscription: Subscription) -> str:
     if not subscription:
         return SubscriptionState.INVALID.value
-    elif subscription.type == Subscription.Type.TRIAL:
+    else:
+        # Ensure created_at is timezone-aware (UTC) if it's naive
+        if django_timezone.is_naive(subscription.created_at):
+            subscription.created_at = django_timezone.make_aware(subscription.created_at, timezone.utc)
+        if subscription.renewal_date and django_timezone.is_naive(subscription.renewal_date):
+            subscription.renewal_date = django_timezone.make_aware(subscription.renewal_date, timezone.utc)
+
+    if subscription.type == Subscription.Type.TRIAL:
         # Check if the trial has expired
         if not subscription.renewal_date:
             # If the renewal date is not set, set it to the current date + trial length and evaluate
@@ -601,9 +608,13 @@ class ProcessLockAdapters:
 
     @staticmethod
     def is_process_locked(process_lock: ProcessLock):
-        if process_lock.started_at + timedelta(seconds=process_lock.max_duration_in_seconds) < datetime.now(
-            tz=timezone.utc
-        ):
+        started_at_ts = process_lock.started_at
+        # Ensure started_at_ts is timezone-aware (UTC) if it's naive
+        if django_timezone.is_naive(started_at_ts):
+            started_at_ts = django_timezone.make_aware(started_at_ts, timezone.utc)
+
+        max_duration_in_seconds = process_lock.max_duration_in_seconds
+        if started_at_ts + timedelta(seconds=max_duration_in_seconds) < datetime.now(tz=timezone.utc):
             process_lock.delete()
             logger.info(f"🔓 Deleted stale {process_lock.name} process lock on timeout")
             return False
@@ -1191,7 +1202,7 @@ class ConversationAdapters:
     async def aget_chat_model_by_name(chat_model_name: str, ai_model_api_name: str = None):
         if ai_model_api_name:
             return await ChatModel.objects.filter(name=chat_model_name, ai_model_api__name=ai_model_api_name).afirst()
-        return await ChatModel.objects.filter(name=chat_model_name).afirst()
+        return await ChatModel.objects.filter(name=chat_model_name).prefetch_related("ai_model_api").afirst()
 
     @staticmethod
     async def aget_voice_model_config(user: KhojUser) -> Optional[VoiceModelOption]:
@@ -1296,9 +1307,30 @@ class ConversationAdapters:
         server_chat_settings = ServerChatSettings.objects.first()
         if server_chat_settings:
             server_chat_settings.chat_default = chat_model
+            server_chat_settings.chat_advanced = chat_model
             server_chat_settings.save()
         else:
-            ServerChatSettings.objects.create(chat_default=chat_model)
+            ServerChatSettings.objects.create(chat_default=chat_model, chat_advanced=chat_model)
+
+    @staticmethod
+    def get_max_context_size(chat_model: ChatModel, user: KhojUser) -> int | None:
+        """Get the max context size for the user based on the chat model."""
+        subscribed = is_user_subscribed(user) if user else False
+        if subscribed and chat_model.subscribed_max_prompt_size:
+            max_tokens = chat_model.subscribed_max_prompt_size
+        else:
+            max_tokens = chat_model.max_prompt_size
+        return max_tokens
+
+    @staticmethod
+    async def aget_max_context_size(chat_model: ChatModel, user: KhojUser) -> int | None:
+        """Get the max context size for the user based on the chat model."""
+        subscribed = await ais_user_subscribed(user) if user else False
+        if subscribed and chat_model.subscribed_max_prompt_size:
+            max_tokens = chat_model.subscribed_max_prompt_size
+        else:
+            max_tokens = chat_model.max_prompt_size
+        return max_tokens
 
     @staticmethod
     async def aget_server_webscraper():
@@ -1403,7 +1435,7 @@ class ConversationAdapters:
         if conversation:
             conversation.conversation_log = conversation_log
             conversation.slug = slug
-            conversation.updated_at = datetime.now(tz=timezone.utc)
+            conversation.updated_at = django_timezone.now()
             await conversation.asave()
         else:
             await Conversation.objects.acreate(
@@ -1454,12 +1486,12 @@ class ConversationAdapters:
 
     @staticmethod
     async def aget_valid_chat_model(user: KhojUser, conversation: Conversation, is_subscribed: bool):
-        agent: Agent = (
-            conversation.agent
-            if is_subscribed and await AgentAdapters.aget_default_agent() != conversation.agent
-            else None
-        )
-        if agent and agent.chat_model:
+        """
+        For paid users: Prefer any custom agent chat model > user default chat model > server default chat model.
+        For free users: Prefer conversation specific agent's chat model > user default chat model > server default chat model.
+        """
+        agent: Agent = conversation.agent if await AgentAdapters.aget_default_agent() != conversation.agent else None
+        if agent and agent.chat_model and (agent.is_hidden or is_subscribed):
             chat_model = await ChatModel.objects.select_related("ai_model_api").aget(
                 pk=conversation.agent.chat_model.pk
             )
@@ -1488,7 +1520,7 @@ class ConversationAdapters:
             return chat_model
 
         else:
-            raise ValueError("Invalid conversation config - either configure offline chat or openai chat")
+            raise ValueError("Invalid conversation settings. Configure some chat model on server.")
 
     @staticmethod
     async def aget_text_to_image_model_config():

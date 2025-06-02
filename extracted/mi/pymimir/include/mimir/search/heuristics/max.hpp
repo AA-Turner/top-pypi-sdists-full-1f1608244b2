@@ -37,36 +37,41 @@ public:
 private:
     /// @brief Initialize "And"-structure node annotations.
     /// Sets the cost for each structure node to 0.
-    void initialize_and_annotations_impl();
+    void initialize_and_annotations_impl(const rpg::Action& action);
+    void initialize_and_annotations_impl(const rpg::Axiom& axiom);
 
     /// @brief Initialize "Or"-proposition node annotations.
-    /// Sets the cost for each prosition that is true in the state to 0, and otherwise to infinity.
-    /// @param state is the state.
-    void initialize_or_annotations_impl(State state);
+    /// Sets the cost for each proposition that is true in the state to 0, and otherwise to infinity.
+    void initialize_or_annotations_impl(const rpg::Proposition& proposition);
+    void initialize_or_annotations_and_queue_impl(const rpg::Proposition& proposition);
 
-    /// @brief Update the "And"-action node with maximal cost.
+    /// @brief Update the "And"-action node.
+    /// Choose maximal cost among proposition and action.
     /// @param proposition is the proposition.
     /// @param axiom is the "And"-action node.
-    void update_and_annotation_impl(const rpg::Proposition& proposition, const rpg::UnaryGroundAction& action);
+    void update_and_annotation_impl(const rpg::Proposition& proposition, const rpg::Action& action);
 
-    /// @brief Update the "And"-axiom node with maximal cost.
+    /// @brief Update the "And"-axiom node.
+    /// Choose maximal cost among proposition and axiom.
     /// @param proposition is the proposition.
     /// @param axiom is the "And"-axiom node.
-    void update_and_annotation_impl(const rpg::Proposition& proposition, const rpg::UnaryGroundAxiom& axiom);
+    void update_and_annotation_impl(const rpg::Proposition& proposition, const rpg::Axiom& axiom);
 
-    /// @brief Update the "Or"-proposition node with minimal cost and enqueue the proposition if cost is updated.
+    /// @brief Update the "Or"-proposition node.
+    /// Choose minimal cost among proposition and action + 1.
     /// @param action is the action.
     /// @param proposition is the "Or"-proposition node.
-    void update_or_annotation_impl(const rpg::UnaryGroundAction& action, const rpg::Proposition& proposition);
+    void update_or_annotation_impl(const rpg::Action& action, const rpg::Proposition& proposition);
 
-    /// @brief Update the "Or"-proposition node with minimal cost and enqueue the proposition if cost is updated.
+    /// @brief Update the "Or"-proposition node.
+    /// Choose minimal cost among proposition and axiom.
     /// @param axiom is the axiom.
     /// @param proposition is the "Or"-proposition node.
-    void update_or_annotation_impl(const rpg::UnaryGroundAxiom& axiom, const rpg::Proposition& proposition);
+    void update_or_annotation_impl(const rpg::Axiom& axiom, const rpg::Proposition& proposition);
 
     /// @brief Extract h_max heuristic estimate from the goal propositions.
     /// @return the h_max heuristic estimate.
-    DiscreteCost extract_impl();
+    DiscreteCost extract_impl(State state);
 
     friend class rpg::RelaxedPlanningGraph<MaxHeuristicImpl>;
 };

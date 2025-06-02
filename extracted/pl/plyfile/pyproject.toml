@@ -23,7 +23,7 @@ lint = "flake8 plyfile.py test/test_plyfile.py"
 
 [project]
 name = "plyfile"
-version = "1.1"
+version = "1.1.2"
 description = "PLY file reader/writer"
 authors = [
     { name = "Darsh Ranjan", email = "dranjan@berkeley.edu" },
@@ -46,6 +46,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
 ]
 
@@ -59,6 +60,6 @@ Repository = "https://github.com/dranjan/python-plyfile"
 
 [build-system]
 requires = [
-    "pdm-pep517>=1.0.0",
+    "pdm-backend",
 ]
-build-backend = "pdm.pep517.api"
+build-backend = "pdm.backend"

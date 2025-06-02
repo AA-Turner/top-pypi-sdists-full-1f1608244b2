@@ -118,7 +118,7 @@ class MivotInstance:
                 if isinstance(vars(value), dict):
                     if 'value' not in vars(value):
                         value.update(row=row)
-                    if 'value' in vars(value):
+                    if 'ref' in vars(value):
                         value.update(row=row, ref=getattr(value, 'ref'))
             else:
                 if key == 'value' and ref is not None and ref != 'null':
@@ -165,7 +165,7 @@ class MivotInstance:
                     return False
         return True
 
-    def _get_class_dict(self, obj, classkey=None, slim=False):
+    def _get_class_dict(self, obj, classkey=None, slim=False, with_dmtypes=True):
         """
         Recursively displays a serializable dictionary.
         This function is only used for debugging purposes.
@@ -178,6 +178,8 @@ class MivotInstance:
         slim (bool, optional): if true, only @values and @units (if not empty) are
                                attached to model leaves.
                                @dmtype and @ref attributes are ignored
+        with_dmtypes (boolean, optional) : if true dmtypes are added to the
+                                           primitive types (model leaves)
         Returns
         -------
         dict or object
@@ -194,13 +196,13 @@ class MivotInstance:
         elif hasattr(obj, "__iter__") and not isinstance(obj, str):
             return [self._get_class_dict(v, classkey, slim=slim) for v in obj]
         elif hasattr(obj, "__dict__"):
-            data = dict([(key, obj._get_class_dict(value, classkey, slim=slim))
+            data = {key: obj._get_class_dict(value, classkey, slim=slim)
                          for key, value in obj.__dict__.items()
-                         if not callable(value) and not key.startswith('_')])
+                         if not callable(value) and not key.startswith('_')}
             # remove the house keeping parameters
             if slim is True:
                 # data is atomic value (e.g. float): the type be hidden
-                if "ref" in data or "value" in data:
+                if with_dmtypes is False and ("ref" in data or "value" in data):
                     data.pop("dmtype", None)
                 # remove unit when not set
                 if "unit" in data and not data["unit"]:

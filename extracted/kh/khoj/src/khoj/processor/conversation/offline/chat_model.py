@@ -7,7 +7,7 @@ from time import perf_counter
 from typing import Any, AsyncGenerator, Dict, List, Optional, Union
 
 import pyjson5
-from langchain.schema import ChatMessage
+from langchain_core.messages.chat import ChatMessage
 from llama_cpp import Llama
 
 from khoj.database.models import Agent, ChatModel, KhojUser
@@ -16,6 +16,7 @@ from khoj.processor.conversation.offline.utils import download_model
 from khoj.processor.conversation.utils import (
     clean_json,
     commit_conversation_trace,
+    construct_question_history,
     generate_chatml_messages_with_context,
     messages_to_print,
 )
@@ -64,13 +65,7 @@ def extract_questions_offline(
     username = prompts.user_name.format(name=user.get_full_name()) if user and user.get_full_name() else ""
 
     # Extract Past User Message and Inferred Questions from Conversation Log
-    chat_history = ""
-
-    if use_history:
-        for chat in conversation_log.get("chat", [])[-4:]:
-            if chat["by"] == "khoj":
-                chat_history += f"Q: {chat['intent']['query']}\n"
-                chat_history += f"Khoj: {chat['message']}\n\n"
+    chat_history = construct_question_history(conversation_log, include_query=False) if use_history else ""
 
     # Get dates relative to today for prompt creation
     today = datetime.today()
@@ -148,8 +143,8 @@ def filter_questions(questions: List[str]):
 
 
 async def converse_offline(
-    user_query,
-    references=[],
+    user_query: str,
+    references: list[dict] = [],
     online_results={},
     code_results={},
     conversation_log={},

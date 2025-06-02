@@ -1,6 +1,6 @@
 from base64 import b64decode
 from dataclasses import dataclass, replace
-from typing import Callable, FrozenSet, List, Optional, Union
+from typing import Callable, FrozenSet, List, Optional, Tuple, Union
 from warnings import warn
 
 import cryptography.exceptions
@@ -8,7 +8,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives.asymmetric import dsa, ec, rsa, utils
 from cryptography.hazmat.primitives.asymmetric.padding import MGF1, PSS, AsymmetricPadding, PKCS1v15
 from cryptography.hazmat.primitives.hmac import HMAC
-from cryptography.hazmat.primitives.serialization import load_der_public_key
+from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat, load_der_public_key
 from lxml import etree
 
 from .algorithms import (
@@ -27,7 +27,6 @@ from .util import (
     bits_to_bytes_unit,
     bytes_to_long,
     ds_tag,
-    ensure_bytes,
     namespaces,
 )
 
@@ -42,6 +41,11 @@ class SignatureConfiguration:
     """
     If ``True``, a valid X.509 certificate-based signature with an established chain of trust is required to
     pass validation. If ``False``, other types of valid signatures (e.g. HMAC or RSA public key) are accepted.
+
+    Ensure you establish trust: to specify an HMAC shared secret that will be required to be used by the signature, use
+    the ``hmac_key`` parameter. If ``require_x509`` is ``False`` and no ``hmac_key`` is set, any valid XML signature
+    satisfying the other SignatureConfiguration parameters will be accepted, regardless of the key used. You must then
+    establish trust by examining the ``VerifyResult`` contents, in particular asserting on the value of ``signature_key``.
     """
 
     location: str = ".//"
@@ -62,13 +66,15 @@ class SignatureConfiguration:
     signature_methods: FrozenSet[SignatureMethod] = frozenset(sm for sm in SignatureMethod if "SHA1" not in sm.name)
     """
     Set of acceptable signature methods (signature algorithms). Any signature generated using an algorithm not listed
-    here will fail verification.
+    here will fail verification. It is recommended that you restrict this set to only methods expected to be used in
+    signatures handled by your application.
     """
 
     digest_algorithms: FrozenSet[DigestAlgorithm] = frozenset(da for da in DigestAlgorithm if "SHA1" not in da.name)
     """
     Set of acceptable digest algorithms. Any signature or reference transform generated using an algorithm not listed
-    here will cause verification to fail.
+    here will cause verification to fail. It is recommended that you restrict this set to only methods expected to be
+    used in signatures handled by your application.
     """
 
     ignore_ambiguous_key_info: bool = False
@@ -86,7 +92,8 @@ class SignatureConfiguration:
 class VerifyResult:
     """
     This is a dataclass representing structured data returned by :func:`signxml.XMLVerifier.verify`. The results of a
-    verification contain the signed bytes, the parsed signed XML, and the parsed signature XML. Example usage:
+    verification contain the signed bytes, the parsed signed XML, the parsed signature XML, and the key that was used
+    to verify the signature. Example usage:
 
         verified_data = signxml.XMLVerifier().verify(input_data).signed_xml
     """
@@ -99,6 +106,9 @@ class VerifyResult:
 
     signature_xml: etree._Element
     "The signature element parsed as XML"
+
+    signature_key: bytes
+    "The cryptographic key that was used to verify the signature, in PEM format (for asymmetric keys) or raw secret bytes (for HMAC keys)"
 
 
 class XMLVerifier(XMLSignatureProcessor):
@@ -123,7 +133,7 @@ class XMLVerifier(XMLSignatureProcessor):
         key_value: Optional[etree._Element] = None,
         der_encoded_key_value: Optional[etree._Element] = None,
         signing_certificate: Optional[x509.Certificate] = None,
-    ) -> bytes:
+    ) -> Tuple[bytes, bytes | dsa.DSAPublicKey | rsa.RSAPublicKey | ec.EllipticCurvePublicKey]:
         if der_encoded_key_value is not None:
             assert der_encoded_key_value.text is not None
             key = load_der_public_key(b64decode(der_encoded_key_value.text))
@@ -177,7 +187,7 @@ class XMLVerifier(XMLSignatureProcessor):
             key.verify(raw_signature, data=signed_info_c14n, padding=padding, algorithm=digest_alg_impl)
         else:
             raise InvalidInput(f"Unsupported signature algorithm {signature_alg}")
-        return signed_info_c14n
+        return signed_info_c14n, key
 
     def _encode_dss_signature(self, raw_signature: bytes, key_size_bits: int) -> bytes:
         want_raw_signature_len = bits_to_bytes_unit(key_size_bits) * 2
@@ -279,7 +289,7 @@ class XMLVerifier(XMLSignatureProcessor):
         cert_subject_name: Optional[str] = None,
         cert_resolver: Optional[Callable] = None,
         ca_pem_file: Optional[Union[str, bytes]] = None,
-        hmac_key: Optional[str] = None,
+        hmac_key: Optional[bytes] = None,
         validate_schema: bool = True,
         parser=None,
         uri_resolver: Optional[Callable] = None,
@@ -366,6 +376,15 @@ class XMLVerifier(XMLSignatureProcessor):
         :raises: :class:`signxml.exceptions.InvalidSignature`
         """
         self.hmac_key = hmac_key
+        if hmac_key is not None:
+            if expect_config.signature_methods == SignatureConfiguration().signature_methods:  # default value
+                expect_config = replace(
+                    expect_config,
+                    signature_methods=frozenset(sm for sm in SignatureMethod if sm.name.startswith("HMAC")),
+                )
+            elif any(not sm.name.startswith("HMAC") for sm in expect_config.signature_methods):
+                raise InvalidInput("When hmac_key is set, all expected signature methods must use HMAC")
+
         self.config = expect_config
         if deprecated_kwargs:
             self.config = replace(expect_config, **deprecated_kwargs)
@@ -389,7 +408,7 @@ class XMLVerifier(XMLSignatureProcessor):
         root = self.get_root(data)
         signature_ref = self._get_signature(root)
 
-        # HACK: deep copy won't keep root's namespaces
+        # We could do a deep copy here, but it wouldn't preserve root level namespaces
         signature = self._fromstring(self._tostring(signature_ref))
 
         if validate_schema:
@@ -452,7 +471,7 @@ class XMLVerifier(XMLSignatureProcessor):
                     raise InvalidSignature("Certificate subject common name mismatch")
 
             try:
-                verified_signed_info_c14n = self._verify_signature_with_pubkey(
+                verified_signed_info_c14n, key_used = self._verify_signature_with_pubkey(
                     signed_info_c14n=signed_info_c14n,
                     raw_signature=raw_signature,
                     signing_certificate=signing_cert,
@@ -471,17 +490,19 @@ class XMLVerifier(XMLSignatureProcessor):
             if self.hmac_key is None:
                 raise InvalidInput('Parameter "hmac_key" is required when verifying a HMAC signature')
 
-            signer = HMAC(key=ensure_bytes(self.hmac_key), algorithm=digest_algorithm_implementations[signature_alg]())
+            signer = HMAC(key=self.hmac_key, algorithm=digest_algorithm_implementations[signature_alg]())
             signer.update(signed_info_c14n)
-            if raw_signature == signer.finalize():
+            try:
+                signer.verify(raw_signature)
                 verified_signed_info_c14n = signed_info_c14n
-            else:
+            except cryptography.exceptions.InvalidSignature:
                 raise InvalidSignature("Signature mismatch (HMAC)")
+            key_used = self.hmac_key
         else:
             if key_value is None and der_encoded_key_value is None:
                 raise InvalidInput("Expected to find either KeyValue or X509Data XML element in KeyInfo")
 
-            verified_signed_info_c14n = self._verify_signature_with_pubkey(
+            verified_signed_info_c14n, key_used = self._verify_signature_with_pubkey(
                 signed_info_c14n=signed_info_c14n,
                 raw_signature=raw_signature,
                 key_value=key_value,
@@ -492,7 +513,9 @@ class XMLVerifier(XMLSignatureProcessor):
         verified_signed_info = self._fromstring(verified_signed_info_c14n)
         verify_results: List[VerifyResult] = []
         for idx, reference in enumerate(self._findall(verified_signed_info, "Reference")):
-            verify_results.append(self._verify_reference(reference, idx, root, uri_resolver, c14n_algorithm, signature))
+            verify_results.append(
+                self._verify_reference(reference, idx, root, uri_resolver, c14n_algorithm, signature, key_used)
+            )
 
         if type(self.config.expect_references) is int and len(verify_results) != self.config.expect_references:
             msg = "Expected to find {} references, but found {}"
@@ -500,7 +523,7 @@ class XMLVerifier(XMLSignatureProcessor):
 
         return verify_results if self.config.expect_references > 1 else verify_results[0]
 
-    def _verify_reference(self, reference, index, root, uri_resolver, c14n_algorithm, signature):
+    def _verify_reference(self, reference, index, root, uri_resolver, c14n_algorithm, signature, signature_key_used):
         copied_root = self._fromstring(self._tostring(root))
         copied_signature_ref = self._get_signature(copied_root)
         transforms = self._find(reference, "Transforms", require=False)
@@ -514,12 +537,19 @@ class XMLVerifier(XMLSignatureProcessor):
         if b64decode(digest_value.text) != self._get_digest(payload_c14n, digest_alg):
             raise InvalidDigest(f"Digest mismatch for reference {index} ({reference.get('URI')})")
 
-        # We return the signed XML (and only that) to ensure no access to unsigned data happens
+        # We return the signed XML (and only that) to ensure no access to unsigned data happens.
+        # Note it is essential to roundtrip the payload and render it from canonicalized XML, to avoid returning
+        # untrusted comments, avoid text nodes being broken up even after comments are excised, etc.
         try:
             payload_c14n_xml = self._fromstring(payload_c14n)
         except etree.XMLSyntaxError:
             payload_c14n_xml = None
-        return VerifyResult(payload_c14n, payload_c14n_xml, signature)
+
+        if isinstance(signature_key_used, bytes):
+            signature_key = signature_key_used
+        else:
+            signature_key = signature_key_used.public_bytes(Encoding.PEM, PublicFormat.SubjectPublicKeyInfo)
+        return VerifyResult(payload_c14n, payload_c14n_xml, signature, signature_key=signature_key)
 
     def validate_schema(self, signature):
         last_exception = None

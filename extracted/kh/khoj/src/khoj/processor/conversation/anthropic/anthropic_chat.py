@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import AsyncGenerator, Dict, List, Optional
 
 import pyjson5
-from langchain.schema import ChatMessage
+from langchain_core.messages.chat import ChatMessage
 
 from khoj.database.models import Agent, ChatModel, KhojUser
 from khoj.processor.conversation import prompts
@@ -14,7 +14,10 @@ from khoj.processor.conversation.anthropic.utils import (
     format_messages_for_anthropic,
 )
 from khoj.processor.conversation.utils import (
+    OperatorRun,
+    ResponseWithThought,
     clean_json,
+    construct_question_history,
     construct_structured_message,
     generate_chatml_messages_with_context,
     messages_to_print,
@@ -52,13 +55,7 @@ def extract_questions_anthropic(
     username = prompts.user_name.format(name=user.get_full_name()) if user and user.get_full_name() else ""
 
     # Extract Past User Message and Inferred Questions from Conversation Log
-    chat_history = "".join(
-        [
-            f'User: {chat["intent"]["query"]}\nAssistant: {{"queries": {chat["intent"].get("inferred-queries") or list([chat["intent"]["query"]])}}}\nA: {chat["message"]}\n\n'
-            for chat in conversation_log.get("chat", [])[-4:]
-            if chat["by"] == "khoj"
-        ]
-    )
+    chat_history = construct_question_history(conversation_log, query_prefix="User", agent_name="Assistant")
 
     # Get dates relative to today for prompt creation
     today = datetime.today()
@@ -139,10 +136,11 @@ def anthropic_send_message_to_model(
 
 
 async def converse_anthropic(
-    references,
-    user_query,
+    user_query: str,
+    references: list[dict],
     online_results: Optional[Dict[str, Dict]] = None,
     code_results: Optional[Dict[str, Dict]] = None,
+    operator_results: Optional[List[OperatorRun]] = None,
     conversation_log={},
     model: Optional[str] = "claude-3-7-sonnet-latest",
     api_key: Optional[str] = None,
@@ -162,7 +160,7 @@ async def converse_anthropic(
     generated_asset_results: Dict[str, Dict] = {},
     deepthought: Optional[bool] = False,
     tracer: dict = {},
-) -> AsyncGenerator[str, None]:
+) -> AsyncGenerator[str | ResponseWithThought, None]:
     """
     Converse with user using Anthropic's Claude
     """
@@ -213,6 +211,13 @@ async def converse_anthropic(
         context_message += (
             f"{prompts.code_executed_context.format(code_results=truncate_code_context(code_results))}\n\n"
         )
+    if ConversationCommand.Operator in conversation_commands and not is_none_or_empty(operator_results):
+        operator_content = [
+            {"query": oc.query, "response": oc.response, "webpages": oc.webpages} for oc in operator_results
+        ]
+        context_message += (
+            f"{prompts.operator_execution_context.format(operator_results=yaml_dump(operator_content))}\n\n"
+        )
     context_message = context_message.strip()
 
     # Setup Prompt with Primer or Conversation History
@@ -247,7 +252,8 @@ async def converse_anthropic(
         deepthought=deepthought,
         tracer=tracer,
     ):
-        full_response += chunk
+        if chunk.response:
+            full_response += chunk.response
         yield chunk
 
     # Call completion_func once finish streaming and we have the full response

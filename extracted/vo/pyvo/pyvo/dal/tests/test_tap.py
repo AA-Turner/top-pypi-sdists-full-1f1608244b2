@@ -7,6 +7,7 @@ from contextlib import ExitStack
 import datetime
 import re
 from io import BytesIO, StringIO
+from unittest.mock import Mock
 from urllib.parse import parse_qsl
 import tempfile
 
@@ -135,7 +136,10 @@ class MockAsyncTAPServer:
         self._jobs = dict()
 
     def validator(self, request):
-        pass
+        data = dict(parse_qsl(request.body))
+        if 'QUERY' in data:
+            if "select" not in data['QUERY'].casefold():
+                raise DALQueryError("Missing select")
 
     def use(self, mocker):
         with ExitStack() as stack:
@@ -199,7 +203,7 @@ class MockAsyncTAPServer:
         context.status_code = 303
         context.reason = 'See other'
         context.headers['Location'] = (
-            'http://example.com/tap/async/{}'.format(newid))
+            f'http://example.com/tap/async/{newid}')
 
         self._jobs[newid] = job
 
@@ -280,7 +284,7 @@ class MockAsyncTAPServer:
                         uploads1.update(uploads2)
 
                         param.content = ';'.join([
-                            '{}={}'.format(key, value) for key, value
+                            f'{key}={value}' for key, value
                             in uploads1.items()
                         ])
 
@@ -352,6 +356,12 @@ class MockAsyncTAPServer:
 
 @pytest.fixture()
 def async_fixture(mocker):
+    mock_server = MockAsyncTAPServer()
+    yield from mock_server.use(mocker)
+
+
+@pytest.fixture()
+def async_fixture_with_timeout(mocker):
     mock_server = MockAsyncTAPServer()
     yield from mock_server.use(mocker)
 
@@ -533,10 +543,27 @@ class TestTAPService:
     @pytest.mark.filterwarnings("ignore::astropy.io.votable.exceptions.W27")
     @pytest.mark.filterwarnings("ignore::astropy.io.votable.exceptions.W48")
     @pytest.mark.filterwarnings("ignore::astropy.io.votable.exceptions.W06")
-    def test_run_async(self):
+    def test_run_async(self, monkeypatch):
         service = TAPService('http://example.com/tap')
-        results = service.run_async("SELECT * FROM ivoa.obscore")
+        mock_delete = Mock()
+        monkeypatch.setattr(AsyncTAPJob, "delete", mock_delete)
+        results = service.run_async("SELECT * FROM ivoa.obscore", delete=False)
         _test_image_results(results)
+        # make sure that delete was not called
+        mock_delete.assert_not_called()
+
+    @pytest.mark.usefixtures('async_fixture')
+    @pytest.mark.filterwarnings("ignore::astropy.io.votable.exceptions.W27")
+    @pytest.mark.filterwarnings("ignore::astropy.io.votable.exceptions.W48")
+    @pytest.mark.filterwarnings("ignore::astropy.io.votable.exceptions.W06")
+    def test_run_async_on_error(self, monkeypatch):
+        service = TAPService('http://example.com/tap')
+        mock_delete = Mock()
+        monkeypatch.setattr(AsyncTAPJob, "delete", mock_delete)
+        with pytest.raises(DALQueryError):
+            service.run_async("bad query", delete=True)
+            # make sure that the job is deleted even with a bad query
+            mock_delete.assert_called_once()
 
     @pytest.mark.usefixtures('async_fixture')
     def test_submit_job(self):
@@ -739,6 +766,103 @@ class TestTAPService:
             prototype.deactivate_features('cadc-tb-upload')
 
     @pytest.mark.usefixtures('async_fixture')
+    def test_job_no_result(self):
+        service = TAPService('http://example.com/tap')
+        job = service.submit_job("SELECT * FROM ivoa.obscore")
+        with pytest.raises(DALServiceError) as excinfo:
+            job.fetch_result()
+
+        assert "No result URI available" in str(excinfo.value)
+        job.delete()
+
+    @pytest.mark.usefixtures('async_fixture')
+    def test_fetch_result_network_error(self):
+        service = TAPService('http://example.com/tap')
+        job = service.submit_job("SELECT * FROM ivoa.obscore")
+        job.run()
+        job.wait()
+        status_response = '''<?xml version="1.0" encoding="UTF-8"?>
+            <uws:job xmlns:uws="http://www.ivoa.net/xml/UWS/v1.0"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <uws:jobId>1</uws:jobId>
+                <uws:phase>COMPLETED</uws:phase>
+                <uws:results>
+                    <uws:result id="result" xsi:type="vot:VOTable"
+                        href="http://example.com/tap/async/1/results/result"/>
+                </uws:results>
+            </uws:job>'''
+
+        with requests_mock.Mocker() as rm:
+            rm.get(f'http://example.com/tap/async/{job.job_id}',
+                   text=status_response)
+            rm.get(
+                f'http://example.com/tap/async/{job.job_id}/results/result',
+                exc=requests.exceptions.ConnectTimeout
+            )
+
+            with pytest.raises(DALServiceError) as excinfo:
+                job.fetch_result()
+
+            assert "Unknown service error" in str(excinfo.value)
+
+        job.delete()
+
+    @pytest.mark.usefixtures('async_fixture')
+    def test_job_no_result_uri(self):
+        status_response = '''<?xml version="1.0" encoding="UTF-8"?>
+            <uws:job xmlns:uws="http://www.ivoa.net/xml/UWS/v1.0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <uws:jobId>1</uws:jobId>
+                <uws:phase>COMPLETED</uws:phase>
+                <uws:results>
+                    <uws:result id="diag" xlink:href="uws:executing:10"/>
+                </uws:results>
+            </uws:job>'''
+
+        service = TAPService('http://example.com/tap')
+        job = service.submit_job("SELECT * FROM ivoa.obscore")
+        job.run()
+        job.wait()
+
+        with requests_mock.Mocker() as rm:
+            rm.get(f'http://example.com/tap/async/{job.job_id}',
+                   text=status_response)
+            job._update()
+            with pytest.raises(DALServiceError) as excinfo:
+                job.fetch_result()
+
+            assert "No result URI available" in str(excinfo.value)
+
+        job.delete()
+
+    @pytest.mark.usefixtures('async_fixture')
+    def test_job_with_empty_error(self):
+        error_response = '''<?xml version="1.0" encoding="UTF-8"?>
+            <uws:job xmlns:uws="http://www.ivoa.net/xml/UWS/v1.0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <uws:jobId>1</uws:jobId>
+                <uws:phase>ERROR</uws:phase>
+                <uws:results/>
+                <uws:errorSummary>
+                    <uws:message></uws:message>
+                </uws:errorSummary>
+            </uws:job>'''
+
+        service = TAPService('http://example.com/tap')
+        job = service.submit_job("SELECT * FROM ivoa.obscore")
+        job.run()
+        job.wait()
+
+        with requests_mock.Mocker() as rm:
+            rm.get(f'http://example.com/tap/async/{job.job_id}',
+                   text=error_response)
+            job._update()
+            with pytest.raises(DALQueryError) as excinfo:
+                job.fetch_result()
+
+            assert "<No useful error from server>" in str(excinfo.value)
+
+    @pytest.mark.usefixtures('async_fixture')
     def test_endpoint_503_with_retry_after(self):
         service = TAPService('http://example.com/tap')
 
@@ -827,7 +951,7 @@ class TestTAPCapabilities:
     def test_get_featurelist(self, tapservice):
         features = tapservice.get_tap_capability().get_adql().get_feature_list(
             "ivo://ivoa.net/std/TAPRegExt#features-adqlgeo")
-        assert set(f.form for f in features) == {
+        assert {f.form for f in features} == {
             'CENTROID', 'CONTAINS', 'COORD1', 'POLYGON',
             'INTERSECTS', 'COORD2', 'BOX', 'AREA', 'DISTANCE',
             'REGION', 'CIRCLE', 'POINT'}

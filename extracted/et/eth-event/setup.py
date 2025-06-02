@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 
 import platform
+from pathlib import Path
 from setuptools import setup, find_packages
 
+
+this_directory = Path(__file__).parent
+requirements = list(map(str.strip, (this_directory / "requirements.txt").read_text().splitlines()))
 
 if platform.python_implementation() != "CPython":
     # We only compile this library for CPython, other implementations will use it as normal interpreted python code
@@ -31,7 +35,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="eth-event",
-    version="1.3.0",  # do not edit directly, use bumpversion
+    version="1.3.1",  # do not edit directly, use bumpversion
     license="MIT",
     description="Ethereum event decoder and topic generator",
     long_description=long_description,
@@ -47,14 +51,9 @@ setup(
     packages=find_packages(exclude=["tests", "tests.*"]),
     package_data={"eth_event": ["py.typed"]},
     python_requires=">=3.8,<4",
-    install_requires=[
-        "cchecksum>=0.2.6,<0.3",
-        "eth-abi>=4,<6",
-        "eth-hash[pycryptodome]>=0.2.0,<1.0.0",
-        "hexbytes>=1,<2",
-    ],
+    install_requires=requirements,
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Build Tools",
         "License :: OSI Approved :: MIT License",

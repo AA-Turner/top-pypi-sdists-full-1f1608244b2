@@ -1,6 +1,5 @@
 import json
-from itertools import chain
-from typing import TypedDict, cast
+from typing import Sequence, TypedDict, cast
 
 from openai.types.responses import (
     FunctionToolParam,
@@ -8,6 +7,8 @@ from openai.types.responses import (
     ResponseComputerToolCallParam,
     ResponseFunctionToolCall,
     ResponseFunctionToolCallParam,
+    ResponseFunctionWebSearch,
+    ResponseFunctionWebSearchParam,
     ResponseInputContentParam,
     ResponseInputImageParam,
     ResponseInputItemParam,
@@ -51,6 +52,7 @@ from inspect_ai.model._openai_computer_use import (
     maybe_computer_use_preview_tool,
     tool_call_from_openai_computer_tool_call,
 )
+from inspect_ai.model._openai_web_search import maybe_web_search_tool
 from inspect_ai.tool._tool_call import ToolCall
 from inspect_ai.tool._tool_choice import ToolChoice
 from inspect_ai.tool._tool_info import ToolInfo
@@ -174,6 +176,12 @@ def openai_responses_chat_choices(
     return [ChatCompletionChoice(message=message, stop_reason=stop_reason)]
 
 
+def is_native_tool_configured(
+    tools: Sequence[ToolInfo], config: GenerateConfig
+) -> bool:
+    return any(_maybe_native_tool_param(tool, config) is not None for tool in tools)
+
+
 # The next two function perform transformations between OpenAI types an Inspect
 # ChatMessageAssistant. Here is a diagram that helps visualize the transforms.
 # ┌───────────────────────────┐    ┌───────────────────────────┐    ┌───────────────────────────┐
@@ -207,7 +215,6 @@ def openai_responses_chat_choices(
 
 
 class _AssistantInternal(TypedDict):
-    output_message_id: str | None
     tool_message_ids: dict[str, str]
 
 
@@ -237,17 +244,17 @@ def _chat_message_assistant_from_openai_response(
     # collect output and tool calls
     message_content: list[Content] = []
     tool_calls: list[ToolCall] = []
-    internal = _AssistantInternal(output_message_id=None, tool_message_ids={})
+    internal = _AssistantInternal(tool_message_ids={})
     for output in response.output:
         match output:
             case ResponseOutputMessage(content=content, id=id):
-                assert internal["output_message_id"] is None, "Multiple message outputs"
-                internal["output_message_id"] = id
                 message_content.extend(
                     [
-                        ContentText(text=c.text)
+                        ContentText(text=c.text, internal={"id": id})
                         if isinstance(c, ResponseOutputText)
-                        else ContentText(text=c.refusal, refusal=True)
+                        else ContentText(
+                            text=c.refusal, refusal=True, internal={"id": id}
+                        )
                         for c in content
                     ]
                 )
@@ -277,6 +284,13 @@ def _chat_message_assistant_from_openai_response(
                         tool_calls.append(
                             tool_call_from_openai_computer_tool_call(output)
                         )
+                    case ResponseFunctionWebSearch():
+                        # We don't currently capture this since the model did the
+                        # "tool call" internally. It's conceivable that could be
+                        # forced to include it in `.internal` in the future, but
+                        # for now we just ignore it.
+                        # {"id":"ws_682cdcec3fa88198bc10b38fafefbd5e077e89e31fd4a3d5","status":"completed","type":"web_search_call"}
+                        pass
                     case _:
                         raise ValueError(f"Unexpected output type: {output.__class__}")
 
@@ -304,25 +318,39 @@ def _openai_input_items_from_chat_message_assistant(
     field of the `ChatMessageAssistant` to help it provide the proper id's the
     items in the returned list.
     """
-    (output_message_id, tool_message_ids) = _ids_from_assistant_internal(message)
+    tool_message_ids = _ids_from_assistant_internal(message)
 
     # we want to prevent yielding output messages in the case where we have an
     # 'internal' field (so the message came from the model API as opposed to
-    # being user synthesized) AND there is no output_message_id (indicating that
-    # when reading the message from the server we didn't find output). this could
-    # happen e.g. when a react() agent sets the output.completion in response
+    # being user synthesized) AND there are no ContentText items with message IDs
+    # (indicating that when reading the message from the server we didn't find output).
+    # this could happen e.g. when a react() agent sets the output.completion in response
     # to a submit() tool call
-    suppress_output_message = message.internal is not None and output_message_id is None
+    content_items: list[ContentText | ContentReasoning] = (
+        [ContentText(text=message.content)]
+        if isinstance(message.content, str)
+        else [
+            c for c in message.content if isinstance(c, ContentText | ContentReasoning)
+        ]
+    )
+    has_content_with_ids = any(
+        isinstance(c, ContentText)
+        and isinstance(c.internal, dict)
+        and "id" in c.internal
+        for c in content_items
+    )
+    suppress_output_message = message.internal is not None and not has_content_with_ids
 
     # if we are not storing messages on the server then blank these out
     if not store:
-        output_message_id = None
         tool_message_ids = {}
 
-    # items to return -- ensure we use a single output message (and just chain
-    # additional content on to it)
+    # items to return
     items: list[ResponseInputItemParam] = []
-    output_message: ResponseOutputMessageParam | None = None
+    # group content by message ID
+    messages_by_id: dict[
+        str | None, list[ResponseOutputTextParam | ResponseOutputRefusalParam]
+    ] = {}
 
     for content in (
         list[ContentText | ContentReasoning]([ContentText(text=message.content)])
@@ -352,6 +380,14 @@ def _openai_input_items_from_chat_message_assistant(
                 if suppress_output_message:
                     continue
 
+                # get the message ID from ContentText.modelJson
+                content_message_id: str | None = None
+                if isinstance(content.internal, dict) and "id" in content.internal:
+                    id_value = content.internal["id"]
+                    content_message_id = id_value if isinstance(id_value, str) else None
+                else:
+                    content_message_id = None
+
                 new_content = (
                     ResponseOutputRefusalParam(type="refusal", refusal=text)
                     if refusal
@@ -359,22 +395,24 @@ def _openai_input_items_from_chat_message_assistant(
                         type="output_text", text=text, annotations=[]
                     )
                 )
-                if output_message is None:
-                    output_message = ResponseOutputMessageParam(
-                        type="message",
-                        role="assistant",
-                        # this actually can be `None`, and it will in fact be `None` when the
-                        # assistant message is synthesized by the scaffold as opposed to being
-                        # replayed from the model (or when store=False)
-                        id=output_message_id,  # type: ignore[typeddict-item]
-                        content=[new_content],
-                        status="completed",
-                    )
-                    items.append(output_message)
-                else:
-                    output_message["content"] = chain(
-                        output_message["content"], [new_content]
-                    )
+
+                if content_message_id not in messages_by_id:
+                    messages_by_id[content_message_id] = []
+                messages_by_id[content_message_id].append(new_content)
+
+    # create ResponseOutputMessage for each unique ID
+    for msg_id, content_list in messages_by_id.items():
+        output_message = ResponseOutputMessageParam(
+            type="message",
+            role="assistant",
+            # this actually can be `None`, and it will in fact be `None` when the
+            # assistant message is synthesized by the scaffold as opposed to being
+            # replayed from the model (or when store=False)
+            id=msg_id,  # type: ignore[typeddict-item]
+            content=content_list,
+            status="completed",
+        )
+        items.append(output_message)
 
     return items + _tool_call_items_from_assistant_message(message, tool_message_ids)
 
@@ -399,7 +437,7 @@ def _maybe_native_tool_param(
 ) -> ToolParam | None:
     return (
         (
-            maybe_computer_use_preview_tool(tool)
+            maybe_computer_use_preview_tool(tool) or maybe_web_search_tool(tool)
             # or self.text_editor_tool_param(tool)
             # or self.bash_tool_param(tool)
         )
@@ -442,22 +480,23 @@ def _tool_call_items_from_assistant_message(
 
 def _ids_from_assistant_internal(
     message: ChatMessageAssistant,
-) -> tuple[str | None, dict[str, str]]:
+) -> dict[str, str]:
     if message.internal is not None:
         assert isinstance(message.internal, dict), (
             "OpenAI ChatMessageAssistant internal must be an _AssistantInternal"
         )
         internal = cast(_AssistantInternal, message.internal)
-        return (internal["output_message_id"], internal["tool_message_ids"])
+        return internal["tool_message_ids"]
     else:
-        return None, {}
+        return {}
 
 
 _ResponseToolCallParam = (
-    ResponseFunctionToolCallParam | ResponseComputerToolCallParam
+    ResponseFunctionToolCallParam
+    | ResponseComputerToolCallParam
+    | ResponseFunctionWebSearchParam
     # | ResponseFileSearchToolCallParam
     # | ResponseFunctionToolCallParam
-    # | ResponseFunctionWebSearchParam
 )
 
 

@@ -290,7 +290,7 @@ class TaskState:
         return self._tools
 
     @tools.setter
-    def tools(self, tools: list[Tool | ToolDef]) -> None:
+    def tools(self, tools: Sequence[Tool | ToolDef]) -> None:
         self._tools.clear()
         for tool in tools:
             self._tools.append(tool if isinstance(tool, Tool) else tool.as_tool())
@@ -353,7 +353,7 @@ class TaskState:
     def completed(self) -> bool:
         """Is the task completed.
 
-        Additionally, checks message and token limits and raises if they are exceeded, and also checks for an operator interrupt of the sample.
+        Additionally, checks for an operator interrupt of the sample.
         """
         from inspect_ai.log._samples import set_active_sample_total_messages
 

@@ -151,7 +151,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
         returns tables as a dict-like object
         """
         if self._tables is None:
-            tables_url = '{}/tables'.format(self.baseurl)
+            tables_url = f'{self.baseurl}/tables'
 
             response = self._session.get(tables_url, params={"detail": "min"}, stream=True)
 
@@ -205,7 +205,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
         returns examples as a list of TAPQuery objects
         """
         if self._examples is None:
-            examples_url = '{}/examples'.format(self.baseurl)
+            examples_url = f'{self.baseurl}/examples'
 
             self._examples = self._parse_examples(examples_url)
         return self._examples
@@ -286,7 +286,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
 
     def run_async(
             self, query, *, language="ADQL", maxrec=None, uploads=None,
-            **keywords):
+            delete=True, **keywords):
         """
         runs async query and returns its result
 
@@ -301,6 +301,8 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
             the maximum records to return. defaults to the service default
         uploads : dict
             a mapping from table names to objects containing a votable
+        delete : bool
+            delete the job after fetching the results
 
         Returns
         -------
@@ -325,9 +327,18 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
             self.baseurl, query, language=language, maxrec=maxrec, uploads=uploads,
             session=self._session, **keywords)
         job = job.run().wait()
-        job.raise_if_error()
+
+        try:
+            job.raise_if_error()
+        except DALQueryError:
+            if delete:
+                job.delete()
+            raise
+
         result = job.fetch_result()
-        job.delete()
+
+        if delete:
+            job.delete()
 
         return result
 
@@ -445,7 +456,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
                 after = _from_ivoa_format(after)
             params['AFTER'] = after.strftime(IVOA_DATETIME_FORMAT)
 
-        response = self._session.get('{}/async'.format(self.baseurl),
+        response = self._session.get(f'{self.baseurl}/async',
                                      params=params,
                                      stream=True)
         response.raw.read = partial(response.raw.read, decode_content=True)
@@ -510,7 +521,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
                 format(format, ' '.join(TABLE_DEF_FORMAT.keys())))
 
         headers = {'Content-Type': TABLE_DEF_FORMAT[format]}
-        response = self._session.put('{}/tables/{}'.format(self.baseurl, name),
+        response = self._session.put(f'{self.baseurl}/tables/{name}',
                                      headers=headers,
                                      data=definition)
         response.raise_for_status()
@@ -532,7 +543,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
                 format(name))
 
         response = self._session.delete(
-            '{}/tables/{}'.format(self.baseurl, name))
+            f'{self.baseurl}/tables/{name}')
         response.raise_for_status()
 
     @prototype_feature('cadc-tb-upload')
@@ -561,7 +572,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
 
         headers = {'Content-Type': TABLE_UPLOAD_FORMAT[format]}
         response = self._session.post(
-            '{}/load/{}'.format(self.baseurl, name),
+            f'{self.baseurl}/load/{name}',
             headers=headers,
             data=source)
         response.raise_for_status()
@@ -585,7 +596,7 @@ class TAPService(DALService, AvailabilityMixin, CapabilityMixin):
                 'table and column names are required in index: {}/{}'.
                 format(table_name, column_name))
 
-        result = self._session.post('{}/table-update'.format(self.baseurl),
+        result = self._session.post(f'{self.baseurl}/table-update',
                                     data={'table': table_name,
                                           'index': column_name,
                                           'unique': 'true' if unique
@@ -645,7 +656,7 @@ class AsyncTAPJob:
         job = cls(response.url, session=session)
         return job
 
-    def __init__(self, url, *, session=None):
+    def __init__(self, url, *, session=None, delete=True):
         """
         initialize the job object with the given url and fetch remote values
 
@@ -653,9 +664,14 @@ class AsyncTAPJob:
         ----------
         url : str
             the job url
+        session : object, optional
+            session to use for network requests
+        delete : bool, optional
+            whether to delete the job when exiting (default: True)
         """
         self._url = url
         self._session = use_session(session)
+        self._delete_on_exit = delete
         self._update()
 
     def __enter__(self):
@@ -666,12 +682,15 @@ class AsyncTAPJob:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """
-        Exits the context. The job is silently deleted.
+        Exits the context. Unless delete=False was set at initialization,
+        the job is deleted. Any deletion errors are silently ignored
+        to ensure proper context exit.
         """
-        try:
-            self.delete()
-        except Exception:
-            pass
+        if self._delete_on_exit:
+            try:
+                self.delete()
+            except DALServiceError:
+                pass
 
     def _update(self, wait_for_statechange=False, timeout=10.):
         """
@@ -738,7 +757,7 @@ class AsyncTAPJob:
     def execution_duration(self, value):
         try:
             response = self._session.post(
-                "{}/executionduration".format(self.url),
+                f"{self.url}/executionduration",
                 data={"EXECUTIONDURATION": str(value)})
             response.raise_for_status()
         except requests.RequestException as ex:
@@ -771,7 +790,7 @@ class AsyncTAPJob:
 
         try:
             response = self._session.post(
-                "{}/destruction".format(self.url),
+                f"{self.url}/destruction",
                 data={"DESTRUCTION": value.strftime(IVOA_DATETIME_FORMAT)})
             response.raise_for_status()
         except requests.RequestException as ex:
@@ -810,7 +829,7 @@ class AsyncTAPJob:
     def query(self, query):
         try:
             response = self._session.post(
-                '{}/parameters'.format(self.url),
+                f'{self.url}/parameters',
                 data={"QUERY": query})
             response.raise_for_status()
         except requests.RequestException as ex:
@@ -831,7 +850,7 @@ class AsyncTAPJob:
 
         try:
             response = self._session.post(
-                '{}/parameters'.format(self.url),
+                f'{self.url}/parameters',
                 data={'UPLOAD': uploads.param()},
                 files=files
             )
@@ -851,14 +870,14 @@ class AsyncTAPJob:
     @property
     def result(self):
         """
-        The job result if exists
+        Returns the UWS result with id='result' if it exists, otherwise None.
         """
         try:
             for r in self._job.results:
                 if r.id_ == 'result':
                     return r
 
-            return self._job.results[0]
+            return None
         except IndexError:
             return None
 
@@ -875,7 +894,10 @@ class AsyncTAPJob:
         the uri of the result
         """
         try:
-            uri = self.result.href
+            result = self.result
+            if result is None:
+                return None
+            uri = result.href
             if not urlparse(uri).netloc:
                 uri = urljoin(self.url, uri)
             return uri
@@ -902,7 +924,7 @@ class AsyncTAPJob:
         """
         try:
             response = self._session.post(
-                '{}/phase'.format(self.url), data={"PHASE": "RUN"})
+                f'{self.url}/phase', data={"PHASE": "RUN"})
             response.raise_for_status()
         except requests.RequestException as ex:
             raise DALServiceError.from_except(ex, self.url)
@@ -915,7 +937,7 @@ class AsyncTAPJob:
         """
         try:
             response = self._session.post(
-                '{}/phase'.format(self.url), data={"PHASE": "ABORT"})
+                f'{self.url}/phase', data={"PHASE": "ABORT"})
             response.raise_for_status()
         except requests.RequestException as ex:
             raise DALServiceError.from_except(ex, self.url)
@@ -999,6 +1021,13 @@ class AsyncTAPJob:
         """
         returns the result votable if query is finished
         """
+        result_uri = self.result_uri
+        if result_uri is None:
+            self._update()
+            self.raise_if_error()
+            raise DALServiceError(reason="No result URI available",
+                                  url=self.url)
+
         try:
             response = self._session.get(self.result_uri, stream=True)
             response.raise_for_status()
@@ -1083,7 +1112,7 @@ class TAPQuery(DALQuery):
         queries.
 
         """
-        return '{baseurl}/{mode}'.format(baseurl=self.baseurl, mode=self._mode)
+        return f'{self.baseurl}/{self._mode}'
 
     def execute_stream(self, *, post=False):
         """
