@@ -1,4 +1,4 @@
-#   Copyright 2014-2023 Darsh Ranjan and plyfile authors.
+#   Copyright 2014-2025 Darsh Ranjan and plyfile authors.
 #
 #   This file is part of python-plyfile.
 #
@@ -1411,7 +1411,7 @@ def _read_array(stream, dtype, n):
         If `n` elements could not be read.
     """
     try:
-        size = int(_np.dtype(dtype).itemsize * n)
+        size = int(_np.dtype(dtype).itemsize) * int(n)
         return _np.frombuffer(stream.read(size), dtype)
     except Exception:
         raise StopIteration

@@ -1,8 +1,9 @@
 from setuptools import setup
 
 setup(name='panphon',
-      version='0.22.0',
-      description='Tools for using the International Phonetic Alphabet with phonological features',
+      version='0.22.1',
+      description='Tools for using the International Phonetic Alphabet ' +
+      'with phonological features',
       url='https://github.com/dmort27/panphon',
       download_url='https://github.com/dmort27/panphon/archive/0.21.1.tar.gz',
       long_description=open('README.md', encoding='utf-8').read(),
@@ -16,7 +17,8 @@ setup(name='panphon',
                         'regex',
                         'numpy>=1.20.2',
                         'editdistance',
-                        'munkres'],
+                        'munkres',
+                        'pandas',],
       scripts=['panphon/bin/validate_ipa.py',
                'panphon/bin/align_wordlists.py',
                'panphon/bin/generate_ipa_all.py'],

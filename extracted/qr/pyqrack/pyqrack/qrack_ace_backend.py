@@ -3,6 +3,7 @@
 # Use of this source code is governed by an MIT-style license that can be
 # found in the LICENSE file or at https://opensource.org/licenses/MIT.
 import math
+import os
 import random
 import sys
 import time
@@ -18,6 +19,12 @@ try:
     from qiskit.quantum_info.operators.symplectic.clifford import Clifford
 except ImportError:
     _IS_QISKIT_AVAILABLE = False
+
+_IS_QISKIT_AER_AVAILABLE = True
+try:
+    from qiskit_aer.noise import NoiseModel, depolarizing_error
+except ImportError:
+    _IS_QISKIT_AER_AVAILABLE = False
 
 
 class QrackAceBackend:
@@ -42,7 +49,7 @@ class QrackAceBackend:
     def __init__(
         self,
         qubit_count=1,
-        long_range_columns=2,
+        long_range_columns=-1,
         alternating_codes=True,
         reverse_row_and_col=False,
         isTensorNetwork=False,
@@ -50,8 +57,6 @@ class QrackAceBackend:
         isBinaryDecisionTree=False,
         toClone=None,
     ):
-        if long_range_columns < 0:
-            long_range_columns = 0
         if qubit_count < 0:
             qubit_count = 0
         if toClone:
@@ -59,14 +64,18 @@ class QrackAceBackend:
             long_range_columns = toClone.long_range_columns
 
         self._factor_width(qubit_count, reverse_row_and_col)
-        self.alternating_codes = alternating_codes
+        if long_range_columns < 0:
+            long_range_columns = 3 if (self.row_length % 3) == 1 else 2
         self.long_range_columns = long_range_columns
+
+        self.alternating_codes = alternating_codes
         self._is_init = [False] * qubit_count
+        self._coupling_map = None
 
         # If there's only one or zero "False" columns,
         # the entire simulator is connected, anyway.
         if (long_range_columns + 1) >= self.row_length:
-            self._is_col_long_range = [True] * long_range_columns
+            self._is_col_long_range = [True] * self.row_length
         else:
             col_seq = [True] * long_range_columns + [False]
             len_col_seq = len(col_seq)
@@ -95,6 +104,10 @@ class QrackAceBackend:
                 isBinaryDecisionTree=isBinaryDecisionTree,
             )
         )
+
+        # You can still "monkey-patch" this, after the constructor.
+        if "QRACK_QUNIT_SEPARABILITY_THRESHOLD" not in os.environ:
+            self.sim.set_sdrp(0.03)
 
     def clone(self):
         return QrackAceBackend(toClone=self)
@@ -204,6 +217,12 @@ class QrackAceBackend:
             # Decode entangled-first
             self.sim.mcx([hq[0]], hq[1])
         self._cx_shadow(hq[0], hq[2])
+
+    def _encode_decode_1qb(self, lq, hq):
+        if not self.alternating_codes or not ((lq // self.row_length) & 1):
+            self.sim.mcx([hq[0]], hq[1])
+        else:
+            self.sim.mcx([hq[2]], hq[1])
 
     def _correct(self, lq):
         if not self._is_init[lq]:
@@ -333,12 +352,15 @@ class QrackAceBackend:
 
         if not math.isclose(ph, -lm) and not math.isclose(abs(ph), math.pi / 2):
             # Produces/destroys superposition
-            self._correct_if_like_h(th, lq)
-            self._decode(lq, hq)
+            if self._is_init[lq]:
+                self._correct_if_like_h(th, lq)
+                self._encode_decode_1qb(lq, hq)
             self.sim.u(hq[0], th, ph, lm)
-            if not self._is_init[lq]:
-                self.sim.u(hq[2], th, ph, lm)
-            self._encode(lq, hq)
+            self.sim.u(hq[2], th, ph, lm)
+            if self._is_init[lq]:
+                self._encode_decode_1qb(lq, hq)
+            else:
+                self._encode(lq, hq)
         else:
             # Shouldn't produce/destroy superposition
             for b in hq:
@@ -354,7 +376,7 @@ class QrackAceBackend:
             th -= 2 * math.pi
         while th <= -math.pi:
             th += 2 * math.pi
-        if p == Pauli.PauliY:
+        if self._is_init[lq] and (p == Pauli.PauliY):
             self._correct_if_like_h(th, lq)
 
         if (p == Pauli.PauliZ) or math.isclose(abs(th), math.pi):
@@ -363,11 +385,14 @@ class QrackAceBackend:
                 self.sim.r(p, th, b)
         else:
             # Produces/destroys superposition
-            self._decode(lq, hq)
+            if self._is_init[lq]:
+                self._encode_decode_1qb(lq, hq)
             self.sim.r(p, th, hq[0])
-            if not self._is_init[lq]:
-                self.sim.r(p, th, hq[2])
-            self._encode(lq, hq)
+            self.sim.r(p, th, hq[2])
+            if self._is_init[lq]:
+                self._encode_decode_1qb(lq, hq)
+            else:
+                self._encode(lq, hq)
 
     def h(self, lq):
         hq = self._unpack(lq)
@@ -375,11 +400,15 @@ class QrackAceBackend:
             self.sim.h(hq[0])
             return
 
-        self._decode(lq, hq)
+        if self._is_init[lq]:
+            self._correct(lq)
+            self._encode_decode_1qb(lq, hq)
         self.sim.h(hq[0])
-        if not self._is_init[lq]:
-            self.sim.h(hq[2])
-        self._encode(lq, hq)
+        self.sim.h(hq[2])
+        if self._is_init[lq]:
+            self._encode_decode_1qb(lq, hq)
+        else:
+            self._encode(lq, hq)
 
     def s(self, lq):
         hq = self._unpack(lq)
@@ -472,14 +501,14 @@ class QrackAceBackend:
         while self._is_col_long_range[c] and (len(connected_cols) < (self.row_length - 1)):
             connected_cols.append(c)
             c = (c - 1) % self.row_length
-        if len(connected_cols) < self.row_length:
+        if len(connected_cols) < (self.row_length - 1):
             connected_cols.append(c)
         boundary = len(connected_cols)
         c = (lq1_col + 1) % self.row_length
         while self._is_col_long_range[c] and (len(connected_cols) < (self.row_length - 1)):
             connected_cols.append(c)
             c = (c + 1) % self.row_length
-        if len(connected_cols) < self.row_length:
+        if len(connected_cols) < (self.row_length - 1):
             connected_cols.append(c)
 
         if lq1_lr and lq2_lr:
@@ -1093,6 +1122,9 @@ class QrackAceBackend:
 
     # Mostly written by Dan, but with a little help from Elara (custom OpenAI GPT)
     def get_logical_coupling_map(self):
+        if self._coupling_map:
+            return self._coupling_map
+
         coupling_map = set()
         rows, cols = self.row_length, self.col_length
 
@@ -1106,13 +1138,13 @@ class QrackAceBackend:
             while self._is_col_long_range[c] and (len(connected_cols) < self.row_length):
                 connected_cols.append(c)
                 c = (c - 1) % cols
-            if len(connected_cols) < self._row_length:
+            if len(connected_cols) < self.row_length:
                 connected_cols.append(c)
             c = (col + 1) % cols
             while self._is_col_long_range[c] and (len(connected_cols) < self.row_length):
                 connected_cols.append(c)
                 c = (c + 1) % cols
-            if len(connected_cols) < self._row_length:
+            if len(connected_cols) < self.row_length:
                 connected_cols.append(c)
 
             for row in range(rows):
@@ -1123,4 +1155,53 @@ class QrackAceBackend:
                         if a != b:
                             coupling_map.add((a, b))
 
-        return sorted(coupling_map)
+        self._coupling_map = sorted(coupling_map)
+
+        return self._coupling_map
+
+    # Designed by Dan, and implemented by Elara:
+    def create_noise_model(self, x=0.25, y=0.25):
+        if not _IS_QISKIT_AER_AVAILABLE:
+            raise RuntimeError(
+                "Before trying to run_qiskit_circuit() with QrackAceBackend, you must install Qiskit Aer!"
+            )
+        noise_model = NoiseModel()
+
+        for a, b in self.get_logical_coupling_map():
+            col_a, col_b = a % self.row_length, b % self.row_length
+            row_a, row_b = a // self.row_length, b // self.row_length
+            is_long_a = self._is_col_long_range[col_a]
+            is_long_b = self._is_col_long_range[col_b]
+
+            if is_long_a and is_long_b:
+                continue  # No noise on long-to-long
+
+            same_col = col_a == col_b
+            even_odd = (row_a % 2) != (row_b % 2)
+
+            if same_col and not even_odd:
+                continue  # No noise for even-even or odd-odd within a boundary column
+
+            if same_col:
+                x_cy = 1 - (1 - x)**2
+                x_swap = 1 - (1 - x)**3
+                noise_model.add_quantum_error(depolarizing_error(x, 2), 'cx', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(x_cy, 2), 'cy', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(x_cy, 2), 'cz', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(x_swap, 2), 'swap', [a, b])
+            elif is_long_a or is_long_b:
+                y_cy = 1 - (1 - y)**2
+                y_swap = 1 - (1 - y)**3
+                noise_model.add_quantum_error(depolarizing_error(y, 2), 'cx', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(y_cy, 2), 'cy', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(y_cy, 2), 'cz', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(y_swap, 2), 'swap', [a, b])
+            else:
+                y_cy = 1 - (1 - y)**2
+                y_swap = 1 - (1 - y)**3
+                noise_model.add_quantum_error(depolarizing_error(y_cy, 2), 'cx', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(y_cy, 2), 'cy', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(y_cy, 2), 'cz', [a, b])
+                noise_model.add_quantum_error(depolarizing_error(y_swap, 2), 'swap', [a, b])
+
+        return noise_model

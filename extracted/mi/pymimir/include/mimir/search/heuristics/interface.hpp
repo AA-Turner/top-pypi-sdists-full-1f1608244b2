@@ -18,21 +18,32 @@
 #ifndef MIMIR_SEARCH_HEURISTICS_INTERFACE_HPP_
 #define MIMIR_SEARCH_HEURISTICS_INTERFACE_HPP_
 
+#include "mimir/formalism/declarations.hpp"
 #include "mimir/search/declarations.hpp"
 
 namespace mimir::search
 {
 
-/**
- * Interface class
- */
+/// @brief `PreferredActions` encapsulates the preferred actions.
+/// We need this because nanobind cannot return references to type-casted objects.
+/// Unfortunately, there is no bind_unordered_set available, which would allow making it an opague type.
+struct PreferredActions
+{
+    formalism::GroundActionSet data;
+};
 
+/// @brief `IHeuristic` is the interface of a search heuristic.
 class IHeuristic
 {
 public:
     virtual ~IHeuristic() = default;
 
     virtual ContinuousCost compute_heuristic(State state, bool is_goal_state) = 0;
+
+    virtual const PreferredActions& get_preferred_actions() const { return m_preferred_actions; }
+
+protected:
+    PreferredActions m_preferred_actions;
 };
 
 }

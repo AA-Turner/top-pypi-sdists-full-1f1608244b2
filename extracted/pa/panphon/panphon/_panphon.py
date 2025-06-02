@@ -5,14 +5,11 @@ import os.path
 import unicodedata
 from functools import reduce
 from importlib.resources import files
-from os import stat
+from typing import Iterable
 
-import numpy
+import numpy as np
+import pandas as pd
 import regex as re
-import unicodecsv as csv
-
-from panphon import featuretable
-from panphon.errors import SegmentError
 
 from . import xsampa
 
@@ -47,8 +44,10 @@ def segment_text(text, seg_regex=SEG_REGEX):
         yield m.group(0)
 
 
-def fts(s):
-    """Given string `s` with +/-[alphabetical sequence]s, return list of features.
+def fts(s: str) -> set[tuple]:
+    """
+    Given string `s` with +/-[alphabetical sequence]s, return list of
+    features.
 
     Args:
         s (str): string with segments of the sort "+son -syl 0cor"
@@ -56,7 +55,7 @@ def fts(s):
     Return:
         list: list of (value, feature) tuples
     """
-    return [m.groups() for m in FT_REGEX.finditer(s)]
+    return {m.groups() for m in FT_REGEX.finditer(s)}
 
 
 def pat(p):
@@ -100,7 +99,7 @@ def word2array(ft_names, word):
     def seg2col(seg):
         seg = dict([(k, v) for (v, k) in seg])
         return [vdict[seg[ft]] for ft in ft_names]
-    return numpy.array([seg2col(s) for s in word], order='F')
+    return np.array([seg2col(s) for s in word], order='F')
 
 
 class FeatureTable(object):
@@ -128,32 +127,44 @@ class FeatureTable(object):
     def normalize(data):
         return unicodedata.normalize('NFD', data)
 
-    def _read_table(self, filename):
-        """Read the data from data/ipa_all.csv into self.segments, a
-        list of 2-tuples of unicode strings and sets of feature tuples and
-        self.seg_dict, a dictionary mapping from unicode segments and sets of
-        feature tuples.
+    def _read_table(self, filename: str) -> tuple[
+        Iterable[tuple[str, list[tuple[str, str]]]],
+        dict[str, list[tuple[str, str]]],
+        list[str]
+    ]:
         """
-        filename = files('panphon').joinpath(filename)
-        segments = []
-        with open(filename, 'rb') as f:
-            reader = csv.reader(f, encoding='utf-8')
-            header = next(reader)
-            names = header[1:]
-            for row in reader:
-                seg = row[0]
-                vals = row[1:]
-                specs = set(zip(vals, names))
-                segments.append((seg, specs))
-        seg_dict = dict(segments)
-        return segments, seg_dict, names
+        Read the data from a CSV into:
+        - a zip iterator of (ipa, features) tuples,
+        - a dict mapping IPA strings to their features,
+        - and a list of feature names.
+        """
+        with files('panphon').joinpath(filename).open('rb') as f:
+            df = pd.read_csv(f)
 
-    def _read_weights(self, filename=os.path.join('data', 'feature_weights.csv')):
-        filename = files('panphon').joinpath(filename)
-        with open(filename, 'rb') as f:
-            reader = csv.reader(f, encoding='utf-8')
-            next(reader)
-            weights = [float(x) for x in next(reader)]
+        header: list[str] = list(df.columns)
+        names: list[str] = header[1:]
+
+        ft_dicts: list[dict[str, str]] = \
+            df[names].to_dict(orient='records')  # type: ignore
+
+        specs: list[list[tuple[str, str]]] = [
+            [(v, n) for n, v in ft_dict.items()]
+            for ft_dict in ft_dicts
+        ]
+
+        ipa: Iterable[str] = df['ipa']
+        segments: Iterable[tuple[str, list[tuple[str, str]]]] = \
+            zip(ipa, specs)
+        seg_dict: dict[str, list[tuple[str, str]]] = dict(segments)
+
+        return list(zip(ipa, specs))[1:], seg_dict, names
+
+    def _read_weights(self, filename=os.path.join(
+            'data', 'feature_weights.csv')
+    ):
+        with files('panphon').joinpath(filename).open() as f:
+            df = pd.read_csv(f)
+        weights = df.iloc[0].astype(float).tolist()
         return weights
 
     def _build_seg_regex(self):
@@ -161,7 +172,7 @@ class FeatureTable(object):
         segs = sorted(self.seg_dict.keys(), key=lambda x: len(x), reverse=True)
         return re.compile(r'(?P<all>{})'.format('|'.join(segs)))
 
-    def fts(self, segment):
+    def fts(self, segment: str) -> list[tuple[str, str]]:
         """Returns features corresponding to `segment` as list of (value,
         feature) tuples.
 
@@ -170,13 +181,11 @@ class FeatureTable(object):
                               Unicode IPA string.
 
         Returns:
-            set: set of (value, feature) tuples, if `segment` is valid; otherwise,
+            set: set of (value, feature) tuples, if `segment` is valid;
+            otherwise,
                  None
         """
-        if segment in self.seg_dict:
-            return self.seg_dict[segment]
-        else:
-            return None
+        return self.seg_dict.get(segment, [])
 
     def match(self, ft_mask, ft_seg):
         """Answer question "are `ft_mask`'s features a subset of ft_seg?"
@@ -190,7 +199,10 @@ class FeatureTable(object):
         """
         return set(ft_mask) <= set(ft_seg)
 
-    def fts_match(self, features, segment):
+    def fts_match(
+            self,
+            features: Iterable[tuple[str, str]],
+            segment: str | None):
         """Answer question "are `ft_mask`'s features a subset of ft_seg?"
 
         This is like `FeatureTable.match` except that it checks whether a
@@ -204,9 +216,10 @@ class FeatureTable(object):
             bool: True iff all features in `ft_mask` are also in `ft_seg`; None
                   if segment is not valid
         """
-        features = set(features)
-        if self.seg_known(segment):
-            return features <= self.fts(segment)
+        feature_set: set[tuple[str, str]] = set(features)
+        seg_fts: list[tuple[str, str]] | None = self.fts(segment)
+        if (segment is not None) and seg_fts is not None:
+            return feature_set <= set(seg_fts)
         else:
             return None
 
@@ -243,7 +256,6 @@ class FeatureTable(object):
             if match:
                 word = word[len(match.group(0)):]
             else:
-                # print('{}\t->\t{}\t'.format(orig, word).encode('utf-8'), file=sys.stderr)
                 return False
         return True
 
@@ -317,7 +329,7 @@ class FeatureTable(object):
                 word = word[1:]
         return segs
 
-    def filter_segs(self, segs):
+    def filter_segs(self, segs: list[str]) -> list[str]:
         """Given list of strings, return only those which are valid segments
 
         Args:
@@ -330,7 +342,8 @@ class FeatureTable(object):
         return list(filter(self.seg_known, segs))
 
     def filter_string(self, word):
-        """Return a string like the input but containing only legal IPA segments
+        """Return a string like the input but containing only legal IPA 
+        segments
 
         Args:
             word (unicode): input string to be filtered
@@ -343,7 +356,7 @@ class FeatureTable(object):
         segs = [m.group(0) for m in self.seg_regex.finditer(word)]
         return ''.join(segs)
 
-    def fts_intersection(self, segs):
+    def fts_intersection(self, segs: list[str]) -> set[tuple[str, str]]:
         """Return the features shared by `segs`
 
         Args:
@@ -353,8 +366,9 @@ class FeatureTable(object):
             set: set of (value, feature) tuples shared by the valid segments in
                  `segs`
         """
-        fts_vecs = [self.fts(s) for s in self.filter_segs(segs)]
-        return reduce(lambda a, b: a & b, fts_vecs)
+        fts_vecs: list[tuple[str, str]] | None = [
+            self.fts(s) for s in self.filter_segs(segs)]
+        return reduce(lambda a, b: set(a) & set(b), fts_vecs)
 
     def fts_match_any(self, fts, inv):
         """Return `True` if any segment in `inv` matches the features in `fts`
@@ -395,7 +409,11 @@ class FeatureTable(object):
             bool: `True` if two segments in `inv` are identical in features except
                   for feature `ft_name`
         """
-        inv_fts = [self.fts(x) for x in inv if set(fs) <= self.fts(x)]
+        inv_fts = [
+            set(self.fts(x))
+            for x in inv
+            if set(fs) <= set(self.fts(x))
+        ]
         for a in inv_fts:
             for b in inv_fts:
                 if a != b:
@@ -440,7 +458,7 @@ class FeatureTable(object):
         if len(pat) != len(segs):
             return None
         else:
-            if all([set(p) <= s for (p, s) in zip(pat, segs)]):
+            if all([set(p) <= set(s) for (p, s) in zip(pat, segs)]):
                 return segs
 
     def match_pattern_seq(self, pat, const):
@@ -462,7 +480,7 @@ class FeatureTable(object):
         if len(pat) != len(segs):
             return False
         else:
-            return all([set(p) <= s for (p, s) in zip(pat, segs)])
+            return all([set(p) <= set(s) for (p, s) in zip(pat, segs)])
 
     def all_segs_matching_fts(self, fts):
         """Return segments matching a feature mask, both as (value, feature)

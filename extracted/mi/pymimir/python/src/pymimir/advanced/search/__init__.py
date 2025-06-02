@@ -12,12 +12,9 @@ from pymimir.pymimir.advanced.search import (
 
 # Common
 from pymimir.pymimir.advanced.search import (   
-    BlindHeuristic,
-    HStarHeuristic,
     is_applicable,
     IApplicableActionGenerator,
     IAxiomEvaluator,
-    IHeuristic,
     Plan,
     PartiallyOrderedPlan,
     SearchResult,
@@ -28,6 +25,18 @@ from pymimir.pymimir.advanced.search import (
     SearchContext,
     SearchContextOptions,
     GeneralizedSearchContext,
+)
+
+# Heuristics 
+from pymimir.pymimir.advanced.search import (  
+    PreferredActions, 
+    IHeuristic,
+    BlindHeuristic,
+    PerfectHeuristic,
+    MaxHeuristic,
+    AddHeuristic,
+    SetAddHeuristic,
+    FFHeuristic
 )
 
 # SatisficingBindingGenerator
@@ -47,15 +56,28 @@ from pymimir.pymimir.advanced.search import (
     DuplicatePruningStrategy,
     ArityZeroNoveltyPruningStrategy,
     ArityKNoveltyPruningStrategy,
+
+    IExplorationStrategy,
 )
 
-# AStar
+# AStar_EAGER
 from pymimir.pymimir.advanced.search import (
-    AStarStatistics,
-    IAStarEventHandler,
-    DebugAStarEventHandler,
-    DefaultAStarEventHandler,
-    find_solution_astar,
+    AStarEagerStatistics,
+    IAStarEagerEventHandler,
+    DebugAStarEagerEventHandler,
+    DefaultAStarEagerEventHandler,
+    AStarEagerOptions,
+    find_solution_astar_eager,
+)
+
+# AStar_LAZY
+from pymimir.pymimir.advanced.search import (
+    AStarLazyStatistics,
+    IAStarLazyEventHandler,
+    DebugAStarLazyEventHandler,
+    DefaultAStarLazyEventHandler,
+    AStarLazyOptions,
+    find_solution_astar_lazy,
 )
 
 # BrFs
@@ -64,16 +86,28 @@ from pymimir.pymimir.advanced.search import (
     IBrFSEventHandler,
     DebugBrFSEventHandler,
     DefaultBrFSEventHandler,
+    BrFSOptions,
     find_solution_brfs,
 )
 
-# GBFS
+# GBFS_EAGER
 from pymimir.pymimir.advanced.search import (
-    GBFSStatistics,
-    IGBFSEventHandler,
-    DebugGBFSEventHandler,
-    DefaultGBFSEventHandler,
-    find_solution_gbfs,
+    GBFSEagerStatistics,
+    IGBFSEagerEventHandler,
+    DebugGBFSEagerEventHandler,
+    DefaultGBFSEagerEventHandler,
+    GBFSEagerOptions,
+    find_solution_gbfs_eager,
+)
+
+# GBFS_LAZY
+from pymimir.pymimir.advanced.search import (
+    GBFSLazyStatistics,
+    IGBFSLazyEventHandler,
+    DebugGBFSLazyEventHandler,
+    DefaultGBFSLazyEventHandler,
+    GBFSLazyOptions,
+    find_solution_gbfs_lazy,
 )
 
 # IW
@@ -81,6 +115,7 @@ from pymimir.pymimir.advanced.search import (
     IWStatistics,
     IIWEventHandler,
     DefaultIWEventHandler,
+    IWOptions,
     find_solution_iw,
 
     TupleIndexMapper,
@@ -94,6 +129,7 @@ from pymimir.pymimir.advanced.search import (
     SIWStatistics,
     ISIWEventHandler,
     DefaultSIWEventHandler,
+    SIWOptions,
     find_solution_siw,
 )
 

@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: npy-append-array
-Version: 0.9.17
+Version: 0.9.18
 Summary: Create Numpy .npy files by appending on the growth axis
-Author: Joshua Adelman, Yoav Git
-Author-email: Michael Siebert <michael.siebert2k@gmail.com>
+Author: Michael Siebert, Joshua Adelman, Yoav Git
+Maintainer-email: Michael Siebert <michael.siebert2k@gmail.com>
 License-Expression: MIT
 Project-URL: Homepage, https://github.com/xor2k/npy-append-array
 Description-Content-Type: text/markdown

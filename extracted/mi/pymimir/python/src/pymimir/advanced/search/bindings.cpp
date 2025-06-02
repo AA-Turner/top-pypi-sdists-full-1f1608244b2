@@ -33,24 +33,30 @@ public:
     }
 };
 
+class IPyExplorationStrategy : public IExplorationStrategy
+{
+public:
+    NB_TRAMPOLINE(IExplorationStrategy, 1);
+
+    /* Trampoline (need one for each virtual function) */
+    bool on_generate_state(State state, GroundAction action, State succ_state) override { NB_OVERRIDE_PURE(on_generate_state, state, action, succ_state); }
+};
+
 class IPyHeuristic : public IHeuristic
 {
 public:
-    NB_TRAMPOLINE(IHeuristic, 1);
+    NB_TRAMPOLINE(IHeuristic, 2);
 
     /* Trampoline (need one for each virtual function) */
-    ContinuousCost compute_heuristic(State state, bool is_goal_state) override
-    {
-        NB_OVERRIDE_PURE(compute_heuristic, /* Name of function in C++ (must match Python name) */
-                         state,             /* Argument(s) */
-                         is_goal_state);
-    }
+    ContinuousCost compute_heuristic(State state, bool is_goal_state) override { NB_OVERRIDE_PURE(compute_heuristic, state, is_goal_state); }
+
+    const PreferredActions& get_preferred_actions() const override { NB_OVERRIDE(get_preferred_actions); }
 };
 
-class IPyAStarEventHandler : public astar::IEventHandler
+class IPyAStarEagerEventHandler : public astar_eager::IEventHandler
 {
 public:
-    NB_TRAMPOLINE(astar::IEventHandler, 14);
+    NB_TRAMPOLINE(astar_eager::IEventHandler, 14);
 
     /* Trampoline (need one for each virtual function) */
     void on_expand_state(State state) override { NB_OVERRIDE_PURE(on_expand_state, state); }
@@ -70,9 +76,12 @@ public:
         NB_OVERRIDE_PURE(on_generate_state_not_relaxed, state, action, action_cost, successor_state);
     }
     void on_close_state(State state) override { NB_OVERRIDE_PURE(on_close_state, state); }
-    void on_finish_f_layer(double f_value) override { NB_OVERRIDE_PURE(on_finish_f_layer, f_value); }
+    void on_finish_f_layer(ContinuousCost f_value) override { NB_OVERRIDE_PURE(on_finish_f_layer, f_value); }
     void on_prune_state(State state) override { NB_OVERRIDE_PURE(on_prune_state, state); }
-    void on_start_search(State start_state) override { NB_OVERRIDE_PURE(on_start_search, start_state); }
+    void on_start_search(State start_state, ContinuousCost g_value, ContinuousCost h_value) override
+    {
+        NB_OVERRIDE_PURE(on_start_search, start_state, g_value, h_value);
+    }
     void on_end_search(uint64_t num_reached_fluent_atoms,
                        uint64_t num_reached_derived_atoms,
                        uint64_t num_bytes_for_problem,
@@ -95,7 +104,61 @@ public:
     void on_solved(const Plan& plan) override { NB_OVERRIDE_PURE(on_solved, plan); }
     void on_unsolvable() override { NB_OVERRIDE_PURE(on_unsolvable); }
     void on_exhausted() override { NB_OVERRIDE_PURE(on_exhausted); }
-    const astar::Statistics& get_statistics() const override { NB_OVERRIDE_PURE(get_statistics); }
+    const astar_eager::Statistics& get_statistics() const override { NB_OVERRIDE_PURE(get_statistics); }
+};
+
+class IPyAStarLazyEventHandler : public astar_lazy::IEventHandler
+{
+public:
+    NB_TRAMPOLINE(astar_lazy::IEventHandler, 14);
+
+    /* Trampoline (need one for each virtual function) */
+    void on_expand_state(State state) override { NB_OVERRIDE_PURE(on_expand_state, state); }
+
+    void on_expand_goal_state(State state) override { NB_OVERRIDE_PURE(on_expand_goal_state, state); }
+
+    void on_generate_state(State state, GroundAction action, ContinuousCost action_cost, State successor_state) override
+    {
+        NB_OVERRIDE_PURE(on_generate_state, state, action, action_cost, successor_state);
+    }
+    void on_generate_state_relaxed(State state, GroundAction action, ContinuousCost action_cost, State successor_state) override
+    {
+        NB_OVERRIDE_PURE(on_generate_state_relaxed, state, action, action_cost, successor_state);
+    }
+    void on_generate_state_not_relaxed(State state, GroundAction action, ContinuousCost action_cost, State successor_state) override
+    {
+        NB_OVERRIDE_PURE(on_generate_state_not_relaxed, state, action, action_cost, successor_state);
+    }
+    void on_close_state(State state) override { NB_OVERRIDE_PURE(on_close_state, state); }
+    void on_finish_f_layer(ContinuousCost f_value) override { NB_OVERRIDE_PURE(on_finish_f_layer, f_value); }
+    void on_prune_state(State state) override { NB_OVERRIDE_PURE(on_prune_state, state); }
+    void on_start_search(State start_state, ContinuousCost g_value, ContinuousCost h_value) override
+    {
+        NB_OVERRIDE_PURE(on_start_search, start_state, g_value, h_value);
+    }
+    void on_end_search(uint64_t num_reached_fluent_atoms,
+                       uint64_t num_reached_derived_atoms,
+                       uint64_t num_bytes_for_problem,
+                       uint64_t num_bytes_for_nodes,
+                       uint64_t num_states,
+                       uint64_t num_nodes,
+                       uint64_t num_actions,
+                       uint64_t num_axioms) override
+    {
+        NB_OVERRIDE_PURE(on_end_search,
+                         num_reached_fluent_atoms,
+                         num_reached_derived_atoms,
+                         num_bytes_for_problem,
+                         num_bytes_for_nodes,
+                         num_states,
+                         num_nodes,
+                         num_actions,
+                         num_axioms);
+    }
+    void on_solved(const Plan& plan) override { NB_OVERRIDE_PURE(on_solved, plan); }
+    void on_unsolvable() override { NB_OVERRIDE_PURE(on_unsolvable); }
+    void on_exhausted() override { NB_OVERRIDE_PURE(on_exhausted); }
+    const astar_lazy::Statistics& get_statistics() const override { NB_OVERRIDE_PURE(get_statistics); }
 };
 
 class IPyBrFSEventHandler : public brfs::IEventHandler
@@ -148,10 +211,10 @@ public:
     const brfs::Statistics& get_statistics() const override { NB_OVERRIDE_PURE(get_statistics); }
 };
 
-class IPyGBFSEventHandler : public gbfs::IEventHandler
+class IPyGBFSEagerEventHandler : public gbfs_eager::IEventHandler
 {
 public:
-    NB_TRAMPOLINE(gbfs::IEventHandler, 10);
+    NB_TRAMPOLINE(gbfs_eager::IEventHandler, 11);
 
     /* Trampoline (need one for each virtual function) */
     void on_expand_state(State state) override { NB_OVERRIDE_PURE(on_expand_state, state); }
@@ -163,7 +226,11 @@ public:
         NB_OVERRIDE_PURE(on_generate_state, state, action, action_cost, successor_state);
     }
     void on_prune_state(State state) override { NB_OVERRIDE_PURE(on_prune_state, state); }
-    void on_start_search(State start_state) override { NB_OVERRIDE_PURE(on_start_search, start_state); }
+    void on_start_search(State start_state, ContinuousCost g_value, ContinuousCost h_value) override
+    {
+        NB_OVERRIDE_PURE(on_start_search, start_state, g_value, h_value);
+    }
+    void on_new_best_h_value(ContinuousCost h_value) override { NB_OVERRIDE_PURE(on_new_best_h_value, h_value); }
     void on_end_search(uint64_t num_reached_fluent_atoms,
                        uint64_t num_reached_derived_atoms,
                        uint64_t num_bytes_for_problem,
@@ -186,7 +253,52 @@ public:
     void on_solved(const Plan& plan) override { NB_OVERRIDE_PURE(on_solved, plan); }
     void on_unsolvable() override { NB_OVERRIDE_PURE(on_unsolvable); }
     void on_exhausted() override { NB_OVERRIDE_PURE(on_exhausted); }
-    const gbfs::Statistics& get_statistics() const override { NB_OVERRIDE_PURE(get_statistics); }
+    const gbfs_eager::Statistics& get_statistics() const override { NB_OVERRIDE_PURE(get_statistics); }
+};
+
+class IPyGBFSLazyEventHandler : public gbfs_lazy::IEventHandler
+{
+public:
+    NB_TRAMPOLINE(gbfs_lazy::IEventHandler, 11);
+
+    /* Trampoline (need one for each virtual function) */
+    void on_expand_state(State state) override { NB_OVERRIDE_PURE(on_expand_state, state); }
+
+    void on_expand_goal_state(State state) override { NB_OVERRIDE_PURE(on_expand_goal_state, state); }
+
+    void on_generate_state(State state, GroundAction action, ContinuousCost action_cost, State successor_state) override
+    {
+        NB_OVERRIDE_PURE(on_generate_state, state, action, action_cost, successor_state);
+    }
+    void on_prune_state(State state) override { NB_OVERRIDE_PURE(on_prune_state, state); }
+    void on_start_search(State start_state, ContinuousCost g_value, ContinuousCost h_value) override
+    {
+        NB_OVERRIDE_PURE(on_start_search, start_state, g_value, h_value);
+    }
+    void on_new_best_h_value(ContinuousCost h_value) override { NB_OVERRIDE_PURE(on_new_best_h_value, h_value); }
+    void on_end_search(uint64_t num_reached_fluent_atoms,
+                       uint64_t num_reached_derived_atoms,
+                       uint64_t num_bytes_for_problem,
+                       uint64_t num_bytes_for_nodes,
+                       uint64_t num_states,
+                       uint64_t num_nodes,
+                       uint64_t num_actions,
+                       uint64_t num_axioms) override
+    {
+        NB_OVERRIDE_PURE(on_end_search,
+                         num_reached_fluent_atoms,
+                         num_reached_derived_atoms,
+                         num_bytes_for_problem,
+                         num_bytes_for_nodes,
+                         num_states,
+                         num_nodes,
+                         num_actions,
+                         num_axioms);
+    }
+    void on_solved(const Plan& plan) override { NB_OVERRIDE_PURE(on_solved, plan); }
+    void on_unsolvable() override { NB_OVERRIDE_PURE(on_unsolvable); }
+    void on_exhausted() override { NB_OVERRIDE_PURE(on_exhausted); }
+    const gbfs_lazy::Statistics& get_statistics() const override { NB_OVERRIDE_PURE(get_statistics); }
 };
 
 void bind_module_definitions(nb::module_& m)
@@ -537,15 +649,31 @@ void bind_module_definitions(nb::module_& m)
              "axiom_evaluator_event_handler"_a = nullptr);
 
     /* Heuristics */
+    nb::class_<PreferredActions>(m, "PreferredActions")  //
+        .def_rw("data", &PreferredActions::data);
+
     nb::class_<IHeuristic, IPyHeuristic>(m, "IHeuristic")  //
         .def(nb::init<>())
-        .def("compute_heuristic", &IHeuristic::compute_heuristic, "state"_a, "is_goal_state"_a);
+        .def("compute_heuristic", &IHeuristic::compute_heuristic, "state"_a, "is_goal_state"_a)
+        .def("get_preferred_actions", &IHeuristic::get_preferred_actions, nb::rv_policy::reference_internal);
 
     nb::class_<BlindHeuristicImpl, IHeuristic>(m, "BlindHeuristic")  //
         .def(nb::init<Problem>(), "problem"_a);
 
-    nb::class_<HStarHeuristicImpl, IHeuristic>(m, "HStarHeuristic")  //
+    nb::class_<PerfectHeuristicImpl, IHeuristic>(m, "PerfectHeuristic")  //
         .def(nb::init<SearchContext>(), "search_context"_a);
+
+    nb::class_<MaxHeuristicImpl, IHeuristic>(m, "MaxHeuristic")  //
+        .def(nb::init<const DeleteRelaxedProblemExplorator&>(), "delete_relaxed_problem_explorator"_a);
+
+    nb::class_<AddHeuristicImpl, IHeuristic>(m, "AddHeuristic")  //
+        .def(nb::init<const DeleteRelaxedProblemExplorator&>(), "delete_relaxed_problem_explorator"_a);
+
+    nb::class_<SetAddHeuristicImpl, IHeuristic>(m, "SetAddHeuristic")  //
+        .def(nb::init<const DeleteRelaxedProblemExplorator&>(), "delete_relaxed_problem_explorator"_a);
+
+    nb::class_<FFHeuristicImpl, IHeuristic>(m, "FFHeuristic")  //
+        .def(nb::init<const DeleteRelaxedProblemExplorator&>(), "delete_relaxed_problem_explorator"_a);
 
     /* Algorithms */
 
@@ -588,55 +716,114 @@ void bind_module_definitions(nb::module_& m)
         .def(nb::init<size_t, size_t>(), "arity"_a, "num_atoms"_a)
         .def_static("create", &iw::ArityKNoveltyPruningStrategyImpl::create, "arity"_a, "num_atoms"_a);
 
-    // AStar
-    nb::class_<astar::Statistics>(m, "AStarStatistics")  //
+    // ExplorationStrategy
+    nb::class_<IExplorationStrategy, IPyExplorationStrategy>(m, "IExplorationStrategy")
         .def(nb::init<>())
-        .def("get_num_generated", &astar::Statistics::get_num_generated)
-        .def("get_num_expanded", &astar::Statistics::get_num_expanded)
-        .def("get_num_deadends", &astar::Statistics::get_num_deadends)
-        .def("get_num_pruned", &astar::Statistics::get_num_pruned)
-        .def("get_num_generated_until_f_value", &astar::Statistics::get_num_generated_until_f_value)
-        .def("get_num_expanded_until_f_value", &astar::Statistics::get_num_expanded_until_f_value)
-        .def("get_num_deadends_until_f_value", &astar::Statistics::get_num_deadends_until_f_value)
-        .def("get_num_pruned_until_f_value", &astar::Statistics::get_num_pruned_until_f_value);
+        .def("on_generate_state", &IExplorationStrategy::on_generate_state, "state"_a, "action"_a, "succ_state"_a);
 
-    nb::class_<astar::IEventHandler, IPyAStarEventHandler>(m,
-                                                           "IAStarEventHandler")  //
+    // AStar_EAGER
+    nb::class_<astar_eager::Statistics>(m, "AStarEagerStatistics")  //
         .def(nb::init<>())
-        .def("on_expand_state", &astar::IEventHandler::on_expand_state)
-        .def("on_expand_goal_state", &astar::IEventHandler::on_expand_goal_state)
-        .def("on_generate_state", &astar::IEventHandler::on_generate_state)
-        .def("on_generate_state_relaxed", &astar::IEventHandler::on_generate_state_relaxed)
-        .def("on_generate_state_not_relaxed", &astar::IEventHandler::on_generate_state_not_relaxed)
-        .def("on_close_state", &astar::IEventHandler::on_close_state)
-        .def("on_finish_f_layer", &astar::IEventHandler::on_finish_f_layer)
-        .def("on_prune_state", &astar::IEventHandler::on_prune_state)
-        .def("on_start_search", &astar::IEventHandler::on_start_search)
-        .def("on_end_search", &astar::IEventHandler::on_end_search)
-        .def("on_solved", &astar::IEventHandler::on_solved)
-        .def("on_unsolvable", &astar::IEventHandler::on_unsolvable)
-        .def("on_exhausted", &astar::IEventHandler::on_exhausted)
-        .def("get_statistics", &astar::IEventHandler::get_statistics);
+        .def("__str__", [](const astar_eager::Statistics& self) { return to_string(self); })
+        .def("get_num_generated", &astar_eager::Statistics::get_num_generated)
+        .def("get_num_expanded", &astar_eager::Statistics::get_num_expanded)
+        .def("get_num_deadends", &astar_eager::Statistics::get_num_deadends)
+        .def("get_num_pruned", &astar_eager::Statistics::get_num_pruned)
+        .def("get_num_generated_until_f_value", &astar_eager::Statistics::get_num_generated_until_f_value)
+        .def("get_num_expanded_until_f_value", &astar_eager::Statistics::get_num_expanded_until_f_value)
+        .def("get_num_deadends_until_f_value", &astar_eager::Statistics::get_num_deadends_until_f_value)
+        .def("get_num_pruned_until_f_value", &astar_eager::Statistics::get_num_pruned_until_f_value);
 
-    nb::class_<astar::DefaultEventHandlerImpl, astar::IEventHandler>(m,
-                                                                     "DefaultAStarEventHandler")  //
+    nb::class_<astar_eager::IEventHandler, IPyAStarEagerEventHandler>(m,
+                                                                      "IAStarEagerEventHandler")  //
+        .def(nb::init<>())
+        .def("on_expand_state", &astar_eager::IEventHandler::on_expand_state)
+        .def("on_expand_goal_state", &astar_eager::IEventHandler::on_expand_goal_state)
+        .def("on_generate_state", &astar_eager::IEventHandler::on_generate_state)
+        .def("on_generate_state_relaxed", &astar_eager::IEventHandler::on_generate_state_relaxed)
+        .def("on_generate_state_not_relaxed", &astar_eager::IEventHandler::on_generate_state_not_relaxed)
+        .def("on_close_state", &astar_eager::IEventHandler::on_close_state)
+        .def("on_finish_f_layer", &astar_eager::IEventHandler::on_finish_f_layer)
+        .def("on_prune_state", &astar_eager::IEventHandler::on_prune_state)
+        .def("on_start_search", &astar_eager::IEventHandler::on_start_search)
+        .def("on_end_search", &astar_eager::IEventHandler::on_end_search)
+        .def("on_solved", &astar_eager::IEventHandler::on_solved)
+        .def("on_unsolvable", &astar_eager::IEventHandler::on_unsolvable)
+        .def("on_exhausted", &astar_eager::IEventHandler::on_exhausted)
+        .def("get_statistics", &astar_eager::IEventHandler::get_statistics);
+
+    nb::class_<astar_eager::DefaultEventHandlerImpl, astar_eager::IEventHandler>(m,
+                                                                                 "DefaultAStarEagerEventHandler")  //
         .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
-    nb::class_<astar::DebugEventHandlerImpl, astar::IEventHandler>(m,
-                                                                   "DebugAStarEventHandler")  //
+    nb::class_<astar_eager::DebugEventHandlerImpl, astar_eager::IEventHandler>(m,
+                                                                               "DebugAStarEagerEventHandler")  //
         .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
 
-    m.def("find_solution_astar",
-          &astar::find_solution,
-          "search_context"_a,
-          "heuristic"_a,
-          "start_state"_a = nullptr,
-          "astar_event_handler"_a = nullptr,
-          "goal_strategy"_a = nullptr,
-          "pruning_strategy"_a = nullptr);
+    nb::class_<astar_eager::Options>(m, "AStarEagerOptions")  //
+        .def(nb::init<>())
+        .def_rw("start_state", &astar_eager::Options::start_state)
+        .def_rw("event_handler", &astar_eager::Options::event_handler)
+        .def_rw("goal_strategy", &astar_eager::Options::goal_strategy)
+        .def_rw("pruning_strategy", &astar_eager::Options::pruning_strategy)
+        .def_rw("max_num_states", &astar_eager::Options::max_num_states)
+        .def_rw("max_time_in_ms", &astar_eager::Options::max_time_in_ms);
+
+    m.def("find_solution_astar_eager", &astar_eager::find_solution, "search_context"_a, "heuristic"_a, "options"_a);
+
+    // AStar_LAZY
+    nb::class_<astar_lazy::Statistics>(m, "AStarLazyStatistics")  //
+        .def(nb::init<>())
+        .def("__str__", [](const astar_lazy::Statistics& self) { return to_string(self); })
+        .def("get_num_generated", &astar_lazy::Statistics::get_num_generated)
+        .def("get_num_expanded", &astar_lazy::Statistics::get_num_expanded)
+        .def("get_num_deadends", &astar_lazy::Statistics::get_num_deadends)
+        .def("get_num_pruned", &astar_lazy::Statistics::get_num_pruned)
+        .def("get_num_generated_until_f_value", &astar_lazy::Statistics::get_num_generated_until_f_value)
+        .def("get_num_expanded_until_f_value", &astar_lazy::Statistics::get_num_expanded_until_f_value)
+        .def("get_num_deadends_until_f_value", &astar_lazy::Statistics::get_num_deadends_until_f_value)
+        .def("get_num_pruned_until_f_value", &astar_lazy::Statistics::get_num_pruned_until_f_value);
+
+    nb::class_<astar_lazy::IEventHandler, IPyAStarLazyEventHandler>(m,
+                                                                    "IAStarLazyEventHandler")  //
+        .def(nb::init<>())
+        .def("on_expand_state", &astar_lazy::IEventHandler::on_expand_state)
+        .def("on_expand_goal_state", &astar_lazy::IEventHandler::on_expand_goal_state)
+        .def("on_generate_state", &astar_lazy::IEventHandler::on_generate_state)
+        .def("on_generate_state_relaxed", &astar_lazy::IEventHandler::on_generate_state_relaxed)
+        .def("on_generate_state_not_relaxed", &astar_lazy::IEventHandler::on_generate_state_not_relaxed)
+        .def("on_close_state", &astar_lazy::IEventHandler::on_close_state)
+        .def("on_finish_f_layer", &astar_lazy::IEventHandler::on_finish_f_layer)
+        .def("on_prune_state", &astar_lazy::IEventHandler::on_prune_state)
+        .def("on_start_search", &astar_lazy::IEventHandler::on_start_search)
+        .def("on_end_search", &astar_lazy::IEventHandler::on_end_search)
+        .def("on_solved", &astar_lazy::IEventHandler::on_solved)
+        .def("on_unsolvable", &astar_lazy::IEventHandler::on_unsolvable)
+        .def("on_exhausted", &astar_lazy::IEventHandler::on_exhausted)
+        .def("get_statistics", &astar_lazy::IEventHandler::get_statistics);
+
+    nb::class_<astar_lazy::DefaultEventHandlerImpl, astar_lazy::IEventHandler>(m,
+                                                                               "DefaultAStarLazyEventHandler")  //
+        .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
+    nb::class_<astar_lazy::DebugEventHandlerImpl, astar_lazy::IEventHandler>(m,
+                                                                             "DebugAStarLazyEventHandler")  //
+        .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
+
+    nb::class_<astar_lazy::Options>(m, "AStarLazyOptions")  //
+        .def(nb::init<>())
+        .def_rw("start_state", &astar_lazy::Options::start_state)
+        .def_rw("event_handler", &astar_lazy::Options::event_handler)
+        .def_rw("goal_strategy", &astar_lazy::Options::goal_strategy)
+        .def_rw("pruning_strategy", &astar_lazy::Options::pruning_strategy)
+        .def_rw("max_num_states", &astar_lazy::Options::max_num_states)
+        .def_rw("max_time_in_ms", &astar_lazy::Options::max_time_in_ms)
+        .def_rw("openlist_weights", &astar_lazy::Options::openlist_weights);
+
+    m.def("find_solution_astar_lazy", &astar_lazy::find_solution, "search_context"_a, "heuristic"_a, "options"_a);
 
     // BrFS
     nb::class_<brfs::Statistics>(m, "BrFSStatistics")  //
         .def(nb::init<>())
+        .def("__str__", [](const brfs::Statistics& self) { return to_string(self); })
         .def("get_num_generated", &brfs::Statistics::get_num_generated)
         .def("get_num_expanded", &brfs::Statistics::get_num_expanded)
         .def("get_num_deadends", &brfs::Statistics::get_num_deadends)
@@ -668,53 +855,101 @@ void bind_module_definitions(nb::module_& m)
                                                                  "DebugBrFSEventHandler")  //
         .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
 
-    m.def("find_solution_brfs",
-          &brfs::find_solution,
-          "search_context"_a,
-          "start_state"_a = nullptr,
-          "brfs_event_handler"_a = nullptr,
-          "goal_strategy"_a = nullptr,
-          "pruning_strategy"_a = nullptr,
-          "stop_if_goal"_a = true,
-          "max_num_states"_a = std::numeric_limits<uint32_t>::max(),
-          "max_time_in_ms"_a = std::numeric_limits<uint32_t>::max());
-
-    // GBFS
-    nb::class_<gbfs::Statistics>(m, "GBFSStatistics")  //
+    nb::class_<brfs::Options>(m, "BrFSOptions")  //
         .def(nb::init<>())
-        .def("get_num_generated", &gbfs::Statistics::get_num_generated)
-        .def("get_num_expanded", &gbfs::Statistics::get_num_expanded)
-        .def("get_num_deadends", &gbfs::Statistics::get_num_deadends)
-        .def("get_num_pruned", &gbfs::Statistics::get_num_pruned);
+        .def_rw("start_state", &brfs::Options::start_state)
+        .def_rw("event_handler", &brfs::Options::event_handler)
+        .def_rw("goal_strategy", &brfs::Options::goal_strategy)
+        .def_rw("pruning_strategy", &brfs::Options::pruning_strategy)
+        .def_rw("stop_if_goal", &brfs::Options::stop_if_goal)
+        .def_rw("max_num_states", &brfs::Options::max_num_states)
+        .def_rw("max_time_in_ms", &brfs::Options::max_time_in_ms);
 
-    nb::class_<gbfs::IEventHandler, IPyGBFSEventHandler>(m, "IGBFSEventHandler")  //
+    m.def("find_solution_brfs", &brfs::find_solution, "search_context"_a, "options"_a);
+
+    // GBFS_EAGER
+    nb::class_<gbfs_eager::Statistics>(m, "GBFSEagerStatistics")  //
         .def(nb::init<>())
-        .def("on_expand_state", &gbfs::IEventHandler::on_expand_state)
-        .def("on_expand_goal_state", &gbfs::IEventHandler::on_expand_goal_state)
-        .def("on_generate_state", &gbfs::IEventHandler::on_generate_state)
-        .def("on_prune_state", &gbfs::IEventHandler::on_prune_state)
-        .def("on_start_search", &gbfs::IEventHandler::on_start_search)
-        .def("on_end_search", &gbfs::IEventHandler::on_end_search)
-        .def("on_solved", &gbfs::IEventHandler::on_solved)
-        .def("on_unsolvable", &gbfs::IEventHandler::on_unsolvable)
-        .def("on_exhausted", &gbfs::IEventHandler::on_exhausted)
-        .def("get_statistics", &gbfs::IEventHandler::get_statistics);
+        .def("__str__", [](const gbfs_eager::Statistics& self) { return to_string(self); })
+        .def("get_num_generated", &gbfs_eager::Statistics::get_num_generated)
+        .def("get_num_expanded", &gbfs_eager::Statistics::get_num_expanded)
+        .def("get_num_deadends", &gbfs_eager::Statistics::get_num_deadends)
+        .def("get_num_pruned", &gbfs_eager::Statistics::get_num_pruned);
 
-    nb::class_<gbfs::DefaultEventHandlerImpl, gbfs::IEventHandler>(m,
-                                                                   "DefaultGBFSEventHandler")  //
+    nb::class_<gbfs_eager::IEventHandler, IPyGBFSEagerEventHandler>(m, "IGBFSEagerEventHandler")  //
+        .def(nb::init<>())
+        .def("on_expand_state", &gbfs_eager::IEventHandler::on_expand_state)
+        .def("on_expand_goal_state", &gbfs_eager::IEventHandler::on_expand_goal_state)
+        .def("on_generate_state", &gbfs_eager::IEventHandler::on_generate_state)
+        .def("on_prune_state", &gbfs_eager::IEventHandler::on_prune_state)
+        .def("on_start_search", &gbfs_eager::IEventHandler::on_start_search)
+        .def("on_new_best_h_value", &gbfs_eager::IEventHandler::on_new_best_h_value)
+        .def("on_end_search", &gbfs_eager::IEventHandler::on_end_search)
+        .def("on_solved", &gbfs_eager::IEventHandler::on_solved)
+        .def("on_unsolvable", &gbfs_eager::IEventHandler::on_unsolvable)
+        .def("on_exhausted", &gbfs_eager::IEventHandler::on_exhausted)
+        .def("get_statistics", &gbfs_eager::IEventHandler::get_statistics);
+
+    nb::class_<gbfs_eager::DefaultEventHandlerImpl, gbfs_eager::IEventHandler>(m,
+                                                                               "DefaultGBFSEagerEventHandler")  //
         .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
-    nb::class_<gbfs::DebugEventHandlerImpl, gbfs::IEventHandler>(m,
-                                                                 "DebugGBFSEventHandler")  //
+    nb::class_<gbfs_eager::DebugEventHandlerImpl, gbfs_eager::IEventHandler>(m,
+                                                                             "DebugGBFSEagerEventHandler")  //
         .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
 
-    m.def("find_solution_gbfs",
-          &gbfs::find_solution,
-          "search_context"_a,
-          "heuristic"_a,
-          "start_state"_a = nullptr,
-          "gbfs_event_handler"_a = nullptr,
-          "goal_strategy"_a = nullptr,
-          "pruning_strategy"_a = nullptr);
+    nb::class_<gbfs_eager::Options>(m, "GBFSEagerOptions")  //
+        .def(nb::init<>())
+        .def_rw("start_state", &gbfs_eager::Options::start_state)
+        .def_rw("event_handler", &gbfs_eager::Options::event_handler)
+        .def_rw("goal_strategy", &gbfs_eager::Options::goal_strategy)
+        .def_rw("pruning_strategy", &gbfs_eager::Options::pruning_strategy)
+        .def_rw("max_num_states", &gbfs_eager::Options::max_num_states)
+        .def_rw("max_time_in_ms", &gbfs_eager::Options::max_time_in_ms);
+
+    m.def("find_solution_gbfs_eager", &gbfs_eager::find_solution, "search_context"_a, "heuristic"_a, "options"_a);
+
+    // GBFS_LAZY
+    nb::class_<gbfs_lazy::Statistics>(m, "GBFSLazyStatistics")  //
+        .def(nb::init<>())
+        .def("__str__", [](const gbfs_lazy::Statistics& self) { return to_string(self); })
+        .def("get_num_generated", &gbfs_lazy::Statistics::get_num_generated)
+        .def("get_num_expanded", &gbfs_lazy::Statistics::get_num_expanded)
+        .def("get_num_deadends", &gbfs_lazy::Statistics::get_num_deadends)
+        .def("get_num_pruned", &gbfs_lazy::Statistics::get_num_pruned);
+
+    nb::class_<gbfs_lazy::IEventHandler, IPyGBFSLazyEventHandler>(m, "IGBFSLazyEventHandler")  //
+        .def(nb::init<>())
+        .def("on_expand_state", &gbfs_lazy::IEventHandler::on_expand_state)
+        .def("on_expand_goal_state", &gbfs_lazy::IEventHandler::on_expand_goal_state)
+        .def("on_generate_state", &gbfs_lazy::IEventHandler::on_generate_state)
+        .def("on_prune_state", &gbfs_lazy::IEventHandler::on_prune_state)
+        .def("on_start_search", &gbfs_lazy::IEventHandler::on_start_search)
+        .def("on_new_best_h_value", &gbfs_lazy::IEventHandler::on_new_best_h_value)
+        .def("on_end_search", &gbfs_lazy::IEventHandler::on_end_search)
+        .def("on_solved", &gbfs_lazy::IEventHandler::on_solved)
+        .def("on_unsolvable", &gbfs_lazy::IEventHandler::on_unsolvable)
+        .def("on_exhausted", &gbfs_lazy::IEventHandler::on_exhausted)
+        .def("get_statistics", &gbfs_lazy::IEventHandler::get_statistics);
+
+    nb::class_<gbfs_lazy::DefaultEventHandlerImpl, gbfs_lazy::IEventHandler>(m,
+                                                                             "DefaultGBFSLazyEventHandler")  //
+        .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
+    nb::class_<gbfs_lazy::DebugEventHandlerImpl, gbfs_lazy::IEventHandler>(m,
+                                                                           "DebugGBFSLazyEventHandler")  //
+        .def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
+
+    nb::class_<gbfs_lazy::Options>(m, "GBFSLazyOptions")  //
+        .def(nb::init<>())
+        .def_rw("start_state", &gbfs_lazy::Options::start_state)
+        .def_rw("event_handler", &gbfs_lazy::Options::event_handler)
+        .def_rw("goal_strategy", &gbfs_lazy::Options::goal_strategy)
+        .def_rw("pruning_strategy", &gbfs_lazy::Options::pruning_strategy)
+        .def_rw("exploration_strategy", &gbfs_lazy::Options::exploration_strategy)
+        .def_rw("max_num_states", &gbfs_lazy::Options::max_num_states)
+        .def_rw("max_time_in_ms", &gbfs_lazy::Options::max_time_in_ms)
+        .def_rw("openlist_weights", &gbfs_lazy::Options::openlist_weights);
+
+    m.def("find_solution_gbfs_lazy", &gbfs_lazy::find_solution, "search_context"_a, "heuristic"_a, "options"_a);
 
     // IW
     nb::class_<iw::TupleIndexMapper>(m, "TupleIndexMapper")  //
@@ -786,6 +1021,7 @@ void bind_module_definitions(nb::module_& m)
 
     nb::class_<iw::Statistics>(m, "IWStatistics")  //
         .def(nb::init<>())
+        .def("__str__", [](const iw::Statistics& self) { return to_string(self); })
         .def("get_effective_width", &iw::Statistics::get_effective_width)
         .def("get_brfs_statistics_by_arity", &iw::Statistics::get_brfs_statistics_by_arity);
 
@@ -794,18 +1030,20 @@ void bind_module_definitions(nb::module_& m)
 
     nb::class_<iw::DefaultEventHandlerImpl, iw::IEventHandler>(m, "DefaultIWEventHandler").def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
 
-    m.def("find_solution_iw",
-          &iw::find_solution,
-          "search_context"_a,
-          "start_state"_a = nullptr,
-          "max_arity"_a = nullptr,
-          "iw_event_handler"_a = nullptr,
-          "brfs_event_handler"_a = nullptr,
-          "goal_strategy"_a = nullptr);
+    nb::class_<iw::Options>(m, "IWOptions")  //
+        .def(nb::init<>())
+        .def_rw("start_state", &iw::Options::start_state)
+        .def_rw("iw_event_handler", &iw::Options::iw_event_handler)
+        .def_rw("brfs_event_handler", &iw::Options::brfs_event_handler)
+        .def_rw("goal_strategy", &iw::Options::goal_strategy)
+        .def_rw("max_arity", &iw::Options::max_arity);
+
+    m.def("find_solution_iw", &iw::find_solution, "search_context"_a, "options"_a);
 
     // SIW
     nb::class_<siw::Statistics>(m, "SIWStatistics")  //
         .def(nb::init<>())
+        .def("__str__", [](const siw::Statistics& self) { return to_string(self); })
         .def("get_maximum_effective_width", &siw::Statistics::get_maximum_effective_width)
         .def("get_average_effective_width", &siw::Statistics::get_average_effective_width)
         .def("get_iw_statistics_by_subproblem", &siw::Statistics::get_iw_statistics_by_subproblem);
@@ -813,15 +1051,16 @@ void bind_module_definitions(nb::module_& m)
         .def("get_statistics", &siw::IEventHandler::get_statistics);
     nb::class_<siw::DefaultEventHandlerImpl, siw::IEventHandler>(m, "DefaultSIWEventHandler").def(nb::init<Problem, bool>(), "problem"_a, "quiet"_a = true);
 
-    m.def("find_solution_siw",
-          &siw::find_solution,
-          "search_context"_a,
-          "start_state"_a = nullptr,
-          "max_arity"_a = nullptr,
-          "siw_event_handler"_a = nullptr,
-          "iw_event_handler"_a = nullptr,
-          "brfs_event_handler"_a = nullptr,
-          "goal_strategy"_a = nullptr);
+    nb::class_<siw::Options>(m, "SIWOptions")  //
+        .def(nb::init<>())
+        .def_rw("start_state", &siw::Options::start_state)
+        .def_rw("siw_event_handler", &siw::Options::siw_event_handler)
+        .def_rw("iw_event_handler", &siw::Options::iw_event_handler)
+        .def_rw("brfs_event_handler", &siw::Options::brfs_event_handler)
+        .def_rw("goal_strategy", &siw::Options::goal_strategy)
+        .def_rw("max_arity", &siw::Options::max_arity);
+
+    m.def("find_solution_siw", &siw::find_solution, "search_context"_a, "options"_a);
 }
 
 }

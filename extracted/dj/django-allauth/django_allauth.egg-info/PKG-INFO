@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-allauth
-Version: 65.8.1
+Version: 65.9.0
 Summary: Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication.
 Home-page: https://allauth.org
 Author: Raymond Penners
@@ -37,6 +37,9 @@ License-File: LICENSE
 License-File: AUTHORS
 Requires-Dist: Django>=4.2.16
 Requires-Dist: asgiref>=3.8.1
+Provides-Extra: idp-oidc
+Requires-Dist: oauthlib<4,>=3.2.2; extra == "idp-oidc"
+Requires-Dist: pyjwt[crypto]<3,>=2.0; extra == "idp-oidc"
 Provides-Extra: mfa
 Requires-Dist: qrcode<9,>=7.0.0; extra == "mfa"
 Requires-Dist: fido2<3,>=1.1.2; extra == "mfa"

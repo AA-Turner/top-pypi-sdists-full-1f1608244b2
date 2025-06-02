@@ -9,14 +9,14 @@ except ImportError:
     from xml.etree.ElementTree import Element as element
 from astropy.utils.data import get_pkg_data_filename
 from pyvo.mivot.version_checker import check_astropy_version
-from pyvo.mivot import MivotViewer
+from pyvo.mivot.viewer import MivotViewer
 from pyvo.mivot.utils.exceptions import MivotError
 
 
 @pytest.mark.skipif(not check_astropy_version(), reason="need astropy 6+")
 def test_xml_viewer(m_viewer):
 
-    m_viewer.next()
+    m_viewer.next_row_view()
     xml_viewer = m_viewer.xml_viewer
     with pytest.raises(MivotError,
                        match="Cannot find dmrole wrong_role in any instances of the VOTable"):

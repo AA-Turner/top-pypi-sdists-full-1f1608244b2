@@ -5,20 +5,23 @@ from copy import deepcopy
 from time import perf_counter
 from typing import AsyncGenerator, AsyncIterator, Dict
 
+import httpx
 from google import genai
 from google.genai import errors as gerrors
 from google.genai import types as gtypes
-from langchain.schema import ChatMessage
+from langchain_core.messages.chat import ChatMessage
 from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
     retry,
+    retry_if_exception,
     stop_after_attempt,
     wait_exponential,
     wait_random_exponential,
 )
 
 from khoj.processor.conversation.utils import (
+    ResponseWithThought,
     commit_conversation_trace,
     get_image_from_base64,
     get_image_from_url,
@@ -34,7 +37,9 @@ logger = logging.getLogger(__name__)
 
 gemini_clients: Dict[str, genai.Client] = {}
 
-MAX_OUTPUT_TOKENS_GEMINI = 8192
+# Output tokens should be more than reasoning tokens.
+# This avoids premature response termination.
+MAX_OUTPUT_TOKENS_GEMINI = 20000
 MAX_REASONING_TOKENS_GEMINI = 10000
 
 SAFETY_SETTINGS = [
@@ -61,15 +66,30 @@ SAFETY_SETTINGS = [
 ]
 
 
+def _is_retryable_error(exception: BaseException) -> bool:
+    """Check if the exception is a retryable error"""
+    # server errors
+    if isinstance(exception, gerrors.APIError):
+        return exception.code in [429, 502, 503, 504]
+    # client errors
+    if isinstance(exception, httpx.TimeoutException) or isinstance(exception, httpx.NetworkError):
+        return True
+    # validation errors
+    if isinstance(exception, ValueError):
+        return True
+    return False
+
+
 @retry(
+    retry=retry_if_exception(_is_retryable_error),
     wait=wait_random_exponential(min=1, max=10),
     stop=stop_after_attempt(2),
     before_sleep=before_sleep_log(logger, logging.DEBUG),
     reraise=True,
 )
 def gemini_completion_with_backoff(
-    messages,
-    system_prompt,
+    messages: list[ChatMessage],
+    system_prompt: str,
     model_name: str,
     temperature=1.0,
     api_key=None,
@@ -83,7 +103,7 @@ def gemini_completion_with_backoff(
         client = get_gemini_client(api_key, api_base_url)
         gemini_clients[api_key] = client
 
-    formatted_messages, system_prompt = format_messages_for_gemini(messages, system_prompt)
+    formatted_messages, system_instruction = format_messages_for_gemini(messages, system_prompt)
 
     # format model response schema
     response_schema = None
@@ -91,12 +111,12 @@ def gemini_completion_with_backoff(
         response_schema = clean_response_schema(model_kwargs["response_schema"])
 
     thinking_config = None
-    if deepthought and model_name.startswith("gemini-2-5"):
+    if deepthought and model_name.startswith("gemini-2.5"):
         thinking_config = gtypes.ThinkingConfig(thinking_budget=MAX_REASONING_TOKENS_GEMINI)
 
     seed = int(os.getenv("KHOJ_LLM_SEED")) if os.getenv("KHOJ_LLM_SEED") else None
     config = gtypes.GenerateContentConfig(
-        system_instruction=system_prompt,
+        system_instruction=system_instruction,
         temperature=temperature,
         thinking_config=thinking_config,
         max_output_tokens=MAX_OUTPUT_TOKENS_GEMINI,
@@ -104,6 +124,7 @@ def gemini_completion_with_backoff(
         response_mime_type=model_kwargs.get("response_mime_type", "text/plain") if model_kwargs else "text/plain",
         response_schema=response_schema,
         seed=seed,
+        http_options=gtypes.HttpOptions(client_args={"timeout": httpx.Timeout(30.0, read=60.0)}),
     )
 
     try:
@@ -127,6 +148,11 @@ def gemini_completion_with_backoff(
         model_name, input_tokens, output_tokens, thought_tokens=thought_tokens, usage=tracer.get("usage")
     )
 
+    # Validate the response. If empty, raise an error to retry.
+    if is_none_or_empty(response_text):
+        logger.warning(f"No response by {model_name}\nLast Message by {messages[-1].role}: {messages[-1].content}.")
+        raise ValueError(f"Empty or no response by {model_name} over API. Retry if needed.")
+
     # Save conversation trace
     tracer["chat_model"] = model_name
     tracer["temperature"] = temperature
@@ -137,88 +163,100 @@ def gemini_completion_with_backoff(
 
 
 @retry(
+    retry=retry_if_exception(_is_retryable_error),
     wait=wait_exponential(multiplier=1, min=4, max=10),
-    stop=stop_after_attempt(2),
-    before_sleep=before_sleep_log(logger, logging.DEBUG),
-    reraise=True,
+    stop=stop_after_attempt(3),
+    before_sleep=before_sleep_log(logger, logging.WARNING),
+    reraise=False,
 )
 async def gemini_chat_completion_with_backoff(
-    messages,
-    model_name,
-    temperature,
-    api_key,
-    api_base_url,
-    system_prompt,
+    messages: list[ChatMessage],
+    model_name: str,
+    temperature: float,
+    api_key: str,
+    api_base_url: str,
+    system_prompt: str,
     model_kwargs=None,
     deepthought=False,
     tracer: dict = {},
-) -> AsyncGenerator[str, None]:
-    try:
-        client = gemini_clients.get(api_key)
-        if not client:
-            client = get_gemini_client(api_key, api_base_url)
-            gemini_clients[api_key] = client
+) -> AsyncGenerator[ResponseWithThought, None]:
+    client = gemini_clients.get(api_key)
+    if not client:
+        client = get_gemini_client(api_key, api_base_url)
+        gemini_clients[api_key] = client
 
-        formatted_messages, system_prompt = format_messages_for_gemini(messages, system_prompt)
+    formatted_messages, system_instruction = format_messages_for_gemini(messages, system_prompt)
 
-        thinking_config = None
-        if deepthought and model_name.startswith("gemini-2-5"):
-            thinking_config = gtypes.ThinkingConfig(thinking_budget=MAX_REASONING_TOKENS_GEMINI)
+    thinking_config = None
+    if deepthought and model_name.startswith("gemini-2.5"):
+        thinking_config = gtypes.ThinkingConfig(thinking_budget=MAX_REASONING_TOKENS_GEMINI, include_thoughts=True)
 
-        seed = int(os.getenv("KHOJ_LLM_SEED")) if os.getenv("KHOJ_LLM_SEED") else None
-        config = gtypes.GenerateContentConfig(
-            system_instruction=system_prompt,
-            temperature=temperature,
-            thinking_config=thinking_config,
-            max_output_tokens=MAX_OUTPUT_TOKENS_GEMINI,
-            stop_sequences=["Notes:\n["],
-            safety_settings=SAFETY_SETTINGS,
-            seed=seed,
-        )
+    seed = int(os.getenv("KHOJ_LLM_SEED")) if os.getenv("KHOJ_LLM_SEED") else None
+    config = gtypes.GenerateContentConfig(
+        system_instruction=system_instruction,
+        temperature=temperature,
+        thinking_config=thinking_config,
+        max_output_tokens=MAX_OUTPUT_TOKENS_GEMINI,
+        stop_sequences=["Notes:\n["],
+        safety_settings=SAFETY_SETTINGS,
+        seed=seed,
+        http_options=gtypes.HttpOptions(async_client_args={"timeout": httpx.Timeout(30.0, read=60.0)}),
+    )
 
-        aggregated_response = ""
-        final_chunk = None
-        start_time = perf_counter()
-        chat_stream: AsyncIterator[gtypes.GenerateContentResponse] = await client.aio.models.generate_content_stream(
-            model=model_name, config=config, contents=formatted_messages
-        )
-        async for chunk in chat_stream:
-            # Log the time taken to start response
-            if final_chunk is None:
-                logger.info(f"First response took: {perf_counter() - start_time:.3f} seconds")
-            # Keep track of the last chunk for usage data
-            final_chunk = chunk
-            # Handle streamed response chunk
-            message, stopped = handle_gemini_response(chunk.candidates, chunk.prompt_feedback)
-            message = message or chunk.text
-            aggregated_response += message
-            yield message
-            if stopped:
-                raise ValueError(message)
+    aggregated_response = ""
+    final_chunk = None
+    response_started = False
+    start_time = perf_counter()
+    chat_stream: AsyncIterator[gtypes.GenerateContentResponse] = await client.aio.models.generate_content_stream(
+        model=model_name, config=config, contents=formatted_messages
+    )
+    async for chunk in chat_stream:
+        # Log the time taken to start response
+        if not response_started:
+            response_started = True
+            logger.info(f"First response took: {perf_counter() - start_time:.3f} seconds")
+        # Keep track of the last chunk for usage data
+        final_chunk = chunk
 
-        # Log the time taken to stream the entire response
-        logger.info(f"Chat streaming took: {perf_counter() - start_time:.3f} seconds")
+        # handle safety, rate-limit, other finish reasons
+        stop_message, stopped = handle_gemini_response(chunk.candidates, chunk.prompt_feedback)
+        if stopped:
+            yield ResponseWithThought(response=stop_message)
+            logger.warning(
+                f"LLM Response Prevented for {model_name}: {stop_message}.\n"
+                + f"Last Message by {messages[-1].role}: {messages[-1].content}"
+            )
+            break
 
-        # Calculate cost of chat
-        input_tokens = final_chunk.usage_metadata.prompt_token_count or 0 if final_chunk else 0
-        output_tokens = final_chunk.usage_metadata.candidates_token_count or 0 if final_chunk else 0
-        thought_tokens = final_chunk.usage_metadata.thoughts_token_count or 0 if final_chunk else 0
-        tracer["usage"] = get_chat_usage_metrics(
-            model_name, input_tokens, output_tokens, thought_tokens=thought_tokens, usage=tracer.get("usage")
-        )
+        # emit thought vs response parts
+        for part in chunk.candidates[0].content.parts:
+            if part.text:
+                aggregated_response += part.text
+                yield ResponseWithThought(response=part.text)
+            if part.thought:
+                yield ResponseWithThought(thought=part.text)
 
-        # Save conversation trace
-        tracer["chat_model"] = model_name
-        tracer["temperature"] = temperature
-        if is_promptrace_enabled():
-            commit_conversation_trace(messages, aggregated_response, tracer)
-    except ValueError as e:
-        logger.warning(
-            f"LLM Response Prevented for {model_name}: {e.args[0]}.\n"
-            + f"Last Message by {messages[-1].role}: {messages[-1].content}"
-        )
-    except Exception as e:
-        logger.error(f"Error in gemini_chat_completion_with_backoff stream: {e}", exc_info=True)
+    # Calculate cost of chat
+    input_tokens = final_chunk.usage_metadata.prompt_token_count or 0 if final_chunk else 0
+    output_tokens = final_chunk.usage_metadata.candidates_token_count or 0 if final_chunk else 0
+    thought_tokens = final_chunk.usage_metadata.thoughts_token_count or 0 if final_chunk else 0
+    tracer["usage"] = get_chat_usage_metrics(
+        model_name, input_tokens, output_tokens, thought_tokens=thought_tokens, usage=tracer.get("usage")
+    )
+
+    # Validate the response. If empty, raise an error to retry.
+    if is_none_or_empty(aggregated_response):
+        logger.warning(f"No response by {model_name}\nLast Message by {messages[-1].role}: {messages[-1].content}.")
+        raise ValueError(f"Empty or no response by {model_name} over API. Retry if needed.")
+
+    # Log the time taken to stream the entire response
+    logger.info(f"Chat streaming took: {perf_counter() - start_time:.3f} seconds")
+
+    # Save conversation trace
+    tracer["chat_model"] = model_name
+    tracer["temperature"] = temperature
+    if is_promptrace_enabled():
+        commit_conversation_trace(messages, aggregated_response, tracer)
 
 
 def handle_gemini_response(
@@ -228,6 +266,10 @@ def handle_gemini_response(
     # Check if the response was blocked due to safety concerns with the prompt
     if len(candidates) == 0 and prompt_feedback:
         message = f"\nI'd prefer to not respond to that due to **{prompt_feedback.block_reason.name}** issues with your query."
+        stopped = True
+    # If response hits rate limit
+    elif isinstance(candidates[0], str):
+        message = candidates[0]
         stopped = True
     # Check if the response was blocked due to safety concerns with the generated content
     elif candidates[0].finish_reason == gtypes.FinishReason.SAFETY:
@@ -284,7 +326,10 @@ def format_messages_for_gemini(
     messages = deepcopy(original_messages)
     for message in messages.copy():
         if message.role == "system":
-            system_prompt += message.content
+            if isinstance(message.content, list):
+                system_prompt += "\n".join([part["text"] for part in message.content if part["type"] == "text"])
+            else:
+                system_prompt += message.content
             messages.remove(message)
     system_prompt = None if is_none_or_empty(system_prompt) else system_prompt
 

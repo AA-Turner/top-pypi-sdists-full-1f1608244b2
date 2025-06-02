@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: django-silk
-Version: 5.3.2
+Version: 5.4.0
 Summary: Silky smooth profiling for the Django Framework
 Home-page: https://github.com/jazzband/django-silk
 Author: Michael Ford
@@ -10,8 +10,8 @@ Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Web Environment
 Classifier: Framework :: Django
 Classifier: Framework :: Django :: 4.2
-Classifier: Framework :: Django :: 5.0
 Classifier: Framework :: Django :: 5.1
+Classifier: Framework :: Django :: 5.2
 Classifier: Intended Audience :: Developers
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
@@ -27,8 +27,21 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: Django>=4.2
 Requires-Dist: sqlparse
-Requires-Dist: autopep8
 Requires-Dist: gprof2dot>=2017.09.19
+Provides-Extra: formatting
+Requires-Dist: autopep8; extra == "formatting"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # Silk
 
@@ -62,7 +75,7 @@ Silk is a live profiling and inspection tool for the Django framework. Silk inte
 
 Silk has been tested with:
 
-* Django: 4.2, 5.0, 5.1
+* Django: 4.2, 5.1, 5.2
 * Python: 3.9, 3.10, 3.11, 3.12, 3.13
 
 ## Installation
@@ -71,6 +84,12 @@ Via pip into a `virtualenv`:
 
 ```bash
 pip install django-silk
+```
+
+To including optional formatting of python snippets:
+
+```bash
+pip install django-silk[formatting]
 ```
 
 In `settings.py` add the following:
@@ -136,7 +155,7 @@ You can install from master using the following, but please be aware that the ve
 may not be working for all versions specified in [requirements](#requirements)
 
 ```bash
-pip install -e git+https://github.com/jazzband/django-silk.git#egg=django-silk
+pip install -e git+https://github.com/jazzband/django-silk.git#egg=django_silk
 ```
 
 ## Features

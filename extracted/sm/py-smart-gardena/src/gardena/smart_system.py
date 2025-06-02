@@ -1,7 +1,8 @@
 import asyncio
-
 import json
 import logging
+import ssl
+import functools
 
 import backoff
 from httpx import HTTPStatusError
@@ -20,10 +21,16 @@ from gardena.token_manager import TokenManager
 
 MAX_BACKOFF_VALUE = 900
 
+@functools.lru_cache(maxsize=1)
+def get_ssl_context():
+    """Create and cache SSL context outside of event loop."""
+    context = ssl.create_default_context()
+    return context
+
 class SmartSystem:
     """Base class to communicate with gardena and handle network calls"""
 
-    def __init__(self, client_id=None, client_secret=None, level=logging.INFO):
+    def __init__(self, client_id=None, client_secret=None, level=logging.INFO, ssl_context=None):
         """Constructor, create instance of gateway"""
         if client_id is None or client_secret is None:
             raise ValueError(
@@ -57,6 +64,8 @@ class SmartSystem:
             "POWER_SOCKET",
             "DEVICE",
         ]
+        # Use provided SSL context or get cached one
+        self._ssl_context = ssl_context or get_ssl_context()
 
     def create_header(self, include_json=False):
         headers = {"Authorization-Provider": "husqvarna", "X-Api-Key": self.client_id}
@@ -76,7 +85,8 @@ class SmartSystem:
             self.client_secret,
             update_token=self.token_saver,
             grant_type="client_credentials",
-            token_endpoint=url
+            token_endpoint=url,
+            verify=self._ssl_context  # Pass SSL context to httpx client
         )
         self.token_manager.load_from_oauth2_token(await self.client.fetch_token(
             url, grant_type="client_credentials"
@@ -99,7 +109,7 @@ class SmartSystem:
         headers = self.create_header(True)
 
         r = await self.client.put(
-            f"{self.SMART_HOST}/v1/command/{service_id}",
+            f"{self.SMART_HOST}/v2/command/{service_id}",
             headers=headers,
             data=json.dumps(args, ensure_ascii=False),
         )
@@ -145,7 +155,7 @@ class SmartSystem:
 
     async def update_locations(self):
         response_data = await self.__call_smart_system_get(
-            f"{self.SMART_HOST}/v1/locations"
+            f"{self.SMART_HOST}/v2/locations"
         )
         if response_data is not None:
             if "data" not in response_data or len(response_data["data"]) < 1:
@@ -159,7 +169,7 @@ class SmartSystem:
 
     async def update_devices(self, location):
         response_data = await self.__call_smart_system_get(
-            f"{self.SMART_HOST}/v1/locations/{location.id}"
+            f"{self.SMART_HOST}/v2/locations/{location.id}"
         )
         if response_data is not None:
             #  TODO : test if key exists
@@ -212,7 +222,7 @@ class SmartSystem:
         }
         self.logger.debug("Trying to get Websocket url")
         r = await self.client.post(
-            f"{self.SMART_HOST}/v1/websocket",
+            f"{self.SMART_HOST}/v2/websocket",
             headers=self.create_header(True),
             data=json.dumps(args, ensure_ascii=False),
         )
@@ -225,7 +235,7 @@ class SmartSystem:
 
     async def __launch_websocket_loop(self, url):
         self.logger.debug("Connecting to websocket ..")
-        websocket = await connect(url, ping_interval=150)
+        websocket = await connect(url, ping_interval=150, ssl=self._ssl_context)
         self.set_ws_status(True)
         self.logger.debug("Connected !")
         while not self.should_stop:

@@ -3,6 +3,7 @@
 import csv
 import json
 import os
+import sys
 import requests
 import shutil
 import tarfile
@@ -15,6 +16,7 @@ import ipywidgets as widgets
 import numpy as np
 import pandas as pd
 import whitebox
+import xyzservices
 import subprocess
 from pathlib import Path
 from typing import Union, List, Dict, Optional, Tuple, TYPE_CHECKING, Any
@@ -515,45 +517,50 @@ def hex_to_rgb(value: Optional[str] = "FFFFFF") -> Tuple[int, int, int]:
     return tuple(int(value[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 
-def check_color(in_color: Union[str, Tuple]) -> str:
+def check_color(in_color: Union[str, Tuple, List]) -> str:
     """Checks the input color and returns the corresponding hex color code.
 
     Args:
-            in_color (str or tuple or list): It can be a string (e.g., 'red', '#ffff00', 'ffff00', 'ff0') or RGB tuple (e.g., (255, 127, 0)).
+        in_color (str or tuple or list): It can be a string (e.g., 'red', '#ffff00', 'ffff00', 'ff0') or RGB tuple/list (e.g., (255, 127, 0)).
 
     Returns:
         str: A hex color code.
     """
-    import colour
+    from matplotlib import colors
 
     out_color = "#000000"  # default black color
-    if (isinstance(in_color, tuple) or isinstance(in_color, list)) and len(
-        in_color
-    ) == 3:
+    # Handle RGB tuple or list
+    if isinstance(in_color, (tuple, list)) and len(in_color) == 3:
         # rescale color if necessary
         if all(isinstance(item, int) for item in in_color):
+            # Ensure values are floats between 0 and 1 for to_hex
             in_color = [c / 255.0 for c in in_color]
-
-        return colour.Color(rgb=tuple(in_color)).hex_l
-
-    else:
-        # try to guess the color system
         try:
-            return colour.Color(in_color).hex_l
-
-        except Exception as e:
-            pass
-
-        # try again by adding an extra # (GEE handle hex codes without #)
-        try:
-            return colour.Color(f"#{in_color}").hex_l
-
-        except Exception as e:
+            return colors.to_hex(in_color)
+        except ValueError:
             print(
-                f"The provided color ({in_color}) is invalid. Using the default black color."
+                f"The provided RGB color ({in_color}) is invalid. Using the default black color."
             )
-            print(e)
+            return out_color
 
+    # Handle string color input
+    elif isinstance(in_color, str):
+        try:
+            # Try converting directly (handles color names and hex with #)
+            return colors.to_hex(in_color)
+        except ValueError:
+            try:
+                # Try again by adding an extra # (handles hex without #)
+                return colors.to_hex(f"#{in_color}")
+            except ValueError:
+                print(
+                    f"The provided color string ({in_color}) is invalid. Using the default black color."
+                )
+                return out_color
+    else:
+        print(
+            f"The provided color type ({type(in_color)}) is invalid. Using the default black color."
+        )
         return out_color
 
 
@@ -5708,7 +5715,7 @@ class The_national_map_USGS:
 
         Args:
             region (str | list): an URL|filepath to a vector dataset to a polygon
-            geopandas_reader_args (dict, optional): A dictionary of arguments to pass to the geopandas.read_file() function.
+            geopandas_args (dict, optional): A dictionary of arguments to pass to the geopandas.read_file() function.
                 Used for reading a region URL|filepath.
         """
         import geopandas as gpd
@@ -8863,7 +8870,7 @@ def zonal_stats(
             use either by name or number. Defaults to 0
         band_num (int | str, optional): If raster is a GDAL source, the band number to use (counting from 1). defaults to 1.
         nodata (float, optional): If raster is a GDAL source, this value overrides any NODATA value
-            specified in the file’s metadata. If None, the file’s metadata’s NODATA value (if any)
+            specified in the file's metadata. If None, the file's metadata's NODATA value (if any)
             will be used. defaults to None.
         affine (Affine, optional): required only for ndarrays, otherwise it is read from src. Defaults to None.
         stats (str | list, optional): Which statistics to calculate for each zone.
@@ -10546,9 +10553,9 @@ def get_google_map(
         return
 
     if api_key is None:
-        api_key = os.environ.get("GOOGLE_MAPS_API_KEY", "YOUR-API-KEY")
+        api_key = os.environ.get("GOOGLE_MAPS_API_KEY", None)
 
-    if api_key == "":
+    if api_key is None:
         MAP_TILES = {
             "ROADMAP": {
                 "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
@@ -10572,42 +10579,24 @@ def get_google_map(
             },
         }
 
-        print(
-            "Google Maps API key is required to use Google Maps. You can generate one from https://bit.ly/3sw0THG and use geemap.set_api_key(), defaulting to Esri basemaps."
-        )
-
     else:
         MAP_TILES = {
-            "ROADMAP": {
-                "url": f"https://mt1.google.com/vt/lyrs=m&x={{x}}&y={{y}}&z={{z}}&key={api_key}",
-                "attribution": "Google",
-                "name": "Google Maps",
-            },
-            "SATELLITE": {
-                "url": f"https://mt1.google.com/vt/lyrs=s&x={{x}}&y={{y}}&z={{z}}&key={api_key}",
-                "attribution": "Google",
-                "name": "Google Satellite",
-            },
-            "TERRAIN": {
-                "url": f"https://mt1.google.com/vt/lyrs=p&x={{x}}&y={{y}}&z={{z}}&key={api_key}",
-                "attribution": "Google",
-                "name": "Google Terrain",
-            },
-            "HYBRID": {
-                "url": f"https://mt1.google.com/vt/lyrs=y&x={{x}}&y={{y}}&z={{z}}&key={api_key}",
-                "attribution": "Google",
-                "name": "Google Hybrid",
-            },
+            "ROADMAP": GoogleMapsTileProvider(map_type="roadmap"),
+            "SATELLITE": GoogleMapsTileProvider(map_type="satellite"),
+            "TERRAIN": GoogleMapsTileProvider(map_type="terrain"),
+            "HYBRID": GoogleMapsTileProvider(map_type="hybrid"),
         }
 
     if "max_zoom" not in kwargs:
         kwargs["max_zoom"] = 24
 
+    url = MAP_TILES[map_type]["url"]
+
     if backend == "ipyleaflet":
         import ipyleaflet
 
         layer = ipyleaflet.TileLayer(
-            url=MAP_TILES[map_type]["url"],
+            url=url,
             name=MAP_TILES[map_type]["name"],
             attribution=MAP_TILES[map_type]["attribution"],
             visible=show,
@@ -10617,7 +10606,7 @@ def get_google_map(
         import folium
 
         layer = folium.TileLayer(
-            tiles=MAP_TILES[map_type]["url"],
+            tiles=url,
             name=MAP_TILES[map_type]["name"],
             attr=MAP_TILES[map_type]["attribution"],
             overlay=True,
@@ -17307,3 +17296,189 @@ def get_ee_tile_url(
     except requests.RequestException as e:
         print(f"Request failed: {e}")
         return None
+
+
+class GoogleMapsTileProvider(xyzservices.TileProvider):
+    """Google Maps TileProvider."""
+
+    MAP_TYPE_CONFIG = {
+        "roadmap": {"mapType": "roadmap"},
+        "satellite": {"mapType": "satellite"},
+        "terrain": {
+            "mapType": "terrain",
+            "layerTypes": ["layerRoadmap"],
+        },
+        "hybrid": {
+            "mapType": "satellite",
+            "layerTypes": ["layerRoadmap"],
+        },
+    }
+
+    def __init__(
+        self,
+        map_type: str = "roadmap",
+        language: str = "en-Us",
+        region: str = "US",
+        api_key: Optional[str] = None,
+        **kwargs: Any,
+    ):
+        """
+        Generates Google Map tiles using the provided parameters. To get an API key
+            and enable Map Tiles API, visit
+            https://developers.google.com/maps/get-started#create-project.
+            You can set the API key using the environment variable
+            `GOOGLE_MAPS_API_KEY` or by passing it as an argument.
+
+        Args:
+            map_type (str, optional): The type of map to generate. Options are
+                'roadmap', 'satellite', 'terrain', 'hybrid', 'traffic', 'streetview'.
+                Defaults to 'roadmap'.
+            language (str, optional): An IETF language tag that specifies the
+                language used to display information on the tiles, such as 'zh-Cn'.
+                Defaults to 'en-Us'.
+            region (str, optional): A Common Locale Data Repository region
+                identifier (two uppercase letters) that represents the physical
+                location of the user. Defaults to 'US'.
+            api_key (str, optional): The API key to use for the Google Maps API.
+                If not provided, it will try to get it from the environment or
+                Colab user data with the key 'GOOGLE_MAPS_API_KEY'. Defaults to None.
+            **kwargs: Additional parameters to pass to the map generation. For more
+                info, visit https://bit.ly/3UhbZKU
+
+        Raises:
+            ValueError: If the API key is not provided and cannot be found in the
+                environment or Colab user data.
+            ValueError: If the map_type is not one of the allowed types.
+
+        Example:
+            >>> from leafmap.basemaps import GoogleMapsTileProvider
+            >>> m = leafmap.Map()
+            >>> basemap = GoogleMapsTileProvider(map_type='roadmap',
+                language="en-Us", region="US", scale="scaleFactor2x", highDpi=True)
+            >>> m.add_basemap(basemap)
+
+        Returns:
+            TileProvider object: A TileProvider object with the Google Maps tile.
+        """
+
+        key = api_key or get_google_maps_api_key()
+        if key is None:
+            raise ValueError(
+                "API key is required to access Google Maps API. To get an API "
+                "key and enable Map Tiles API, visit "
+                "https://developers.google.com/maps/get-started#create-project"
+            )
+
+        if map_type not in self.MAP_TYPE_CONFIG:
+            raise ValueError(f"map_type must be one of: {self.MAP_TYPE_CONFIG.keys()}")
+
+        request_url = f"https://tile.googleapis.com/v1/createSession?key={key}"
+        response = requests.post(
+            url=request_url,
+            headers={"Content-Type": "application/json"},
+            json={
+                **self.MAP_TYPE_CONFIG[map_type],
+                "language": language,
+                "region": region,
+                **kwargs,
+            },
+            timeout=3,
+        )
+
+        if response.status_code == requests.codes.ok:
+            json = response.json()
+            map_name = map_type.capitalize()
+            super().__init__(
+                {
+                    "url": f"https://tile.googleapis.com/v1/2dtiles/{{z}}/{{x}}/{{y}}?session={json['session']}&key={{accessToken}}",
+                    "attribution": f"© Google {map_name}",
+                    "accessToken": key,
+                    "name": f"Google.{map_name}",
+                    "ext": json["imageFormat"],
+                    "tileSize": json["tileWidth"],
+                }
+            )
+            self["url"] = self.build_url()
+        else:
+            raise RuntimeError(
+                f"Error creating a Maps API session:\n{response.json()}."
+            )
+
+
+def get_google_map_tile_providers(
+    language: str = "en-Us",
+    region: str = "US",
+    api_key: Optional[str] = None,
+    **kwargs: Any,
+):
+    """
+    Generates a dictionary of Google Map tile providers for different map types.
+
+    Args:
+        language (str, optional): An IETF language tag that specifies the
+            language used to display information on the tiles, such as 'zh-Cn'.
+            Defaults to 'en-Us'.
+        region (str, optional): A Common Locale Data Repository region
+            identifier (two uppercase letters) that represents the physical
+            location of the user. Defaults to 'US'.
+        api_key (str, optional): The API key to use for the Google Maps API.
+            If not provided, it will try to get it from the environment or
+            Colab user data with the key 'GOOGLE_MAPS_API_KEY'. Defaults to None.
+        **kwargs: Additional parameters to pass to the map generation. For more
+            info, visit https://bit.ly/3UhbZKU
+
+    Returns:
+        dict: A dictionary where the keys are the map types
+        ('roadmap', 'satellite', 'terrain', 'hybrid')
+        and the values are the corresponding GoogleMapsTileProvider objects.
+    """
+    gmap_providers = {}
+
+    for m_type in GoogleMapsTileProvider.MAP_TYPE_CONFIG:
+        gmap_providers[m_type] = GoogleMapsTileProvider(
+            map_type=m_type, language=language, region=region, api_key=api_key, **kwargs
+        )
+
+    return gmap_providers
+
+
+def get_google_maps_api_key(key: str = "GOOGLE_MAPS_API_KEY") -> Optional[str]:
+    """
+    Retrieves the Google Maps API key from the environment or Colab user data.
+
+    Args:
+        key (str, optional): The name of the environment variable or Colab user
+            data key where the API key is stored. Defaults to
+            'GOOGLE_MAPS_API_KEY'.
+
+    Returns:
+        str: The API key, or None if it could not be found.
+    """
+    if api_key := get_env_var(key):
+        return api_key
+    return os.environ.get(key, None)
+
+
+def get_env_var(key: str) -> Optional[str]:
+    """Retrieves an environment variable or Colab secret for the given key.
+
+    Colab secrets have precedence over environment variables.
+
+    Args:
+        key (str): The key that's used to fetch the environment variable.
+
+    Returns:
+        Optional[str]: The retrieved key, or None if no environment variable was found.
+    """
+    if not key:
+        return None
+
+    if "google.colab" in sys.modules:
+        from google.colab import userdata
+
+        try:
+            return userdata.get(key)
+        except (userdata.SecretNotFoundError, userdata.NotebookAccessError):
+            pass
+
+    return os.environ.get(key)

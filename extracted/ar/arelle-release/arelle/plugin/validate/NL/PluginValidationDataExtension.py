@@ -13,6 +13,8 @@ import regex as re
 from lxml.etree import _Comment, _ElementTree, _Entity, _ProcessingInstruction
 
 from arelle.FunctionIxt import ixtNamespaces
+from arelle import ModelDocument as ModelDocumentFile
+from arelle.ModelDocument import ModelDocument
 from arelle.ModelInstanceObject import ModelContext, ModelFact, ModelInlineFootnote, ModelUnit, ModelInlineFact
 from arelle.ModelObject import ModelObject
 from arelle.ModelValue import QName
@@ -20,13 +22,14 @@ from arelle.ModelXbrl import ModelXbrl
 from arelle.typing import assert_type
 from arelle.utils.PluginData import PluginData
 from arelle.utils.validate.ValidationUtil import etreeIterWithDepth
+from arelle.ValidateXbrl import ValidateXbrl
 from arelle.XbrlConst import ixbrl11, xhtmlBaseIdentifier, xmlBaseIdentifier
 from arelle.XmlValidate import lexicalPatterns
 from arelle.XmlValidateConst import VALID
 
 XBRLI_IDENTIFIER_PATTERN = re.compile(r"^(?!00)\d{8}$")
 XBRLI_IDENTIFIER_SCHEMA = 'http://www.kvk.nl/kvk-id'
-
+MAX_REPORT_PACKAGE_SIZE_MBS = 100
 
 DISALLOWED_IXT_NAMESPACES = frozenset((
     ixtNamespaces["ixt v1"],
@@ -52,6 +55,11 @@ ALLOWABLE_LANGUAGES = frozenset((
     'en',
     'de',
     'fr'
+))
+
+EFFECTIVE_TAXONOMY_URLS = frozenset((
+    'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-nlgaap-ext.xsd',
+    'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-ifrs-ext.xsd',
 ))
 
 @dataclass(frozen=True)
@@ -135,6 +143,21 @@ class PluginValidationDataExtension(PluginData):
             contextsWithPeriodTimeZone=contextsWithPeriodTimeZone,
             contextsWithSegments=contextsWithSegments,
         )
+
+    def checkFilingDTS(
+            self,
+            val: ValidateXbrl,
+            modelDocument: ModelDocument,
+            visited: list[ModelDocument]
+    ) -> None:
+        visited.append(modelDocument)
+        for referencedDocument, modelDocumentReference in modelDocument.referencesDocument.items():
+            if referencedDocument not in visited and referencedDocument.inDTS:
+                self.checkFilingDTS(val, referencedDocument, visited)
+        if modelDocument.type == ModelDocumentFile.Type.SCHEMA:
+            for doc, docRef in modelDocument.referencesDocument.items():
+                if "import" in docRef.referenceTypes:
+                    val.extensionImportedUrls.add(doc.uri)
 
     @lru_cache(1)
     def checkHiddenElements(self, modelXbrl: ModelXbrl) -> HiddenElementsData:
@@ -337,6 +360,17 @@ class PluginValidationDataExtension(PluginData):
                         reportXmlLang = xmlLang
                         firstRootmostXmlLangDepth = depth
         return reportXmlLang
+
+    @lru_cache(1)
+    def getTargetElements(self, modelXbrl: ModelXbrl) -> list[Any]:
+        targetElements = []
+        for ixdsHtmlRootElt in modelXbrl.ixdsHtmlElements:
+            ixNStag = getattr(ixdsHtmlRootElt.modelDocument, "ixNStag", ixbrl11)
+            ixTags = set(ixNStag + ln for ln in ("nonNumeric", "nonFraction", "references", "relationship"))
+            for elt, depth in etreeIterWithDepth(ixdsHtmlRootElt):
+                if elt.tag in ixTags and elt.get("target"):
+                    targetElements.append(elt)
+        return targetElements
 
     @lru_cache(1)
     def isFilenameValidCharacters(self, filename: str) -> bool:

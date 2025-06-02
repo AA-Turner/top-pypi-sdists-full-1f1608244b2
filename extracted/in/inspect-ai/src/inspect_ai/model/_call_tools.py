@@ -4,6 +4,7 @@ import types
 from copy import copy
 from dataclasses import is_dataclass
 from datetime import date, datetime, time
+from enum import EnumMeta
 from logging import getLogger
 from textwrap import dedent
 from types import UnionType
@@ -172,7 +173,7 @@ async def execute_tools(
             except LimitExceededError as ex:
                 tool_error = ToolCallError(
                     "limit",
-                    f"The tool exceeded its {ex.type} limit of {ex.limit}.",
+                    f"The tool exceeded its {ex.type} limit of {ex.limit_str}.",
                 )
             except ToolParsingError as ex:
                 tool_error = ToolCallError("parsing", ex.message)
@@ -497,7 +498,7 @@ async def agent_handoff(
             ChatMessageUser(
                 content=(
                     f"The {agent_name} exceeded its {limit_error.type} limit of "
-                    f"{limit_error.limit}."
+                    f"{limit_error.limit_str}."
                 )
             )
         )
@@ -548,6 +549,7 @@ def tools_info(
                     name=tool.name,
                     description=tool.description,
                     parameters=tool.parameters,
+                    options=tool.options,
                 )
             )
     return tools_info
@@ -652,6 +654,8 @@ def tool_param(type_hint: Type[Any], input: Any) -> Any:
             return type_hint(**dataclass_data)
         elif issubclass(type_hint, BaseModel):
             return type_hint(**input)
+        elif isinstance(type_hint, EnumMeta):
+            return type_hint(input)
         else:
             return input
     elif origin is list or origin is List:

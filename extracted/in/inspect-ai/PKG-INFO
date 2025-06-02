@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: inspect_ai
-Version: 0.3.99
+Version: 0.3.100
 Summary: Framework for large language model evaluations
 Author: UK AI Security Institute
 License: MIT License
@@ -40,7 +40,7 @@ Requires-Dist: nest_asyncio
 Requires-Dist: numpy
 Requires-Dist: platformdirs>=2.3.0
 Requires-Dist: psutil
-Requires-Dist: pydantic>=2
+Requires-Dist: pydantic>=2.11.4
 Requires-Dist: python-dotenv>=0.16.0
 Requires-Dist: pyyaml
 Requires-Dist: rich<14.0.0,>=13.3.3
@@ -66,7 +66,7 @@ Requires-Dist: markdown; extra == "dev"
 Requires-Dist: mcp; extra == "dev"
 Requires-Dist: mistralai; extra == "dev"
 Requires-Dist: moto[server]; extra == "dev"
-Requires-Dist: mypy; extra == "dev"
+Requires-Dist: mypy>=1.16.0; extra == "dev"
 Requires-Dist: nbformat; extra == "dev"
 Requires-Dist: openai; extra == "dev"
 Requires-Dist: pandas>=2.0.0; extra == "dev"

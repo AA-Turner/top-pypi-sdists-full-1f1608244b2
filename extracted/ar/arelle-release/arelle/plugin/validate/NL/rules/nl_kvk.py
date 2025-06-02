@@ -4,6 +4,7 @@ See COPYRIGHT.md for copyright information.
 from __future__ import annotations
 
 from datetime import date
+import zipfile
 
 from arelle.ModelInstanceObject import ModelInlineFact
 from arelle.ValidateDuplicateFacts import getDuplicateFactSets
@@ -20,8 +21,10 @@ from arelle.utils.validate.Validation import Validation
 from arelle.ValidateDuplicateFacts import getHashEquivalentFactGroups, getAspectEqualFacts
 from arelle.utils.validate.ValidationUtil import etreeIterWithDepth
 from ..DisclosureSystems import DISCLOSURE_SYSTEM_NL_INLINE_2024
-from ..PluginValidationDataExtension import (PluginValidationDataExtension, XBRLI_IDENTIFIER_PATTERN,
-                                             XBRLI_IDENTIFIER_SCHEMA, DISALLOWED_IXT_NAMESPACES, ALLOWABLE_LANGUAGES)
+from ..PluginValidationDataExtension import (PluginValidationDataExtension, ALLOWABLE_LANGUAGES,
+                                             DISALLOWED_IXT_NAMESPACES, EFFECTIVE_TAXONOMY_URLS,
+                                             MAX_REPORT_PACKAGE_SIZE_MBS, XBRLI_IDENTIFIER_PATTERN,
+                                             XBRLI_IDENTIFIER_SCHEMA)
 
 if TYPE_CHECKING:
     from arelle.ModelXbrl import ModelXbrl
@@ -706,6 +709,30 @@ def rule_nl_kvk_3_5_2_3(
         DISCLOSURE_SYSTEM_NL_INLINE_2024
     ],
 )
+def rule_nl_kvk_3_5_3_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.5.3.1: The default target attribute MUST be used for the annual report content.
+    """
+    targetElements = pluginData.getTargetElements(val.modelXbrl)
+    if targetElements:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.5.3.1.defaultTargetAttributeNotUsed',
+            msg=_('Target attribute must not be used for the annual report content.'),
+            modelObject=targetElements
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
 def rule_nl_kvk_3_5_4_1 (
         pluginData: PluginValidationDataExtension,
         val: ValidateXbrl,
@@ -818,3 +845,58 @@ def rule_nl_kvk_3_6_3_3(
                   'Allowed characters include: A-Z, a-z, 0-9, underscore ( _ ), period ( . ), and hyphen ( - ). '
                   'Update filing naming to review unallowed characters. '
                   'Invalid filenames: %(invalidBasenames)s'))
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_4_1_2_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.4.1.2.1: Validate that the imported taxonomy matches the KVK-specified entry point.
+        - https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-nlgaap-ext.xsd,
+        - https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-ifrs-ext.xsd.
+    """
+    if val.modelXbrl.modelDocument is not None:
+        pluginData.checkFilingDTS(val, val.modelXbrl.modelDocument, [])
+        if not any(e in val.extensionImportedUrls for e in EFFECTIVE_TAXONOMY_URLS):
+            yield Validation.error(
+                codes='NL.NL-KVK.4.1.2.1.requiredEntryPointNotImported',
+                msg=_('The extension taxonomy must import the entry point of the taxonomy files prepared by KVK.'),
+                modelObject=val.modelXbrl.modelDocument
+            )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_6_1_1_1(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.6.1.1.1: The size of the report package MUST NOT exceed 100 MB.
+    """
+    if val.modelXbrl.fileSource.fs and isinstance(val.modelXbrl.fileSource.fs, zipfile.ZipFile):
+        maxMB = float(MAX_REPORT_PACKAGE_SIZE_MBS)
+        # The following code computes report package size by adding the compressed file sizes within the package.
+        # This method of computation is over 99% accurate and gets more accurate the larger the filesize is.
+        _size = sum(zi.compress_size for zi in val.modelXbrl.fileSource.fs.infolist())
+        if _size > maxMB * 1000000:
+            yield Validation.error(
+                codes='NL.NL-KVK.6.1.1.1.reportPackageMaximumSizeExceeded',
+                msg=_('The size of the report package must not exceed %(maxSize)s MBs, size is %(size)s MBs.'),
+                modelObject=val.modelXbrl, maxSize=MAX_REPORT_PACKAGE_SIZE_MBS, size=int(_size/1000000)
+            )

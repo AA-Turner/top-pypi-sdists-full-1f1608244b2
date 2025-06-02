@@ -70,7 +70,7 @@ def authed_client(
         client.load(os.environ["GARTH_HOME"])
     except KeyError:
         client.configure(oauth1_token=oauth1_token, oauth2_token=oauth2_token)
-    assert client.oauth2_token
+    assert client.oauth2_token and isinstance(client.oauth2_token, OAuth2Token)
     assert not client.oauth2_token.expired
     return client
 
@@ -143,15 +143,16 @@ def sanitize_response(response):
         except json.JSONDecodeError:
             pass
         else:
-            for field in [
-                "access_token",
-                "refresh_token",
-                "jti",
-                "consumer_key",
-                "consumer_secret",
-            ]:
-                if field in body_json:
-                    body_json[field] = "SANITIZED"
+            if body_json and isinstance(body_json, dict):
+                for field in [
+                    "access_token",
+                    "refresh_token",
+                    "jti",
+                    "consumer_key",
+                    "consumer_secret",
+                ]:
+                    if field in body_json:
+                        body_json[field] = "SANITIZED"
 
             body = json.dumps(body_json)
         response["body"]["string"] = body.encode("utf8")

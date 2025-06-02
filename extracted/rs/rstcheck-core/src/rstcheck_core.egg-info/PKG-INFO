@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: rstcheck-core
-Version: 1.2.1
+Version: 1.2.2
 Summary: Checks syntax of reStructuredText and code blocks nested within it
 Author-email: Steven Myint <git@stevenmyint.com>
 Maintainer-email: Christian Riedel <cielquan@protonmail.com>
@@ -10,16 +10,14 @@ Project-URL: Repository, https://github.com/rstcheck/rstcheck-core
 Project-URL: Changelog, https://github.com/rstcheck/rstcheck-core/blob/main/CHANGELOG.md
 Keywords: restructuredtext,rst,linter,static-analysis
 Classifier: Topic :: Software Development :: Quality Assurance
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
 License-File: AUTHORS.rst
 Requires-Dist: docutils>=0.7
 Requires-Dist: pydantic>=2
-Requires-Dist: importlib-metadata>=1.6; python_version <= "3.8"
-Requires-Dist: typing-extensions>=3.7.4; python_version <= "3.8"
 Provides-Extra: sphinx
-Requires-Dist: sphinx>=5.0; extra == "sphinx"
+Requires-Dist: sphinx>=6.0; extra == "sphinx"
 Provides-Extra: toml
 Requires-Dist: tomli>=2.0; python_version <= "3.10" and extra == "toml"
 Provides-Extra: yaml
@@ -33,8 +31,8 @@ Requires-Dist: pytest-sugar>=0.9.5; extra == "testing"
 Requires-Dist: pytest-randomly>=3.0; extra == "testing"
 Requires-Dist: pytest-mock>=3.7; extra == "testing"
 Provides-Extra: docs
-Requires-Dist: sphinx!=7.2.5,>=5.0; extra == "docs"
-Requires-Dist: m2r2>=0.3.2; extra == "docs"
+Requires-Dist: sphinx!=7.2.5,>=6.0; extra == "docs"
+Requires-Dist: myst-parser>=3; extra == "docs"
 Requires-Dist: sphinx-rtd-theme>=1.2; extra == "docs"
 Requires-Dist: sphinx-autodoc-typehints>=1.15; extra == "docs"
 Requires-Dist: sphinxcontrib-apidoc>=0.3; extra == "docs"
@@ -47,6 +45,7 @@ Requires-Dist: types-PyYAML>=6.0.0; extra == "type-check"
 Provides-Extra: dev
 Requires-Dist: rstcheck-core[docs,sphinx,testing,toml,type-check,yaml]; extra == "dev"
 Requires-Dist: tox>=3.15; extra == "dev"
+Dynamic: license-file
 
 =============
 rstcheck-core

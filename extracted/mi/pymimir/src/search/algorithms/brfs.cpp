@@ -68,35 +68,29 @@ get_or_create_search_node(size_t state_index, const BrFSSearchNodeImpl& default_
  * BrFS
  */
 
-SearchResult find_solution(const SearchContext& context,
-                           State start_state_,
-                           EventHandler event_handler_,
-                           GoalStrategy goal_strategy_,
-                           PruningStrategy pruning_strategy_,
-                           bool stop_if_goal,
-                           uint32_t max_num_states,
-                           uint32_t max_time_in_ms)
+SearchResult find_solution(const SearchContext& context, const Options& options)
 {
     const auto& problem = *context->get_problem();
     auto& applicable_action_generator = *context->get_applicable_action_generator();
     auto& state_repository = *context->get_state_repository();
 
-    const auto [start_state, start_g_value] =
-        (start_state_) ? std::make_pair(start_state_, compute_state_metric_value(start_state_, problem)) : state_repository.get_or_create_initial_state();
-    const auto event_handler = (event_handler_) ? event_handler_ : DefaultEventHandlerImpl::create(context->get_problem());
-    const auto goal_strategy = (goal_strategy_) ? goal_strategy_ : ProblemGoalStrategyImpl::create(context->get_problem());
-    const auto pruning_strategy = (pruning_strategy_) ? pruning_strategy_ : DuplicatePruningStrategyImpl::create();
+    const auto [start_state, start_g_value] = (options.start_state) ?
+                                                  std::make_pair(options.start_state, compute_state_metric_value(options.start_state, problem)) :
+                                                  state_repository.get_or_create_initial_state();
+    const auto event_handler = (options.event_handler) ? options.event_handler : DefaultEventHandlerImpl::create(context->get_problem());
+    const auto goal_strategy = (options.goal_strategy) ? options.goal_strategy : ProblemGoalStrategyImpl::create(context->get_problem());
+    const auto pruning_strategy = (options.pruning_strategy) ? options.pruning_strategy : DuplicatePruningStrategyImpl::create();
 
     auto result = SearchResult();
     auto default_search_node = BrFSSearchNodeImpl { SearchNodeStatus::NEW, std::numeric_limits<Index>::max(), DiscreteCost(0) };
     auto search_nodes = SearchNodeImplVector<DiscreteCost>();
     auto queue = std::deque<State>();
 
-    event_handler->on_start_search(start_state);
-
     auto start_search_node = get_or_create_search_node(start_state->get_index(), default_search_node, search_nodes);
     start_search_node->get_status() = SearchNodeStatus::OPEN;
     set_g_value(start_search_node, 0);
+
+    event_handler->on_start_search(start_state);
 
     if (!goal_strategy->test_static_goal())
     {
@@ -123,7 +117,7 @@ SearchResult find_solution(const SearchContext& context,
 
     event_handler->on_finish_g_layer(g_value);
 
-    auto stopwatch = StopWatch(max_time_in_ms);
+    auto stopwatch = StopWatch(options.max_time_in_ms);
     stopwatch.start();
 
     while (!queue.empty())
@@ -137,8 +131,14 @@ SearchResult find_solution(const SearchContext& context,
         const auto state = queue.front();
         queue.pop_front();
 
-        // We need this before goal test for correct statistics reporting.
         auto search_node = get_or_create_search_node(state->get_index(), default_search_node, search_nodes);
+
+        /* Close state. */
+
+        if (search_node->get_status() == SearchNodeStatus::CLOSED || search_node->get_status() == SearchNodeStatus::DEAD_END)
+        {
+            continue;
+        }
 
         if (get_g_value(search_node) > g_value)
         {
@@ -152,7 +152,7 @@ SearchResult find_solution(const SearchContext& context,
         {
             event_handler->on_expand_goal_state(state);
 
-            if (stop_if_goal)
+            if (options.stop_if_goal)
             {
                 event_handler->on_end_search(state_repository.get_reached_fluent_ground_atoms_bitset().count(),
                                              state_repository.get_reached_derived_ground_atoms_bitset().count(),
@@ -176,7 +176,13 @@ SearchResult find_solution(const SearchContext& context,
             }
         }
 
+        /* Expand the successors of the state. */
+
         event_handler->on_expand_state(state);
+
+        /* Ensure that the state is closed */
+
+        search_node->get_status() = SearchNodeStatus::CLOSED;
 
         for (const auto& action : applicable_action_generator.create_applicable_action_generator(state))
         {
@@ -200,15 +206,12 @@ SearchResult find_solution(const SearchContext& context,
 
             queue.emplace_back(successor_state);
 
-            if (search_nodes.size() >= max_num_states)
+            if (search_nodes.size() >= options.max_num_states)
             {
                 result.status = SearchStatus::OUT_OF_STATES;
                 return result;
             }
         }
-
-        /* Close state. */
-        search_node->get_status() = SearchNodeStatus::CLOSED;
     }
 
     event_handler->on_end_search(state_repository.get_reached_fluent_ground_atoms_bitset().count(),
