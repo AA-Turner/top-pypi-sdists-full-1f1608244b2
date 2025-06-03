@@ -620,10 +620,10 @@ if __name__ == '__main__':
     # print(chat_completion_chunk)
     # print(chat_completion)
 
-    chat_completion_chunk.usage = dict(
-        completion_tokens=10,
-        prompt_tokens=10,
-        total_tokens=20,
-    )
-
-    print(chat_completion_chunk)
+    # chat_completion_chunk.usage = dict(
+    #     completion_tokens=10,
+    #     prompt_tokens=10,
+    #     total_tokens=20,
+    # )
+    #
+    # print(chat_completion_chunk)

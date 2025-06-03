@@ -47,6 +47,9 @@ async def get_bearer_token(
     elif ',' in token:  # 内存里随机轮询
         token = np.random.choice(token.split(','))
 
+    elif token in {"none", "null"}:
+        token = None
+
     return token
 
 

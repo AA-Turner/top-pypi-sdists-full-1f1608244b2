@@ -1070,6 +1070,6 @@ class GPUVertFormat:
         This is mainly useful for memory optimizations when you want to store values with
         reduced precision. E.g. you can store a float in only 1 byte but it will be
         converted to a normal 4 byte float when used.
-        Possible values are FLOAT, INT, INT_TO_FLOAT_UNIT.
+        Possible values are FLOAT, INT, INT_TO_FLOAT_UNIT and INT_TO_FLOAT.
                 :type fetch_mode: str
         """

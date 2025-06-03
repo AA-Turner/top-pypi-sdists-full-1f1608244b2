@@ -11,6 +11,7 @@
 # limitations under the License.
 
 import os
+import os.path
 import sys
 
 from setuptools.command.build_ext import build_ext
@@ -23,16 +24,19 @@ except ImportError:  # Needed for setuptools < 59.0
 
 import setuptools
 
-VERSION = "3.5.0"
+VERSION = "3.5.1"
+README_PATH = os.path.abspath(
+    os.path.join(os.path.abspath(__file__), os.pardir, 'README.rst')
+)
 
 for x in ("version.py", "dirs.py"):
-    try:
-        # Try to open generated ovs/{version,dirs}.py
-        open(f"ovs/{x}")
-    except IOError:
+    if not os.path.exists(f"ovs/{x}"):
         print(f"Ensure {x} is created by running make python/ovs/{x}",
               file=sys.stderr)
         sys.exit(-1)
+
+with open(README_PATH) as fh:
+    long_description = fh.read()
 
 ext_errors = (CCompilerError, ExecError, PlatformError)
 if sys.platform == 'win32':
@@ -77,6 +81,8 @@ flow_extras_require = ['netaddr', 'pyparsing']
 setup_args = dict(
     name='ovs',
     description='Open vSwitch library',
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
     version=VERSION,
     url='http://www.openvswitch.org/',
     author='Open vSwitch',

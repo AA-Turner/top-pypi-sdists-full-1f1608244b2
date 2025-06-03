@@ -1,7 +1,7 @@
 Metadata-Version: 2.3
 Requires-Python: >=3.9, <3.14
 Name: OZI
-Version: 2.0.0
+Version: 2.0.4
 Author: Eden Ross Duff MSc
 Author-email: help@oziproject.dev
 Classifier: Development Status :: 4 - Beta
@@ -27,7 +27,7 @@ License: Apache-2.0 WITH LLVM-exception
 Summary: Package Python projects with Meson.
 Requires-External: git
 Requires-Dist: pathvalidate~=3.2.1
-Requires-Dist: ozi-core==1.20.3
+Requires-Dist: ozi-core==1.20.4
 Requires-Dist: setuptools_scm[toml]
 Requires-Dist: tomli>=2.0.0;python_version<"3.11"
 Provides-Extra: ci
@@ -94,7 +94,7 @@ OZI
   :height: 62
   :target: https://www.oziproject.dev/
 
-OZI is a set of publishing tools for creating and maintaining Python packages.
+OZI is a set of tools for creating, publishing, and maintaining Python packages using semantic versioning and conventional commits.
 See the `documentation <https://docs.oziproject.dev/>`_ for the project roadmap,
 API specification, Meson version support, and other project information.
 

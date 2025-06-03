@@ -27,6 +27,7 @@ import typing
 from typing import (
     Callable,
     Dict,
+    Hashable,
     Iterable,
     List,
     Literal,
@@ -46,6 +47,7 @@ import google.api_core.exceptions
 import google.cloud.bigquery as bigquery
 import numpy
 import pandas
+from pandas.api import extensions as pd_ext
 import pandas.io.formats.format
 import pyarrow
 import tabulate
@@ -394,6 +396,19 @@ class DataFrame(vendored_pandas_frame.DataFrame):
 
         return self._apply_unary_op(ops.AsTypeOp(dtype, safe_cast))
 
+    def _should_sql_have_index(self) -> bool:
+        """Should the SQL we pass to BQML and other I/O include the index?"""
+
+        return self._has_index and (
+            self.index.name is not None or len(self.index.names) > 1
+        )
+
+    def _to_view(self) -> bigquery.TableReference:
+        """Compiles this DataFrame's expression tree to SQL and saves it to a
+        (temporary) view.
+        """
+        return self._block.to_view(include_index=self._should_sql_have_index())
+
     def _to_sql_query(
         self, include_index: bool, enable_cache: bool = True
     ) -> Tuple[str, list[str], list[blocks.Label]]:
@@ -420,9 +435,7 @@ class DataFrame(vendored_pandas_frame.DataFrame):
                 string representing the compiled SQL.
         """
         try:
-            include_index = self._has_index and (
-                self.index.name is not None or len(self.index.names) > 1
-            )
+            include_index = self._should_sql_have_index()
             sql, _, _ = self._to_sql_query(include_index=include_index)
             return sql
         except AttributeError as e:
@@ -2069,15 +2082,67 @@ class DataFrame(vendored_pandas_frame.DataFrame):
     def _resolve_levels(self, level: LevelsType) -> typing.Sequence[str]:
         return self._block.index.resolve_level(level)
 
+    @overload
     def rename(self, *, columns: Mapping[blocks.Label, blocks.Label]) -> DataFrame:
+        ...
+
+    @overload
+    def rename(
+        self, *, columns: Mapping[blocks.Label, blocks.Label], inplace: Literal[False]
+    ) -> DataFrame:
+        ...
+
+    @overload
+    def rename(
+        self, *, columns: Mapping[blocks.Label, blocks.Label], inplace: Literal[True]
+    ) -> None:
+        ...
+
+    def rename(
+        self, *, columns: Mapping[blocks.Label, blocks.Label], inplace: bool = False
+    ) -> Optional[DataFrame]:
         block = self._block.rename(columns=columns)
-        return DataFrame(block)
+
+        if inplace:
+            self._block = block
+            return None
+        else:
+            return DataFrame(block)
+
+    @overload
+    def rename_axis(
+        self,
+        mapper: typing.Union[blocks.Label, typing.Sequence[blocks.Label]],
+    ) -> DataFrame:
+        ...
+
+    @overload
+    def rename_axis(
+        self,
+        mapper: typing.Union[blocks.Label, typing.Sequence[blocks.Label]],
+        *,
+        inplace: Literal[False],
+        **kwargs,
+    ) -> DataFrame:
+        ...
+
+    @overload
+    def rename_axis(
+        self,
+        mapper: typing.Union[blocks.Label, typing.Sequence[blocks.Label]],
+        *,
+        inplace: Literal[True],
+        **kwargs,
+    ) -> None:
+        ...
 
     def rename_axis(
         self,
         mapper: typing.Union[blocks.Label, typing.Sequence[blocks.Label]],
+        *,
+        inplace: bool = False,
         **kwargs,
-    ) -> DataFrame:
+    ) -> Optional[DataFrame]:
         if len(kwargs) != 0:
             raise NotImplementedError(
                 f"rename_axis does not currently support any keyword arguments. {constants.FEEDBACK_LINK}"
@@ -2087,7 +2152,14 @@ class DataFrame(vendored_pandas_frame.DataFrame):
             labels = mapper
         else:
             labels = [mapper]
-        return DataFrame(self._block.with_index_labels(labels))
+
+        block = self._block.with_index_labels(labels)
+
+        if inplace:
+            self._block = block
+            return None
+        else:
+            return DataFrame(block)
 
     @validations.requires_ordering()
     def equals(self, other: typing.Union[bigframes.series.Series, DataFrame]) -> bool:
@@ -2913,9 +2985,23 @@ class DataFrame(vendored_pandas_frame.DataFrame):
         return bigframes.series.Series(block)
 
     def agg(
-        self, func: str | typing.Sequence[str]
+        self,
+        func: str
+        | typing.Sequence[str]
+        | typing.Mapping[blocks.Label, typing.Sequence[str] | str],
     ) -> DataFrame | bigframes.series.Series:
-        if utils.is_list_like(func):
+        if utils.is_dict_like(func):
+            # Must check dict-like first because dictionaries are list-like
+            # according to Pandas.
+            agg_cols = []
+            for col_label, agg_func in func.items():
+                agg_cols.append(self[col_label].agg(agg_func))
+
+            from bigframes.core.reshape import api as reshape
+
+            return reshape.concat(agg_cols, axis=1)
+
+        elif utils.is_list_like(func):
             aggregations = [agg_ops.lookup_agg_func(f) for f in func]
 
             for dtype, agg in itertools.product(self.dtypes, aggregations):
@@ -2929,6 +3015,7 @@ class DataFrame(vendored_pandas_frame.DataFrame):
                     aggregations,
                 )
             )
+
         else:
             return bigframes.series.Series(
                 self._block.aggregate_all_and_stack(
@@ -3597,6 +3684,47 @@ class DataFrame(vendored_pandas_frame.DataFrame):
     def abs(self) -> DataFrame:
         return self._apply_unary_op(ops.abs_op)
 
+    def round(self, decimals: Union[int, dict[Hashable, int]] = 0) -> DataFrame:
+        is_mapping = utils.is_dict_like(decimals)
+        if not (is_mapping or isinstance(decimals, int)):
+            raise TypeError("'decimals' must be either a dict-like or integer.")
+        block = self._block
+        exprs = []
+        for label, col_id, dtype in zip(
+            block.column_labels, block.value_columns, block.dtypes
+        ):
+            if dtype in set(bigframes.dtypes.NUMERIC_BIGFRAMES_TYPES_PERMISSIVE) - {
+                bigframes.dtypes.BOOL_DTYPE
+            }:
+                if is_mapping:
+                    if label in decimals:  # type: ignore
+                        exprs.append(
+                            ops.round_op.as_expr(
+                                col_id,
+                                ex.const(
+                                    decimals[label], dtype=bigframes.dtypes.INT_DTYPE  # type: ignore
+                                ),
+                            )
+                        )
+                    else:
+                        exprs.append(ex.deref(col_id))
+                else:
+                    exprs.append(
+                        ops.round_op.as_expr(
+                            col_id,
+                            ex.const(
+                                typing.cast(int, decimals),
+                                dtype=bigframes.dtypes.INT_DTYPE,
+                            ),
+                        )
+                    )
+            else:
+                exprs.append(ex.deref(col_id))
+
+        return DataFrame(
+            block.project_exprs(exprs, labels=block.column_labels, drop=True)
+        )
+
     def isna(self) -> DataFrame:
         return self._apply_unary_op(ops.isnull_op)
 
@@ -4029,7 +4157,7 @@ class DataFrame(vendored_pandas_frame.DataFrame):
         self,
         dtype=None,
         copy=False,
-        na_value=None,
+        na_value=pd_ext.no_default,
         *,
         allow_large_results=None,
         **kwargs,

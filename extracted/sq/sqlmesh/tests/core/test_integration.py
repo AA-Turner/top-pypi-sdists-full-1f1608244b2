@@ -4346,7 +4346,7 @@ def test_dbt_dialect_with_normalization_strategy(init_and_plan_context: t.Callab
 
 
 @time_machine.travel("2023-01-08 15:00:00 UTC")
-def test_dbt_before_all_with_var(init_and_plan_context: t.Callable):
+def test_dbt_before_all_with_var_ref_source(init_and_plan_context: t.Callable):
     _, plan = init_and_plan_context(
         "tests/fixtures/dbt/sushi_test", config="test_config_with_normalization_strategy"
     )
@@ -4356,7 +4356,7 @@ def test_dbt_before_all_with_var(init_and_plan_context: t.Callable):
     assert rendered_statements[0] == [
         "CREATE TABLE IF NOT EXISTS analytic_stats (physical_table TEXT, evaluation_time TEXT)",
         "CREATE TABLE IF NOT EXISTS to_be_executed_last (col TEXT)",
-        'SELECT 1 AS "1"',
+        "SELECT 1 AS var, 'items' AS src, 'waiters' AS ref",
     ]
 
 
@@ -4872,13 +4872,11 @@ def test_multi(mocker):
     assert context.fetchdf("select * from after_1").to_dict()["repo_1"][0] == "repo_1"
     assert context.fetchdf("select * from after_2").to_dict()["repo_2"][0] == "repo_2"
 
-    adapter = context.engine_adapter
     context = Context(
         paths=["examples/multi/repo_1"],
         state_sync=context.state_sync,
         gateway="memory",
     )
-    context._engine_adapters["memory"] = adapter
 
     model = context.get_model("bronze.a")
     assert model.project == "repo_1"
@@ -4935,6 +4933,8 @@ def test_multi_virtual_layer(copy_to_temp_path):
     )
 
     context = Context(paths=paths, config=config)
+    assert context.default_catalog_per_gateway == {"first": "db_1", "second": "db_2"}
+    assert len(context.engine_adapters) == 2
 
     # For the model without gateway the default should be used and the gateway variable should overide the global
     assert (
@@ -5050,7 +5050,7 @@ def test_multi_virtual_layer(copy_to_temp_path):
     assert len(prod_environment.snapshots_) == 3
 
     # Changing the flag should show a diff
-    context.gateway_managed_virtual_layer = False
+    context.config.gateway_managed_virtual_layer = False
     plan = context.plan_builder().build()
     assert not plan.requires_backfill
     assert (

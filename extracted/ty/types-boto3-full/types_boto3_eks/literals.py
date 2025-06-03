@@ -133,7 +133,7 @@ AddonStatusType = Literal[
 ]
 AuthenticationModeType = Literal["API", "API_AND_CONFIG_MAP", "CONFIG_MAP"]
 CapacityTypesType = Literal["CAPACITY_BLOCK", "ON_DEMAND", "SPOT"]
-CategoryType = Literal["UPGRADE_READINESS"]
+CategoryType = Literal["MISCONFIGURATION", "UPGRADE_READINESS"]
 ClusterActiveWaiterName = Literal["cluster_active"]
 ClusterDeletedWaiterName = Literal["cluster_deleted"]
 ClusterIssueCodeType = Literal[

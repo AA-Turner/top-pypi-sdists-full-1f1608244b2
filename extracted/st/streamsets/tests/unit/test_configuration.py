@@ -315,16 +315,19 @@ def test_configuration_with_invalid_configurations(value, flag):
             {'name': 'name1', 'value': 'value2'},
             {'dummy_key': 'name3', 'value': 'value3'},
         ],
-        [
-            {'name': 'name1', 'value': 'value2'},
-            {'name': 'name1', 'value': 'value2'},
-            {'name': 'name1', 'dummy_value': 'value2'},
-        ],
     ],
 )
 def test_configuration_with_incorrect_property_keys_values(value):
     with pytest.raises(TypeError):
         Configuration(value)
+
+
+def test_configuration_without_value():
+    configuration = [{'name': 'name1', 'value': 'value1'}, {'name': 'name2'}]
+
+    config = Configuration(configuration)
+    assert config['name1'] == 'value1'
+    assert config['name2'] is None
 
 
 def test_configuration_compatibility_map():

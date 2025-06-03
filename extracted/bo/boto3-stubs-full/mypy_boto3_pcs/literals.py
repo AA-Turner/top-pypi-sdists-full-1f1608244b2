@@ -44,7 +44,15 @@ __all__ = (
 
 AccountingModeType = Literal["NONE", "STANDARD"]
 ClusterStatusType = Literal[
-    "ACTIVE", "CREATE_FAILED", "CREATING", "DELETE_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"
+    "ACTIVE",
+    "CREATE_FAILED",
+    "CREATING",
+    "DELETE_FAILED",
+    "DELETING",
+    "SUSPENDED",
+    "SUSPENDING",
+    "UPDATE_FAILED",
+    "UPDATING",
 ]
 ComputeNodeGroupStatusType = Literal[
     "ACTIVE",
@@ -53,6 +61,8 @@ ComputeNodeGroupStatusType = Literal[
     "DELETED",
     "DELETE_FAILED",
     "DELETING",
+    "SUSPENDED",
+    "SUSPENDING",
     "UPDATE_FAILED",
     "UPDATING",
 ]
@@ -62,7 +72,15 @@ ListComputeNodeGroupsPaginatorName = Literal["list_compute_node_groups"]
 ListQueuesPaginatorName = Literal["list_queues"]
 PurchaseOptionType = Literal["ONDEMAND", "SPOT"]
 QueueStatusType = Literal[
-    "ACTIVE", "CREATE_FAILED", "CREATING", "DELETE_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"
+    "ACTIVE",
+    "CREATE_FAILED",
+    "CREATING",
+    "DELETE_FAILED",
+    "DELETING",
+    "SUSPENDED",
+    "SUSPENDING",
+    "UPDATE_FAILED",
+    "UPDATING",
 ]
 SchedulerTypeType = Literal["SLURM"]
 SizeType = Literal["LARGE", "MEDIUM", "SMALL"]

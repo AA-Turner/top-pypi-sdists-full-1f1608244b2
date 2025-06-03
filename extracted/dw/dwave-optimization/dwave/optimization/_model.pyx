@@ -24,17 +24,20 @@ import zipfile
 import numpy as np
 
 from cpython cimport Py_buffer
+from cpython.ref cimport PyObject
 from cython.operator cimport dereference as deref, preincrement as inc
 from cython.operator cimport typeid
 from libcpp cimport bool
+from libcpp.typeindex cimport type_index
+from libcpp.unordered_map cimport unordered_map
 from libcpp.utility cimport move
 from libcpp.vector cimport vector
 
+from dwave.optimization.libcpp cimport dynamic_cast_ptr
 from dwave.optimization.libcpp.array cimport Array as cppArray
 from dwave.optimization.libcpp.graph cimport DecisionNode as cppDecisionNode
 from dwave.optimization.states cimport States
 from dwave.optimization.states import StateView
-from dwave.optimization.symbols cimport symbol_from_ptr
 from dwave.optimization.utilities import _file_object_arg, _lock
 
 __all__ = []
@@ -48,6 +51,38 @@ KNOWN_SERIALIZATION_VERSIONS = (
     (1, 0),
 )
 """A tuple of 2-tuples listing all serialization versions supported."""
+
+
+# Store a mapping from the type_index of each C++ Node type to the relevant
+# Cython class. We don't refcount the PyObject*s pointing to each class because
+# the lifespace of this map is identical to that of the type objects.
+cdef unordered_map[type_index, PyObject*] _cpp_type_to_python
+
+# Register a mapping between the given Cython class and C++ class.
+cdef void _register(object cls, const type_info& typeinfo):
+    """Register a Python/Cython symbol to allow it to be created from a pointer
+    via `symbol_from_ptr`.
+    """
+    _cpp_type_to_python[type_index(typeinfo)] = <PyObject*>(cls)
+
+
+cdef object symbol_from_ptr(_Graph model, cppNode* node_ptr):
+    """Create a Python/Cython symbol from a C++ Node*."""
+
+    # If it's null, either after the cast of just as given, then we can't get a symbol from it
+    if not node_ptr:
+        raise ValueError("cannot construct a Symbol from the given pointer")
+
+    try:
+        cls = <object>_cpp_type_to_python.at(type_index(typeid(deref(node_ptr))))
+    except IndexError:
+        # IndexError would be returned by .at()
+        raise RuntimeError("given pointer cannot be cast to a known node type") from None
+
+    # In order to get nice polymorphism, it's much easier to pass the dispatch
+    # through Python, so we construct a generic Symbol holding the pointer and then
+    # construct the specific symbol from it.
+    return cls._from_symbol(Symbol.from_ptr(model, node_ptr))
 
 
 cdef class _Graph:
@@ -544,6 +579,25 @@ cdef class _Graph:
         for ptr in self._graph.decisions():
             yield symbol_from_ptr(self, ptr)
 
+    def iter_inputs(self):
+        """Iterate over all inputs in the model.
+
+        Examples:
+            This example iterates over a model's inputs.
+
+            >>> from dwave.optimization.model import Model
+            >>> model = Model()
+            >>> i0, i1 = model.input(), model.input()
+            >>> c = model.constant(7)
+            >>> inputs = list(model.iter_inputs())
+            >>> len(inputs)
+            2
+
+        .. versionadded:: 0.6.2
+        """
+        for ptr in self._graph.inputs():
+            yield symbol_from_ptr(self, ptr)
+
     def iter_symbols(self):
         """Iterate over all symbols in the model.
 
@@ -663,6 +717,28 @@ cdef class _Graph:
         for i in range(self._graph.num_nodes()):
             num_edges += self._graph.nodes()[i].get().successors().size()
         return num_edges
+
+    cpdef Py_ssize_t num_inputs(self) noexcept:
+        """Number of input nodes on the model.
+
+        See also:
+            :meth:`.num_symbols`
+            :class:`~dwave.optimization.symbols.Input`
+
+        Examples:
+            This example adds two inputs and a constant to a model and
+            checks the number of inputs.
+
+            >>> from dwave.optimization.model import Model
+            >>> model = Model()
+            >>> i0, i1 = model.input(), model.input()
+            >>> c = model.constant(7)
+            >>> model.num_inputs()
+            2
+
+        .. versionadded:: 0.6.2
+        """
+        return self._graph.num_inputs()
 
     cpdef Py_ssize_t num_nodes(self) noexcept:
         """Number of nodes in the directed acyclic graph for the model.
@@ -895,10 +971,18 @@ cdef class Symbol:
         obj.initialize_node(model, ptr)
         return obj
 
-    @staticmethod
-    def _from_symbol(Symbol symbol):
-        # Symbols must overload this method
-        raise ValueError("Symbols cannot be constructed directly")
+    @classmethod
+    def _from_symbol(cls, Symbol symbol):
+        # Disallow lateral casts or demotions.
+        # This is to prevent, say, an Add to be constructed from a Subtract
+        # There are ways around it, but this method is private anyway so it
+        # should be enough of a discouragement and for safety.
+        if not issubclass(cls, type(symbol)):
+            raise TypeError(f"cannot construct a {cls.__name__} from a {type(symbol).__name__}")
+
+        cdef Symbol obj = cls.__new__(cls)
+        obj.initialize_node(symbol.model, symbol.node_ptr)
+        return obj
 
     @classmethod
     def _from_zipfile(cls, zf, directory, _Graph model, predecessors):
@@ -1291,6 +1375,25 @@ cdef class ArraySymbol(Symbol):
         self.array_ptr = array_ptr
         self.initialize_node(model, array_ptr)
 
+    @classmethod
+    def _from_symbol(cls, Symbol symbol):
+        """Construct an ArraySymbol from another Symbol."""
+        # Disallow lateral casts or demotions.
+        # This is to prevent, say, an Add to be constructed from a Subtract
+        # There are ways around it, but this method is private anyway so it
+        # should be enough of a discouragement and for safety.
+        if not issubclass(cls, type(symbol)):
+            raise TypeError(f"cannot construct a {cls.__name__} from a {type(symbol).__name__}")
+
+        # Now try to "promote" the type and raise an error if that fails.
+        cdef cppArrayNode* ptr = dynamic_cast_ptr[cppArrayNode](symbol.node_ptr)
+        if not ptr:
+            raise TypeError(f"given symbol cannot construct a {cls.__name__}")
+
+        cdef ArraySymbol obj = cls.__new__(cls)
+        obj.initialize_arraynode(symbol.model, ptr)
+        return obj
+
     def __abs__(self):
         from dwave.optimization.symbols import Absolute  # avoid circular import
         return Absolute(self)
@@ -1376,6 +1479,19 @@ cdef class ArraySymbol(Symbol):
             return NaryMultiply(self, rhs)
 
         return NotImplemented
+
+    def __iter__(self):
+        if self.ndim() <= 0:
+            # NumPy's error is TypeError("iteration over a 0-d array"), so match
+            # that.
+            raise TypeError("iteration over a 0-d array symbol")
+
+        if self.array_ptr.dynamic():
+            # NumPy doesn't have a notion of dynamic size, but let's keep our
+            # error message consistent
+            raise TypeError("iteration over a dynamically sized array symbol")
+
+        yield from (self[i] for i in range(self.shape()[0]))
 
     def __le__(self, rhs):
         if isinstance(rhs, ArraySymbol):

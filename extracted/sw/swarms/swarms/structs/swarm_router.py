@@ -614,7 +614,13 @@ class SwarmRouter:
             Exception: If an error occurs during task execution.
         """
         try:
-            return self._run(task=task, img=img, model_response=model_response, *args, **kwargs)
+            return self._run(
+                task=task,
+                img=img,
+                model_response=model_response,
+                *args,
+                **kwargs,
+            )
         except Exception as e:
             logger.error(f"Error executing task on swarm: {str(e)}")
             raise

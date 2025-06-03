@@ -104,8 +104,10 @@ class DecoratedJobQueue(object):
         self.discriminator = None
 
         self.id = id
-        self.user_provided_id = user_provided_id
-        self.name = name
+        if user_provided_id is not None:
+            self.user_provided_id = user_provided_id
+        if name is not None:
+            self.name = name
         self.current_job_queue_state = current_job_queue_state
         self.execution_mode = execution_mode
         self.max_concurrency = max_concurrency
@@ -174,8 +176,6 @@ class DecoratedJobQueue(object):
         :param user_provided_id: The user_provided_id of this DecoratedJobQueue.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and user_provided_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `user_provided_id`, must not be `None`")  # noqa: E501
 
         self._user_provided_id = user_provided_id
 
@@ -199,8 +199,6 @@ class DecoratedJobQueue(object):
         :param name: The name of this DecoratedJobQueue.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and name is None:  # noqa: E501
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
 
         self._name = name
 

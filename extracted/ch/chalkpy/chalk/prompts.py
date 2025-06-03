@@ -123,7 +123,7 @@ def completion(
     ...    id: str
     ...    description: str
     ...    estimated_age_response: P.PromptResponse = P.completion(
-    ...        model="gpt-3.5-turbo",
+    ...        model="gpt-4o",
     ...        messages=[
     ...            P.message("system", F.jinja("Estimate the age of the user based on the description: {{User.description}}")),
     ...        ],

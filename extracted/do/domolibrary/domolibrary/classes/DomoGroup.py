@@ -14,17 +14,15 @@ from ..routes.user import SearchUser_NoResults
 
 # %% ../../nbs/classes/50_DomoGroup.ipynb 3
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Union
 
 import httpx
-import asyncio
 from nbdev.showdoc import patch_to
 
-import datetime as dt
 
-import domolibrary.utils.chunk_execution as dmce
-import domolibrary.client.DomoError as dmde
 import domolibrary.client.DomoAuth as dmda
+import domolibrary.client.DomoError as dmde
+import domolibrary.utils.chunk_execution as dmce
 import domolibrary.utils.DictDot as util_dd
 
 import domolibrary.routes.group as group_routes
@@ -117,6 +115,9 @@ class DomoGroup:
 
         return domo_groups
 
+    def display_url(self):
+        return f"https://{self.auth.domo_instance}.domo.com/admin/groups/{self.id}"
+
 # %% ../../nbs/classes/50_DomoGroup.ipynb 9
 @patch_to(DomoGroup, cls_method=True)
 async def get_by_id(
@@ -152,7 +153,7 @@ async def create_from_name(
     cls: DomoGroup,
     auth: dmda.DomoAuth,
     group_name: str = None,
-    group_type: str = "open",  # use GroupType_Enum
+    group_type: Union[GroupType_Enum, str] = "open",  # use GroupType_Enum
     description: str = None,
     is_include_manage_groups_role: bool = True,
     debug_api: bool = False,
@@ -362,7 +363,7 @@ async def search_by_name(
     debug_api: bool = False,
     debug_num_stacks_to_drop: bool = False,
     session: httpx.AsyncClient = None,
-) -> List[DomoGroup]:
+) -> Union[DomoGroup, List[DomoGroup]]: # by default returns one DomoGroup, but can return a list of DomoGroups
 
     domo_groups = await self.get(
         is_hide_system_groups=is_hide_system_groups,

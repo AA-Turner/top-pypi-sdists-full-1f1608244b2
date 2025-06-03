@@ -109,7 +109,9 @@ shared_processors = [
     AddPrefixedEnvVars("LANGSMITH_LANGGRAPH_"),  # injected by docker build
     structlog.processors.TimeStamper(fmt="iso", utc=True),
     structlog.processors.StackInfoRenderer(),
-    structlog.processors.format_exc_info,
+    structlog.processors.dict_tracebacks
+    if LOG_JSON
+    else structlog.processors.format_exc_info,
     structlog.processors.UnicodeDecoder(),
     AddLoggingContext(),
 ]

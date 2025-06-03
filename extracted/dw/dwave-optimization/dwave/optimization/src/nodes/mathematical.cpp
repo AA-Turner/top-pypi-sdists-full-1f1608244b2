@@ -151,7 +151,6 @@ void BinaryOpNode<BinaryOp>::initialize_state(State& state) const {
     auto lhs_ptr = operands_[0];
     auto rhs_ptr = operands_[1];
 
-    auto func = op();
     std::vector<double> values;
 
     if (std::ranges::equal(lhs_ptr->shape(state), rhs_ptr->shape(state))) {
@@ -160,7 +159,7 @@ void BinaryOpNode<BinaryOp>::initialize_state(State& state) const {
 
         auto it = lhs_ptr->begin(state);
         for (const double& val : rhs_ptr->view(state)) {
-            values.emplace_back(func(*it, val));  // order is important
+            values.emplace_back(op(*it, val));  // order is important
             ++it;
         }
 
@@ -170,7 +169,7 @@ void BinaryOpNode<BinaryOp>::initialize_state(State& state) const {
         const double& lhs = lhs_ptr->view(state).front();
 
         for (const double& val : rhs_ptr->view(state)) {
-            values.emplace_back(func(lhs, val));
+            values.emplace_back(op(lhs, val));
         }
 
     } else if (rhs_ptr->size() == 1) {
@@ -179,7 +178,7 @@ void BinaryOpNode<BinaryOp>::initialize_state(State& state) const {
         const double& rhs = rhs_ptr->view(state).front();
 
         for (const double& val : lhs_ptr->view(state)) {
-            values.emplace_back(func(val, rhs));
+            values.emplace_back(op(val, rhs));
         }
 
     } else {
@@ -204,7 +203,8 @@ bool BinaryOpNode<BinaryOp>::integral() const {
     auto lhs_ptr = operands_[0];
     auto rhs_ptr = operands_[1];
 
-    if constexpr (std::is_same<BinaryOp, std::divides<double>>::value) {
+    if constexpr (std::is_same<BinaryOp, std::divides<double>>::value ||
+                  std::is_same<BinaryOp, functional::safe_divides<double>>::value) {
         return false;
     }
     if constexpr (std::is_same<BinaryOp, functional::max<double>>::value ||
@@ -260,6 +260,44 @@ std::pair<double, double> BinaryOpNode<BinaryOp>::minmax(
 
         return memoize(cache, std::make_pair(std::ranges::min(combos), std::ranges::max(combos)));
     }
+    if constexpr (std::same_as<BinaryOp, functional::safe_divides<double>>) {
+        // safe_divide is, well, safe. So we start by calculating all combos.
+        // Though there are some possible other values depending on our rhs.
+        std::vector<double> combos = {op(lhs_low, rhs_low), op(lhs_low, rhs_high),
+                                      op(lhs_high, rhs_low), op(lhs_high, rhs_high)};
+
+       if (rhs_ptr->integral()) {
+            if (rhs_low < 0 && 0 < rhs_high) {
+                combos.emplace_back(op(1, 0));
+            }
+            if (rhs_low < -1 && -1 < rhs_high) {
+                combos.emplace_back(op(lhs_low, -1));
+                combos.emplace_back(op(lhs_high, -1));
+            }
+            if (rhs_low < 1 && 1 < rhs_high) {
+                combos.emplace_back(op(lhs_low, 1));
+                combos.emplace_back(op(lhs_high, 1));
+            }
+        } else {
+            if (rhs_low < 0 && 0 < rhs_high) {
+                // rhs's range includes zero, but it's not currently accounted for
+                // so let's do that.
+                // combos.emplace_back(op(1, 0));  // redundant because we're already max range
+                combos.emplace_back(std::numeric_limits<double>::max());
+                combos.emplace_back(std::numeric_limits<double>::lowest());
+            } else if (rhs_low == 0 && rhs_high != 0) {
+                // We can get very close to dividing by 0
+                combos.emplace_back(std::copysign(std::numeric_limits<double>::max(), lhs_low));
+                combos.emplace_back(std::copysign(std::numeric_limits<double>::max(), lhs_high));
+            } else if (rhs_low != 0 && rhs_high == 0) {
+                // We can get very close to dividing by -0
+                combos.emplace_back(std::copysign(std::numeric_limits<double>::max(), -lhs_low));
+                combos.emplace_back(std::copysign(std::numeric_limits<double>::max(), -lhs_high));
+            }
+        }
+
+        return memoize(cache, std::make_pair(std::ranges::min(combos), std::ranges::max(combos)));
+    }
     if constexpr (std::same_as<BinaryOp, functional::max<double>> ||
                   std::same_as<BinaryOp, functional::min<double>> ||
                   std::same_as<BinaryOp, std::plus<double>>) {
@@ -285,7 +323,6 @@ void BinaryOpNode<BinaryOp>::propagate(State& state) const {
     const Array* lhs_ptr = operands_[0];
     const Array* rhs_ptr = operands_[1];
 
-    auto func = op();
     auto& values = ptr->buffer;
     auto& changes = ptr->updates;
 
@@ -301,14 +338,14 @@ void BinaryOpNode<BinaryOp>::propagate(State& state) const {
             // save the diff
             for (const auto& [index, _, __] : lhs_ptr->diff(state)) {
                 double old = values[index];
-                values[index] = func(*(lit + index), *(rit + index));
+                values[index] = op(*(lit + index), *(rit + index));
                 if (values[index] != old) {
                     changes.emplace_back(index, old, values[index]);
                 }
             }
             for (const auto& [index, _, __] : rhs_ptr->diff(state)) {
                 double old = values[index];
-                values[index] = func(*(lit + index), *(rit + index));
+                values[index] = op(*(lit + index), *(rit + index));
                 if (values[index] != old) {
                     changes.emplace_back(index, old, values[index]);
                 }
@@ -318,7 +355,7 @@ void BinaryOpNode<BinaryOp>::propagate(State& state) const {
             auto rit = rhs_ptr->begin(state);
             for (const auto& [index, _, value] : lhs_ptr->diff(state)) {
                 double old = values[index];
-                values[index] = func(value, *(rit + index));
+                values[index] = op(value, *(rit + index));
                 changes.emplace_back(index, old, values[index]);
             }
         } else if (rhs_ptr->diff(state).size()) {
@@ -326,7 +363,7 @@ void BinaryOpNode<BinaryOp>::propagate(State& state) const {
             auto lit = lhs_ptr->begin(state);
             for (const auto& [index, _, value] : rhs_ptr->diff(state)) {
                 double old = values[index];
-                values[index] = func(*(lit + index), value);
+                values[index] = op(*(lit + index), value);
                 changes.emplace_back(index, old, values[index]);
             }
         }
@@ -335,7 +372,7 @@ void BinaryOpNode<BinaryOp>::propagate(State& state) const {
 
         // Create a unary version of our binary op.
         const double& lhs = lhs_ptr->view(state).front();
-        auto unary_func = std::bind(func, lhs, std::placeholders::_1);
+        auto unary_func = std::bind(op, lhs, std::placeholders::_1);
 
         if (lhs_ptr->diff(state).size()) {
             // The lhs has changed, so in this case we're probably changing
@@ -355,7 +392,7 @@ void BinaryOpNode<BinaryOp>::propagate(State& state) const {
 
         // create a unary version of our binary op
         const double& rhs = rhs_ptr->view(state).front();
-        auto unary_func = std::bind(func, std::placeholders::_1, rhs);
+        auto unary_func = std::bind(op, std::placeholders::_1, rhs);
 
         if (rhs_ptr->diff(state).size()) {
             // The rhs has changed, so in this case we're probably changing
@@ -457,6 +494,7 @@ template class BinaryOpNode<std::logical_or<double>>;
 template class BinaryOpNode<functional::logical_xor<double>>;
 template class BinaryOpNode<functional::max<double>>;
 template class BinaryOpNode<functional::min<double>>;
+template class BinaryOpNode<functional::safe_divides<double>>;
 
 // NaryOpNode *****************************************************************
 
@@ -639,7 +677,6 @@ void NaryOpNode<BinaryOp>::revert(State& state) const {
 
 template <class BinaryOp>
 void NaryOpNode<BinaryOp>::initialize_state(State& state) const {
-    auto func = op();
     std::vector<double> values;
 
     values.reserve(size());
@@ -659,7 +696,7 @@ void NaryOpNode<BinaryOp>::initialize_state(State& state) const {
 
         // reduce the values from the rest of the nodes
         for (auto& it : iterators | std::views::drop(1)) {
-            val = func(*it, val);
+            val = op(*it, val);
             ++it;
         }
         values.emplace_back(val);
@@ -672,14 +709,13 @@ template <class BinaryOp>
 void NaryOpNode<BinaryOp>::propagate(State& state) const {
     auto node_data = data_ptr<NaryOpNodeData>(state);
 
-    auto func = op();
     auto& values = node_data->buffer;
     auto& changes = node_data->updates;
     auto& iterators = node_data->iterators;
 
     std::vector<ssize_t> recompute_indices;
 
-    if constexpr (!InverseOp<op>().exists()) {
+    if constexpr (!InverseOp<BinaryOp>().exists()) {
         // have to recompute from all predecessors on any changed index
         for (const Array* input : operands_) {
             if (input->diff(state).size()) {
@@ -690,7 +726,7 @@ void NaryOpNode<BinaryOp>::propagate(State& state) const {
         }
 
     } else {
-        auto inv_func = InverseOp<op>();
+        auto inv_func = InverseOp<BinaryOp>();
         for (const Array* input : operands_) {
             if (input->diff(state).size()) {
                 for (const auto& [index, old_val, new_val] : input->diff(state)) {
@@ -704,7 +740,7 @@ void NaryOpNode<BinaryOp>::propagate(State& state) const {
                     }
 
                     double old_reduced = values[index];
-                    values[index] = func(new_reduced_val, new_val);
+                    values[index] = op(new_reduced_val, new_val);
                     changes.emplace_back(index, old_reduced, values[index]);
                 }
             }
@@ -723,7 +759,7 @@ void NaryOpNode<BinaryOp>::propagate(State& state) const {
             double& val = values[index];
             val = *(iterators[0] + index);
             for (auto it : iterators | std::views::drop(1)) {
-                val = func(*(it + index), val);
+                val = op(*(it + index), val);
             }
 
             if (val != old) {
@@ -921,17 +957,17 @@ std::span<const ssize_t> PartialReduceNode<BinaryOp>::axes() const {
 
 template <class BinaryOp>
 double const* PartialReduceNode<BinaryOp>::buff(const State& state) const {
-    return data_ptr<PartialReduceNodeData<op>>(state)->buff();
+    return data_ptr<PartialReduceNodeData<BinaryOp>>(state)->buff();
 }
 
 template <class BinaryOp>
 void PartialReduceNode<BinaryOp>::commit(State& state) const {
-    data_ptr<PartialReduceNodeData<op>>(state)->commit();
+    data_ptr<PartialReduceNodeData<BinaryOp>>(state)->commit();
 }
 
 template <class BinaryOp>
 std::span<const Update> PartialReduceNode<BinaryOp>::diff(const State& state) const {
-    return data_ptr<PartialReduceNodeData<op>>(state)->diff();
+    return data_ptr<PartialReduceNodeData<BinaryOp>>(state)->diff();
 }
 
 template <class BinaryOp>
@@ -1007,7 +1043,7 @@ void PartialReduceNode<BinaryOp>::initialize_state(State& state) const {
         }
     }
 
-    emplace_data_ptr<PartialReduceNodeData<op>>(state, std::move(values));
+    emplace_data_ptr<PartialReduceNodeData<BinaryOp>>(state, std::move(values));
 }
 
 template <class BinaryOp>
@@ -1101,7 +1137,7 @@ std::pair<double, double> PartialReduceNode<BinaryOp>::minmax(
 
 template <class BinaryOp>
 void PartialReduceNode<BinaryOp>::propagate(State& state) const {
-    auto ptr = data_ptr<PartialReduceNodeData<op>>(state);
+    auto ptr = data_ptr<PartialReduceNodeData<BinaryOp>>(state);
 
     for (const auto& [p_index, old, value] : array_ptr_->diff(state)) {
         const ssize_t index = map_parent_index(state, p_index);
@@ -1113,7 +1149,7 @@ void PartialReduceNode<BinaryOp>::propagate(State& state) const {
 
 template <class BinaryOp>
 void PartialReduceNode<BinaryOp>::revert(State& state) const {
-    data_ptr<PartialReduceNodeData<op>>(state)->revert();
+    data_ptr<PartialReduceNodeData<BinaryOp>>(state)->revert();
 }
 
 template <class BinaryOp>
@@ -1128,7 +1164,7 @@ ssize_t PartialReduceNode<BinaryOp>::size(const State& state) const {
 
 template <class BinaryOp>
 ssize_t PartialReduceNode<BinaryOp>::size_diff(const State& state) const {
-    return data_ptr<PartialReduceNodeData<op>>(state)->size_diff();
+    return data_ptr<PartialReduceNodeData<BinaryOp>>(state)->size_diff();
 }
 
 // Uncommented are the tested specializations
@@ -1243,23 +1279,23 @@ ReduceNode<BinaryOp>::ReduceNode(ArrayNode* array_ptr) : init(), array_ptr_(arra
 
 template <class BinaryOp>
 void ReduceNode<BinaryOp>::commit(State& state) const {
-    data_ptr<ReduceNodeData<op>>(state)->commit();
+    data_ptr<ReduceNodeData<BinaryOp>>(state)->commit();
 }
 
 template <class BinaryOp>
 double const* ReduceNode<BinaryOp>::buff(const State& state) const {
-    return data_ptr<ReduceNodeData<op>>(state)->buff();
+    return data_ptr<ReduceNodeData<BinaryOp>>(state)->buff();
 }
 
 template <class BinaryOp>
 std::span<const Update> ReduceNode<BinaryOp>::diff(const State& state) const {
-    const Update& update = data_ptr<ReduceNodeData<op>>(state)->values;
+    const Update& update = data_ptr<ReduceNodeData<BinaryOp>>(state)->values;
     return std::span<const Update>(&update, static_cast<int>(update.old != update.value));
 }
 
 template <class BinaryOp>
 void ReduceNode<BinaryOp>::initialize_state(State& state) const {
-    emplace_data_ptr<ReduceNodeData<op>>(state, reduce(state));
+    emplace_data_ptr<ReduceNodeData<BinaryOp>>(state, reduce(state));
 }
 
 template <>
@@ -1269,7 +1305,7 @@ void ReduceNode<std::logical_and<double>>::initialize_state(State& state) const 
         num_zero += !value;
     }
 
-    emplace_data_ptr<ReduceNodeData<op>>(state, !num_zero, num_zero);
+    emplace_data_ptr<ReduceNodeData<std::logical_and<double>>>(state, !num_zero, num_zero);
 }
 
 template <>
@@ -1279,7 +1315,7 @@ void ReduceNode<std::logical_or<double>>::initialize_state(State& state) const {
         num_nonzero += static_cast<bool>(value);
     }
 
-    emplace_data_ptr<ReduceNodeData<op>>(state, num_nonzero > 0, num_nonzero);
+    emplace_data_ptr<ReduceNodeData<std::logical_or<double>>>(state, num_nonzero > 0, num_nonzero);
 }
 
 template <>
@@ -1296,7 +1332,8 @@ void ReduceNode<std::multiplies<double>>::initialize_state(State& state) const {
     }
 
     // and then create the state
-    emplace_data_ptr<ReduceNodeData<op>>(state, static_cast<double>(product), product);
+    emplace_data_ptr<ReduceNodeData<std::multiplies<double>>>(state, static_cast<double>(product),
+                                                              product);
 }
 
 template <class BinaryOp>
@@ -1421,7 +1458,7 @@ std::pair<double, double> ReduceNode<BinaryOp>::minmax(
 
 template <>
 void ReduceNode<std::logical_and<double>>::propagate(State& state) const {
-    auto ptr = data_ptr<ReduceNodeData<op>>(state);
+    auto ptr = data_ptr<ReduceNodeData<std::logical_and<double>>>(state);
 
     ssize_t& num_zero = ptr->extra.num_zero;
 
@@ -1455,7 +1492,7 @@ void ReduceNode<std::logical_and<double>>::propagate(State& state) const {
 
 template <>
 void ReduceNode<std::logical_or<double>>::propagate(State& state) const {
-    auto ptr = data_ptr<ReduceNodeData<op>>(state);
+    auto ptr = data_ptr<ReduceNodeData<std::logical_or<double>>>(state);
 
     ssize_t& num_nonzero = ptr->extra.num_nonzero;
 
@@ -1489,7 +1526,7 @@ void ReduceNode<std::logical_or<double>>::propagate(State& state) const {
 
 template <>
 void ReduceNode<functional::max<double>>::propagate(State& state) const {
-    auto ptr = data_ptr<ReduceNodeData<op>>(state);
+    auto ptr = data_ptr<ReduceNodeData<functional::max<double>>>(state);
 
     auto& value = ptr->values.value;
 
@@ -1522,7 +1559,7 @@ void ReduceNode<functional::max<double>>::propagate(State& state) const {
 
 template <>
 void ReduceNode<functional::min<double>>::propagate(State& state) const {
-    auto ptr = data_ptr<ReduceNodeData<op>>(state);
+    auto ptr = data_ptr<ReduceNodeData<functional::min<double>>>(state);
 
     auto& value = ptr->values.value;
 
@@ -1555,7 +1592,7 @@ void ReduceNode<functional::min<double>>::propagate(State& state) const {
 
 template <>
 void ReduceNode<std::multiplies<double>>::propagate(State& state) const {
-    auto ptr = data_ptr<ReduceNodeData<op>>(state);
+    auto ptr = data_ptr<ReduceNodeData<std::multiplies<double>>>(state);
 
     RunningProduct& product = ptr->extra.product;
 
@@ -1575,7 +1612,7 @@ void ReduceNode<std::multiplies<double>>::propagate(State& state) const {
 
 template <>
 void ReduceNode<std::plus<double>>::propagate(State& state) const {
-    auto ptr = data_ptr<ReduceNodeData<op>>(state);
+    auto ptr = data_ptr<ReduceNodeData<std::plus<double>>>(state);
 
     // todo: consider kahan summation
 
@@ -1620,7 +1657,7 @@ double ReduceNode<BinaryOp>::reduce(const State& state) const {
 
 template <class BinaryOp>
 void ReduceNode<BinaryOp>::revert(State& state) const {
-    data_ptr<ReduceNodeData<op>>(state)->revert();
+    data_ptr<ReduceNodeData<BinaryOp>>(state)->revert();
 }
 
 // Uncommented are the tested specializations
@@ -1665,11 +1702,10 @@ std::span<const Update> UnaryOpNode<UnaryOp>::diff(const State& state) const {
 
 template <class UnaryOp>
 void UnaryOpNode<UnaryOp>::initialize_state(State& state) const {
-    auto func = op();
     std::vector<double> values;
     values.reserve(array_ptr_->size(state));
     for (const double& val : array_ptr_->view(state)) {
-        values.emplace_back(func(val));
+        values.emplace_back(op(val));
     }
 
     emplace_data_ptr<ArrayNodeStateData>(state, std::move(values));
@@ -1678,6 +1714,10 @@ void UnaryOpNode<UnaryOp>::initialize_state(State& state) const {
 template <>
 bool UnaryOpNode<functional::abs<double>>::integral() const {
     return array_ptr_->integral();
+}
+template <>
+bool UnaryOpNode<functional::exp<double>>::integral() const {
+    return false;
 }
 template <>
 bool UnaryOpNode<functional::expit<double>>::integral() const {
@@ -1743,6 +1783,9 @@ std::pair<double, double> UnaryOpNode<UnaryOp>::minmax(
             return memoize(cache, std::make_pair(-high, -low));
         }
     }
+    if constexpr (std::same_as<UnaryOp, functional::exp<double>>) {
+        return memoize(cache, std::make_pair(std::exp(low), std::exp(high)));
+    }
     if constexpr (std::same_as<UnaryOp, functional::expit<double>>) {
         double expit_low = 1.0 / (1.0 + std::exp(-low));
         double expit_high = 1.0 / (1.0 + std::exp(-high));
@@ -1775,7 +1818,6 @@ std::pair<double, double> UnaryOpNode<UnaryOp>::minmax(
 
 template <class UnaryOp>
 void UnaryOpNode<UnaryOp>::propagate(State& state) const {
-    auto func = op();
     auto node_data = data_ptr<ArrayNodeStateData>(state);
 
     for (const auto& update : array_ptr_->diff(state)) {
@@ -1783,12 +1825,12 @@ void UnaryOpNode<UnaryOp>::propagate(State& state) const {
 
         if (update.placed()) {
             assert(idx == static_cast<ssize_t>(node_data->buffer.size()));
-            node_data->emplace_back(func(value));
+            node_data->emplace_back(op(value));
         } else if (update.removed()) {
             assert(idx == static_cast<ssize_t>(node_data->buffer.size()) - 1);
             node_data->pop_back();
         } else {
-            node_data->set(idx, func(value));
+            node_data->set(idx, op(value));
         }
     }
 
@@ -1816,6 +1858,7 @@ ssize_t UnaryOpNode<UnaryOp>::size_diff(const State& state) const {
 }
 
 template class UnaryOpNode<functional::abs<double>>;
+template class UnaryOpNode<functional::exp<double>>;
 template class UnaryOpNode<functional::expit<double>>;
 template class UnaryOpNode<functional::log<double>>;
 template class UnaryOpNode<functional::logical<double>>;

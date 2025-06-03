@@ -22,6 +22,10 @@ class Core(object):
 
 		Version history:
 
+		1.105.0 (02.06.2025)
+		- Corrected duplicate time-statistics methods from logger.
+		- Improved help texts.
+
 		1.104.0 (20.05.2025)
 		- Added settings profile 'RadEsT' for R&S Automotive Radar Tester.
 		- Added settings 'EachCmdSuffix' settings option - use it for instruments that require CRLF at the end of each command.
@@ -254,7 +258,7 @@ class Core(object):
 		"""Initializes new driver session. For cleaner code, use the class methods: \n
 		- Core.from_existing_session() - initializes a new Core with an existing pyvisa session."""
 
-		self.core_version = '1.104.0'
+		self.core_version = '1.105.0'
 		self.resource_name = resource_name
 		self.called_from_driver = called_from_driver
 

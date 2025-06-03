@@ -75,6 +75,36 @@ class TestArraySymbol(unittest.TestCase):
 
         np.testing.assert_array_equal(y.state(), aarr[xarr, xarr, 1:3])
 
+    def test_iteration(self):
+        model = Model()
+
+        dynamic = model.set(5)
+        with self.assertRaisesRegex(TypeError, "iteration over a dynamically sized array symbol"):
+            for _ in dynamic:
+                pass
+
+        zeroD = model.binary()
+        with self.assertRaisesRegex(TypeError, "iteration over a 0-d array symbol"):
+            for _ in zeroD:
+                pass
+
+        oneD = model.binary(5)
+        iter_oneD = list(oneD)
+        self.assertEqual(len(iter_oneD), 5)
+        self.assertTrue(
+            all(isinstance(sym, dwave.optimization.symbols.BasicIndexing) for sym in iter_oneD)
+        )
+
+        twoD = model.binary((4, 5))
+        iter_twoD = list(twoD)
+        self.assertEqual(len(iter_twoD), 4)
+        self.assertTrue(
+            all(isinstance(sym, dwave.optimization.symbols.BasicIndexing) for sym in iter_twoD)
+        )
+
+        self.assertEqual(len(list(model.binary(0))), 0)
+        self.assertEqual(len(list(model.binary((0, 10)))), 0)
+
     def test_operator_types(self):
         # For each, test that we get the right class from the operator and that
         # incorrect types returns NotImplemented
@@ -225,6 +255,20 @@ class TestModel(unittest.TestCase):
 
             # Check that False is returned for infeasible state
             self.assertFalse(model.feasible(0))
+
+    def test_inputs(self):
+        model = Model()
+        i0 = model.input()
+        _ = model.constant(7)
+        i1 = model.input()
+
+        self.assertEqual(model.num_inputs(), 2)
+
+        inputs = list(model.iter_inputs())
+
+        self.assertEqual(len(inputs), 2)
+        self.assertTrue(i0.equals(inputs[0]))
+        self.assertTrue(i1.equals(inputs[1]))
 
     def test_lock(self):
         model = Model()

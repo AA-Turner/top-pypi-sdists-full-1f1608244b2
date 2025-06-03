@@ -796,7 +796,7 @@ class Idl(object):
         for table in self.tables.values():
             if table.rows:
                 changed = True
-                table.rows = custom_index.IndexedRows(table)
+                table.rows.clear()
 
         self.cond_seqno = 0
 
@@ -1731,7 +1731,7 @@ class Transaction(object):
                     and ovs.ovsuuid.is_valid_string(json[1])):
                 uuid = ovs.ovsuuid.from_string(json[1])
                 row = self._txn_rows.get(uuid, None)
-                if row and row._data is None:
+                if row and row._data is None and not row._persist_uuid:
                     return ["named-uuid", _uuid_name_from_uuid(uuid)]
             else:
                 return [self._substitute_uuids(elem) for elem in json]
@@ -1856,7 +1856,7 @@ class Transaction(object):
                 else:
                     # Let ovsdb-server decide whether to really delete it.
                     pass
-            elif row._changes:
+            else:
                 op = {"table": row._table.name}
                 if row._data is None:
                     op["op"] = "insert"

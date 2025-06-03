@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pybiolib"
-version = "1.2.838"
+version = "1.2.841"
 description = "BioLib Python Client"
 readme = "PYPI_README.md"
 license = "MIT"

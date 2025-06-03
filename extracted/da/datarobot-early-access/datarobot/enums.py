@@ -1271,6 +1271,9 @@ class KeyValueEntityType(Enum):
     REGISTERED_MODEL = "registeredModel"
     CUSTOM_JOB = "customJob"
     CUSTOM_JOB_RUN = "customJobRun"
+    CUSTOM_MODEL_VERSION = "customModelVersion"
+    CUSTOM_APPLICATION_SOURCE_VERSION = "customApplicationSourceVersion"
+    CUSTOM_APPLICATION = "customApplication"
 
 
 class KeyValueType(Enum):
@@ -1848,3 +1851,8 @@ class ChunkingPartitionMethod(StrEnum):
     RANDOM = "random"
     STRATIFIED = "stratified"
     DATE = "date"
+
+
+class PlaygroundType(StrEnum):  # pylint: disable=missing-class-docstring
+    RAG = "rag"
+    AGENTIC = "agentic"

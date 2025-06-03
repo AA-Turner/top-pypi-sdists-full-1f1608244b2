@@ -14,48 +14,6 @@
 
 # As of Cython 3.0.8 these are not in Cython's libcpp
 
-cdef extern from "<span>" namespace "std" nogil:
-    cdef cppclass span[T]:
-        ctypedef size_t size_type
-        ctypedef ptrdiff_t difference_type
-
-        cppclass iterator:
-            iterator() except +
-            iterator(iterator&) except +
-            T& operator*()
-            iterator operator++()
-            iterator operator--()
-            iterator operator++(int)
-            iterator operator--(int)
-            iterator operator+(size_type)
-            iterator operator-(size_type)
-            difference_type operator-(iterator)
-            difference_type operator-(const_iterator)
-            bint operator==(iterator)
-            bint operator==(const_iterator)
-            bint operator!=(iterator)
-            bint operator!=(const_iterator)
-            bint operator<(iterator)
-            bint operator<(const_iterator)
-            bint operator>(iterator)
-            bint operator>(const_iterator)
-            bint operator<=(iterator)
-            bint operator<=(const_iterator)
-            bint operator>=(iterator)
-            bint operator>=(const_iterator)
-
-        span()
-        span(T* ptr)
-        span(T*, size_type) except +  # span[It](It, size_type)
-
-        T& operator[](ssize_t)
-
-        iterator begin()
-        T* data()
-        iterator end()
-        size_type size()
-
-
 cdef extern from "<variant>" namespace "std" nogil:
     cdef cppclass variant[T, U]:
         variant()
@@ -64,3 +22,18 @@ cdef extern from "<variant>" namespace "std" nogil:
 
     T get[T](...)
     bint holds_alternative[T](...)
+
+
+# We would like to be able to do constructions like dynamic_cast[cppConstantNode*](...)
+# but Cython does not allow pointers as template types
+# see https://github.com/cython/cython/issues/2143
+# So instead we create our own wrapper to handle this case. Crucially, the
+# template type is the class, but it dynamically casts on the pointer
+cdef extern from *:
+    """
+    template<class T, class F>
+    T* dynamic_cast_ptr(F* ptr) {
+        return dynamic_cast<T*>(ptr);
+    }
+    """
+    cdef T* dynamic_cast_ptr[T](...) noexcept

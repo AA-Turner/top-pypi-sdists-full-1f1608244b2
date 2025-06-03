@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: dask-geopandas
-Version: 0.4.3
+Version: 0.5.0
 Summary: Parallel GeoPandas with Dask
 Author-email: Julia Signell <jsignell@gmail.com>
 Maintainer: GeoPandas contributors
@@ -29,6 +29,7 @@ Requires-Dist: dask[dataframe]>=2025.1.0
 Requires-Dist: packaging
 Provides-Extra: test
 Requires-Dist: pytest; extra == "test"
+Dynamic: license-file
 
 dask-geopandas |conda| |pypi| |docs| |gitter|
 =============================================

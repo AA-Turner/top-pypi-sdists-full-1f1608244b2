@@ -44,7 +44,7 @@ from google.cloud.bigquery_storage_v1 import types as bq_storage_types
 import pandas
 import pyarrow as pa
 
-from bigframes.core import guid, local_data, utils
+from bigframes.core import guid, identifiers, local_data, nodes, ordering, utils
 import bigframes.core as core
 import bigframes.core.blocks as blocks
 import bigframes.core.schema as schemata
@@ -172,7 +172,6 @@ class GbqDataLoader:
         self,
         pandas_dataframe: pandas.DataFrame,
         method: Literal["load", "stream", "write"],
-        api_name: str,
     ) -> dataframe.DataFrame:
         # TODO: Push this into from_pandas, along with index flag
         from bigframes import dataframe
@@ -184,36 +183,55 @@ class GbqDataLoader:
             [*idx_cols, *val_cols], axis="columns"
         )
         managed_data = local_data.ManagedArrowTable.from_pandas(prepared_df)
-
-        if method == "load":
-            array_value = self.load_data(managed_data, api_name=api_name)
-        elif method == "stream":
-            array_value = self.stream_data(managed_data)
-        elif method == "write":
-            array_value = self.write_data(managed_data)
-        else:
-            raise ValueError(f"Unsupported read method {method}")
-
         block = blocks.Block(
-            array_value,
+            self.read_managed_data(managed_data, method=method),
             index_columns=idx_cols,
             column_labels=pandas_dataframe.columns,
             index_labels=pandas_dataframe.index.names,
         )
         return dataframe.DataFrame(block)
 
-    def load_data(
-        self, data: local_data.ManagedArrowTable, api_name: Optional[str] = None
+    def read_managed_data(
+        self,
+        data: local_data.ManagedArrowTable,
+        method: Literal["load", "stream", "write"],
     ) -> core.ArrayValue:
+        offsets_col = guid.generate_guid("upload_offsets_")
+        if method == "load":
+            gbq_source = self.load_data(data, offsets_col=offsets_col)
+        elif method == "stream":
+            gbq_source = self.stream_data(data, offsets_col=offsets_col)
+        elif method == "write":
+            gbq_source = self.write_data(data, offsets_col=offsets_col)
+        else:
+            raise ValueError(f"Unsupported read method {method}")
+
+        return core.ArrayValue.from_bq_data_source(
+            source=gbq_source,
+            scan_list=nodes.ScanList(
+                tuple(
+                    nodes.ScanItem(
+                        identifiers.ColumnId(item.column), item.dtype, item.column
+                    )
+                    for item in data.schema.items
+                )
+            ),
+            session=self._session,
+        )
+
+    def load_data(
+        self,
+        data: local_data.ManagedArrowTable,
+        offsets_col: str,
+    ) -> nodes.BigqueryDataSource:
         """Load managed data into bigquery"""
-        ordering_col = guid.generate_guid("load_offsets_")
 
         # JSON support incomplete
         for item in data.schema.items:
             _validate_dtype_can_load(item.column, item.dtype)
 
         schema_w_offsets = data.schema.append(
-            schemata.SchemaItem(ordering_col, bigframes.dtypes.INT_DTYPE)
+            schemata.SchemaItem(offsets_col, bigframes.dtypes.INT_DTYPE)
         )
         bq_schema = schema_w_offsets.to_bigquery(_LOAD_JOB_TYPE_OVERRIDES)
 
@@ -227,17 +245,15 @@ class GbqDataLoader:
         job_config.parquet_options = parquet_options
 
         job_config.schema = bq_schema
-        if api_name:
-            job_config.labels = {"bigframes-api": api_name}
 
         load_table_destination = self._storage_manager.create_temp_table(
-            bq_schema, [ordering_col]
+            bq_schema, [offsets_col]
         )
 
         buffer = io.BytesIO()
         data.to_parquet(
             buffer,
-            offsets_col=ordering_col,
+            offsets_col=offsets_col,
             geo_format="wkt",
             duration_type="duration",
             json_type="string",
@@ -249,23 +265,24 @@ class GbqDataLoader:
         self._start_generic_job(load_job)
         # must get table metadata after load job for accurate metadata
         destination_table = self._bqclient.get_table(load_table_destination)
-        return core.ArrayValue.from_table(
-            table=destination_table,
-            schema=schema_w_offsets,
-            session=self._session,
-            offsets_col=ordering_col,
-            n_rows=data.data.num_rows,
-        ).drop_columns([ordering_col])
+        return nodes.BigqueryDataSource(
+            nodes.GbqTable.from_table(destination_table),
+            ordering=ordering.TotalOrdering.from_offset_col(offsets_col),
+            n_rows=data.metadata.row_count,
+        )
 
-    def stream_data(self, data: local_data.ManagedArrowTable) -> core.ArrayValue:
+    def stream_data(
+        self,
+        data: local_data.ManagedArrowTable,
+        offsets_col: str,
+    ) -> nodes.BigqueryDataSource:
         """Load managed data into bigquery"""
-        ordering_col = guid.generate_guid("stream_offsets_")
         schema_w_offsets = data.schema.append(
-            schemata.SchemaItem(ordering_col, bigframes.dtypes.INT_DTYPE)
+            schemata.SchemaItem(offsets_col, bigframes.dtypes.INT_DTYPE)
         )
         bq_schema = schema_w_offsets.to_bigquery(_STREAM_JOB_TYPE_OVERRIDES)
         load_table_destination = self._storage_manager.create_temp_table(
-            bq_schema, [ordering_col]
+            bq_schema, [offsets_col]
         )
 
         rows = data.itertuples(
@@ -284,24 +301,23 @@ class GbqDataLoader:
                     f"Problem loading at least one row from DataFrame: {errors}. {constants.FEEDBACK_LINK}"
                 )
         destination_table = self._bqclient.get_table(load_table_destination)
-        return core.ArrayValue.from_table(
-            table=destination_table,
-            schema=schema_w_offsets,
-            session=self._session,
-            offsets_col=ordering_col,
-            n_rows=data.data.num_rows,
-        ).drop_columns([ordering_col])
+        return nodes.BigqueryDataSource(
+            nodes.GbqTable.from_table(destination_table),
+            ordering=ordering.TotalOrdering.from_offset_col(offsets_col),
+            n_rows=data.metadata.row_count,
+        )
 
-    def write_data(self, data: local_data.ManagedArrowTable) -> core.ArrayValue:
+    def write_data(
+        self,
+        data: local_data.ManagedArrowTable,
+        offsets_col: str,
+    ) -> nodes.BigqueryDataSource:
         """Load managed data into bigquery"""
-        ordering_col = guid.generate_guid("stream_offsets_")
         schema_w_offsets = data.schema.append(
-            schemata.SchemaItem(ordering_col, bigframes.dtypes.INT_DTYPE)
+            schemata.SchemaItem(offsets_col, bigframes.dtypes.INT_DTYPE)
         )
         bq_schema = schema_w_offsets.to_bigquery(_STREAM_JOB_TYPE_OVERRIDES)
-        bq_table_ref = self._storage_manager.create_temp_table(
-            bq_schema, [ordering_col]
-        )
+        bq_table_ref = self._storage_manager.create_temp_table(bq_schema, [offsets_col])
 
         requested_stream = bq_storage_types.stream.WriteStream()
         requested_stream.type_ = bq_storage_types.stream.WriteStream.Type.COMMITTED  # type: ignore
@@ -313,7 +329,7 @@ class GbqDataLoader:
 
         def request_gen() -> Generator[bq_storage_types.AppendRowsRequest, None, None]:
             schema, batches = data.to_arrow(
-                offsets_col=ordering_col, duration_type="int"
+                offsets_col=offsets_col, duration_type="int"
             )
             offset = 0
             for batch in batches:
@@ -339,13 +355,11 @@ class GbqDataLoader:
         assert response.row_count == data.data.num_rows
 
         destination_table = self._bqclient.get_table(bq_table_ref)
-        return core.ArrayValue.from_table(
-            table=destination_table,
-            schema=schema_w_offsets,
-            session=self._session,
-            offsets_col=ordering_col,
-            n_rows=data.data.num_rows,
-        ).drop_columns([ordering_col])
+        return nodes.BigqueryDataSource(
+            nodes.GbqTable.from_table(destination_table),
+            ordering=ordering.TotalOrdering.from_offset_col(offsets_col),
+            n_rows=data.metadata.row_count,
+        )
 
     def _start_generic_job(self, job: formatting_helpers.GenericJob):
         if bigframes.options.display.progress_bar is not None:
@@ -368,12 +382,12 @@ class GbqDataLoader:
         columns: Iterable[str] = ...,
         names: Optional[Iterable[str]] = ...,
         max_results: Optional[int] = ...,
-        api_name: str = ...,
         use_cache: bool = ...,
         filters: third_party_pandas_gbq.FiltersType = ...,
         enable_snapshot: bool = ...,
         dry_run: Literal[False] = ...,
         force_total_order: Optional[bool] = ...,
+        n_rows: Optional[int] = None,
     ) -> dataframe.DataFrame:
         ...
 
@@ -390,12 +404,12 @@ class GbqDataLoader:
         columns: Iterable[str] = ...,
         names: Optional[Iterable[str]] = ...,
         max_results: Optional[int] = ...,
-        api_name: str = ...,
         use_cache: bool = ...,
         filters: third_party_pandas_gbq.FiltersType = ...,
         enable_snapshot: bool = ...,
         dry_run: Literal[True] = ...,
         force_total_order: Optional[bool] = ...,
+        n_rows: Optional[int] = None,
     ) -> pandas.Series:
         ...
 
@@ -411,12 +425,12 @@ class GbqDataLoader:
         columns: Iterable[str] = (),
         names: Optional[Iterable[str]] = None,
         max_results: Optional[int] = None,
-        api_name: str = "read_gbq_table",
         use_cache: bool = True,
         filters: third_party_pandas_gbq.FiltersType = (),
         enable_snapshot: bool = True,
         dry_run: bool = False,
         force_total_order: Optional[bool] = None,
+        n_rows: Optional[int] = None,
     ) -> dataframe.DataFrame | pandas.Series:
         import bigframes._tools.strings
         import bigframes.dataframe as dataframe
@@ -543,7 +557,6 @@ class GbqDataLoader:
                 query,
                 index_col=index_cols,
                 columns=columns,
-                api_name=api_name,
                 use_cache=use_cache,
                 dry_run=dry_run,
             )
@@ -595,7 +608,6 @@ class GbqDataLoader:
             bqclient=self._bqclient,
             table=table,
             index_cols=index_cols,
-            api_name=api_name,
             # If non in strict ordering mode, don't go through overhead of scanning index column(s) to determine if unique
             metadata_only=not self._scan_index_uniqueness,
         )
@@ -609,6 +621,7 @@ class GbqDataLoader:
             at_time=time_travel_timestamp if enable_snapshot else None,
             primary_key=primary_key,
             session=self._session,
+            n_rows=n_rows,
         )
         # if we don't have a unique index, we order by row hash if we are in strict mode
         if (
@@ -654,9 +667,10 @@ class GbqDataLoader:
             renamed_cols: Dict[str, str] = {
                 col: new_name for col, new_name in zip(array_value.column_ids, names)
             }
-            index_names = [
-                renamed_cols.get(index_col, index_col) for index_col in index_cols
-            ]
+            if index_col != bigframes.enums.DefaultIndexKind.SEQUENTIAL_INT64:
+                index_names = [
+                    renamed_cols.get(index_col, index_col) for index_col in index_cols
+                ]
             value_columns = [renamed_cols.get(col, col) for col in value_columns]
 
         block = blocks.Block(
@@ -718,7 +732,6 @@ class GbqDataLoader:
         columns: Iterable[str] = ...,
         configuration: Optional[Dict] = ...,
         max_results: Optional[int] = ...,
-        api_name: str = ...,
         use_cache: Optional[bool] = ...,
         filters: third_party_pandas_gbq.FiltersType = ...,
         dry_run: Literal[False] = ...,
@@ -735,7 +748,6 @@ class GbqDataLoader:
         columns: Iterable[str] = ...,
         configuration: Optional[Dict] = ...,
         max_results: Optional[int] = ...,
-        api_name: str = ...,
         use_cache: Optional[bool] = ...,
         filters: third_party_pandas_gbq.FiltersType = ...,
         dry_run: Literal[True] = ...,
@@ -751,7 +763,6 @@ class GbqDataLoader:
         columns: Iterable[str] = (),
         configuration: Optional[Dict] = None,
         max_results: Optional[int] = None,
-        api_name: str = "read_gbq_query",
         use_cache: Optional[bool] = None,
         filters: third_party_pandas_gbq.FiltersType = (),
         dry_run: bool = False,
@@ -817,7 +828,6 @@ class GbqDataLoader:
         destination, query_job = self._query_to_destination(
             query,
             cluster_candidates=[],
-            api_name=api_name,
             configuration=configuration,
         )
 
@@ -845,8 +855,8 @@ class GbqDataLoader:
             index_col=index_col,
             columns=columns,
             use_cache=configuration["query"]["useQueryCache"],
-            api_name=api_name,
             force_total_order=force_total_order,
+            n_rows=query_job.result().total_rows,
             # max_results and filters are omitted because they are already
             # handled by to_query(), above.
         )
@@ -855,7 +865,6 @@ class GbqDataLoader:
         self,
         query: str,
         cluster_candidates: List[str],
-        api_name: str,
         configuration: dict = {"query": {"useQueryCache": True}},
         do_clustering=True,
     ) -> Tuple[Optional[bigquery.TableReference], bigquery.QueryJob]:
@@ -863,11 +872,9 @@ class GbqDataLoader:
         # bother trying to do a CREATE TEMP TABLE ... AS SELECT ... statement.
         dry_run_config = bigquery.QueryJobConfig()
         dry_run_config.dry_run = True
-        _, dry_run_job = self._start_query(
-            query, job_config=dry_run_config, api_name=api_name
-        )
+        _, dry_run_job = self._start_query(query, job_config=dry_run_config)
         if dry_run_job.statement_type != "SELECT":
-            _, query_job = self._start_query(query, api_name=api_name)
+            _, query_job = self._start_query(query)
             return query_job.destination, query_job
 
         # Create a table to workaround BigQuery 10 GB query results limit. See:
@@ -905,7 +912,6 @@ class GbqDataLoader:
                 query,
                 job_config=job_config,
                 timeout=timeout,
-                api_name=api_name,
             )
             return query_job.destination, query_job
         except google.api_core.exceptions.BadRequest:
@@ -913,7 +919,7 @@ class GbqDataLoader:
             # tables as the destination. For example, if the query has a
             # top-level ORDER BY, this conflicts with our ability to cluster
             # the table by the index column(s).
-            _, query_job = self._start_query(query, timeout=timeout, api_name=api_name)
+            _, query_job = self._start_query(query, timeout=timeout)
             return query_job.destination, query_job
 
     def _start_query(
@@ -921,7 +927,6 @@ class GbqDataLoader:
         sql: str,
         job_config: Optional[google.cloud.bigquery.QueryJobConfig] = None,
         timeout: Optional[float] = None,
-        api_name: Optional[str] = None,
     ) -> Tuple[google.cloud.bigquery.table.RowIterator, bigquery.QueryJob]:
         """
         Starts BigQuery query job and waits for results.
@@ -939,7 +944,6 @@ class GbqDataLoader:
             sql,
             job_config=job_config,
             timeout=timeout,
-            api_name=api_name,
         )
         assert query_job is not None
         return iterator, query_job

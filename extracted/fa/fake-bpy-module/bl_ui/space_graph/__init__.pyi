@@ -3,6 +3,7 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 import bl_ui.space_dopesheet
+import bl_ui.space_toolsystem_common
 import bpy.types
 
 class GRAPH_HT_header(bpy.types.Header):
@@ -487,6 +488,29 @@ class GRAPH_PT_filters(
         """
 
         :param context:
+        """
+
+class GRAPH_PT_playhead_snapping(
+    bl_ui.space_toolsystem_common.PlayheadSnappingPanel, bpy.types.Panel
+):
+    bl_label: typing.Any
+    bl_region_type: typing.Any
+    bl_rna: typing.Any
+    bl_space_type: typing.Any
+    id_data: typing.Any
+
+    def bl_rna_get_subclass(self) -> bpy.types.Struct:
+        """
+
+        :return: The RNA type or default when not found.
+        :rtype: bpy.types.Struct
+        """
+
+    def bl_rna_get_subclass_py(self) -> typing.Any:
+        """
+
+        :return: The class or default when not found.
+        :rtype: typing.Any
         """
 
 class GRAPH_PT_proportional_edit(bpy.types.Panel):

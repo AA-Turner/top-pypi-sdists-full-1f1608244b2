@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pulp-cli"
-version = "0.32.3"
+version = "0.33.0"
 description = "Command line interface to talk to pulpcore's REST API."
 readme = "README.md"
 requires-python = ">=3.9,<3.14"
@@ -23,9 +23,8 @@ classifiers=[
   "Typing :: Typed",
 ]
 dependencies = [
-  "pulp-glue==0.32.3",
-  "click>=8.0.0,<8.2",  # Proven to not do semver.
-  "packaging>=20.0,<=25",  # CalVer
+  "pulp-glue==0.33.0",
+  "click>=8.0.0,<8.3",  # Proven to not do semver.
   "PyYAML>=5.3,<6.1",
   "schema>=0.7.5,<0.8",
   "tomli>=2.0.0,<2.1;python_version<'3.11'",
@@ -39,7 +38,7 @@ shell = ["click-shell>=2.1,<3.0"]
 password-manager = ["SecretStorage>=3.3.3,<3.4"]
 
 [project.urls]
-documentation = "https://pulpproject.org/pulp-cli/docs/user/guides/installation/"
+documentation = "https://pulpproject.org/pulp-cli/"
 repository = "https://github.com/pulp/pulp-cli"
 changelog = "https://pulpproject.org/pulp-cli/changes/"
 
@@ -52,7 +51,6 @@ common = "pulpcore.cli.common"
 container = "pulpcore.cli.container"
 core = "pulpcore.cli.core"
 file = "pulpcore.cli.file"
-migration = "pulpcore.cli.migration"
 python = "pulpcore.cli.python"
 rpm = "pulpcore.cli.rpm"
 
@@ -81,7 +79,7 @@ unittests = true
 
 [tool.bumpversion]
 # This section is managed by the cookiecutter templates.
-current_version = "0.32.3"
+current_version = "0.33.0"
 commit = false
 tag = false
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)(\\.(?P<release>[a-z]+))?"
@@ -225,7 +223,6 @@ markers = [
   "script: tests provided as shell scripts",
   "help_page: tests that render help pages",
   "pulpcore: pulpcore tests",
-  "pulp_2to3_migration: pulp-2to3-migration tests",
   "pulp_file: pulp_file tests",
   "pulp_ansible: pulp_ansible tests",
   "pulp_container: pulp_container tests",

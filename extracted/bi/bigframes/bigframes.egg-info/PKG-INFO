@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: bigframes
-Version: 2.4.0
+Version: 2.5.0
 Summary: BigQuery DataFrames -- scalable analytics and machine learning with BigQuery
 Home-page: https://github.com/googleapis/python-bigquery-dataframes
 Author: Google LLC
@@ -24,7 +24,7 @@ Description-Content-Type: text/x-rst
 License-File: LICENSE
 Requires-Dist: cloudpickle>=2.0.0
 Requires-Dist: fsspec>=2023.3.0
-Requires-Dist: gcsfs>=2023.3.0
+Requires-Dist: gcsfs!=2025.5.0,>=2023.3.0
 Requires-Dist: geopandas>=0.12.2
 Requires-Dist: google-auth<3.0,>=2.15.0
 Requires-Dist: google-cloud-bigquery[bqstorage,pandas]>=3.31.0

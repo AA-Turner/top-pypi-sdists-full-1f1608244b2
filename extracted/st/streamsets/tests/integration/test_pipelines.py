@@ -2,10 +2,12 @@
 
 # fmt: off
 import json
+import logging
 import os
 import re
 import time
 from datetime import datetime
+from io import StringIO
 
 import pytest
 
@@ -1056,3 +1058,28 @@ def test_call_get_pipeline_builder_with_disparate_engine_type_and_engine(sch, sc
     sch_authoring_id = request.getfixturevalue(sch_authoring_id)
     with pytest.raises(TypeError):
         sch.get_pipeline_builder(engine_type, sch_authoring_id)
+
+
+def test_pipeline_pagination(sch, sch_authoring_sdc_id):
+    pipeline_builder1 = sch.get_pipeline_builder(engine_type='data_collector', engine_id=sch_authoring_sdc_id)
+    published_pipeline1 = pipeline_builder1.build(title='TEST_1')
+    sch.publish_pipeline(published_pipeline1)
+
+    pipeline_builder2 = sch.get_pipeline_builder(engine_type='data_collector', engine_id=sch_authoring_sdc_id)
+    published_pipeline2 = pipeline_builder2.build(title='TEST_1')
+    sch.publish_pipeline(published_pipeline2)
+
+    pipeline_builder3 = sch.get_pipeline_builder(engine_type='data_collector', engine_id=sch_authoring_sdc_id)
+    published_pipeline3 = pipeline_builder3.build(title='TEST_2')
+    sch.publish_pipeline(published_pipeline3)
+
+    log_stream = StringIO()
+    handler = logging.StreamHandler(log_stream)
+    handler.setLevel(logging.DEBUG)
+    logging.getLogger().addHandler(handler)
+
+    sch.pipelines.get_all(search="name==*TEST_1*", len=1)
+
+    handler.flush()
+    log_contents = log_stream.getvalue()
+    assert log_contents.find("Current offset was negative") == -1

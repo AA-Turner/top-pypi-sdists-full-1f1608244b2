@@ -912,6 +912,7 @@ def duration(
         Gets preprolated duration:
 
         >>> staff = abjad.Staff(r"\times 2/3 { c'4 ~ c' } \times 2/3 { d' ~ d' }")
+        >>> abjad.makers.tweak_tuplet_bracket_edge_height(staff)
         >>> abjad.show(staff) # doctest: +SKIP
 
         ..  docs::
@@ -4099,6 +4100,7 @@ def sustained(argument) -> bool:
     ..  container:: example
 
         >>> tuplet = abjad.Tuplet((3, 2), "c'4 ~ c' ~ c'")
+        >>> abjad.makers.tweak_tuplet_number_text(tuplet)
         >>> abjad.show(tuplet) # doctest: +SKIP
 
         ..  container:: example

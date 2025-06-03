@@ -6,7 +6,7 @@ import math
 from ladybug_geometry.geometry2d import Vector2D, Point2D, Ray2D, LineSegment2D, \
     Polygon2D
 from ladybug_geometry.geometry3d import Vector3D, Point3D, LineSegment3D, \
-    Polyline3D, Plane, Face3D, Polyface3D
+    Plane, Face3D, Polyface3D
 from ladybug_geometry.intersection2d import closest_point2d_on_line2d, \
     closest_point2d_on_line2d_infinite
 import ladybug_geometry.boolean as pb
@@ -80,16 +80,40 @@ class RoofSpecification(object):
         # join the coplanar faces together
         all_geos = []
         for r_grp in roof_groups:
-            p_face = Polyface3D.from_faces(r_grp, tolerance)
-            p_lines = Polyline3D.join_segments(p_face.naked_edges, tolerance)
-            if len(p_lines) == 1:  # can be represented with a single Face3D
-                final_faces = [Face3D(p_lines[0].vertices[:-1])]
-            else:  # need to separate holes from distinct Face3Ds
-                faces = [Face3D(pl.vertices[:-1]) for pl in p_lines]
-                try:
-                    final_faces = Face3D.merge_faces_to_holes(faces, tolerance)
-                except Exception:  # some really wacky geometry was input
-                    final_faces = faces
+            if len(r_grp) == 1:
+                final_faces = r_grp
+            else:
+                # remove colinear vertices and degenerate geometries
+                clean_geos = []
+                for geo in r_grp:
+                    try:
+                        clean_geo = geo.remove_colinear_vertices(tolerance)
+                        if clean_geo.normal.z < 0:
+                            clean_geo = clean_geo.flip()
+                        clean_geos.append(clean_geo)
+                    except AssertionError:  # degenerate geometry to ignore
+                        pass
+                if len(clean_geos) == 0:
+                    continue
+                # convert the floor Face3Ds into counterclockwise Polygon2Ds
+                roof_polys = []
+                for rf_geo in clean_geos:
+                    b_poly = Polygon2D([Point2D(pt.x, pt.y) for pt in rf_geo.boundary])
+                    roof_polys.append(b_poly)
+                    if rf_geo.has_holes:
+                        for hole in rf_geo.holes:
+                            h_poly = Polygon2D([Point2D(pt.x, pt.y) for pt in hole])
+                            roof_polys.append(h_poly)
+                # get the boundary around all of the polygons
+                rf_polys2d = Polygon2D.joined_intersected_boundary(roof_polys, tolerance)
+                r_pln, proj_dir = clean_geos[0].plane, Vector3D(0, 0, 1)
+                final_faces = []
+                for r_poly in rf_polys2d:
+                    r_face = []
+                    for pt2 in r_poly.vertices:
+                        pt3 = r_pln.project_point(Point3D(pt2.x, pt2.y), proj_dir)
+                        r_face.append(pt3)
+                    final_faces.append(Face3D(r_face, plane=r_pln))
             for f_geo in final_faces:
                 f_geo = Face3D(f_geo.boundary, f_geo.plane) if f_geo.has_holes else f_geo
                 all_geos.append(f_geo)
@@ -945,7 +969,7 @@ class RoofSpecification(object):
             selected_indices: An optional list of indices for specific roof
                 geometries to be split with the input lines. If None, all of
                 the roof geometry will be tested for intersection with the
-                input polygon. (Default: None).
+                input lines. (Default: None).
             tolerance: The maximum difference between point values for them to be
                 considered distinct from one another. (Default: 0.01; suitable
                 for objects in Meters).
@@ -978,6 +1002,34 @@ class RoofSpecification(object):
 
         # update the geometry
         self.geometry = split_geometries
+
+    def join_geometries(self, selected_indices=None, tolerance=0.01):
+        """Join coplanar roofs together that are touching within the tolerance.
+
+        Args:
+            selected_indices: An optional list of indices for specific roof
+                geometries to be joined together. If None, all of the roof
+                geometry will be tested for whether they can be joined
+                together. (Default: None).
+            tolerance: The maximum difference between point values for them to be
+                considered distinct from one another. (Default: 0.01; suitable
+                for objects in Meters).
+        """
+        # separate geometry to join from that to keep
+        if selected_indices is None:
+            geo_to_join, geo_to_keep = self.geometry, []
+        else:
+            geo_to_join, geo_to_keep = [], []
+            for i, geo in enumerate(self.geometry):
+                if i in selected_indices:
+                    geo_to_join.append(geo)
+                else:
+                    geo_to_keep.append(geo)
+        # join the geometries together
+        if len(geo_to_join) != 0:
+            joined_roof = RoofSpecification.from_geometry_to_join(
+                geo_to_join, tolerance=tolerance)
+            self.geometry = joined_roof.geometry + tuple(geo_to_keep)
 
     def check_roof_above_rooms(self, room_2ds, tolerance=0.01):
         """Check that all geometries of this roof lie above a given set of Room2Ds.

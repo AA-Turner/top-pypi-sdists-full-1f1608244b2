@@ -73,6 +73,22 @@ POLYLINE_UNIFORM_COLOR
 
 
 
+POINT_FLAT_COLOR
+
+
+    Attributes: vec3 pos, vec4 color
+    Uniforms: float size
+
+
+
+POLYLINE_UNIFORM_COLOR
+
+
+    Attributes: vec3 pos
+    Uniforms: vec4 color, float size
+
+
+
 """
 
 import typing

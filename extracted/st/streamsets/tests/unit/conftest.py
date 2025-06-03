@@ -4,6 +4,7 @@
 
 # fmt: off
 from copy import deepcopy
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -16,6 +17,7 @@ from streamsets.sdk.st_models import PipelineBuilder as StPipelineBuilder
 from .resources.conftest_data import (
     AZURE_ENVIRONMENT_JSON, DEPLOYMENT_BUILDER_JSON, PIPELINE_BUILDER_DEFINITIONS_JSON, PIPELINE_BUILDER_JSON,
 )
+from .resources.pipeline_builder_data import PIPELINE_BUILDER_DEFINITIONS, PIPELINE_BUILDER_STAGE_DATA_DEFINITION
 
 # fmt: on
 
@@ -64,6 +66,18 @@ def sch_sdc_pipeline_builder(pipeline_builder_json, sdc_pipeline_builder):
         data_collector_pipeline_builder=sdc_pipeline_builder,
         control_hub=MockControlHub(),
     )
+
+
+@pytest.fixture(scope="function")
+def sch_sdc_pipeline_builder_with_definitions(sch_sdc_pipeline_builder):
+    sch_sdc_pipeline_builder._definitions = MagicMock()
+    sch_sdc_pipeline_builder._definitions = PIPELINE_BUILDER_DEFINITIONS
+
+    json_content_mock = MagicMock()
+    json_content_mock.definition = PIPELINE_BUILDER_STAGE_DATA_DEFINITION
+    sch_sdc_pipeline_builder._get_stage_data = MagicMock(return_value=[json_content_mock])
+
+    return sch_sdc_pipeline_builder
 
 
 @pytest.fixture(scope="function")

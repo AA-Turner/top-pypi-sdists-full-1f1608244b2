@@ -37,8 +37,12 @@ class Membership_Entity:
     entity: Any
 
     def __eq__(self, other):
-        if not hasattr(other, "entity"):
-            return False
+        import domolibrary.classes.DomoUser as dmdu
+        import domolibrary.classes.DomoGroup as dmdg
+
+        if isinstance(other, (dmdu.DomoUser, dmdg.DomoGroup)):
+            return str(self.entity.id) == str(other.id)
+
 
         if self.__class__.__name__ != other.__class__.__name__:
             return False
@@ -263,7 +267,7 @@ class GroupMembership(Membership):
 
         return self.members
 
-# %% ../../nbs/classes/50_DomoMembership.ipynb 13
+# %% ../../nbs/classes/50_DomoMembership.ipynb 14
 @patch_to(GroupMembership)
 async def add_members(
     self: GroupMembership,
@@ -335,7 +339,11 @@ async def set_members(
 ):
     self._reset_obj()
 
-    domo_users = await self.get_members(
+    user_ls = [
+        Membership_Entity(entity=user) for user in user_ls
+    ]
+
+    memberships = await self.get_members(
         debug_api=debug_api,
         session=session,
         debug_num_stacks_to_drop=debug_num_stacks_to_drop + 1,
@@ -344,9 +352,9 @@ async def set_members(
     for domo_user in user_ls:
         self._add_member(domo_user)
 
-    for domo_user in domo_users:
-        if domo_user not in user_ls:
-            self._remove_member(domo_user)
+    for me in memberships:
+        if me not in user_ls:
+            self._remove_member(me)
 
     res = await self.update(
         debug_api=debug_api,
@@ -362,7 +370,7 @@ async def set_members(
         session=session,
     )
 
-# %% ../../nbs/classes/50_DomoMembership.ipynb 15
+# %% ../../nbs/classes/50_DomoMembership.ipynb 16
 @patch_to(GroupMembership)
 async def add_owners(
     self: GroupMembership,
@@ -435,13 +443,17 @@ async def set_owners(
     import domolibrary.classes.DomoGroup as dmdg
 
     self._reset_obj()
-
-    owner_entities = await self.get_owners()
+    
+    owner_ls = [
+        Membership_Entity(entity=owner) for owner in owner_ls
+    ]
+    
+    membership = await self.get_owners()
 
     for domo_entity in owner_ls:
         self._add_owner(domo_entity)
 
-    for oe in owner_entities:
+    for oe in membership:
 
         # open accounts must have themselves as an owner
         if (

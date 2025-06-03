@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dolma
-Version: 1.1.2
+Version: 1.2.0
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: Apache Software License
@@ -11,8 +11,7 @@ Classifier: Topic :: Text Processing
 Classifier: Typing :: Typed
 Requires-Dist: anyascii>=0.3.2
 Requires-Dist: blingfire==0.1.8
-Requires-Dist: boto3>=1.28
-Requires-Dist: cached-path>=1.5.1
+Requires-Dist: boto3
 Requires-Dist: fasttext-wheel==0.9.2
 Requires-Dist: fsspec>=2023.6.0
 Requires-Dist: jsonpath-ng
@@ -25,8 +24,8 @@ Requires-Dist: pyyaml
 Requires-Dist: python-dotenv>=0.19.0
 Requires-Dist: requests
 Requires-Dist: rich
-Requires-Dist: s3fs>=2023.6.0
-Requires-Dist: smart-open
+Requires-Dist: s3fs==2023.6.0
+Requires-Dist: smart-open>=7.0.4
 Requires-Dist: tokenizers>=0.15.0,<=0.19.1
 Requires-Dist: tqdm
 Requires-Dist: uniseg
@@ -49,12 +48,10 @@ Requires-Dist: detect-secrets==1.4.0 ; extra == 'code'
 Requires-Dist: beautifulsoup4>=4 ; extra == 'code'
 Requires-Dist: pygments ; extra == 'code'
 Requires-Dist: regex ; extra == 'code'
-Requires-Dist: presidio-analyzer==2.2.32 ; extra == 'pii'
 Requires-Dist: regex ; extra == 'pii'
 Requires-Dist: fasttext-wheel==0.9.2 ; extra == 'lang'
-Requires-Dist: ltpycld2==0.42 ; extra == 'lang'
+Requires-Dist: pycld2 ; extra == 'lang'
 Requires-Dist: lingua-language-detector>=2.0.0 ; extra == 'lang'
-Requires-Dist: langdetect>=1.0.9 ; extra == 'lang'
 Requires-Dist: fastwarc ; extra == 'warc'
 Requires-Dist: w3lib ; extra == 'warc'
 Requires-Dist: url-normalize ; extra == 'warc'
@@ -82,11 +79,11 @@ Provides-Extra: trafilatura
 Provides-Extra: resiliparse
 Provides-Extra: all
 License-File: LICENSE
-Summary: Data filters
+Summary: Toolkit for pre-processing LLM training data.
 Author-email: Allen Institute for Artificial Intelligence <contact@allenai.org>, Luca Soldaini <luca@soldaini.net>, Kyle Lo <kylel@allenai.org>, Rodney Kinney <rodneyk@allenai.org>, Aakanksha Naik <aakankshan@allenai.org>, Abhilasha Ravichander <abhilashar@allenai.org>, Akshita Bhagia <akshitab@allenai.org>, Dirk Groeneveld <dirkg@allenai.org>, Dustin Schwenk <dustins@allenai.org>, Ian Magnusson <ianm@allenai.org>, Khyathi Chandu <khyathic@allenai.org>
 Maintainer-email: Allen Institute for Artificial Intelligence <contact@allenai.org>
 License: Apache-2.0
-Requires-Python: >=3.9
+Requires-Python: >=3.10, <3.13
 Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
 Project-URL: Homepage, https://github.com/allenai/dolma
 

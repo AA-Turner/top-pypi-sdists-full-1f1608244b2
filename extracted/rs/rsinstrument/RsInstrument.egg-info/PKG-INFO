@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: RsInstrument
-Version: 1.101.0
+Version: 1.102.0
 Summary: VISA or Socket Communication Module for Rohde & Schwarz Instruments
 Home-page: https://github.com/Rohde-Schwarz/RsInstrument
 Author: Rohde & Schwarz GmbH & Co. KG
@@ -76,11 +76,18 @@ If you're looking for examples with specific instruments, check out the ones for
 Version history:
 ----------------
 
+    Version 1.102.0.112 (02.06.2025)
+        - Corrected duplicate time-statistics methods from logger.
+        - Improved help.
+        - Core 1.105.0
+
     Version 1.101.0.111 (27.05.2025)
         - Added settings profile 'RadEsT' for R&S Automotive Radar Tester.
         - Added settings 'EachCmdSuffix' settings option - use it for instruments that require CRLF at the end of each command.
         - Added settings 'StripStringTrailingWhitespaces' - use it to strip white spaces from string query responses.
+        - Added settings 'LoggingRelativeTimeOfFirstEntry' (boolean) - set it to true to start the logging with 00:00:00.000 relative time.
         - Added check_status() method for checking instrument errors and throwing exception.
+        - Added in ScpiLogger: set_time_offset_zero_on_first_entry() - call it to have the next log entry starting with 00:00:00.000 relative time.
         - Core 1.104.0
 
     Version 1.100.0.110 (09.04.2025)

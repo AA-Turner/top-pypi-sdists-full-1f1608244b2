@@ -31,8 +31,8 @@ def send_message(
         url: str = DEFAULT,
         n: int = 1,
 ):
-    logger.debug(f"数据类型：{type(content)}")
-    logger.debug(content)
+    # logger.debug(f"数据类型：{type(content)}")
+    # logger.debug(content)
 
     if any((content, title)):
 

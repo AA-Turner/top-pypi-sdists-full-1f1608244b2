@@ -211,7 +211,7 @@ BOT_CADMIN_ = '☐☑'
 BOT_VARS_ = '{"BOT_PROMO": "#911", "BOT_CHANNEL": 0, "BOT_CHANNELTID": 0, "BOT_GROUP": 0, "BOT_GROUPTID": 0, "BOT_CHATGPT": "", "BOT_GEO": 0, "BOT_TZ": "+00:00", "BOT_DT": "", "BOT_LZ": "en", "BOT_LC": "en", "BOT_ISSTARTED": 0, "BOT_ISMENTIONED": 0}'
 BOT_LSTS_ = '{"BOT_ADMINS": [], "BOT_COMMANDS": ["/start"]}'
 USER_VARS_ = '{"USER_TEXT": "", "USER_REACTION": "", "USER_PUSH": "", "USER_EMAIL": "", "USER_PROMO": "", "USER_CONTACT": "", "USER_GEO": "", "USER_UTM": "", "USER_ID": 0, "USER_DT": "", "USER_TZ": "+00:00", "USER_LC": "en", "USER_LZ": "en", "USER_ISADMIN": 0, "USER_ISBLOG": 0, "USER_ISPREMIUM": 0, "USER_BALL": 0, "USER_RAND": 0, "USER_QUIZ": 0, "USER_DICE": 0, "MSGID_PAID": 0, "DATE_TIME": 0}'
-USER_LSTS_ = '{"USER_UTMREF": [], "USER_PAYMENTS": []}'
+USER_LSTS_ = '{"USER_UTMREF": [], "USER_PAYMENTS": [], "USER_TXS": [], "USER_DAU": [], "USER_MAU": []}'
 
 UB_CONFIG_ = '☑☑☑☐☐☑☑☐☐☐☐☐☐'
 UB_CMONITOR_ = '☐'
@@ -15511,6 +15511,260 @@ async def get_vars_web_main(chat_id, username, full_name, lc, is_premium, utm_we
         return is_paid, till_paid, lz
 
 
+async def upd_user_data_main(data, web_app_init_data, BASE_P, BOT_TOKEN_E18B, req_url=''):
+    chat_id = int(web_app_init_data.get('user', {}).get('id'))
+    username = web_app_init_data.get('user', {}).get('username', None)
+    first_name = web_app_init_data.get('user', {}).get('first_name', '')
+    last_name = web_app_init_data.get('user', {}).get('last_name', '')
+    full_name = f"{first_name} {last_name}".strip()
+    lc = web_app_init_data.get('user', {}).get('language_code', 'en')
+    is_premium = web_app_init_data.get('user', {}).get('is_premium', None)
+    usr_sig = web_app_init_data.get('signature', '')
+
+    page = data.get('page', '')
+    connectedAddress = data.get('connectedAddress', '')
+    USER_TID = chat_id
+    USER_VARS = json.loads(USER_VARS_)
+    USER_LSTS = json.loads(USER_LSTS_)
+    USER_GAMES = {}
+    balls = 1
+    is_paid = False
+    till_paid = ''
+
+    print(f"upd_user_data_main: {USER_LSTS=}")
+    try:
+        sql = f"SELECT USER_TID, USER_GAMES, USER_VARS, USER_LSTS FROM \"USER\" WHERE USER_TID=$1"
+        data_user = await db_select_pg(sql, (chat_id,), BASE_P)
+
+        # region data
+        if len(data_user):
+            USER_TID, USER_GAMES, USER_VARS, USER_LSTS = data_user[0]
+            USER_GAMES = json.loads(USER_GAMES)
+            USER_VARS = json.loads(USER_VARS)
+            USER_LSTS = json.loads(USER_LSTS)
+            if page in ['msg', 'pst']: USER_GAMES = await ch_games(USER_GAMES, 'web', True, balls)
+
+            if lc:
+                USER_VARS['USER_LC'] = lc
+                lz = 'en'
+                if lc in ['zh', 'zh-chs', 'zh-cht', 'ja', 'ko', 'zh-CN', 'zh-TW', 'th', 'vi', 'tw', 'sg']:
+                    lz = 'zh'
+                # arabic    # ir, af
+                elif lc in ['ar-XA', 'ar', 'tr', 'ur', 'fa', 'tj', 'dz', 'eg', 'iq', 'sy', 'ae', 'sa', 'tn', 'ir', 'af']:
+                    lz = 'ar'
+                # spanish   # portugal: 'pt', 'br', 'ao', 'mz'
+                elif lc in ['es', 'ar', 'cl', 'co', 'cu', 've', 'bo', 'pe', 'ec', 'pt', 'br', 'ao', 'mz']:
+                    lz = 'es'
+                # french
+                elif lc in ['fr', 'ch', 'be', 'ca']:
+                    lz = 'fr'
+                # europe
+                elif lc in ['ru', 'kz', 'kg', 'uz', 'tm', 'md', 'am', 'uk-UA', 'uk', 'kk', 'tk', 'ky']:
+                    lz = 'ru'
+                USER_VARS['USER_LZ'] = lz
+
+        now = datetime.now(timezone.utc)
+        USER_LSTS["USER_DAU"] = list(set(USER_LSTS.get("USER_DAU", []) + [now.strftime('%Y-%m-%d')]))
+        USER_LSTS["USER_MAU"] = list(set(USER_LSTS.get("USER_MAU", []) + [now.strftime('%Y-%m')]))
+        USER_VARS['USER_SIG'] = usr_sig
+        USER_VARS['USER_ISPREMIUM'] = is_premium
+        lz = USER_VARS.get('USER_LZ', 'en')
+
+        if USER_VARS['USER_DT'] == '':
+            USER_VARS['USER_DT'] = datetime.now(timezone.utc).strftime("%d-%m-%Y_%H-%M-%S")
+        # if utm != '':
+        #     USER_VARS['USER_UTM'] = utm
+        # endregion
+
+        # region tx
+        if connectedAddress:
+            print(f"{connectedAddress=}, {USER_VARS=}")
+            USER_VARS['USER_WALLET'] = connectedAddress
+            print(f"after {req_url=}, {USER_VARS=}")
+            print(f"after {data.get('amount', None)=}, {data=}")
+
+            if req_url and data.get('amount', None):
+                amount = data.get('amount', None)
+                address = data.get('address', '')
+                DT_START = datetime.now(timezone.utc).strftime('%d-%m-%Y_%H-%M-%S')
+                USER_TXS = USER_LSTS.get("USER_TXS", [])
+
+                USER_TXS.append({
+                    'TYPE': req_url,
+                    'AMOUNT': amount,
+                    'ADDRESS': address,
+                    'DT_START': DT_START,
+                })
+                USER_LSTS["USER_TXS"] = USER_TXS
+                print(f"{USER_TXS=}, {USER_LSTS=}")
+        # endregion
+
+        # region pay
+        pays = USER_LSTS.get('USER_PAYMENTS', [])
+        print(f"{pays=}")
+        for pay in pays:
+            try:
+                if not (pay.get('TYPE', '') == 'SUB' and pay.get('DT_END', '')): continue
+                DT_END = datetime.strptime(pay.get('DT_END'), '%d-%m-%Y_%H-%M-%S').replace(tzinfo=timezone.utc)
+                print(f"{DT_END=}")
+                if datetime.now(timezone.utc) <= DT_END:
+                    is_paid = True
+                    till_paid = DT_END.strftime('%d.%m.%Y')
+            except Exception as e:
+                logger.info(log_ % str(e))
+                pass
+
+        if not is_paid:
+            extra_bot = None
+            try:
+                lib_id = channel_library_ru if lz == 'ru' else channel_library_en
+                print(f"{channel_library_ru=}, {channel_library_en=}")
+                extra_bot = Bot(token=BOT_TOKEN_E18B)
+                member_ = await extra_bot.get_chat_member(chat_id=lib_id, user_id=chat_id)
+                if member_.status in ['member', 'administrator', 'creator']: is_paid = True
+                print(f"get_vars_web_main -> get_chat_member {is_paid=}")
+            except Exception as e:
+                logger.info(log_ % str(e))
+            finally:
+                if extra_bot: await extra_bot.session.close()
+        # endregion
+
+        sql = f""" 
+        INSERT INTO \"USER\" (
+            USER_TID, USER_USERNAME, USER_FULLNAME, USER_GAMES, USER_VARS, USER_LSTS
+        )
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (USER_TID) DO UPDATE
+        SET 
+            USER_USERNAME = EXCLUDED.USER_USERNAME,
+            USER_FULLNAME = EXCLUDED.USER_FULLNAME,
+            USER_GAMES = EXCLUDED.USER_GAMES,
+            USER_VARS = EXCLUDED.USER_VARS,
+            USER_LSTS = EXCLUDED.USER_LSTS
+        """
+        await db_change_pg(sql, (USER_TID, username, full_name,
+                                 json.dumps(USER_GAMES, ensure_ascii=False),
+                                 json.dumps(USER_VARS, ensure_ascii=False),
+                                 json.dumps(USER_LSTS, ensure_ascii=False),), BASE_P)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
+    finally:
+        return USER_TID, username, full_name, USER_GAMES, USER_VARS, USER_LSTS, is_paid, till_paid
+
+
+async def upd_user_data(ENT_TID, data, web_app_init_data, PROJECT_USERNAME, BASE_P, req_url=''):
+    chat_id = int(web_app_init_data.get('user', {}).get('id'))
+    username = web_app_init_data.get('user', {}).get('username', None)
+    first_name = web_app_init_data.get('user', {}).get('first_name', '')
+    last_name = web_app_init_data.get('user', {}).get('last_name', '')
+    full_name = f"{first_name} {last_name}".strip()
+    lc = web_app_init_data.get('user', {}).get('language_code', 'en')
+    is_premium = web_app_init_data.get('user', {}).get('is_premium', None)
+    usr_sig = web_app_init_data.get('signature', '')
+
+    tid = str(ENT_TID).replace('-', '')
+    page = data.get('page', '')
+    connectedAddress = data.get('connectedAddress', '')
+    USER_TID = chat_id
+    USER_VARS = json.loads(USER_VARS_)
+    USER_LSTS = json.loads(USER_LSTS_)
+    USER_GAMES = {}
+    balls = 1
+
+    print(f"upd_user_data: {USER_LSTS=}")
+    try:
+        schema_name = 'USER'
+        if PROJECT_USERNAME == 'FereyBotBot':
+            schema_name = 'BOT'
+            balls = -1
+        elif PROJECT_USERNAME == 'FereyChannelBot':
+            schema_name = 'CHANNEL'
+        elif PROJECT_USERNAME == 'FereyGroupBot':
+            schema_name = 'GROUPP'
+
+        sql = f"SELECT USER_TID, USER_GAMES, USER_VARS, USER_LSTS FROM {schema_name}_{tid}.USER WHERE USER_TID=$1"
+        data_user = await db_select_pg(sql, (chat_id,), BASE_P)
+
+        # region data
+        if len(data_user):
+            USER_TID, USER_GAMES, USER_VARS, USER_LSTS = data_user[0]
+            USER_GAMES = json.loads(USER_GAMES)
+            USER_VARS = json.loads(USER_VARS)
+            USER_LSTS = json.loads(USER_LSTS)
+            if page in ['msg', 'pst']: USER_GAMES = await ch_games(USER_GAMES, 'web', True, balls)
+
+            if lc:
+                USER_VARS['USER_LC'] = lc
+                lz = 'en'
+                if lc in ['zh', 'zh-chs', 'zh-cht', 'ja', 'ko', 'zh-CN', 'zh-TW', 'th', 'vi', 'tw', 'sg']:
+                    lz = 'zh'
+                # arabic    # ir, af
+                elif lc in ['ar-XA', 'ar', 'tr', 'ur', 'fa', 'tj', 'dz', 'eg', 'iq', 'sy', 'ae', 'sa', 'tn', 'ir', 'af']:
+                    lz = 'ar'
+                # spanish   # portugal: 'pt', 'br', 'ao', 'mz'
+                elif lc in ['es', 'ar', 'cl', 'co', 'cu', 've', 'bo', 'pe', 'ec', 'pt', 'br', 'ao', 'mz']:
+                    lz = 'es'
+                # french
+                elif lc in ['fr', 'ch', 'be', 'ca']:
+                    lz = 'fr'
+                # europe
+                elif lc in ['ru', 'kz', 'kg', 'uz', 'tm', 'md', 'am', 'uk-UA', 'uk', 'kk', 'tk', 'ky']:
+                    lz = 'ru'
+                USER_VARS['USER_LZ'] = lz
+
+        now = datetime.now(timezone.utc)
+        USER_LSTS["USER_DAU"] = list(set(USER_LSTS.get("USER_DAU", []) + [now.strftime('%Y-%m-%d')]))
+        USER_LSTS["USER_MAU"] = list(set(USER_LSTS.get("USER_MAU", []) + [now.strftime('%Y-%m')]))
+        USER_VARS['USER_SIG'] = usr_sig
+        USER_VARS['USER_ISPREMIUM'] = is_premium
+        # endregion
+
+        # region tx
+        if connectedAddress:
+            print(f"{connectedAddress=}, {USER_VARS=}")
+            USER_VARS['USER_WALLET'] = connectedAddress
+            print(f"after {req_url=}, {USER_VARS=}")
+            print(f"after {data.get('amount', None)=}, {data=}")
+
+            if req_url and data.get('amount', None):
+                amount = data.get('amount', None)
+                address = data.get('address', '')
+                DT_START = datetime.now(timezone.utc).strftime('%d-%m-%Y_%H-%M-%S')
+                USER_TXS = USER_LSTS.get("USER_TXS", [])
+
+                USER_TXS.append({
+                    'TYPE': req_url,
+                    'AMOUNT': amount,
+                    'ADDRESS': address,
+                    'DT_START': DT_START,
+                })
+                USER_LSTS["USER_TXS"] = USER_TXS
+                print(f"{USER_TXS=}, {USER_LSTS=}")
+        # endregion
+
+        sql = f""" 
+        INSERT INTO {schema_name}_{tid}.USER (
+            USER_TID, USER_USERNAME, USER_FULLNAME, USER_GAMES, USER_VARS, USER_LSTS
+        )
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (USER_TID) DO UPDATE
+        SET 
+            USER_USERNAME = EXCLUDED.USER_USERNAME,
+            USER_FULLNAME = EXCLUDED.USER_FULLNAME,
+            USER_GAMES = EXCLUDED.USER_GAMES,
+            USER_VARS = EXCLUDED.USER_VARS,
+            USER_LSTS = EXCLUDED.USER_LSTS
+        """
+        await db_change_pg(sql, (USER_TID, username, full_name,
+                                 json.dumps(USER_GAMES, ensure_ascii=False),
+                                 json.dumps(USER_VARS, ensure_ascii=False),
+                                 json.dumps(USER_LSTS, ensure_ascii=False),), BASE_P)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
+    finally:
+        return USER_TID, username, full_name, USER_GAMES, USER_VARS, USER_LSTS
 # endregion
 
 
@@ -15604,139 +15858,6 @@ async def ch_games(USER_GAMES, game, condition, balls=-1):
     finally:
         print(f"Финальные данные: {USER_GAMES}")
         return USER_GAMES
-
-
-# async def ch_games(USER_GAMES, game, condition, balls=1):
-#     try:
-#         dt = datetime.now(timezone.utc)
-#         dt_ = dt.strftime('%d-%m-%Y_%H-%M-%S')
-#
-#         if condition:
-#             dt_game = USER_GAMES[game].get('date')
-#
-#             if not dt_game:
-#                 USER_GAMES[game]['date'] = dt_
-#                 USER_GAMES[game]['balls'] = balls
-#             else:
-#                 dt_game = datetime.strptime(dt_game, "%d-%m-%Y_%H-%M-%S").replace(tzinfo=timezone.utc)
-#                 if (dt - dt_game).days >= 1:
-#                     USER_GAMES[game]['date'] = dt_
-#                     USER_GAMES[game]['balls'] = balls
-#         else:
-#             USER_GAMES[game]['balls'] = 0
-#     except Exception as e:
-#         logger.info(log_ % str(e))
-#         await asyncio.sleep(round(random.uniform(0, 1), 2))
-#     finally:
-#         return USER_GAMES
-
-
-async def get_user_vars(PROJECT_USERNAME, BASE_P, ENT_TID, chat_id, lc, username, full_name, is_premium=False, usr_sig='',
-                        page=''):
-    USER_TID = chat_id
-    USER_VARS = json.loads(USER_VARS_)
-    USER_LSTS = json.loads(USER_LSTS_)
-    USER_GAMES = {}
-    print(f"start get usernv a, {USER_LSTS=}")
-    try:
-        schema_name = 'USER'
-        balls = 1
-        if PROJECT_USERNAME == 'FereyBotBot':
-            schema_name = 'BOT'
-            balls = -1
-        elif PROJECT_USERNAME == 'FereyChannelBot':
-            schema_name = 'CHANNEL'
-        elif PROJECT_USERNAME == 'FereyGroupBot':
-            schema_name = 'GROUPP'
-
-        sql = f"SELECT USER_TID, USER_GAMES, USER_VARS, USER_LSTS FROM {schema_name}_{str(ENT_TID).replace('-', '')}.USER WHERE USER_TID=$1"
-        data_user = await db_select_pg(sql, (chat_id,), BASE_P)
-        print(f"{data_user=}")
-        if len(data_user):
-            USER_TID, USER_GAMES, USER_VARS, USER_LSTS = data_user[0]
-            USER_GAMES = json.loads(USER_GAMES)
-            USER_VARS = json.loads(USER_VARS)
-            USER_LSTS = json.loads(USER_LSTS)
-            if page in ['msg', 'pst']: USER_GAMES = await ch_games(USER_GAMES, 'web', True, balls)
-
-            # region lz
-            if lc:
-                USER_VARS['USER_LC'] = lc
-                lz = 'en'
-                if lc in ['zh', 'zh-chs', 'zh-cht', 'ja', 'ko', 'zh-CN', 'zh-TW', 'th', 'vi', 'tw', 'sg']:
-                    lz = 'zh'
-                # arabic    # ir, af
-                elif lc in ['ar-XA', 'ar', 'tr', 'ur', 'fa', 'tj', 'dz', 'eg', 'iq', 'sy', 'ae', 'sa', 'tn', 'ir',
-                            'af']:
-                    lz = 'ar'
-                # spanish   # portugal: 'pt', 'br', 'ao', 'mz'
-                elif lc in ['es', 'ar', 'cl', 'co', 'cu', 've', 'bo', 'pe', 'ec', 'pt', 'br', 'ao', 'mz']:
-                    lz = 'es'
-                # french
-                elif lc in ['fr', 'ch', 'be', 'ca']:
-                    lz = 'fr'
-                # europe
-                elif lc in ['ru', 'kz', 'kg', 'uz', 'tm', 'md', 'am', 'uk-UA', 'uk', 'kk', 'tk', 'ky']:
-                    lz = 'ru'
-                USER_VARS['USER_LZ'] = lz
-            # endregion
-            print(f"{USER_VARS=}, {lc=}")
-        USER_VARS['USER_SIG'] = usr_sig
-        USER_VARS['USER_ISPREMIUM'] = is_premium
-
-        sql = f""" 
-        INSERT INTO {schema_name}_{str(ENT_TID).replace('-', '')}.USER (
-            USER_TID, USER_USERNAME, USER_FULLNAME, USER_GAMES, USER_VARS, USER_LSTS
-        )
-        VALUES ($1, $2, $3, $4, $5, $6)
-        ON CONFLICT (USER_TID) DO UPDATE
-        SET 
-            USER_USERNAME = EXCLUDED.USER_USERNAME,
-            USER_FULLNAME = EXCLUDED.USER_FULLNAME,
-            USER_GAMES = EXCLUDED.USER_GAMES,
-            USER_VARS = EXCLUDED.USER_VARS,
-            USER_LSTS = EXCLUDED.USER_LSTS
-        """
-        await db_change_pg(sql, (USER_TID, username, full_name,
-                                 json.dumps(USER_GAMES, ensure_ascii=False),
-                                 json.dumps(USER_VARS, ensure_ascii=False),
-                                 json.dumps(USER_LSTS, ensure_ascii=False),), BASE_P)
-    except Exception as e:
-        logger.info(log_ % str(e))
-        await asyncio.sleep(round(random.uniform(0, 1), 2))
-    finally:
-        return USER_TID, username, full_name, USER_GAMES, USER_VARS, USER_LSTS
-
-
-async def get_user_vars2(chat_id, ENT_TID, BASE_D, PROJECT_USERNAME):
-    USER_GAMES = {}
-    USER_VARS = {}
-    USER_ISPAID = 0
-    try:
-        schema_name = 'USER'
-        if PROJECT_USERNAME == 'FereyBotBot':
-            schema_name = 'BOT'
-        elif PROJECT_USERNAME == 'FereyChannelBot':
-            schema_name = 'CHANNEL'
-        elif PROJECT_USERNAME == 'FereyGroupBot':
-            schema_name = 'GROUPP'
-
-        sql = f"SELECT USER_GAMES, USER_VARS, USER_ISPAID FROM {schema_name}_{str(ENT_TID).replace('-', '')}.USER WHERE USER_TID=$1"
-        data_usr = await db_select_pg(sql, (chat_id,), BASE_D)
-        if not len(data_usr) or not data_usr[0][0]:
-            if not len(data_usr):
-                dt_now = datetime.now(timezone.utc).strftime('%d-%m-%Y_%H-%M-%S')
-                sql = f"INSERT INTO {schema_name}_{str(ENT_TID).replace('-', '')}.USER (USER_TID, USER_DT) VALUES ($1, $2) ON CONFLICT DO NOTHING"
-                await db_change_pg(sql, (chat_id, dt_now,), BASE_D)
-        else:
-            USER_GAMES, USER_VARS, USER_ISPAID = data_usr[0]
-            USER_GAMES = json.loads(USER_GAMES) if USER_GAMES else {}
-            USER_VARS = json.loads(USER_VARS) if USER_VARS else {}
-    except Exception as e:
-        logger.info(log_ % str(e))
-        await asyncio.sleep(round(random.uniform(0, 1), 2))
-    finally:
-        return USER_GAMES, USER_VARS, USER_ISPAID
 
 
 async def post_save(bot, data_user, data_web, MEDIA_D, BASE_P, KEYS_JSON, PROJECT_USERNAME, PROJECT_TYPE, is_paid=False):
@@ -15860,6 +15981,9 @@ async def post_save(bot, data_user, data_web, MEDIA_D, BASE_P, KEYS_JSON, PROJEC
             print(f"--------------------------------------------------------")
             print(f"--------------------------------------------------------")
             print(f"after {POST_MEDIA=}")
+
+        if PROJECT_USERNAME == 'FereyPostBot' and POST_TYPE in ['voice', 'audio'] and 'filev_id' not in POST_MEDIA[0]:
+            asyncio.create_task(convert_to_vinyl(bot, chat_id, ENT_TID, POST_TID, MEDIA_D, EXTRA_D, POST_MEDIA, BASE_P))
 
         # region pay
         for button in POST_BUTTONS:
@@ -17465,6 +17589,46 @@ async def pst_inline(chat_id, POST_TID, data_bot, BASE_P, PROJECT_USERNAME, is_m
         await asyncio.sleep(round(random.uniform(1, 2), 2))
     finally:
         return result
+
+
+async def convert_to_vinyl(bot, chat_id, ENT_TID, POST_TID, MEDIA_D, EXTRA_D, POST_MEDIA, BASE_P):
+    full_file_name = os.path.join(MEDIA_D, str(ENT_TID), POST_MEDIA[0]['file_name'])
+    file_name_video = full_file_name[: full_file_name.rfind('.')] + '.mp4'
+    try:
+        print(f"convert_to_vinyl start..")
+        file = await bot.get_file(POST_MEDIA[0]['file_id'])
+        await bot.download_file(file.file_path, full_file_name)
+        print(f"{full_file_name=} dl ok..")
+
+        vinyl_file = os.path.join(EXTRA_D, 'vinyl.mp4')
+        print(f"Итоговый путь для нового видео с заменённым звуком {file_name_video=}")
+
+        audio_clip = AudioFileClip(full_file_name)
+        if audio_clip.duration > 59: audio_clip = audio_clip.subclipped(0, 59)
+        target_duration = 59 if audio_clip.duration > 59 else audio_clip.duration
+        print(f"{target_duration=}")
+
+        video_template = VideoFileClip(vinyl_file)
+        video_template = video_template.subclipped(0, target_duration)
+        video_with_audio = video_template.with_audio(audio_clip)
+        video_with_audio.write_videofile(file_name_video, codec="libx264", audio_codec="aac", fps=24)
+        print(f"{file_name_video=} write_videofile ok..")
+
+        r = await bot.send_video_note(chat_id=chat_id, video_note=types.FSInputFile(file_name_video))
+        await bot.delete_message(chat_id, r.message_id)
+
+        if r.video_note:
+            print(f"{r.video_note.file_id=}")
+            POST_MEDIA[0]['filev_id'] = r.video_note.file_id
+
+            sql = f"UPDATE USER_{chat_id}.POST SET POST_MEDIA=$1 WHERE POST_TID=$2"
+            await db_change_pg(sql, (json.dumps(POST_MEDIA, ensure_ascii=False), POST_TID,), BASE_P)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(1, 2), 2))
+    finally:
+        if os.path.exists(full_file_name): os.remove(full_file_name)
+        if os.path.exists(file_name_video): os.remove(file_name_video)
 # endregion
 
 

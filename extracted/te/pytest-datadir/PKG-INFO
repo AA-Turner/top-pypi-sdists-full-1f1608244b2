@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pytest-datadir
-Version: 1.7.0
+Version: 1.7.1
 Summary: pytest plugin for test data directories and files
 Author-email: Gabriel Reis <gabrielcnr@gmail.com>
 License: MIT

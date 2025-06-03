@@ -39,14 +39,21 @@ setup(**{
         'aiotools~=1.8.2',
         'async_timeout~=4.0',
         'attrs>=25.3',
-        'backend.ai-cli==25.8.1',
-        'backend.ai-common==25.8.1',
-        'backend.ai-kernel-binary==25.8.1',
-        'backend.ai-kernel-helper==25.8.1',
-        'backend.ai-kernel==25.8.1',
+        """backend.ai-cli==25.9.0
+""",
+        """backend.ai-common==25.9.0
+""",
+        """backend.ai-kernel-binary==25.9.0
+""",
+        """backend.ai-kernel-helper==25.9.0
+""",
+        """backend.ai-kernel==25.9.0
+""",
         'backend.ai-krunner-static-gnu==4.4.0',
-        'backend.ai-logging==25.8.1',
-        'backend.ai-plugin==25.8.1',
+        """backend.ai-logging==25.9.0
+""",
+        """backend.ai-plugin==25.9.0
+""",
         'cachetools~=5.5.0',
         'callosum~=1.0.3',
         'cattrs~=24.1.1',
@@ -405,6 +412,7 @@ LICENSES
     },
     'python_requires': '>=3.13,<3.14',
     'url': 'https://github.com/lablup/backend.ai',
-    'version': '25.8.1',
+    'version': """25.9.0
+""",
     'zip_safe': False,
 })

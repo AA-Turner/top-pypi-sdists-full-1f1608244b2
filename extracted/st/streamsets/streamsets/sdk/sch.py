@@ -40,11 +40,12 @@ from .sch_models import (
     Environments, GCEDeployment, GCPEnvironment, GroupBuilder, Groups, Job, JobBuilder, Jobs, JobSequence,
     JobSequenceBuilder, JobSequences, KubernetesDeployment, KubernetesEnvironment, LegacyDeploymentBuilder,
     LegacyDeployments, LoginAudits, MeteringUsage, NotImplementedDeployment, NotImplementedEnvironment,
-    OrganizationBuilder, Organizations, Pipeline, PipelineBuilder, PipelineLabels, Pipelines, ProtectionMethodBuilder,
-    ProtectionPolicies, ProtectionPolicy, ProtectionPolicyBuilder, ProvisioningAgents, ReportDefinitions, SAQLSearch,
-    SAQLSearchBuilder, SAQLSearches, ScheduledTask, ScheduledTaskActions, ScheduledTaskBuilder, ScheduledTasks,
-    SelfManagedDeployment, SelfManagedEnvironment, StPipelineBuilder, SubscriptionAudit, SubscriptionBuilder,
-    Subscriptions, Topologies, Topology, TopologyBuilder, UserBuilder, Users,
+    OrganizationBuilder, Organizations, Pipeline, PipelineBuilder, PipelineLabels, Pipelines, Project, ProjectBuilder,
+    Projects, ProtectionMethodBuilder, ProtectionPolicies, ProtectionPolicy, ProtectionPolicyBuilder,
+    ProvisioningAgents, ReportDefinitions, SAQLSearch, SAQLSearchBuilder, SAQLSearches, ScheduledTask,
+    ScheduledTaskActions, ScheduledTaskBuilder, ScheduledTasks, SelfManagedDeployment, SelfManagedEnvironment,
+    StPipelineBuilder, SubscriptionAudit, SubscriptionBuilder, Subscriptions, Topologies, Topology, TopologyBuilder,
+    UserBuilder, Users,
 )
 from .utils import (
     SDC_DEFAULT_EXECUTION_MODE, TRANSFORMER_EXECUTION_MODES, SeekableList, get_stage_library_display_name_from_library,
@@ -180,6 +181,9 @@ class ControlHub:
         self._sla_api = self.api_client.get_sla_api()
 
         self._en_translations = self.api_client.get_translations_json()
+
+        # store which project we are running in, if any
+        self._current_project = None
 
         self._data_collectors = {}
         self._transformers = {}
@@ -3786,11 +3790,12 @@ class ControlHub:
         environment._data = self.environments.get(environment_id=environment.environment_id)._data
         return command
 
-    def delete_environment(self, *environments):
+    def delete_environment(self, *environments, stop=True):
         """Delete environments.
 
         Args:
             *environments: One or more instances of :py:class:`streamsets.sdk.sch_models.Environment`.
+            stop (:obj:`bool`): Deactivate the environments and delete its deployments. Default ``True``.
 
         Returns:
             An instance of :py:class:`streamsets.sdk.sch_api.Command`.
@@ -3804,14 +3809,24 @@ class ControlHub:
         enabled_environments = [environment for environment in environments if environment.json_state == 'ENABLED']
         if enabled_environments:
             logger.info(
-                'Since only deactivated environments can be deleted, deactivating environment %s ...',
+                'Since only deactivated environments can be deleted, deactivating environment %s ... as well as '
+                'its associated deployments',
                 [environment.environment_name for environment in enabled_environments],
             )
-            self.deactivate_environment(*enabled_environments)
 
         environment_ids = [environment.environment_id for environment in environments]
         logger.info('Deleting environments %s ...', [environment.environment_name for environment in environments])
-        self.api_client.delete_environments(environment_ids)
+        self.api_client.delete_environments(environment_ids, stop=stop)
+        delete_environment_exception = None
+        for environment in environments:
+            try:
+                self.api_client.wait_for_environment_to_be_deleted(environment_id=environment.environment_id)
+            except Exception as ex:
+                # just log the exceptions and ultimately raise the last one.
+                logger.debug(ex)
+                delete_environment_exception = ex
+        if delete_environment_exception:
+            raise delete_environment_exception
 
     def get_kubernetes_apply_agent_yaml_command(self, environment):
         """Get install script for a Kubernetes environment.
@@ -4228,7 +4243,7 @@ class ControlHub:
         delete_deployment_exception = None
         for deployment in deployments:
             try:
-                self.api_client.wait_for_deployment_status(deployment_id=deployment.deployment_id, status='DELETED')
+                self.api_client.wait_for_deployment_to_be_deleted(deployment_id=deployment.id)
             except Exception as ex:
                 # just log the exceptions and ultimately raise the last one.
                 logger.debug(ex)
@@ -4750,3 +4765,103 @@ class ControlHub:
             'username': username,
         }
         return self.api_client.validate_snowflake_account(body=validate_snowflake_account_json)
+
+    @property
+    def projects(self):
+        """Projects.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_models.Projects`.
+        """
+        return Projects(self)
+
+    @property
+    def current_project(self):
+        """Which project we are currently running in.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_models.Project` or :obj:`None`.
+        """
+        return self._current_project
+
+    @current_project.setter
+    def current_project(self, val):
+        if val is not None:
+            if not isinstance(val, Project):
+                raise TypeError(
+                    "current_project should be of type :py:class:`streamsets.sdk.sch_models.Project` or `None`"
+                )
+            if val.id is None:
+                raise ValueError(
+                    "ID of the project passed is not set. " "Set it by adding it to platform via `add_project`"
+                )
+        self._current_project = val
+
+        # set the appropriate project ID in the API client. This will consumed while making calls to platform.
+        self.api_client.current_project_id = self.current_project.id if self.current_project else None
+
+    def add_project(self, project):
+        """Add a project to Control Hub.
+
+        Args:
+            project (:py:class:`streamsets.sdk.sch_models.Project`): An instance of the project to be added.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        if not isinstance(project, Project):
+            raise TypeError("project should be of type Project.")
+
+        request_body = {'name': project.name, 'description': project.description}
+        command = self.api_client.create_project(body=request_body)
+
+        # overwrite the data into the same object.
+        project._data = command.response.json()
+
+        return command
+
+    def update_project(self, project):
+        """Update an existing project.
+
+        Args:
+            project (:py:class:`streamsets.sdk.sch_models.Project`): An instance of the project to be updated.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        if not isinstance(project, Project):
+            raise TypeError("project should be of type Project.")
+
+        if project.id is None:
+            raise ValueError("project is not initialized. Add it to Control Hub using the `add_project` method.")
+
+        command = self.api_client.update_project(data=project._data, project_id=project.id)
+        return command
+
+    def delete_project(self, *projects):
+        """Delete one or more projects from Control Hub
+
+        Args: projects (:py:class:`streamsets.sdk.sch_models.Project`): One or more instances of
+                                                                        :py:class:`streamsets.sdk.sch_models.Project`.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        if not all([isinstance(project, Project) for project in projects]):
+            raise TypeError("project should be of type Project.")
+
+        request_body = {'projectIds': [project.id for project in projects]}
+        command = self.api_client.delete_projects(body=request_body)
+
+        return command
+
+    def get_project_builder(self):
+        """Get a ProjectBuilder instance to create a project.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_models.ProjectBuilder`.
+        """
+        project_properties = self._security_api['definitions']['ProjectJson']['properties']
+        project = {property_: None for property_ in project_properties}
+
+        return ProjectBuilder(project=project, control_hub=self)

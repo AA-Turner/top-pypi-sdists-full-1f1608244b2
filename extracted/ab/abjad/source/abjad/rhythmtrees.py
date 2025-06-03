@@ -117,6 +117,7 @@ class RhythmTreeNode:
             >>> string = '(1 ((1 (1 1)) (1 (1 1))))'
             >>> rtc = abjad.rhythmtrees.parse(string)[0]
             >>> components = rtc(abjad.Duration(1, 1))
+            >>> abjad.makers.tweak_tuplet_number_text(components)
             >>> voice = abjad.Voice(components)
             >>> score = abjad.Score([voice])
             >>> abjad.setting(score).proportionalNotationDuration = "#1/12"
@@ -365,8 +366,9 @@ class RhythmTreeLeaf(RhythmTreeNode, uqbar.containers.UniqueTreeNode):
             pitches = [0]
         else:
             pitches = [None]
+        pitch_lists = _makers.make_pitch_lists(pitches)
         duration *= _duration.Duration(self.pair)
-        components = _makers.make_leaves(pitches, duration)
+        components = _makers.make_leaves(pitch_lists, [duration])
         return components
 
     def __graph__(self, **keywords) -> uqbar.graphs.Graph:
@@ -824,6 +826,7 @@ class RhythmTreeParser(Parser):
                 1))))
 
         >>> components = rtc(abjad.Duration(1, 2))
+        >>> abjad.makers.tweak_tuplet_number_text(components)
         >>> voice = abjad.Voice(components)
         >>> staff = abjad.Staff([voice])
         >>> score = abjad.Score([staff])
@@ -1098,6 +1101,7 @@ def parse(string: str) -> list[RhythmTreeContainer | RhythmTreeLeaf]:
         >>> string = "(2 (1 1))"
         >>> nodes = abjad.rhythmtrees.parse(string)
         >>> components = abjad.rhythmtrees.call(nodes)
+        >>> abjad.makers.tweak_tuplet_number_text(components)
         >>> voice = abjad.Voice(components)
         >>> leaf = abjad.select.leaf(voice, 0)
         >>> abjad.setting(leaf).Score.proportionalNotationDuration = "#1/12"
@@ -1165,6 +1169,7 @@ def parse(string: str) -> list[RhythmTreeContainer | RhythmTreeLeaf]:
         >>> string = "(1 (1)) (1 (1 1)) (1 (1 2))"
         >>> nodes = abjad.rhythmtrees.parse(string)
         >>> components = abjad.rhythmtrees.call(nodes)
+        >>> abjad.makers.tweak_tuplet_number_text(components)
         >>> voice = abjad.Voice(components)
         >>> leaf = abjad.select.leaf(voice, 0)
         >>> abjad.setting(leaf).Score.proportionalNotationDuration = "#1/12"
@@ -1246,6 +1251,7 @@ def parse(string: str) -> list[RhythmTreeContainer | RhythmTreeLeaf]:
         >>> string = "(1 (1 (1 (1 1)) 1))"
         >>> nodes = abjad.rhythmtrees.parse(string)
         >>> components = abjad.rhythmtrees.call(nodes, abjad.Duration(1, 2))
+        >>> abjad.makers.tweak_tuplet_number_text(components)
         >>> voice = abjad.Voice(components)
         >>> leaf = abjad.select.leaf(voice, 0)
         >>> abjad.setting(leaf).Score.proportionalNotationDuration = "#1/12"

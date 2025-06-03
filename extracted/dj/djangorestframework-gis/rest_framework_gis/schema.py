@@ -53,15 +53,15 @@ class GeoFeatureAutoSchema(AutoSchema):
     }
 
     GEO_FIELD_TO_SCHEMA[models.GeometryField] = {
-        'type': {'type': 'string'},
-        'coordinates': {
-            'oneOf': [  # If you have custom subclass of GeometryField, Override `oneOf` property.
+        "type": {"type": "string"},
+        "coordinates": {
+            "oneOf": [  # If you have custom subclass of GeometryField, Override `oneOf` property.
                 GEO_FIELD_TO_SCHEMA[models.PointField],
                 GEO_FIELD_TO_SCHEMA[models.LineStringField],
                 GEO_FIELD_TO_SCHEMA[models.PolygonField],
             ],
-            'example': GEO_FIELD_TO_SCHEMA[models.PolygonField]['coordinates'][
-                'example'
+            "example": GEO_FIELD_TO_SCHEMA[models.PolygonField]["coordinates"][
+                "example"
             ],
         },
     }
@@ -101,9 +101,7 @@ class GeoFeatureAutoSchema(AutoSchema):
         try:
             return self.GEO_FIELD_TO_SCHEMA[geo_field.__class__]
         except KeyError:
-            warnings.warn(
-                "Geometry generation for {field} is not supported.".format(field=field)
-            )
+            warnings.warn(f"Geometry generation for {field} is not supported.")
             return {}
 
     def map_field(self, field):

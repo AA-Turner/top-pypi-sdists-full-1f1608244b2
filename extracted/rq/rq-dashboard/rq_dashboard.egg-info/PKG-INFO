@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: rq-dashboard
-Version: 0.8.2.2
+Version: 0.8.3.2
 Summary: rq-dashboard is a general purpose, lightweight, web interface to monitor your RQ queues, jobs, and workers in realtime.
 Home-page: https://github.com/Parallels/rq-dashboard
 Author: Vincent Driessen
@@ -36,6 +36,17 @@ Requires-Dist: Flask
 Requires-Dist: redis
 Requires-Dist: arrow
 Requires-Dist: redis-sentinel-url
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: platform
+Dynamic: requires-dist
+Dynamic: summary
 
 Introduction
 ============

@@ -31,7 +31,7 @@ openai = OpenAI(
 
 images = [open("image1.webp", "rb"), open("image2.webp", "rb")]
 
-images = open("image1.webp", "rb")
+# images = open("image1.webp", "rb")
 
 r = openai.images.edit(
     model="fal-ai/flux-pro/kontext",

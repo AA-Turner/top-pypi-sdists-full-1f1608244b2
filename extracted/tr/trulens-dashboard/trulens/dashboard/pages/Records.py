@@ -2,13 +2,16 @@ from typing import Dict, List, Optional, Sequence
 
 import pandas as pd
 import streamlit as st
+from trulens.core.otel.utils import is_otel_tracing_enabled
 from trulens.dashboard.components.record_viewer import record_viewer
+from trulens.dashboard.components.record_viewer_otel import record_viewer_otel
 from trulens.dashboard.constants import EXTERNAL_APP_COL_NAME
 from trulens.dashboard.constants import HIDE_RECORD_COL_NAME
 from trulens.dashboard.constants import PINNED_COL_NAME
 from trulens.dashboard.constants import RECORDS_PAGE_NAME as page_name
 from trulens.dashboard.utils import streamlit_compat
 from trulens.dashboard.utils.dashboard_utils import ST_RECORDS_LIMIT
+from trulens.dashboard.utils.dashboard_utils import _get_event_otel_spans
 from trulens.dashboard.utils.dashboard_utils import get_feedback_defs
 from trulens.dashboard.utils.dashboard_utils import get_records_and_feedback
 from trulens.dashboard.utils.dashboard_utils import is_sis_compatibility_enabled
@@ -113,8 +116,10 @@ def _render_trace(
     st.divider()
 
     # Breadcrumbs
-    st.caption(f"{selected_row['app_id']} / {selected_row['record_id']}")
-    st.markdown(f"#### {selected_row['record_id']}")
+    st.caption(
+        f"{selected_row['app_name']} / {selected_row['app_version']} / Record: {selected_row['record_id']}"
+    )
+    st.markdown(f"#### Record ID: {selected_row['record_id']}")
 
     input_col, output_col = st_columns(2)
     with input_col.expander("Record Input"):
@@ -153,7 +158,14 @@ def _render_trace(
 
         st.subheader("App Details")
         st.json(app_json, expanded=1)
-
+    elif is_otel_tracing_enabled():
+        with trace_details:
+            st.subheader("Trace Details")
+            event_spans = _get_event_otel_spans(selected_row["record_id"])
+            if event_spans:
+                record_viewer_otel(spans=event_spans, key=None)
+            else:
+                st.warning("No trace data available for this record.")
     else:
         with trace_details:
             st.subheader("Trace Details")
@@ -244,22 +256,24 @@ def _build_grid_options(
 
     gb.configure_column(
         "input",
-        header_name="User Input",
+        header_name="Record Input",
         wrapText=True,
         autoHeight=True,
         filter="agMultiColumnFilter",
     )
     gb.configure_column(
         "output",
-        header_name="Response",
+        header_name="Record Output",
         wrapText=True,
         autoHeight=True,
         filter="agMultiColumnFilter",
     )
+
     gb.configure_column(
         "record_metadata",
         header_name="Record Metadata",
         filter="agTextColumnFilter",
+        valueGetter="JSON.stringify(data.record_metadata)",
     )
 
     gb.configure_column(
@@ -322,6 +336,10 @@ def _build_grid_options(
         hide=True,
         filter="agTextColumnFilter",
     )
+    gb.configure_column(
+        "num_events",
+        header_name="Number of Events",
+    )
 
     for metadata_col in version_metadata_col_names:
         gb.configure_column(
@@ -351,6 +369,12 @@ def _build_grid_options(
                 feedback_col + "_calls",
                 hide=True,
             )
+            gb.configure_column(
+                feedback_col + " direction",
+                cellDataType="text",
+                valueGetter=f"data['{feedback_col} direction'] ? 'Higher is Better' : 'Lower is Better'",
+                hide=True,
+            )
 
     for col in df.columns:
         if "feedback cost" in col:
@@ -368,6 +392,7 @@ def _build_grid_options(
     )
     gb.configure_pagination(enabled=True)
     gb.configure_side_bar()
+
     return gb.build()
 
 
@@ -383,11 +408,8 @@ def _render_grid(
             from st_aggrid.shared import ColumnsAutoSizeMode
             from st_aggrid.shared import DataReturnMode
 
-            height = 1000 if len(df) > 20 else 45 * len(df) + 100
-
             event = st_aggrid.AgGrid(
                 df,
-                height=height,
                 gridOptions=_build_grid_options(
                     df=df,
                     feedback_col_names=feedback_col_names,
@@ -540,7 +562,7 @@ def render_records(app_name: str):
     # Get records and feedback data
     records_limit = st.session_state.get(ST_RECORDS_LIMIT, None)
     records_df, feedback_col_names = get_records_and_feedback(
-        app_name=app_name, app_ids=app_ids, limit=records_limit
+        app_ids=app_ids, app_name=app_name, limit=records_limit
     )
 
     feedback_col_names = list(feedback_col_names)

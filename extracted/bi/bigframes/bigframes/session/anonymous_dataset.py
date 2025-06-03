@@ -43,7 +43,6 @@ class AnonymousDatasetManager(temporary_storage.TemporaryStorageManager):
         self.dataset = bf_io_bigquery.create_bq_dataset_reference(
             self.bqclient,
             location=self._location,
-            api_name="session-__init__",
         )
 
         self.session_id = session_id
@@ -54,6 +53,12 @@ class AnonymousDatasetManager(temporary_storage.TemporaryStorageManager):
     def location(self):
         return self._location
 
+    def _default_expiration(self):
+        """When should the table expire automatically?"""
+        return (
+            datetime.datetime.now(datetime.timezone.utc) + constants.DEFAULT_EXPIRATION
+        )
+
     def create_temp_table(
         self, schema: Sequence[bigquery.SchemaField], cluster_cols: Sequence[str] = []
     ) -> bigquery.TableReference:
@@ -61,9 +66,7 @@ class AnonymousDatasetManager(temporary_storage.TemporaryStorageManager):
         Allocates and and creates a table in the anonymous dataset.
         The table will be cleaned up by clean_up_tables.
         """
-        expiration = (
-            datetime.datetime.now(datetime.timezone.utc) + constants.DEFAULT_EXPIRATION
-        )
+        expiration = self._default_expiration()
         table = bf_io_bigquery.create_temp_table(
             self.bqclient,
             self.allocate_temp_table(),
@@ -71,6 +74,20 @@ class AnonymousDatasetManager(temporary_storage.TemporaryStorageManager):
             schema=schema,
             cluster_columns=list(cluster_cols),
             kms_key=self._kms_key,
+        )
+        return bigquery.TableReference.from_string(table)
+
+    def create_temp_view(self, sql: str) -> bigquery.TableReference:
+        """
+        Allocates and and creates a view in the anonymous dataset.
+        The view will be cleaned up by clean_up_tables.
+        """
+        expiration = self._default_expiration()
+        table = bf_io_bigquery.create_temp_view(
+            self.bqclient,
+            self.allocate_temp_table(),
+            expiration=expiration,
+            sql=sql,
         )
         return bigquery.TableReference.from_string(table)
 

@@ -73,15 +73,16 @@ job_queue_spec:
         elif idle_timeout_s < 0:
             raise ValueError("'idle_timeout_s' should be >= 0")
 
-    name: str = field(
+    name: Optional[str] = field(
+        default=None,
         metadata={
             "docstring": "Name of the job queue that can be used to target it when submitting future jobs. "
             "The name of a job queue must be unique within a project.",
         },
     )
 
-    def _validate_name(self, name: str):
-        if not isinstance(name, str):
+    def _validate_name(self, name: Optional[str]):
+        if name is not None and not isinstance(name, str):
             raise TypeError(f"'name' must be a string (it is {type(name)}).")
 
     execution_mode: JobQueueExecutionMode = field(  # type: ignore

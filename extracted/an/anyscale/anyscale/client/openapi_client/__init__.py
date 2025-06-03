@@ -473,6 +473,7 @@ from openapi_client.models.run_attempt_status import RunAttemptStatus
 from openapi_client.models.run_status import RunStatus
 from openapi_client.models.s3_download_location import S3DownloadLocation
 from openapi_client.models.sso_login_info import SSOLoginInfo
+from openapi_client.models.sso_mode import SSOMode
 from openapi_client.models.supportedbaseimagesenum import SUPPORTEDBASEIMAGESENUM
 from openapi_client.models.schedule_config import ScheduleConfig
 from openapi_client.models.scheduler_info import SchedulerInfo

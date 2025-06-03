@@ -215,7 +215,7 @@ def frame_offset(
 def header_toggle_menus(
     execution_context: int | str | None = None, undo: bool | None = None
 ):
-    """Expand or collapse the header pulldown menus
+    """Expand or collapse the header pull-down menus
 
     :type execution_context: int | str | None
     :type undo: bool | None

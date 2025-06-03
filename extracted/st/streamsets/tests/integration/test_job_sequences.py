@@ -1,6 +1,8 @@
 # Copyright 2024 StreamSets Inc.
 
 # fmt: off
+import datetime
+
 import pytest
 import requests
 
@@ -10,10 +12,11 @@ from streamsets.sdk.sch_models import (
 from streamsets.sdk.utils import SeekableList, get_random_string
 
 # fmt: on
-START_TIME_2099 = 4200268800
-END_TIME_2099 = 4200854400
-START_TIME_2100 = 4237401600
-END_TIME_2100 = 4237996800
+TODAY = datetime.datetime.now()
+TWO_DAYS_LATER = int((TODAY + datetime.timedelta(days=2)).timestamp()) * 1000
+TWO_AND_A_HALF_DAYS_LATER = int((TODAY + datetime.timedelta(days=2, hours=12)).timestamp()) * 1000
+THREE_DAYS_LATER = int((TODAY + datetime.timedelta(days=3)).timestamp()) * 1000
+THREE_AND_A_HALF_DAYS_LATER = int((TODAY + datetime.timedelta(days=3, hours=12)).timestamp()) * 1000
 UTC_TIME_Z0NE = 'UTC'
 BASIC_CRON_TAB_MASK = '0/1 * 1/1 * ? *'
 
@@ -61,7 +64,9 @@ def test_publish_job_sequence(sch):
     job_sequence_builder = sch.get_job_sequence_builder()
     assert isinstance(job_sequence_builder, JobSequenceBuilder)
 
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
 
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
@@ -71,8 +76,8 @@ def test_publish_job_sequence(sch):
     try:
         sch.publish_job_sequence(job_sequence=job_sequence)
         assert job_sequence.id
-        assert job_sequence.start_time == START_TIME_2099
-        assert job_sequence.end_time == END_TIME_2099
+        assert job_sequence.start_time == TWO_DAYS_LATER
+        assert job_sequence.end_time == TWO_AND_A_HALF_DAYS_LATER
         assert job_sequence.timezone == UTC_TIME_Z0NE
         assert job_sequence.crontab_mask == BASIC_CRON_TAB_MASK
 
@@ -89,7 +94,9 @@ def test_publish_job_sequence(sch):
 
 def test_delete_job_sequence(sch):
     job_sequence_builder = sch.get_job_sequence_builder()
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
     )
@@ -112,31 +119,33 @@ def test_delete_job_sequence(sch):
 
 def test_update_job_sequence_metadata(sch):
     job_sequence_builder = sch.get_job_sequence_builder()
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
     )
     try:
         sch.publish_job_sequence(job_sequence=job_sequence)
-        assert job_sequence.start_time == START_TIME_2099
-        assert job_sequence.end_time == END_TIME_2099
+        assert job_sequence.start_time == TWO_DAYS_LATER
+        assert job_sequence.end_time == TWO_AND_A_HALF_DAYS_LATER
         assert job_sequence.timezone == UTC_TIME_Z0NE
         assert job_sequence.crontab_mask == BASIC_CRON_TAB_MASK
 
         job_sequence = sch.job_sequences.get(id=job_sequence.id)
-        job_sequence.start_time = START_TIME_2100
-        job_sequence.end_time = END_TIME_2100
+        job_sequence.start_time = THREE_DAYS_LATER
+        job_sequence.end_time = THREE_AND_A_HALF_DAYS_LATER
         new_desc = get_random_string()
         job_sequence.description = new_desc
-        assert job_sequence.start_time == START_TIME_2100
-        assert job_sequence.end_time == END_TIME_2100
+        assert job_sequence.start_time == THREE_DAYS_LATER
+        assert job_sequence.end_time == THREE_AND_A_HALF_DAYS_LATER
         assert job_sequence.description == new_desc
 
         sch.update_job_sequence_metadata(job_sequence=job_sequence)
 
         job_sequence = sch.job_sequences.get(id=job_sequence.id)
-        assert job_sequence.start_time == START_TIME_2100
-        assert job_sequence.end_time == END_TIME_2100
+        assert job_sequence.start_time == THREE_DAYS_LATER
+        assert job_sequence.end_time == THREE_AND_A_HALF_DAYS_LATER
         assert job_sequence.description == new_desc
 
     except Exception as e:
@@ -151,7 +160,9 @@ def test_job_sequences_property(sch):
         number_of_job_sequences = 3
         for i in range(number_of_job_sequences):
             job_sequence_builder = sch.get_job_sequence_builder()
-            job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+            job_sequence_builder.add_start_condition(
+                TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+            )
             job_sequence = job_sequence_builder.build(
                 name='TEST Sequence {}'.format(get_random_string()),
                 description='description {}'.format(get_random_string()),
@@ -176,7 +187,9 @@ def test_job_sequences_property(sch):
 
 def test_get_and_delete_history_log_and_history_logs(sch, sample_jobs):
     job_sequence_builder = sch.get_job_sequence_builder()
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
     )
@@ -226,7 +239,9 @@ def test_get_and_delete_history_log_and_history_logs(sch, sample_jobs):
 def test_add_steps_and_jobs_to_job_sequence(sch, sample_jobs):
     job_sequence_builder = sch.get_job_sequence_builder()
 
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
 
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
@@ -275,7 +290,9 @@ def test_add_steps_and_jobs_to_job_sequence(sch, sample_jobs):
 
 def test_reorder_and_remove_jobs_from_sequence(sch, sample_jobs):
     job_sequence_builder = sch.get_job_sequence_builder()
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
     )
@@ -316,7 +333,9 @@ def test_reorder_and_remove_jobs_from_sequence(sch, sample_jobs):
 
 def test_change_status_of_job_sequence(sch, sample_jobs):
     job_sequence_builder = sch.get_job_sequence_builder()
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
     )
@@ -351,7 +370,9 @@ def test_change_status_of_job_sequence(sch, sample_jobs):
 def test_job_sequence_finish_conditions(sch, sample_jobs):
     # Set up Job Sequence and Jobs
     job_sequence_builder = sch.get_job_sequence_builder()
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
     )
@@ -378,12 +399,12 @@ def test_job_sequence_finish_conditions(sch, sample_jobs):
         # Make in-memory changes to Finish Condition
         finish_condition = step.finish_conditions[0]
         finish_condition.condition_type = 'END_TIME'
-        finish_condition.end_time = END_TIME_2100
+        finish_condition.end_time = THREE_AND_A_HALF_DAYS_LATER
         finish_condition.timezone = UTC_TIME_Z0NE
 
         # Assert changes reflect in-memory
         assert finish_condition.condition_type == 'END_TIME'
-        assert finish_condition.end_time == END_TIME_2100
+        assert finish_condition.end_time == THREE_AND_A_HALF_DAYS_LATER
         assert finish_condition.timezone == UTC_TIME_Z0NE
 
         # Reflect in Platform
@@ -394,7 +415,7 @@ def test_job_sequence_finish_conditions(sch, sample_jobs):
         step = job_sequence_from_sch.steps[0]
         finish_condition = step.finish_conditions[0]
         assert finish_condition.condition_type == 'END_TIME'
-        assert finish_condition.end_time == END_TIME_2100
+        assert finish_condition.end_time == THREE_AND_A_HALF_DAYS_LATER
         assert finish_condition.timezone == UTC_TIME_Z0NE
 
         # Make sure the appropriate job is returned
@@ -421,7 +442,9 @@ def test_job_sequence_finish_conditions(sch, sample_jobs):
 
 def test_running_a_job_sequence(sch, sample_jobs):
     job_sequence_builder = sch.get_job_sequence_builder()
-    job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+    job_sequence_builder.add_start_condition(
+        TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+    )
     job_sequence = job_sequence_builder.build(
         name='Sequence {}'.format(get_random_string()), description='description {}'.format(get_random_string())
     )

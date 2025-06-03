@@ -24,6 +24,7 @@ from dwave.optimization.symbols import (
     BSpline,
     Concatenate,
     Divide,
+    Exp,
     Expit,
     LinearProgram,
     LinearProgramFeasible,
@@ -43,6 +44,7 @@ from dwave.optimization.symbols import (
     Or,
     Put,
     Rint,
+    SafeDivide,
     SquareRoot,
     Where,
     Xor,
@@ -50,6 +52,7 @@ from dwave.optimization.symbols import (
 
 
 __all__ = [
+    "absolute",
     "add",
     "arange",
     "atleast_1d",
@@ -57,6 +60,7 @@ __all__ = [
     "bspline",
     "concatenate",
     "divide",
+    "exp",
     "expit",
     "hstack",
     "linprog",
@@ -72,6 +76,7 @@ __all__ = [
     "multiply",
     "put",
     "rint",
+    "safe_divide",
     "sqrt",
     "stack",
     "vstack",
@@ -94,6 +99,30 @@ def _op(BinaryOp: type, NaryOp: type, reduce_method: str):
                 return NaryOp(x1, *xi, **kwargs)
         return wrapper
     return decorator
+
+
+absolute = abs
+"""Absolute value element-wise on a symbol.
+
+An alias for :func:`abs`.
+
+Examples:
+    This example adds the absolute value of an integer decision
+    variable to a model.
+
+    >>> from dwave.optimization.model import Model
+    >>> model = Model()
+    >>> x = abs(model.constant([-2, 0, 1]))
+    >>> model.states.resize(1)
+    >>> with model.lock():
+    ...     print(x.state())
+    [2. 0. 1.]
+
+See Also:
+    :class:`~dwave.optimization.symbols.Absolute`: equivalent symbol.
+
+.. versionadded:: 0.6.2
+"""
 
 
 @_op(Add, NaryAdd, "sum")
@@ -367,6 +396,34 @@ def divide(x1: ArraySymbol, x2: ArraySymbol) -> Divide:
         [3. 5.]
     """
     return Divide(x1, x2)
+
+def exp(x: ArraySymbol) -> Exp:
+    """Return the element-wise base-e exponential of the given symbol.
+
+    Args:
+        x: Input symbol.
+
+    Returns:
+        A symbol that propagates the values of the base-e exponential of a given symbol.
+
+    Examples:
+        >>> from dwave.optimization import Model
+        >>> from dwave.optimization.mathematical import exp
+        ...
+        >>> model = Model()
+        >>> x = model.constant(1.0)
+        >>> exp_x = exp(x)
+        >>> model.states.resize(1)
+        >>> with model.lock():
+        ...     print(exp_x.state())
+        2.718281828459045
+
+    See Also:
+        :class:`~dwave.optimization.symbols.Exp`: equivalent symbol.
+
+    .. versionadded:: 0.6.2
+    """
+    return Exp(x)
 
 def expit(x: ArraySymbol) -> Expit:
     """Return an element-wise logistic sigmoid on the given symbol.
@@ -1017,6 +1074,47 @@ def rint(x: ArraySymbol) -> Rint:
         :class:`~dwave.optimization.symbols.Rint`: equivalent symbol.
     """
     return Rint(x)
+
+
+def safe_divide(x1: ArraySymbol, x2: ArraySymbol) -> SafeDivide:
+    r"""Divide the symbols element-wise, substituting ``0`` where ``x2 == 0``.
+
+    This function is not strictly mathematical division. Rather it encodes
+    the following function:
+
+    .. math::
+        f(a, b) = \begin{cases}
+            a / b & \text{for } b \neq 0 \\
+            0 & \text{else}
+        \end{cases}
+
+    Such a definition is useful [#buzzard]_ in cases where ``x2`` is non-zero by
+    construction or otherwise enforced to be non-zero.
+
+    .. [#buzzard] Buzzard, Kevin (5 Jul 2020),
+       `"Division by zero in type theory: a FAQ" <xena_>`_,
+       Xena Project (Blog), retrieved 2025-05-20
+    .. _xena: https://xenaproject.wordpress.com/2020/07/05/division-by-zero-in-type-theory-a-faq/
+
+    Examples:
+        >>> from dwave.optimization import Model
+        >>> from dwave.optimization.mathematical import safe_divide
+        ...
+        >>> model = Model()
+        >>> a = model.constant([-1, 0, 1, 2])
+        >>> b = model.constant([2, 1, 0, -1])
+        >>> x = safe_divide(a, b)
+        >>> model.states.resize(1)
+        >>> with model.lock():
+        ...     print(x.state())
+        [-0.5  0.   0.  -2. ]
+
+    See Also:
+        :class:`~dwave.optimization.symbols.SafeDivide`: equivalent symbol.
+
+    .. versionadded:: 0.6.2
+    """
+    return SafeDivide(x1, x2)
 
 
 def sqrt(x: ArraySymbol) -> SquareRoot:

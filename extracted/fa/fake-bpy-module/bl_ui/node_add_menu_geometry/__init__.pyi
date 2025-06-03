@@ -50,10 +50,10 @@ class NODE_MT_category_GEO_OUTPUT(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_category_GEO_POINT(bpy.types.Menu):

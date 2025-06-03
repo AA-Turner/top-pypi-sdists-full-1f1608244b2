@@ -796,7 +796,10 @@ class Clef:
 
         ..  container:: example
 
-            >>> notes = abjad.makers.make_notes(list(range(-12, -6)), [(1, 4)])
+            >>> numbers = list(range(-12, -6))
+            >>> pitches = abjad.makers.make_pitches(numbers)
+            >>> durations = [abjad.Duration(1, 4)]
+            >>> notes = abjad.makers.make_notes(pitches, durations)
             >>> staff = abjad.Staff(notes)
             >>> pitches = abjad.iterate.pitches(staff)
             >>> abjad.Clef.from_pitches(pitches)
@@ -7406,6 +7409,7 @@ class TimeSignature:
             Suppresses LilyPond "strange time signature" warning:
 
             >>> tuplet = abjad.Tuplet((2, 3), "c'4 d' e' f'")
+            >>> abjad.makers.tweak_tuplet_bracket_edge_height(tuplet)
             >>> staff = abjad.Staff([tuplet])
             >>> score = abjad.Score([staff], name="Score")
             >>> time_signature = abjad.TimeSignature((4, 3))

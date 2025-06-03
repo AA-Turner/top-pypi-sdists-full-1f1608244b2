@@ -1,44 +1,43 @@
 import pytest
-from dvc.testing.api_tests import (  # noqa, pylint: disable=unused-import
+
+from dvc.testing.api_tests import (  # noqa: F401
     TestAPI,
 )
-from dvc.testing.remote_tests import (  # noqa, pylint: disable=unused-import
+from dvc.testing.remote_tests import (  # noqa: F401
     TestRemote,
     TestRemoteVersionAware,
 )
-from dvc.testing.workspace_tests import (  # noqa, pylint: disable=unused-import
+from dvc.testing.workspace_tests import (  # noqa: F401  # noqa: F401
     TestGetUrl,
-)
-from dvc.testing.workspace_tests import TestImport as _TestImport
-from dvc.testing.workspace_tests import (  # noqa, pylint: disable=unused-import
     TestImportURLVersionAware,
     TestLsUrl,
 )
+from dvc.testing.workspace_tests import TestImport as _TestImport
 
 
 @pytest.fixture
 def cloud(make_cloud):
-    yield make_cloud(typ="gs")
+    return make_cloud(typ="gs")
 
 
 @pytest.fixture
 def remote(make_remote):
-    yield make_remote(name="upstream", typ="gs")
+    return make_remote(name="upstream", typ="gs")
 
 
 @pytest.fixture
 def remote_version_aware(make_remote_version_aware):
-    yield make_remote_version_aware(name="upstream", typ="gs")
+    return make_remote_version_aware(name="upstream", typ="gs")
 
 
 @pytest.fixture
 def remote_worktree(make_remote_worktree):
-    yield make_remote_worktree(name="upstream", typ="gs")
+    return make_remote_worktree(name="upstream", typ="gs")
 
 
 @pytest.fixture
 def workspace(make_workspace):
-    yield make_workspace(name="workspace", typ="gs")
+    return make_workspace(name="workspace", typ="gs")
 
 
 class TestImport(_TestImport):
@@ -57,15 +56,3 @@ class TestImport(_TestImport):
         # we temporarily set it to None until the test is revisited
         # https://github.com/iterative/dvc-gs/issues/7#issuecomment-1218497067
         return None
-
-    @pytest.mark.xfail(reason="https://github.com/iterative/dvc-gs/issues/46")
-    def test_import_empty_dir(
-        self,
-        tmp_dir,
-        dvc,
-        workspace,  # pylint: disable=redefined-outer-name
-        is_object_storage,
-    ):
-        return super().test_import_empty_dir(
-            tmp_dir, dvc, workspace, is_object_storage
-        )

@@ -653,8 +653,6 @@ class Instrument(object):
 				end_time = datetime.now()
 				if log_ok_result:
 					self._log_status_check_ok(start_time, end_time)
-				else:
-					self.logger.update_time_stats(start_time, end_time)
 
 			except RsInstrException as e:
 				# General errors: log the exception message

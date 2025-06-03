@@ -113,6 +113,15 @@ class MultipleIssuesError(Exception):
         return str('{}: {}'.format(self.message, self.errors))
 
 
+class ProjectAccessError(Exception):
+    """User does not have access to the current Project."""
+
+    def __init__(self, code, message):
+        super().__init__(f"{code}: {message}")
+        self.code = code
+        self.message = message
+
+
 class UnprocessableEntityError(HTTPError):
     """Unprocessable Entity Error (HTTP 422)."""
 

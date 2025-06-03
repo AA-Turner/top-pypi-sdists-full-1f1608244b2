@@ -153,6 +153,7 @@ class Block:
 
         self._stats_cache[" ".join(self.index_columns)] = {}
         self._transpose_cache: Optional[Block] = transpose_cache
+        self._view_ref: Optional[bigquery.TableReference] = None
 
     @classmethod
     def from_local(
@@ -2165,7 +2166,7 @@ class Block:
                 result_columns.append(get_column_left[col_id])
         for col_id in other.value_columns:
             if col_id in right_join_ids:
-                if other.col_id_to_label[matching_right_id] in matching_join_labels:
+                if other.col_id_to_label[col_id] in matching_join_labels:
                     pass
                 else:
                     result_columns.append(get_column_right[col_id])
@@ -2487,6 +2488,17 @@ class Block:
             idx_labels,
         )
 
+    def to_view(self, include_index: bool) -> bigquery.TableReference:
+        """
+        Creates a temporary BigQuery VIEW with the SQL corresponding to this block.
+        """
+        if self._view_ref is not None:
+            return self._view_ref
+
+        sql, _, _ = self.to_sql_query(include_index=include_index)
+        self._view_ref = self.session._create_temp_view(sql)
+        return self._view_ref
+
     def cached(self, *, force: bool = False, session_aware: bool = False) -> None:
         """Write the block to a session table."""
         # use a heuristic for whether something needs to be cached
@@ -2644,9 +2656,8 @@ T1 AS (
 SELECT {select_columns_csv} FROM T1
 """
         # The only ways this code is used is through df.apply(axis=1) cope path
-        # TODO: Stop using internal API
         destination, query_job = self.session._loader._query_to_destination(
-            json_sql, cluster_candidates=[ordering_column_name], api_name="apply"
+            json_sql, cluster_candidates=[ordering_column_name]
         )
         if not destination:
             raise ValueError(f"Query job {query_job} did not produce result table")

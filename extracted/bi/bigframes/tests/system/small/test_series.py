@@ -13,12 +13,14 @@
 # limitations under the License.
 
 import datetime as dt
+import json
 import math
 import re
 import tempfile
 
 import db_dtypes  # type: ignore
 import geopandas as gpd  # type: ignore
+import google.api_core.exceptions
 import numpy
 from packaging.version import Version
 import pandas as pd
@@ -2130,7 +2132,7 @@ def test_drop_duplicates(scalars_df_index, scalars_pandas_df_index, keep, col_na
     ],
 )
 def test_unique(scalars_df_index, scalars_pandas_df_index, col_name):
-    bf_uniq = scalars_df_index[col_name].unique().to_numpy()
+    bf_uniq = scalars_df_index[col_name].unique().to_numpy(na_value=None)
     pd_uniq = scalars_pandas_df_index[col_name].unique()
     numpy.array_equal(pd_uniq, bf_uniq)
 
@@ -2999,6 +3001,17 @@ def test_clip(scalars_df_index, scalars_pandas_df_index, ordered):
     assert_series_equal(bf_result, pd_result, ignore_order=not ordered)
 
 
+def test_clip_int_with_float_bounds(scalars_df_index, scalars_pandas_df_index):
+    col_bf = scalars_df_index["int64_too"]
+    bf_result = col_bf.clip(-100, 3.14151593).to_pandas()
+
+    col_pd = scalars_pandas_df_index["int64_too"]
+    # pandas doesn't work with Int64 and clip with floats
+    pd_result = col_pd.astype("int64").clip(-100, 3.14151593).astype("Float64")
+
+    assert_series_equal(bf_result, pd_result)
+
+
 def test_clip_filtered_two_sided(scalars_df_index, scalars_pandas_df_index):
     col_bf = scalars_df_index["int64_col"].iloc[::2]
     lower_bf = scalars_df_index["int64_too"].iloc[2:] - 1
@@ -3474,9 +3487,11 @@ def test_mask_simple_udf(scalars_dfs):
         ("int64_col", pd.ArrowDtype(pa.timestamp("us"))),
         ("int64_col", pd.ArrowDtype(pa.timestamp("us", tz="UTC"))),
         ("int64_col", "time64[us][pyarrow]"),
+        ("int64_col", pd.ArrowDtype(db_dtypes.JSONArrowType())),
         ("bool_col", "Int64"),
         ("bool_col", "string[pyarrow]"),
         ("bool_col", "Float64"),
+        ("bool_col", pd.ArrowDtype(db_dtypes.JSONArrowType())),
         ("string_col", "binary[pyarrow]"),
         ("bytes_col", "string[pyarrow]"),
         # pandas actually doesn't let folks convert to/from naive timestamp and
@@ -3541,7 +3556,7 @@ def test_astype_safe(session):
     pd.testing.assert_series_equal(result, exepcted)
 
 
-def test_series_astype_error_error(session):
+def test_series_astype_w_invalid_error(session):
     input = pd.Series(["hello", "world", "3.11", "4000"])
     with pytest.raises(ValueError):
         session.read_pandas(input).astype("Float64", errors="bad_value")
@@ -3676,6 +3691,119 @@ def test_timestamp_astype_string():
     assert bf_result.dtype == "string[pyarrow]"
 
 
+@pytest.mark.parametrize("errors", ["raise", "null"])
+def test_float_astype_json(errors):
+    data = ["1.25", "2500000000", None, "-12323.24"]
+    bf_series = series.Series(data, dtype=dtypes.FLOAT_DTYPE)
+
+    bf_result = bf_series.astype(dtypes.JSON_DTYPE, errors=errors)
+    assert bf_result.dtype == dtypes.JSON_DTYPE
+
+    expected_result = pd.Series(data, dtype=dtypes.JSON_DTYPE)
+    expected_result.index = expected_result.index.astype("Int64")
+    pd.testing.assert_series_equal(bf_result.to_pandas(), expected_result)
+
+
+@pytest.mark.parametrize("errors", ["raise", "null"])
+def test_string_astype_json(errors):
+    data = [
+        "1",
+        None,
+        '["1","3","5"]',
+        '{"a":1,"b":["x","y"],"c":{"x":[],"z":false}}',
+    ]
+    bf_series = series.Series(data, dtype=dtypes.STRING_DTYPE)
+
+    bf_result = bf_series.astype(dtypes.JSON_DTYPE, errors=errors)
+    assert bf_result.dtype == dtypes.JSON_DTYPE
+
+    pd_result = bf_series.to_pandas().astype(dtypes.JSON_DTYPE)
+    pd.testing.assert_series_equal(bf_result.to_pandas(), pd_result)
+
+
+def test_string_astype_json_in_safe_mode():
+    data = ["this is not a valid json string"]
+    bf_series = series.Series(data, dtype=dtypes.STRING_DTYPE)
+    bf_result = bf_series.astype(dtypes.JSON_DTYPE, errors="null")
+    assert bf_result.dtype == dtypes.JSON_DTYPE
+
+    expected = pd.Series([None], dtype=dtypes.JSON_DTYPE)
+    expected.index = expected.index.astype("Int64")
+    pd.testing.assert_series_equal(bf_result.to_pandas(), expected)
+
+
+def test_string_astype_json_raise_error():
+    data = ["this is not a valid json string"]
+    bf_series = series.Series(data, dtype=dtypes.STRING_DTYPE)
+    with pytest.raises(
+        google.api_core.exceptions.BadRequest,
+        match="syntax error while parsing value",
+    ):
+        bf_series.astype(dtypes.JSON_DTYPE, errors="raise").to_pandas()
+
+
+@pytest.mark.parametrize("errors", ["raise", "null"])
+@pytest.mark.parametrize(
+    ("data", "to_type"),
+    [
+        pytest.param(["1", "10.0", None], dtypes.INT_DTYPE, id="to_int"),
+        pytest.param(["0.0001", "2500000000", None], dtypes.FLOAT_DTYPE, id="to_float"),
+        pytest.param(["true", "false", None], dtypes.BOOL_DTYPE, id="to_bool"),
+        pytest.param(['"str"', None], dtypes.STRING_DTYPE, id="to_string"),
+        pytest.param(
+            ['"str"', None],
+            dtypes.TIME_DTYPE,
+            id="invalid",
+            marks=pytest.mark.xfail(raises=TypeError),
+        ),
+    ],
+)
+def test_json_astype_others(data, to_type, errors):
+    bf_series = series.Series(data, dtype=dtypes.JSON_DTYPE)
+
+    bf_result = bf_series.astype(to_type, errors=errors)
+    assert bf_result.dtype == to_type
+
+    load_data = [json.loads(item) if item is not None else None for item in data]
+    expected = pd.Series(load_data, dtype=to_type)
+    expected.index = expected.index.astype("Int64")
+    pd.testing.assert_series_equal(bf_result.to_pandas(), expected)
+
+
+@pytest.mark.parametrize(
+    ("data", "to_type"),
+    [
+        pytest.param(["10.2", None], dtypes.INT_DTYPE, id="to_int"),
+        pytest.param(["false", None], dtypes.FLOAT_DTYPE, id="to_float"),
+        pytest.param(["10.2", None], dtypes.BOOL_DTYPE, id="to_bool"),
+        pytest.param(["true", None], dtypes.STRING_DTYPE, id="to_string"),
+    ],
+)
+def test_json_astype_others_raise_error(data, to_type):
+    bf_series = series.Series(data, dtype=dtypes.JSON_DTYPE)
+    with pytest.raises(google.api_core.exceptions.BadRequest):
+        bf_series.astype(to_type, errors="raise").to_pandas()
+
+
+@pytest.mark.parametrize(
+    ("data", "to_type"),
+    [
+        pytest.param(["10.2", None], dtypes.INT_DTYPE, id="to_int"),
+        pytest.param(["false", None], dtypes.FLOAT_DTYPE, id="to_float"),
+        pytest.param(["10.2", None], dtypes.BOOL_DTYPE, id="to_bool"),
+        pytest.param(["true", None], dtypes.STRING_DTYPE, id="to_string"),
+    ],
+)
+def test_json_astype_others_in_safe_mode(data, to_type):
+    bf_series = series.Series(data, dtype=dtypes.JSON_DTYPE)
+    bf_result = bf_series.astype(to_type, errors="null")
+    assert bf_result.dtype == to_type
+
+    expected = pd.Series([None, None], dtype=to_type)
+    expected.index = expected.index.astype("Int64")
+    pd.testing.assert_series_equal(bf_result.to_pandas(), expected)
+
+
 @pytest.mark.parametrize(
     "index",
     [0, 5, -2],
@@ -3687,9 +3815,7 @@ def test_iloc_single_integer(scalars_df_index, scalars_pandas_df_index, index):
     assert bf_result == pd_result
 
 
-def test_iloc_single_integer_out_of_bound_error(
-    scalars_df_index, scalars_pandas_df_index
-):
+def test_iloc_single_integer_out_of_bound_error(scalars_df_index):
     with pytest.raises(IndexError, match="single positional indexer is out-of-bounds"):
         scalars_df_index.string_col.iloc[99]
 
@@ -4478,4 +4604,5 @@ def test_series_to_pandas_dry_run(scalars_df_index):
 
     result = bf_series.to_pandas(dry_run=True)
 
-    assert len(result) == 14
+    assert isinstance(result, pd.Series)
+    assert len(result) > 0

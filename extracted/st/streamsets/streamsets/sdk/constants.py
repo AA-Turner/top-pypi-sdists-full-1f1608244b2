@@ -375,8 +375,8 @@ ST_PIPELINE_BW_COMPATIBILITY = {
             'values': {True: 'PROVISION_CLUSTER', False: 'EXISTING_CLUSTER'},
         },
     },
+    # Transformer
     '6.0.0': {
-        # Transformer
         'transformerEmrConnection.masterInstanceType': {'name': 'transformerEmrConnection.primaryInstanceType'},
         'transformerEmrConnection.masterInstanceTypeCustom': {
             'name': 'transformerEmrConnection.primaryInstanceTypeCustom'
@@ -394,6 +394,9 @@ ST_PIPELINE_BW_COMPATIBILITY = {
         'sdcEmrConnection.slaveInstanceType': {'name': 'sdcEmrConnection.secondaryInstanceType'},
         'sdcEmrConnection.slaveInstanceTypeCustom': {'name': 'sdcEmrConnection.secondaryInstanceTypeCustom'},
         'sdcEmrConnection.slaveSecurityGroup': {'name': 'sdcEmrConnection.secondarySecurityGroup'},
+    },
+    '6.1.0': {
+        'googleCloudConfig.masterType': {'name': 'googleCloudConfig.primaryType'},
     },
 }
 

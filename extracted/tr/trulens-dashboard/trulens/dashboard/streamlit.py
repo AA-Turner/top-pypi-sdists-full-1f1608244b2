@@ -3,7 +3,7 @@ import asyncio
 import json
 import math
 import sys
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel
 import streamlit as st
@@ -18,8 +18,12 @@ from trulens.dashboard import display as dashboard_display
 from trulens.dashboard.components import (
     record_viewer as dashboard_record_viewer,
 )
+from trulens.dashboard.components import (
+    record_viewer_otel as dashboard_record_viewer_otel,
+)
 from trulens.dashboard.utils import dashboard_utils
 from trulens.dashboard.utils import streamlit_compat
+from trulens.dashboard.utils.dashboard_utils import _get_event_otel_spans
 from trulens.dashboard.utils.streamlit_compat import st_columns
 from trulens.dashboard.ux import components as dashboard_components
 from trulens.dashboard.ux import styles as dashboard_styles
@@ -283,9 +287,13 @@ def trulens_feedback(record: record_schema.Record):
             record, feedback_name=selected_feedback
         )
         if "groundedness" in selected_feedback.lower():
-            df = dashboard_display.expand_groundedness_df(df)
-        else:
-            pass
+            try:
+                df = dashboard_display.expand_groundedness_df(df)
+            except ValueError:
+                st.error(
+                    "Error expanding groundedness DataFrame. "
+                    "Please ensure the DataFrame is in the correct format."
+                )
 
         # Apply the highlight function row-wise
         styled_df = df.style.apply(
@@ -305,32 +313,42 @@ def trulens_feedback(record: record_schema.Record):
         st.dataframe(styled_df, hide_index=True)
 
 
-def trulens_trace(record: record_schema.Record):
+def trulens_trace(record: Union[record_schema.Record, str]):
     """Display the trace view for a record.
 
     Args:
-
-        record: A trulens record.
+        record: Either a trulens record (non-OTel) or a record_id string (OTel).
 
     Example:
         ```python
         from trulens.core import streamlit as trulens_st
 
+        # Using with Record object
         with tru_llm as recording:
             response = llm.invoke(input_text)
-
         record, response = recording.get()
-
         trulens_st.trulens_trace(record=record)
+
+        # Using with record_id string
+        trulens_st.trulens_trace(record="record_123")
         ```
     """
 
     session = core_session.TruSession()
-    app = session.get_app(app_id=record.app_id)
+    if isinstance(record, record_schema.Record):
+        app = session.get_app(app_id=record.app_id)
     if dashboard_utils.is_sis_compatibility_enabled():
         st.warning(
             "TruLens trace view is not enabled when SiS compatibility is enabled."
         )
+    elif isinstance(record, str):
+        event_spans = _get_event_otel_spans(record)
+        if event_spans:
+            dashboard_record_viewer_otel.record_viewer_otel(
+                spans=event_spans, key=None
+            )
+        else:
+            st.warning("No OTel trace data available for this record.")
     else:
         dashboard_record_viewer.record_viewer(
             record_json=json.loads(json_utils.json_str_of_obj(record)),

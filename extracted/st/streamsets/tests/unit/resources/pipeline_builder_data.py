@@ -59,3 +59,59 @@ CONFIG_TYPE_TEST_CASES_JSON = [
         [],
     ),
 ]
+
+PIPELINE_BUILDER_DEFINITIONS = {
+    'services': [
+        {
+            'provides': 'com.streamsets.pipeline.api.service.dataformats.DataFormatParserService',
+            'configDefinitions': [
+                {
+                    'label': 'JSON Content',
+                    'name': 'dataFormatConfig.jsonContent',
+                    'fieldName': 'jsonContent',
+                    'type': 'MODEL',
+                    'model': {
+                        'labels': ['JSON array of objects', 'Multiple JSON objects'],
+                        'values': [
+                            'ARRAY_OBJECTS',
+                            'MULTIPLE_OBJECTS',
+                        ],
+                        'modelType': 'VALUE_CHOOSER',
+                    },
+                },
+                {
+                    'label': 'Max Object Length (chars)',
+                    'name': 'dataFormatConfig.jsonMaxObjectLen',
+                    'fieldName': 'jsonMaxObjectLen',
+                    'type': 'NUMBER',
+                },
+            ],
+        },
+    ]
+}
+
+
+PIPELINE_BUILDER_STAGE_DATA_DEFINITION = {
+    'configDefinitions': [
+        {
+            'label': 'On Record Error',
+            'fieldName': 'stageOnRecordError',
+            'name': 'stageOnRecordError',
+            'type': 'MODEL',
+            'model': {
+                'modelType': 'VALUE_CHOOSER',
+                'labels': ['Discard', 'Send to Error', 'Stop Pipeline'],
+                'values': ['DISCARD', 'TO_ERROR', 'STOP_PIPELINE'],
+            },
+        },
+        {
+            'label': 'Number of Threads',
+            'fieldName': 'numberOfThreads',
+            'name': 'numberOfThreads',
+            'type': 'NUMBER',
+        },
+    ],
+    'services': [
+        {'service': 'com.streamsets.pipeline.api.service.dataformats.DataFormatParserService'},
+    ],
+}

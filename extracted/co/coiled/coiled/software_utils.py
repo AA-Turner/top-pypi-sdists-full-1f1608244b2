@@ -593,6 +593,128 @@ def get_mamba_auth(netloc: str) -> tuple[str, str] | None:
 
 
 @functools.lru_cache
+def get_conda_config() -> dict:
+    """Returns the current conda config as dictionary"""
+    encoding = get_encoding()
+    conda_config = {}
+    try:
+        config_output = subprocess.check_output(
+            [
+                "conda",
+                "config",
+                "--show",
+                "--json",
+            ],
+            encoding=encoding,
+        )
+        conda_config = json.loads(config_output)
+    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, ValueError):
+        logger.debug("Encountered error when loading conda config", exc_info=True)
+
+    return conda_config
+
+
+def get_conda_python_path() -> Path | None:
+    """Returns the path the conda base environment python executable"""
+    # Try using config first, since that's probably the most cross-platform way
+    conda_config = get_conda_config()
+    root_prefix = conda_config.get("root_prefix")
+    if root_prefix:
+        conda_python = Path(root_prefix) / "bin" / "python"
+        if conda_python.exists():
+            return conda_python
+    # Fallback to the conda executable
+    conda_executable = shutil.which("conda")
+    if conda_executable:
+        conda_executable = Path(conda_executable)
+        conda_python = conda_executable.parent / "python"
+        if conda_python.exists():
+            return conda_python
+    return None
+
+
+def get_conda_auth(no_auth_url: str) -> tuple[str, str] | None:
+    """Returns the Requests tuple auth for a given domain from its conda-auth values."""
+    conda_config = get_conda_config()
+    channel_settings = conda_config.get("channel_settings", [])
+    auth_type = None
+    username = None
+    password = None
+    for channel in channel_settings:
+        if channel.get("channel") != no_auth_url:
+            continue
+        auth_type = channel.get("auth")
+        if not auth_type:
+            continue
+        if auth_type == "http-basic":
+            username = channel.get("username")
+            password = channel.get("password")
+        elif auth_type == "token":
+            username = "token"
+            password = channel.get("token")
+
+    if not auth_type or not username:
+        return None
+    if not password:
+        # Use base environment python to get the keyring,
+        # so we don't prompt for a password and know keyring is available
+        conda_python = get_conda_python_path()
+        if conda_python:
+            # This is kind of a hack, but using multiprocessing with a
+            # different python executable lends itself to pickling issues
+            python_code = f"""
+import json
+import sys
+try:
+    import keyring
+except Exception as e:
+    sys.exit(0)
+
+username = {username!r}
+url = "conda-auth::{auth_type}::{no_auth_url}"
+auth_parts = None
+
+if hasattr(keyring, "get_credential"):
+    cred = keyring.get_credential(url, username)
+    if cred is not None:
+        auth_parts = cred.username, cred.password
+
+if username is not None:
+    password = keyring.get_password(url, username)
+    if password:
+        auth_parts = username, password
+
+print(json.dumps(auth_parts))
+"""
+            try:
+                auth_parts_str = subprocess.check_output(
+                    [str(conda_python), "-c", python_code],
+                    encoding=get_encoding(),
+                    timeout=5,
+                ).strip()
+                if auth_parts_str and auth_parts_str != "null":
+                    auth_parts = json.loads(auth_parts_str)
+                    if auth_parts:
+                        username, password = auth_parts
+                else:
+                    logger.debug(f"Keyring returned no credentials for conda-auth::{auth_type}::{no_auth_url}")
+            except subprocess.TimeoutExpired:
+                logger.warning("Timed out getting conda-auth keyring creds")
+                return None
+            except Exception as e:
+                logger.warning(f"Unexpected error getting keyring auth: {e}", exc_info=True)
+                return None
+
+    if auth_type == "token":
+        username = AUTH_BEARER_USERNAME
+
+    if not username and not password:
+        return None
+
+    return (username or "", password or "")
+
+
+@functools.lru_cache
 def set_auth_for_url(url: Url | str) -> str:
     """Returns a url string with the user and password set from netrc, keyring, mamba, or the URL itself."""
     if isinstance(url, str):
@@ -617,12 +739,15 @@ def set_auth_for_url(url: Url | str) -> str:
     netloc = parsed_url.netloc or ""
 
     if not password:
+        no_auth_url = parsed_url._replace(auth=None).url
         auth_parts = (
-            # netrc stores things based on entire URL (including username in URL if present)
-            get_netrc_auth(parsed_url.url)
+            # get_netrc_auth takes a URL, but only uses the netloc part
+            get_netrc_auth(no_auth_url)
             # keyring could have URL stored by full URL or netloc
-            or get_keyring_auth(parsed_url._replace(auth=None).url, username)
+            or get_keyring_auth(no_auth_url, username)
             or get_keyring_auth(netloc, username)
+            # conda-auth stores things in keyring in its own format
+            or get_conda_auth(no_auth_url)
             # mamba could have URL stored by netloc/path or netloc
             or get_mamba_auth(f"{netloc}{path}")
             or get_mamba_auth(netloc)
@@ -729,16 +854,32 @@ def get_index_urls():
     # Include netrc auth in URLs if available
     authed_index_urls = []
     for index_url in index_urls:
+        try:
+            parsed_url = parse_url(index_url)
+        except Exception:
+            logger.warning(f"Failed to parse PyPI index URL {index_url}. Skipping URL")
+            continue
+
+        # If the URL is not http(s), skip it
+        if parsed_url.scheme not in ("http", "https"):
+            logger.debug(f"Skipping PyPI index URL with unexpected scheme {index_url}")
+            continue
+
+        host = parsed_url.host or ""
+        # If the host is a local domain, skip it
+        if host.endswith(".local") or host.startswith("localhost"):
+            logger.debug(f"Skipping local PyPI index URL {index_url}")
+            continue
+
         # Do not bother checking for passwords to pypi.org
         if index_url != DEFAULT_PYPI_URL:
-            try:
-                parsed_url = parse_url(index_url)
-            except Exception:
-                logger.warning(f"Failed to parse PyPI index URL {index_url}. Skipping URL")
-                continue
             index_url = set_auth_for_url(parsed_url)
 
         authed_index_urls.append(index_url)
+
+    # If no index URLs were found, use the default PyPI URL
+    if not authed_index_urls:
+        authed_index_urls = [DEFAULT_PYPI_URL]
 
     return authed_index_urls
 

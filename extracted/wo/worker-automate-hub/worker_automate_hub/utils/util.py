@@ -655,7 +655,15 @@ async def login_emsys(
                         )
 
                 pyautogui.press("enter")
-
+                await worker_sleep(6)
+                try:
+                    # Warning apos selecao da filial
+                    app = Application(backend="win32").connect(title="Warning")
+                    warning_window = app["Warning"]
+                    warning_window.child_window(title="OK", class_name="TButton").click()
+                except:
+                    console.print("Sem tela de warning aparente seguindo processo...")
+                
                 button_logout = await find_element_center(
                     "assets/emsys/button_logout.png", (0, 0, 130, 150), 60
                 )

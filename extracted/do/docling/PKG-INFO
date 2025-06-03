@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: docling
-Version: 2.34.0
+Version: 2.35.0
 Summary: SDK and CLI for parsing PDF, DOCX, HTML, and more, to a unified document representation for powering downstream workflows such as gen AI applications.
 Home-page: https://github.com/docling-project/docling
 License: MIT
@@ -29,7 +29,7 @@ Requires-Dist: accelerate (>=1.2.1,<2.0.0) ; (sys_platform != "darwin" or platfo
 Requires-Dist: beautifulsoup4 (>=4.12.3,<5.0.0)
 Requires-Dist: certifi (>=2024.7.4)
 Requires-Dist: click (<8.2.0)
-Requires-Dist: docling-core[chunking] (>=2.29.0,<3.0.0)
+Requires-Dist: docling-core[chunking] (>=2.31.2,<3.0.0)
 Requires-Dist: docling-ibm-models (>=3.4.0,<4.0.0)
 Requires-Dist: docling-parse (>=4.0.0,<5.0.0)
 Requires-Dist: easyocr (>=1.7,<2.0)

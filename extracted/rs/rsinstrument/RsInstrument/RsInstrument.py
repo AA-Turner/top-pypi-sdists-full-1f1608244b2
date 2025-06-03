@@ -18,10 +18,11 @@ from .Internal.ContextManagers import InstrErrorSuppressor, VisaTimeoutSuppresso
 
 class RsInstrument:
 	"""Root class for remote-controlling instrument with SCPI commands."""
-	_driver_version_const = '1.101.0.111'
+	_driver_version_const = '1.102.0.112'
 	_driver_options_const = "SupportedInstrModels = All Rohde & Schwarz Instruments, SupportedIdnPatterns = Rohde\\s*(-|&)\\s*Schwarz/Hameg, SimulationIdnString = Rohde&Schwarz*SimulationDevice*100001*" + _driver_version_const
 	_global_logging_relative_timestamp: ClassVar[datetime] = None
 	_global_logging_target_stream: ClassVar = None
+	_global_logging_relative_timestamp_of_first_entry: ClassVar = False
 
 	def __init__(
 			self, resource_name: str, id_query: bool = True, reset: bool = False, options: str = None, direct_session: object = None):
@@ -123,6 +124,13 @@ class RsInstrument:
 		"""Sets global common relative timestamp for log entries to this moment.
 		To use it, call the following: io.logger.set_relative_timestamp_global()."""
 		cls._global_logging_relative_timestamp = datetime.now()
+
+	@classmethod
+	def set_global_logging_relative_time_of_first_entry(cls) -> None:
+		"""This method sets the global flag, that takes the very first log entry start time of any global instance as a global relative timestamp.
+		This means, after this call, the first instance that logs an entry set the relative timestamp for all global target instances,
+		and begins with the start timestamp 0:00:00.000"""
+		cls._global_logging_relative_timestamp_of_first_entry = True
 
 	@classmethod
 	def clear_global_logging_relative_timestamp(cls) -> None:

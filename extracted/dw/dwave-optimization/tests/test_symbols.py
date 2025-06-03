@@ -27,6 +27,7 @@ from dwave.optimization import (
     Model,
     arange,
     bspline,
+    exp,
     expit,
     log,
     logical,
@@ -37,6 +38,7 @@ from dwave.optimization import (
     mod,
     put,
     rint,
+    safe_divide,
     sqrt,
     stack,
 )
@@ -62,6 +64,20 @@ class TestAbsolute(utils.UnaryOpTests):
         a = abs(x)
         self.assertIsInstance(a, Absolute)
         self.assertEqual(model.num_symbols(), 2)
+
+    def test_absolute(self):
+        from dwave.optimization.symbols import Absolute
+
+        model = Model()
+        x = model.integer(5, lower_bound=-5, upper_bound=5)
+        a = dwave.optimization.absolute(x)
+        self.assertIsInstance(a, Absolute)
+        self.assertEqual(model.num_symbols(), 2)
+
+        model.states.resize(1)
+        with model.lock():
+            x.set_state(0, [-2, -1, 0, 1, 5])
+            np.testing.assert_array_equal(a.state(), [2, 1, 0, 1, 5])
 
 
 class TestAdd(utils.BinaryOpTests):
@@ -1154,6 +1170,32 @@ class TestDivide(utils.SymbolTests):
             a // b
 
 
+class TestExp(utils.SymbolTests):
+    def generate_symbols(self):
+        model = Model()
+        a = model.constant(1.3)
+        op_a = exp(a)
+        model.lock()
+        yield op_a
+
+    def test_simple_inputs(self):
+        model = Model()
+        empty = exp(model.constant(0))
+        model.lock()
+        model.states.resize(1)
+        self.assertEqual(empty.state(), 1.0)
+
+        # confirm consistency with numpy exp
+        simple_inputs = [-1.0, 1.23, 3.14]
+        numpy_outputs = [0.36787944117144233, 3.4212295362896734, 23.103866858722185]
+        for i, si in enumerate(simple_inputs):
+            model = Model()
+            exp_node = exp(model.constant(si))
+            model.lock()
+            model.states.resize(1)
+            self.assertEqual(exp_node.state(), numpy_outputs[i])
+
+
 class TestExpit(utils.SymbolTests):
     def generate_symbols(self):
         model = Model()
@@ -1179,6 +1221,93 @@ class TestExpit(utils.SymbolTests):
 
             self.assertEqual(expit_node.state(), scipy_expit_output[i])  # confirm consistency with SciPy expit
 
+
+class TestInput(utils.SymbolTests):
+    def generate_symbols(self):
+        model = Model()
+        inp = model.input(lower_bound=-10, upper_bound=10, integral=False)
+        inp10 = model.input((10,))
+        model.lock()
+
+        yield inp
+        yield inp10
+
+    def test_set_state(self):
+        model = Model()
+        inp = dwave.optimization.symbols.Input(model, shape=(2, 1, 2))
+        model.lock()
+
+        model.states.resize(1)
+
+        inp.set_state(0, [[[0, 1]], [[2, 3]]])
+
+        np.testing.assert_array_equal(inp.state(), [[[0, 1]], [[2, 3]]])
+
+        with self.assertRaises(ValueError):
+            inp.set_state(0, [0, 1, 2, 3])
+
+    def test_state_serialization(self):
+        for version in dwave.optimization._model.KNOWN_SERIALIZATION_VERSIONS:
+            if version < self.MIN_SERIALIZATION_VERSION:
+                continue
+            with self.subTest(version=version):
+                model = Model()
+                inp = model.input(lower_bound=-10, upper_bound=10, integral=False)
+                model.lock()
+
+                model.states.resize(1)
+
+                # ensure serialization works if no state is set
+                with model.states.to_file(version=version) as f:
+                    model.states.clear()
+                    model.states.from_file(f)
+
+                # ensure serialization saves the state if set
+                inp.set_state(0, -7)
+
+                self.assertTrue(inp.has_state(0))
+                self.assertEqual(inp.state(), -7)
+
+                with model.states.to_file(version=version) as f:
+                    model.states.clear()
+                    model.states.from_file(f)
+
+                self.assertEqual(inp.state(), -7)
+
+                # test with a larger shape
+                model = Model()
+                inp = dwave.optimization.symbols.Input(model, shape=(2, 1, 2))
+                model.lock()
+
+                model.states.resize(1)
+
+                inp.set_state(0, [[[0, 1]], [[2, 3]]])
+
+                self.assertTrue(inp.has_state(0))
+
+                with model.states.to_file(version=version) as f:
+                    model.states.clear()
+                    model.states.from_file(f)
+
+                np.testing.assert_array_equal(inp.state(), [[[0, 1]], [[2, 3]]])
+
+        def test_initializing_unset_state(self):
+            # ensure proper error is raised when initializing the model state without having
+            # set the input's state
+            model = Model()
+            inp = model.input()
+            x = model.binary()
+            model.minimize(inp + x)
+
+            model.lock()
+
+            model.states.resize(1)
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                r"^InputNode must have state explicitly initialized"
+            ):
+                model.objective.state()
 
 class TestIntegerVariable(utils.SymbolTests):
     def generate_symbols(self):
@@ -1452,7 +1581,7 @@ class TestListVariable(utils.SymbolTests):
             x = model.list(5)
 
             # repeated entries
-            with self.assertRaisesRegex(ValueError, r"^contents must be unique$"):
+            with self.assertRaisesRegex(ValueError, r"^values must be a subset of range\(5\)$"):
                 x.set_state(0, [0, 0, 1, 2, 3])
 
             # wrong size
@@ -2516,6 +2645,38 @@ class TestRint(utils.SymbolTests):
         self.assertEqual(sixteen.state(0), 16)
 
 
+class TestSafeDivide(utils.BinaryOpTests):
+    def generate_symbols(self):
+        model = Model()
+
+        a = model.constant(1)
+        b = model.constant(2)
+        zero = model.constant(0)
+
+        w = safe_divide(a, b)
+        x = safe_divide(b, a)
+        y = safe_divide(a, zero)
+        z = safe_divide(zero, a)
+        with model.lock():
+            yield from (w, x, y, z)
+
+    def op(self, lhs, rhs):
+        return np.divide(lhs, rhs, where=(rhs != 0))
+
+    def symbol_op(self, lhs, rhs):
+        return safe_divide(lhs, rhs)
+
+    def test(self):
+        model = Model()
+        a = model.constant([-1, 0, 1, 2])
+        b = model.constant([2, 1, 0, -1])
+        x = safe_divide(a, b)
+
+        model.states.resize(1)
+        with model.lock():
+            np.testing.assert_array_equal(x.state(), [-.5, 0, 0, -2])
+
+
 class TestSquare(utils.UnaryOpTests):
     def op(self, x):
         return x ** 2
@@ -2641,7 +2802,7 @@ class TestSetVariable(utils.SymbolTests):
             s = model.set(5)
 
             # repeated entries
-            with self.assertRaisesRegex(ValueError, r"^contents must be unique$"):
+            with self.assertRaisesRegex(ValueError, r"^values must be a subset of range\(5\)$"):
                 s.set_state(0, [0, 0, 1, 2, 3])
 
     def test_state_size(self):
