@@ -1,6 +1,7 @@
 # Copyright 2023 StreamSets Inc.
 
 # fmt: off
+import datetime
 import json
 
 import pytest
@@ -12,8 +13,9 @@ from streamsets.sdk.utils import get_random_string
 
 NUM_PIPELINES = 2
 NUM_JOBS = 2
-START_TIME_2099 = 4200268800
-END_TIME_2099 = 4200854400
+TODAY = datetime.datetime.now()
+TWO_DAYS_LATER = int((TODAY + datetime.timedelta(days=2)).timestamp()) * 1000
+TWO_AND_A_HALF_DAYS_LATER = int((TODAY + datetime.timedelta(days=2, hours=12)).timestamp()) * 1000
 UTC_TIME_Z0NE = 'UTC'
 BASIC_CRON_TAB_MASK = '0/1 * 1/1 * ? *'
 
@@ -266,7 +268,9 @@ def test_saql_saved_searches_job_sequence(sch):
         for i in range(5):
             job_sequence_builder = sch.get_job_sequence_builder()
 
-            job_sequence_builder.add_start_condition(START_TIME_2099, END_TIME_2099, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK)
+            job_sequence_builder.add_start_condition(
+                TWO_DAYS_LATER, TWO_AND_A_HALF_DAYS_LATER, UTC_TIME_Z0NE, BASIC_CRON_TAB_MASK
+            )
 
             job_sequence = job_sequence_builder.build(
                 name='{} {}'.format(random_string, i),

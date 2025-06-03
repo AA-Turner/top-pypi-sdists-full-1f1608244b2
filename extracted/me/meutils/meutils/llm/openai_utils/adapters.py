@@ -9,6 +9,7 @@
 # @Description  : 
 
 from meutils.pipe import *
+from meutils.io.files_utils import to_url, to_url_fal
 from meutils.schemas.openai_types import CompletionRequest
 from meutils.schemas.image_types import ImageRequest
 from meutils.llm.openai_utils import chat_completion, chat_completion_chunk, create_chat_completion_chunk
@@ -24,13 +25,17 @@ async def chat_for_image(
                     "使用四到五个字直接返回这句话的简要主题",
                     "简要总结一下对话内容，用作后续的上下文提示 prompt，控制在 200 字以内"
             )):
-        return
+        return chat_completion
+
+    prompt = request.last_user_content
+    if request.last_urls:  # image_url
+        urls = await to_url_fal(request.last_urls["image_url"], content_type="image/png")
+        prompt = "\n".join(urls + [prompt])
 
     request = ImageRequest(
         model=request.model,
-        prompt=request.last_user_content,
+        prompt=prompt,
     )
-
 
     future_task = asyncio.create_task(generate(request))  # 异步执行
 

@@ -39,6 +39,7 @@ from trulens.core.database import orm as db_orm
 from trulens.core.database import utils as db_utils
 from trulens.core.database.legacy import migration as legacy_migration
 from trulens.core.database.migrations import data as data_migrations
+from trulens.core.otel.utils import is_otel_tracing_enabled
 from trulens.core.schema import app as app_schema
 from trulens.core.schema import base as base_schema
 from trulens.core.schema import dataset as dataset_schema
@@ -51,6 +52,8 @@ from trulens.core.utils import pyschema as pyschema_utils
 from trulens.core.utils import python as python_utils
 from trulens.core.utils import serial as serial_utils
 from trulens.core.utils import text as text_utils
+from trulens.otel.semconv.trace import ResourceAttributes
+from trulens.otel.semconv.trace import SpanAttributes
 
 logger = logging.getLogger(__name__)
 
@@ -389,6 +392,8 @@ class SQLAlchemyDB(core_db.DB):
         self, record: record_schema.Record
     ) -> types_schema.RecordID:
         """See [DB.insert_record][trulens.core.database.base.DB.insert_record]."""
+        if is_otel_tracing_enabled():
+            raise RuntimeError("Not supported with OTel tracing enabled!")
         # TODO: thread safety
 
         _rec = self.orm.Record.parse(record, redact_keys=self.redact_keys)
@@ -411,6 +416,8 @@ class SQLAlchemyDB(core_db.DB):
     def batch_insert_record(
         self, records: List[record_schema.Record]
     ) -> List[types_schema.RecordID]:
+        if is_otel_tracing_enabled():
+            raise RuntimeError("Not supported with OTel tracing enabled!")
         """See [DB.batch_insert_record][trulens.core.database.base.DB.batch_insert_record]."""
         with self.session.begin() as session:
             records_list = [
@@ -570,6 +577,8 @@ class SQLAlchemyDB(core_db.DB):
         self, feedback_result: feedback_schema.FeedbackResult
     ) -> types_schema.FeedbackResultID:
         """See [DB.insert_feedback][trulens.core.database.base.DB.insert_feedback]."""
+        if is_otel_tracing_enabled():
+            raise RuntimeError("Not supported with OTel tracing enabled!")
 
         # TODO: thread safety
 
@@ -634,6 +643,8 @@ class SQLAlchemyDB(core_db.DB):
         self, feedback_results: List[feedback_schema.FeedbackResult]
     ) -> List[types_schema.FeedbackResultID]:
         """See [DB.batch_insert_feedback][trulens.core.database.base.DB.batch_insert_feedback]."""
+        if is_otel_tracing_enabled():
+            raise RuntimeError("Not supported with OTel tracing enabled!")
         # The Snowflake stored procedure connector isn't currently capable of
         # handling None qmark-bound to an `INSERT INTO` or `UPDATE` statement
         # for nullable numeric columns. Thus, as a hack, we get around this by
@@ -753,7 +764,8 @@ class SQLAlchemyDB(core_db.DB):
         run_location: Optional[feedback_schema.FeedbackRunLocation] = None,
     ) -> Dict[feedback_schema.FeedbackResultStatus, int]:
         """See [DB.get_feedback_count_by_status][trulens.core.database.base.DB.get_feedback_count_by_status]."""
-
+        if is_otel_tracing_enabled():
+            raise RuntimeError("Not supported with OTel tracing enabled!")
         with self.session.begin() as session:
             q = self._feedback_query(
                 count_by_status=True,
@@ -786,7 +798,8 @@ class SQLAlchemyDB(core_db.DB):
         run_location: Optional[feedback_schema.FeedbackRunLocation] = None,
     ) -> pd.DataFrame:
         """See [DB.get_feedback][trulens.core.database.base.DB.get_feedback]."""
-
+        if is_otel_tracing_enabled():
+            raise RuntimeError("Not supported with OTel tracing enabled!")
         with self.session.begin() as session:
             q = self._feedback_query(
                 **python_utils.locals_except("self", "session")
@@ -796,18 +809,535 @@ class SQLAlchemyDB(core_db.DB):
 
             return _extract_feedback_results(results)
 
-    def get_records_and_feedback(
+    def _get_event_record_attributes_otel(self, event: Event) -> Dict[str, Any]:
+        """Get the record attributes from the event.
+
+        This implementation differs from the pre-OTEL implementation by using the
+        `record_attributes` field of the event.
+
+        Args:
+            event: The event to extract the record attributes from.
+
+        Returns:
+            Dict[str, Any]: The record attributes from the event.
+        """
+        record_attributes = event.record_attributes
+        if not isinstance(record_attributes, dict):
+            try:
+                record_attributes = json.loads(record_attributes)
+            except (json.JSONDecodeError, TypeError):
+                logger.error(
+                    f"Failed to decode record attributes as JSON: {record_attributes}",
+                )
+
+        return record_attributes
+
+    def _get_event_resource_attributes_otel(
+        self, event: Event
+    ) -> Dict[str, Any]:
+        """Get the resource attributes from the event.
+
+        This implementation differs from the pre-OTEL implementation by using the
+        `resource_attributes` field of the event.
+
+        Args:
+            event: The event to extract the resource attributes from.
+
+        Returns:
+            Dict[str, Any]: The resource attributes from the event.
+        """
+        resource_attributes = event.resource_attributes
+        if not isinstance(resource_attributes, dict):
+            try:
+                resource_attributes = json.loads(resource_attributes)
+            except (json.JSONDecodeError, TypeError):
+                logger.error(
+                    f"Failed to decode resource attributes as JSON: {resource_attributes}",
+                )
+
+        return resource_attributes
+
+    def _update_cost_info_otel(
+        self,
+        target_dict: dict,
+        record_attributes: dict,
+        include_tokens: bool = False,
+    ):
+        """Update cost information in the target dictionary.
+
+        Args:
+            target_dict: Dictionary to update with cost information
+            record_attributes: Source attributes containing cost information
+            include_tokens: Whether to update token count (only for record_events)
+        """
+        if any(
+            key.startswith(SpanAttributes.COST.base)
+            for key in record_attributes
+        ):
+            if include_tokens:
+                target_dict["total_tokens"] += record_attributes.get(
+                    SpanAttributes.COST.NUM_TOKENS, 0
+                )
+
+            target_dict["total_cost"] += record_attributes.get(
+                SpanAttributes.COST.COST, 0.0
+            )
+            target_dict["cost_currency"] = record_attributes.get(
+                SpanAttributes.COST.CURRENCY, "USD"
+            )
+
+        # TODO(SNOW-2061174): convert to map (see comment: https://github.com/truera/trulens/pull/1939#discussion_r2054802093)
+        # Add to total_cost map
+        # cost = record_attributes.get(SpanAttributes.COST.COST, 0.0)
+        # currency = record_attributes.get(SpanAttributes.COST.CURRENCY, "USD")
+        # if currency not in record_events[record_id]["total_cost"]:
+        #     record_events[record_id]["total_cost"][currency] = 0.0
+        # record_events[record_id]["total_cost"][currency] += cost
+
+    def _json_extract_otel(self, column: str, path: str) -> sa.Column:
+        """Helper function to extract JSON values from a JSON column in the Event table.
+
+        Args:
+            column: The name of the JSON column to extract from (e.g. 'record_attributes', 'record', etc.)
+            path: The JSON path to extract from the column
+
+        Returns:
+            A SQLAlchemy column expression that extracts the value at the given path
+
+        Raises:
+            ValueError: If the column doesn't exist or is not a JSON column
+        """
+        if not hasattr(self.orm.Event, column):
+            raise ValueError(f"Column {column} not found in Event table")
+
+        column_obj = getattr(self.orm.Event, column)
+        if not isinstance(column_obj.type, sa.JSON):
+            raise ValueError(f"Column {column} is not a JSON column")
+
+        return sa.func.json_extract(column_obj, f'$."{path}"')
+
+    def _get_paginated_record_ids_otel(
         self,
         app_ids: Optional[List[str]] = None,
         app_name: Optional[types_schema.AppName] = None,
         offset: Optional[int] = None,
         limit: Optional[int] = None,
+    ) -> sa.Select:
+        """Get a paginated query for record IDs from the OTEL event table.
+
+        Args:
+            app_ids: List of app IDs to filter by. Defaults to None.
+            app_name: App name to filter by. Defaults to None.
+            offset: Offset for pagination. Defaults to None.
+            limit: Limit for pagination. Defaults to None.
+
+        Returns:
+            A SQLAlchemy select statement for record IDs with pagination applied.
+        """
+
+        # Base select statement for record IDs and timestamps
+        stmt = sa.select(
+            self._json_extract_otel(
+                "record_attributes", SpanAttributes.RECORD_ID
+            ).label("record_id"),
+            sa.func.min(self.orm.Event.start_timestamp).label(
+                "min_start_timestamp"
+            ),
+        )
+
+        # Common conditions for filtering
+        conditions = [
+            # Filter for record_root span type events
+            self._json_extract_otel(
+                "record_attributes", SpanAttributes.SPAN_TYPE
+            )
+            == SpanAttributes.SpanType.RECORD_ROOT.value,
+            # Filter out NULL and empty record IDs
+            self._json_extract_otel(
+                "record_attributes", SpanAttributes.RECORD_ID
+            ).isnot(None),
+            self._json_extract_otel(
+                "record_attributes", SpanAttributes.RECORD_ID
+            )
+            != "",
+        ]
+
+        # Add app_name filter if provided
+        if app_name:
+            app_name_expr = self._json_extract_otel(
+                "resource_attributes", ResourceAttributes.APP_NAME
+            )
+            conditions.append(app_name_expr == app_name)
+
+        if app_ids:
+            app_id_expr = self._json_extract_otel(
+                "resource_attributes", ResourceAttributes.APP_ID
+            )
+            conditions.append(app_id_expr.in_(app_ids))
+
+        # Apply all conditions
+        stmt = stmt.where(sa.and_(*conditions))
+
+        # Group by record_id to get unique records
+        stmt = stmt.group_by("record_id")
+
+        # Order by timestamp ascending (oldest first)
+        stmt = stmt.order_by(sa.asc("min_start_timestamp"))
+
+        # Apply pagination
+        if limit is not None:
+            stmt = stmt.limit(limit)
+        if offset is not None:
+            stmt = stmt.offset(offset)
+
+        return stmt
+
+    def _get_records_and_feedback_otel(
+        self,
+        app_ids: Optional[List[str]] = None,
+        app_name: Optional[types_schema.AppName] = None,
+        record_ids: Optional[List[types_schema.RecordID]] = None,
+        offset: Optional[int] = None,
+        limit: Optional[int] = None,
     ) -> Tuple[pd.DataFrame, Sequence[str]]:
-        """See [DB.get_records_and_feedback][trulens.core.database.base.DB.get_records_and_feedback]."""
+        """Get records and feedback from the OTEL event table.
+
+        This method builds a records dataframe from the EVENT table that mirrors
+        the structure of the pre-OTEL ORM's get_records_and_feedback method.
+
+        Args:
+            app_ids: List of app IDs to filter by. Defaults to None.
+            app_name: App name to filter by. Defaults to None.
+            record_ids: List of record IDs to filter by. Defaults to None.
+            offset: Offset for pagination. Defaults to None.
+            limit: Limit for pagination. Defaults to None.
+
+        Returns:
+            A tuple of (records dataframe, feedback column names).
+        """
+        with self.session.begin() as session:
+            # Get paginated record IDs
+            if record_ids is None:
+                record_id_subquery = self._get_paginated_record_ids_otel(
+                    app_ids=app_ids,
+                    app_name=app_name,
+                    offset=offset,
+                    limit=limit,
+                )
+                record_ids_sql = sa.select(record_id_subquery.c.record_id)
+            else:
+                record_ids_sql = record_ids
+
+            # Now get all events for those record IDs
+            stmt = sa.select(self.orm.Event).where(
+                self._json_extract_otel(
+                    "record_attributes", SpanAttributes.RECORD_ID
+                ).in_(record_ids_sql)
+            )
+
+            # Execute query
+            events = session.execute(stmt).scalars().all()
+
+            if not events:
+                # Return empty dataframe with expected columns
+                logger.warning(
+                    f"No events found for app_name: {app_name}, app_ids: {app_ids}"
+                )
+                return pd.DataFrame(columns=AppsExtractor.all_cols), []
+
+            # Group events by record_id
+            record_events = {}
+            for event in events:
+                record_attributes = self._get_event_record_attributes_otel(
+                    event
+                )
+                resource_attributes = self._get_event_resource_attributes_otel(
+                    event
+                )
+                record_id = record_attributes.get(SpanAttributes.RECORD_ID)
+                if not record_id:
+                    continue
+                app_name = resource_attributes.get(
+                    ResourceAttributes.APP_NAME, ""
+                )
+                app_version = resource_attributes.get(
+                    ResourceAttributes.APP_VERSION, ""
+                )
+                app_id = resource_attributes.get(
+                    ResourceAttributes.APP_ID,
+                    app_schema.AppDefinition._compute_app_id(
+                        app_name, app_version
+                    ),
+                )
+
+                if record_id not in record_events:
+                    record_events[record_id] = {
+                        "events": [],
+                        "app_name": app_name,
+                        "app_version": app_version,
+                        "app_id": app_id,
+                        "input": "",  # Initialize to empty string, filled below
+                        "output": "",  # Initialize to empty string, filled below
+                        "tags": "",  # Not present in OTEL, use empty string
+                        "ts": pd.NaT,  # Initialize to empty value, filled below
+                        "latency": 0.0,  # Initialize to 0.0, filled below
+                        "total_tokens": 0,  # Initialize to 0, calculated below
+                        "total_cost": 0.0,  # Initialize to 0.0, calculated below
+                        "cost_currency": "USD",  # Initialize to "USD", calculated below
+                        "feedback_results": {},  # Initialize to empty map, calculated below
+                    }
+
+                record_events[record_id]["events"].append(event)
+
+                # Check if the span is of type RECORD_ROOT
+                if (
+                    record_attributes.get(SpanAttributes.SPAN_TYPE)
+                    == SpanAttributes.SpanType.RECORD_ROOT.value
+                ):
+                    record_events[record_id]["input"] = record_attributes.get(
+                        SpanAttributes.RECORD_ROOT.INPUT, ""
+                    )
+                    record_events[record_id]["output"] = record_attributes.get(
+                        SpanAttributes.RECORD_ROOT.OUTPUT, ""
+                    )
+                    # NOTE: We grab timestamps from the RECORD_ROOT span because it provides a
+                    # more accurate duration/latency.
+                    record_events[record_id]["ts"] = event.start_timestamp
+                    record_events[record_id]["latency"] = (
+                        event.timestamp - event.start_timestamp
+                    ).total_seconds()
+
+                # Check if the span has cost info (tokens, cost, currency), and update record events
+                self._update_cost_info_otel(
+                    record_events[record_id],
+                    record_attributes,
+                    include_tokens=True,
+                )
+
+            # Process feedback results
+            feedback_col_names = []
+            for record_id, record_data in record_events.items():
+                for event in record_data["events"]:
+                    record_attributes = self._get_event_record_attributes_otel(
+                        event
+                    )
+
+                    # Check if the span is of type EVAL or EVAL_ROOT
+                    if record_attributes.get(SpanAttributes.SPAN_TYPE) in [
+                        SpanAttributes.SpanType.EVAL.value,
+                        SpanAttributes.SpanType.EVAL_ROOT.value,
+                    ]:
+                        metric_name = record_attributes.get(
+                            SpanAttributes.EVAL.METRIC_NAME
+                        )
+                        if not metric_name:
+                            logger.warning(
+                                f"Skipping eval span for record_id: {record_id}, no metric name found"
+                            )
+                            continue
+
+                        # Add feedback name to column names if not present
+                        if metric_name not in feedback_col_names:
+                            feedback_col_names.append(metric_name)
+
+                        # Initialize feedback result if not present
+                        if metric_name not in record_data["feedback_results"]:
+                            record_data["feedback_results"][metric_name] = {
+                                "mean_score": None,
+                                "calls": [],
+                                "total_cost": 0.0,
+                                "cost_currency": "USD",  # Initialize to USD, calculated below
+                                "direction": None,
+                            }
+
+                        # Update feedback result
+                        feedback_result = record_data["feedback_results"][
+                            metric_name
+                        ]
+
+                        eval_root_score = record_attributes.get(
+                            SpanAttributes.EVAL_ROOT.SCORE, None
+                        )
+
+                        if (
+                            record_attributes.get(SpanAttributes.SPAN_TYPE)
+                            == SpanAttributes.SpanType.EVAL_ROOT.value
+                        ):
+                            # NOTE: EVAL_ROOT.SCORE should provide the mean score of all related EVAL spans
+                            feedback_result["mean_score"] = eval_root_score
+                            # TODO(SNOW-2112879): HIGHER_IS_BETTER has not been populated in the OTEL spans yet
+                            feedback_result["direction"] = (
+                                record_attributes.get(
+                                    SpanAttributes.EVAL_ROOT.HIGHER_IS_BETTER,
+                                    None,
+                                )
+                            )
+
+                        # Add call data
+                        # Extract kwargs by finding all attributes that start with the KWARGS prefix
+                        kwargs_prefix = SpanAttributes.CALL.KWARGS + "."
+                        kwargs = {
+                            key[len(kwargs_prefix) :]: value
+                            for key, value in record_attributes.items()
+                            if key.startswith(kwargs_prefix)
+                        }
+
+                        call_data = {
+                            # TODO(SNOW-2112879): Call data may not be populated in the OTEL spans yet
+                            "args": {
+                                "kwargs": kwargs,
+                                "input": record_data["input"],
+                                "output": record_data["output"],
+                            },
+                            # NOTE: Some feedbacks may not have sub-scores, so we use the EVAL_ROOT score as a fallback
+                            "ret": (
+                                record_attributes.get(SpanAttributes.EVAL.SCORE)
+                                if SpanAttributes.EVAL.SCORE
+                                in record_attributes
+                                else eval_root_score
+                            ),
+                            "meta": {
+                                "metadata": record_attributes.get(
+                                    SpanAttributes.EVAL_ROOT.METADATA, {}
+                                ),
+                                "explanation": record_attributes.get(
+                                    SpanAttributes.EVAL_ROOT.EXPLANATION
+                                ),
+                            },
+                        }
+                        feedback_result["calls"].append(call_data)
+
+                        # Update feedback result with cost info if available
+                        self._update_cost_info_otel(
+                            feedback_result, record_attributes
+                        )
+
+            # Create dataframe
+            records_data = []
+            for record_id, record_data in record_events.items():
+                # TODO: audit created jsons for correctness (app_json, record_json, cost_json, perf_json)
+
+                app_json = {
+                    "app_name": record_data["app_name"],
+                    "app_version": record_data["app_version"],
+                    "app_id": record_data["app_id"],
+                }
+
+                record_json = {
+                    "record_id": record_id,
+                    "app_id": record_data["app_id"],
+                    "input": record_data["input"],
+                    "output": record_data["output"],
+                    "tags": record_data["tags"],
+                    "ts": record_data["ts"],
+                    "meta": {},
+                }
+
+                cost_json = {
+                    "n_tokens": record_data["total_tokens"],
+                    # TODO: convert to map (see comment: https://github.com/truera/trulens/pull/1939#discussion_r2054802093)
+                    "cost": record_data["total_cost"],
+                }
+
+                perf_json = {
+                    "start_time": record_data["ts"],
+                    "end_time": record_data["ts"]
+                    + pd.Timedelta(seconds=record_data["latency"]),
+                }
+
+                # Create record row
+                record_row = {
+                    "app_id": record_data["app_id"],
+                    "app_name": record_data["app_name"],
+                    "app_version": record_data["app_version"],
+                    "app_json": app_json,
+                    # TODO(nit): consider using a constant here
+                    "type": "SPAN",  # Default type as per orm.py
+                    "record_id": record_id,
+                    "input": record_data["input"],
+                    "output": record_data["output"],
+                    "tags": record_data["tags"],
+                    "record_json": record_json,
+                    "cost_json": cost_json,
+                    "perf_json": perf_json,
+                    "ts": record_data["ts"],
+                    "latency": record_data["latency"],
+                    "total_tokens": record_data["total_tokens"],
+                    # TODO: convert to map (see comment: https://github.com/truera/trulens/pull/1939#discussion_r2054802093)
+                    "total_cost": record_data["total_cost"],
+                    "cost_currency": record_data["cost_currency"],
+                    "num_events": len(record_data["events"]),
+                }
+
+                # Add feedback results
+                for feedback_name, feedback_result in record_data[
+                    "feedback_results"
+                ].items():
+                    # NOTE: we use the mean score as the feedback result
+                    record_row[feedback_name] = feedback_result["mean_score"]
+
+                    record_row[f"{feedback_name}_calls"] = feedback_result[
+                        "calls"
+                    ]
+                    record_row[
+                        f"{feedback_name} feedback cost in {feedback_result['cost_currency']}"
+                    ] = feedback_result["total_cost"]
+                    record_row[f"{feedback_name} direction"] = feedback_result[
+                        "direction"
+                    ]
+
+                records_data.append(record_row)
+
+            # Create dataframe
+            df = pd.DataFrame(records_data)
+
+            # Ensure that all expected columns are present
+            for col in AppsExtractor.all_cols:
+                if col not in df.columns:
+                    logger.warning(
+                        f"Column {col} not found in dataframe, setting to None."
+                    )
+                    df[col] = None
+
+            return df, feedback_col_names
+
+    def get_records_and_feedback(
+        self,
+        app_ids: Optional[List[types_schema.AppID]] = None,
+        app_name: Optional[types_schema.AppName] = None,
+        record_ids: Optional[List[types_schema.RecordID]] = None,
+        offset: Optional[int] = None,
+        limit: Optional[int] = None,
+    ) -> Tuple[pd.DataFrame, Sequence[str]]:
+        """See [DB.get_records_and_feedback][trulens.core.database.base.DB.get_records_and_feedback].
+
+        Args:
+            app_ids: Optional list of app IDs to filter by. Defaults to None.
+            app_name: Optional app name to filter by. Defaults to None.
+            record_ids: Optional list of record IDs to filter by. Defaults to None.
+            offset: Optional offset for pagination. Defaults to None.
+            limit: Optional limit for pagination. Defaults to None.
+        """
+
+        if is_otel_tracing_enabled():
+            return self._get_records_and_feedback_otel(
+                app_ids=app_ids,
+                app_name=app_name,
+                record_ids=record_ids,
+                offset=offset,
+                limit=limit,
+            )
+
+        # Original implementation for pre-OTEL ORM
 
         # TODO: Add pagination to this method. Currently the joinedload in
         # select below disables lazy loading of records which will be a problem
         # for large databases without the use of pagination.
+
+        if record_ids is not None:
+            raise NotImplementedError(
+                "`record_ids` is not supported in the pre-OTEL implementation."
+            )
 
         with self.session.begin() as session:
             stmt = sa.select(self.orm.Record)
@@ -845,7 +1375,11 @@ class SQLAlchemyDB(core_db.DB):
             # records were to be retrieved from AppDefinition.records via auto
             # join, though, the orm backref ordering would be able to take hold.
 
-            stmt = stmt.limit(limit).offset(offset)
+            # Apply pagination
+            if limit is not None:
+                stmt = stmt.limit(limit)
+            if offset is not None:
+                stmt = stmt.offset(offset)
 
             ex = session.execute(stmt).unique()
             # unique needed for joinedload above.
@@ -1075,6 +1609,57 @@ class SQLAlchemyDB(core_db.DB):
             )
             return _event.event_id
 
+    def get_events(
+        self,
+        app_id: Optional[str],
+        record_ids: Optional[List[str]],
+        start_time: Optional[datetime],
+    ) -> pd.DataFrame:
+        """See [DB.get_events][trulens.core.database.base.DB.get_events]."""
+        with self.session.begin() as session:
+            where_clauses = []
+            if app_id is not None:
+                app_id_expr = self._json_extract_otel(
+                    "resource_attributes", ResourceAttributes.APP_ID
+                )
+                where_clauses.append(app_id_expr == app_id)
+            if record_ids is not None:
+                record_id_expr = self._json_extract_otel(
+                    "record_attributes", SpanAttributes.RECORD_ID
+                )
+                where_clauses.append(record_id_expr.in_(record_ids))
+            if start_time is not None:
+                where_clauses.append(
+                    self.orm.Event.start_timestamp >= start_time
+                )
+
+            if len(where_clauses) == 0:
+                q = sa.select(self.orm.Event)
+            elif len(where_clauses) == 1:
+                q = sa.select(self.orm.Event).where(where_clauses[0])
+            else:
+                q = sa.select(self.orm.Event).where(sa.and_(*where_clauses))
+            return pd.read_sql(q, session.bind)
+
+    def get_events_by_record_id(self, record_id: str) -> pd.DataFrame:
+        """Get all events for a given record ID.
+
+        Args:
+            record_id: The record ID to get events for.
+
+        Returns:
+            A pandas DataFrame containing all events for the given record ID.
+        """
+        with self.session.begin() as session:
+            # Query events where record_attributes contains the record_id
+            record_id_expr = self._json_extract_otel(
+                "record_attributes", SpanAttributes.RECORD_ID
+            )
+            q = sa.select(self.orm.Event).where(record_id_expr == record_id)
+
+            # Execute query and return as DataFrame
+            return pd.read_sql(q, session.bind)
+
 
 # Use this Perf for missing Perfs.
 # TODO: Migrate the database instead.
@@ -1215,7 +1800,7 @@ def _extract_ground_truths(
 class AppsExtractor:
     """Utilities for creating dataframes from orm instances."""
 
-    app_cols = ["app_id", "app_json", "type"]
+    app_cols = ["app_name", "app_version", "app_id", "app_json", "type"]
     rec_cols = [
         "record_id",
         "input",
@@ -1226,7 +1811,7 @@ class AppsExtractor:
         "perf_json",
         "ts",
     ]
-    extra_cols = ["latency", "total_tokens", "total_cost"]
+    extra_cols = ["latency", "total_tokens", "total_cost", "num_events"]
     all_cols = app_cols + rec_cols + extra_cols
 
     def __init__(self):
@@ -1336,6 +1921,8 @@ class AppsExtractor:
     def extract_records(
         self, records: Iterable["db_orm.ORM.Record"]
     ) -> Iterable[pd.Series]:
+        if is_otel_tracing_enabled():
+            raise RuntimeError("Not supported with OTel tracing enabled!")
         for _rec in records:
             calls = defaultdict(list)
             values = defaultdict(list)

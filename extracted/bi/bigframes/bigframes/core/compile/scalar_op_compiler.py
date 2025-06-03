@@ -1164,6 +1164,35 @@ def astype_op_impl(x: ibis_types.Value, op: ops.AsTypeOp):
         elif to_type == ibis_dtypes.time:
             return x_converted.time()
 
+    if to_type == ibis_dtypes.json:
+        if x.type() == ibis_dtypes.string:
+            return parse_json_in_safe(x) if op.safe else parse_json(x)
+        if x.type() == ibis_dtypes.bool:
+            x_bool = typing.cast(
+                ibis_types.StringValue,
+                bigframes.core.compile.ibis_types.cast_ibis_value(
+                    x, ibis_dtypes.string, safe=op.safe
+                ),
+            ).lower()
+            return parse_json_in_safe(x_bool) if op.safe else parse_json(x_bool)
+        if x.type() in (ibis_dtypes.int64, ibis_dtypes.float64):
+            x_str = bigframes.core.compile.ibis_types.cast_ibis_value(
+                x, ibis_dtypes.string, safe=op.safe
+            )
+            return parse_json_in_safe(x_str) if op.safe else parse_json(x_str)
+
+    if x.type() == ibis_dtypes.json:
+        if to_type == ibis_dtypes.int64:
+            return cast_json_to_int64_in_safe(x) if op.safe else cast_json_to_int64(x)
+        if to_type == ibis_dtypes.float64:
+            return (
+                cast_json_to_float64_in_safe(x) if op.safe else cast_json_to_float64(x)
+            )
+        if to_type == ibis_dtypes.bool:
+            return cast_json_to_bool_in_safe(x) if op.safe else cast_json_to_bool(x)
+        if to_type == ibis_dtypes.string:
+            return cast_json_to_string_in_safe(x) if op.safe else cast_json_to_string(x)
+
     # TODO: either inline this function, or push rest of this op into the function
     return bigframes.core.compile.ibis_types.cast_ibis_value(x, to_type, safe=op.safe)
 
@@ -1325,6 +1354,19 @@ def json_extract_string_array_op_impl(
     x: ibis_types.Value, op: ops.JSONExtractStringArray
 ):
     return json_extract_string_array(json_obj=x, json_path=op.json_path)
+
+
+@scalar_op_compiler.register_unary_op(ops.JSONQuery, pass_op=True)
+def json_query_op_impl(x: ibis_types.Value, op: ops.JSONQuery):
+    # Define a user-defined function whose returned type is dynamically matching the input.
+    def json_query(json_or_json_string, json_path: ibis_dtypes.str):  # type: ignore
+        """Extracts a JSON value and converts it to a SQL JSON-formatted STRING or JSON value."""
+        ...
+
+    return_type = x.type()
+    json_query.__annotations__["return"] = return_type
+    json_query_op = ibis_udf.scalar.builtin(json_query)
+    return json_query_op(json_or_json_string=x, json_path=op.json_path)
 
 
 @scalar_op_compiler.register_unary_op(ops.ParseJSON, pass_op=True)
@@ -1797,6 +1839,13 @@ def fillna_op(
 
 @scalar_op_compiler.register_binary_op(ops.round_op)
 def round_op(x: ibis_types.Value, y: ibis_types.Value):
+    if x.type().is_integer():
+        # bq produces float64, but pandas returns int
+        return (
+            typing.cast(ibis_types.NumericValue, x)
+            .round(digits=typing.cast(ibis_types.IntegerValue, y))
+            .cast(ibis_dtypes.int64)
+        )
     return typing.cast(ibis_types.NumericValue, x).round(
         digits=typing.cast(ibis_types.IntegerValue, y)
     )
@@ -1899,34 +1948,18 @@ def clip_op(
     if isinstance(lower, ibis_types.NullScalar) and (
         not isinstance(upper, ibis_types.NullScalar)
     ):
-        return (
-            ibis_api.case()  # type: ignore
-            .when(upper.isnull() | (original > upper), upper)
-            .else_(original)
-            .end()
-        )
+        return ibis_api.least(original, upper)
     elif (not isinstance(lower, ibis_types.NullScalar)) and isinstance(
         upper, ibis_types.NullScalar
     ):
-        return (
-            ibis_api.case()  # type: ignore
-            .when(lower.isnull() | (original < lower), lower)
-            .else_(original)
-            .end()
-        )
+        return ibis_api.greatest(original, lower)
     elif isinstance(lower, ibis_types.NullScalar) and (
         isinstance(upper, ibis_types.NullScalar)
     ):
         return original
     else:
         # Note: Pandas has unchanged behavior when upper bound and lower bound are flipped. This implementation requires that lower_bound < upper_bound
-        return (
-            ibis_api.case()  # type: ignore
-            .when(lower.isnull() | (original < lower), lower)
-            .when(upper.isnull() | (original > upper), upper)
-            .else_(original)
-            .end()
-        )
+        return ibis_api.greatest(ibis_api.least(original, upper), lower)
 
 
 # N-ary Operations
@@ -2047,6 +2080,11 @@ def parse_json(json_str: str) -> ibis_dtypes.JSON:  # type: ignore[empty-body]
     """Converts a JSON-formatted STRING value to a JSON value."""
 
 
+@ibis_udf.scalar.builtin(name="SAFE.PARSE_JSON")
+def parse_json_in_safe(json_str: str) -> ibis_dtypes.JSON:  # type: ignore[empty-body]
+    """Converts a JSON-formatted STRING value to a JSON value in the safe mode."""
+
+
 @ibis_udf.scalar.builtin(name="json_set")
 def json_set(  # type: ignore[empty-body]
     json_obj: ibis_dtypes.JSON, json_path: ibis_dtypes.String, json_value
@@ -2073,6 +2111,46 @@ def json_value(  # type: ignore[empty-body]
     json_obj: ibis_dtypes.JSON, json_path: ibis_dtypes.String
 ) -> ibis_dtypes.String:
     """Retrieve value of a JSON field as plain STRING."""
+
+
+@ibis_udf.scalar.builtin(name="INT64")
+def cast_json_to_int64(json_str: ibis_dtypes.JSON) -> ibis_dtypes.Int64:  # type: ignore[empty-body]
+    """Converts a JSON number to a SQL INT64 value."""
+
+
+@ibis_udf.scalar.builtin(name="SAFE.INT64")
+def cast_json_to_int64_in_safe(json_str: ibis_dtypes.JSON) -> ibis_dtypes.Int64:  # type: ignore[empty-body]
+    """Converts a JSON number to a SQL INT64 value in the safe mode."""
+
+
+@ibis_udf.scalar.builtin(name="FLOAT64")
+def cast_json_to_float64(json_str: ibis_dtypes.JSON) -> ibis_dtypes.Float64:  # type: ignore[empty-body]
+    """Attempts to convert a JSON value to a SQL FLOAT64 value."""
+
+
+@ibis_udf.scalar.builtin(name="SAFE.FLOAT64")
+def cast_json_to_float64_in_safe(json_str: ibis_dtypes.JSON) -> ibis_dtypes.Float64:  # type: ignore[empty-body]
+    """Attempts to convert a JSON value to a SQL FLOAT64 value."""
+
+
+@ibis_udf.scalar.builtin(name="BOOL")
+def cast_json_to_bool(json_str: ibis_dtypes.JSON) -> ibis_dtypes.Boolean:  # type: ignore[empty-body]
+    """Attempts to convert a JSON value to a SQL BOOL value."""
+
+
+@ibis_udf.scalar.builtin(name="SAFE.BOOL")
+def cast_json_to_bool_in_safe(json_str: ibis_dtypes.JSON) -> ibis_dtypes.Boolean:  # type: ignore[empty-body]
+    """Attempts to convert a JSON value to a SQL BOOL value."""
+
+
+@ibis_udf.scalar.builtin(name="STRING")
+def cast_json_to_string(json_str: ibis_dtypes.JSON) -> ibis_dtypes.String:  # type: ignore[empty-body]
+    """Attempts to convert a JSON value to a SQL STRING value."""
+
+
+@ibis_udf.scalar.builtin(name="SAFE.STRING")
+def cast_json_to_string_in_safe(json_str: ibis_dtypes.JSON) -> ibis_dtypes.String:  # type: ignore[empty-body]
+    """Attempts to convert a JSON value to a SQL STRING value."""
 
 
 @ibis_udf.scalar.builtin(name="ML.DISTANCE")

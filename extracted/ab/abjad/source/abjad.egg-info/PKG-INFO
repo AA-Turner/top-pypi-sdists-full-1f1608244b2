@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: abjad
-Version: 3.24
+Version: 3.25
 Summary: Abjad is a Python API for building LilyPond files.
 Author-email: Trevor Bača <trevor.baca@gmail.com>, Joséphine Wolf Oberholtzer <josephine.wolf.oberholtzer@gmail.com>
 License: MIT

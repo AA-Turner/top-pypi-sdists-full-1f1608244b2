@@ -1,7 +1,7 @@
 """Interface for SCPI communication logging."""
 import socket
 from enum import Enum
-from datetime import datetime, timedelta
+from datetime import datetime
 import re
 import string
 from typing import List, Dict
@@ -289,12 +289,8 @@ class ScpiLogger:
         self._log_to_udp = False
         self._udp_port = 49200
 
-        # Time stats
-        self._first_timestamp: datetime or None = None
-        self._last_timestamp: datetime or None = None
-        self._total_time_spent: timedelta = timedelta(0)
-        self._time_offset_zero_on_first_entry: bool = False  # If you set this variable to true, the entire log timestamps will be relative to the first entry. Meaning, the first entry will start with 00:00:00.000
-        self.reset_time_stats()
+        # If you set this variable to true, the entire log timestamps will be relative to the first entry. Meaning, the first entry will start with 00:00:00.000
+        self._time_offset_zero_on_first_entry: bool = False
 
         # Transients
         self._segment: Segment or None = None
@@ -396,9 +392,9 @@ class ScpiLogger:
         self._cached.clear()
 
     def set_logging_target(self, target, console_log: bool or None = None, udp_log: bool or None = None) -> None:
-        """Sets logging target - the target must implement write() and flush().
+        """Sets local logging stream target - the target must implement write() and flush().
         You can optionally set the console and UDP logging ON or OFF.
-        This method switches the logging target global OFF."""
+        This method switches the logging target global to OFF."""
         self._log_target_local = target
         self._global_mode = False
         if console_log is not None:
@@ -408,7 +404,9 @@ class ScpiLogger:
         self._flush_cached_entries()
 
     def set_logging_target_global(self, console_log: bool or None = None, udp_log: bool or None = None) -> None:
-        """Sets logging target to global. The global target must be defined. You can optionally set the console and UDP logging ON or OFF. """
+        """Sets logging target to global. The global target must be defined.
+        You can optionally set the console and UDP logging ON or OFF.
+        This method switches the logging target global to ON."""
         if GlobalData.get_logging_target() is None:
             raise RsInstrException(f"Cannot set the logging to global target, because the global target has not been defined. Device name: '{self.device_name}'")
         self._global_mode = True
@@ -594,27 +592,20 @@ class ScpiLogger:
             raise ValueError('LoggingMode.Default can not be set here. Use a specific value.')
         self._default_mode = value
 
-    def update_time_stats(self, start_time: datetime or None, end_time: datetime or None) -> None:
-        """Updates time statistics: first log timestamp, last log timestamp, total log time.
-        Only updates the statistics if the logger is not off."""
-        if self.mode == LoggingMode.Off:
-            return
-
-        if self._first_timestamp is None:
-            self._first_timestamp = convert_ts_to_datetime(start_time)
-
-        self._last_timestamp = convert_ts_to_datetime(end_time)
-        if start_time is not None and end_time is not None:
-            td = self._last_timestamp - convert_ts_to_datetime(start_time)
-            self._total_time_spent += td
-
     def _resolve_reference_time(self, reference_time: datetime or float or int or None) -> None:
-        """Checks the internal flag time_offset_zero_on_first_entry.
+        """Checks the internal flag time_offset_zero_on_first_entry or Global attribute _global_logging_relative_time_of_first_entry.
         If this flag is true, it sets the reference time to the entered reference_time, and clears the time_offset_zero_on_first_entry."""
-        if self._time_offset_zero_on_first_entry:
-            if reference_time is not None:
-                self.set_relative_timestamp(reference_time)
-                self._time_offset_zero_on_first_entry = False
+        if self._global_mode:
+            if GlobalData.get_logging_relative_time_of_first_entry():
+                if reference_time is not None:
+                    self.set_relative_timestamp(reference_time)
+                    GlobalData.set_logging_relative_timestamp(reference_time)
+                    GlobalData.set_logging_relative_time_of_first_entry(False)
+        else:
+            if self._time_offset_zero_on_first_entry:
+                if reference_time is not None:
+                    self.set_relative_timestamp(reference_time)
+                    self._time_offset_zero_on_first_entry = False
 
     def _write_to_log(self, entry: LogEntry) -> None:
         """Logs the provided string to the target and optionally to the stdout.
@@ -630,8 +621,6 @@ class ScpiLogger:
             # No target is defined yet, cache the entries internally for now
             self._cached.append(entry)
             return
-
-        self.update_time_stats(entry.start_time, entry.end_time)
 
         # Only now, before writing to the log target, resolve the content.
         entry.set_timestamp_reference_time(self.get_relative_timestamp())
@@ -663,34 +652,6 @@ class ScpiLogger:
             self._socket.sendto(msg, ("127.0.0.1", self._udp_port))
         finally:
             pass
-
-    def get_first_log_time(self) -> datetime or None:
-        """Returns the start time of the very first log entry."""
-        return self._first_timestamp
-
-    def get_last_log_time(self) -> datetime or None:
-        """Returns the start time of the very last log entry."""
-        return self._last_timestamp
-
-    def get_first_last_log_timedelta(self) -> timedelta:
-        """Returns the difference between the get_last_log_time() - get_first_log_time()."""
-        if self.get_first_log_time() is None or self.get_last_log_time() is None:
-            return timedelta(0)
-        return self.get_last_log_time() - self.get_first_log_time()
-
-    def get_total_time_spent(self) -> timedelta:
-        """Returns the summary of all the log durations. This value express the pure durations spent by the log entries.
-        The simple difference between the first and last log entries timestamps is always bigger, and you can query it by get_first_last_log_timedelta()."""
-        return self._total_time_spent
-
-    def reset_time_stats(self) -> None:
-        """Resets the time statistics:
-            - First Log Time: get_first_log_time()
-            - Last Log Time: get_last_log_time()
-            - Total Duration: get_total_time_spent()"""
-        self._first_timestamp = None
-        self._last_timestamp = None
-        self._total_time_spent = timedelta(0)
 
     def set_time_offset_zero_on_first_entry(self) -> None:
         """Sets the reference time to the value of the first log entry start time.

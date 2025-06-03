@@ -229,7 +229,8 @@ CORS_CONFIG: CorsConfig | None = env("CORS_CONFIG", cast=_parse_json, default=No
 }
 """
 if CORS_CONFIG is not None and CORS_ALLOW_ORIGINS != "*":
-    raise ValueError("CORS_CONFIG and CORS_ALLOW_ORIGINS cannot be set together")
+    if CORS_CONFIG.get("allow_origins") is None:
+        CORS_CONFIG["allow_origins"] = CORS_ALLOW_ORIGINS
 
 # queue
 

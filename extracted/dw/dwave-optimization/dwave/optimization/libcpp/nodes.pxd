@@ -12,11 +12,12 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+from libcpp.span cimport span
 from libcpp.string cimport string
 from libcpp.unordered_map cimport unordered_map
 from libcpp.vector cimport vector
 
-from dwave.optimization.libcpp cimport span, variant
+from dwave.optimization.libcpp cimport  variant
 from dwave.optimization.libcpp.array cimport Array, Slice
 from dwave.optimization.libcpp.graph cimport ArrayNode, Node
 from dwave.optimization.libcpp.state cimport State
@@ -71,6 +72,11 @@ cdef extern from "dwave-optimization/nodes/flow.hpp" namespace "dwave::optimizat
         pass
 
 
+# This would usually be defined in here, but we need it for Graph.inputs() so to
+# avoid the circular dependency we define it in graph.pxd.
+from dwave.optimization.libcpp.graph cimport InputNode
+
+
 cdef extern from "dwave-optimization/nodes/indexing.hpp" namespace "dwave::optimization" nogil:
     cdef cppclass AdvancedIndexingNode(ArrayNode):
         ctypedef variant[ArrayNodePtr, Slice] array_or_slice
@@ -99,8 +105,7 @@ cdef extern from "dwave-optimization/nodes/lp.hpp" namespace "dwave::optimizatio
 
     cdef cppclass LinearProgramNode(Node):
         unordered_map[string, ssize_t] get_arguments()
-        void initialize_state(State&, const span[double]) except + # for Cython
-        void initialize_state(State&, const span[const double]) except +
+        void initialize_state(State&, ...) except +  # Cython gets confused between span<double> and span<const double>
         span[const double] solution(const State&) const
         span[const Py_ssize_t] variables_shape() const
 
@@ -154,6 +159,9 @@ cdef extern from "dwave-optimization/nodes/mathematical.hpp" namespace "dwave::o
         pass
 
     cdef cppclass ExpitNode(ArrayNode):
+        pass
+
+    cdef cppclass ExpNode(ArrayNode):
         pass
 
     cdef cppclass LessEqualNode(ArrayNode):
@@ -214,6 +222,9 @@ cdef extern from "dwave-optimization/nodes/mathematical.hpp" namespace "dwave::o
         pass
 
     cdef cppclass RintNode(ArrayNode):
+        pass
+
+    cdef cppclass SafeDivideNode(ArrayNode):
         pass
 
     cdef cppclass SquareNode(ArrayNode):

@@ -1,6 +1,6 @@
 use crate::{
-    find_workspace_cargo_toml, get_path_crate_cargo_toml, goto_workspace_member_crates,
-    load_cargo_toml,
+    find_workspace_cargo_toml, get_path_crate_cargo_toml, get_workspace_path,
+    goto_workspace_member_crates, load_cargo_toml,
 };
 use itertools::Itertools;
 use tombi_config::TomlVersion;
@@ -185,29 +185,47 @@ fn document_link_for_crate_cargo_toml(
     }
 
     let mut total_document_links = vec![];
-    if let Some((workspace_cargo_toml_path, workspace_document_tree)) =
-        find_workspace_cargo_toml(crate_cargo_toml_path, toml_version)
-    {
+    if let Some((workspace_cargo_toml_path, workspace_document_tree)) = find_workspace_cargo_toml(
+        crate_cargo_toml_path,
+        get_workspace_path(crate_document_tree),
+        toml_version,
+    ) {
         let registories =
             get_registories(&workspace_cargo_toml_path, toml_version).unwrap_or_default();
 
+        // Support Workspace
+        // See: https://doc.rust-lang.org/cargo/reference/manifest.html#the-workspace-field
+        if let Some((_, tombi_document_tree::Value::String(workspace_path))) =
+            dig_keys(&crate_document_tree, &["package", "workspace"])
+        {
+            if let Ok(target) = Url::from_file_path(&workspace_cargo_toml_path) {
+                total_document_links.push(tombi_extension::DocumentLink {
+                    target,
+                    range: workspace_path.unquoted_range(),
+                    tooltip: DocumentLinkToolTip::WorkspaceCargoToml.to_string(),
+                });
+            }
+        }
+
+        // Support Package Table
+        // See: https://doc.rust-lang.org/cargo/reference/workspaces.html#the-package-table
         for package_item in [
-            "version",
             "authors",
-            "edition",
-            "rust-version",
+            "categories",
             "description",
             "documentation",
-            "readme",
-            "homepage",
-            "repository",
-            "license",
-            "license-file",
-            "keywords",
-            "categories",
+            "edition",
             "exclude",
+            "homepage",
             "include",
+            "keywords",
+            "license-file",
+            "license",
             "publish",
+            "readme",
+            "repository",
+            "rust-version",
+            "version",
         ] {
             if let (
                 Some((workspace_key, tombi_document_tree::Value::Boolean(value))),
@@ -233,6 +251,30 @@ fn document_link_for_crate_cargo_toml(
                 });
             }
         }
+
+        // Support Lints Workspace
+        // See: https://doc.rust-lang.org/cargo/reference/workspaces.html#the-lints-table
+        if let (
+            Some((workspace_key, tombi_document_tree::Value::Boolean(value))),
+            Some((workspace_lints_key, _)),
+        ) = (
+            dig_keys(crate_document_tree, &["lints", "workspace"]),
+            dig_keys(&workspace_document_tree, &["workspace", "lints"]),
+        ) {
+            if let Ok(mut target) = Url::from_file_path(&workspace_cargo_toml_path) {
+                target.set_fragment(Some(&format!(
+                    "L{}",
+                    workspace_lints_key.range().start.line + 1
+                )));
+                total_document_links.push(tombi_extension::DocumentLink {
+                    target,
+                    range: workspace_key.range() + value.range(),
+                    tooltip: DocumentLinkToolTip::WorkspaceCargoToml.to_string(),
+                });
+            };
+        }
+
+        // Support Workspace Dependencies
         let workspace_dependencies =
             if let Some((_, tombi_document_tree::Value::Table(dependencies))) =
                 dig_keys(&workspace_document_tree, &["workspace", "dependencies"])

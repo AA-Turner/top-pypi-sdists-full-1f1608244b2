@@ -124,7 +124,10 @@ class ApiRoute(Route):
 
     async def handle(self, scope: Scope, receive: Receive, send: Send) -> None:
         # https://asgi.readthedocs.io/en/latest/specs/www.html#http-connection-scope
+        from langgraph_api.logging import set_logging_context
+
         scope["route"] = self.path
+        set_logging_context({"path": self.path, "method": scope.get("method")})
         ctx = get_auth_ctx()
         if ctx:
             user, auth = ctx.user, ctx.permissions

@@ -68,6 +68,7 @@ MemberAccountDiscountVisibilityType = Literal["All", "None"]
 OrderType = Literal["Asc", "Desc"]
 PaymentOptionType = Literal["AllUpfront", "NoUpfront", "PartialUpfront"]
 ResourceTypeType = Literal[
+    "AuroraDbClusterStorage",
     "ComputeSavingsPlans",
     "DynamoDbReservedCapacity",
     "EbsVolume",

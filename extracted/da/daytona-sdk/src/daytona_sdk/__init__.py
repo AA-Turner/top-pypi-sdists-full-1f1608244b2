@@ -28,6 +28,7 @@ from .common.lsp_server import LspLanguageId
 from .common.process import CodeRunParams, SessionExecuteRequest
 from .common.sandbox import SandboxState, SandboxTargetRegion
 from .common.volume import VolumeMount
+from .common.image import Image
 
 CreateWorkspaceParams = deprecated_alias("CreateWorkspaceParams", "CreateSandboxParams")(CreateSandboxParams)
 Workspace = deprecated_alias("Workspace", "Sandbox")(Sandbox)
@@ -67,4 +68,5 @@ __all__ = [
     "VolumeMount",
     "AsyncDaytona",
     "AsyncSandbox",
+    "Image",
 ]

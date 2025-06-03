@@ -1,12 +1,12 @@
 Metadata-Version: 2.3
 Name: aiohomekit
-Version: 3.2.14
+Version: 3.2.15
 Summary: An asyncio HomeKit client
 License: Apache-2.0
 Keywords: HomeKit,home,automation
 Author: John Carr
 Author-email: john.carr@unrouted.co.uk
-Requires-Python: >=3.10,<3.14
+Requires-Python: >=3.10
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: End Users/Desktop
 Classifier: License :: OSI Approved :: Apache Software License

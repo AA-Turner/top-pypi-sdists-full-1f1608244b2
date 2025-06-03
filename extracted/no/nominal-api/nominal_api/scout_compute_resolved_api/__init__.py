@@ -24,6 +24,7 @@ from .._impl import (
     scout_compute_resolved_api_CurveFitPlotTypeNode as CurveFitPlotTypeNode,
     scout_compute_resolved_api_CurveFitPlotTypeNodeVisitor as CurveFitPlotTypeNodeVisitor,
     scout_compute_resolved_api_DerivativeSeriesNode as DerivativeSeriesNode,
+    scout_compute_resolved_api_DurationFilterRangesNode as DurationFilterRangesNode,
     scout_compute_resolved_api_EnumCountDuplicateSeriesNode as EnumCountDuplicateSeriesNode,
     scout_compute_resolved_api_EnumEqualityRangesNode as EnumEqualityRangesNode,
     scout_compute_resolved_api_EnumFilterRangesNode as EnumFilterRangesNode,

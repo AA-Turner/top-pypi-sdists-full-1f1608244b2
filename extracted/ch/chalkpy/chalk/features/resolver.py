@@ -4,6 +4,7 @@ import abc
 import ast
 import asyncio
 import base64
+import builtins
 import collections
 import collections.abc
 import dataclasses
@@ -16,6 +17,7 @@ import math
 import random
 import re
 import statistics
+import types
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum, IntEnum
@@ -1622,6 +1624,47 @@ def capture_global(
     return None
 
 
+@dataclasses.dataclass
+class ClosureCapturedValues:
+    globals: "dict[str, object]"
+    builtins: "dict[str, object]"
+
+
+def get_closure_vars_including_comprehensions(fn: Callable[..., Any]):
+    """
+    Returns globals captured by the function or by any inner functions scopes from list comprehensions.
+    """
+    closure = inspect.getclosurevars(fn)
+
+    builtins_ns = fn.__globals__.get("__builtins__", builtins.__dict__)
+    captured_globals = dict(closure.globals)
+    captured_builtins = dict(closure.builtins)
+
+    _visited: "set[types.CodeType]" = set()
+
+    def _visit_code(code: types.CodeType) -> None:
+        if code in _visited:
+            return
+        _visited.add(code)
+        for name in code.co_names:
+            if name not in captured_globals and name in fn.__globals__:
+                captured_globals[name] = fn.__globals__[name]
+            elif name not in captured_builtins and name in builtins_ns:
+                captured_builtins[name] = builtins_ns[name]
+        for const in code.co_consts:
+            if type(const) is types.CodeType:
+                _visit_code(const)
+
+    for const in fn.__code__.co_consts:
+        if type(const) is types.CodeType:
+            _visit_code(const)
+
+    return ClosureCapturedValues(
+        globals=captured_globals,
+        builtins=captured_builtins,
+    )
+
+
 def parse_extract_function_object_captured_globals(
     fn: Callable[..., Any],
     gas: GasLimit,
@@ -1656,7 +1699,7 @@ def parse_extract_function_object_captured_globals(
     """
     gas.consume_gas()
     function_captured_globals: dict[str, FunctionCapturedGlobal] | None = {}
-    fn_closure_vars = inspect.getclosurevars(fn)
+    fn_closure_vars = get_closure_vars_including_comprehensions(fn)
     function_module = inspect.getmodule(fn)
     module_name = function_module.__name__ if function_module is not None else None
 

@@ -10,6 +10,8 @@ import collections
 import copy
 import enum
 import io
+import ipaddress
+import itertools
 import json
 import logging
 import re
@@ -17,6 +19,7 @@ import uuid
 import warnings
 import zipfile
 from abc import ABCMeta
+from collections import namedtuple
 from datetime import datetime, timedelta
 from time import sleep, time
 
@@ -24,6 +27,7 @@ import inflection
 import requests
 import urllib3
 import yaml
+from requests.exceptions import HTTPError
 
 from . import sch_api
 from .analytics import analytics_class_decorator
@@ -33,7 +37,7 @@ from .constants import (
     SNOWFLAKE_EXECUTOR_TYPE, SNOWFLAKE_STAGE_RENAME_ALIASES, ST_PIPELINE_BW_COMPATIBILITY, STAGE_CONFIG_OVERRIDES,
     ServiceConfigurationProperty, StageConfigurationProperty,
 )
-from .exceptions import InternalServerError, ServiceDefinitionNotFound, TopologyIssuesError
+from .exceptions import InternalServerError, ProjectAccessError, ServiceDefinitionNotFound, TopologyIssuesError
 from .models import Configuration, _StageWithPredicates
 from .sdc import DataCollector as SdcDataCollector
 from .sdc_api import ApiClient as SdcApiClient
@@ -66,6 +70,8 @@ ModelCollectionResults = collections.namedtuple('ModelCollectionResults', ['resu
 CollectionModelResults = collections.namedtuple(
     'CollectionModelResults', ['results', 'kwargs', 'class_type', 'class_kwargs']
 )
+NameMap = namedtuple('NameMap', ['label', 'fieldName', 'name'])
+ChooseOption = namedtuple('ChooseOption', ['UI_VALUE', 'SDK_VALUE'])
 
 MILLIS_IN_HOUR = 3600000
 METERING_MAX_DAYS = 60
@@ -398,8 +404,8 @@ class CollectionModel:
         if kwargs.get('offset') and not (isinstance(kwargs.get('offset'), int) and kwargs.get('offset') >= 0):
             raise ValueError("`offset` should be an integer with value of at least 0")
 
+        is_api_paginable = lambda rsp: all(i in rsp for i in ['data', 'totalCount', 'offset', 'len'])
         all_ids = set()
-        previous_length = len(self)
         requested_length = kwargs.get('len', float('inf'))
         if requested_length == -1:
             requested_length = float('inf')
@@ -410,12 +416,15 @@ class CollectionModel:
         kwargs_without_pagination_params = {
             k: v for k, v in kwargs.items() if k not in CollectionModel.PAGINATION_PARAMS
         }
+        logger.debug('Fetching items with offset=%d and len=%d', current_offset, page_length)
         response, current_new_kwargs, class_type, class_kwargs = self._get_all_results_from_api(
             offset=current_offset, len=page_length, **kwargs_without_pagination_params
         )
+        previous_length = response['totalCount'] if is_api_paginable(response) else len(self)
+
         # If an API is paginated, the result set we need to page through will be contained in the response's 'data'
         # attribute. If there is no 'data' attribute, the response itself is the result set (unpaginated API).
-        if 'data' in response:
+        if is_api_paginable(response):
             current_results = SeekableList(class_type(item, **class_kwargs) for item in response['data'])
         else:
             current_results = SeekableList(class_type(item, **class_kwargs) for item in response)
@@ -426,17 +435,18 @@ class CollectionModel:
             # ControlHub api endpoints)
             current_results = current_results.get_all(**current_new_kwargs)
             for result in current_results:
-                if len(all_ids) == requested_length:
-                    # We fetched specified number of items so, return
-                    return
                 # This check is to avoid duplicates especially since we are doing the
                 # if current_length < previous_length check below to handle deleted entities.
                 item_id = getattr(result, self._id_attr)
                 if item_id not in all_ids:
                     all_ids.add(item_id)
                     yield result
+
+            if len(all_ids) >= requested_length:
+                return
+
             current_offset += page_length
-            current_length = len(self)
+            current_length = response['totalCount'] if is_api_paginable(response) else len(self)
             # If the total number of items decreased, reduce the offset by the difference to make sure we return all the
             # items. If duplicates occur in the process as described in step 5 of workflow in the docstring are handled
             # above by checking for the id in all_ids.
@@ -564,7 +574,13 @@ class CollectionModel:
         """
         try:
             self.get(**kwargs)
-        except ValueError:
+        except (ValueError, ProjectAccessError):
+            # this can occur when a user tries to access a resource from a different project.
+            # e.g: org-level connection connectionA: connectionA = sch.connections[0]
+            # switch to project projectA via sch.current_project = sch.projects[0]
+            # check if the resource exists in a project: connectionA in sch.connections  # should be False
+            # but since connections (and classes like Jobs) pass _id_attr in __contains__ we get a ProjectAccessError
+            # as we try to get the resource by id instead of trying to get all resources and comparing.
             return False
         return True
 
@@ -886,7 +902,8 @@ class User(BaseModel):
         organization (:obj:`str`): Organization ID that the user is part of.
         password_expires_on (:obj:`str`): User's password expiration time.
         password_system_generated (:obj:`bool`): Whether User's password is system generated or not.
-        roles (:obj:`set`): A set of role labels.
+        organization_roles (:obj:`set`): A set of role labels to be used organization wide.
+        project_roles (:obj:`set`): A set of role labels applicable for the user in a project.
         saml_user_name (:obj:`str`): SAML username of user.
         status (:obj:`str`): The status of the user.
     """
@@ -943,15 +960,40 @@ class User(BaseModel):
     @property
     def roles(self):
         """Get the roles for the user."""
-        return Roles(
-            [self._roles[role] for role in self._data.get('roles', []) if role not in User._ROLES_TO_HIDE],
-            self,
-            reversed_dict(self._roles),
+        warnings.warn(
+            'The `roles` attribute is now deprecated for User objects. It has been replaced by the'
+            ' `organization_roles` attribute. Please update your usage accordingly.',
+            DeprecationWarning,
         )
+        return self.organization_roles
 
     @roles.setter
     def roles(self, value):
         """Set the roles for the user.
+
+        Args:
+            value: A :obj:`list` of one or more roles. A role is of type :obj:`str`.
+        """
+        warnings.warn(
+            'The `roles` attribute is now deprecated for User objects. It has been replaced by the'
+            ' `organization_roles` attribute. Please update your usage accordingly.',
+            DeprecationWarning,
+        )
+        self.organization_roles = value
+
+    @property
+    def organization_roles(self):
+        """Get the organization roles for the user."""
+        return Roles(
+            [self._roles[role] for role in self._data.get('roles', []) if role not in User._ROLES_TO_HIDE],
+            self,
+            reversed_dict(self._roles),
+            role_data_key='roles',
+        )
+
+    @organization_roles.setter
+    def organization_roles(self, value):
+        """Set the organization roles for the user.
 
         Args:
             value: A :obj:`list` of one or more roles. A role is of type :obj:`str`.
@@ -961,6 +1003,29 @@ class User(BaseModel):
 
         value_ = value if isinstance(value, list) else [value]
         self._data['roles'] = list({role_label_to_id[role] for role in value_} | set(User._ROLES_TO_HIDE))
+
+    @property
+    def project_roles(self):
+        """Get the project roles for the user."""
+        return Roles(
+            [self._roles[role] for role in self._data.get('projectRoles', []) if role not in User._ROLES_TO_HIDE],
+            self,
+            reversed_dict(self._roles),
+            role_data_key='projectRoles',
+        )
+
+    @project_roles.setter
+    def project_roles(self, value):
+        """Set the project roles for the user.
+
+        Args:
+            value: A :obj:`list` of one or more roles. A role is of type :obj:`str`.
+        """
+        # We reverse the _roles dictionary to let this setter deal with role labels while still writing role ids.
+        role_label_to_id = {role_label: role_id for role_id, role_label in self._roles.items()}
+
+        value_ = value if isinstance(value, list) else [value]
+        self._data['projectRoles'] = list({role_label_to_id[role] for role in value_} | set(User._ROLES_TO_HIDE))
 
     @property
     def status(self):
@@ -1321,12 +1386,14 @@ class Roles(list):
         entity (:py:class:`streamsets.sdk.sch_models.Group`) or
               (:py:class:`streamsets.sdk.sch_models.User`): Group or User object.
         role_label_to_id (:obj:`dict`): Role label to Role ID mapping.
+        role_data_key(:obj:`str`): The key the roles map to in the underlying user or group object. Default: ``role``.
     """
 
-    def __init__(self, values, entity, role_label_to_id):
+    def __init__(self, values, entity, role_label_to_id, role_data_key='role'):
         super().__init__(values)
         self._entity = entity
         self._role_label_to_id = role_label_to_id
+        self._role_data_key = role_data_key
 
     def append(self, value):
         """
@@ -1352,7 +1419,7 @@ class Roles(list):
 
                 # Use super().append() to throw corresponding exceptions when necessary.
                 super().append(element)
-                self._entity._data['roles'].append(self._role_label_to_id[element])
+                self._entity._data[self._role_data_key].append(self._role_label_to_id[element])
 
         except TypeError:
             raise TypeError('Value to append to roles must be a str or an iterable of str')
@@ -1381,7 +1448,7 @@ class Roles(list):
 
                 # Use super().remove() to throw corresponding exceptions when necessary.
                 super().remove(element)
-                self._entity._data['roles'].remove(self._role_label_to_id[element])
+                self._entity._data[self._role_data_key].remove(self._role_label_to_id[element])
 
         except TypeError:
             raise TypeError('Value to remove from roles must be a str or an iterable of str')
@@ -1474,7 +1541,8 @@ class Group(BaseModel):
         last_modified_by (:obj:`str`): Group last modified by.
         last_modified_on (:obj:`str`): Group last modification time.
         organization (:obj:`str`): Organization this group belongs to.
-        roles (:obj:`set`): A set of role labels.
+        organization_roles (:obj:`set`): A set of role labels to be used organization wide.
+        project_roles (:obj:`set`): A set of role labels applicable for the user in a project.
         users (:py:class:`streamsets.sdk.util.SeekableList` of :py:class:`streamsets.sdk.sch_models.User` instances):
             Users that are a member of this group.
 
@@ -1502,15 +1570,40 @@ class Group(BaseModel):
     @property
     def roles(self):
         """Get the roles for the group."""
-        return Roles(
-            [self._roles[role] for role in self._data.get('roles', []) if role not in Group._ROLES_TO_HIDE],
-            self,
-            reversed_dict(self._roles),
+        warnings.warn(
+            'The `roles` attribute is now deprecated for Group objects. It has been replaced by the'
+            ' `organization_roles` attribute. Please update your usage accordingly.',
+            DeprecationWarning,
         )
+        return self.organization_roles
 
     @roles.setter
     def roles(self, value):
         """Set the roles for the group.
+
+        Args:
+            value: A :obj:`list` of one or more roles. A role is of type :obj:`str`.
+        """
+        warnings.warn(
+            'The `roles` attribute is now deprecated for Group objects. It has been replaced by the'
+            ' `organization_roles` attribute. Please update your usage accordingly.',
+            DeprecationWarning,
+        )
+        self.organization_roles = value
+
+    @property
+    def organization_roles(self):
+        """Get the organization roles for the group."""
+        return Roles(
+            [self._roles[role] for role in self._data.get('roles', []) if role not in Group._ROLES_TO_HIDE],
+            self,
+            reversed_dict(self._roles),
+            role_data_key='roles',
+        )
+
+    @organization_roles.setter
+    def organization_roles(self, value):
+        """Set the organization roles for the group.
 
         Args:
             value: A :obj:`list` of one or more roles. A role is of type :obj:`str`.
@@ -1520,6 +1613,29 @@ class Group(BaseModel):
 
         value_ = value if isinstance(value, list) else [value]
         self._data['roles'] = list({role_label_to_id[role] for role in value_} | set(Group._ROLES_TO_HIDE))
+
+    @property
+    def project_roles(self):
+        """Get the project roles for the group."""
+        return Roles(
+            [self._roles[role] for role in self._data.get('projectRoles', []) if role not in Group._ROLES_TO_HIDE],
+            self,
+            reversed_dict(self._roles),
+            role_data_key='projectRoles',
+        )
+
+    @project_roles.setter
+    def project_roles(self, value):
+        """Set the project roles for the group.
+
+        Args:
+            value: A :obj:`list` of one or more roles. A role is of type :obj:`str`.
+        """
+        # We reverse the _roles dictionary to let this setter deal with role labels while still writing role ids.
+        role_label_to_id = reversed_dict(self._roles)
+
+        value_ = value if isinstance(value, list) else [value]
+        self._data['projectRoles'] = list({role_label_to_id[role] for role in value_} | set(Group._ROLES_TO_HIDE))
 
     @property
     def users(self):
@@ -1768,6 +1884,129 @@ class Organization(BaseModel):
             value: Value to set for 'id'.
         """
         self._api_client.update_organization_configuration(self.id, value._data)
+
+    @property
+    def ip_auth_enabled(self):
+        """Returns whether IP Auth rules are enabled for the organization.
+
+        Returns:
+            An :obj:`bool`.
+        """
+        configs = self._api_client.get_organization_configuration_v2(org_id=self.id).response.json()
+        return configs.get('ipAuthRules', {}).get('enabled')
+
+    @ip_auth_enabled.setter
+    def ip_auth_enabled(self, value):
+        """Sets whether IP Auth rules are enabled for the organization.
+
+        Args:
+            value (:obj:`bool`): Whether IP Auth should be enabled for the organization.
+        """
+
+        if not isinstance(value, bool):
+            raise TypeError("ip_auth_enabled should be of type bool.")
+
+        configs = self._api_client.get_organization_configuration_v2(org_id=self.id).response.json()
+
+        if value is True and len(configs.get('ipAuthRules', {}).get('rules')) == 0:
+            raise ValueError("No rules added, add at least one rule before enabling IP Auth.")
+
+        configs['ipAuthRules']['enabled'] = value
+        # clear configs to avoid updating something that is not allowed by org admins.
+        configs['configs'].clear()
+        self._api_client.update_organization_configuration_v2(data=configs, org_id=self.id)
+
+    @property
+    def ip_auth_rules(self):
+        """The current set of IP Auth rules in the organization.
+
+        Returns:
+            An :obj:`tuple` containing :obj:`dict` for each IP Auth rule in the organization.
+        """
+        configs = self._api_client.get_organization_configuration_v2(org_id=self.id).response.json()
+
+        # casting the list to a tuple so that it is immutable by the user. To avoid any confusion with usability.
+        return tuple(configs.get('ipAuthRules', {}).get('rules'))
+
+    @ip_auth_rules.setter
+    def ip_auth_rules(self, value):
+        raise NotImplementedError(
+            "Not possible to directly set the value of IP auth rules."
+            "Use `add_ip_auth_ruleset` and `remove_ip_auth_ruleset` to modify the rules."
+        )
+
+    def add_ip_auth_ruleset(self, ip_address, bitmask=32, comment=''):
+        """Add a rule to the IP Auth ruleset.
+
+        Args:
+            ip_address (:obj:`str`): IP Address to be added. Should be IPv4.
+            bitmask (:obj:`int`, optional): Bitmask to apply to the IP Address. Default ``32``.
+            comment (:obj:`str`, optional): Comments to be made regarding the rule.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        if not isinstance(ip_address, str):
+            raise TypeError("ip_address should be of type str")
+
+        try:
+            # ensure the address passed it a valid IPv4 address
+            ipaddress.IPv4Address(ip_address)
+        except ipaddress.AddressValueError:
+            raise ValueError("ip_address is not a valid IPv4 address.")
+
+        if not isinstance(bitmask, int):
+            raise TypeError("bitmask should be of type int")
+
+        if bitmask < 0 or bitmask > 32:
+            raise ValueError("bitmask value must be within the inclusive range 0-32.")
+
+        if not isinstance(comment, str):
+            raise TypeError("comment should be of type str")
+
+        new_rule = dict(ruleType='IPV4_ALLOW', address=ip_address, bitMask=bitmask, comment=comment)
+
+        configs = self._api_client.get_organization_configuration_v2(org_id=self.id).response.json()
+        configs['ipAuthRules']['rules'].append(new_rule)
+        # clear configs to avoid updating something that is not allowed by org admins.
+        configs['configs'].clear()
+
+        command = self._api_client.update_organization_configuration_v2(data=configs, org_id=self.id)
+        return command
+
+    def remove_ip_auth_ruleset(self, ip_address, bitmask=32):
+        """Remove all rules that have the same IP address and bitmask.
+
+        Args:
+            ip_address (:obj:`str`): IP address to remove from the ruleset.
+            bitmask (:obj:`int`, optional): Bitmask to remove from the ruleset. Default ``32``.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        if not isinstance(ip_address, str):
+            raise TypeError("ip_address should be of type str")
+
+        if not isinstance(bitmask, int):
+            raise TypeError("bitmask should be of type int")
+
+        configs = self._api_client.get_organization_configuration_v2(org_id=self.id).response.json()
+        ip_rules = configs.get('ipAuthRules', {}).get('rules')
+
+        filtered_rules = list(
+            filter(lambda rule: not (rule.get('address') == ip_address and rule.get('bitMask') == bitmask), ip_rules)
+        )
+
+        if len(filtered_rules) == 0 and configs.get('ipAuthRules', {}).get('enabled'):
+            raise ValueError("Cannot delete all rules when IP Auth is enabled.")
+
+        configs['ipAuthRules']['rules'] = filtered_rules
+        # clear configs to avoid updating something that is not allowed by org admins.
+        configs['configs'].clear()
+        command = self._api_client.update_organization_configuration_v2(data=configs, org_id=self.id)
+        return command
 
 
 @analytics_class_decorator
@@ -2511,6 +2750,136 @@ class PipelineBuilder(SdcPipelineBuilder):
                 stage_name: type(stage_name, (_SchSdcStage, stage_type), {'_attributes': stage_type._attributes})
                 for stage_name, stage_type in self._all_stages.items()
             }
+
+    def _get_stage_configs_names_mapping(self, stage_name, stage_name_type='label'):
+        """Returns a list of named tuples for each configuration field.
+
+        Each record contains label, fieldName, and full name for a configuration field.
+        Note: 'label' and 'fieldName' are not guaranteed to be unique across all configurations.
+
+        Args:
+            stage_name (:obj:`str`): Name of the stage type (eg. 'Dev Raw Data Source')
+            stage_name_type (:obj:`str`): Type of stage_name value. Available options: ['label', 'name']. Default ``label``.
+
+        Returns:
+            (:obj:`list`): List of tuples, each tuple contains mapped names for configuration field.
+        """
+        if stage_name_type == 'label':
+            raw_stage = self._get_stage_data(label=stage_name)[0]
+        elif stage_name_type == 'name':
+            raw_stage = self._get_stage_data(name=stage_name)[0]
+        else:
+            raise ValueError(
+                f"Incorrect stage_name_type parameter ({stage_name_type}). Allowed values are: ['label', 'name']."
+            )
+
+        service_definitions = {service['provides']: service for service in self._definitions['services']}
+
+        names = []
+
+        # add simple field config
+        for field_config in raw_stage.definition['configDefinitions']:
+            names.append(
+                NameMap(
+                    label=field_config['label'],
+                    fieldName=field_config['fieldName'],
+                    name=field_config['name'],
+                )
+            )
+
+        # add services fields config (with full name <service_name>.<field_name>) - this name is probably invisible for the end user
+        for service in raw_stage.definition['services']:
+            for field_config in service_definitions[service['service']]['configDefinitions']:
+                names.append(
+                    NameMap(
+                        label=field_config['label'],
+                        fieldName=field_config['fieldName'],
+                        name=field_config['name'],
+                    )
+                )
+
+        return names
+
+    def get_stage_configuration_options(
+        self, config_name, stage_name, config_name_type='label', stage_name_type='label'
+    ):
+        """Gets available configuration options.
+
+        Args:
+            config_name (:obj:`str`): Name of the configuration field.
+            stage_name (:obj:`str`): Name of the stage type (eg. com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource)
+            config_name_type (:obj:`str`): Type of config_name value. Available options: ['full_name', 'field_name', 'label']. Default ``label``.
+            stage_name_type (:obj:`str`): Type of stage_name value. Available options: ['label', 'name']. Default ``label``.
+
+        Returns:
+            (:obj:`list`, optional): List of tuples.
+
+        Raises:
+            ValueError: If incorrect value of config_name_type.
+            ValueError: If config_name value is not in configuration fields list for stage.
+        """
+        ALLOWED_CONFIG_NAME_TYPES = {'full_name': 'name', 'field_name': 'fieldName', 'label': 'label'}
+
+        if not isinstance(config_name_type, str) or config_name_type not in ALLOWED_CONFIG_NAME_TYPES.keys():
+            raise ValueError(
+                f"Incorrect config_name_type parameter ({config_name_type}). Allowed values are: {ALLOWED_CONFIG_NAME_TYPES.keys()}."
+            )
+
+        if stage_name_type == 'label':
+            raw_stage = self._get_stage_data(label=stage_name)[0]
+        elif stage_name_type == 'name':
+            raw_stage = self._get_stage_data(name=stage_name)[0]
+        else:
+            raise ValueError(
+                f"Incorrect stage_name_type parameter ({stage_name_type}). Allowed values are: ['label', 'name']."
+            )
+
+        configuration_names = [
+            name_map
+            for name_map in self._get_stage_configs_names_mapping(stage_name, stage_name_type=stage_name_type)
+            if getattr(name_map, ALLOWED_CONFIG_NAME_TYPES[config_name_type]) == config_name
+        ]
+
+        if len(configuration_names) < 1:
+            raise ValueError(f"Unknown config name '{config_name}'")
+        if len(configuration_names) > 1:
+            warnings.warn(
+                f"Config name '{config_name}' is ambiguous and could be resolved with any of the following values: "
+                "{[c.name for c in configuration_names]}. Using the first one value.",
+                warnings.RuntimeWarning,
+            )
+
+        config_name = configuration_names[0].name
+        cname_split = config_name.split('.')
+        is_service_config = len(cname_split) > 1
+
+        # Get config definition:
+        if is_service_config:
+            # get definitions of services used in this stage
+            services_name_list = [service['service'] for service in raw_stage.definition['services']]
+            services_configs = [
+                service for service in self._definitions['services'] if service['provides'] in services_name_list
+            ]
+
+            # iterable of all config fields in services
+            config_fields = itertools.chain(
+                *[service_config['configDefinitions'] for service_config in services_configs]
+            )
+
+        else:
+            # simple field config
+            config_fields = raw_stage.definition['configDefinitions']
+
+        config = next(filter(lambda config_field: config_field['name'] == config_name, config_fields), None)
+
+        # if config is not of type VALUE_CHOOSER return 'nothing'
+        if config is None or config['type'] != 'MODEL' or config['model']['modelType'] != 'VALUE_CHOOSER':
+            return None
+
+        # if field is of type VALUE_CHOOSER return all options
+        return [
+            ChooseOption(label, value) for label, value in zip(config['model']['labels'], config['model']['values'])
+        ]
 
     def add_stage(self, label=None, name=None, type=None, library=None):
         """Add a stage to the pipeline.
@@ -3358,7 +3727,7 @@ class Pipeline(BaseModel):
             ' `engine_id` attribute. Please update your usage accordingly.',
             DeprecationWarning,
         )
-        return self._data['sdcId']
+        return self.engine_id
 
     @sdc_id.setter
     def sdc_id(self, value):
@@ -3372,7 +3741,30 @@ class Pipeline(BaseModel):
             ' `engine_id` attribute. Please update your usage accordingly.',
             DeprecationWarning,
         )
+        self.engine_id = value
+
+    @property
+    def sdc_version(self):
+        return self._data['sdcVersion']
+
+    @sdc_version.setter
+    def sdc_version(self, value):
+        raise AttributeError("Sorry, 'sdc_version' is a read-only attribute.")
+
+    @property
+    def engine_id(self):
+        """Get the Engine ID of the Pipeline."""
+        return self._data['sdcId']
+
+    @engine_id.setter
+    def engine_id(self, value):
+        """Set the Engine ID of the Pipeline.
+
+        Args:
+            value (:obj:`str`): The Engine id to set.
+        """
         self._data['sdcId'] = value
+        self._data['sdcVersion'] = self._control_hub.engines.get(id=value).version
 
     def add_label(self, *labels):
         """Add a label
@@ -3817,6 +4209,8 @@ class Pipelines(CollectionModel):
         kwargs_instance = MutableKwargs(kwargs_defaults, kwargs)
         kwargs_unioned = kwargs_instance.union()
         if label is not None:
+            if self._control_hub.current_project is not None:
+                label = f"{label}--{self._control_hub.current_project.id}"
             label_id_org = self._organization if organization is None else organization
             pipeline_label_id = '{}:{}'.format(label, label_id_org)
         else:
@@ -11793,11 +12187,19 @@ class ConnectionBuilder:
         Args:
             title (:obj:`str`): Connection title.
             connection_type (:obj:`str`): Type of connection. The options are 'STREAMSETS_AWS_EMR_CLUSTER',
-                'STREAMSETS_MYSQL', 'STREAMSETS_SNOWFLAKE', 'STREAMSETS_COAP_CLIENT', 'STREAMSETS_OPC_UA_CLIENT',
-                'STREAMSETS_GOOGLE_PUB_SUB', 'STREAMSETS_MQTT', 'STREAMSETS_POSTGRES',
-                'STREAMSETS_GOOGLE_CLOUD_STORAGE', 'STREAMSETS_AWS_REDSHIFT', 'STREAMSETS_GOOGLE_BIG_QUERY',
-                'STREAMSETS_ORACLE', 'STREAMSETS_AWS_S3', 'STREAMSETS_REMOTE_FILE', 'STREAMSETS_SQLSERVER',
-                'STREAMSETS_AWS_SQS', 'STREAMSETS_SNOWPIPE', and 'STREAMSETS_JDBC'.
+                'STREAMSETS_MYSQL', 'STREAMSETS_AZURE_SYNAPSE', 'STREAMSETS_ORCHESTRATOR', 'STREAMSETS_INFLUX2',
+                'STREAMSETS_DATABRICKS_DELTA_LAKE', 'STREAMSETS_HIVE', 'STREAMSETS_GOOGLE_PUB_SUB',
+                'STREAMSETS_BLOB_STORAGE', 'STREAMSETS_MQTT', 'STREAMSETS_MONGODB', 'STREAMSETS_POSTGRES',
+                'STREAMSETS_GOOGLE_CLOUD_STORAGE', 'STREAMSETS_CASSANDRA', 'STREAMSETS_JMS', 'STREAMSETS_ELASTICSEARCH',
+                'STREAMSETS_ORACLE', 'STREAMSETS_DB2', 'STREAMSETS_ADLS_GEN2', 'STREAMSETS_TERADATA',
+                'STREAMSETS_WEBCLIENT', 'STREAMSETS_AEROSPIKE', 'STREAMSETS_SNOWPIPE', 'STREAMSETS_AWS_EMR_CLUSTER',
+                'STREAMSETS_SNOWFLAKE', 'STREAMSETS_SPLUNK', 'STREAMSETS_COAP_CLIENT', 'STREAMSETS_OPC_UA_CLIENT',
+                'STREAMSETS_COUCHBASE', 'STREAMSETS_MONGODB_ATLAS', 'STREAMSETS_WATSONXDATA',
+                'STREAMSETS_AWS_KINESIS_STREAM', 'STREAMSETS_AWS_KINESIS_FIREHOSE', 'STREAMSETS_KUDU',
+                'STREAMSETS_PULSAR', 'STREAMSETS_AWS_REDSHIFT', 'STREAMSETS_GOOGLE_BIG_QUERY', 'STREAMSETS_REMOTE_FILE',
+                'STREAMSETS_AWS_S3', 'STREAMSETS_KAFKA', 'STREAMSETS_SQLSERVER', 'STREAMSETS_AWS_SQS',
+                'STREAMSETS_AWS_EMR_SERVERLESS', 'STREAMSETS_CONNX', 'STREAMSETS_RABBITMQ', 'STREAMSETS_SALESFORCE',
+                'STREAMSETS_REDIS' and 'STREAMSETS_JDBC
             authoring_data_collector (:obj:`streamsets.sdk.sch.DataCollector`): Authoring Data Collector.
             tags (:obj:`list`, optional): List of tags (strings). Default: ``None``.
 
@@ -12462,6 +12864,301 @@ class MeteringReport(BaseModel):
             )
         else:
             return {}
+
+
+@analytics_class_decorator
+class Project(BaseModel):
+    """Represents a Project.
+
+    Args:
+        project (:obj:`dict`): JSON representation of a Project.
+        control_hub (:py:class:`streamsets.sdk.sch.ControlHub`): ControlHub object.
+
+    Attributes:
+        id (:obj:`str`): ID of the project.
+        name (:obj:`str`): Name of the project.
+        description (:obj:`str`): Description of the project.
+        users (:py:class:`streamsets.sdk.utils.SeekableList` of
+               :py:class:`streamsets.sdk.sch_models.User` instances): Users belonging to this project.
+        groups (:py:class:`streamsets.sdk.utils.SeekableList` of
+                :py:class:`streamsets.sdk.sch_models.Group` instances): Groups belonging to this project.
+        organization (:obj:`str`): Organization ID inside which this project exists.
+    """
+
+    _ATTRIBUTES_TO_IGNORE = ['containerUserXJoins']
+    _ATTRIBUTES_TO_REMAP = {'organization': 'organizationId'}
+    _REPR_METADATA = ['id', 'name', 'description']
+
+    def __init__(self, project, control_hub):
+        super().__init__(
+            data=project,
+            attributes_to_ignore=Project._ATTRIBUTES_TO_IGNORE,
+            attributes_to_remap=Project._ATTRIBUTES_TO_REMAP,
+            repr_metadata=Project._REPR_METADATA,
+        )
+
+        self._control_hub = control_hub
+
+        # Private members for properties that will be initialized later
+        self._users = None
+        self._groups = None
+
+    @property
+    def users(self):
+        if self._users is None:
+            users = self._control_hub.api_client.get_all_users_in_project(project_id=self.id).response.json()['data']
+            self._users = SeekableList()
+            for user_data in users:
+                self._users.append(User(user=user_data, roles=self._control_hub._roles, control_hub=self._control_hub))
+        return self._users
+
+    @users.setter
+    def users(self, val):
+        raise NotImplementedError(
+            "Cannot set value to users property of a project, use `add_user` or `remove_user` instead."
+        )
+
+    @property
+    def groups(self):
+        if self._groups is None:
+            groups = self._control_hub.api_client.get_all_groups_in_project(project_id=self.id).response.json()['data']
+            self._groups = SeekableList()
+            for group in groups:
+                group_data = self._control_hub.api_client.get_group(
+                    org_id=self._control_hub.organization, group_id=group['id']
+                ).response.json()
+                self._groups.append(
+                    Group(group=group_data, roles=self._control_hub._roles, control_hub=self._control_hub)
+                )
+        return self._groups
+
+    @groups.setter
+    def groups(self, val):
+        raise NotImplementedError(
+            "Cannot set value to groups property of a project, use `add_group` or `remove_group` instead."
+        )
+
+    def _commit_users_to_control_hub(self):
+        """Commits the current state of users to ControlHub.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        user_ids = [user.id for user in self.users]
+        request_body = {'userIds': user_ids}
+
+        try:
+            update_users_command = self._control_hub.api_client.update_users_in_project(
+                project_id=self.id, body=request_body
+            )
+        except HTTPError as e:
+            # if an error occurs, we clear the _users attributes as we might not know the current state of users in the project
+            self._users = None
+            raise e
+
+        return update_users_command
+
+    def add_user(self, *users):
+        """Add one or more users to the project.
+
+        Args:
+            *users (:py:class:`streamsets.sdk.sch_models.User`): One or more users to add to the project.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        if not all([isinstance(user, User) for user in users]):
+            raise TypeError("users should be of type :py:class:`streamsets.sdk.sch_models.User`.")
+
+        if not all([user.id is not None for user in users]):
+            raise ValueError("User's ID should not be None, ensure the user is added to Control Hub.")
+
+        existing_user_ids = set([existing_user.id for existing_user in self.users])
+
+        for user in users:
+            if user.id not in existing_user_ids:
+                self.users.append(user)
+                existing_user_ids.add(user.id)
+
+        # finally, commit to control hub
+        return self._commit_users_to_control_hub()
+
+    def remove_user(self, *users):
+        """Remove one of more users from the project.
+
+        Args:
+            *users (:py:class:`streamsets.sdk.sch_models.User`): One or more users to add to the project.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        if not all([isinstance(user, User) for user in users]):
+            raise TypeError("users should be of type :py:class:`streamsets.sdk.sch_models.User`.")
+
+        if not all([user.id is not None for user in users]):
+            raise ValueError("User's ID should not be None, ensure the user is added to Control Hub.")
+
+        # ensure all users exist in the project before removing
+        for user in users:
+            try:
+                self.users.get(id=user.id)
+            except ValueError:
+                raise ValueError(f"User with ID {user.id} not found in project.")
+
+        # since all users exist in the project, we can remove them
+        for user in users:
+            self.users.remove(user)
+
+        # finally, commit to control hub
+        return self._commit_users_to_control_hub()
+
+    def _commit_groups_to_control_hub(self):
+        """Commits the current state of groups to ControlHub.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        group_ids = [group.group_id for group in self.groups]
+        request_body = {'groupIds': group_ids}
+
+        try:
+            update_groups_command = self._control_hub.api_client.update_groups_in_project(
+                project_id=self.id, body=request_body
+            )
+        except HTTPError as e:
+            # if an error occurs, we clear the _groups attributes as we might not know the current state of groups in the project
+            self._groups = None
+            raise e
+
+        return update_groups_command
+
+    def add_group(self, *groups):
+        """Add one or more groups to the project.
+
+        Args:
+            *groups (:py:class:`streamsets.sdk.sch_models.Group`): One or more groups to add to the project.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        if not all([isinstance(group, Group) for group in groups]):
+            raise TypeError("groups should be of type :py:class:`streamsets.sdk.sch_models.Group`.")
+
+        if not all([group.group_id is not None for group in groups]):
+            raise ValueError("Group's ID should not be None, ensure the group is added to Control Hub.")
+
+        existing_group_ids = set([existing_group.group_id for existing_group in self.groups])
+
+        for group in groups:
+            if group.group_id not in existing_group_ids:
+                self.groups.append(group)
+                existing_group_ids.add(group.group_id)
+
+        # finally, commit to control hub
+        return self._commit_groups_to_control_hub()
+
+    def remove_group(self, *groups):
+        """Remove one of more groups from the project.
+
+        Args:
+            *groups (:py:class:`streamsets.sdk.sch_models.Group`): One or more groups to add to the project.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+
+        if not all([isinstance(group, Group) for group in groups]):
+            raise TypeError("groups should be of type :py:class:`streamsets.sdk.sch_models.Group`.")
+
+        if not all([group.group_id is not None for group in groups]):
+            raise ValueError("Group's ID should not be None, ensure the group is added to Control Hub.")
+
+        # ensure all groups exist in the project before removing
+        for group in groups:
+            try:
+                self.groups.get(group_id=group.group_id)
+            except ValueError:
+                raise ValueError(f"Group with ID {group.group_id} not found in project.")
+
+        # since all groups exist in the project, we can remove them
+        for group in groups:
+            self.groups.remove(group)
+
+        # finally, commit to control hub
+        return self._commit_groups_to_control_hub()
+
+
+@analytics_class_decorator
+class Projects(CollectionModel):
+    """Collection of :py:class:`streamsets.sdk.sch_models.Project` instances.
+
+    Args:
+        control_hub: An instance of :py:class:`streamsets.sdk.sch.ControlHub`.
+    """
+
+    def __init__(self, control_hub):
+        super().__init__(control_hub)
+
+    def _get_all_results_from_api(self, **kwargs):
+        """
+        Args:
+            kwargs: Other optional arguments
+
+        Returns:
+            A :obj:`collections.namedtuple`: of
+                response (:obj:`list`): a list of :py:class:`streamsets.sdk.sch_models.Project` instances
+                    in JSON format
+                kwargs (:obj:`dict`): a dict of local variables not used in this function
+                class_type (:py:class:`streamsets.sdk.sch_models.User`): the type of class to instantiate
+                class_kwargs (:obj:`dict`): a dict of additional arguments required by the class_type's init
+        """
+        kwargs_defaults = {'offset': None, 'len': None}
+        kwargs_instance = MutableKwargs(kwargs_defaults, kwargs)
+        kwargs_unioned = kwargs_instance.union()
+
+        response = self._control_hub.api_client.get_all_projects_in_org(
+            offset=kwargs_unioned['offset'], len=kwargs_unioned['len']
+        ).response.json()
+
+        kwargs_unused = kwargs_instance.subtract()
+        return CollectionModelResults(response, kwargs_unused, Project, {'control_hub': self._control_hub})
+
+
+@analytics_class_decorator
+class ProjectBuilder:
+    """Class with which to build instances of :py:class:`streamsets.sdk.sch_models.Project`.
+
+    Instead of instantiating this class directly, all users should use
+        :py:meth:`streamsets.sdk.sch.ControlHub.get_project_builder`.
+
+    Args:
+        project (:obj:`dict`): Python object built from our Swagger NewProject definition.
+        control_hub (:py:class:`streamsets.sdk.ControlHub`): Control Hub.
+    """
+
+    def __init__(self, project, control_hub):
+        self._project = project
+        self._control_hub = control_hub
+
+    def build(self, name, description=None):
+        """Build the Project.
+
+        Args:
+            name (:obj:`str`): Name of the project.
+            description (:obj:`str`, optional): Description of the project. Default: ``None``.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_models.Project`.
+        """
+        self._project['name'] = name
+        self._project['description'] = description
+
+        return Project(project=self._project, control_hub=self._control_hub)
 
 
 # We define module-level attributes to allow users to extend certain

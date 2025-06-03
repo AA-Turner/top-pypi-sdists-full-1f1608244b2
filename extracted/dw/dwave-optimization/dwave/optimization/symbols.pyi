@@ -108,7 +108,15 @@ class Equal(ArraySymbol):
     ...
 
 
+class Exp(ArraySymbol):
+    ...
+
+
 class Expit(ArraySymbol):
+    ...
+
+
+class Input(ArraySymbol):
     ...
 
 
@@ -139,7 +147,7 @@ class LinearProgramSolution(ArraySymbol):
 
 
 class ListVariable(ArraySymbol):
-    def set_state(self, index: int, state: numpy.typing.ArrayLike): ...
+    def set_state(self, index: int, values: numpy.typing.ArrayLike): ...
 
 
 class Log(ArraySymbol):
@@ -227,7 +235,7 @@ class Rint(ArraySymbol):
 
 
 class SetVariable(ArraySymbol):
-    def set_state(self, index: int, state: numpy.typing.ArrayLike): ...
+    def set_state(self, index: int, values: numpy.typing.ArrayLike): ...
 
 
 class Size(ArraySymbol):

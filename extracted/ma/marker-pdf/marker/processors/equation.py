@@ -1,4 +1,4 @@
-from typing import Annotated, List, Optional, Tuple
+from typing import Annotated, List, Tuple
 from PIL import Image
 import re
 from bs4 import BeautifulSoup
@@ -28,7 +28,7 @@ class EquationProcessor(BaseProcessor):
         "The maximum number of tokens to allow for the Recognition model.",
     ] = 1024
     equation_batch_size: Annotated[
-        Optional[int],
+        int,
         "The batch size to use for the recognition model while processing equations.",
         "Default is None, which will use the default batch size for the model.",
     ] = None
@@ -36,6 +36,7 @@ class EquationProcessor(BaseProcessor):
         bool,
         "Whether to disable the tqdm progress bar.",
     ] = False
+    drop_repeated_text: Annotated[bool, "Drop repeated text in OCR results."] = False
 
     def __init__(self, recognition_model: RecognitionPredictor, config=None):
         super().__init__(config)
@@ -130,6 +131,7 @@ class EquationProcessor(BaseProcessor):
             task_names=["block_without_boxes"] * len(page_images),
             recognition_batch_size=self.get_batch_size(),
             sort_lines=False,
+            drop_repeated_text=self.drop_repeated_text,
         )
 
         equation_predictions = [

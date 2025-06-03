@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: streamlit-image-coordinates
-Version: 0.2.1
+Version: 0.2.2
 Summary: Streamlit component that displays an image and returns the coordinates when you click on it
 Home-page: https://github.com/blackary/streamlit-image-coordinates/
 Author: Zachary Blackwood

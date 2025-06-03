@@ -27,6 +27,7 @@ from .literals import (
     AMITypesType,
     AuthenticationModeType,
     CapacityTypesType,
+    CategoryType,
     ClusterIssueCodeType,
     ClusterStatusType,
     ClusterVersionStatusType,
@@ -719,7 +720,7 @@ class InsightStatusTypeDef(TypedDict):
     reason: NotRequired[str]
 
 class InsightsFilterTypeDef(TypedDict):
-    categories: NotRequired[Sequence[Literal["UPGRADE_READINESS"]]]
+    categories: NotRequired[Sequence[CategoryType]]
     kubernetesVersions: NotRequired[Sequence[str]]
     statuses: NotRequired[Sequence[InsightStatusValueType]]
 
@@ -1251,7 +1252,7 @@ InsightSummaryTypeDef = TypedDict(
     {
         "id": NotRequired[str],
         "name": NotRequired[str],
-        "category": NotRequired[Literal["UPGRADE_READINESS"]],
+        "category": NotRequired[CategoryType],
         "kubernetesVersion": NotRequired[str],
         "lastRefreshTime": NotRequired[datetime],
         "lastTransitionTime": NotRequired[datetime],
@@ -1570,7 +1571,7 @@ InsightTypeDef = TypedDict(
     {
         "id": NotRequired[str],
         "name": NotRequired[str],
-        "category": NotRequired[Literal["UPGRADE_READINESS"]],
+        "category": NotRequired[CategoryType],
         "kubernetesVersion": NotRequired[str],
         "lastRefreshTime": NotRequired[datetime],
         "lastTransitionTime": NotRequired[datetime],

@@ -91,11 +91,10 @@ class MaleoClientConfiguration(BaseModel):
 
 class MaleoClientConfigurations(BaseModel):
     metadata:MaleoClientConfiguration = Field(..., description="MaleoMetadata client's configuration")
-    security:MaleoClientConfiguration = Field(..., description="MaleoSecurity client's configuration")
-    storage:MaleoClientConfiguration = Field(..., description="MaleoStorage client's configuration")
     identity:MaleoClientConfiguration = Field(..., description="MaleoIdentity client's configuration")
     access:MaleoClientConfiguration = Field(..., description="MaleoAccess client's configuration")
-    soapie:MaleoClientConfiguration = Field(..., description="MaleoSOAPIE client's configuration")
+    workshop:MaleoClientConfiguration = Field(..., description="MaleoWorkshop client's configuration")
+    medix:MaleoClientConfiguration = Field(..., description="MaleoMedix client's configuration")
     fhir:MaleoClientConfiguration = Field(..., description="MaleoFHIR client's configuration")
     dicom:MaleoClientConfiguration = Field(..., description="MaleoDICOM client's configuration")
     scribe:MaleoClientConfiguration = Field(..., description="MaleoScribe client's configuration")

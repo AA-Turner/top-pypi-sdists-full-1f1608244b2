@@ -40,6 +40,7 @@ __all__ = (
     "ListSchemaMappingsPaginatorName",
     "MatchPurposeType",
     "PaginatorName",
+    "ProcessingTypeType",
     "RecordMatchingModelType",
     "ResolutionTypeType",
     "ResourceServiceName",
@@ -65,6 +66,7 @@ ListMatchingWorkflowsPaginatorName = Literal["list_matching_workflows"]
 ListProviderServicesPaginatorName = Literal["list_provider_services"]
 ListSchemaMappingsPaginatorName = Literal["list_schema_mappings"]
 MatchPurposeType = Literal["IDENTIFIER_GENERATION", "INDEXING"]
+ProcessingTypeType = Literal["CONSISTENT", "EVENTUAL", "EVENTUAL_NO_LOOKUP"]
 RecordMatchingModelType = Literal["MANY_SOURCE_TO_ONE_TARGET", "ONE_SOURCE_TO_ONE_TARGET"]
 ResolutionTypeType = Literal["ML_MATCHING", "PROVIDER", "RULE_MATCHING"]
 SchemaAttributeTypeType = Literal[
@@ -392,7 +394,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -453,7 +454,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -461,6 +461,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

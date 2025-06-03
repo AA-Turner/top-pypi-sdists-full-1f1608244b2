@@ -9,7 +9,7 @@ import pytest
 
 from streamsets.sdk import ControlHub
 from streamsets.sdk.sch_api import ApiClient
-from streamsets.sdk.sch_models import AzureEnvironment, SelfManagedDeployment
+from streamsets.sdk.sch_models import SelfManagedDeployment
 
 from .resources.sch_data import DUMMY_DEPLOYMENT_JSON, DUMMY_DEPLOYMENT_JSON_2
 
@@ -157,38 +157,6 @@ def activation_error_data():
         'status': 'ERROR',
         'statusDetail': 'Unexpected status CREATE_FAILED detected while checking deployment',
     }
-
-
-def test_start_deployment_activation_error(dummy_deployment_data):
-    sch = MockControlHub()
-    deployment = SelfManagedDeployment(dummy_deployment_data)
-    deployment._control_hub = sch
-    with pytest.raises(RuntimeError):
-        sch.start_deployment(deployment)
-
-
-def test_update_deployment_activation_error(dummy_deployment_data):
-    sch = MockControlHub()
-    deployment = SelfManagedDeployment(dummy_deployment_data)
-    deployment._control_hub = sch
-    with pytest.raises(RuntimeError):
-        sch.update_deployment(deployment)
-
-
-def test_activate_environment_activation_error(azure_environment_json):
-    sch = MockControlHub()
-    environment = AzureEnvironment(azure_environment_json)
-    environment._control_hub = sch
-    with pytest.raises(RuntimeError):
-        sch.activate_environment(environment)
-
-
-def test_update_environment_activation_error(azure_environment_json):
-    sch = MockControlHub()
-    environment = AzureEnvironment(azure_environment_json)
-    environment._control_hub = sch
-    with pytest.raises(RuntimeError):
-        sch.update_environment(environment)
 
 
 def test_invalid_java_version_install_script(dummy_deployment_data):

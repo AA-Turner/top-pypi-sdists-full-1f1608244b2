@@ -3208,7 +3208,7 @@ def jinja(template: str):
     ...    id: str
     ...    score: float
     ...    transactions: "DataFrame[Transaction]"
-    ...    description: float = F.jinja("User {{User.id}}. Score: {{User.score}}. Transactions: {% for txn in User.transactions %}{{txn.description}},{% endfor %}")
+    ...    description: str = F.jinja("User {{User.id}}. Score: {{User.score}}. Transactions: {% for txn in User.transactions %}{{txn.description}},{% endfor %}")
     """
     return UnderscoreFunction("jinja", template=template)
 

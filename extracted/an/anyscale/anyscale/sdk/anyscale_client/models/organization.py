@@ -36,17 +36,19 @@ class Organization(object):
         'id': 'str',
         'name': 'str',
         'public_identifier': 'str',
-        'sso_required': 'bool'
+        'sso_required': 'bool',
+        'sso_mode': 'SSOMode'
     }
 
     attribute_map = {
         'id': 'id',
         'name': 'name',
         'public_identifier': 'public_identifier',
-        'sso_required': 'sso_required'
+        'sso_required': 'sso_required',
+        'sso_mode': 'sso_mode'
     }
 
-    def __init__(self, id=None, name=None, public_identifier=None, sso_required=False, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, name=None, public_identifier=None, sso_required=False, sso_mode=None, local_vars_configuration=None):  # noqa: E501
         """Organization - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -56,6 +58,7 @@ class Organization(object):
         self._name = None
         self._public_identifier = None
         self._sso_required = None
+        self._sso_mode = None
         self.discriminator = None
 
         self.id = id
@@ -63,6 +66,8 @@ class Organization(object):
         self.public_identifier = public_identifier
         if sso_required is not None:
             self.sso_required = sso_required
+        if sso_mode is not None:
+            self.sso_mode = sso_mode
 
     @property
     def id(self):
@@ -161,6 +166,29 @@ class Organization(object):
         """
 
         self._sso_required = sso_required
+
+    @property
+    def sso_mode(self):
+        """Gets the sso_mode of this Organization.  # noqa: E501
+
+        Mode for use of single sign on (SSO) for your organization.  # noqa: E501
+
+        :return: The sso_mode of this Organization.  # noqa: E501
+        :rtype: SSOMode
+        """
+        return self._sso_mode
+
+    @sso_mode.setter
+    def sso_mode(self, sso_mode):
+        """Sets the sso_mode of this Organization.
+
+        Mode for use of single sign on (SSO) for your organization.  # noqa: E501
+
+        :param sso_mode: The sso_mode of this Organization.  # noqa: E501
+        :type: SSOMode
+        """
+
+        self._sso_mode = sso_mode
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -79,7 +79,7 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
                 "width": width,
                 "height": height
             },
-            "num_images": request.n,
+            "num_images": request.n or 1,
 
             "enable_safety_checker": False,
             "safety_tolerance": "6",
@@ -130,7 +130,7 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
         arguments = {
             **arguments,
 
-            "num_images": request.n,
+            "num_images": request.n or 1,
 
             "enable_safety_checker": False,
             "safety_tolerance": "5",
@@ -152,7 +152,7 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
 
         arguments = {
             **arguments,
-            "num_images": request.n,
+            "num_images": request.n or 1,
 
             "enable_safety_checker": False,
             "safety_tolerance": "6",
@@ -243,14 +243,16 @@ if __name__ == '__main__':
     # token = "77fcfad2-aadc-4158-8e11-b30a5668dfad:ea5f38d864bde6707561d348436d2cea"
     # token = "5116af3f-1aa5-4c1b-b505-fd49f701dccc:7f4278d69d069cec4794fe658a09bd9d"
 
-    arun(generate(request))
+    # arun(generate(request))
 
     # arun(AsyncClient(key=token).key)
 
-    # tokens = arun(get_series(FEISHU_URL))
-    # # tokens = [token]
-    #
-    # r = []
-    # for t in tokens:
-    #     if arun(check(t)):
-    #         r.append(t)
+    tokens = arun(get_series(FEISHU_URL))
+    # tokens = [token]
+
+    r = []
+    for t in tokens:
+        if arun(check(t)):
+            r.append(t)
+
+    print('\n'.join(r))

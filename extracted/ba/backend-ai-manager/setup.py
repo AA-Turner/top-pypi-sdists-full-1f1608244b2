@@ -61,10 +61,14 @@ setup(**{
         'alembic~=1.13.2',
         'async_timeout~=4.0',
         'attrs>=25.3',
-        'backend.ai-cli==25.8.1',
-        'backend.ai-common==25.8.1',
-        'backend.ai-logging==25.8.1',
-        'backend.ai-plugin==25.8.1',
+        """backend.ai-cli==25.9.0
+""",
+        """backend.ai-common==25.9.0
+""",
+        """backend.ai-logging==25.9.0
+""",
+        """backend.ai-plugin==25.9.0
+""",
         'bcrypt~=4.2.0',
         'boto3~=1.35',
         'callosum~=1.0.3',
@@ -404,12 +408,15 @@ LICENSES
         'ai.backend.manager.config.loader',
         'ai.backend.manager.config.watchers',
         'ai.backend.manager.container_registry',
+        'ai.backend.manager.data.auth',
         'ai.backend.manager.data.container_registry',
         'ai.backend.manager.data.image',
+        'ai.backend.manager.data.keypair',
         'ai.backend.manager.data.resource',
         'ai.backend.manager.data.session',
         'ai.backend.manager.errors',
         'ai.backend.manager.event_dispatcher',
+        'ai.backend.manager.event_dispatcher.handlers',
         'ai.backend.manager.models',
         'ai.backend.manager.models.alembic',
         'ai.backend.manager.models.alembic.versions',
@@ -426,6 +433,8 @@ LICENSES
         'ai.backend.manager.services',
         'ai.backend.manager.services.agent',
         'ai.backend.manager.services.agent.actions',
+        'ai.backend.manager.services.auth',
+        'ai.backend.manager.services.auth.actions',
         'ai.backend.manager.services.container_registry',
         'ai.backend.manager.services.container_registry.actions',
         'ai.backend.manager.services.domain',
@@ -466,6 +475,7 @@ LICENSES
     },
     'python_requires': '>=3.13,<3.14',
     'url': 'https://github.com/lablup/backend.ai',
-    'version': '25.8.1',
+    'version': """25.9.0
+""",
     'zip_safe': False,
 })

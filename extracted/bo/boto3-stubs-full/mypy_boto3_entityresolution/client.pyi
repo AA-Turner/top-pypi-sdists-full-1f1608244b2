@@ -57,6 +57,8 @@ from .type_defs import (
     DeletePolicyStatementOutputTypeDef,
     DeleteSchemaMappingInputTypeDef,
     DeleteSchemaMappingOutputTypeDef,
+    GenerateMatchIdInputTypeDef,
+    GenerateMatchIdOutputTypeDef,
     GetIdMappingJobInputTypeDef,
     GetIdMappingJobOutputTypeDef,
     GetIdMappingWorkflowInputTypeDef,
@@ -281,11 +283,22 @@ class EntityResolutionClient(BaseClient):
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_entityresolution/client/#delete_schema_mapping)
         """
 
+    def generate_match_id(
+        self, **kwargs: Unpack[GenerateMatchIdInputTypeDef]
+    ) -> GenerateMatchIdOutputTypeDef:
+        """
+        Generates or retrieves Match IDs for records using a rule-based matching
+        workflow.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/entityresolution/client/generate_match_id.html)
+        [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_entityresolution/client/#generate_match_id)
+        """
+
     def get_id_mapping_job(
         self, **kwargs: Unpack[GetIdMappingJobInputTypeDef]
     ) -> GetIdMappingJobOutputTypeDef:
         """
-        Gets the status, metrics, and errors (if there are any) that are associated
+        Returns the status, metrics, and errors (if there are any) that are associated
         with a job.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/entityresolution/client/get_id_mapping_job.html)
@@ -325,7 +338,7 @@ class EntityResolutionClient(BaseClient):
         self, **kwargs: Unpack[GetMatchingJobInputTypeDef]
     ) -> GetMatchingJobOutputTypeDef:
         """
-        Gets the status, metrics, and errors (if there are any) that are associated
+        Returns the status, metrics, and errors (if there are any) that are associated
         with a job.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/entityresolution/client/get_matching_job.html)

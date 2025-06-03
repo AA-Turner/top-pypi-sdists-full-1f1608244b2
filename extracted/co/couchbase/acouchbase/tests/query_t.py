@@ -232,6 +232,7 @@ class QueryTestSuite:
 
     @pytest.mark.asyncio
     async def test_non_blocking(self, cb_env):
+
         async def run_query(cluster, idx):
             slow_query = ['SELECT COUNT (1) AS c FROM',
                           'ARRAY_RANGE(0,100) AS d1,'

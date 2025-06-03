@@ -239,14 +239,13 @@ class TestZappa(unittest.TestCase):
 
     def test_verify_downloaded_manylinux_wheel(self):
         z = Zappa(runtime="python3.10")
-        cached_wheels_dir = os.path.join(tempfile.gettempdir(), "cached_wheels")
-        expected_wheel_path = os.path.join(
-            cached_wheels_dir,
-            "pycryptodome-3.16.0-cp35-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl",
+        cached_wheels_dir = Path(tempfile.gettempdir()) / "cached_wheels"
+        expected_wheel_path = (
+            cached_wheels_dir / "pycryptodome-3.23.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
         )
 
         # check with a known manylinux wheel package
-        actual_wheel_path = z.get_cached_manylinux_wheel("pycryptodome", "3.16.0")
+        actual_wheel_path = z.get_cached_manylinux_wheel("pycryptodome", "3.23.0")
         self.assertEqual(actual_wheel_path, expected_wheel_path)
         os.remove(actual_wheel_path)
 
@@ -1196,7 +1195,7 @@ class TestZappa(unittest.TestCase):
         event = {
             "version": "2.0",
             "routeKey": "ANY /{proxy+}",
-            "rawPath": "/",
+            "rawPath": "/api/",
             "rawQueryString": "",
             "headers": {
                 "accept": "*/*",
@@ -1220,7 +1219,7 @@ class TestZappa(unittest.TestCase):
                 "domainPrefix": "qw8klxioji",
                 "http": {
                     "method": "GET",
-                    "path": "/",
+                    "path": "/api",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "50.191.225.98",
                     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
@@ -1236,6 +1235,8 @@ class TestZappa(unittest.TestCase):
         }
         environ = create_wsgi_request(event)
         self.assertTrue(environ)
+        self.assertEqual(environ["PATH_INFO"], "/api/")
+        self.assertEqual(environ["QUERY_STRING"], "")
 
     def test_wsgi_from_v2_event_with_lambda_authorizer(self):
         principal_id = "user|a1b2c3d4"
@@ -1407,6 +1408,21 @@ class TestZappa(unittest.TestCase):
         zappa_cli.load_settings("test_settings.json")
         self.assertEqual("lmbda", zappa_cli.stage_config["s3_bucket"])
         self.assertEqual(True, zappa_cli.stage_config["touch"])
+        self.assertIn("x86_64", zappa_cli.architecture)
+
+        if sys.version_info.major == 3 and sys.version_info.minor < 8:
+            with self.assertRaises(ValueError):
+                zappa_cli = ZappaCLI()
+                zappa_cli.api_stage = "arch_arm64"
+                zappa_cli.load_settings("test_settings.json")
+                self.assertIn("arm64", zappa_cli.stage_config["architecture"])
+                self.assertIn("arm64", zappa_cli.architecture)
+        else:
+            zappa_cli = ZappaCLI()
+            zappa_cli.api_stage = "arch_arm64"
+            zappa_cli.load_settings("test_settings.json")
+            self.assertIn("arm64", zappa_cli.stage_config["architecture"])
+            self.assertIn("arm64", zappa_cli.architecture)
 
         zappa_cli = ZappaCLI()
         zappa_cli.api_stage = "extendofail"
@@ -1424,6 +1440,11 @@ class TestZappa(unittest.TestCase):
         self.assertEqual("lmbda2", zappa_cli.stage_config["s3_bucket"])  # Second Extension
         self.assertTrue(zappa_cli.stage_config["touch"])  # First Extension
         self.assertTrue(zappa_cli.stage_config["delete_local_zip"])  # The base
+
+        zappa_cli = ZappaCLI()
+        zappa_cli.api_stage = "archfail"
+        with self.assertRaises(ValueError):
+            zappa_cli.load_settings("test_settings.json")
 
     def test_load_settings__lambda_concurrency_enabled(self):
         zappa_cli = ZappaCLI()

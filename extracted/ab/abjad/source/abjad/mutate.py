@@ -433,7 +433,7 @@ def _set_leaf_duration(leaf, new_duration, *, tag=None):
         return [leaf]
     except _exceptions.AssignabilityError:
         pass
-    components = _makers.make_notes(0, new_duration, tag=tag)
+    components = _makers.make_notes([_pitch.NamedPitch("c'")], [new_duration], tag=tag)
     new_leaves = _select.leaves(components)
     following_leaf_count = len(new_leaves) - 1
     following_leaves = []
@@ -935,6 +935,7 @@ def extract(argument):
         >>> voice = abjad.Voice()
         >>> voice.append(abjad.Tuplet((3, 2), "c'4 e'4"))
         >>> voice.append(abjad.Tuplet((3, 2), "d'4 f'4"))
+        >>> abjad.makers.tweak_tuplet_number_text(voice)
         >>> leaves = abjad.select.leaves(voice)
         >>> staff = abjad.Staff([voice])
         >>> score = abjad.Score([staff], name="Score")
@@ -1001,6 +1002,7 @@ def extract(argument):
         >>> staff = abjad.Staff([voice])
         >>> voice.append(abjad.Tuplet((3, 2), "c'4 e'4"))
         >>> voice.append(abjad.Tuplet((3, 2), "d'4 f'4"))
+        >>> abjad.makers.tweak_tuplet_number_text(voice)
         >>> score = abjad.Score([staff], name="Score")
         >>> leaves = abjad.select.leaves(staff)
         >>> abjad.hairpin('p < f', leaves)
@@ -1066,6 +1068,7 @@ def extract(argument):
         component:
 
         >>> tuplet = abjad.Tuplet((3, 2), "c'4 e'4")
+        >>> abjad.makers.tweak_tuplet_number_text(tuplet)
         >>> abjad.show(tuplet) # doctest: +SKIP
 
         ..  docs::
@@ -1300,7 +1303,9 @@ def logical_tie_to_tuplet(
             }
 
         >>> logical_tie = abjad.select.logical_tie(voice[1])
-        >>> abjad.mutate.logical_tie_to_tuplet(logical_tie, [2, 1, 1, 1])
+        >>> tuplet = abjad.mutate.logical_tie_to_tuplet(logical_tie, [2, 1, 1, 1])
+        >>> abjad.makers.tweak_tuplet_number_text(tuplet)
+        >>> tuplet
         Tuplet('5:3', "c'8 c'16 c'16 c'16")
 
         ..  docs::
@@ -1379,9 +1384,10 @@ def logical_tie_to_tuplet(
     try:
         notes = [_score.Note(0, _) for _ in written_durations]
     except _exceptions.AssignabilityError:
+        pitches = _makers.make_pitches([0])
         denominator = target_duration._denominator
         note_durations = [_duration.Duration(_, denominator) for _ in proportions]
-        notes = _makers.make_notes(0, note_durations, tag=tag)
+        notes = _makers.make_notes(pitches, note_durations, tag=tag)
     tuplet = _score.Tuplet.from_duration(target_duration, notes, tag=tag)
     for leaf in argument:
         _bind.detach(_indicators.Tie, leaf)
@@ -1432,7 +1438,9 @@ def replace(argument, recipients, *, wrappers: bool = False) -> None:
                 }
             }
 
-        >>> notes = abjad.makers.make_notes("c' d' e' f' c' d' e' f'", (1, 16))
+        >>> duration = abjad.Duration(1, 16)
+        >>> pitches = abjad.makers.make_pitches("c' d' e' f' c' d' e' f'")
+        >>> notes = abjad.makers.make_notes(pitches, [duration])
         >>> abjad.mutate.replace([tuplet_1], notes)
         >>> abjad.attach(abjad.Dynamic('p'), voice[0])
         >>> abjad.attach(abjad.StartHairpin('<'), voice[0])
@@ -1575,12 +1583,10 @@ def replace(argument, recipients, *, wrappers: bool = False) -> None:
 
     ..  container:: example
 
-        ..  todo:: Fix.
-
-        Introduces duplicate ties:
-
         >>> staff = abjad.Staff("c'2 ~ c'2")
-        >>> tied_notes = abjad.makers.make_notes(0, abjad.Duration(5, 8))
+        >>> pitches = abjad.makers.make_pitches([0])
+        >>> durations = [abjad.Duration(5, 8)]
+        >>> tied_notes = abjad.makers.make_notes(pitches, durations)
         >>> abjad.mutate.replace(staff[:1], tied_notes)
 
         >>> string = abjad.lilypond(staff)
@@ -2438,8 +2444,7 @@ def swap(argument, container):
             }
 
         >>> containers = voice[:]
-        >>> tuplet = abjad.Tuplet((2, 3), [])
-        >>> tuplet.denominator = 4
+        >>> tuplet = abjad.Tuplet((4, 6), [])
         >>> abjad.mutate.swap(containers, tuplet)
         >>> abjad.show(voice) # doctest: +SKIP
 
@@ -2473,8 +2478,8 @@ def swap(argument, container):
         ...     time_signature = abjad.get.effective(component, prototype)
         ...     print(component, time_signature)
         ...
-        Voice("{ 3:2 c'4 d'4 e'4 d'4 e'4 f'4 }") TimeSignature(pair=(3, 4), hide=False, partial=None)
-        Tuplet('3:2', "c'4 d'4 e'4 d'4 e'4 f'4") TimeSignature(pair=(3, 4), hide=False, partial=None)
+        Voice("{ 6:4 c'4 d'4 e'4 d'4 e'4 f'4 }") TimeSignature(pair=(3, 4), hide=False, partial=None)
+        Tuplet('6:4', "c'4 d'4 e'4 d'4 e'4 f'4") TimeSignature(pair=(3, 4), hide=False, partial=None)
         Note("c'4") TimeSignature(pair=(3, 4), hide=False, partial=None)
         Note("d'4") TimeSignature(pair=(3, 4), hide=False, partial=None)
         Note("e'4") TimeSignature(pair=(3, 4), hide=False, partial=None)
@@ -2632,7 +2637,9 @@ def wrap(argument, container):
 
         Wraps outside-score notes in tuplet:
 
-        >>> notes = abjad.makers.make_notes([0, 2, 4], [(1, 8)])
+        >>> pitches = abjad.makers.make_pitches([0, 2, 4])
+        >>> durations = [abjad.Duration(1, 8)]
+        >>> notes = abjad.makers.make_notes(pitches, durations)
         >>> tuplet = abjad.Tuplet((2, 3), [])
         >>> abjad.mutate.wrap(notes, tuplet)
         >>> abjad.show(tuplet) # doctest: +SKIP
@@ -2691,6 +2698,7 @@ def wrap(argument, container):
         ...     tuplet = abjad.Tuplet((2, 3))
         ...     abjad.mutate.wrap(note, tuplet)
         ...
+        >>> abjad.makers.tweak_tuplet_bracket_edge_height(staff)
 
         ..  docs::
 

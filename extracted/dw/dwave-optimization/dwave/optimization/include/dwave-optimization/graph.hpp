@@ -34,6 +34,7 @@ namespace dwave::optimization {
 class ArrayNode;
 class Node;
 class DecisionNode;
+class InputNode;
 
 // A decision is an independent variable in the model. The value(s) to be optimized.
 struct Decision {};
@@ -95,14 +96,23 @@ class Graph {
     // the sources.
     static std::vector<const Node*> descendants(State& state, std::vector<const Node*> sources);
 
+    /// Call propagate on every `Node` in the `Graph`.
+    void propagate(State& state) const;
+
     // Call the propagate method on each node in changed. Note this does not call propagate on
     // the descendents of changed.
     void propagate(State& state, std::span<const Node*> changed) const;
     void propagate(State& state, std::vector<const Node*>&& changed) const;
 
+    /// Call commit on every `Node` in the `Graph`.
+    void commit(State& state) const;
+
     // Commit the changes on each changed node.
     void commit(State& state, std::span<const Node*> changed) const;
     void commit(State& state, std::vector<const Node*>&& changed) const;
+
+    /// Call revert on every `Node` in the `Graph`.
+    void revert(State& state) const;
 
     // Revert the changes on each changed node.
     void revert(State& state, std::span<const Node*> changed) const;
@@ -116,6 +126,9 @@ class Graph {
 
     // The number of constraints in the model.
     ssize_t num_constraints() const noexcept { return constraints_.size(); }
+
+    // The number of input nodes in the model.
+    ssize_t num_inputs() const noexcept { return inputs_.size(); }
 
     // Specify the objective node. Must be an array with a single element.
     // To unset the objective provide nullptr.
@@ -136,6 +149,9 @@ class Graph {
     // Retrieve all of the decisions in the model
     std::span<DecisionNode* const> decisions() noexcept { return decisions_; }
     std::span<const DecisionNode* const> decisions() const noexcept { return decisions_; }
+
+    std::span<InputNode* const> inputs() noexcept { return inputs_; }
+    std::span<const InputNode* const> inputs() const noexcept { return inputs_; }
 
     // Remove unused nodes from the graph.
     //
@@ -161,6 +177,7 @@ class Graph {
     ArrayNode* objective_ptr_ = nullptr;
     std::vector<ArrayNode*> constraints_;
     std::vector<DecisionNode*> decisions_;
+    std::vector<InputNode*> inputs_;
 
     // Track whether the model is currently topologically sorted
     bool topologically_sorted_ = false;
@@ -325,6 +342,8 @@ NodeType* Graph::emplace_node(Args&&... args) {
         static_assert(std::is_base_of_v<DecisionNode, NodeType>);
         ptr->topological_index_ = decisions_.size();
         decisions_.emplace_back(ptr);
+    } else if constexpr (std::is_base_of_v<InputNode, NodeType>) {
+        inputs_.emplace_back(ptr);
     }
 
     return ptr;  // return the observing pointer

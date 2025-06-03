@@ -251,7 +251,9 @@ class GroupType_Enum(Enum):
 
 
 def generate_body_create_group(
-    group_name: str, group_type: str = "open", description: str = ""
+    group_name: str, 
+    group_type: str = "open",
+    description: str = ""
 ) -> dict:
     """Generates the body to create group for content_v2_group API"""
     body = {"name": group_name, "type": group_type, "description": description}
@@ -263,7 +265,7 @@ def generate_body_create_group(
 async def create_group(
     auth: dmda.DomoAuth,
     group_name: str,
-    group_type: str = "open",
+    group_type: Union[GroupType_Enum, str] = "open",
     description: str = "",
     session: httpx.AsyncClient = None,
     debug_api: bool = False,
@@ -272,6 +274,9 @@ async def create_group(
     return_raw: bool = False,
 ) -> rgd.ResponseGetData:
     # body : {"name": "GROUP_NAME", "type": "open", "description": ""}
+
+    if isinstance(group_type, GroupType_Enum):
+        group_type = group_type.value
 
     body = generate_body_create_group(
         group_name=group_name, group_type=group_type, description=description

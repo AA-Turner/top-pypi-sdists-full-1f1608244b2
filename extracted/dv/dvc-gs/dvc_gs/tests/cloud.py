@@ -6,7 +6,6 @@ from dvc.testing.path_info import CloudURLInfo
 
 
 class GCP(Cloud, CloudURLInfo):
-
     IS_OBJECT_STORAGE = True
 
     def __init__(self, url, credentialpath):
@@ -17,6 +16,10 @@ class GCP(Cloud, CloudURLInfo):
         ret = super().__truediv__(key)
         ret.credentialpath = self.credentialpath
         return ret
+
+    @property
+    def fs_path(self):
+        return self.bucket + "/" + self.path.lstrip("/")
 
     @property
     def config(self):
@@ -71,6 +74,27 @@ class GCP(Cloud, CloudURLInfo):
         assert isinstance(contents, bytes)
         self._blob.upload_from_string(contents)
 
+    def unlink(self, missing_ok: bool = False) -> None:
+        if not self.exists():
+            if not missing_ok:
+                raise FileNotFoundError(str(self))
+            return
+        self._blob.delete()
+
+    def rmdir(self, recursive: bool = True) -> None:
+        if not self.is_dir():
+            raise NotADirectoryError(str(self))
+
+        blobs = list(self._bucket.list_blobs(prefix=(self / "").path))
+        if not blobs:
+            return
+
+        if not recursive:
+            raise OSError(f"Not recursive and directory not empty: {self}")
+
+        for blob in blobs:
+            blob.delete()
+
     def read_bytes(self):
         return self._blob.download_as_string()
 
@@ -80,7 +104,8 @@ class FakeGCP(GCP):
 
     def __init__(self, url, endpoint_url: str):
         super().__init__(
-            url, ""  # no need to provide credentials for a mock server
+            url,
+            "",  # no need to provide credentials for a mock server
         )
         self.endpoint_url = endpoint_url
 
@@ -91,7 +116,11 @@ class FakeGCP(GCP):
 
     @property
     def config(self):
-        return {"url": self.url, "endpointurl": self.endpoint_url}
+        return {
+            "url": self.url,
+            "endpointurl": self.endpoint_url,
+            "allow_anonymous_login": True,
+        }
 
     def get_url(self):  # pylint: disable=arguments-differ
         return self.url

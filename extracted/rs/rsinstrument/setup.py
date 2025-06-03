@@ -12,7 +12,7 @@ README = (HERE / "README.rst").read_text()
 # This call to setup() does all the work
 setup(
     name="RsInstrument",
-    version="1.101.0",
+    version="1.102.0",
     description="VISA or Socket Communication Module for Rohde & Schwarz Instruments",
     long_description=README,
     long_description_content_type="text/x-rst",

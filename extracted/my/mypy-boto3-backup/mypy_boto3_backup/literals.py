@@ -105,6 +105,9 @@ BackupVaultEventType = Literal[
     "COPY_JOB_FAILED",
     "COPY_JOB_STARTED",
     "COPY_JOB_SUCCESSFUL",
+    "RECOVERY_POINT_INDEXING_FAILED",
+    "RECOVERY_POINT_INDEX_COMPLETED",
+    "RECOVERY_POINT_INDEX_DELETED",
     "RECOVERY_POINT_MODIFIED",
     "RESTORE_JOB_COMPLETED",
     "RESTORE_JOB_FAILED",
@@ -151,7 +154,9 @@ ListRestoreJobsByProtectedResourcePaginatorName = Literal["list_restore_jobs_by_
 ListRestoreJobsPaginatorName = Literal["list_restore_jobs"]
 ListRestoreTestingPlansPaginatorName = Literal["list_restore_testing_plans"]
 ListRestoreTestingSelectionsPaginatorName = Literal["list_restore_testing_selections"]
-RecoveryPointStatusType = Literal["COMPLETED", "DELETING", "EXPIRED", "PARTIAL"]
+RecoveryPointStatusType = Literal[
+    "AVAILABLE", "COMPLETED", "CREATING", "DELETING", "EXPIRED", "PARTIAL", "STOPPED"
+]
 RestoreDeletionStatusType = Literal["DELETING", "FAILED", "SUCCESSFUL"]
 RestoreJobStateType = Literal[
     "ABORTED", "AGGREGATE_ALL", "ANY", "COMPLETED", "CREATED", "FAILED", "PENDING", "RUNNING"
@@ -463,7 +468,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -524,7 +528,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -532,6 +535,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

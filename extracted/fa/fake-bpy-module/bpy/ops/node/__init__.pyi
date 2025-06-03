@@ -387,6 +387,7 @@ def add_node(
     settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting]
     | None = None,
     type: str = "",
+    visible_output: str = "",
 ):
     """Add a node to the active tree
 
@@ -398,6 +399,8 @@ def add_node(
     :type settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting] | None
     :param type: Node Type, Node type
     :type type: str
+    :param visible_output: Output Name, If provided, all outputs that are named differently will be hidden
+    :type visible_output: str
     """
 
 def add_object(
@@ -1098,6 +1101,39 @@ def foreach_geometry_element_zone_main_item_move(
     """
 
 def foreach_geometry_element_zone_main_item_remove(
+    execution_context: int | str | None = None, undo: bool | None = None
+):
+    """Remove active item
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    """
+
+def format_string_item_add(
+    execution_context: int | str | None = None, undo: bool | None = None
+):
+    """Add item below active item
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    """
+
+def format_string_item_move(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    direction: typing.Literal["UP", "DOWN"] | None = "UP",
+):
+    """Move active item
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param direction: Direction, Move direction
+    :type direction: typing.Literal['UP','DOWN'] | None
+    """
+
+def format_string_item_remove(
     execution_context: int | str | None = None, undo: bool | None = None
 ):
     """Remove active item

@@ -43,13 +43,23 @@ JsonType = Union[
 
 
 class ConfluenceVersion(enum.Enum):
+    """
+    Confluence REST API version an HTTP request corresponds to.
+
+    For some operations, Confluence Cloud supports v2 endpoints exclusively. However, for other operations, only v1 endpoints are available via REST API.
+    Some versions of Confluence Server and Data Center, unfortunately, don't support v2 endpoints at all.
+
+    The principal use case for *md2conf* is Confluence Cloud. As such, *md2conf* uses v2 endpoints when available, and resorts to v1 endpoints only when
+    necessary.
+    """
+
     VERSION_1 = "rest/api"
     VERSION_2 = "api/v2"
 
 
 class ConfluencePageParentContentType(enum.Enum):
     """
-    Content types that can be a parent to a Confluence page
+    Content types that can be a parent to a Confluence page.
     """
 
     PAGE = "page"
@@ -80,6 +90,15 @@ LOGGER = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class ConfluenceAttachment:
+    """
+    Holds data for an object uploaded to Confluence as a page attachment.
+
+    :param id: Unique ID for the attachment.
+    :param media_type: MIME type for the attachment.
+    :param file_size: Size in bytes.
+    :param comment: Description for the attachment.
+    """
+
     id: str
     media_type: str
     file_size: int
@@ -87,7 +106,18 @@ class ConfluenceAttachment:
 
 
 @dataclass(frozen=True)
-class ConfluencePageMetadata:
+class ConfluencePageProperties:
+    """
+    Holds Confluence page properties used for page synchronization.
+
+    :param id: Confluence page ID.
+    :param space_id: Confluence space ID.
+    :param parent_id: Confluence page ID of the immediate parent.
+    :param parent_type: Identifies the content type of the parent.
+    :param title: Page title.
+    :param version: Page version. Incremented when the page is updated.
+    """
+
     id: str
     space_id: str
     parent_id: str
@@ -97,11 +127,36 @@ class ConfluencePageMetadata:
 
 
 @dataclass(frozen=True)
-class ConfluencePage(ConfluencePageMetadata):
+class ConfluencePage(ConfluencePageProperties):
+    """
+    Holds Confluence page data used for page synchronization.
+
+    :param content: Page content in Confluence Storage Format.
+    """
+
     content: str
 
 
+@dataclass(frozen=True)
+class ConfluenceLabel:
+    """
+    Holds information about a single label.
+
+    :param id: ID of the label.
+    :param name: Name of the label.
+    :param prefix: Prefix of the label.
+    """
+
+    id: str
+    name: str
+    prefix: str
+
+
 class ConfluenceAPI:
+    """
+    Represents an active connection to a Confluence server.
+    """
+
     properties: ConfluenceConnectionProperties
     session: Optional["ConfluenceSession"] = None
 
@@ -195,7 +250,7 @@ class ConfluenceSession:
         path: str,
         query: Optional[dict[str, str]] = None,
     ) -> JsonType:
-        "Execute an HTTP request via Confluence API."
+        "Executes an HTTP request via Confluence API."
 
         url = self._build_url(version, path, query)
         response = self.session.get(url)
@@ -204,7 +259,33 @@ class ConfluenceSession:
         response.raise_for_status()
         return response.json()
 
-    def _save(self, version: ConfluenceVersion, path: str, data: dict) -> None:
+    def _fetch(
+        self, path: str, query: Optional[dict[str, str]] = None
+    ) -> list[JsonType]:
+        "Retrieves all results of a REST API v2 paginated result-set."
+
+        items: list[JsonType] = []
+        url = self._build_url(ConfluenceVersion.VERSION_2, path, query)
+        while True:
+            response = self.session.get(url)
+            response.raise_for_status()
+
+            payload = typing.cast(dict[str, JsonType], response.json())
+            results = typing.cast(list[JsonType], payload["results"])
+            items.extend(results)
+
+            links = typing.cast(dict[str, JsonType], payload.get("_links", {}))
+            link = typing.cast(str, links.get("next", ""))
+            if link:
+                url = f"https://{self.site.domain}{link}"
+            else:
+                break
+
+        return items
+
+    def _save(self, version: ConfluenceVersion, path: str, data: JsonType) -> None:
+        "Persists data via Confluence REST API."
+
         url = self._build_url(version, path)
         response = self.session.put(
             url,
@@ -263,7 +344,7 @@ class ConfluenceSession:
         self, *, space_id: Optional[str] = None, space_key: Optional[str] = None
     ) -> Optional[str]:
         """
-        Coalesce a space ID or space key into a space ID, accounting for site default.
+        Coalesces a space ID or space key into a space ID, accounting for site default.
 
         :param space_id: A Confluence space ID.
         :param space_key: A Confluence space key.
@@ -285,6 +366,10 @@ class ConfluenceSession:
     def get_attachment_by_name(
         self, page_id: str, filename: str
     ) -> ConfluenceAttachment:
+        """
+        Retrieves a Confluence page attachment by an unprefixed file name.
+        """
+
         path = f"/pages/{page_id}/attachments"
         query = {"filename": filename}
         data = typing.cast(
@@ -313,6 +398,18 @@ class ConfluenceSession:
         comment: Optional[str] = None,
         force: bool = False,
     ) -> None:
+        """
+        Uploads a new attachment to a Confluence page.
+
+        :param page_id: Confluence page ID.
+        :param attachment_name: Unprefixed name unique to the page.
+        :param attachment_path: Path to the file to upload as an attachment.
+        :param raw_data: Raw data to upload as an attachment.
+        :param content_type: Attachment MIME type.
+        :param comment: Attachment description.
+        :param force: Overwrite an existing attachment even if there seem to be no changes.
+        """
+
         if attachment_path is None and raw_data is None:
             raise ArgumentError("required: `attachment_path` or `raw_data`")
 
@@ -409,7 +506,7 @@ class ConfluenceSession:
     ) -> None:
         id = attachment_id.removeprefix("att")
         path = f"/content/{page_id}/child/attachment/{id}"
-        data = {
+        data: JsonType = {
             "id": attachment_id,
             "type": "attachment",
             "status": "current",
@@ -428,10 +525,11 @@ class ConfluenceSession:
         space_key: Optional[str] = None,
     ) -> str:
         """
-        Look up a Confluence wiki page ID by title.
+        Looks up a Confluence wiki page ID by title.
 
         :param title: The page title.
-        :param space_key: The Confluence space key (unless the default space is to be used).
+        :param space_id: The Confluence space ID (unless the default space is to be used). Exclusive with space key.
+        :param space_key: The Confluence space key (unless the default space is to be used). Exclusive with space ID.
         :returns: Confluence page ID.
         """
 
@@ -457,7 +555,7 @@ class ConfluenceSession:
 
     def get_page(self, page_id: str) -> ConfluencePage:
         """
-        Retrieve Confluence wiki page details and content.
+        Retrieves Confluence wiki page details and content.
 
         :param page_id: The Confluence page ID.
         :returns: Confluence page info and content.
@@ -486,9 +584,9 @@ class ConfluenceSession:
         )
 
     @functools.cache
-    def get_page_metadata(self, page_id: str) -> ConfluencePageMetadata:
+    def get_page_properties(self, page_id: str) -> ConfluencePageProperties:
         """
-        Retrieve Confluence wiki page details.
+        Retrieves Confluence wiki page details.
 
         :param page_id: The Confluence page ID.
         :returns: Confluence page info.
@@ -499,7 +597,7 @@ class ConfluenceSession:
         data = typing.cast(dict[str, JsonType], payload)
         version = typing.cast(dict[str, JsonType], data["version"])
 
-        return ConfluencePageMetadata(
+        return ConfluencePageProperties(
             id=page_id,
             space_id=typing.cast(str, data["spaceId"]),
             parent_id=typing.cast(str, data["parentId"]),
@@ -514,7 +612,7 @@ class ConfluenceSession:
 
     def get_page_version(self, page_id: str) -> int:
         """
-        Retrieve a Confluence wiki page version.
+        Retrieves a Confluence wiki page version.
 
         :param page_id: The Confluence page ID.
         :returns: Confluence page version.
@@ -534,7 +632,7 @@ class ConfluenceSession:
         title: Optional[str] = None,
     ) -> None:
         """
-        Update a page via the Confluence API.
+        Updates a page via the Confluence API.
 
         :param page_id: The Confluence page ID.
         :param new_content: Confluence Storage Format XHTML.
@@ -553,7 +651,7 @@ class ConfluenceSession:
             LOGGER.warning(exc)
 
         path = f"/pages/{page_id}"
-        data = {
+        data: JsonType = {
             "id": page_id,
             "status": "current",
             "title": new_title,
@@ -571,10 +669,10 @@ class ConfluenceSession:
         new_content: str,
     ) -> ConfluencePage:
         """
-        Create a new page via Confluence API.
+        Creates a new page via Confluence API.
         """
 
-        parent_page = self.get_page_metadata(parent_id)
+        parent_page = self.get_page_properties(parent_id)
         path = "/pages/"
         query = {
             "spaceId": parent_page.space_id,
@@ -615,10 +713,10 @@ class ConfluenceSession:
 
     def delete_page(self, page_id: str, *, purge: bool = False) -> None:
         """
-        Delete a page via Confluence API.
+        Deletes a page via Confluence API.
 
         :param page_id: The Confluence page ID.
-        :param purge: True to completely purge the page, False to move to trash only.
+        :param purge: `True` to completely purge the page, `False` to move to trash only.
         """
 
         path = f"/pages/{page_id}"
@@ -645,10 +743,12 @@ class ConfluenceSession:
         space_key: Optional[str] = None,
     ) -> Optional[str]:
         """
-        Check if a Confluence page exists with the given title.
+        Checks if a Confluence page exists with the given title.
 
         :param title: Page title. Pages in the same Confluence space must have a unique title.
         :param space_key: Identifies the Confluence space.
+
+        :returns: Confluence page ID of a matching page (if found), or `None`.
         """
 
         space_id = self.get_space_id(space_id=space_id, space_key=space_key)
@@ -676,13 +776,13 @@ class ConfluenceSession:
 
     def get_or_create_page(self, title: str, parent_id: str) -> ConfluencePage:
         """
-        Find a page with the given title, or create a new page if no such page exists.
+        Finds a page with the given title, or creates a new page if no such page exists.
 
         :param title: Page title. Pages in the same Confluence space must have a unique title.
         :param parent_id: Identifies the parent page for a new child page.
         """
 
-        parent_page = self.get_page_metadata(parent_id)
+        parent_page = self.get_page_properties(parent_id)
         page_id = self.page_exists(title, space_id=parent_page.space_id)
 
         if page_id is not None:
@@ -691,3 +791,22 @@ class ConfluenceSession:
         else:
             LOGGER.debug("Creating new page with title: %s", title)
             return self.create_page(parent_id, title, "")
+
+    def get_labels(self, page_id: str) -> list[ConfluenceLabel]:
+        """
+        Retrieves labels for a Confluence page.
+
+        :param page_id: The Confluence page ID.
+        :returns: A list of page labels.
+        """
+
+        items: list[ConfluenceLabel] = []
+        path = f"/pages/{page_id}/labels"
+        results = self._fetch(path)
+        for r in results:
+            result = typing.cast(dict[str, JsonType], r)
+            id = typing.cast(str, result["id"])
+            name = typing.cast(str, result["name"])
+            prefix = typing.cast(str, result["prefix"])
+            items.append(ConfluenceLabel(id, name, prefix))
+        return items

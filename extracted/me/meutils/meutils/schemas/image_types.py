@@ -549,3 +549,6 @@ if __name__ == '__main__':
 
     request = ImageRequest(prompt=prompt)
     print(request.image_and_prompt)
+
+    data = {"image[]": "xxx"}
+    r = ImageRequest(**data)

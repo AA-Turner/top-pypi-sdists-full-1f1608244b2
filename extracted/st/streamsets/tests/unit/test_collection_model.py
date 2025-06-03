@@ -1,9 +1,16 @@
 # Copyright 2023 StreamSets Inc.
 
 # fmt: off
+import copy
+
 import pytest
 
-from streamsets.sdk.sch_models import BaseModel, CollectionModel, CollectionModelResults, MutableKwargs
+from streamsets.sdk.exceptions import ProjectAccessError
+from streamsets.sdk.sch_models import (
+    BaseModel, CollectionModel, CollectionModelResults, Connection, Connections, MutableKwargs,
+)
+
+from .resources.connections_data import CONNECTION_INTERNAL_JSON
 
 # fmt: on
 
@@ -35,6 +42,7 @@ class ValidCollectionModel(CollectionModel):
             'data': self.data[kwargs_unioned['offset'] : kwargs_unioned['offset'] + kwargs_unioned['len']],
             'offset': kwargs_unioned['offset'] + kwargs_unioned['len'],
             'len': kwargs_unioned['len'],
+            'totalCount': len(self.data),
         }
 
         self.page_size = kwargs_unioned['len']
@@ -76,6 +84,7 @@ class DecreasingLengthCollectionModel(CollectionModel):
             'data': self.data[kwargs_unioned['offset'] : kwargs_unioned['offset'] + kwargs_unioned['len']],
             'offset': kwargs_unioned['offset'] + kwargs_unioned['len'],
             'len': 0,
+            'totalCount': len(self.data),
         }  # len isn't used but is checked for
         kwargs_unused = kwargs_instance.subtract()
 
@@ -86,6 +95,11 @@ class DecreasingLengthCollectionModel(CollectionModel):
 
     def __len__(self):
         return len(self.data)
+
+
+class ProjectErrorConnectionCollectionModel(Connections):
+    def _get_all_results_from_api(self, **kwargs):
+        raise ProjectAccessError(code='RESTAPI_08', message='User does not have access to resource.')
 
 
 def test_not_implemented_error(mocker):
@@ -122,3 +136,10 @@ def test_decreasing_length_collection_model(mocker):
     res = decreasing_collection_model._paginate(offset=0, len=75)  # we want more items than the page length
 
     assert len(list(res)) == 75
+
+
+def test_contains_returns_false_with_project_access_error(mocker):
+    error_collection_model = ProjectErrorConnectionCollectionModel(mocker.Mock(), organization='')
+    connection = Connection(connection=copy.deepcopy(CONNECTION_INTERNAL_JSON), control_hub=mocker.Mock())
+
+    assert connection not in error_collection_model

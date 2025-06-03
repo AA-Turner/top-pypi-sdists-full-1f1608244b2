@@ -72,6 +72,8 @@ class ServerFeatures(Enum):
     ScopeSearchIndexManagement = 'scope_search_index_mgmt'
     ScopeEventingFunctionManagement = 'scope_eventing_function_mgmt'
     BinaryTxns = 'binary_txns'
+    ServerGroups = 'server_groups'
+    Magma128Buckets = 'magma_128_buckets'
 
 
 class EnvironmentFeatures:
@@ -102,7 +104,8 @@ class EnvironmentFeatures:
                             ServerFeatures.NonDedupedHistory,
                             ServerFeatures.UpdateCollection,
                             ServerFeatures.ScopeEventingFunctionManagement,
-                            ServerFeatures.BinaryTxns]
+                            ServerFeatures.BinaryTxns,
+                            ServerFeatures.ServerGroups]
 
     FEATURES_IN_MOCK = [ServerFeatures.Txns]
 
@@ -151,7 +154,10 @@ class EnvironmentFeatures:
                                 ServerFeatures.ScopeSearch,
                                 ServerFeatures.ScopeSearchIndexManagement]
 
-    AT_LEAST_V7_6_2_FEATURES = [ServerFeatures.BinaryTxns]
+    AT_LEAST_V7_6_2_FEATURES = [ServerFeatures.BinaryTxns,
+                                ServerFeatures.ServerGroups]
+
+    AT_LEAST_V8_0_0_FEATURES = [ServerFeatures.Magma128Buckets]
 
     AT_MOST_V7_2_0_FEATURES = [ServerFeatures.RateLimiting]
 
@@ -364,5 +370,15 @@ class EnvironmentFeatures:
             if server_version == 7.6 and patch < 2:
                 return (f'Feature: {feature} only supported on server versions >= 7.6.2. '
                         f'Using server version: {server_version}.{patch}.')
+
+            return None
+
+        if feature in map(lambda f: f.value, EnvironmentFeatures.AT_LEAST_V8_0_0_FEATURES):
+            if is_mock_server:
+                return f'Mock server does not support feature: {feature}'
+
+            if server_version < 8:
+                return (f'Feature: {feature} only supported on server versions >= 8.0. '
+                        f'Using server version: {server_version}.')
 
             return None

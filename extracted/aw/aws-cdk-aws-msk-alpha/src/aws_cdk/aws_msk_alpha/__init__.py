@@ -24,7 +24,7 @@ The following example creates an MSK Cluster.
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc
 )
 ```
@@ -38,7 +38,7 @@ To control who can access the Cluster, use the `.connections` attribute. For a l
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc
 )
 
@@ -88,7 +88,7 @@ import aws_cdk.aws_acmpca as acmpca
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -110,7 +110,7 @@ Enable client authentication with [SASL/SCRAM](https://docs.aws.amazon.com/msk/l
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -130,7 +130,7 @@ Enable client authentication with [IAM](https://docs.aws.amazon.com/msk/latest/d
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -153,7 +153,7 @@ import aws_cdk.aws_acmpca as acmpca
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -180,7 +180,7 @@ To configure logs to be sent to an S3 bucket, provide a bucket in the `logging` 
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc,
     logging=msk.BrokerLogging(
         s3=msk.S3LoggingConfiguration(
@@ -221,7 +221,7 @@ making it cost-effective to build streaming data applications.
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_9_X,
+    kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
     vpc=vpc,
     storage_mode=msk.StorageMode.TIERED
 )
@@ -322,7 +322,7 @@ class BrokerLogging:
             
             cluster = msk.Cluster(self, "cluster",
                 cluster_name="myCluster",
-                kafka_version=msk.KafkaVersion.V3_9_X,
+                kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
                 vpc=vpc,
                 logging=msk.BrokerLogging(
                     s3=msk.S3LoggingConfiguration(
@@ -410,7 +410,7 @@ class ClientAuthentication(
         
         cluster = msk.Cluster(self, "Cluster",
             cluster_name="myCluster",
-            kafka_version=msk.KafkaVersion.V3_9_X,
+            kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
             vpc=vpc,
             encryption_in_transit=msk.EncryptionInTransitConfig(
                 client_broker=msk.ClientBrokerEncryption.TLS
@@ -523,7 +523,7 @@ class ClientBrokerEncryption(enum.Enum):
         
         cluster = msk.Cluster(self, "Cluster",
             cluster_name="myCluster",
-            kafka_version=msk.KafkaVersion.V3_9_X,
+            kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
             vpc=vpc,
             encryption_in_transit=msk.EncryptionInTransitConfig(
                 client_broker=msk.ClientBrokerEncryption.TLS
@@ -722,7 +722,7 @@ class ClusterProps:
             
             cluster = msk.Cluster(self, "cluster",
                 cluster_name="myCluster",
-                kafka_version=msk.KafkaVersion.V3_9_X,
+                kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
                 vpc=vpc,
                 encryption_in_transit=msk.EncryptionInTransitConfig(
                     client_broker=msk.ClientBrokerEncryption.TLS
@@ -1087,7 +1087,7 @@ class EncryptionInTransitConfig:
             
             cluster = msk.Cluster(self, "Cluster",
                 cluster_name="myCluster",
-                kafka_version=msk.KafkaVersion.V3_9_X,
+                kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
                 vpc=vpc,
                 encryption_in_transit=msk.EncryptionInTransitConfig(
                     client_broker=msk.ClientBrokerEncryption.TLS
@@ -1225,7 +1225,7 @@ class KafkaVersion(
         
         cluster = msk.Cluster(self, "cluster",
             cluster_name="myCluster",
-            kafka_version=msk.KafkaVersion.V3_9_X,
+            kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
             vpc=vpc,
             encryption_in_transit=msk.EncryptionInTransitConfig(
                 client_broker=msk.ClientBrokerEncryption.TLS
@@ -1590,6 +1590,16 @@ class KafkaVersion(
         '''
         return typing.cast("KafkaVersion", jsii.sget(cls, "V3_9_X_KRAFT"))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="V4_0_X_KRAFT")
+    def V4_0_X_KRAFT(cls) -> "KafkaVersion":
+        '''(experimental) Kafka version 4.0.x with KRaft (Apache Kafka Raft) metadata mode support.
+
+        :see: https://docs.aws.amazon.com/msk/latest/developerguide/metadata-management.html#kraft-intro
+        :stability: experimental
+        '''
+        return typing.cast("KafkaVersion", jsii.sget(cls, "V4_0_X_KRAFT"))
+
     @builtins.property
     @jsii.member(jsii_name="version")
     def version(self) -> builtins.str:
@@ -1793,7 +1803,7 @@ class S3LoggingConfiguration:
             
             cluster = msk.Cluster(self, "cluster",
                 cluster_name="myCluster",
-                kafka_version=msk.KafkaVersion.V3_9_X,
+                kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
                 vpc=vpc,
                 logging=msk.BrokerLogging(
                     s3=msk.S3LoggingConfiguration(
@@ -1873,7 +1883,7 @@ class SaslAuthProps:
             
             cluster = msk.Cluster(self, "cluster",
                 cluster_name="myCluster",
-                kafka_version=msk.KafkaVersion.V3_9_X,
+                kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
                 vpc=vpc,
                 encryption_in_transit=msk.EncryptionInTransitConfig(
                     client_broker=msk.ClientBrokerEncryption.TLS
@@ -2035,7 +2045,7 @@ class StorageMode(enum.Enum):
         
         cluster = msk.Cluster(self, "cluster",
             cluster_name="myCluster",
-            kafka_version=msk.KafkaVersion.V3_9_X,
+            kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
             vpc=vpc,
             storage_mode=msk.StorageMode.TIERED
         )
@@ -2079,7 +2089,7 @@ class TlsAuthProps:
             
             cluster = msk.Cluster(self, "Cluster",
                 cluster_name="myCluster",
-                kafka_version=msk.KafkaVersion.V3_9_X,
+                kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
                 vpc=vpc,
                 encryption_in_transit=msk.EncryptionInTransitConfig(
                     client_broker=msk.ClientBrokerEncryption.TLS
@@ -2376,7 +2386,7 @@ class SaslTlsAuthProps(SaslAuthProps, TlsAuthProps):
             
             cluster = msk.Cluster(self, "Cluster",
                 cluster_name="myCluster",
-                kafka_version=msk.KafkaVersion.V3_9_X,
+                kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
                 vpc=vpc,
                 encryption_in_transit=msk.EncryptionInTransitConfig(
                     client_broker=msk.ClientBrokerEncryption.TLS
@@ -2583,7 +2593,7 @@ class Cluster(
         
         cluster = msk.Cluster(self, "cluster",
             cluster_name="myCluster",
-            kafka_version=msk.KafkaVersion.V3_9_X,
+            kafka_version=msk.KafkaVersion.V4_0_X_KRAFT,
             vpc=vpc,
             encryption_in_transit=msk.EncryptionInTransitConfig(
                 client_broker=msk.ClientBrokerEncryption.TLS

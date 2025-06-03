@@ -233,7 +233,7 @@ class _Frame(FrameBase, OperatorMethodMixin):
                 )
             ).compute(),
             crs=self.crs,
-        )
+        ).reset_index(drop=True)
         self.spatial_partitions = parts
 
     def _propagate_spatial_partitions(self, new_object):
@@ -1023,7 +1023,6 @@ for name in [
 for name in [
     "contains",
     "geom_equals",
-    "geom_almost_equals",
     "crosses",
     "disjoint",
     "intersects",

@@ -661,6 +661,7 @@ MODEL_RATIO = {
     "meta-deepresearch": 2,
 
     # 豆包
+    "doubao-1-5-ui-tars-250428": 1.75,
     "doubao-1-5-pro-32k": 0.4,
     "doubao-1-5-pro-32k-250115": 0.4,
     "doubao-1-5-pro-256k": 2.5,
@@ -1177,6 +1178,8 @@ COMPLETION_RATIO = {
     "deepseek-ai/deepseek-vl2": 4,
 
     # 豆包
+    "doubao-1-5-ui-tars-250428": 4,
+
     "doubao-lite-128k": 3,
     "doubao-lite-32k": 3,
     "doubao-lite-32k-character": 3,

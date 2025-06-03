@@ -137,11 +137,9 @@ class Configuration:
             for config_item_index, config_item in enumerate(config_list):
                 if not isinstance(config_item, dict):
                     raise TypeError('A Configuration must be a list of dictionaries')
-                if self.property_key not in config_item or self.property_value not in config_item:
+                if self.property_key not in config_item:
                     raise TypeError(
-                        'Configuration {} does not contain property_key:{} or property_value:{}'.format(
-                            config_item, self.property_key, self.property_value
-                        )
+                        'Configuration {} does not contain property_key:{}'.format(config_item, self.property_key)
                     )
                 configuration_index_map[config_item[self.property_key]] = (config_item_index, config_list_index)
 
@@ -270,7 +268,7 @@ class Configuration:
         elif config.get('type') == 'integer':
             return int(config[self.property_value])
         else:
-            return config[self.property_value]
+            return config.get(self.property_value, None)
 
 
 class BaseModel:

@@ -31,8 +31,10 @@ setup(**{
         'asynctest>=0.13.0',
         'asyncudp>=0.11',
         'attrs>=25.3',
-        'backend.ai-logging==25.8.1',
-        'backend.ai-plugin==25.8.1',
+        """backend.ai-logging==25.9.0
+""",
+        """backend.ai-plugin==25.9.0
+""",
         'callosum~=1.0.3',
         'click~=8.1.7',
         'etcd-client-py~=0.4.0',
@@ -125,6 +127,7 @@ configured to use different self IP addresses to announce to the cluster nodes a
         'ai.backend.common.data.vfolder',
         'ai.backend.common.dto.agent',
         'ai.backend.common.dto.manager',
+        'ai.backend.common.dto.manager.auth',
         'ai.backend.common.dto.storage',
         'ai.backend.common.events',
         'ai.backend.common.events.hub',
@@ -137,6 +140,7 @@ configured to use different self IP addresses to announce to the cluster nodes a
         'ai.backend.common.plugin',
         'ai.backend.common.service_discovery',
         'ai.backend.common.service_discovery.etcd_discovery',
+        'ai.backend.common.stage',
         'ai.backend.common.web.session',
     ),
     'project_urls': {
@@ -145,6 +149,7 @@ configured to use different self IP addresses to announce to the cluster nodes a
     },
     'python_requires': '>=3.13,<3.14',
     'url': 'https://github.com/lablup/backend.ai',
-    'version': '25.8.1',
+    'version': """25.9.0
+""",
     'zip_safe': False,
 })

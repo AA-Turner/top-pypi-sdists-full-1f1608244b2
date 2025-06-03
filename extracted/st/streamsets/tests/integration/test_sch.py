@@ -55,11 +55,142 @@ def test_delete_active_deployment(test_environment, sch):
         environment=test_environment,
     )
     sch.add_deployment(deployment)
-    sch.start_deployment(deployment)
-    assert deployment.state == 'ACTIVE'
-    with pytest.raises(requests.exceptions.HTTPError) as error_message:
-        sch.delete_deployment(deployment, stop=False)
-        assert EXPECTED_ERROR_MESSAGE == error_message["ISSUES"][0]["message"]
-    sch.delete_deployment(deployment)
-    with pytest.raises(ValueError):
-        sch.deployments.get(deployment_id=deployment.deployment_id)
+    try:
+        sch.start_deployment(deployment)
+        assert deployment.state == 'ACTIVE'
+        with pytest.raises(requests.exceptions.HTTPError) as error_message:
+            sch.delete_deployment(deployment, stop=False)
+            assert EXPECTED_ERROR_MESSAGE == error_message["ISSUES"][0]["message"]
+        sch.delete_deployment(deployment)
+        with pytest.raises(ValueError):
+            sch.deployments.get(deployment_id=deployment.deployment_id)
+    except Exception as e:
+        sch.delete_deployment(deployment, stop=True)
+        raise e
+
+
+def test_delete_active_environment(sch):
+    # Create and start environment
+    environment_builder = sch.get_environment_builder(environment_type='SELF')
+
+    environment = environment_builder.build(
+        environment_name='Self-managed--environment-{}'.format(get_random_string()),
+        environment_tags=['self-managed-tag'],
+        allow_nightly_engine_builds=False,
+    )
+    sch.add_environment(environment)
+    try:
+        sch.activate_environment(environment)
+        assert environment.state == 'ACTIVE'
+        sch.delete_environment(environment)
+        with pytest.raises(ValueError):
+            sch.environments.get(environment_id=environment.environment_id)
+    except Exception as e:
+        sch.delete_environment(environment, stop=True)
+        raise e
+
+
+def test_delete_active_environment_with_active_deployment(sch):
+    EXPECTED_ERROR_MESSAGE_CONTAINS = "Environments can only be deactivated when they have no deployments"
+
+    # Create and start environment
+    environment_builder = sch.get_environment_builder(environment_type='SELF')
+
+    environment = environment_builder.build(
+        environment_name='Self-managed--environment-{}'.format(get_random_string()),
+        environment_tags=['self-managed-tag'],
+        allow_nightly_engine_builds=False,
+    )
+    sch.add_environment(environment)
+    try:
+        sch.activate_environment(environment)
+        assert environment.state == 'ACTIVE'
+
+        # Create and start deployment
+        builder = sch.get_deployment_builder(deployment_type='SELF')
+        deployment = builder.build(
+            deployment_name='SDK Test Deployment SDC_Docker {}'.format(get_random_string()),
+            engine_type="DC",
+            engine_version="5.1.0",
+            environment=environment,
+        )
+        sch.add_deployment(deployment)
+        sch.start_deployment(deployment)
+        assert deployment.state == 'ACTIVE'
+
+        with pytest.raises(requests.exceptions.HTTPError) as error_message:
+            sch.delete_environment(environment, stop=False)
+            assert EXPECTED_ERROR_MESSAGE_CONTAINS in error_message["ISSUES"][0]["message"]
+        sch.delete_environment(environment, stop=True)
+        with pytest.raises(ValueError):
+            sch.environments.get(environment_id=environment.environment_id)
+    except Exception as e:
+        sch.delete_environment(environment, stop=True)
+        raise e
+
+
+def test_delete_active_environment_with_inactive_deployment(sch):
+    # Create and start environment
+    environment_builder = sch.get_environment_builder(environment_type='SELF')
+
+    environment = environment_builder.build(
+        environment_name='Self-managed--environment-{}'.format(get_random_string()),
+        environment_tags=['self-managed-tag'],
+        allow_nightly_engine_builds=False,
+    )
+    sch.add_environment(environment)
+    try:
+        sch.activate_environment(environment)
+        assert environment.state == 'ACTIVE'
+
+        # Create deployment
+        builder = sch.get_deployment_builder(deployment_type='SELF')
+        deployment = builder.build(
+            deployment_name='SDK Test Deployment SDC_Docker {}'.format(get_random_string()),
+            engine_type="DC",
+            engine_version="5.1.0",
+            environment=environment,
+        )
+        sch.add_deployment(deployment)
+        assert deployment.state != 'ACTIVE'
+        sch.delete_environment(environment, stop=True)
+        with pytest.raises(ValueError):
+            sch.environments.get(environment_id=environment.environment_id)
+    except Exception as e:
+        sch.delete_environment(environment, stop=True)
+        raise e
+
+
+def test_delete_deactivated_environment_with_inactive_deployment(sch):
+    # Create and start environment
+    environment_builder = sch.get_environment_builder(environment_type='SELF')
+
+    environment = environment_builder.build(
+        environment_name='Self-managed--environment-{}'.format(get_random_string()),
+        environment_tags=['self-managed-tag'],
+        allow_nightly_engine_builds=False,
+    )
+    sch.add_environment(environment)
+    try:
+        sch.activate_environment(environment)
+        assert environment.state == 'ACTIVE'
+
+        # Create deployment
+        builder = sch.get_deployment_builder(deployment_type='SELF')
+        deployment = builder.build(
+            deployment_name='SDK Test Deployment SDC_Docker {}'.format(get_random_string()),
+            engine_type="DC",
+            engine_version="5.1.0",
+            environment=environment,
+        )
+        sch.add_deployment(deployment)
+
+        # Deactivate environment
+        sch.deactivate_environment(environment)
+        assert environment.state == 'DEACTIVATED'
+        sch.delete_environment(environment, stop=True)
+        with pytest.raises(ValueError):
+            sch.environments.get(environment_id=environment.environment_id)
+    except Exception as e:
+        sch.delete_environment(environment, stop=True)
+        raise e

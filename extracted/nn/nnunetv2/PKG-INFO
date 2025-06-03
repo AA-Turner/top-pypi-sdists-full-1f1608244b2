@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: nnunetv2
-Version: 2.6.0
+Version: 2.6.2
 Summary: nnU-Net is a framework for out-of-the box image segmentation.
 Author: Helmholtz Imaging Applied Computer Vision Lab
 Author-email: Fabian Isensee <f.isensee@dkfz-heidelberg.de>
@@ -222,9 +222,8 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: torch>=2.1.2
 Requires-Dist: acvl-utils<0.3,>=0.2.3
-Requires-Dist: dynamic-network-architectures<0.4,>=0.3.1
+Requires-Dist: dynamic-network-architectures<0.5,>=0.4.1
 Requires-Dist: tqdm
-Requires-Dist: dicom2nifti
 Requires-Dist: scipy
 Requires-Dist: batchgenerators>=0.25.1
 Requires-Dist: numpy>=1.24
@@ -240,13 +239,14 @@ Requires-Dist: matplotlib
 Requires-Dist: seaborn
 Requires-Dist: imagecodecs
 Requires-Dist: yacs
-Requires-Dist: batchgeneratorsv2>=0.2
+Requires-Dist: batchgeneratorsv2>=0.3.0
 Requires-Dist: einops
 Requires-Dist: blosc2>=3.0.0b1
 Provides-Extra: dev
 Requires-Dist: black; extra == "dev"
 Requires-Dist: ruff; extra == "dev"
 Requires-Dist: pre-commit; extra == "dev"
+Dynamic: license-file
 
 # Welcome to the new nnU-Net!
 

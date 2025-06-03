@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: json_strong_typing
-Version: 0.3.8
+Version: 0.3.9
 Summary: Type-safe data interchange for Python data classes
 Home-page: https://github.com/hunyadi/strong_typing
 Author: Levente Hunyadi

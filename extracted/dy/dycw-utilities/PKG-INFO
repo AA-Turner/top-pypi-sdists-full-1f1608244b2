@@ -1,17 +1,17 @@
 Metadata-Version: 2.4
 Name: dycw-utilities
-Version: 0.126.5
+Version: 0.126.10
 Author-email: Derek Wan <d.wan@icloud.com>
 License-File: LICENSE
 Requires-Python: >=3.12
 Requires-Dist: typing-extensions<4.14,>=4.13.1
 Provides-Extra: test
-Requires-Dist: hypothesis<6.133,>=6.132.0; extra == 'test'
+Requires-Dist: dycw-pytest-only<2.2,>=2.1.1; extra == 'test'
+Requires-Dist: hypothesis<6.134,>=6.133.0; extra == 'test'
 Requires-Dist: pytest-asyncio<1.1,>=1.0.0; extra == 'test'
 Requires-Dist: pytest-cov<6.2,>=6.1.1; extra == 'test'
 Requires-Dist: pytest-instafail<0.6,>=0.5.0; extra == 'test'
 Requires-Dist: pytest-lazy-fixtures<1.2,>=1.1.4; extra == 'test'
-Requires-Dist: pytest-only<2.2,>=2.1.2; extra == 'test'
 Requires-Dist: pytest-randomly<3.17,>=3.16.0; extra == 'test'
 Requires-Dist: pytest-regressions<2.9,>=2.8.0; extra == 'test'
 Requires-Dist: pytest-rerunfailures<16,>=15.1; extra == 'test'
@@ -19,7 +19,6 @@ Requires-Dist: pytest-rng<1.1,>=1.0.0; extra == 'test'
 Requires-Dist: pytest-timeout<2.5,>=2.4.0; extra == 'test'
 Requires-Dist: pytest-xdist<3.8,>=3.7.0; extra == 'test'
 Requires-Dist: pytest<8.4,>=8.3.5; extra == 'test'
-Requires-Dist: setuptools>=78.0.2; extra == 'test'
 Provides-Extra: zzz-test-altair
 Requires-Dist: altair<5.6,>=5.5.0; extra == 'zzz-test-altair'
 Requires-Dist: atomicwrites<1.5,>=1.4.1; extra == 'zzz-test-altair'
@@ -78,7 +77,7 @@ Provides-Extra: zzz-test-hypothesis
 Requires-Dist: aiosqlite<0.22,>=0.21.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: asyncpg<0.31,>=0.30.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: greenlet<3.3,>=3.2.0; extra == 'zzz-test-hypothesis'
-Requires-Dist: hypothesis<6.133,>=6.132.0; extra == 'zzz-test-hypothesis'
+Requires-Dist: hypothesis<6.134,>=6.133.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: luigi<3.7,>=3.6.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: numpy<2.3,>=2.2.6; extra == 'zzz-test-hypothesis'
 Requires-Dist: pathvalidate<3.3,>=3.2.3; extra == 'zzz-test-hypothesis'
@@ -174,7 +173,7 @@ Requires-Dist: scipy<1.16,>=1.15.3; extra == 'zzz-test-scipy'
 Provides-Extra: zzz-test-sentinel
 Provides-Extra: zzz-test-shelve
 Provides-Extra: zzz-test-slack-sdk
-Requires-Dist: aiohttp<3.12.7,>=3.12.6; extra == 'zzz-test-slack-sdk'
+Requires-Dist: aiohttp<3.12.8,>=3.12.7; extra == 'zzz-test-slack-sdk'
 Requires-Dist: slack-sdk<3.36,>=3.35.0; extra == 'zzz-test-slack-sdk'
 Provides-Extra: zzz-test-socket
 Provides-Extra: zzz-test-sqlalchemy

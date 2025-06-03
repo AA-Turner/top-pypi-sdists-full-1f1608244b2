@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: markdown-to-confluence
-Version: 0.3.4
+Version: 0.3.5
 Summary: Publish Markdown files to Confluence wiki
 Home-page: https://github.com/hunyadi/md2conf
 Author: Levente Hunyadi
@@ -21,12 +21,12 @@ Classifier: Typing :: Typed
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: lxml>=5.3
-Requires-Dist: types-lxml>=2024.12.13
-Requires-Dist: markdown>=3.7
-Requires-Dist: types-markdown>=3.7
-Requires-Dist: pymdown-extensions>=10.14
-Requires-Dist: pyyaml>=6.0
+Requires-Dist: lxml>=5.4
+Requires-Dist: types-lxml>=2025.3.30
+Requires-Dist: markdown>=3.8
+Requires-Dist: types-markdown>=3.8
+Requires-Dist: pymdown-extensions>=10.15
+Requires-Dist: PyYAML>=6.0
 Requires-Dist: types-PyYAML>=6.0
 Requires-Dist: requests>=2.32
 Requires-Dist: types-requests>=2.32
@@ -198,19 +198,25 @@ root
         └── Mean vs. median
 ```
 
+### Lists and tables
+
+If your Markdown lists or tables don't appear in Confluence as expected, verify that the list or table is delimited by a blank line both before and after, as per strict Markdown syntax. While some previewers accept a more lenient syntax (e.g. an itemized list immediately following a paragraph), *md2conf* uses [Python-Markdown](https://python-markdown.github.io/) internally to convert Markdown into XHTML, which expects the Markdown document to adhere to the stricter syntax.
+
 ### Publishing images
 
 Local images referenced in a Markdown file are automatically published to Confluence as attachments to the page.
 
-Unfortunately, Confluence struggles with SVG images, e.g. they may only show in *edit* mode, display in a wrong size or text labels in the image may be truncated. In order to mitigate the issue, whenever *md2conf* encounters a reference to an SVG image in a Markdown file, it checks whether a corresponding PNG image also exists in the same directory, and if a PNG image is found, it is published instead.
+Unfortunately, Confluence struggles with SVG images, e.g. they may only show in *edit* mode, display in a wrong size or text labels in the image may be truncated. (This seems to be a known issue in Confluence.) In order to mitigate the issue, whenever *md2conf* encounters a reference to an SVG image in a Markdown file, it checks whether a corresponding PNG image also exists in the same directory, and if a PNG image is found, it is published instead.
 
 External images referenced with an absolute URL retain the original URL.
 
 ### Ignoring files
 
-Skip files in a directory with rules defined in `.mdignore`. Each rule should occupy a single line. Rules follow the syntax of [fnmatch](https://docs.python.org/3/library/fnmatch.html#fnmatch.fnmatch). Specifically, `?` matches any single character, and `*` matches zero or more characters. For example, use `up-*.md` to exclude Markdown files that start with `up-`. Lines that start with `#` are treated as comments.
+Skip files in a directory with rules defined in `.mdignore`. Each rule should occupy a single line. Rules follow the syntax (and constraints) of [fnmatch](https://docs.python.org/3/library/fnmatch.html#fnmatch.fnmatch). Specifically, `?` matches any single character, and `*` matches zero or more characters. For example, use `up-*.md` to exclude Markdown files that start with `up-`. Lines that start with `#` are treated as comments.
 
 Files that don't have the extension `*.md` are skipped automatically. Hidden directories (whose name starts with `.`) are not recursed into.
+
+Relative paths to items in a nested directory are not supported. You must put `.mdignore` in the same directory where the items to be skipped reside.
 
 ### Page title
 

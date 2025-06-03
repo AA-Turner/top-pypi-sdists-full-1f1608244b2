@@ -1,13 +1,13 @@
 Metadata-Version: 2.1
 Name: libvirt-python
-Version: 11.3.0
+Version: 11.4.0
 Summary: The libvirt virtualization API python binding
 Home-page: http://www.libvirt.org
 Maintainer: Libvirt Maintainers
 Maintainer-email: libvir-list@redhat.com
+License: LGPL-v2.0-or-later
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)
 Classifier: Programming Language :: Python :: 3 :: Only
 Requires-Python: >=3.6
 Description-Content-Type: text/x-rst

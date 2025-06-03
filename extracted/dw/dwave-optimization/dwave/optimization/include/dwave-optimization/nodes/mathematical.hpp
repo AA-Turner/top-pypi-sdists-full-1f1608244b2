@@ -35,19 +35,18 @@ struct abs {
 };
 
 template <class T>
-struct expit {};
-
-template <>
-struct expit<double> {
-    double operator()(const double& x) const { return 1.0 / (1.0 + std::exp(-x)); }
+struct exp {
+    constexpr auto operator()(const T& x) const { return std::exp(x); }
 };
 
 template <class T>
-struct log {};
+struct expit {
+    constexpr double operator()(const T& x) const { return 1.0 / (1.0 + std::exp(-1. * x)); }
+};
 
-template <>
-struct log<double> {
-    double operator()(const double& x) const { return std::log(x); }
+template <class T>
+struct log {
+    constexpr auto operator()(const T& x) const { return std::log(x); }
 };
 
 template <class T>
@@ -73,16 +72,17 @@ struct min {
 };
 
 template <class T>
-struct modulus {};
-
-template <>
-struct modulus<double> {
-    constexpr double operator()(const double& x, const double& y) const {
+struct modulus {
+    constexpr T operator()(const T& x, const T& y) const {
         // Copy numpy behavior and return 0 for `x % 0`
-        if (y == 0) {
-            return 0;
+        if (y == 0) return 0;
+
+        T result;
+        if constexpr (std::integral<T>) {
+            result = std::div(x, y).rem;
+        } else {
+            result = std::fmod(x, y);
         }
-        double result = std::fmod(x, y);
 
         if ((std::signbit(x) != std::signbit(y)) && (result != 0)) {
             // Make result consistent with numpy for different-sign arguments
@@ -94,11 +94,16 @@ struct modulus<double> {
 };
 
 template <class T>
-struct rint {};
+struct rint {
+    constexpr auto operator()(const T& x) const { return std::rint(x); }
+};
 
-template <>
-struct rint<double> {
-    double operator()(const double& x) const { return std::rint(x); }
+template <class T>
+struct safe_divides {
+    constexpr T operator()(const T& lhs, const T& rhs) const {
+        if (!rhs) return 0;
+        return lhs / rhs;
+    }
 };
 
 template <class T>
@@ -107,11 +112,8 @@ struct square {
 };
 
 template <class T>
-struct square_root {};
-
-template <>
-struct square_root<double> {
-    double operator()(const double& x) const { return std::sqrt(x); }
+struct square_root {
+    constexpr auto operator()(const T& x) const { return std::sqrt(x); }
 };
 
 }  // namespace functional
@@ -156,7 +158,7 @@ class BinaryOpNode : public ArrayOutputMixin<ArrayNode> {
     }
 
  private:
-    using op = BinaryOp;
+    BinaryOp op;
 
     // There are redundant, because we could dynamic_cast each time from
     // predecessors(), but this is more performant
@@ -176,6 +178,7 @@ using MaximumNode = BinaryOpNode<functional::max<double>>;
 using MinimumNode = BinaryOpNode<functional::min<double>>;
 using ModulusNode = BinaryOpNode<functional::modulus<double>>;
 using OrNode = BinaryOpNode<std::logical_or<double>>;
+using SafeDivideNode = BinaryOpNode<functional::safe_divides<double>>;
 using SubtractNode = BinaryOpNode<std::minus<double>>;
 using XorNode = BinaryOpNode<functional::logical_xor<double>>;
 
@@ -216,7 +219,7 @@ class NaryOpNode : public ArrayOutputMixin<ArrayNode> {
     }
 
  private:
-    using op = BinaryOp;
+    BinaryOp op;
 
     std::vector<Array*> operands_;
 };
@@ -278,7 +281,7 @@ class PartialReduceNode : public ArrayOutputMixin<ArrayNode> {
     const std::optional<double> init;
 
  private:
-    using op = BinaryOp;
+    BinaryOp op;
 
     // There are redundant, because we could dynamic_cast each time from
     // predecessors(), but this is more performant
@@ -341,7 +344,7 @@ class ReduceNode : public ScalarOutputMixin<ArrayNode> {
     const std::optional<double> init;
 
  private:
-    using op = BinaryOp;
+    BinaryOp op;
 
     // Calculate the output value based on the state of the predecessor
     double reduce(const State& state) const;
@@ -396,7 +399,7 @@ class UnaryOpNode : public ArrayOutputMixin<ArrayNode> {
     }
 
  private:
-    using op = UnaryOp;
+    UnaryOp op;
 
     // There are redundant, because we could dynamic_cast each time from
     // predecessors(), but this is more performant
@@ -405,6 +408,7 @@ class UnaryOpNode : public ArrayOutputMixin<ArrayNode> {
 
 using AbsoluteNode = UnaryOpNode<functional::abs<double>>;
 using ExpitNode = UnaryOpNode<functional::expit<double>>;
+using ExpNode = UnaryOpNode<functional::exp<double>>;
 using LogNode = UnaryOpNode<functional::log<double>>;
 using LogicalNode = UnaryOpNode<functional::logical<double>>;
 using NegativeNode = UnaryOpNode<std::negate<double>>;

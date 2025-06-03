@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: daytona_sdk
-Version: 0.18.2
+Version: 0.19.0
 Summary: Python SDK for Daytona
 Author-email: "Daytona Platforms Inc." <support@daytona.io>
 License: AGPL-3.0
@@ -25,6 +25,9 @@ Requires-Dist: httpx<0.29.0,>=0.28.0
 Requires-Dist: aiofiles<24.2.0,>=24.1.0
 Requires-Dist: aiohttp<4.0.0,>=3.12.0
 Requires-Dist: aiohttp_retry<3.0.0,>=2.9.0
+Requires-Dist: toml<0.11.0,>=0.10.0
+Requires-Dist: aioboto3<15.0.0,>=14.0.0
+Requires-Dist: boto3<2.0.0,>=1.0.0
 Provides-Extra: dev
 Requires-Dist: pydoc-markdown>=4.8.2; extra == "dev"
 Requires-Dist: build>=1.0.3; extra == "dev"

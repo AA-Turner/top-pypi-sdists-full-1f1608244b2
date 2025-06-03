@@ -2,6 +2,9 @@
 from .._impl import (
     storage_writer_api_ArrayPoints as ArrayPoints,
     storage_writer_api_ArrayPointsVisitor as ArrayPointsVisitor,
+    storage_writer_api_ColumnBatch as ColumnBatch,
+    storage_writer_api_ColumnValues as ColumnValues,
+    storage_writer_api_ColumnValuesVisitor as ColumnValuesVisitor,
     storage_writer_api_DirectNominalChannelWriterService as DirectNominalChannelWriterService,
     storage_writer_api_DoubleArrayPoint as DoubleArrayPoint,
     storage_writer_api_DoublePoint as DoublePoint,
@@ -22,6 +25,7 @@ from .._impl import (
     storage_writer_api_TelegrafMetric as TelegrafMetric,
     storage_writer_api_WriteBatchesRequest as WriteBatchesRequest,
     storage_writer_api_WriteBatchesRequestExternal as WriteBatchesRequestExternal,
+    storage_writer_api_WriteColumnBatchesRequest as WriteColumnBatchesRequest,
     storage_writer_api_WriteLogsRequest as WriteLogsRequest,
     storage_writer_api_WriteTelegrafBatchesRequest as WriteTelegrafBatchesRequest,
 )

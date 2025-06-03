@@ -86,6 +86,7 @@ from .._impl import (
     scout_compute_api_DriverSeries3d as DriverSeries3d,
     scout_compute_api_DurationConstant as DurationConstant,
     scout_compute_api_DurationConstantVisitor as DurationConstantVisitor,
+    scout_compute_api_DurationFilterRanges as DurationFilterRanges,
     scout_compute_api_EnumAggregationFunction as EnumAggregationFunction,
     scout_compute_api_EnumBucket as EnumBucket,
     scout_compute_api_EnumCountDuplicateSeries as EnumCountDuplicateSeries,

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: aristaproto
-Version: 0.1.3
+Version: 0.1.4
 Summary: Arista Protobuf / Python gRPC bindings generator & library
 Home-page: https://github.com/aristanetworks/python-aristaproto
 License: MIT
@@ -18,11 +18,10 @@ Classifier: Programming Language :: Python :: 3.13
 Provides-Extra: compiler
 Provides-Extra: rust-codec
 Requires-Dist: betterproto-rust-codec (==0.1.1) ; extra == "rust-codec"
-Requires-Dist: black (>=23.1.0) ; extra == "compiler"
 Requires-Dist: grpclib (>=0.4.1,<0.5.0)
-Requires-Dist: isort (>=5.11.5,<6.0.0) ; extra == "compiler"
 Requires-Dist: jinja2 (>=3.0.3) ; extra == "compiler"
 Requires-Dist: python-dateutil (>=2.8,<3.0)
+Requires-Dist: ruff (>=0.11.11) ; extra == "compiler"
 Requires-Dist: typing-extensions (>=4.7.1,<5.0.0)
 Project-URL: Repository, https://github.com/aristanetworks/python-aristaproto
 Description-Content-Type: text/markdown
@@ -31,7 +30,7 @@ Description-Content-Type: text/markdown
 
 This was originally forked from <https://github.com/danielgtaylor/python-betterproto> @ [b8a091ae7055dd949d193695a06c9536ad51eea8](https://github.com/danielgtaylor/python-betterproto/commit/b8a091ae7055dd949d193695a06c9536ad51eea8).
 
-Afterwards commits up to `1f88b67eeb9871d33da154fd2c859b9d1aed62c1` on `python-betterproto` have been cherry-picked.
+Afterwards, commits up to (and including) `124613f55fa8ff62a460e1ad33c5c78723b703a0` on `python-betterproto`, have been cherry-picked.
 
 Changes in this project compared with the base project:
 
@@ -42,6 +41,8 @@ Changes in this project compared with the base project:
 - Keep nanosecond precision for `Timestamp`.
   - Subclass `datetime` to store the original nano-second value when converting from `Timestamp` to `datetime`.
   - On conversion from the subclass of `datetime` to `Timestamp` the original nano-second value is restored.
+- Minor fixes.
+  - Escaping double-quotes in docstrings.
 
 ## Installation
 
@@ -390,6 +391,51 @@ swap the dataclass implementation from the builtin python dataclass to the
 pydantic dataclass. You must have pydantic as a dependency in your project for
 this to work.
 
+## Configuration typing imports
+
+By default typing types will be imported directly from typing.  This sometimes can lead to issues in generation if types that are being generated conflict with the name.  In this case you can configure the way types are imported from 3 different options:
+
+### Direct
+```
+protoc -I . --python_aristaproto_opt=typing.direct --python_aristaproto_out=lib example.proto
+```
+this configuration is the default, and will import types as follows:
+```
+from typing import (
+  List,
+  Optional,
+  Union
+)
+...
+value: List[str] = []
+value2: Optional[str] = None
+value3: Union[str, int] = 1
+```
+### Root
+```
+protoc -I . --python_aristaproto_opt=typing.root --python_aristaproto_out=lib example.proto
+```
+this configuration loads the root typing module, and then access the types off of it directly:
+```
+import typing
+...
+value: typing.List[str] = []
+value2: typing.Optional[str] = None
+value3: typing.Union[str, int] = 1
+```
+
+### 310
+```
+protoc -I . --python_aristaproto_opt=typing.310 --python_aristaproto_out=lib example.proto
+```
+this configuration avoid loading typing all together if possible and uses the python 3.10 pattern:
+```
+...
+value: list[str] = []
+value2: str | None = None
+value3: str | int = 1
+```
+
 ## Development
 
 ### Requirements
@@ -467,7 +513,7 @@ poe full-test
 
 ### (Re)compiling Google Well-known Types
 
-Betterproto includes compiled versions for Google's well-known types at [src/aristaproto/lib/google](src/aristaproto/lib/google).
+Aristaproto includes compiled versions for Google's well-known types at [src/aristaproto/lib/google](src/aristaproto/lib/google).
 Be sure to regenerate these files when modifying the plugin output format, and validate by running the tests.
 
 Normally, the plugin does not compile any references to `google.protobuf`, since they are pre-compiled. To force compilation of `google.protobuf`, use the option `--custom_opt=INCLUDE_GOOGLE`.

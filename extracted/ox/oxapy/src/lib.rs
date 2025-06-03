@@ -25,6 +25,7 @@ use routing::{delete, get, head, options, patch, post, put, static_file, Route, 
 use serde::{Deserialize, Serialize};
 use session::{Session, SessionStore};
 use status::Status;
+use templating::Template;
 
 use hyper::server::conn::http1;
 use hyper::service::service_fn;
@@ -45,8 +46,6 @@ use std::{
 use pyo3::{exceptions::PyException, prelude::*};
 
 type MatchRoute<'l> = matchit::Match<'l, 'l, &'l Route>;
-
-use crate::templating::Template;
 
 trait IntoPyException<T> {
     fn into_py_exception(self) -> PyResult<T>;
@@ -223,7 +222,9 @@ impl HttpServer {
                             io,
                             service_fn(move |req| {
                                 let request_ctx = request_ctx.clone();
-                                async move { handle_request(req, request_ctx).await }
+                                async move {
+                                    handle_request(req, request_ctx).await // ping
+                                }
                             }),
                         )
                         .await
@@ -232,7 +233,7 @@ impl HttpServer {
             }
         });
 
-        handle_response(&mut shutdown_rx, &mut request_receiver).await;
+        handle_response(&mut shutdown_rx, &mut request_receiver).await; // pong
 
         Ok(())
     }

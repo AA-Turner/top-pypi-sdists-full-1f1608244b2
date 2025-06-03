@@ -115,8 +115,10 @@ class ApiClient(object):
     def _fetch_tunneling_instance_id(self):
         def _get_tunneling_instance_id(api_client):
             try:
+                # the engine server url is of the format: {SCH_URL}/tunneling/rest/{ENGINE_ID}
+                # we get the SCH_URL and ENGINE_ID to get the tunneling_instance_id
                 parsed_uri = urlparse(api_client.server_url)
-                sch_url = '{}://{}'.format(parsed_uri.scheme, parsed_uri.netloc)
+                sch_url = api_client.server_url[: api_client.server_url.find('/tunneling/rest/')]
                 end_point = '{}/tunneling/rest/connection/{}'.format(
                     sch_url, parsed_uri.path.split('/tunneling/rest/')[1]
                 )

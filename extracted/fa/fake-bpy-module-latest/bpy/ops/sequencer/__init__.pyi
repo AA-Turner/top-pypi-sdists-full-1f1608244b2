@@ -7,15 +7,6 @@ import bpy.ops.transform
 import bpy.types
 import mathutils
 
-def change_effect_input(
-    execution_context: int | str | None = None, undo: bool | None = None
-):
-    """Undocumented, consider contributing.
-
-    :type execution_context: int | str | None
-    :type undo: bool | None
-    """
-
 def change_effect_type(
     execution_context: int | str | None = None,
     undo: bool | None = None,
@@ -42,62 +33,62 @@ def change_effect_type(
     ]
     | None = "CROSS",
 ):
-    """Undocumented, consider contributing.
+    """Replace effect strip with another that takes the same number of inputs
 
         :type execution_context: int | str | None
         :type undo: bool | None
-        :param type: Type, Sequencer effect type
+        :param type: Type, Strip effect type
 
     CROSS
-    Crossfade -- Crossfade effect strip type.
+    Crossfade -- Fade out of one video, fading into another.
 
     ADD
-    Add -- Add effect strip type.
+    Add -- Add together color channels from two videos.
 
     SUBTRACT
-    Subtract -- Subtract effect strip type.
+    Subtract -- Subtract one strip's color from another.
 
     ALPHA_OVER
-    Alpha Over -- Alpha Over effect strip type.
+    Alpha Over -- Blend alpha on top of another video.
 
     ALPHA_UNDER
-    Alpha Under -- Alpha Under effect strip type.
+    Alpha Under -- Blend alpha below another video.
 
     GAMMA_CROSS
-    Gamma Cross -- Gamma Cross effect strip type.
+    Gamma Crossfade -- Crossfade with color correction.
 
     MULTIPLY
-    Multiply -- Multiply effect strip type.
+    Multiply -- Multiply color channels from two videos.
 
     WIPE
-    Wipe -- Wipe effect strip type.
+    Wipe -- Sweep a transition line across the frame.
 
     GLOW
-    Glow -- Glow effect strip type.
+    Glow -- Add blur and brightness to light areas.
 
     TRANSFORM
-    Transform -- Transform effect strip type.
+    Transform -- Apply scale, rotation, or translation.
 
     COLOR
-    Color -- Color effect strip type.
+    Color -- Add a simple color strip.
 
     SPEED
-    Speed -- Color effect strip type.
+    Speed -- Timewarp video strips, modifying playback speed.
 
     MULTICAM
-    Multicam Selector.
+    Multicam Selector -- Control active camera angles.
 
     ADJUSTMENT
-    Adjustment Layer.
+    Adjustment Layer -- Apply nondestructive effects.
 
     GAUSSIAN_BLUR
-    Gaussian Blur.
+    Gaussian Blur -- Soften details along axes.
 
     TEXT
-    Text.
+    Text -- Add a simple text strip.
 
     COLORMIX
-    Color Mix.
+    Color Mix -- Combine two strips using blend modes.
         :type type: typing.Literal['CROSS','ADD','SUBTRACT','ALPHA_OVER','ALPHA_UNDER','GAMMA_CROSS','MULTIPLY','WIPE','GLOW','TRANSFORM','COLOR','SPEED','MULTICAM','ADJUSTMENT','GAUSSIAN_BLUR','TEXT','COLORMIX'] | None
     """
 
@@ -358,6 +349,7 @@ def effect_strip_add(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     color: collections.abc.Sequence[float] | mathutils.Color | None = (0.0, 0.0, 0.0),
 ):
     """Add an effect to the sequencer, most are applied on top of existing strips
@@ -367,55 +359,55 @@ def effect_strip_add(
         :param type: Type, Sequencer effect type
 
     CROSS
-    Crossfade -- Crossfade effect strip type.
+    Crossfade -- Fade out of one video, fading into another.
 
     ADD
-    Add -- Add effect strip type.
+    Add -- Add together color channels from two videos.
 
     SUBTRACT
-    Subtract -- Subtract effect strip type.
+    Subtract -- Subtract one strip's color from another.
 
     ALPHA_OVER
-    Alpha Over -- Alpha Over effect strip type.
+    Alpha Over -- Blend alpha on top of another video.
 
     ALPHA_UNDER
-    Alpha Under -- Alpha Under effect strip type.
+    Alpha Under -- Blend alpha below another video.
 
     GAMMA_CROSS
-    Gamma Cross -- Gamma Cross effect strip type.
+    Gamma Crossfade -- Crossfade with color correction.
 
     MULTIPLY
-    Multiply -- Multiply effect strip type.
+    Multiply -- Multiply color channels from two videos.
 
     WIPE
-    Wipe -- Wipe effect strip type.
+    Wipe -- Sweep a transition line across the frame.
 
     GLOW
-    Glow -- Glow effect strip type.
+    Glow -- Add blur and brightness to light areas.
 
     TRANSFORM
-    Transform -- Transform effect strip type.
+    Transform -- Apply scale, rotation, or translation.
 
     COLOR
-    Color -- Color effect strip type.
+    Color -- Add a simple color strip.
 
     SPEED
-    Speed -- Color effect strip type.
+    Speed -- Timewarp video strips, modifying playback speed.
 
     MULTICAM
-    Multicam Selector.
+    Multicam Selector -- Control active camera angles.
 
     ADJUSTMENT
-    Adjustment Layer.
+    Adjustment Layer -- Apply nondestructive effects.
 
     GAUSSIAN_BLUR
-    Gaussian Blur.
+    Gaussian Blur -- Soften details along axes.
 
     TEXT
-    Text.
+    Text -- Add a simple text strip.
 
     COLORMIX
-    Color Mix.
+    Color Mix -- Combine two strips using blend modes.
         :type type: typing.Literal['CROSS','ADD','SUBTRACT','ALPHA_OVER','ALPHA_UNDER','GAMMA_CROSS','MULTIPLY','WIPE','GLOW','TRANSFORM','COLOR','SPEED','MULTICAM','ADJUSTMENT','GAUSSIAN_BLUR','TEXT','COLORMIX'] | None
         :param frame_start: Start Frame, Start frame of the sequence strip
         :type frame_start: int | None
@@ -429,6 +421,8 @@ def effect_strip_add(
         :type overlap: bool | None
         :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
         :type overlap_shuffle_override: bool | None
+        :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+        :type skip_locked_or_muted_channels: bool | None
         :param color: Color, Initialize the strip with this color
         :type color: collections.abc.Sequence[float] | mathutils.Color | None
     """
@@ -676,6 +670,7 @@ def image_strip_add(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     fit_method: typing.Literal["FIT", "FILL", "STRETCH", "ORIGINAL"] | None = "FIT",
     set_view_transform: bool | None = True,
     use_placeholders: bool | None = False,
@@ -778,6 +773,8 @@ def image_strip_add(
         :type overlap: bool | None
         :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
         :type overlap_shuffle_override: bool | None
+        :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+        :type skip_locked_or_muted_channels: bool | None
         :param fit_method: Fit Method, Scale fit method
 
     FIT
@@ -830,6 +827,7 @@ def mask_strip_add(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     mask: str | None = "",
 ):
     """Add a mask strip to the sequencer
@@ -846,6 +844,8 @@ def mask_strip_add(
     :type overlap: bool | None
     :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
     :type overlap_shuffle_override: bool | None
+    :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+    :type skip_locked_or_muted_channels: bool | None
     :param mask: Mask
     :type mask: str | None
     """
@@ -920,6 +920,7 @@ def movie_strip_add(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     fit_method: typing.Literal["FIT", "FILL", "STRETCH", "ORIGINAL"] | None = "FIT",
     set_view_transform: bool | None = True,
     adjust_playback_rate: bool | None = True,
@@ -1024,6 +1025,8 @@ def movie_strip_add(
         :type overlap: bool | None
         :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
         :type overlap_shuffle_override: bool | None
+        :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+        :type skip_locked_or_muted_channels: bool | None
         :param fit_method: Fit Method, Scale fit method
 
     FIT
@@ -1058,6 +1061,7 @@ def movieclip_strip_add(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     clip: str | None = "",
 ):
     """Add a movieclip strip to the sequencer
@@ -1074,6 +1078,8 @@ def movieclip_strip_add(
     :type overlap: bool | None
     :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
     :type overlap_shuffle_override: bool | None
+    :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+    :type skip_locked_or_muted_channels: bool | None
     :param clip: Clip
     :type clip: str | None
     """
@@ -1345,6 +1351,7 @@ def scene_strip_add(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     scene: str | None = "",
 ):
     """Add a strip to the sequencer using a Blender scene as a source
@@ -1361,6 +1368,8 @@ def scene_strip_add(
     :type overlap: bool | None
     :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
     :type overlap_shuffle_override: bool | None
+    :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+    :type skip_locked_or_muted_channels: bool | None
     :param scene: Scene
     :type scene: str | None
     """
@@ -1375,6 +1384,7 @@ def scene_strip_add_new(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     type: typing.Literal["NEW", "EMPTY", "LINK_COPY", "FULL_COPY"] | None = "NEW",
 ):
     """Create a new Strip and assign a new Scene as source
@@ -1391,6 +1401,8 @@ def scene_strip_add_new(
         :type overlap: bool | None
         :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
         :type overlap_shuffle_override: bool | None
+        :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+        :type skip_locked_or_muted_channels: bool | None
         :param type: Type
 
     NEW
@@ -1793,6 +1805,7 @@ def sound_strip_add(
     replace_sel: bool | None = True,
     overlap: bool | None = False,
     overlap_shuffle_override: bool | None = False,
+    skip_locked_or_muted_channels: bool | None = True,
     cache: bool | None = False,
     mono: bool | None = False,
 ):
@@ -1890,6 +1903,8 @@ def sound_strip_add(
         :type overlap: bool | None
         :param overlap_shuffle_override: Override Overlap Shuffle Behavior, Use the overlap_mode tool settings to determine how to shuffle overlapping strips
         :type overlap_shuffle_override: bool | None
+        :param skip_locked_or_muted_channels: Skip Locked or Muted Channels, Add strips to muted or locked channels when adding movie strips
+        :type skip_locked_or_muted_channels: bool | None
         :param cache: Cache, Cache the sound in memory
         :type cache: bool | None
         :param mono: Mono, Merge all the sound's channels into one

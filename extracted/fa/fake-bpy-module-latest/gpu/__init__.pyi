@@ -104,7 +104,8 @@ with an identifier such as UNIFORM_COLOR
 
  or FLAT_COLOR
 
-.
+. There are specific builtin shaders for
+drawing triangles, lines and points.
 
 Every shader defines a set of attributes and uniforms that have to be set in order to use the shader.
 Attributes are properties that are set using a vertex buffer and can be different for individual vertices.
@@ -112,6 +113,38 @@ Uniforms are properties that are constant per draw call.
 They can be set using the shader.uniform_*
 
  functions after the shader has been bound.
+
+[NOTE]
+It is important to note that GLSL sources are reinterpreted to MSL (Metal Shading Language)
+on Apple operating systems.
+This uses a small compatibility layer that does not cover the whole GLSL language specification.
+Here is a list of differences to keep in mind when targeting compatibility with Apple platforms:
+* The only matrix constructors available are:
+[QUOTE]
+    * diagonal scalar (example: mat2(1)
+
+    )
+    * all scalars (example: mat2(1, 0, 0, 1)
+
+    )
+    * column vector (example: mat2(vec2(1,0), vec2(0,1))
+
+    )
+    * reshape constructors work only for square matrices (example: mat3(mat4(1))
+
+    )
+
+* vertex
+
+, fragment
+
+ and kernel
+
+ are reserved keywords.
+* all types and keywords defined by the
+MSL specification
+are reserved keywords and should not be used.
+
 
 
 --------------------
@@ -148,8 +181,7 @@ To try these examples, just copy them into Blenders text editor and execute them
 To keep the examples relatively small, they just register a draw function that can't easily be removed anymore.
 Blender has to be restarted in order to delete the draw handlers.
 
-
---------------------
+3D Points with Single Color
 
 ```../examples/gpu.1.py```
 

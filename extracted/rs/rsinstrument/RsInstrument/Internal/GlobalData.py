@@ -37,3 +37,15 @@ class GlobalData:
         if not cls.is_bounded():
             return None
         return getattr(cls.bounded_class, '_global_logging_relative_timestamp')
+
+    @classmethod
+    def set_logging_relative_time_of_first_entry(cls, value: bool) -> None:
+        """Sets the class variable to the entered value."""
+        setattr(cls.bounded_class, '_global_logging_relative_timestamp_of_first_entry', value)
+
+    @classmethod
+    def get_logging_relative_time_of_first_entry(cls) -> bool or None:
+        """Returns the class variable value."""
+        if not cls.is_bounded():
+            return None
+        return getattr(cls.bounded_class, '_global_logging_relative_timestamp_of_first_entry')

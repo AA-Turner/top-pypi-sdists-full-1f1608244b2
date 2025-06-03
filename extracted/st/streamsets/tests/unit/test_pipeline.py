@@ -24,9 +24,27 @@ class DummyPipelineBuilder:
         self._pipeline = {self._config_key: {'stages': []}}
 
 
+class MockEngine:
+    def __init__(self, version):
+        self.version = version
+
+
+class MockEngines:
+    def __init__(self):
+        self._engines_data = {'abcd1234': {"version": "6.1.1"}, 'wxyz0987': {"version": "5.6.1"}}
+
+    def get(self, id):
+        version = self._engines_data.get(id)["version"]
+        return MockEngine(version)
+
+
 class MockControlHub:
     def __init__(self):
         self.api_client = MockApiClient()
+
+    @property
+    def engines(self):
+        return MockEngines()
 
 
 class MockApiClient:
@@ -224,6 +242,7 @@ def test_pipeline_engine_id(dummy_pipeline):
     assert dummy_pipeline.engine_id
     dummy_pipeline.engine_id = fake_engine_id
     assert dummy_pipeline._data['sdcId'] == fake_engine_id
+    assert dummy_pipeline.sdc_version == '6.1.1'
 
 
 def test_pipeline_sdc_id(dummy_pipeline):
@@ -231,6 +250,7 @@ def test_pipeline_sdc_id(dummy_pipeline):
     assert dummy_pipeline.sdc_id
     dummy_pipeline.sdc_id = fake_engine_id
     assert dummy_pipeline._data['sdcId'] == fake_engine_id
+    assert dummy_pipeline.sdc_version == '5.6.1'
 
 
 def test_pipeline_sdc_id_is_deprecated(dummy_pipeline):

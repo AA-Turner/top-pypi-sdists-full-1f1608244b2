@@ -68,6 +68,7 @@ class TableProcessor(BaseProcessor):
         bool,
         "Whether to format the lines.",
     ] = False
+    drop_repeated_text: Annotated[bool, "Drop repeated text in OCR results."] = False
 
     def __init__(
         self,
@@ -101,8 +102,13 @@ class TableProcessor(BaseProcessor):
                         "table_image": image,
                         "table_bbox": image_poly.bbox,
                         "img_size": page.get_image(highres=True).size,
-                        "ocr_block": page.text_extraction_method == "surya"
-                        or self.format_lines,
+                        "ocr_block": any(
+                            [
+                                page.text_extraction_method in ["surya", "hybrid"],
+                                page.ocr_errors_detected,
+                                self.format_lines,
+                            ]
+                        ),
                     }
                 )
 
@@ -474,6 +480,7 @@ class TableProcessor(BaseProcessor):
             det_predictor=self.detection_model,
             recognition_batch_size=self.get_recognition_batch_size(),
             detection_batch_size=self.get_detection_batch_size(),
+            drop_repeated_text=self.drop_repeated_text,
         )
 
         for block, ocr_res in zip(ocr_blocks, ocr_results):
@@ -488,7 +495,7 @@ class TableProcessor(BaseProcessor):
         if self.detection_batch_size is not None:
             return self.detection_batch_size
         elif settings.TORCH_DEVICE_MODEL == "cuda":
-            return 12
+            return 10
         return 4
 
     def get_table_rec_batch_size(self):

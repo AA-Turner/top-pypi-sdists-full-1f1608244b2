@@ -60,7 +60,8 @@ from bigframes import exceptions as bfe
 from bigframes import version
 import bigframes._config.bigquery_options as bigquery_options
 import bigframes.clients
-from bigframes.core import blocks
+import bigframes.constants
+from bigframes.core import blocks, log_adapter, utils
 import bigframes.core.pyformat
 
 # Even though the ibis.backends.bigquery import is unused, it's needed
@@ -104,6 +105,7 @@ MAX_INLINE_DF_BYTES = 5000
 logger = logging.getLogger(__name__)
 
 
+@log_adapter.class_logger
 class Session(
     third_party_pandas_gbq.GBQIOMixin,
     third_party_pandas_parquet.ParquetIOMixin,
@@ -170,6 +172,7 @@ class Session(
                 application_name=context.application_name,
                 bq_kms_key_name=self._bq_kms_key_name,
                 client_endpoints_override=context.client_endpoints_override,
+                requests_transport_adapters=context.requests_transport_adapters,
             )
 
         # TODO(shobs): Remove this logic after https://github.com/ibis-project/ibis/issues/8494
@@ -247,13 +250,6 @@ class Session(
         self._temp_storage_manager = (
             self._session_resource_manager or self._anon_dataset_manager
         )
-        self._executor: executor.Executor = bq_caching_executor.BigQueryCachingExecutor(
-            bqclient=self._clients_provider.bqclient,
-            bqstoragereadclient=self._clients_provider.bqstoragereadclient,
-            storage_manager=self._temp_storage_manager,
-            strictly_ordered=self._strictly_ordered,
-            metrics=self._metrics,
-        )
         self._loader = bigframes.session.loader.GbqDataLoader(
             session=self,
             bqclient=self._clients_provider.bqclient,
@@ -262,6 +258,14 @@ class Session(
             default_index_type=self._default_index_type,
             scan_index_uniqueness=self._strictly_ordered,
             force_total_order=self._strictly_ordered,
+            metrics=self._metrics,
+        )
+        self._executor: executor.Executor = bq_caching_executor.BigQueryCachingExecutor(
+            bqclient=self._clients_provider.bqclient,
+            bqstoragereadclient=self._clients_provider.bqstoragereadclient,
+            loader=self._loader,
+            storage_manager=self._temp_storage_manager,
+            strictly_ordered=self._strictly_ordered,
             metrics=self._metrics,
         )
 
@@ -445,7 +449,6 @@ class Session(
                 columns=columns,
                 configuration=configuration,
                 max_results=max_results,
-                api_name="read_gbq",
                 use_cache=use_cache,
                 filters=filters,
                 dry_run=dry_run,
@@ -463,7 +466,6 @@ class Session(
                 index_col=index_col,
                 columns=columns,
                 max_results=max_results,
-                api_name="read_gbq",
                 use_cache=use_cache if use_cache is not None else True,
                 filters=filters,
                 dry_run=dry_run,
@@ -497,6 +499,7 @@ class Session(
     ) -> pandas.Series:
         ...
 
+    @log_adapter.log_name_override("read_gbq_colab")
     def _read_gbq_colab(
         self,
         query: str,
@@ -527,13 +530,11 @@ class Session(
         query = bigframes.core.pyformat.pyformat(
             query,
             pyformat_args=pyformat_args,
-            # TODO: add dry_run parameter to avoid API calls for data in pyformat_args
         )
 
         return self._loader.read_gbq_query(
             query=query,
             index_col=bigframes.enums.DefaultIndexKind.NULL,
-            api_name="read_gbq_colab",
             force_total_order=False,
             dry_run=typing.cast(Union[Literal[False], Literal[True]], dry_run),
         )
@@ -654,7 +655,6 @@ class Session(
             columns=columns,
             configuration=configuration,
             max_results=max_results,
-            api_name="read_gbq_query",
             use_cache=use_cache,
             filters=filters,
             dry_run=dry_run,
@@ -737,7 +737,6 @@ class Session(
             index_col=index_col,
             columns=columns,
             max_results=max_results,
-            api_name="read_gbq_table",
             use_cache=use_cache,
             filters=filters,
             dry_run=dry_run,
@@ -773,7 +772,6 @@ class Session(
 
         df = self._loader.read_gbq_table(
             table,
-            api_name="read_gbq_table_steaming",
             enable_snapshot=False,
             index_col=bigframes.enums.DefaultIndexKind.NULL,
         )
@@ -906,7 +904,6 @@ class Session(
         if isinstance(pandas_dataframe, pandas.Series):
             bf_df = self._read_pandas(
                 pandas.DataFrame(pandas_dataframe),
-                "read_pandas",
                 write_engine=write_engine,
             )
             bf_series = series.Series(bf_df._block)
@@ -916,13 +913,10 @@ class Session(
         if isinstance(pandas_dataframe, pandas.Index):
             return self._read_pandas(
                 pandas.DataFrame(index=pandas_dataframe),
-                "read_pandas",
                 write_engine=write_engine,
             ).index
         if isinstance(pandas_dataframe, pandas.DataFrame):
-            return self._read_pandas(
-                pandas_dataframe, "read_pandas", write_engine=write_engine
-            )
+            return self._read_pandas(pandas_dataframe, write_engine=write_engine)
         else:
             raise ValueError(
                 f"read_pandas() expects a pandas.DataFrame, but got a {type(pandas_dataframe)}"
@@ -931,7 +925,6 @@ class Session(
     def _read_pandas(
         self,
         pandas_dataframe: pandas.DataFrame,
-        api_name: str,
         *,
         write_engine: constants.WriteEngineType = "default",
     ) -> dataframe.DataFrame:
@@ -947,29 +940,27 @@ class Session(
         if write_engine == "default":
             write_engine = (
                 "bigquery_load"
-                if mem_usage > MAX_INLINE_DF_BYTES
+                if mem_usage > bigframes.constants.MAX_INLINE_BYTES
                 else "bigquery_inline"
             )
 
         if write_engine == "bigquery_inline":
-            if mem_usage > MAX_INLINE_DF_BYTES:
+            if mem_usage > bigframes.constants.MAX_INLINE_BYTES:
                 raise ValueError(
                     f"DataFrame size ({mem_usage} bytes) exceeds the maximum allowed "
-                    f"for inline data ({MAX_INLINE_DF_BYTES} bytes)."
+                    f"for inline data ({bigframes.constants.MAX_INLINE_BYTES} bytes)."
                 )
             return self._read_pandas_inline(pandas_dataframe)
         elif write_engine == "bigquery_load":
-            return self._loader.read_pandas(
-                pandas_dataframe, method="load", api_name=api_name
-            )
+            return self._loader.read_pandas(pandas_dataframe, method="load")
         elif write_engine == "bigquery_streaming":
-            return self._loader.read_pandas(
-                pandas_dataframe, method="stream", api_name=api_name
-            )
+            return self._loader.read_pandas(pandas_dataframe, method="stream")
         elif write_engine == "bigquery_write":
-            return self._loader.read_pandas(
-                pandas_dataframe, method="write", api_name=api_name
-            )
+            return self._loader.read_pandas(pandas_dataframe, method="write")
+        elif write_engine == "_deferred":
+            import bigframes.dataframe as dataframe
+
+            return dataframe.DataFrame(blocks.Block.from_local(pandas_dataframe, self))
         else:
             raise ValueError(f"Got unexpected write_engine '{write_engine}'")
 
@@ -1097,7 +1088,7 @@ class Session(
             encoding=encoding,
             **kwargs,
         )
-        return self._read_pandas(pandas_df, api_name="read_csv", write_engine=write_engine)  # type: ignore
+        return self._read_pandas(pandas_df, write_engine=write_engine)  # type: ignore
 
     def _read_csv_w_bigquery_engine(
         self,
@@ -1118,11 +1109,8 @@ class Session(
         native CSV loading capabilities, making it suitable for large datasets
         that may not fit into local memory.
         """
-        if dtype is not None:
-            raise NotImplementedError(
-                f"BigQuery engine does not support the `dtype` argument."
-                f"{constants.FEEDBACK_LINK}"
-            )
+        if dtype is not None and not utils.is_dict_like(dtype):
+            raise ValueError("dtype should be a dict-like object.")
 
         if names is not None:
             if len(names) != len(set(names)):
@@ -1177,9 +1165,15 @@ class Session(
             job_config.skip_leading_rows = header + 1
 
         table_id = self._loader.load_file(filepath_or_buffer, job_config=job_config)
-        return self._loader.read_gbq_table(
+        df = self._loader.read_gbq_table(
             table_id, index_col=index_col, columns=columns, names=names
         )
+
+        if dtype is not None:
+            for column, dtype in dtype.items():
+                if column in df.columns:
+                    df[column] = df[column].astype(dtype)
+        return df
 
     def read_pickle(
         self,
@@ -1198,11 +1192,9 @@ class Session(
         if isinstance(pandas_obj, pandas.Series):
             if pandas_obj.name is None:
                 pandas_obj.name = 0
-            bigframes_df = self._read_pandas(pandas_obj.to_frame(), "read_pickle")
+            bigframes_df = self._read_pandas(pandas_obj.to_frame())
             return bigframes_df[bigframes_df.columns[0]]
-        return self._read_pandas(
-            pandas_obj, api_name="read_pickle", write_engine=write_engine
-        )
+        return self._read_pandas(pandas_obj, write_engine=write_engine)
 
     def read_parquet(
         self,
@@ -1248,9 +1240,7 @@ class Session(
                 engine=engine,  # type: ignore
                 **read_parquet_kwargs,
             )
-            return self._read_pandas(
-                pandas_obj, api_name="read_parquet", write_engine=write_engine
-            )
+            return self._read_pandas(pandas_obj, write_engine=write_engine)
 
     def read_json(
         self,
@@ -1329,9 +1319,7 @@ class Session(
                     engine=engine,
                     **kwargs,
                 )
-            return self._read_pandas(
-                pandas_df, api_name="read_json", write_engine=write_engine
-            )
+            return self._read_pandas(pandas_df, write_engine=write_engine)
 
     def _check_file_size(self, filepath: str):
         max_size = 1024 * 1024 * 1024  # 1 GB in bytes
@@ -1959,6 +1947,10 @@ class Session(
 
         return table
 
+    def _create_temp_view(self, sql: str) -> bigquery.TableReference:
+        """Create a random id Object Table from the input path and connection."""
+        return self._anon_dataset_manager.create_temp_view(sql)
+
     def from_glob_path(
         self, path: str, *, connection: Optional[str] = None, name: Optional[str] = None
     ) -> dataframe.DataFrame:
@@ -1990,9 +1982,7 @@ class Session(
 
         table = self._create_object_table(path, connection)
 
-        s = self._loader.read_gbq_table(table, api_name="from_glob_path")[
-            "uri"
-        ].str.to_blob(connection)
+        s = self._loader.read_gbq_table(table)["uri"].str.to_blob(connection)
         return s.rename(name).to_frame()
 
     def _create_bq_connection(
@@ -2045,9 +2035,7 @@ class Session(
         table = self.bqclient.get_table(object_table)
         connection = table._properties["externalDataConfiguration"]["connectionId"]
 
-        s = self._loader.read_gbq_table(object_table, api_name="read_gbq_object_table")[
-            "uri"
-        ].str.to_blob(connection)
+        s = self._loader.read_gbq_table(object_table)["uri"].str.to_blob(connection)
         return s.rename(name).to_frame()
 
 

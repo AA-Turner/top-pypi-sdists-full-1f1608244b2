@@ -16,7 +16,7 @@ class ReAct(Module):
         """
         `tools` is either a list of functions, callable classes, or `dspy.Tool` instances.
         """
-
+        super().__init__()
         self.signature = signature = ensure_signature(signature)
         self.max_iters = max_iters
 
@@ -47,6 +47,7 @@ class ReAct(Module):
 
         for idx, tool in enumerate(tools.values()):
             instr.append(f"({idx + 1}) {tool}")
+        instr.append("When providing `next_tool_args`, the value inside the field must be in JSON format")
 
         react_signature = (
             dspy.Signature({**signature.input_fields}, "\n".join(instr))

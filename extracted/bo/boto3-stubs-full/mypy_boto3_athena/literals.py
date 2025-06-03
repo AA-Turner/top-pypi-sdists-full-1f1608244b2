@@ -45,6 +45,7 @@ __all__ = (
     "NotebookTypeType",
     "PaginatorName",
     "QueryExecutionStateType",
+    "QueryResultTypeType",
     "RegionName",
     "ResourceServiceName",
     "S3AclOptionType",
@@ -112,6 +113,7 @@ ListTableMetadataPaginatorName = Literal["list_table_metadata"]
 ListTagsForResourcePaginatorName = Literal["list_tags_for_resource"]
 NotebookTypeType = Literal["IPYNB"]
 QueryExecutionStateType = Literal["CANCELLED", "FAILED", "QUEUED", "RUNNING", "SUCCEEDED"]
+QueryResultTypeType = Literal["DATA_MANIFEST", "DATA_ROWS"]
 S3AclOptionType = Literal["BUCKET_OWNER_FULL_CONTROL"]
 SessionStateType = Literal[
     "BUSY", "CREATED", "CREATING", "DEGRADED", "FAILED", "IDLE", "TERMINATED", "TERMINATING"

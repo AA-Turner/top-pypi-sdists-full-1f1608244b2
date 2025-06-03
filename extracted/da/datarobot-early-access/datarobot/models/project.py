@@ -241,6 +241,8 @@ class Project(APIObject, BrowserMixin):
         (New in version v3.0) The object ID of the ``catalog_version`` which the project's dataset belongs to.
     use_gpu: bool
         (New in version v3.2) Whether project allows usage of GPUs
+    use_case_id : Optional[str]
+        (New in version v3.8) The object ID of the use case which the project belongs to.
     """
 
     _path = "projects/"
@@ -333,6 +335,8 @@ class Project(APIObject, BrowserMixin):
         }
     ).allow_extra("*")
 
+    _use_case_converter = t.Dict({"name": String(), "id": String()}) & (lambda x: str(x["id"]))
+
     _converter = t.Dict(
         {
             t.Key("_id", optional=True) >> "id": String(allow_blank=True),
@@ -365,6 +369,7 @@ class Project(APIObject, BrowserMixin):
             ),
             t.Key("catalog_id", optional=True): String(),
             t.Key("catalog_version_id", optional=True): String(),
+            t.Key("use_case", optional=True) >> "use_case_id": _use_case_converter,
         }
     ).allow_extra("*")
 
@@ -397,6 +402,7 @@ class Project(APIObject, BrowserMixin):
         catalog_id: Optional[str] = None,
         catalog_version_id: Optional[str] = None,
         use_gpu: Optional[bool] = None,
+        use_case_id: Optional[str] = None,
     ) -> None:
         self.id = id
         self.project_name = project_name
@@ -428,6 +434,7 @@ class Project(APIObject, BrowserMixin):
         self.catalog_id = catalog_id
         self.catalog_version_id = catalog_version_id
         self.use_gpu = use_gpu
+        self.use_case_id = use_case_id
         self.__options = None
 
     @property
@@ -4508,6 +4515,8 @@ OR individual keyword arguments. You cannot pass both."
         url : str
             Permanent static hyperlink to a project leaderboard.
         """
+        if self.use_case_id:
+            return f"{self._client.domain}/usecases/{self.use_case_id}/experiment/{self.id}/leaderboard"
         return f"{self._client.domain}/{self._path}{self.id}/models"
 
     def get_rating_table_models(self) -> List[RatingTableModel]:

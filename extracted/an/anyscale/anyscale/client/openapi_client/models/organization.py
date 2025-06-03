@@ -39,6 +39,7 @@ class Organization(object):
         'default_cloud_id': 'str',
         'sso_config_id': 'str',
         'sso_required': 'bool',
+        'sso_mode': 'SSOMode',
         'is_general_platform_enabled': 'bool',
         'is_private_endpoints_enabled': 'bool',
         'is_usage_blocked': 'bool',
@@ -57,6 +58,7 @@ class Organization(object):
         'default_cloud_id': 'default_cloud_id',
         'sso_config_id': 'sso_config_id',
         'sso_required': 'sso_required',
+        'sso_mode': 'sso_mode',
         'is_general_platform_enabled': 'is_general_platform_enabled',
         'is_private_endpoints_enabled': 'is_private_endpoints_enabled',
         'is_usage_blocked': 'is_usage_blocked',
@@ -68,7 +70,7 @@ class Organization(object):
         'invite_code': 'invite_code'
     }
 
-    def __init__(self, id=None, name=None, public_identifier=None, default_cloud_id=None, sso_config_id=None, sso_required=False, is_general_platform_enabled=None, is_private_endpoints_enabled=None, is_usage_blocked=None, endpoints_user_id=None, endpoints_stripe_customer_id=None, endpoints_metronome_customer_id=None, endpoints_is_free_credit_used_up=None, metronome_customer_id=None, invite_code=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, name=None, public_identifier=None, default_cloud_id=None, sso_config_id=None, sso_required=False, sso_mode=None, is_general_platform_enabled=None, is_private_endpoints_enabled=None, is_usage_blocked=None, endpoints_user_id=None, endpoints_stripe_customer_id=None, endpoints_metronome_customer_id=None, endpoints_is_free_credit_used_up=None, metronome_customer_id=None, invite_code=None, local_vars_configuration=None):  # noqa: E501
         """Organization - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -80,6 +82,7 @@ class Organization(object):
         self._default_cloud_id = None
         self._sso_config_id = None
         self._sso_required = None
+        self._sso_mode = None
         self._is_general_platform_enabled = None
         self._is_private_endpoints_enabled = None
         self._is_usage_blocked = None
@@ -100,6 +103,8 @@ class Organization(object):
             self.sso_config_id = sso_config_id
         if sso_required is not None:
             self.sso_required = sso_required
+        if sso_mode is not None:
+            self.sso_mode = sso_mode
         self.is_general_platform_enabled = is_general_platform_enabled
         self.is_private_endpoints_enabled = is_private_endpoints_enabled
         self.is_usage_blocked = is_usage_blocked
@@ -247,6 +252,27 @@ class Organization(object):
         """
 
         self._sso_required = sso_required
+
+    @property
+    def sso_mode(self):
+        """Gets the sso_mode of this Organization.  # noqa: E501
+
+
+        :return: The sso_mode of this Organization.  # noqa: E501
+        :rtype: SSOMode
+        """
+        return self._sso_mode
+
+    @sso_mode.setter
+    def sso_mode(self, sso_mode):
+        """Sets the sso_mode of this Organization.
+
+
+        :param sso_mode: The sso_mode of this Organization.  # noqa: E501
+        :type: SSOMode
+        """
+
+        self._sso_mode = sso_mode
 
     @property
     def is_general_platform_enabled(self):

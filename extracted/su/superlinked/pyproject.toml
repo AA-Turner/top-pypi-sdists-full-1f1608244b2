@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "superlinked"
-version = "27.2.1"  # The version will be dynamically updated
+version = "27.5.0"  # The version will be dynamically updated
 description = "The Superlinked vector computing library"
 authors = ["Superlinked Release <release@superlinked.com>"]
 readme = "PYPI_README.md"
@@ -11,7 +11,7 @@ include = ["NOTICE"]
 Deprecated = "^1.2.18"
 types-Deprecated = ">=1.2.15"
 python = ">=3.10,<=3.12.10"
-numpy = "^1.25.2"
+numpy = ">=1.25.2,<=3.0.0"
 sentence-transformers = "4.1.0"
 transformers = "^4.51.0"
 open_clip_torch = "<2.33.0" # for image embedding - 2.29.0 needs tensorflow, update carefully
@@ -53,10 +53,9 @@ mongo-types = { version = "~0.15.1", optional = true }
 pymongo = { version = "^4.7.3", optional = true }
 redis = { version = "^5.0.3", optional = true }
 qdrant-client = { version = "^1.12.1", optional = true }
+redisvl = { version = ">=0.6.0,<0.7.0", optional = true }
 certifi = ">=2024.7.4,<2026.0.0" # Requests' transitive dep due to: CVE-2024-39689
 asgi-correlation-id = "^4.3.4"
-redisvl = ">=0.4.1,<0.7.0"
-infinity-client = "^0.0.76"
 modal = "0.76.1"
 
 [tool.poetry.extras]
@@ -64,7 +63,7 @@ interactive = ["jupyter", "altair", "umap-learn", "transformers", "accelerate", 
 profiler = ["jupyter", "yelp-gprof2dot", "snakeviz"]
 batch = ["pyspark"]
 mongo = ["pymongo", "mongo-types"]
-redis = ["redis"]
+redis = ["redis", "redisvl"]
 qdrant = ["qdrant-client"]
 pub-sub = ["google-cloud-pubsub"]
 storage = ["google-cloud-storage"]

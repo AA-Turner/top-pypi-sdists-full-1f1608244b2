@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pepperize.projen-awscdk-app-ts
-Version: 0.0.712
+Version: 0.0.715
 Summary: This project provides a projen project type providing presets for an AWS CDK construct library project
 Home-page: https://github.com/pepperize/projen-awscdk-app-ts.git
 Author: Patrick Florek<patrick.florek@gmail.com>

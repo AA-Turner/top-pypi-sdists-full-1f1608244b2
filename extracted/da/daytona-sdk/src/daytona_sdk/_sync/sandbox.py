@@ -14,7 +14,7 @@ from daytona_api_client import Workspace as ApiSandbox
 from daytona_api_client import WorkspaceApi as SandboxApi
 from daytona_sdk._sync.filesystem import FileSystem
 from daytona_sdk._sync.git import Git
-from daytona_sdk._sync.lsp_server import LspLanguageId, LspServer
+from daytona_sdk._sync.lsp_server import LspServer, LspLanguageId
 from daytona_sdk._sync.process import Process
 from daytona_sdk._utils.enum import to_enum
 from daytona_sdk._utils.errors import intercept_errors
@@ -250,7 +250,7 @@ class Sandbox:
         Raises:
             DaytonaError: If timeout is negative; If Sandbox fails to start or times out
         """
-        state = None
+        state = (self.info()).state
         while state != "started":
             response = self.sandbox_api.get_workspace(self.id)
             state = response.state
@@ -301,7 +301,7 @@ class Sandbox:
         Raises:
             DaytonaError: If timeout is negative. If Sandbox fails to stop or times out.
         """
-        state = None
+        state = (self.info()).state
         while state != "stopped":
             try:
                 response = self.sandbox_api.get_workspace(self.id)

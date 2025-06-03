@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pepperize.cdk-ssm-parameters-cross-region
-Version: 0.0.528
+Version: 0.0.531
 Summary: Store, read and lookup AWS SSM Parameters cross-region
 Home-page: https://github.com/pepperize/cdk-ssm-parameters-cross-region.git
 Author: Patrick Florek<patrick.florek@gmail.com>

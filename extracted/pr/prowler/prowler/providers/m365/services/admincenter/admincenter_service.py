@@ -12,6 +12,9 @@ class AdminCenter(M365Service):
     def __init__(self, provider: M365Provider):
         super().__init__(provider)
 
+        if self.powershell:
+            self.powershell.close()
+
         loop = get_event_loop()
 
         # Get users first alone because it is a dependency for other attributes
@@ -157,7 +160,7 @@ class DirectoryRole(BaseModel):
 class Group(BaseModel):
     id: str
     name: str
-    visibility: str
+    visibility: Optional[str]
 
 
 class Domain(BaseModel):

@@ -70,6 +70,7 @@ def run_dashboard(
 
     """
     session = session or core_session.TruSession()
+
     session.connector.db.check_db_revision()
 
     IN_COLAB = "google.colab" in sys.modules
@@ -105,7 +106,7 @@ def run_dashboard(
         "--server.headless=True",
         "--theme.base=dark",
         "--theme.primaryColor=#E0735C",
-        "--theme.font=sans serif",
+        '--theme.font="sans-serif"',
     ]
     if _watch_changes:
         args.extend([

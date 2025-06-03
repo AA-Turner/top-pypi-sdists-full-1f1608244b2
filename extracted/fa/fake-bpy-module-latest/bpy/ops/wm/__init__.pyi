@@ -656,7 +656,7 @@ def collada_export(
     limit_precision: bool | None = False,
     keep_bind_info: bool | None = False,
 ):
-    """Save a Collada file
+    """Save a Collada file (Deprecated)
 
         :type execution_context: int | str | None
         :type undo: bool | None
@@ -897,7 +897,7 @@ def collada_import(
     min_chain_length: int | None = 0,
     keep_bind_info: bool | None = False,
 ):
-    """Load a Collada file
+    """Load a Collada file (Deprecated)
 
         :type execution_context: int | str | None
         :type undo: bool | None

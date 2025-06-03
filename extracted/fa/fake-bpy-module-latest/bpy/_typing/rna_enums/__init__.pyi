@@ -2530,7 +2530,7 @@ type PropertyFlagItems = typing.Literal[
     "PROPORTIONAL",  # Adjust values proportionally to each other.
     "TEXTEDIT_UPDATE",  # Update on every keystroke in textedit 'mode'.
     "OUTPUT_PATH",  # Output Path.
-    "PATH_SUPPORTS_BLEND_RELATIVE",  # Relative Path Support.This path supports relative prefix "//" which is expanded the the directory where the current ".blend" file is located..
+    "PATH_SUPPORTS_BLEND_RELATIVE",  # Relative Path Support.This path supports relative prefix "//" which is expanded the directory where the current ".blend" file is located..
     "SUPPORTS_TEMPLATES",  # Variable expression support.This path supports the "{variable_name}" template syntax, which substitutes the value of the referenced variable in place of the template expression.
 ]
 type PropertyOverrideFlagCollectionItems = typing.Literal[

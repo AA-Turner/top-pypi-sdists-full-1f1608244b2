@@ -1,5 +1,8 @@
 # Copyright Streamsets 2023
 
+from contextlib import nullcontext
+from unittest.mock import ANY
+
 # fmt: off
 import pytest
 
@@ -60,3 +63,70 @@ def test_configuration_default_values(builder_type, pipeline_builder_definitions
     builder = builder_class(pipeline=pipeline_builder_json, definitions=pipeline_builder_definitions)
     stage_instance = builder.add_stage(pipeline_builder_definitions['stages'][0]['label'])
     assert stage_instance.configuration[config_definition['name']] == "OVERRIDE"
+
+
+@pytest.mark.parametrize(
+    'name,config_name_type,expected,err',
+    [
+        (
+            'JSON Content',
+            'label',
+            [('JSON array of objects', 'ARRAY_OBJECTS'), ('Multiple JSON objects', 'MULTIPLE_OBJECTS')],
+            None,
+        ),
+        (
+            'dataFormatConfig.jsonContent',
+            'full_name',
+            [('JSON array of objects', 'ARRAY_OBJECTS'), ('Multiple JSON objects', 'MULTIPLE_OBJECTS')],
+            None,
+        ),
+        (
+            'jsonContent',
+            'field_name',
+            [('JSON array of objects', 'ARRAY_OBJECTS'), ('Multiple JSON objects', 'MULTIPLE_OBJECTS')],
+            None,
+        ),
+        (
+            'On Record Error',
+            'label',
+            [('Discard', 'DISCARD'), ('Send to Error', 'TO_ERROR'), ('Stop Pipeline', 'STOP_PIPELINE')],
+            None,
+        ),
+        (
+            'stageOnRecordError',
+            'full_name',
+            [('Discard', 'DISCARD'), ('Send to Error', 'TO_ERROR'), ('Stop Pipeline', 'STOP_PIPELINE')],
+            None,
+        ),
+        (
+            'stageOnRecordError',
+            'field_name',
+            [('Discard', 'DISCARD'), ('Send to Error', 'TO_ERROR'), ('Stop Pipeline', 'STOP_PIPELINE')],
+            None,
+        ),
+        ('Max Object Length (chars)', 'label', None, None),
+        ('dataFormatConfig.jsonMaxObjectLen', 'full_name', None, None),
+        ('jsonMaxObjectLen', 'field_name', None, None),
+        ('Number of Threads', 'label', None, None),
+        ('numberOfThreads', 'full_name', None, None),
+        ('numberOfThreads', 'field_name', None, None),
+        ('unknown', 'label', None, ValueError),
+        ('unknown', 'full_name', None, ValueError),
+        ('unknown', 'field_name', None, ValueError),
+    ],
+)
+def test_get_stage_configuration_options(name, config_name_type, expected, err, request):
+    pipeline_builder = request.getfixturevalue('sch_sdc_pipeline_builder_with_definitions')
+
+    exception_context = pytest.raises(err) if err else nullcontext()
+
+    with exception_context:
+        output = pipeline_builder.get_stage_configuration_options(
+            config_name=name, stage_name=ANY, config_name_type=config_name_type, stage_name_type=ANY
+        )
+
+    if expected:
+        assert len(output) == len(expected)
+        assert output == expected
+    elif err is None:
+        assert output == expected

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sqlalchemy-hana
-Version: 3.0.2
+Version: 3.0.3
 Summary: SQLAlchemy dialect for SAP HANA
 Author-email: Christoph Heer <christoph.heer@sap.com>
 Maintainer-email: Christoph Heer <christoph.heer@sap.com>, Kai Harder <kai.harder@sap.com>
@@ -34,16 +34,17 @@ Requires-Dist: isort==6.0.1; extra == "dev"
 Requires-Dist: black==25.1.0; extra == "dev"
 Requires-Dist: pre-commit==4.2.0; extra == "dev"
 Requires-Dist: flake8==7.2.0; extra == "dev"
-Requires-Dist: pylint==3.3.6; extra == "dev"
-Requires-Dist: mypy==1.15.0; extra == "dev"
+Requires-Dist: flake8-tergeo==25.5.22.0; extra == "dev"
+Requires-Dist: pylint==3.3.7; extra == "dev"
+Requires-Dist: mypy==1.16.0; extra == "dev"
 Requires-Dist: types-hdbcli==2.24.0.20250325; extra == "dev"
-Requires-Dist: typing-extensions==4.12.2; extra == "dev"
+Requires-Dist: typing-extensions==4.13.2; extra == "dev"
 Requires-Dist: yesqa==1.5.0; extra == "dev"
 Provides-Extra: test
 Requires-Dist: pytest==8.3.5; extra == "test"
-Requires-Dist: pytest-cov==6.0.0; extra == "test"
-Requires-Dist: coverage[toml]==7.8.0; extra == "test"
-Requires-Dist: diff-cover[toml]==9.2.4; extra == "test"
+Requires-Dist: pytest-cov==6.1.1; extra == "test"
+Requires-Dist: coverage[toml]==7.8.2; extra == "test"
+Requires-Dist: diff-cover[toml]==9.3.1; extra == "test"
 Provides-Extra: alembic
 Requires-Dist: alembic~=1.12; extra == "alembic"
 Dynamic: license-file
@@ -56,6 +57,9 @@ SQLAlchemy dialect for SAP HANA
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
+
+.. image:: https://coveralls.io/repos/github/SAP/sqlalchemy-hana/badge.svg
+    :target: https://coveralls.io/github/SAP/sqlalchemy-hana
 
 This dialect allows you to use the SAP HANA database with SQLAlchemy.
 It uses ``hdbcli`` to connect to SAP HANA.

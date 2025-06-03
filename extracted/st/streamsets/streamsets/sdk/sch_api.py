@@ -11,7 +11,7 @@ import json
 import logging
 import re
 from time import gmtime, sleep, time
-from urllib.parse import quote_plus, urlparse
+from urllib.parse import quote_plus
 
 import requests
 import urllib3
@@ -24,7 +24,7 @@ from .analytics import FUNCTION_CALLS_HEADERS_KEY, INTERACTIVE_MODE_HEADERS_KEY,
 from .constants import STATUS_ERRORS
 from .exceptions import (
     ConnectionError, InvalidCredentialsError, JobInactiveError, JobRunnerError, LegacyDeploymentInactiveError,
-    MultipleIssuesError,
+    MultipleIssuesError, ProjectAccessError,
 )
 from .utils import (
     SDC_DEFAULT_EXECUTION_MODE, get_decoded_jwt, get_params, join_url_parts, retry_on_connection_error,
@@ -35,6 +35,19 @@ from .utils import (
 
 logger = logging.getLogger(__name__)
 
+APPS_REQUIRING_PROJECT_ID = [
+    'connection',
+    'jobrunner',
+    'notification',
+    'pipeline',
+    'pipelinestore',
+    'provisioning',
+    'scheduler',
+    'sequencing',
+    'sla',
+    'topology',
+]
+
 # The `#:` constructs at the end of assignments are part of Sphinx's autodoc functionality.
 DEFAULT_BANNER_API_VERSION = 1  #:
 DEFAULT_EXPLORER_API_VERSION = 1
@@ -44,6 +57,9 @@ DEFAULT_METERING_API_VERSION = 3  #:
 DEFAULT_JOBRUNNER2_API_VERSION = 3  #:
 
 DEFAULT_ASTER_URL = 'https://cloud.login.streamsets.com/'
+
+LANDING_URL_SUBSTRING_AFTER_SCH_URL = '/security/public-rest/v1/aster/landing'
+
 # Any headers that DPM requires for all calls should be added to this dictionary.
 REQUIRED_HEADERS = {
     'X-Requested-By': 'sch',
@@ -100,7 +116,7 @@ class ApiClient(object):
             org_id = get_decoded_jwt(self.auth_token)['o']
             if org_id == 'admin':
                 if kwargs.get('landing_url') is not None:
-                    parsed_url = urlparse(kwargs.get('landing_url'))
+                    landing_url = kwargs.get('landing_url')
                 else:
                     raise ValueError('Sys-admin must supply landing_url when instantiating SCH')
             else:
@@ -109,8 +125,9 @@ class ApiClient(object):
                     server_url=kwargs.get('aster_url') or DEFAULT_ASTER_URL,
                     verify=session_attributes.get('verify', True),
                 )
-                parsed_url = urlparse(r.json()['data']['landingUrl'])
-            self.base_url = '{}://{}'.format(parsed_url.scheme, parsed_url.netloc)
+                landing_url = r.json()['data']['landingUrl']
+            # we get the SCH base URL from the landing URL
+            self.base_url = landing_url.replace(LANDING_URL_SUBSTRING_AFTER_SCH_URL, '')
         except Exception as e:
             raise ValueError('Encountered error while decoding auth token: {}'.format(e))
 
@@ -129,6 +146,9 @@ class ApiClient(object):
         if not self.session.verify:
             # If we disable SSL cert verification, we should disable warnings about having disabled it.
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+        # store the ID of the project we are running in, if any
+        self.current_project_id = None
 
     def update_session_headers_with_analytics_data(self):
         analytics_instance = AnalyticsHeaders.get_instance()
@@ -6220,7 +6240,7 @@ class ApiClient(object):
         Args:
             job_id (:obj:`str`)
             sdc_id (:obj:`str`, optional): Default: ``None``.
-            ime_filter_condition (:obj:`str`, optional): Default: ``'LAST_5M'``.
+            time_filter_condition (:obj:`str`, optional): Default: ``'LAST_5M'``.
             limit (:obj:`str`, optional): Default: ``None``.
             start_time (:obj:`int`, optional): Default: ``None``.
             end_time (:obj:`int`, optional): Default: ``None``.
@@ -6242,7 +6262,7 @@ class ApiClient(object):
         Args:
             job_id (:obj:`str`)
             sdc_id (:obj:`str`, optional): Default: ``None``.
-            ime_filter_condition (:obj:`str`, optional): Default: ``'LAST_5M'``.
+            time_filter_condition (:obj:`str`, optional): Default: ``'LAST_5M'``.
             limit (:obj:`str`, optional): Default: ``None``.
             start_time (:obj:`int`, optional): Default: ``None``.
             end_time (:obj:`int`, optional): Default: ``None``.
@@ -6690,18 +6710,21 @@ class ApiClient(object):
         )
         return Command(self, response)
 
-    def delete_environments(self, environment_ids):
+    def delete_environments(self, environment_ids, stop=True):
         """Delete existing environments.
 
         Args:
             environment_ids (:obj:`list`): Environment IDs.
+            stop (:obj:`bool`): Stop and delete the deployments in the environment. Default ``True``.
 
         Returns:
             An instance of :py:class:`streamsets.sdk.sch_api.Command`.
         """
+        params = get_params(parameters=locals(), exclusions=('self', 'environment_ids'))
         response = self._post(
             app='provisioning',
             endpoint='/v{}/csp/environments/deleteEnvironments'.format(self.api_version),
+            params=params,
             data=environment_ids,
         )
         return Command(self, response)
@@ -7525,6 +7548,25 @@ class ApiClient(object):
         )
         return Command(self, response)
 
+    def wait_for_environment_to_be_deleted(self, environment_id, timeout_sec=900):
+        """Block until an environment is inaccessible.
+
+        Args:
+            environment_id (:obj:`str`): The environment id.
+            timeout_sec (:obj:`int`, optional): Timeout to wait for ``environment`` to be deleted, in seconds.
+                Default: ``900``.
+        """
+
+        def condition():
+            try:
+                self.get_environment(environment_id).response.json()
+            except HTTPError as e:
+                if e.response.status_code == 404:
+                    return True
+            return False
+
+        wait_for_condition(condition=condition, timeout=timeout_sec)
+
     def wait_for_environment_status(self, environment_id, status, timeout_sec=900):
         """Block until an environment reaches the desired status.
 
@@ -7547,7 +7589,8 @@ class ApiClient(object):
                 response_json['statusDetail'],
             )
 
-            if current_status == "ERROR":
+            # Check environment transitioned into an error state
+            if initial_status != "ERROR" and current_status == "ERROR":
                 raise RuntimeError(
                     'Environment entered unexpected state: {} while trying to enter state: {} due to: {}'.format(
                         current_status, status, response_json['statusDetail']
@@ -7563,7 +7606,14 @@ class ApiClient(object):
             logger.debug('environment reached desired status after %s s.', time)
 
         logger.debug('environment %s waiting for status %s ...', environment_id, status)
-        wait_for_condition(condition=condition, timeout=timeout_sec, failure=failure, success=success)
+        try:
+            initial_status = self.get_environment(environment_id).response.json()["status"]
+            wait_for_condition(condition=condition, timeout=timeout_sec, failure=failure, success=success)
+        except HTTPError as e:
+            if not (e.response.status_code == 404 and status == 'DELETED'):
+                # we expect a 404 response from platform once an object is deleted
+                # that's why we raise all exceptions except in one scenario
+                raise
 
     def wait_for_environment_state_display_label(self, environment_id, state_display_label, timeout_sec=300):
         """Block until an environment reaches the desired status.
@@ -7582,7 +7632,13 @@ class ApiClient(object):
             response_json = self.get_environment(environment_id).response.json()
             current_state_display_label = response_json['stateDisplayLabel']
             logger.debug('Environment has current current_state_display_label %s  ...', current_state_display_label)
-            if current_state_display_label in ("ACTIVATION_ERROR", "DEACTIVATION_ERROR"):
+
+            # Check that environment transitioned into an error state
+            error_states = ("ACTIVATION_ERROR", "DEACTIVATION_ERROR")
+            if (
+                current_state_display_label in error_states
+                and current_state_display_label != initial_state_display_label
+            ):
                 raise RuntimeError(
                     'Environment entered unexpected state: {} while trying to enter state: {} due to: {}'.format(
                         current_state_display_label, state_display_label, response_json['statusDetail']
@@ -7599,6 +7655,7 @@ class ApiClient(object):
         logger.debug(
             'Environment with id %s waiting for state_display_label %s ...', environment_id, state_display_label
         )
+        initial_state_display_label = self.get_environment(environment_id).response.json()['stateDisplayLabel']
         wait_for_condition(condition=condition, timeout=timeout_sec, failure=failure, success=success)
 
     def get_deployment_engine_acl_audits(
@@ -7941,6 +7998,25 @@ class ApiClient(object):
         )
         return Command(self, response)
 
+    def wait_for_deployment_to_be_deleted(self, deployment_id, timeout_sec=900):
+        """Block until a deployment is inaccessible.
+
+        Args:
+            deployment_id (:obj:`str`): The deployment id.
+            timeout_sec (:obj:`int`, optional): Timeout to wait for ``deployment`` to be deleted, in seconds.
+                Default: ``900``.
+        """
+
+        def condition():
+            try:
+                self.get_deployment(deployment_id).response.json()
+            except HTTPError as e:
+                if e.response.status_code == 404:
+                    return True
+            return False
+
+        wait_for_condition(condition=condition, timeout=timeout_sec)
+
     def wait_for_deployment_status(self, deployment_id, status, timeout_sec=900):
         """Block until a deployment reaches the desired status.
 
@@ -7962,8 +8038,8 @@ class ApiClient(object):
                 current_status,
                 response_json['statusDetail'],
             )
-
-            if current_status == "ERROR":
+            # Check deployment transitioned into an error state
+            if initial_status != "ERROR" and current_status == "ERROR":
                 raise RuntimeError(
                     'Deployment entered unexpected state: {} while trying to enter state: {} due to: {}'.format(
                         current_status, status, response_json['statusDetail']
@@ -7979,6 +8055,7 @@ class ApiClient(object):
             logger.debug('deployment reached desired status after %s s.', time)
 
         logger.debug('deployment %s waiting for status %s ...', deployment_id, status)
+        initial_status = self.get_deployment(deployment_id).response.json()['status']
         wait_for_condition(condition=condition, timeout=timeout_sec, failure=failure, success=success)
 
     def wait_for_deployment_state_display_label(self, deployment_id, state_display_label, timeout_sec=900):
@@ -7998,7 +8075,13 @@ class ApiClient(object):
             response_json = self.get_deployment(deployment_id).response.json()
             current_state_display_label = response_json['stateDisplayLabel']
             logger.debug('Deployment has current current_state_display_label %s  ...', current_state_display_label)
-            if current_state_display_label in ("ACTIVATION_ERROR", "DEACTIVATION_ERROR"):
+
+            # Check that deployment transitioned into an error state
+            error_states = ("ACTIVATION_ERROR", "DEACTIVATION_ERROR")
+            if (
+                current_state_display_label in error_states
+                and current_state_display_label != initial_state_display_label
+            ):
                 raise RuntimeError(
                     'Deployment entered unexpected state: {} while trying to enter state: {} due to: {}'.format(
                         current_state_display_label, state_display_label, response_json['statusDetail']
@@ -8014,6 +8097,7 @@ class ApiClient(object):
             logger.debug('deployment reached desired state_display_label after %s s.', time)
 
         logger.debug('deployment %s waiting for state_display_label %s ...', deployment_id, state_display_label)
+        initial_state_display_label = self.get_deployment(deployment_id).response.json()['stateDisplayLabel']
         wait_for_condition(condition=condition, timeout=timeout_sec, failure=failure, success=success)
 
     def get_deployment_engine_token(self, deployment_id):
@@ -8888,6 +8972,129 @@ class ApiClient(object):
 
         return Command(self, response)
 
+    def create_project(self, body):
+        """Create a Project in the organization.
+
+        Args:
+            body (:obj:`dict`): Request body conforming to the Swagger API definition.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        response = self._post(app="security", endpoint=f"/v{self.api_version}/projects", data=body)
+        return Command(self, response)
+
+    def delete_projects(self, body):
+        """Delete one or more Projects.
+
+        Args:
+            body (:obj:`dict`): Request body conforming to the Swagger API definition.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        response = self._put(app="security", endpoint=f"/v{self.api_version}/projects", data=body)
+        return Command(self, response)
+
+    def get_project_by_id(self, project_id):
+        """Get a Project by ID.
+
+        Args:
+            project_id (:obj:`str`): ID of the Project to get.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        response = self._get(app="security", endpoint=f"/v{self.api_version}/project/{project_id}")
+        return Command(self, response)
+
+    def update_project(self, data, project_id):
+        """Update an existing project.
+
+        Args:
+            data (:obj:`dict`): Request body conforming to Swagger API definition.
+            project_id (:obj:`str`): Project ID of the project to update.
+        """
+
+        response = self._post(app="security", endpoint=f"v{self.api_version}/project/{project_id}", data=data)
+        return Command(self, response)
+
+    def get_all_projects_in_org(self, len=None, offset=None, order_by=None, search=None):
+        """Gets all the Projects in an organization.
+
+        Args:
+            len (:obj:`int`, optional): The size of the page to be returned. Default: ``None``
+            offset (:obj:`int`, optional): Zero Based Offset Index. Default: ``None``.
+            order_by (:obj:`str`, optional): The order in which the results should be returned.
+            search (:obj:`str`, optional): The SAQL search query. Default: ``None``.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        params = get_params(locals(), exclusions=(self,))
+        response = self._get(app="security", endpoint=f"/v{self.api_version}/projects/search", params=params)
+        return Command(self, response)
+
+    def get_all_projects_available_to_user(self, offset=None, len=None):
+        """Gets all the Projects the current user is part of.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        params = get_params(locals(), exclusions=(self,))
+        response = self._get(app="security", endpoint=f"/v{self.api_version}/projects", params=params)
+        return Command(self, response)
+
+    def get_all_users_in_project(self, project_id):
+        """Get all users in a given Project.
+
+        Args:
+            project_id (:obj:`str`): ID of the Project to get.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        response = self._get(app="security", endpoint=f"/v{self.api_version}/project/{project_id}/getAllUsers")
+        return Command(self, response)
+
+    def get_all_groups_in_project(self, project_id):
+        """Get all groups in a given Project.
+
+        Args:
+            project_id (:obj:`str`): ID of the Project to get.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        response = self._get(app="security", endpoint=f"/v{self.api_version}/project/{project_id}/getAllGroups")
+        return Command(self, response)
+
+    def update_users_in_project(self, project_id, body):
+        """Update users in a given Project.
+
+        Args:
+            project_id (:obj:`str`): ID of the Project to get.
+            body (:obj:`dict`):  Request body conforming to the Swagger API definition.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        response = self._put(app="security", endpoint=f"/v{self.api_version}/project/{project_id}/users", data=body)
+        return Command(self, response)
+
+    def update_groups_in_project(self, project_id, body):
+        """Update groups in a given Project.
+
+        Args:
+            project_id (:obj:`str`): ID of the Project to get.
+            body (:obj:`dict`):  Request body conforming to the Swagger API definition.
+
+        Returns:
+            An instance of :py:class:`streamsets.sdk.sch_api.Command`.
+        """
+        response = self._put(app="security", endpoint=f"/v{self.api_version}/project/{project_id}/groups", data=body)
+        return Command(self, response)
+
     def get_banner_api(self):
         try:
             response = self._get(app='banner', endpoint='swagger.json')
@@ -8943,11 +9150,28 @@ class ApiClient(object):
             return None
 
     # Internal functions only below.
+    def _update_project_param_based_on_app(self, app, params):
+        """Updates the query string params to pass the project ID based on which app is being called.
+
+        Args:
+            app (:obj:`str`): App for which the endpoint being called.
+            params (:obj:`dict`): A dictionary with the query string params being passed to the endpoint.
+        """
+        if not isinstance(params, dict):
+            raise TypeError("Params should be of type dict.")
+
+        if app in APPS_REQUIRING_PROJECT_ID:
+            params.update(get_params({'project': self.current_project_id}))
+
     @retry_on_connection_error
     def _delete(self, app, endpoint, rest='rest', params=None):
+        # update params with which project we are running in
+        params = params or {}
+        self._update_project_param_based_on_app(app=app, params=params)
+
         self.update_session_headers_with_analytics_data()
         url = join_url_parts(self.base_url, app, '/{}'.format(rest), endpoint)
-        response = self.session.delete(url, params=params or {})
+        response = self.session.delete(url, params=params)
         self._handle_http_error(response)
         return response
 
@@ -8955,6 +9179,11 @@ class ApiClient(object):
     def _delete_via_tunneling(
         self, endpoint, tunneling_instance_id, rest='rest', tunneling='tunneling', engine_id=None, params=None
     ):
+        params = params or {}
+        # Platform's APIs use an unconventional parameter for tunneling instance ID that doesn't conform to the
+        # same naming convention as other parameters, thus we have to set it manually here
+        params.update({'TUNNELING_INSTANCE_ID': tunneling_instance_id})
+
         self.update_session_headers_with_analytics_data()
         url = join_url_parts(
             self.base_url,
@@ -8964,20 +9193,19 @@ class ApiClient(object):
             '/{}'.format(rest),
             endpoint,
         )
-        if params is None:
-            params = {}
-        # Platform's APIs use an unconventional parameter for tunneling instance ID that doesn't conform to the
-        # same naming convention as other parameters, thus we have to set it manually here
-        params.update({'TUNNELING_INSTANCE_ID': tunneling_instance_id})
         response = self.session.delete(url, params=params)
         self._handle_http_error(response)
         return response
 
     @retry_on_connection_error
     def _get(self, endpoint, app=None, rest='rest', params=None, headers=None, absolute_endpoint=False):
+        # update params with which project we are running in
+        params = params or {}
+        self._update_project_param_based_on_app(app=app, params=params)
+
         self.update_session_headers_with_analytics_data()
         url = endpoint if absolute_endpoint else join_url_parts(self.base_url, app, '/{}'.format(rest), endpoint)
-        response = self.session.get(url, params=params or {}, headers=headers)
+        response = self.session.get(url, params=params, headers=headers)
         self._handle_http_error(response)
         return response
 
@@ -8985,6 +9213,11 @@ class ApiClient(object):
     def _get_via_tunneling(
         self, endpoint, tunneling_instance_id, rest='rest', tunneling='tunneling', engine_id=None, params=None
     ):
+        params = params or {}
+        # Platform's APIs use an unconventional parameter for tunneling instance ID that doesn't conform to the
+        # same naming convention as other parameters, thus we have to set it manually here
+        params.update({'TUNNELING_INSTANCE_ID': tunneling_instance_id})
+
         self.update_session_headers_with_analytics_data()
         url = join_url_parts(
             self.base_url,
@@ -8994,11 +9227,6 @@ class ApiClient(object):
             '/{}'.format(rest),
             endpoint,
         )
-        if params is None:
-            params = {}
-        # Platform's APIs use an unconventional parameter for tunneling instance ID that doesn't conform to the
-        # same naming convention as other parameters, thus we have to set it manually here
-        params.update({'TUNNELING_INSTANCE_ID': tunneling_instance_id})
         response = self.session.get(url, params=params)
         self._handle_http_error(response)
         return response
@@ -9007,13 +9235,17 @@ class ApiClient(object):
     def _post(
         self, endpoint, app=None, rest='rest', params=None, data=None, files=None, headers=None, absolute_endpoint=False
     ):
+        # update params with which project we are running in
+        params = params or {}
+        self._update_project_param_based_on_app(app=app, params=params)
+
         self.update_session_headers_with_analytics_data()
         url = endpoint if absolute_endpoint else join_url_parts(self.base_url, app, '/{}'.format(rest), endpoint)
         if not data:
             data = None
         else:
             data = data if isinstance(data, str) else json.dumps(data)
-        response = self.session.post(url, params=params or {}, data=data, files=files, headers=headers)
+        response = self.session.post(url, params=params, data=data, files=files, headers=headers)
         self._handle_http_error(response)
         return response
 
@@ -9031,13 +9263,13 @@ class ApiClient(object):
         headers=None,
         engine_id=None,
     ):
-        self.update_session_headers_with_analytics_data()
-        url = join_url_parts(self.base_url, tunneling, rest, form_data, engine_id, rest, endpoint)
-        if params is None:
-            params = {}
+        params = params or {}
         # Platform's APIs use an unconventional parameter for tunneling instance ID that doesn't conform to the
         # same naming convention as other parameters, thus we have to set it manually here
         params.update({'TUNNELING_INSTANCE_ID': tunneling_instance_id})
+
+        self.update_session_headers_with_analytics_data()
+        url = join_url_parts(self.base_url, tunneling, rest, form_data, engine_id, rest, endpoint)
         if data:
             data = data if isinstance(data, str) else json.dumps(data)
         response = self.session.post(url, params=params, data=data, files=files, headers=headers)
@@ -9046,9 +9278,13 @@ class ApiClient(object):
 
     @retry_on_connection_error
     def _put(self, app, endpoint, rest='rest', params=None, data=None):
+        # update params with which project we are running in
+        params = params or {}
+        self._update_project_param_based_on_app(app=app, params=params)
+
         self.update_session_headers_with_analytics_data()
         url = join_url_parts(self.base_url, app, '/{}'.format(rest), endpoint)
-        response = self.session.put(url, params=params or {}, data=json.dumps(data or {}))
+        response = self.session.put(url, params=params, data=json.dumps(data or {}))
         self._handle_http_error(response)
         return response
 
@@ -9063,6 +9299,11 @@ class ApiClient(object):
         params=None,
         data=None,
     ):
+        params = params or {}
+        # Platform's APIs use an unconventional parameter for tunneling instance ID that doesn't conform to the
+        # same naming convention as other parameters, thus we have to set it manually here
+        params.update({'TUNNELING_INSTANCE_ID': tunneling_instance_id})
+
         self.update_session_headers_with_analytics_data()
         url = join_url_parts(
             self.base_url,
@@ -9072,11 +9313,6 @@ class ApiClient(object):
             '/{}'.format(rest),
             endpoint,
         )
-        if params is None:
-            params = {}
-        # Platform's APIs use an unconventional parameter for tunneling instance ID that doesn't conform to the
-        # same naming convention as other parameters, thus we have to set it manually here
-        params.update({'TUNNELING_INSTANCE_ID': tunneling_instance_id})
         response = self.session.put(url, params=params, data=json.dumps(data or {}))
         self._handle_http_error(response)
         return response
@@ -9094,6 +9330,8 @@ class ApiClient(object):
                         errors.append(JobRunnerError(code=code, message=issue['message']))
                     elif code.startswith('CONNECTION'):
                         errors.append(ConnectionError(code=code, message=issue['message']))
+                    elif code == "RESTAPI_08":
+                        errors.append(ProjectAccessError(code=code, message=issue.get('message')))
                 if errors:
                     raise MultipleIssuesError(errors) if len(errors) > 1 else errors[0]
             except ValueError:

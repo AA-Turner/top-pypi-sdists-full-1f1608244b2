@@ -6,6 +6,8 @@ from .._impl import (
     persistent_compute_api_ComputeNodeAppendResponse as ComputeNodeAppendResponse,
     persistent_compute_api_ComputeNodeAppendResponseVisitor as ComputeNodeAppendResponseVisitor,
     persistent_compute_api_FullResult as FullResult,
+    persistent_compute_api_GroupedComputeNodeAppendResponse as GroupedComputeNodeAppendResponse,
+    persistent_compute_api_GroupedComputeNodeAppendResponses as GroupedComputeNodeAppendResponses,
     persistent_compute_api_HealthMessage as HealthMessage,
     persistent_compute_api_HealthMessageVisitor as HealthMessageVisitor,
     persistent_compute_api_InvalidComputationType as InvalidComputationType,

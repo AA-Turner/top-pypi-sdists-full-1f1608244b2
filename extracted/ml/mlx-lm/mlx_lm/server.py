@@ -141,6 +141,8 @@ def process_message_content(messages):
             if len(text_fragments) != len(content):
                 raise ValueError("Only 'text' content type is supported.")
             message["content"] = "".join(text_fragments)
+        elif content is None:
+            message["content"] = ""
 
 
 @dataclass
@@ -547,6 +549,9 @@ class APIHandler(BaseHTTPRequestHandler):
         prompt_len = len(prompt)
         com_prefix_len = common_prefix_len(self.prompt_cache.tokens, prompt)
 
+        # Leave at least one token in the prompt
+        com_prefix_len = min(com_prefix_len, len(prompt) - 1)
+
         # Condition 1: Model changed or no common prefix at all. Reset cache.
         if (
             self.prompt_cache.model_key != self.model_provider.model_key
@@ -648,7 +653,7 @@ class APIHandler(BaseHTTPRequestHandler):
         ):
             segment = gen_response.text
             text += segment
-            logging.debug(text)
+            logging.debug(segment)
             token = gen_response.token
             logprobs = gen_response.logprobs
             tokens.append(token)

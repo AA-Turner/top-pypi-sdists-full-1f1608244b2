@@ -29,6 +29,7 @@ __all__ = (
     "AgentCollaborationType",
     "AgentStatusType",
     "AgentsforBedrockServiceName",
+    "AliasInvocationStateType",
     "CachePointTypeType",
     "ChunkingStrategyType",
     "ConcurrencyTypeType",
@@ -135,6 +136,7 @@ AgentStatusType = Literal[
     "UPDATING",
     "VERSIONING",
 ]
+AliasInvocationStateType = Literal["ACCEPT_INVOCATIONS", "REJECT_INVOCATIONS"]
 CachePointTypeType = Literal["default"]
 ChunkingStrategyType = Literal["FIXED_SIZE", "HIERARCHICAL", "NONE", "SEMANTIC"]
 ConcurrencyTypeType = Literal["Automatic", "Manual"]
@@ -597,7 +599,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
