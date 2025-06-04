@@ -36,6 +36,7 @@ from .paginator import (
     GetRouteResponsesPaginator,
     GetRoutesPaginator,
     GetStagesPaginator,
+    ListRoutingRulesPaginator,
 )
 from .type_defs import (
     CreateApiMappingRequestTypeDef,
@@ -58,6 +59,8 @@ from .type_defs import (
     CreateRouteResponseRequestTypeDef,
     CreateRouteResponseResponseTypeDef,
     CreateRouteResultTypeDef,
+    CreateRoutingRuleRequestTypeDef,
+    CreateRoutingRuleResponseTypeDef,
     CreateStageRequestTypeDef,
     CreateStageResponseTypeDef,
     CreateVpcLinkRequestTypeDef,
@@ -76,6 +79,7 @@ from .type_defs import (
     DeleteRouteRequestTypeDef,
     DeleteRouteResponseRequestTypeDef,
     DeleteRouteSettingsRequestTypeDef,
+    DeleteRoutingRuleRequestTypeDef,
     DeleteStageRequestTypeDef,
     DeleteVpcLinkRequestTypeDef,
     EmptyResponseMetadataTypeDef,
@@ -123,6 +127,8 @@ from .type_defs import (
     GetRouteResultTypeDef,
     GetRoutesRequestTypeDef,
     GetRoutesResponseTypeDef,
+    GetRoutingRuleRequestTypeDef,
+    GetRoutingRuleResponseTypeDef,
     GetStageRequestTypeDef,
     GetStageResponseTypeDef,
     GetStagesRequestTypeDef,
@@ -135,6 +141,10 @@ from .type_defs import (
     GetVpcLinksResponseTypeDef,
     ImportApiRequestTypeDef,
     ImportApiResponseTypeDef,
+    ListRoutingRulesRequestTypeDef,
+    ListRoutingRulesResponseTypeDef,
+    PutRoutingRuleRequestTypeDef,
+    PutRoutingRuleResponseTypeDef,
     ReimportApiRequestTypeDef,
     ReimportApiResponseTypeDef,
     ResetAuthorizersCacheRequestTypeDef,
@@ -321,6 +331,16 @@ class ApiGatewayV2Client(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#create_route_response)
         """
 
+    def create_routing_rule(
+        self, **kwargs: Unpack[CreateRoutingRuleRequestTypeDef]
+    ) -> CreateRoutingRuleResponseTypeDef:
+        """
+        Creates a RoutingRule.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/create_routing_rule.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#create_routing_rule)
+        """
+
     def create_stage(
         self, **kwargs: Unpack[CreateStageRequestTypeDef]
     ) -> CreateStageResponseTypeDef:
@@ -477,6 +497,16 @@ class ApiGatewayV2Client(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/delete_route_settings.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#delete_route_settings)
+        """
+
+    def delete_routing_rule(
+        self, **kwargs: Unpack[DeleteRoutingRuleRequestTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Deletes a routing rule.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/delete_routing_rule.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#delete_routing_rule)
         """
 
     def delete_stage(
@@ -711,6 +741,26 @@ class ApiGatewayV2Client(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#get_routes)
         """
 
+    def get_routing_rule(
+        self, **kwargs: Unpack[GetRoutingRuleRequestTypeDef]
+    ) -> GetRoutingRuleResponseTypeDef:
+        """
+        Gets a routing rule.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/get_routing_rule.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#get_routing_rule)
+        """
+
+    def list_routing_rules(
+        self, **kwargs: Unpack[ListRoutingRulesRequestTypeDef]
+    ) -> ListRoutingRulesResponseTypeDef:
+        """
+        Lists routing rules.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/list_routing_rules.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#list_routing_rules)
+        """
+
     def get_stage(self, **kwargs: Unpack[GetStageRequestTypeDef]) -> GetStageResponseTypeDef:
         """
         Gets a Stage.
@@ -759,6 +809,16 @@ class ApiGatewayV2Client(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/import_api.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#import_api)
+        """
+
+    def put_routing_rule(
+        self, **kwargs: Unpack[PutRoutingRuleRequestTypeDef]
+    ) -> PutRoutingRuleResponseTypeDef:
+        """
+        Updates a routing rule.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/put_routing_rule.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#put_routing_rule)
         """
 
     def reimport_api(
@@ -1008,6 +1068,17 @@ class ApiGatewayV2Client(BaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["get_stages"]
     ) -> GetStagesPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/client/get_paginator.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_routing_rules"]
+    ) -> ListRoutingRulesPaginator:
         """
         Create a paginator for an operation.
 

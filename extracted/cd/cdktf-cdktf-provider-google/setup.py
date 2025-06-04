@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-google",
-    "version": "14.36.0",
+    "version": "15.0.0",
     "description": "Prebuilt google Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-google.git",
@@ -478,6 +478,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.data_google_bigquery_datapolicy_data_policy_iam_policy",
         "cdktf_cdktf_provider_google.data_google_bigquery_dataset",
         "cdktf_cdktf_provider_google.data_google_bigquery_dataset_iam_policy",
+        "cdktf_cdktf_provider_google.data_google_bigquery_datasets",
         "cdktf_cdktf_provider_google.data_google_bigquery_default_service_account",
         "cdktf_cdktf_provider_google.data_google_bigquery_table",
         "cdktf_cdktf_provider_google.data_google_bigquery_table_iam_policy",
@@ -818,6 +819,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.dataplex_datascan_iam_binding",
         "cdktf_cdktf_provider_google.dataplex_datascan_iam_member",
         "cdktf_cdktf_provider_google.dataplex_datascan_iam_policy",
+        "cdktf_cdktf_provider_google.dataplex_entry",
         "cdktf_cdktf_provider_google.dataplex_entry_group",
         "cdktf_cdktf_provider_google.dataplex_entry_group_iam_binding",
         "cdktf_cdktf_provider_google.dataplex_entry_group_iam_member",
@@ -1442,7 +1444,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_google._jsii": [
-            "provider-google@14.36.0.jsii.tgz"
+            "provider-google@15.0.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_google": [
             "py.typed"

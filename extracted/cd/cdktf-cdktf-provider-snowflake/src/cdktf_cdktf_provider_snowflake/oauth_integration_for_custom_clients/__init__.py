@@ -1,7 +1,7 @@
 r'''
 # `snowflake_oauth_integration_for_custom_clients`
 
-Refer to the Terraform Registry for docs: [`snowflake_oauth_integration_for_custom_clients`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients).
+Refer to the Terraform Registry for docs: [`snowflake_oauth_integration_for_custom_clients`](https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OauthIntegrationForCustomClients(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClients",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients snowflake_oauth_integration_for_custom_clients}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients snowflake_oauth_integration_for_custom_clients}.'''
 
     def __init__(
         self,
@@ -76,27 +76,27 @@ class OauthIntegrationForCustomClients(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients snowflake_oauth_integration_for_custom_clients} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients snowflake_oauth_integration_for_custom_clients} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#name OauthIntegrationForCustomClients#name}
-        :param oauth_client_type: Specifies the type of client being registered. Snowflake supports both confidential and public clients. Valid options are: ``PUBLIC`` | ``CONFIDENTIAL``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_type OauthIntegrationForCustomClients#oauth_client_type}
-        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_redirect_uri OauthIntegrationForCustomClients#oauth_redirect_uri}
-        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#blocked_roles_list OauthIntegrationForCustomClients#blocked_roles_list}
-        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#comment OauthIntegrationForCustomClients#comment}
-        :param enabled: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#enabled OauthIntegrationForCustomClients#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#id OauthIntegrationForCustomClients#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_policy: Specifies an existing network policy. This network policy controls network traffic that is attempting to exchange an authorization code for an access or refresh token or to use a refresh token to obtain a new access token. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#network_policy OauthIntegrationForCustomClients#network_policy}
-        :param oauth_allow_non_tls_redirect_uri: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) If true, allows setting oauth_redirect_uri to a URI not protected by TLS. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_allow_non_tls_redirect_uri OauthIntegrationForCustomClients#oauth_allow_non_tls_redirect_uri}
-        :param oauth_client_rsa_public_key: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key OauthIntegrationForCustomClients#oauth_client_rsa_public_key}
-        :param oauth_client_rsa_public_key2: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key_2 OauthIntegrationForCustomClients#oauth_client_rsa_public_key_2}
-        :param oauth_enforce_pkce: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Boolean that specifies whether Proof Key for Code Exchange (PKCE) should be required for the integration. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_enforce_pkce OauthIntegrationForCustomClients#oauth_enforce_pkce}
-        :param oauth_issue_refresh_tokens: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_issue_refresh_tokens OauthIntegrationForCustomClients#oauth_issue_refresh_tokens}
-        :param oauth_refresh_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_refresh_token_validity OauthIntegrationForCustomClients#oauth_refresh_token_validity}
-        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_use_secondary_roles OauthIntegrationForCustomClients#oauth_use_secondary_roles}
-        :param pre_authorized_roles_list: A set of Snowflake roles that a user does not need to explicitly consent to using after authenticating. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#pre_authorized_roles_list OauthIntegrationForCustomClients#pre_authorized_roles_list}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#timeouts OauthIntegrationForCustomClients#timeouts}
+        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#name OauthIntegrationForCustomClients#name}
+        :param oauth_client_type: Specifies the type of client being registered. Snowflake supports both confidential and public clients. Valid options are: ``PUBLIC`` | ``CONFIDENTIAL``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_type OauthIntegrationForCustomClients#oauth_client_type}
+        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_redirect_uri OauthIntegrationForCustomClients#oauth_redirect_uri}
+        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#blocked_roles_list OauthIntegrationForCustomClients#blocked_roles_list}
+        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#comment OauthIntegrationForCustomClients#comment}
+        :param enabled: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#enabled OauthIntegrationForCustomClients#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#id OauthIntegrationForCustomClients#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_policy: Specifies an existing network policy. This network policy controls network traffic that is attempting to exchange an authorization code for an access or refresh token or to use a refresh token to obtain a new access token. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#network_policy OauthIntegrationForCustomClients#network_policy}
+        :param oauth_allow_non_tls_redirect_uri: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) If true, allows setting oauth_redirect_uri to a URI not protected by TLS. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_allow_non_tls_redirect_uri OauthIntegrationForCustomClients#oauth_allow_non_tls_redirect_uri}
+        :param oauth_client_rsa_public_key: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key OauthIntegrationForCustomClients#oauth_client_rsa_public_key}
+        :param oauth_client_rsa_public_key2: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key_2 OauthIntegrationForCustomClients#oauth_client_rsa_public_key_2}
+        :param oauth_enforce_pkce: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Boolean that specifies whether Proof Key for Code Exchange (PKCE) should be required for the integration. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_enforce_pkce OauthIntegrationForCustomClients#oauth_enforce_pkce}
+        :param oauth_issue_refresh_tokens: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_issue_refresh_tokens OauthIntegrationForCustomClients#oauth_issue_refresh_tokens}
+        :param oauth_refresh_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_refresh_token_validity OauthIntegrationForCustomClients#oauth_refresh_token_validity}
+        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_use_secondary_roles OauthIntegrationForCustomClients#oauth_use_secondary_roles}
+        :param pre_authorized_roles_list: A set of Snowflake roles that a user does not need to explicitly consent to using after authenticating. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#pre_authorized_roles_list OauthIntegrationForCustomClients#pre_authorized_roles_list}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#timeouts OauthIntegrationForCustomClients#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -151,7 +151,7 @@ class OauthIntegrationForCustomClients(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OauthIntegrationForCustomClients to import.
-        :param import_from_id: The id of the existing OauthIntegrationForCustomClients that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OauthIntegrationForCustomClients that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OauthIntegrationForCustomClients to import is found.
         '''
         if __debug__:
@@ -172,10 +172,10 @@ class OauthIntegrationForCustomClients(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#create OauthIntegrationForCustomClients#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#delete OauthIntegrationForCustomClients#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#read OauthIntegrationForCustomClients#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#update OauthIntegrationForCustomClients#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#create OauthIntegrationForCustomClients#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#delete OauthIntegrationForCustomClients#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#read OauthIntegrationForCustomClients#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#update OauthIntegrationForCustomClients#update}.
         '''
         value = OauthIntegrationForCustomClientsTimeouts(
             create=create, delete=delete, read=read, update=update
@@ -628,23 +628,23 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#name OauthIntegrationForCustomClients#name}
-        :param oauth_client_type: Specifies the type of client being registered. Snowflake supports both confidential and public clients. Valid options are: ``PUBLIC`` | ``CONFIDENTIAL``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_type OauthIntegrationForCustomClients#oauth_client_type}
-        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_redirect_uri OauthIntegrationForCustomClients#oauth_redirect_uri}
-        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#blocked_roles_list OauthIntegrationForCustomClients#blocked_roles_list}
-        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#comment OauthIntegrationForCustomClients#comment}
-        :param enabled: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#enabled OauthIntegrationForCustomClients#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#id OauthIntegrationForCustomClients#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_policy: Specifies an existing network policy. This network policy controls network traffic that is attempting to exchange an authorization code for an access or refresh token or to use a refresh token to obtain a new access token. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#network_policy OauthIntegrationForCustomClients#network_policy}
-        :param oauth_allow_non_tls_redirect_uri: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) If true, allows setting oauth_redirect_uri to a URI not protected by TLS. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_allow_non_tls_redirect_uri OauthIntegrationForCustomClients#oauth_allow_non_tls_redirect_uri}
-        :param oauth_client_rsa_public_key: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key OauthIntegrationForCustomClients#oauth_client_rsa_public_key}
-        :param oauth_client_rsa_public_key2: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key_2 OauthIntegrationForCustomClients#oauth_client_rsa_public_key_2}
-        :param oauth_enforce_pkce: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Boolean that specifies whether Proof Key for Code Exchange (PKCE) should be required for the integration. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_enforce_pkce OauthIntegrationForCustomClients#oauth_enforce_pkce}
-        :param oauth_issue_refresh_tokens: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_issue_refresh_tokens OauthIntegrationForCustomClients#oauth_issue_refresh_tokens}
-        :param oauth_refresh_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_refresh_token_validity OauthIntegrationForCustomClients#oauth_refresh_token_validity}
-        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_use_secondary_roles OauthIntegrationForCustomClients#oauth_use_secondary_roles}
-        :param pre_authorized_roles_list: A set of Snowflake roles that a user does not need to explicitly consent to using after authenticating. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#pre_authorized_roles_list OauthIntegrationForCustomClients#pre_authorized_roles_list}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#timeouts OauthIntegrationForCustomClients#timeouts}
+        :param name: Specifies the name of the OAuth integration. This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#name OauthIntegrationForCustomClients#name}
+        :param oauth_client_type: Specifies the type of client being registered. Snowflake supports both confidential and public clients. Valid options are: ``PUBLIC`` | ``CONFIDENTIAL``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_type OauthIntegrationForCustomClients#oauth_client_type}
+        :param oauth_redirect_uri: Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_redirect_uri OauthIntegrationForCustomClients#oauth_redirect_uri}
+        :param blocked_roles_list: A set of Snowflake roles that a user cannot explicitly consent to using after authenticating. By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#blocked_roles_list OauthIntegrationForCustomClients#blocked_roles_list}
+        :param comment: Specifies a comment for the OAuth integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#comment OauthIntegrationForCustomClients#comment}
+        :param enabled: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether this OAuth integration is enabled or disabled. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#enabled OauthIntegrationForCustomClients#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#id OauthIntegrationForCustomClients#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_policy: Specifies an existing network policy. This network policy controls network traffic that is attempting to exchange an authorization code for an access or refresh token or to use a refresh token to obtain a new access token. For more information about this resource, see `docs <./network_policy>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#network_policy OauthIntegrationForCustomClients#network_policy}
+        :param oauth_allow_non_tls_redirect_uri: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) If true, allows setting oauth_redirect_uri to a URI not protected by TLS. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_allow_non_tls_redirect_uri OauthIntegrationForCustomClients#oauth_allow_non_tls_redirect_uri}
+        :param oauth_client_rsa_public_key: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key OauthIntegrationForCustomClients#oauth_client_rsa_public_key}
+        :param oauth_client_rsa_public_key2: Specifies a Base64-encoded RSA public key, without the -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY----- headers. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key_2 OauthIntegrationForCustomClients#oauth_client_rsa_public_key_2}
+        :param oauth_enforce_pkce: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Boolean that specifies whether Proof Key for Code Exchange (PKCE) should be required for the integration. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_enforce_pkce OauthIntegrationForCustomClients#oauth_enforce_pkce}
+        :param oauth_issue_refresh_tokens: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``default``)) Specifies whether to allow the client to exchange a refresh token for an access token when the current access token has expired. Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_issue_refresh_tokens OauthIntegrationForCustomClients#oauth_issue_refresh_tokens}
+        :param oauth_refresh_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies how long refresh tokens should be valid (in seconds). OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_refresh_token_validity OauthIntegrationForCustomClients#oauth_refresh_token_validity}
+        :param oauth_use_secondary_roles: Specifies whether default secondary roles set in the user properties are activated by default in the session being opened. Valid options are: ``IMPLICIT`` | ``NONE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_use_secondary_roles OauthIntegrationForCustomClients#oauth_use_secondary_roles}
+        :param pre_authorized_roles_list: A set of Snowflake roles that a user does not need to explicitly consent to using after authenticating. For more information about this resource, see `docs <./account_role>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#pre_authorized_roles_list OauthIntegrationForCustomClients#pre_authorized_roles_list}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#timeouts OauthIntegrationForCustomClients#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -794,7 +794,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         This name follows the rules for Object Identifiers. The name should be unique among security integrations in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#name OauthIntegrationForCustomClients#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#name OauthIntegrationForCustomClients#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -806,7 +806,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         Snowflake supports both confidential and public clients. Valid options are: ``PUBLIC`` | ``CONFIDENTIAL``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_type OauthIntegrationForCustomClients#oauth_client_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_type OauthIntegrationForCustomClients#oauth_client_type}
         '''
         result = self._values.get("oauth_client_type")
         assert result is not None, "Required property 'oauth_client_type' is missing"
@@ -816,7 +816,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
     def oauth_redirect_uri(self) -> builtins.str:
         '''Specifies the client URI. After a user is authenticated, the web browser is redirected to this URI.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_redirect_uri OauthIntegrationForCustomClients#oauth_redirect_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_redirect_uri OauthIntegrationForCustomClients#oauth_redirect_uri}
         '''
         result = self._values.get("oauth_redirect_uri")
         assert result is not None, "Required property 'oauth_redirect_uri' is missing"
@@ -828,7 +828,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         By default, this list includes the ACCOUNTADMIN, ORGADMIN and SECURITYADMIN roles. To remove these privileged roles from the list, use the ALTER ACCOUNT command to set the OAUTH_ADD_PRIVILEGED_ROLES_TO_BLOCKED_LIST account parameter to FALSE. For more information about this resource, see `docs <./account_role>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#blocked_roles_list OauthIntegrationForCustomClients#blocked_roles_list}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#blocked_roles_list OauthIntegrationForCustomClients#blocked_roles_list}
         '''
         result = self._values.get("blocked_roles_list")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -837,7 +837,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the OAuth integration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#comment OauthIntegrationForCustomClients#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#comment OauthIntegrationForCustomClients#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -848,14 +848,14 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#enabled OauthIntegrationForCustomClients#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#enabled OauthIntegrationForCustomClients#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#id OauthIntegrationForCustomClients#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#id OauthIntegrationForCustomClients#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -869,7 +869,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         This network policy controls network traffic that is attempting to exchange an authorization code for an access or refresh token or to use a refresh token to obtain a new access token. For more information about this resource, see `docs <./network_policy>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#network_policy OauthIntegrationForCustomClients#network_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#network_policy OauthIntegrationForCustomClients#network_policy}
         '''
         result = self._values.get("network_policy")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -880,7 +880,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_allow_non_tls_redirect_uri OauthIntegrationForCustomClients#oauth_allow_non_tls_redirect_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_allow_non_tls_redirect_uri OauthIntegrationForCustomClients#oauth_allow_non_tls_redirect_uri}
         '''
         result = self._values.get("oauth_allow_non_tls_redirect_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -891,7 +891,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key OauthIntegrationForCustomClients#oauth_client_rsa_public_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key OauthIntegrationForCustomClients#oauth_client_rsa_public_key}
         '''
         result = self._values.get("oauth_client_rsa_public_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -902,7 +902,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key_2 OauthIntegrationForCustomClients#oauth_client_rsa_public_key_2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_client_rsa_public_key_2 OauthIntegrationForCustomClients#oauth_client_rsa_public_key_2}
         '''
         result = self._values.get("oauth_client_rsa_public_key2")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -913,7 +913,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_enforce_pkce OauthIntegrationForCustomClients#oauth_enforce_pkce}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_enforce_pkce OauthIntegrationForCustomClients#oauth_enforce_pkce}
         '''
         result = self._values.get("oauth_enforce_pkce")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -924,7 +924,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         Available options are: "true" or "false". When the value is not set in the configuration the provider will put "default" there which means to use the Snowflake default for this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_issue_refresh_tokens OauthIntegrationForCustomClients#oauth_issue_refresh_tokens}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_issue_refresh_tokens OauthIntegrationForCustomClients#oauth_issue_refresh_tokens}
         '''
         result = self._values.get("oauth_issue_refresh_tokens")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -935,7 +935,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         OAUTH_ISSUE_REFRESH_TOKENS must be set to TRUE.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_refresh_token_validity OauthIntegrationForCustomClients#oauth_refresh_token_validity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_refresh_token_validity OauthIntegrationForCustomClients#oauth_refresh_token_validity}
         '''
         result = self._values.get("oauth_refresh_token_validity")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -946,7 +946,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         Valid options are: ``IMPLICIT`` | ``NONE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#oauth_use_secondary_roles OauthIntegrationForCustomClients#oauth_use_secondary_roles}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#oauth_use_secondary_roles OauthIntegrationForCustomClients#oauth_use_secondary_roles}
         '''
         result = self._values.get("oauth_use_secondary_roles")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -957,7 +957,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
 
         For more information about this resource, see `docs <./account_role>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#pre_authorized_roles_list OauthIntegrationForCustomClients#pre_authorized_roles_list}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#pre_authorized_roles_list OauthIntegrationForCustomClients#pre_authorized_roles_list}
         '''
         result = self._values.get("pre_authorized_roles_list")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -966,7 +966,7 @@ class OauthIntegrationForCustomClientsConfig(_cdktf_9a9027ec.TerraformMetaArgume
     def timeouts(self) -> typing.Optional["OauthIntegrationForCustomClientsTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#timeouts OauthIntegrationForCustomClients#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#timeouts OauthIntegrationForCustomClients#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["OauthIntegrationForCustomClientsTimeouts"], result)
@@ -2369,167 +2369,6 @@ class OauthIntegrationForCustomClientsDescribeOutputOauthAuthorizationEndpointOu
 
 
 @jsii.data_type(
-    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthClientId",
-    jsii_struct_bases=[],
-    name_mapping={},
-)
-class OauthIntegrationForCustomClientsDescribeOutputOauthClientId:
-    def __init__(self) -> None:
-        self._values: typing.Dict[builtins.str, typing.Any] = {}
-
-    def __eq__(self, rhs: typing.Any) -> builtins.bool:
-        return isinstance(rhs, self.__class__) and rhs._values == self._values
-
-    def __ne__(self, rhs: typing.Any) -> builtins.bool:
-        return not (rhs == self)
-
-    def __repr__(self) -> str:
-        return "OauthIntegrationForCustomClientsDescribeOutputOauthClientId(%s)" % ", ".join(
-            k + "=" + repr(v) for k, v in self._values.items()
-        )
-
-
-class OauthIntegrationForCustomClientsDescribeOutputOauthClientIdList(
-    _cdktf_9a9027ec.ComplexList,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthClientIdList",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        wraps_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__5a1799b7e904e32da6ca3da2f887684938d6f94c2a57989800277ea24ce5d2da)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
-
-    @jsii.member(jsii_name="get")
-    def get(
-        self,
-        index: jsii.Number,
-    ) -> "OauthIntegrationForCustomClientsDescribeOutputOauthClientIdOutputReference":
-        '''
-        :param index: the index of the item to return.
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__889f5309cecf42a1bb04378d6cce70ed1d592bfc8fec288acd180d7060238975)
-            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
-        return typing.cast("OauthIntegrationForCustomClientsDescribeOutputOauthClientIdOutputReference", jsii.invoke(self, "get", [index]))
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformAttribute")
-    def _terraform_attribute(self) -> builtins.str:
-        '''The attribute on the parent resource this class is referencing.'''
-        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
-
-    @_terraform_attribute.setter
-    def _terraform_attribute(self, value: builtins.str) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__8838e8002bbf30f63a8f0df5202ebda80fef530848f46a8f54a62b8a52f17895)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformResource")
-    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
-        '''The parent resource.'''
-        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
-
-    @_terraform_resource.setter
-    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__553dc0c1726ea03d7c7dd18a4b6c2f418250e82cab5bff8e28858c00a2e57ee1)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="wrapsSet")
-    def _wraps_set(self) -> builtins.bool:
-        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
-        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
-
-    @_wraps_set.setter
-    def _wraps_set(self, value: builtins.bool) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__957246f4763db8cf9491a80ed3388a05a89b61f42de4d104bc8604bb0db6cf62)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
-
-
-class OauthIntegrationForCustomClientsDescribeOutputOauthClientIdOutputReference(
-    _cdktf_9a9027ec.ComplexObject,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthClientIdOutputReference",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        complex_object_index: jsii.Number,
-        complex_object_is_from_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param complex_object_index: the index of this item in the list.
-        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__3fb2d199ac2f93660b5f8a35c13ab8154e83c473ccdd7fd3ca52ebb31b08edf3)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
-            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
-
-    @builtins.property
-    @jsii.member(jsii_name="default")
-    def default(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "default"))
-
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "name"))
-
-    @builtins.property
-    @jsii.member(jsii_name="type")
-    def type(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "type"))
-
-    @builtins.property
-    @jsii.member(jsii_name="value")
-    def value(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "value"))
-
-    @builtins.property
-    @jsii.member(jsii_name="internalValue")
-    def internal_value(
-        self,
-    ) -> typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthClientId]:
-        return typing.cast(typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthClientId], jsii.get(self, "internalValue"))
-
-    @internal_value.setter
-    def internal_value(
-        self,
-        value: typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthClientId],
-    ) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__9edfec3399452781819042bb5db712cb2bdc5222ba56d552b2633b151d9393b5)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
-
-
-@jsii.data_type(
     jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthClientRsaPublicKey2Fp",
     jsii_struct_bases=[],
     name_mapping={},
@@ -3335,167 +3174,6 @@ class OauthIntegrationForCustomClientsDescribeOutputOauthIssueRefreshTokensOutpu
 
 
 @jsii.data_type(
-    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri",
-    jsii_struct_bases=[],
-    name_mapping={},
-)
-class OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri:
-    def __init__(self) -> None:
-        self._values: typing.Dict[builtins.str, typing.Any] = {}
-
-    def __eq__(self, rhs: typing.Any) -> builtins.bool:
-        return isinstance(rhs, self.__class__) and rhs._values == self._values
-
-    def __ne__(self, rhs: typing.Any) -> builtins.bool:
-        return not (rhs == self)
-
-    def __repr__(self) -> str:
-        return "OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri(%s)" % ", ".join(
-            k + "=" + repr(v) for k, v in self._values.items()
-        )
-
-
-class OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriList(
-    _cdktf_9a9027ec.ComplexList,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriList",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        wraps_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__df6fa6df1e93d3b495f32f760674356753b492e2646c6feddfbb6d2ee46e42bd)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
-
-    @jsii.member(jsii_name="get")
-    def get(
-        self,
-        index: jsii.Number,
-    ) -> "OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriOutputReference":
-        '''
-        :param index: the index of the item to return.
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__0d14e8117392dfbdea597353d4f509db4c5e6253c202fe646aff39cef876d44e)
-            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
-        return typing.cast("OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriOutputReference", jsii.invoke(self, "get", [index]))
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformAttribute")
-    def _terraform_attribute(self) -> builtins.str:
-        '''The attribute on the parent resource this class is referencing.'''
-        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
-
-    @_terraform_attribute.setter
-    def _terraform_attribute(self, value: builtins.str) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__e8d8bc09f558b3b96f9f95b703f9f63a4555e09f1302e307929d36bdfe2f3c0f)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformResource")
-    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
-        '''The parent resource.'''
-        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
-
-    @_terraform_resource.setter
-    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__99eb7eaeb83a328d4b8e163651a34ccb9bef88baf2e47a2923b5b49266d900f4)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="wrapsSet")
-    def _wraps_set(self) -> builtins.bool:
-        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
-        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
-
-    @_wraps_set.setter
-    def _wraps_set(self, value: builtins.bool) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__db29a12a2b54607a330acabe5d1f397ad69450e1f8deb1aa21b6f2b381d096f4)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
-
-
-class OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriOutputReference(
-    _cdktf_9a9027ec.ComplexObject,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriOutputReference",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        complex_object_index: jsii.Number,
-        complex_object_is_from_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param complex_object_index: the index of this item in the list.
-        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__9b2d0799d587d9ecdf7135d063511d6f29d27f0b595cf13fc560f022ef2d7238)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
-            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
-
-    @builtins.property
-    @jsii.member(jsii_name="default")
-    def default(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "default"))
-
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "name"))
-
-    @builtins.property
-    @jsii.member(jsii_name="type")
-    def type(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "type"))
-
-    @builtins.property
-    @jsii.member(jsii_name="value")
-    def value(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "value"))
-
-    @builtins.property
-    @jsii.member(jsii_name="internalValue")
-    def internal_value(
-        self,
-    ) -> typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri]:
-        return typing.cast(typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri], jsii.get(self, "internalValue"))
-
-    @internal_value.setter
-    def internal_value(
-        self,
-        value: typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri],
-    ) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__2a9cecf962612e57b1b8b7de79ed618688e47faba3823595a737c4a3a8f6d0c6)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
-
-
-@jsii.data_type(
     jsii_type="@cdktf/provider-snowflake.oauthIntegrationForCustomClients.OauthIntegrationForCustomClientsDescribeOutputOauthRefreshTokenValidity",
     jsii_struct_bases=[],
     name_mapping={},
@@ -4057,13 +3735,6 @@ class OauthIntegrationForCustomClientsDescribeOutputOutputReference(
         return typing.cast(OauthIntegrationForCustomClientsDescribeOutputOauthAuthorizationEndpointList, jsii.get(self, "oauthAuthorizationEndpoint"))
 
     @builtins.property
-    @jsii.member(jsii_name="oauthClientId")
-    def oauth_client_id(
-        self,
-    ) -> OauthIntegrationForCustomClientsDescribeOutputOauthClientIdList:
-        return typing.cast(OauthIntegrationForCustomClientsDescribeOutputOauthClientIdList, jsii.get(self, "oauthClientId"))
-
-    @builtins.property
     @jsii.member(jsii_name="oauthClientRsaPublicKey2Fp")
     def oauth_client_rsa_public_key2_fp(
         self,
@@ -4097,13 +3768,6 @@ class OauthIntegrationForCustomClientsDescribeOutputOutputReference(
         self,
     ) -> OauthIntegrationForCustomClientsDescribeOutputOauthIssueRefreshTokensList:
         return typing.cast(OauthIntegrationForCustomClientsDescribeOutputOauthIssueRefreshTokensList, jsii.get(self, "oauthIssueRefreshTokens"))
-
-    @builtins.property
-    @jsii.member(jsii_name="oauthRedirectUri")
-    def oauth_redirect_uri(
-        self,
-    ) -> OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriList:
-        return typing.cast(OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriList, jsii.get(self, "oauthRedirectUri"))
 
     @builtins.property
     @jsii.member(jsii_name="oauthRefreshTokenValidity")
@@ -4817,10 +4481,10 @@ class OauthIntegrationForCustomClientsTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#create OauthIntegrationForCustomClients#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#delete OauthIntegrationForCustomClients#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#read OauthIntegrationForCustomClients#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#update OauthIntegrationForCustomClients#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#create OauthIntegrationForCustomClients#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#delete OauthIntegrationForCustomClients#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#read OauthIntegrationForCustomClients#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#update OauthIntegrationForCustomClients#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e4a38923adc9df8feac481d847133084a38c2db1eaa7cd223ae32f18a1406788)
@@ -4840,25 +4504,25 @@ class OauthIntegrationForCustomClientsTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#create OauthIntegrationForCustomClients#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#create OauthIntegrationForCustomClients#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#delete OauthIntegrationForCustomClients#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#delete OauthIntegrationForCustomClients#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#read OauthIntegrationForCustomClients#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#read OauthIntegrationForCustomClients#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/oauth_integration_for_custom_clients#update OauthIntegrationForCustomClients#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/oauth_integration_for_custom_clients#update OauthIntegrationForCustomClients#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -5025,9 +4689,6 @@ __all__ = [
     "OauthIntegrationForCustomClientsDescribeOutputOauthAuthorizationEndpoint",
     "OauthIntegrationForCustomClientsDescribeOutputOauthAuthorizationEndpointList",
     "OauthIntegrationForCustomClientsDescribeOutputOauthAuthorizationEndpointOutputReference",
-    "OauthIntegrationForCustomClientsDescribeOutputOauthClientId",
-    "OauthIntegrationForCustomClientsDescribeOutputOauthClientIdList",
-    "OauthIntegrationForCustomClientsDescribeOutputOauthClientIdOutputReference",
     "OauthIntegrationForCustomClientsDescribeOutputOauthClientRsaPublicKey2Fp",
     "OauthIntegrationForCustomClientsDescribeOutputOauthClientRsaPublicKey2FpList",
     "OauthIntegrationForCustomClientsDescribeOutputOauthClientRsaPublicKey2FpOutputReference",
@@ -5043,9 +4704,6 @@ __all__ = [
     "OauthIntegrationForCustomClientsDescribeOutputOauthIssueRefreshTokens",
     "OauthIntegrationForCustomClientsDescribeOutputOauthIssueRefreshTokensList",
     "OauthIntegrationForCustomClientsDescribeOutputOauthIssueRefreshTokensOutputReference",
-    "OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri",
-    "OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriList",
-    "OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUriOutputReference",
     "OauthIntegrationForCustomClientsDescribeOutputOauthRefreshTokenValidity",
     "OauthIntegrationForCustomClientsDescribeOutputOauthRefreshTokenValidityList",
     "OauthIntegrationForCustomClientsDescribeOutputOauthRefreshTokenValidityOutputReference",
@@ -5649,53 +5307,6 @@ def _typecheckingstub__90963a54baf87e4fa154644c2dedecaa58e93a7195e965aa9ec68592a
     """Type checking stubs"""
     pass
 
-def _typecheckingstub__5a1799b7e904e32da6ca3da2f887684938d6f94c2a57989800277ea24ce5d2da(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    wraps_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__889f5309cecf42a1bb04378d6cce70ed1d592bfc8fec288acd180d7060238975(
-    index: jsii.Number,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__8838e8002bbf30f63a8f0df5202ebda80fef530848f46a8f54a62b8a52f17895(
-    value: builtins.str,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__553dc0c1726ea03d7c7dd18a4b6c2f418250e82cab5bff8e28858c00a2e57ee1(
-    value: _cdktf_9a9027ec.IInterpolatingParent,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__957246f4763db8cf9491a80ed3388a05a89b61f42de4d104bc8604bb0db6cf62(
-    value: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__3fb2d199ac2f93660b5f8a35c13ab8154e83c473ccdd7fd3ca52ebb31b08edf3(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    complex_object_index: jsii.Number,
-    complex_object_is_from_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__9edfec3399452781819042bb5db712cb2bdc5222ba56d552b2633b151d9393b5(
-    value: typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthClientId],
-) -> None:
-    """Type checking stubs"""
-    pass
-
 def _typecheckingstub__2a6d5999a797edf0d1ab6977590291304aa68e342d5e9467b1f4775f0b03a0df(
     terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
     terraform_attribute: builtins.str,
@@ -5927,53 +5538,6 @@ def _typecheckingstub__9e8977591a6ba2e330506d698dfb6bdf495016ac39a96bc79d87de0d3
 
 def _typecheckingstub__97ba979d4429d3b70da4350fe865cd3386f3116a79318e067493cbc8236ca29a(
     value: typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthIssueRefreshTokens],
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__df6fa6df1e93d3b495f32f760674356753b492e2646c6feddfbb6d2ee46e42bd(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    wraps_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__0d14e8117392dfbdea597353d4f509db4c5e6253c202fe646aff39cef876d44e(
-    index: jsii.Number,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__e8d8bc09f558b3b96f9f95b703f9f63a4555e09f1302e307929d36bdfe2f3c0f(
-    value: builtins.str,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__99eb7eaeb83a328d4b8e163651a34ccb9bef88baf2e47a2923b5b49266d900f4(
-    value: _cdktf_9a9027ec.IInterpolatingParent,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__db29a12a2b54607a330acabe5d1f397ad69450e1f8deb1aa21b6f2b381d096f4(
-    value: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__9b2d0799d587d9ecdf7135d063511d6f29d27f0b595cf13fc560f022ef2d7238(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    complex_object_index: jsii.Number,
-    complex_object_is_from_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__2a9cecf962612e57b1b8b7de79ed618688e47faba3823595a737c4a3a8f6d0c6(
-    value: typing.Optional[OauthIntegrationForCustomClientsDescribeOutputOauthRedirectUri],
 ) -> None:
     """Type checking stubs"""
     pass

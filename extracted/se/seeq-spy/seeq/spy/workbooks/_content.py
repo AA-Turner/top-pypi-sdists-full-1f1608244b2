@@ -367,7 +367,12 @@ class DateRange(Item):
             date_range_dict['Auto Offset Direction'] = frontend_date_range_dict['auto']['offsetDirection'].capitalize()
             offset = frontend_date_range_dict['auto']['offset']
             date_range_dict['Auto Offset'] = f'{offset["value"]}{offset["units"]}'
-            date_range_dict['Auto Duration'] = str(frontend_date_range_dict['auto']['duration'] / 1000) + 's'
+            if frontend_date_range_dict['auto'].get('duration') is not None:
+                duration_to_use = frontend_date_range_dict['auto']['duration']
+            else:
+                # This can happen if the formula could not be parsed by _report_content_utilities
+                duration_to_use = _report_content_utilities.DEFAULT_DATE_RANGE['auto']['duration']
+            date_range_dict['Auto Duration'] = str(duration_to_use / 1000) + 's'
 
         condition_dict = frontend_date_range_dict['condition']
         capsule_picker_dict = dict()

@@ -120,6 +120,7 @@ def save(workbooks, folder_or_zipfile: Optional[str] = None, *, datasource_map_f
 
                 workbook_folder_name = '%s (%s)' % (workbook.name, workbook.id)
                 workbook_folder = os.path.join(save_folder, util.cleanse_filename(workbook_folder_name))
+                workbook_folder = _common.sanitize_path(workbook_folder)
 
                 if datasource_maps is not None:
                     workbook.datasource_maps = datasource_maps

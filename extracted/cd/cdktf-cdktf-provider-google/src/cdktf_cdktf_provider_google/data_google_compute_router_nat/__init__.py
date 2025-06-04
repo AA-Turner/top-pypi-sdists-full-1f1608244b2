@@ -1,7 +1,7 @@
 r'''
 # `data_google_compute_router_nat`
 
-Refer to the Terraform Registry for docs: [`data_google_compute_router_nat`](https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat).
+Refer to the Terraform Registry for docs: [`data_google_compute_router_nat`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataGoogleComputeRouterNat(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.dataGoogleComputeRouterNat.DataGoogleComputeRouterNat",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat google_compute_router_nat}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat google_compute_router_nat}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class DataGoogleComputeRouterNat(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat google_compute_router_nat} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat google_compute_router_nat} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#name DataGoogleComputeRouterNat#name}
-        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#router DataGoogleComputeRouterNat#router}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#id DataGoogleComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#project DataGoogleComputeRouterNat#project}.
-        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#region DataGoogleComputeRouterNat#region}
+        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#name DataGoogleComputeRouterNat#name}
+        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#router DataGoogleComputeRouterNat#router}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#id DataGoogleComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#project DataGoogleComputeRouterNat#project}.
+        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#region DataGoogleComputeRouterNat#region}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class DataGoogleComputeRouterNat(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataGoogleComputeRouterNat to import.
-        :param import_from_id: The id of the existing DataGoogleComputeRouterNat that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataGoogleComputeRouterNat that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataGoogleComputeRouterNat to import is found.
         '''
         if __debug__:
@@ -202,6 +202,11 @@ class DataGoogleComputeRouterNat(
         return typing.cast(jsii.Number, jsii.get(self, "minPortsPerVm"))
 
     @builtins.property
+    @jsii.member(jsii_name="nat64Subnetwork")
+    def nat64_subnetwork(self) -> "DataGoogleComputeRouterNatNat64SubnetworkList":
+        return typing.cast("DataGoogleComputeRouterNatNat64SubnetworkList", jsii.get(self, "nat64Subnetwork"))
+
+    @builtins.property
     @jsii.member(jsii_name="natIpAllocateOption")
     def nat_ip_allocate_option(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "natIpAllocateOption"))
@@ -220,6 +225,11 @@ class DataGoogleComputeRouterNat(
     @jsii.member(jsii_name="sourceSubnetworkIpRangesToNat")
     def source_subnetwork_ip_ranges_to_nat(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "sourceSubnetworkIpRangesToNat"))
+
+    @builtins.property
+    @jsii.member(jsii_name="sourceSubnetworkIpRangesToNat64")
+    def source_subnetwork_ip_ranges_to_nat64(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "sourceSubnetworkIpRangesToNat64"))
 
     @builtins.property
     @jsii.member(jsii_name="subnetwork")
@@ -380,11 +390,11 @@ class DataGoogleComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#name DataGoogleComputeRouterNat#name}
-        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#router DataGoogleComputeRouterNat#router}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#id DataGoogleComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#project DataGoogleComputeRouterNat#project}.
-        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#region DataGoogleComputeRouterNat#region}
+        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#name DataGoogleComputeRouterNat#name}
+        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#router DataGoogleComputeRouterNat#router}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#id DataGoogleComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#project DataGoogleComputeRouterNat#project}.
+        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#region DataGoogleComputeRouterNat#region}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -495,7 +505,7 @@ class DataGoogleComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#name DataGoogleComputeRouterNat#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#name DataGoogleComputeRouterNat#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -505,7 +515,7 @@ class DataGoogleComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def router(self) -> builtins.str:
         '''The name of the Cloud Router in which this NAT will be configured.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#router DataGoogleComputeRouterNat#router}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#router DataGoogleComputeRouterNat#router}
         '''
         result = self._values.get("router")
         assert result is not None, "Required property 'router' is missing"
@@ -513,7 +523,7 @@ class DataGoogleComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#id DataGoogleComputeRouterNat#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#id DataGoogleComputeRouterNat#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -523,7 +533,7 @@ class DataGoogleComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#project DataGoogleComputeRouterNat#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#project DataGoogleComputeRouterNat#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -531,7 +541,7 @@ class DataGoogleComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def region(self) -> typing.Optional[builtins.str]:
         '''Region where the router and NAT reside.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/data-sources/compute_router_nat#region DataGoogleComputeRouterNat#region}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/data-sources/compute_router_nat#region DataGoogleComputeRouterNat#region}
         '''
         result = self._values.get("region")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -693,6 +703,152 @@ class DataGoogleComputeRouterNatLogConfigOutputReference(
     ) -> None:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__54ac490be8400074637228bcacdcd115ea23cdf17ab88e4f289699c1b211819d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleComputeRouterNat.DataGoogleComputeRouterNatNat64Subnetwork",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleComputeRouterNatNat64Subnetwork:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleComputeRouterNatNat64Subnetwork(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataGoogleComputeRouterNatNat64SubnetworkList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleComputeRouterNat.DataGoogleComputeRouterNatNat64SubnetworkList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0a7e211baeae9ed8cd342bf6042aa137a14df4335d3dfb0cc5342b78311bb4ed)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleComputeRouterNatNat64SubnetworkOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__bf83b39a6419af08890cb82aa99c34291a71bf5f1ca9ebd9105128f15dc5db5a)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleComputeRouterNatNat64SubnetworkOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3f2048e5b21834474b4cd4f6e86f5d62c79c458220c4cc2306da64fd1763338a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__618beb57c67f172e701ba036e07fdc310d059024252a8674ada9f7b6ea19eae6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5d2b1f3783157634dbe9d28b0e449f49b748888af532559e3805856e0017b5fa)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleComputeRouterNatNat64SubnetworkOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleComputeRouterNat.DataGoogleComputeRouterNatNat64SubnetworkOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__403aca61ed60a436ae84dc51c94f78457405becbd824fc3dd88d027d7acc4e99)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="name")
+    def name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "name"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleComputeRouterNatNat64Subnetwork]:
+        return typing.cast(typing.Optional[DataGoogleComputeRouterNatNat64Subnetwork], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleComputeRouterNatNat64Subnetwork],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b81b2ad339ee6920c7bd8fa774b205dff28ea432cdd655ae8874cb4e8f4cd7fe)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
@@ -1175,6 +1331,9 @@ __all__ = [
     "DataGoogleComputeRouterNatLogConfig",
     "DataGoogleComputeRouterNatLogConfigList",
     "DataGoogleComputeRouterNatLogConfigOutputReference",
+    "DataGoogleComputeRouterNatNat64Subnetwork",
+    "DataGoogleComputeRouterNatNat64SubnetworkList",
+    "DataGoogleComputeRouterNatNat64SubnetworkOutputReference",
     "DataGoogleComputeRouterNatRules",
     "DataGoogleComputeRouterNatRulesAction",
     "DataGoogleComputeRouterNatRulesActionList",
@@ -1308,6 +1467,53 @@ def _typecheckingstub__f9163d9a1b13623c4186262d1ddc89e7e8fd1f54425aa558cf1f79c0c
 
 def _typecheckingstub__54ac490be8400074637228bcacdcd115ea23cdf17ab88e4f289699c1b211819d(
     value: typing.Optional[DataGoogleComputeRouterNatLogConfig],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0a7e211baeae9ed8cd342bf6042aa137a14df4335d3dfb0cc5342b78311bb4ed(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__bf83b39a6419af08890cb82aa99c34291a71bf5f1ca9ebd9105128f15dc5db5a(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3f2048e5b21834474b4cd4f6e86f5d62c79c458220c4cc2306da64fd1763338a(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__618beb57c67f172e701ba036e07fdc310d059024252a8674ada9f7b6ea19eae6(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5d2b1f3783157634dbe9d28b0e449f49b748888af532559e3805856e0017b5fa(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__403aca61ed60a436ae84dc51c94f78457405becbd824fc3dd88d027d7acc4e99(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b81b2ad339ee6920c7bd8fa774b205dff28ea432cdd655ae8874cb4e8f4cd7fe(
+    value: typing.Optional[DataGoogleComputeRouterNatNat64Subnetwork],
 ) -> None:
     """Type checking stubs"""
     pass

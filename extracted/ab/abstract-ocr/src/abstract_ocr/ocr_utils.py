@@ -86,7 +86,7 @@ def download_pdf(url: str, output_path: str):
 is_start = False
 # Helper functions (as defined previously)
 def preprocess_image(image_path: str, output_path: str) -> None:
-    img = preprocess_for_ocr(image_path)
+    sharpened = preprocess_for_ocr(image_path)
     cv2.imwrite(output_path, sharpened)
     return output_path
 

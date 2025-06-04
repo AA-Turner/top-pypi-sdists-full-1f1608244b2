@@ -1,7 +1,7 @@
 r'''
 # `google_dns_policy`
 
-Refer to the Terraform Registry for docs: [`google_dns_policy`](https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy).
+Refer to the Terraform Registry for docs: [`google_dns_policy`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DnsPolicy(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.dnsPolicy.DnsPolicy",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy google_dns_policy}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy google_dns_policy}.'''
 
     def __init__(
         self,
@@ -54,6 +54,7 @@ class DnsPolicy(
         name: builtins.str,
         alternative_name_server_config: typing.Optional[typing.Union["DnsPolicyAlternativeNameServerConfig", typing.Dict[builtins.str, typing.Any]]] = None,
         description: typing.Optional[builtins.str] = None,
+        dns64_config: typing.Optional[typing.Union["DnsPolicyDns64Config", typing.Dict[builtins.str, typing.Any]]] = None,
         enable_inbound_forwarding: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         enable_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         id: typing.Optional[builtins.str] = None,
@@ -68,19 +69,20 @@ class DnsPolicy(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy google_dns_policy} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy google_dns_policy} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: User assigned name for this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#name DnsPolicy#name}
-        :param alternative_name_server_config: alternative_name_server_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#alternative_name_server_config DnsPolicy#alternative_name_server_config}
-        :param description: A textual description field. Defaults to 'Managed by Terraform'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#description DnsPolicy#description}
-        :param enable_inbound_forwarding: Allows networks bound to this policy to receive DNS queries sent by VMs or applications over VPN connections. When enabled, a virtual IP address will be allocated from each of the sub-networks that are bound to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#enable_inbound_forwarding DnsPolicy#enable_inbound_forwarding}
-        :param enable_logging: Controls whether logging is enabled for the networks bound to this policy. Defaults to no logging if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#enable_logging DnsPolicy#enable_logging}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#id DnsPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param networks: networks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#networks DnsPolicy#networks}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#project DnsPolicy#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#timeouts DnsPolicy#timeouts}
+        :param name: User assigned name for this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#name DnsPolicy#name}
+        :param alternative_name_server_config: alternative_name_server_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#alternative_name_server_config DnsPolicy#alternative_name_server_config}
+        :param description: A textual description field. Defaults to 'Managed by Terraform'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#description DnsPolicy#description}
+        :param dns64_config: dns64_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#dns64_config DnsPolicy#dns64_config}
+        :param enable_inbound_forwarding: Allows networks bound to this policy to receive DNS queries sent by VMs or applications over VPN connections. When enabled, a virtual IP address will be allocated from each of the sub-networks that are bound to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#enable_inbound_forwarding DnsPolicy#enable_inbound_forwarding}
+        :param enable_logging: Controls whether logging is enabled for the networks bound to this policy. Defaults to no logging if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#enable_logging DnsPolicy#enable_logging}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#id DnsPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param networks: networks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#networks DnsPolicy#networks}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#project DnsPolicy#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#timeouts DnsPolicy#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -97,6 +99,7 @@ class DnsPolicy(
             name=name,
             alternative_name_server_config=alternative_name_server_config,
             description=description,
+            dns64_config=dns64_config,
             enable_inbound_forwarding=enable_inbound_forwarding,
             enable_logging=enable_logging,
             id=id,
@@ -127,7 +130,7 @@ class DnsPolicy(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DnsPolicy to import.
-        :param import_from_id: The id of the existing DnsPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DnsPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DnsPolicy to import is found.
         '''
         if __debug__:
@@ -145,13 +148,26 @@ class DnsPolicy(
         target_name_servers: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DnsPolicyAlternativeNameServerConfigTargetNameServers", typing.Dict[builtins.str, typing.Any]]]],
     ) -> None:
         '''
-        :param target_name_servers: target_name_servers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#target_name_servers DnsPolicy#target_name_servers}
+        :param target_name_servers: target_name_servers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#target_name_servers DnsPolicy#target_name_servers}
         '''
         value = DnsPolicyAlternativeNameServerConfig(
             target_name_servers=target_name_servers
         )
 
         return typing.cast(None, jsii.invoke(self, "putAlternativeNameServerConfig", [value]))
+
+    @jsii.member(jsii_name="putDns64Config")
+    def put_dns64_config(
+        self,
+        *,
+        scope: typing.Union["DnsPolicyDns64ConfigScope", typing.Dict[builtins.str, typing.Any]],
+    ) -> None:
+        '''
+        :param scope: scope block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#scope DnsPolicy#scope}
+        '''
+        value = DnsPolicyDns64Config(scope=scope)
+
+        return typing.cast(None, jsii.invoke(self, "putDns64Config", [value]))
 
     @jsii.member(jsii_name="putNetworks")
     def put_networks(
@@ -175,9 +191,9 @@ class DnsPolicy(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#create DnsPolicy#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#delete DnsPolicy#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#update DnsPolicy#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#create DnsPolicy#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#delete DnsPolicy#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#update DnsPolicy#update}.
         '''
         value = DnsPolicyTimeouts(create=create, delete=delete, update=update)
 
@@ -190,6 +206,10 @@ class DnsPolicy(
     @jsii.member(jsii_name="resetDescription")
     def reset_description(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetDescription", []))
+
+    @jsii.member(jsii_name="resetDns64Config")
+    def reset_dns64_config(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDns64Config", []))
 
     @jsii.member(jsii_name="resetEnableInboundForwarding")
     def reset_enable_inbound_forwarding(self) -> None:
@@ -236,6 +256,11 @@ class DnsPolicy(
         return typing.cast("DnsPolicyAlternativeNameServerConfigOutputReference", jsii.get(self, "alternativeNameServerConfig"))
 
     @builtins.property
+    @jsii.member(jsii_name="dns64Config")
+    def dns64_config(self) -> "DnsPolicyDns64ConfigOutputReference":
+        return typing.cast("DnsPolicyDns64ConfigOutputReference", jsii.get(self, "dns64Config"))
+
+    @builtins.property
     @jsii.member(jsii_name="networks")
     def networks(self) -> "DnsPolicyNetworksList":
         return typing.cast("DnsPolicyNetworksList", jsii.get(self, "networks"))
@@ -256,6 +281,11 @@ class DnsPolicy(
     @jsii.member(jsii_name="descriptionInput")
     def description_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "descriptionInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="dns64ConfigInput")
+    def dns64_config_input(self) -> typing.Optional["DnsPolicyDns64Config"]:
+        return typing.cast(typing.Optional["DnsPolicyDns64Config"], jsii.get(self, "dns64ConfigInput"))
 
     @builtins.property
     @jsii.member(jsii_name="enableInboundForwardingInput")
@@ -395,7 +425,7 @@ class DnsPolicyAlternativeNameServerConfig:
         target_name_servers: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DnsPolicyAlternativeNameServerConfigTargetNameServers", typing.Dict[builtins.str, typing.Any]]]],
     ) -> None:
         '''
-        :param target_name_servers: target_name_servers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#target_name_servers DnsPolicy#target_name_servers}
+        :param target_name_servers: target_name_servers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#target_name_servers DnsPolicy#target_name_servers}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__381bdc36d87f066d80c705b739e13bf691d35fb24fd455ffac3b854323771795)
@@ -410,7 +440,7 @@ class DnsPolicyAlternativeNameServerConfig:
     ) -> typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DnsPolicyAlternativeNameServerConfigTargetNameServers"]]:
         '''target_name_servers block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#target_name_servers DnsPolicy#target_name_servers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#target_name_servers DnsPolicy#target_name_servers}
         '''
         result = self._values.get("target_name_servers")
         assert result is not None, "Required property 'target_name_servers' is missing"
@@ -504,8 +534,8 @@ class DnsPolicyAlternativeNameServerConfigTargetNameServers:
         forwarding_path: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ipv4_address: IPv4 address to forward to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#ipv4_address DnsPolicy#ipv4_address}
-        :param forwarding_path: Forwarding path for this TargetNameServer. If unset or 'default' Cloud DNS will make forwarding decision based on address ranges, i.e. RFC1918 addresses go to the VPC, Non-RFC1918 addresses go to the Internet. When set to 'private', Cloud DNS will always send queries through VPC for this target Possible values: ["default", "private"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#forwarding_path DnsPolicy#forwarding_path}
+        :param ipv4_address: IPv4 address to forward to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#ipv4_address DnsPolicy#ipv4_address}
+        :param forwarding_path: Forwarding path for this TargetNameServer. If unset or 'default' Cloud DNS will make forwarding decision based on address ranges, i.e. RFC1918 addresses go to the VPC, Non-RFC1918 addresses go to the Internet. When set to 'private', Cloud DNS will always send queries through VPC for this target Possible values: ["default", "private"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#forwarding_path DnsPolicy#forwarding_path}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5a7e8c99efbd05bf95e1910ed84ec83563af85be48357268a0016558fd74331e)
@@ -521,7 +551,7 @@ class DnsPolicyAlternativeNameServerConfigTargetNameServers:
     def ipv4_address(self) -> builtins.str:
         '''IPv4 address to forward to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#ipv4_address DnsPolicy#ipv4_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#ipv4_address DnsPolicy#ipv4_address}
         '''
         result = self._values.get("ipv4_address")
         assert result is not None, "Required property 'ipv4_address' is missing"
@@ -535,7 +565,7 @@ class DnsPolicyAlternativeNameServerConfigTargetNameServers:
         decision based on address ranges, i.e. RFC1918 addresses go to the VPC, Non-RFC1918 addresses go
         to the Internet. When set to 'private', Cloud DNS will always send queries through VPC for this target Possible values: ["default", "private"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#forwarding_path DnsPolicy#forwarding_path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#forwarding_path DnsPolicy#forwarding_path}
         '''
         result = self._values.get("forwarding_path")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -741,6 +771,7 @@ class DnsPolicyAlternativeNameServerConfigTargetNameServersOutputReference(
         "name": "name",
         "alternative_name_server_config": "alternativeNameServerConfig",
         "description": "description",
+        "dns64_config": "dns64Config",
         "enable_inbound_forwarding": "enableInboundForwarding",
         "enable_logging": "enableLogging",
         "id": "id",
@@ -763,6 +794,7 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         name: builtins.str,
         alternative_name_server_config: typing.Optional[typing.Union[DnsPolicyAlternativeNameServerConfig, typing.Dict[builtins.str, typing.Any]]] = None,
         description: typing.Optional[builtins.str] = None,
+        dns64_config: typing.Optional[typing.Union["DnsPolicyDns64Config", typing.Dict[builtins.str, typing.Any]]] = None,
         enable_inbound_forwarding: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         enable_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         id: typing.Optional[builtins.str] = None,
@@ -778,20 +810,23 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: User assigned name for this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#name DnsPolicy#name}
-        :param alternative_name_server_config: alternative_name_server_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#alternative_name_server_config DnsPolicy#alternative_name_server_config}
-        :param description: A textual description field. Defaults to 'Managed by Terraform'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#description DnsPolicy#description}
-        :param enable_inbound_forwarding: Allows networks bound to this policy to receive DNS queries sent by VMs or applications over VPN connections. When enabled, a virtual IP address will be allocated from each of the sub-networks that are bound to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#enable_inbound_forwarding DnsPolicy#enable_inbound_forwarding}
-        :param enable_logging: Controls whether logging is enabled for the networks bound to this policy. Defaults to no logging if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#enable_logging DnsPolicy#enable_logging}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#id DnsPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param networks: networks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#networks DnsPolicy#networks}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#project DnsPolicy#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#timeouts DnsPolicy#timeouts}
+        :param name: User assigned name for this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#name DnsPolicy#name}
+        :param alternative_name_server_config: alternative_name_server_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#alternative_name_server_config DnsPolicy#alternative_name_server_config}
+        :param description: A textual description field. Defaults to 'Managed by Terraform'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#description DnsPolicy#description}
+        :param dns64_config: dns64_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#dns64_config DnsPolicy#dns64_config}
+        :param enable_inbound_forwarding: Allows networks bound to this policy to receive DNS queries sent by VMs or applications over VPN connections. When enabled, a virtual IP address will be allocated from each of the sub-networks that are bound to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#enable_inbound_forwarding DnsPolicy#enable_inbound_forwarding}
+        :param enable_logging: Controls whether logging is enabled for the networks bound to this policy. Defaults to no logging if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#enable_logging DnsPolicy#enable_logging}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#id DnsPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param networks: networks block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#networks DnsPolicy#networks}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#project DnsPolicy#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#timeouts DnsPolicy#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
         if isinstance(alternative_name_server_config, dict):
             alternative_name_server_config = DnsPolicyAlternativeNameServerConfig(**alternative_name_server_config)
+        if isinstance(dns64_config, dict):
+            dns64_config = DnsPolicyDns64Config(**dns64_config)
         if isinstance(timeouts, dict):
             timeouts = DnsPolicyTimeouts(**timeouts)
         if __debug__:
@@ -806,6 +841,7 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument alternative_name_server_config", value=alternative_name_server_config, expected_type=type_hints["alternative_name_server_config"])
             check_type(argname="argument description", value=description, expected_type=type_hints["description"])
+            check_type(argname="argument dns64_config", value=dns64_config, expected_type=type_hints["dns64_config"])
             check_type(argname="argument enable_inbound_forwarding", value=enable_inbound_forwarding, expected_type=type_hints["enable_inbound_forwarding"])
             check_type(argname="argument enable_logging", value=enable_logging, expected_type=type_hints["enable_logging"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
@@ -833,6 +869,8 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["alternative_name_server_config"] = alternative_name_server_config
         if description is not None:
             self._values["description"] = description
+        if dns64_config is not None:
+            self._values["dns64_config"] = dns64_config
         if enable_inbound_forwarding is not None:
             self._values["enable_inbound_forwarding"] = enable_inbound_forwarding
         if enable_logging is not None:
@@ -914,7 +952,7 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''User assigned name for this policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#name DnsPolicy#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#name DnsPolicy#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -926,7 +964,7 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[DnsPolicyAlternativeNameServerConfig]:
         '''alternative_name_server_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#alternative_name_server_config DnsPolicy#alternative_name_server_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#alternative_name_server_config DnsPolicy#alternative_name_server_config}
         '''
         result = self._values.get("alternative_name_server_config")
         return typing.cast(typing.Optional[DnsPolicyAlternativeNameServerConfig], result)
@@ -935,10 +973,19 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''A textual description field. Defaults to 'Managed by Terraform'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#description DnsPolicy#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#description DnsPolicy#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def dns64_config(self) -> typing.Optional["DnsPolicyDns64Config"]:
+        '''dns64_config block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#dns64_config DnsPolicy#dns64_config}
+        '''
+        result = self._values.get("dns64_config")
+        return typing.cast(typing.Optional["DnsPolicyDns64Config"], result)
 
     @builtins.property
     def enable_inbound_forwarding(
@@ -950,7 +997,7 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         virtual IP address will be allocated from each of the sub-networks
         that are bound to this policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#enable_inbound_forwarding DnsPolicy#enable_inbound_forwarding}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#enable_inbound_forwarding DnsPolicy#enable_inbound_forwarding}
         '''
         result = self._values.get("enable_inbound_forwarding")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -961,14 +1008,14 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Controls whether logging is enabled for the networks bound to this policy. Defaults to no logging if not set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#enable_logging DnsPolicy#enable_logging}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#enable_logging DnsPolicy#enable_logging}
         '''
         result = self._values.get("enable_logging")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#id DnsPolicy#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#id DnsPolicy#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -982,14 +1029,14 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DnsPolicyNetworks"]]]:
         '''networks block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#networks DnsPolicy#networks}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#networks DnsPolicy#networks}
         '''
         result = self._values.get("networks")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DnsPolicyNetworks"]]], result)
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#project DnsPolicy#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#project DnsPolicy#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -997,7 +1044,7 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["DnsPolicyTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#timeouts DnsPolicy#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#timeouts DnsPolicy#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["DnsPolicyTimeouts"], result)
@@ -1015,6 +1062,210 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-google.dnsPolicy.DnsPolicyDns64Config",
+    jsii_struct_bases=[],
+    name_mapping={"scope": "scope"},
+)
+class DnsPolicyDns64Config:
+    def __init__(
+        self,
+        *,
+        scope: typing.Union["DnsPolicyDns64ConfigScope", typing.Dict[builtins.str, typing.Any]],
+    ) -> None:
+        '''
+        :param scope: scope block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#scope DnsPolicy#scope}
+        '''
+        if isinstance(scope, dict):
+            scope = DnsPolicyDns64ConfigScope(**scope)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__33816e33b794897575ea255987077ffd2b08b2378caf53805f426d2cb406729b)
+            check_type(argname="argument scope", value=scope, expected_type=type_hints["scope"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "scope": scope,
+        }
+
+    @builtins.property
+    def scope(self) -> "DnsPolicyDns64ConfigScope":
+        '''scope block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#scope DnsPolicy#scope}
+        '''
+        result = self._values.get("scope")
+        assert result is not None, "Required property 'scope' is missing"
+        return typing.cast("DnsPolicyDns64ConfigScope", result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DnsPolicyDns64Config(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DnsPolicyDns64ConfigOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dnsPolicy.DnsPolicyDns64ConfigOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a699175f34785c2a049435e025a461757bd9f8276f2e19e809a9353dde9b543)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="putScope")
+    def put_scope(
+        self,
+        *,
+        all_queries: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ) -> None:
+        '''
+        :param all_queries: Controls whether DNS64 is enabled globally at the network level. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#all_queries DnsPolicy#all_queries}
+        '''
+        value = DnsPolicyDns64ConfigScope(all_queries=all_queries)
+
+        return typing.cast(None, jsii.invoke(self, "putScope", [value]))
+
+    @builtins.property
+    @jsii.member(jsii_name="scope")
+    def scope(self) -> "DnsPolicyDns64ConfigScopeOutputReference":
+        return typing.cast("DnsPolicyDns64ConfigScopeOutputReference", jsii.get(self, "scope"))
+
+    @builtins.property
+    @jsii.member(jsii_name="scopeInput")
+    def scope_input(self) -> typing.Optional["DnsPolicyDns64ConfigScope"]:
+        return typing.cast(typing.Optional["DnsPolicyDns64ConfigScope"], jsii.get(self, "scopeInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(self) -> typing.Optional[DnsPolicyDns64Config]:
+        return typing.cast(typing.Optional[DnsPolicyDns64Config], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(self, value: typing.Optional[DnsPolicyDns64Config]) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5967f2c8c67285c8127f8d016ca06d83bd1311b7cccca6ab8e08e4bfe8b97723)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dnsPolicy.DnsPolicyDns64ConfigScope",
+    jsii_struct_bases=[],
+    name_mapping={"all_queries": "allQueries"},
+)
+class DnsPolicyDns64ConfigScope:
+    def __init__(
+        self,
+        *,
+        all_queries: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ) -> None:
+        '''
+        :param all_queries: Controls whether DNS64 is enabled globally at the network level. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#all_queries DnsPolicy#all_queries}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__60b4fa60c38bfdab8af67ad77ced9a8964c6ea65b98f92a928fd9edf3b231bc0)
+            check_type(argname="argument all_queries", value=all_queries, expected_type=type_hints["all_queries"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if all_queries is not None:
+            self._values["all_queries"] = all_queries
+
+    @builtins.property
+    def all_queries(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Controls whether DNS64 is enabled globally at the network level.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#all_queries DnsPolicy#all_queries}
+        '''
+        result = self._values.get("all_queries")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DnsPolicyDns64ConfigScope(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DnsPolicyDns64ConfigScopeOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dnsPolicy.DnsPolicyDns64ConfigScopeOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__864435476cb9bc38de0a931fff2d3218773146f30b07f8dbda9fb4266af79de4)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetAllQueries")
+    def reset_all_queries(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetAllQueries", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="allQueriesInput")
+    def all_queries_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "allQueriesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="allQueries")
+    def all_queries(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "allQueries"))
+
+    @all_queries.setter
+    def all_queries(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1af8639bec427ac2cd55979df0cb3ca02bce6ac25a9eb0d1e4d056f4cc1e4b43)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "allQueries", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(self) -> typing.Optional[DnsPolicyDns64ConfigScope]:
+        return typing.cast(typing.Optional[DnsPolicyDns64ConfigScope], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(self, value: typing.Optional[DnsPolicyDns64ConfigScope]) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4fcd613983af68330961f4b47f143cb6fcadba7d6dfed111a97f53979db4b065)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-google.dnsPolicy.DnsPolicyNetworks",
     jsii_struct_bases=[],
     name_mapping={"network_url": "networkUrl"},
@@ -1022,7 +1273,7 @@ class DnsPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 class DnsPolicyNetworks:
     def __init__(self, *, network_url: builtins.str) -> None:
         '''
-        :param network_url: The id or fully qualified URL of the VPC network to forward queries to. This should be formatted like 'projects/{project}/global/networks/{network}' or 'https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#network_url DnsPolicy#network_url}
+        :param network_url: The id or fully qualified URL of the VPC network to forward queries to. This should be formatted like 'projects/{project}/global/networks/{network}' or 'https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}' Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#network_url DnsPolicy#network_url}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__02b6b414542d321a165ea8e1af92a62a9321d2312169f045e85e8b3f93f66646)
@@ -1038,7 +1289,7 @@ class DnsPolicyNetworks:
         This should be formatted like 'projects/{project}/global/networks/{network}' or
         'https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}'
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#network_url DnsPolicy#network_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#network_url DnsPolicy#network_url}
         '''
         result = self._values.get("network_url")
         assert result is not None, "Required property 'network_url' is missing"
@@ -1221,9 +1472,9 @@ class DnsPolicyTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#create DnsPolicy#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#delete DnsPolicy#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#update DnsPolicy#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#create DnsPolicy#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#delete DnsPolicy#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#update DnsPolicy#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__53db72875237dda35e7d9296267259c0215df5886a5126767cd2fb273685dbbb)
@@ -1240,19 +1491,19 @@ class DnsPolicyTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#create DnsPolicy#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#create DnsPolicy#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#delete DnsPolicy#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#delete DnsPolicy#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/dns_policy#update DnsPolicy#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/dns_policy#update DnsPolicy#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1377,6 +1628,10 @@ __all__ = [
     "DnsPolicyAlternativeNameServerConfigTargetNameServersList",
     "DnsPolicyAlternativeNameServerConfigTargetNameServersOutputReference",
     "DnsPolicyConfig",
+    "DnsPolicyDns64Config",
+    "DnsPolicyDns64ConfigOutputReference",
+    "DnsPolicyDns64ConfigScope",
+    "DnsPolicyDns64ConfigScopeOutputReference",
     "DnsPolicyNetworks",
     "DnsPolicyNetworksList",
     "DnsPolicyNetworksOutputReference",
@@ -1393,6 +1648,7 @@ def _typecheckingstub__35715ffd4c0302d4a0918b35049ad30349ff32d6e133f52997bf14cca
     name: builtins.str,
     alternative_name_server_config: typing.Optional[typing.Union[DnsPolicyAlternativeNameServerConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     description: typing.Optional[builtins.str] = None,
+    dns64_config: typing.Optional[typing.Union[DnsPolicyDns64Config, typing.Dict[builtins.str, typing.Any]]] = None,
     enable_inbound_forwarding: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     enable_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     id: typing.Optional[builtins.str] = None,
@@ -1572,12 +1828,59 @@ def _typecheckingstub__29fd4fb5965fce1a13be73ca4bf300c71f705245ff3e38bf89f9bb2ce
     name: builtins.str,
     alternative_name_server_config: typing.Optional[typing.Union[DnsPolicyAlternativeNameServerConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     description: typing.Optional[builtins.str] = None,
+    dns64_config: typing.Optional[typing.Union[DnsPolicyDns64Config, typing.Dict[builtins.str, typing.Any]]] = None,
     enable_inbound_forwarding: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     enable_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     id: typing.Optional[builtins.str] = None,
     networks: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DnsPolicyNetworks, typing.Dict[builtins.str, typing.Any]]]]] = None,
     project: typing.Optional[builtins.str] = None,
     timeouts: typing.Optional[typing.Union[DnsPolicyTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__33816e33b794897575ea255987077ffd2b08b2378caf53805f426d2cb406729b(
+    *,
+    scope: typing.Union[DnsPolicyDns64ConfigScope, typing.Dict[builtins.str, typing.Any]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a699175f34785c2a049435e025a461757bd9f8276f2e19e809a9353dde9b543(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5967f2c8c67285c8127f8d016ca06d83bd1311b7cccca6ab8e08e4bfe8b97723(
+    value: typing.Optional[DnsPolicyDns64Config],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__60b4fa60c38bfdab8af67ad77ced9a8964c6ea65b98f92a928fd9edf3b231bc0(
+    *,
+    all_queries: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__864435476cb9bc38de0a931fff2d3218773146f30b07f8dbda9fb4266af79de4(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1af8639bec427ac2cd55979df0cb3ca02bce6ac25a9eb0d1e4d056f4cc1e4b43(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4fcd613983af68330961f4b47f143cb6fcadba7d6dfed111a97f53979db4b065(
+    value: typing.Optional[DnsPolicyDns64ConfigScope],
 ) -> None:
     """Type checking stubs"""
     pass

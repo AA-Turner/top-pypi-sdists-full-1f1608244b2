@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def attribute_add(
     execution_context: int | str | None = None,
@@ -10,8 +10,8 @@ def attribute_add(
     /,
     *,
     name: str = "",
-    domain: bpy._typing.rna_enums.AttributeDomainItems | None = "POINT",
-    data_type: bpy._typing.rna_enums.AttributeTypeItems | None = "FLOAT",
+    domain: bpy.stub_internal.rna_enums.AttributeDomainItems | None = "POINT",
+    data_type: bpy.stub_internal.rna_enums.AttributeTypeItems | None = "FLOAT",
 ):
     """Add attribute to geometry
 
@@ -20,9 +20,9 @@ def attribute_add(
     :param name: Name, Name of new attribute
     :type name: str
     :param domain: Domain, Type of element that attribute is stored on
-    :type domain: bpy._typing.rna_enums.AttributeDomainItems | None
+    :type domain: bpy.stub_internal.rna_enums.AttributeDomainItems | None
     :param data_type: Data Type, Type of data stored in attribute
-    :type data_type: bpy._typing.rna_enums.AttributeTypeItems | None
+    :type data_type: bpy.stub_internal.rna_enums.AttributeTypeItems | None
     """
 
 def attribute_convert(
@@ -31,8 +31,8 @@ def attribute_convert(
     /,
     *,
     mode: typing.Literal["GENERIC", "VERTEX_GROUP"] | None = "GENERIC",
-    domain: bpy._typing.rna_enums.AttributeDomainItems | None = "POINT",
-    data_type: bpy._typing.rna_enums.AttributeTypeItems | None = "FLOAT",
+    domain: bpy.stub_internal.rna_enums.AttributeDomainItems | None = "POINT",
+    data_type: bpy.stub_internal.rna_enums.AttributeTypeItems | None = "FLOAT",
 ):
     """Change how the attribute is stored
 
@@ -41,9 +41,9 @@ def attribute_convert(
     :param mode: Mode
     :type mode: typing.Literal['GENERIC','VERTEX_GROUP'] | None
     :param domain: Domain, Which geometry element to move the attribute to
-    :type domain: bpy._typing.rna_enums.AttributeDomainItems | None
+    :type domain: bpy.stub_internal.rna_enums.AttributeDomainItems | None
     :param data_type: Data Type
-    :type data_type: bpy._typing.rna_enums.AttributeTypeItems | None
+    :type data_type: bpy.stub_internal.rna_enums.AttributeTypeItems | None
     """
 
 def attribute_remove(
@@ -61,8 +61,9 @@ def color_attribute_add(
     /,
     *,
     name: str = "",
-    domain: bpy._typing.rna_enums.ColorAttributeDomainItems | None = "POINT",
-    data_type: bpy._typing.rna_enums.ColorAttributeTypeItems | None = "FLOAT_COLOR",
+    domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None = "POINT",
+    data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems
+    | None = "FLOAT_COLOR",
     color: collections.abc.Iterable[float] | None = (0.0, 0.0, 0.0, 1.0),
 ):
     """Add color attribute to geometry
@@ -72,9 +73,9 @@ def color_attribute_add(
     :param name: Name, Name of new color attribute
     :type name: str
     :param domain: Domain, Type of element that attribute is stored on
-    :type domain: bpy._typing.rna_enums.ColorAttributeDomainItems | None
+    :type domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None
     :param data_type: Data Type, Type of data stored in attribute
-    :type data_type: bpy._typing.rna_enums.ColorAttributeTypeItems | None
+    :type data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems | None
     :param color: Color, Default fill color
     :type color: collections.abc.Iterable[float] | None
     """
@@ -84,17 +85,18 @@ def color_attribute_convert(
     undo: bool | None = None,
     /,
     *,
-    domain: bpy._typing.rna_enums.ColorAttributeDomainItems | None = "POINT",
-    data_type: bpy._typing.rna_enums.ColorAttributeTypeItems | None = "FLOAT_COLOR",
+    domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None = "POINT",
+    data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems
+    | None = "FLOAT_COLOR",
 ):
     """Change how the color attribute is stored
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param domain: Domain, Type of element that attribute is stored on
-    :type domain: bpy._typing.rna_enums.ColorAttributeDomainItems | None
+    :type domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None
     :param data_type: Data Type, Type of data stored in attribute
-    :type data_type: bpy._typing.rna_enums.ColorAttributeTypeItems | None
+    :type data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems | None
     """
 
 def color_attribute_duplicate(
@@ -135,7 +137,8 @@ def execute_node_group(
     undo: bool | None = None,
     /,
     *,
-    asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None = "LOCAL",
+    asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems
+    | None = "LOCAL",
     asset_library_identifier: str = "",
     relative_asset_identifier: str = "",
     name: str = "",
@@ -187,7 +190,7 @@ def execute_node_group(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param asset_library_type: Asset Library Type
-    :type asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None
+    :type asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems | None
     :param asset_library_identifier: Asset Library Identifier
     :type asset_library_identifier: str
     :param relative_asset_identifier: Relative Asset Identifier

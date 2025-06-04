@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -648,14 +648,14 @@ def mode_set(
     undo: bool | None = None,
     /,
     *,
-    mode: bpy._typing.rna_enums.ClipEditorModeItems | None = "TRACKING",
+    mode: bpy.stub_internal.rna_enums.ClipEditorModeItems | None = "TRACKING",
 ):
     """Set the clip interaction mode
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param mode: Mode
-    :type mode: bpy._typing.rna_enums.ClipEditorModeItems | None
+    :type mode: bpy.stub_internal.rna_enums.ClipEditorModeItems | None
     """
 
 def new_image_from_plane_marker(

@@ -6,24 +6,6 @@ import QuantConnect.Securities.FutureOption.Api
 import System
 
 
-class CMEOptionChainQuoteEntry(System.Object):
-    """Option chain entry quotes, containing strike price"""
-
-    @property
-    def strike_price(self) -> float:
-        """Strike price of the future option quote entry"""
-        ...
-
-
-class CMEOptionChainQuotes(System.Object):
-    """CME Option Chain Quotes API call root response"""
-
-    @property
-    def quotes(self) -> typing.List[QuantConnect.Securities.FutureOption.Api.CMEOptionChainQuoteEntry]:
-        """The future options contracts with/without settlements"""
-        ...
-
-
 class CMEOptionExpirationEntry(System.Object):
     """Chicago Mercantile Exchange Option Expiration Entry"""
 
@@ -183,6 +165,24 @@ class CMEProductSlateV2ListResponse(System.Object):
     @property
     def products(self) -> typing.List[QuantConnect.Securities.FutureOption.Api.CMEProductSlateV2ListEntry]:
         """Products matching the search criteria"""
+        ...
+
+
+class CMEOptionChainQuoteEntry(System.Object):
+    """Option chain entry quotes, containing strike price"""
+
+    @property
+    def strike_price(self) -> float:
+        """Strike price of the future option quote entry"""
+        ...
+
+
+class CMEOptionChainQuotes(System.Object):
+    """CME Option Chain Quotes API call root response"""
+
+    @property
+    def quotes(self) -> typing.List[QuantConnect.Securities.FutureOption.Api.CMEOptionChainQuoteEntry]:
+        """The future options contracts with/without settlements"""
         ...
 
 

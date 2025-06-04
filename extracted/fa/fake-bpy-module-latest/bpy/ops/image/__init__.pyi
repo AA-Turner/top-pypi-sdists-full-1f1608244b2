@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -660,7 +660,8 @@ def new(
     height: int | None = 1024,
     color: collections.abc.Iterable[float] | None = (0.0, 0.0, 0.0, 1.0),
     alpha: bool | None = True,
-    generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None = "BLANK",
+    generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems
+    | None = "BLANK",
     float: bool | None = False,
     use_stereo_3d: bool | None = False,
     tiled: bool | None = False,
@@ -680,7 +681,7 @@ def new(
     :param alpha: Alpha, Create an image with an alpha channel
     :type alpha: bool | None
     :param generated_type: Generated Type, Fill the image with a grid for UV map testing
-    :type generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None
+    :type generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems | None
     :param float: 32-bit Float, Create image with 32-bit floating-point bit depth
     :type float: bool | None
     :param use_stereo_3d: Stereo 3D, Create an image with left and right views
@@ -1247,7 +1248,8 @@ def tile_add(
     label: str = "",
     fill: bool | None = True,
     color: collections.abc.Iterable[float] | None = (0.0, 0.0, 0.0, 1.0),
-    generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None = "BLANK",
+    generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems
+    | None = "BLANK",
     width: int | None = 1024,
     height: int | None = 1024,
     float: bool | None = False,
@@ -1268,7 +1270,7 @@ def tile_add(
     :param color: Color, Default fill color
     :type color: collections.abc.Iterable[float] | None
     :param generated_type: Generated Type, Fill the image with a grid for UV map testing
-    :type generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None
+    :type generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems | None
     :param width: Width, Image width
     :type width: int | None
     :param height: Height, Image height
@@ -1285,7 +1287,8 @@ def tile_fill(
     /,
     *,
     color: collections.abc.Iterable[float] | None = (0.0, 0.0, 0.0, 1.0),
-    generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None = "BLANK",
+    generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems
+    | None = "BLANK",
     width: int | None = 1024,
     height: int | None = 1024,
     float: bool | None = False,
@@ -1298,7 +1301,7 @@ def tile_fill(
     :param color: Color, Default fill color
     :type color: collections.abc.Iterable[float] | None
     :param generated_type: Generated Type, Fill the image with a grid for UV map testing
-    :type generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None
+    :type generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems | None
     :param width: Width, Image width
     :type width: int | None
     :param height: Height, Image height
@@ -1321,7 +1324,7 @@ def unpack(
     undo: bool | None = None,
     /,
     *,
-    method: bpy._typing.rna_enums.UnpackMethodItems | None = "USE_LOCAL",
+    method: bpy.stub_internal.rna_enums.UnpackMethodItems | None = "USE_LOCAL",
     id: str = "",
 ):
     """Save an image packed in the .blend file to disk
@@ -1329,7 +1332,7 @@ def unpack(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param method: Method, How to unpack
-    :type method: bpy._typing.rna_enums.UnpackMethodItems | None
+    :type method: bpy.stub_internal.rna_enums.UnpackMethodItems | None
     :param id: Image Name, Image data-block name to unpack
     :type id: str
     """

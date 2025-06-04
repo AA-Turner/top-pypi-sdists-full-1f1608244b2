@@ -45,9 +45,9 @@ class ArtifactsUploader:
         featureset_name: str,
         __instance_module_path__: str,
     ) -> Optional[ArtifactSpec]:
-        transformation_functions: Optional[
-            List[Callable[..., Any]]
-        ] = transformation.get_functions()
+        transformation_functions: Optional[List[Callable[..., Any]]] = (
+            transformation.get_functions()
+        )
         if transformation_functions is not None and transformation_functions:
             return ArtifactSpec(
                 artifact_name=featureset_name,

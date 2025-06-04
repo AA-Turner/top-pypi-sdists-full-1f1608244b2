@@ -1,7 +1,12 @@
+use std::collections::HashMap;
+
 use crate::commit::commits_to_conventional_commits;
 use crate::error::Result;
 use crate::{
-	commit::Commit,
+	commit::{
+		Commit,
+		Range,
+	},
 	config::Bump,
 	config::BumpType,
 };
@@ -31,35 +36,43 @@ use serde_json::value::Value;
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct Release<'a> {
 	/// Release version, git tag.
-	pub version:    Option<String>,
+	pub version:           Option<String>,
 	/// git tag's message.
-	pub message:    Option<String>,
+	pub message:           Option<String>,
 	/// Commits made for the release.
 	#[serde(deserialize_with = "commits_to_conventional_commits")]
-	pub commits:    Vec<Commit<'a>>,
+	pub commits:           Vec<Commit<'a>>,
 	/// Commit ID of the tag.
 	#[serde(rename = "commit_id")]
-	pub commit_id:  Option<String>,
+	pub commit_id:         Option<String>,
 	/// Timestamp of the release in seconds, from epoch.
-	pub timestamp:  i64,
+	pub timestamp:         i64,
 	/// Previous release.
-	pub previous:   Option<Box<Release<'a>>>,
+	pub previous:          Option<Box<Release<'a>>>,
 	/// Repository path.
-	pub repository: Option<String>,
+	pub repository:        Option<String>,
+	/// Commit range.
+	#[serde(rename = "commit_range")]
+	pub commit_range:      Option<Range>,
+	/// Submodule commits.
+	///
+	/// Maps submodule path to a list of commits.
+	#[serde(rename = "submodule_commits")]
+	pub submodule_commits: HashMap<String, Vec<Commit<'a>>>,
 	/// Arbitrary data to be used with the `--from-context` CLI option.
-	pub extra:      Option<Value>,
+	pub extra:             Option<Value>,
 	/// Contributors.
 	#[cfg(feature = "github")]
-	pub github:     RemoteReleaseMetadata,
+	pub github:            RemoteReleaseMetadata,
 	/// Contributors.
 	#[cfg(feature = "gitlab")]
-	pub gitlab:     RemoteReleaseMetadata,
+	pub gitlab:            RemoteReleaseMetadata,
 	/// Contributors.
 	#[cfg(feature = "gitea")]
-	pub gitea:      RemoteReleaseMetadata,
+	pub gitea:             RemoteReleaseMetadata,
 	/// Contributors.
 	#[cfg(feature = "bitbucket")]
-	pub bitbucket:  RemoteReleaseMetadata,
+	pub bitbucket:         RemoteReleaseMetadata,
 }
 
 #[cfg(feature = "github")]
@@ -101,7 +114,7 @@ impl Release<'_> {
 				let mut prefix = None;
 				if semver.is_err() && version.split('.').count() >= 2 {
 					let mut found_numeric = false;
-					for (i, c) in version.chars().enumerate() {
+					for (i, c) in version.char_indices() {
 						if c.is_numeric() && !found_numeric {
 							found_numeric = true;
 							let version_prefix = version[..i].to_string();
@@ -195,6 +208,7 @@ mod test {
 					.iter()
 					.map(|v| Commit::from(v.to_string()))
 					.collect(),
+				commit_range: None,
 				commit_id: None,
 				timestamp: 0,
 				previous: Some(Box::new(Release {
@@ -202,6 +216,7 @@ mod test {
 					..Default::default()
 				})),
 				repository: Some(String::from("/root/repo")),
+				submodule_commits: HashMap::new(),
 				#[cfg(feature = "github")]
 				github: crate::remote::RemoteReleaseMetadata {
 					contributors: vec![],
@@ -411,6 +426,7 @@ mod test {
 					"6c34967147560ea09658776d4901709139b4ad66 should be fine",
 				)),
 			],
+			commit_range: None,
 			commit_id: None,
 			timestamp: 0,
 			previous: Some(Box::new(Release {
@@ -418,6 +434,7 @@ mod test {
 				..Default::default()
 			})),
 			repository: Some(String::from("/root/repo")),
+			submodule_commits: HashMap::new(),
 			github: RemoteReleaseMetadata {
 				contributors: vec![],
 			},
@@ -779,6 +796,7 @@ mod test {
 					"6c34967147560ea09658776d4901709139b4ad66 should be fine",
 				)),
 			],
+			commit_range: None,
 			commit_id: None,
 			timestamp: 0,
 			previous: Some(Box::new(Release {
@@ -786,6 +804,7 @@ mod test {
 				..Default::default()
 			})),
 			repository: Some(String::from("/root/repo")),
+			submodule_commits: HashMap::new(),
 			#[cfg(feature = "github")]
 			github: RemoteReleaseMetadata {
 				contributors: vec![],
@@ -1169,6 +1188,7 @@ mod test {
 					"6c34967147560ea09658776d4901709139b4ad66 should be fine",
 				)),
 			],
+			commit_range: None,
 			commit_id: None,
 			timestamp: 0,
 			previous: Some(Box::new(Release {
@@ -1176,6 +1196,7 @@ mod test {
 				..Default::default()
 			})),
 			repository: Some(String::from("/root/repo")),
+			submodule_commits: HashMap::new(),
 			#[cfg(feature = "github")]
 			github: RemoteReleaseMetadata {
 				contributors: vec![],
@@ -1527,6 +1548,7 @@ mod test {
 					"6c34967147560ea09658776d4901709139b4ad66 should be fine",
 				)),
 			],
+			commit_range: None,
 			commit_id: None,
 			timestamp: 0,
 			previous: Some(Box::new(Release {
@@ -1534,6 +1556,7 @@ mod test {
 				..Default::default()
 			})),
 			repository: Some(String::from("/root/repo")),
+			submodule_commits: HashMap::new(),
 			#[cfg(feature = "github")]
 			github: RemoteReleaseMetadata {
 				contributors: vec![],

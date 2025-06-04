@@ -43,7 +43,7 @@ class StorageHealthCheck(BaseHealthCheckBackend):
                 return self.storage
 
     def get_file_name(self):
-        return "health_check_storage_test/test-%s.txt" % uuid.uuid4()
+        return f"health_check_storage_test/test-{uuid.uuid4()}.txt"
 
     def get_file_content(self):
         return b"this is the healthtest file content"
@@ -75,6 +75,8 @@ class StorageHealthCheck(BaseHealthCheckBackend):
             file_name = self.check_save(file_name, file_content)
             self.check_delete(file_name)
             return True
+        except ServiceUnavailable as e:
+            raise e
         except Exception as e:
             raise ServiceUnavailable("Unknown exception") from e
 

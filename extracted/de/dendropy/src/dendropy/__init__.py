@@ -35,7 +35,6 @@ from dendropy.datamodel.treemodel import Bipartition
 from dendropy.datamodel.treemodel import Edge
 from dendropy.datamodel.treemodel import Node
 from dendropy.datamodel.treemodel import Tree
-from dendropy.datamodel.treemodel import AsciiTreePlot
 from dendropy.datamodel.treecollectionmodel import TreeList
 from dendropy.datamodel.treecollectionmodel import SplitDistribution
 from dendropy.datamodel.treecollectionmodel import TreeArray
@@ -66,8 +65,10 @@ from dendropy.datamodel.charmatrixmodel import StandardCharacterDataSequence
 from dendropy.datamodel.charmatrixmodel import StandardCharacterMatrix
 from dendropy.datamodel.charmatrixmodel import ContinuousCharacterDataSequence
 from dendropy.datamodel.charmatrixmodel import ContinuousCharacterMatrix
-from dendropy.calculate.phylogeneticdistance import PhylogeneticDistanceMatrix
 from dendropy.datamodel.datasetmodel import DataSet
+from dendropy.calculate.phylogeneticdistance import PhylogeneticDistanceMatrix
+from dendropy.plot import AsciiTreePlot
+from dendropy.plot import TikzTreePlot
 from dendropy.utility.error import ImmutableTaxonNamespaceError
 from dendropy.utility.error import DataParseError
 from dendropy.utility.error import UnsupportedSchemaError
@@ -105,10 +106,10 @@ from dendropy.legacy import treesum
 ## PACKAGE METADATA
 import collections
 __project__ = "DendroPy"
-__version__ = "5.0.1"
+__version__ = "5.0.8"
 __author__ = "Jeet Sukumaran and Mark T. Holder and Matthew Andres Moreno"
 __copyright__ = "Copyright 2010-2022 Jeet Sukumaran and Mark T. Holder."
-__citation__ = "Moreno, M. A., Sukumaran, J., and M. T. Holder. 2024. DendroPy 5: a mature Python library for phylogenetic computing. arXiv preprint arXiv:2405.14120. https://doi.org/10.48550/arXiv.2405.14120"
+__citation__ = "Moreno, M. A., Holder, M. T., & Sukumaran, J. (2024). DendroPy 5: a mature Python library for phylogenetic computing. Journal of Open Source Software, 9(101), 6943, https://doi.org/10.21105/joss.06943"
 PACKAGE_VERSION = __version__ # for backwards compatibility (with sate)
 
 def _get_revision_object():

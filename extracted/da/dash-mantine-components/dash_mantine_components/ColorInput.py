@@ -303,6 +303,10 @@ Keyword arguments:
         Determines whether dropdown and target elements should have
         accessible roles, `True` by default.
 
+    - hideDetached (boolean; optional):
+        If set, the dropdown is hidden when the element is hidden with
+        styles or not visible on the screen, `True` by default.
+
     - position (a value equal to: 'top', 'left', 'bottom', 'right', 'top-end', 'top-start', 'left-end', 'left-start', 'bottom-end', 'bottom-start', 'right-end', 'right-start'; optional):
         Dropdown position relative to the target element, `'bottom'`
         by default.
@@ -664,6 +668,7 @@ Keyword arguments:
             "trapFocus": NotRequired[bool],
             "closeOnEscape": NotRequired[bool],
             "withRoles": NotRequired[bool],
+            "hideDetached": NotRequired[bool],
             "position": NotRequired[Literal["top", "left", "bottom", "right", "top-end", "top-start", "left-end", "left-start", "bottom-end", "bottom-start", "right-end", "right-start"]],
             "offset": NotRequired[typing.Union[NumberType]],
             "positionDependencies": NotRequired[typing.Sequence[typing.Any]],

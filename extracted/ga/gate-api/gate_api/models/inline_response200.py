@@ -34,15 +34,15 @@ class InlineResponse200(object):
     """
     openapi_types = {
         'time': 'int',
-        'vaule': 'str'
+        'value': 'str'
     }
 
     attribute_map = {
         'time': 'time',
-        'vaule': 'vaule'
+        'value': 'value'
     }
 
-    def __init__(self, time=None, vaule=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, time=None, value=None, local_vars_configuration=None):  # noqa: E501
         # type: (int, str, Configuration) -> None
         """InlineResponse200 - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -50,13 +50,13 @@ class InlineResponse200(object):
         self.local_vars_configuration = local_vars_configuration
 
         self._time = None
-        self._vaule = None
+        self._value = None
         self.discriminator = None
 
         if time is not None:
             self.time = time
-        if vaule is not None:
-            self.vaule = vaule
+        if value is not None:
+            self.value = value
 
     @property
     def time(self):
@@ -80,25 +80,25 @@ class InlineResponse200(object):
         self._time = time
 
     @property
-    def vaule(self):
-        """Gets the vaule of this InlineResponse200.  # noqa: E501
+    def value(self):
+        """Gets the value of this InlineResponse200.  # noqa: E501
 
 
-        :return: The vaule of this InlineResponse200.  # noqa: E501
+        :return: The value of this InlineResponse200.  # noqa: E501
         :rtype: str
         """
-        return self._vaule
+        return self._value
 
-    @vaule.setter
-    def vaule(self, vaule):
-        """Sets the vaule of this InlineResponse200.
+    @value.setter
+    def value(self, value):
+        """Sets the value of this InlineResponse200.
 
 
-        :param vaule: The vaule of this InlineResponse200.  # noqa: E501
+        :param value: The value of this InlineResponse200.  # noqa: E501
         :type: str
         """
 
-        self._vaule = vaule
+        self._value = value
 
     def to_dict(self):
         """Returns the model properties as a dict"""

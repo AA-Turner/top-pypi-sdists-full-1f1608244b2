@@ -107,6 +107,15 @@ class Status:
         if self.errors == 'raise':
             raise e
 
+    def raise_or_callback(self, message):
+        """
+        Raises an exception if errors == 'raise', otherwise calls the on_error callback if it exists.
+        """
+        if self.errors == 'raise' or self.on_error is None:
+            raise SPyRuntimeError(message)
+        else:
+            self.on_error(message)
+
     @staticmethod
     def handle_keyboard_interrupt(*, errors=None, quiet=None):
         def decorator(func: Callable):
@@ -304,7 +313,7 @@ class Status:
 
         display_df = self.df
         if self.code == Status.RUNNING and len(self.df) > 20 and 'Result' in self.df.columns:
-            display_df = self.df[~self.df['Result'].isin(['Queued', 'Success'])]
+            display_df = self.df[~self.df['Result'].str.startswith(('Queued', 'Success'))]
 
         display_df = display_df.head(20)
 

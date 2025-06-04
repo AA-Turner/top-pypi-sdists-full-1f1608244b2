@@ -30,8 +30,8 @@ from biolib.utils import IS_RUNNING_IN_NOTEBOOK
 from biolib.utils.app_uri import parse_app_uri
 
 
-class Job:
-    # Columns to print in table when showing Job
+class Result:
+    # Columns to print in table when showing Result
     table_columns_to_row_map = OrderedDict(
         {
             'ID': {'key': 'uuid', 'params': {'width': 36}},
@@ -54,7 +54,7 @@ class Job:
         self._cached_input_arguments: Optional[List[str]] = None
 
     def __str__(self):
-        return f"Job for {self._job_dict['app_uri']} created at {self._job_dict['created_at']} ({self._uuid})"
+        return f"Result of {self._job_dict['app_uri']} created at {self._job_dict['created_at']} ({self._uuid})"
 
     def __repr__(self):
         # Get job status and shareable link
@@ -134,20 +134,20 @@ class Job:
         return bool(self._job_dict['ended_at'])
 
     def is_pending(self) -> bool:
-        """Returns whether the job is in a pending state.
+        """Returns whether the result is in a pending state.
 
-        A job is considered pending if it's not finished yet.
-        The job state is re-fetched when this method is called.
+        A result is considered pending if it's not finished yet.
+        The result state is re-fetched when this method is called.
 
         Returns:
-            bool: True if the job is in a pending state, False otherwise.
+            bool: True if the result is in a pending state, False otherwise.
 
         Example::
-            >>> job = biolib.get_job("job_id")
-            >>> if job.is_pending():
-            >>>     print("Job is still running")
+            >>> result = biolib.get_result("result_id")
+            >>> if result.is_pending():
+            >>>     print("Result is still running")
             >>> else:
-            >>>     print("Job has finished")
+            >>>     print("Result has finished")
         """
         return not self.is_finished()
 
@@ -170,7 +170,7 @@ class Job:
         self,
         path_filter: Optional[PathFilter] = None,
     ) -> List[LazyLoadedFile]:
-        """List output files from the job.
+        """List output files from the result.
 
         Args:
             path_filter (PathFilter, optional): Filter to apply to the output files.
@@ -180,10 +180,10 @@ class Job:
             List[LazyLoadedFile]: List of output files.
 
         Example::
-            >>> job = biolib.get_job("job_id")
-            >>> output_files = job.list_output_files()
+            >>> result = biolib.get_result("result_id")
+            >>> output_files = result.list_output_files()
             >>> # Filter files with a glob pattern
-            >>> output_files = job.list_output_files("*.pdb")
+            >>> output_files = result.list_output_files("*.pdb")
         """
         return self.result.list_output_files(path_filter=path_filter)
 
@@ -267,7 +267,7 @@ class Job:
         logger.info(f'Waiting for job {self.id} to finish...')
         while not self.is_finished():
             time.sleep(2)
-        logger.info(f'Job {self.id} has finished.')
+        logger.info(f'Result {self.id} has finished.')
 
     def get_shareable_link(self, embed_view: Optional[bool] = None) -> str:
         api_client = BiolibApiClient.get()
@@ -292,20 +292,20 @@ class Job:
                 headers={'Job-Auth-Token': self._auth_token} if self._auth_token else None,
                 data={'state': 'cancelled'},
             )
-            logger.info(f'Job {self._uuid} canceled')
+            logger.info(f'Result {self._uuid} canceled')
         except Exception as error:
-            logger.error(f'Failed to cancel job {self._uuid} due to: {error}')
+            logger.error(f'Failed to cancel result {self._uuid} due to: {error}')
 
     def delete(self) -> None:
-        """Delete the job.
+        """Delete the result.
 
         Example::
-            >>> job = biolib.get_job("job_id")
-            >>> job.delete()
+            >>> result = biolib.get_result("result_id")
+            >>> result.delete()
         """
         try:
             biolib.api.client.delete(path=f'/jobs/{self._uuid}/')
-            logger.info(f'Job {self._uuid} deleted')
+            logger.info(f'Result {self._uuid} deleted')
         except Exception as error:
             raise BioLibError(f'Failed to delete job {self._uuid} due to: {error}') from error
 
@@ -318,7 +318,7 @@ class Job:
             )
             self._refetch_job_dict(force_refetch=True)
             updated_name = self.get_name()
-            logger.info(f'Job {self._uuid} renamed to "{updated_name}"')
+            logger.info(f'Result {self._uuid} renamed to "{updated_name}"')
         except Exception as error:
             raise BioLibError(f'Failed to rename job {self._uuid} due to: {error}') from error
 
@@ -328,28 +328,28 @@ class Job:
         machine: Optional[str] = None,
         blocking: bool = True,
         arguments: Optional[List[str]] = None,
-    ) -> 'Job':
-        """Recompute the job with the same input files but potentially different arguments.
+    ) -> 'Result':
+        """Recompute the result with the same input files but potentially different arguments.
 
         Args:
             app_uri (Optional[str], optional): The URI of the app to use for recomputation.
                 If None, uses the original app URI. Defaults to None.
-            machine (Optional[str], optional): The machine to run the job on.
+            machine (Optional[str], optional): The machine to run the result on.
                 If None, uses the original requested machine. Defaults to None.
-            blocking (bool, optional): Whether to block until the job completes.
+            blocking (bool, optional): Whether to block until the result completes.
                 If True, streams logs until completion. Defaults to True.
-            arguments (Optional[List[str]], optional): New arguments to use for the job.
+            arguments (Optional[List[str]], optional): New arguments to use for the result.
                 If None, uses the original arguments. Defaults to None.
 
         Returns:
-            Job: A new Job instance for the recomputed job.
+            Result: A new Result instance for the recomputed result.
 
         Example::
-            >>> job = biolib.get_job("job_id")
+            >>> result = biolib.get_result("result_id")
             >>> # Recompute with the same arguments
-            >>> new_job = job.recompute()
+            >>> new_result = result.recompute()
             >>> # Recompute with different arguments
-            >>> new_job = job.recompute(arguments=["--new-arg", "value"])
+            >>> new_result = result.recompute(arguments=["--new-arg", "value"])
         """
         app_response = BiolibAppApi.get_by_uri(uri=app_uri or self._job_dict['app_uri'])
 
@@ -388,7 +388,7 @@ class Job:
     def _get_cloud_job(self) -> CloudJobDict:
         self._refetch_job_dict(force_refetch=True)
         if self._job_dict['cloud_job'] is None:
-            raise BioLibError(f'Job {self._uuid} did not register correctly. Try creating a new job.')
+            raise BioLibError(f'Result {self._uuid} did not register correctly. Try creating a new result.')
 
         return self._job_dict['cloud_job']
 
@@ -396,13 +396,13 @@ class Job:
         self._result = JobResult(job_uuid=self._uuid, job_auth_token=self._auth_token, module_output=module_output)
 
     @staticmethod
-    def fetch_jobs(count: int, status: Optional[str] = None) -> List['Job']:
-        job_dicts = Job._get_job_dicts(count, status)
-        return [Job(job_dict) for job_dict in job_dicts]
+    def fetch_jobs(count: int, status: Optional[str] = None) -> List['Result']:
+        job_dicts = Result._get_job_dicts(count, status)
+        return [Result(job_dict) for job_dict in job_dicts]
 
     @staticmethod
     def show_jobs(count: int = 25) -> None:
-        job_dicts = Job._get_job_dicts(count)
+        job_dicts = Result._get_job_dicts(count)
         BioLibTable(columns_to_row_map=Job.table_columns_to_row_map, rows=job_dicts, title='Jobs').print_table()
 
     @staticmethod
@@ -439,9 +439,9 @@ class Job:
         return job_dict
 
     @staticmethod
-    def create_from_uuid(uuid: str, auth_token: Optional[str] = None) -> 'Job':
-        job_dict = Job._get_job_dict(uuid=uuid, auth_token=auth_token)
-        return Job(job_dict)
+    def create_from_uuid(uuid: str, auth_token: Optional[str] = None) -> 'Result':
+        job_dict = Result._get_job_dict(uuid=uuid, auth_token=auth_token)
+        return Result(job_dict)
 
     @staticmethod
     def print_logs_packages(stdout_and_stderr_packages_b64):
@@ -458,7 +458,9 @@ class Job:
     def show(self) -> None:
         self._refetch_job_dict()
         BioLibTable(
-            columns_to_row_map=Job.table_columns_to_row_map, rows=[self._job_dict], title=f'Job: {self._uuid}'
+            columns_to_row_map=Result.table_columns_to_row_map,
+            rows=[self._job_dict],
+            title=f'Result: {self._uuid}',
         ).print_table()
 
     def stream_logs(self) -> None:
@@ -468,7 +470,7 @@ class Job:
         try:
             cloud_job = self._get_cloud_job_awaiting_started()
         except CloudJobFinishedError:
-            logger.info(f'--- The job {self.id} has already completed (no streaming will take place) ---')
+            logger.info(f'--- The result {self.id} has already completed (no streaming will take place) ---')
             logger.info('--- The stdout log is printed below: ---')
             sys.stdout.flush()
             print(self.get_stdout().decode(), file=sys.stdout)
@@ -562,7 +564,7 @@ class Job:
                 cloud_job = self._get_cloud_job()
                 logger.debug('Failed to get status from compute node, retrying...')
                 if cloud_job['finished_at']:
-                    logger.debug('Job no longer exists on compute node, checking for error...')
+                    logger.debug('Result no longer exists on compute node, checking for error...')
                     if cloud_job['error_code'] != SystemExceptionCodes.COMPLETED_SUCCESSFULLY.value:
                         error_message = SystemExceptionCodeMap.get(
                             cloud_job['error_code'], f'Unknown error code {cloud_job["error_code"]}'
@@ -600,7 +602,7 @@ class Job:
         requested_machine_count: Optional[int] = None,
         temporary_client_secrets: Optional[Dict[str, str]] = None,
         api_client: Optional[ApiClient] = None,
-    ) -> 'Job':
+    ) -> 'Result':
         if len(module_input_serialized) < 500_000 and temporary_client_secrets is None:
             _job_dict = BiolibJobApi.create_job_with_data(
                 app_resource_name_prefix=parse_app_uri(app_uri)['resource_name_prefix'],
@@ -615,7 +617,7 @@ class Job:
                 requested_machine_count=requested_machine_count,
                 api_client=api_client,
             )
-            return Job(cast(JobDict, _job_dict))
+            return Result(cast(JobDict, _job_dict))
 
         job_dict: CreatedJobDict = BiolibJobApi.create(
             app_resource_name_prefix=parse_app_uri(app_uri)['resource_name_prefix'],
@@ -632,4 +634,11 @@ class Job:
         JobStorage.upload_module_input(job=job_dict, module_input_serialized=module_input_serialized)
         cloud_job = BiolibJobApi.create_cloud_job(job_id=job_dict['public_id'], result_name_prefix=result_prefix)
         logger.debug(f"Cloud: Job created with id {cloud_job['public_id']}")
-        return Job(cast(JobDict, job_dict), _api_client=api_client)
+        return Result(cast(JobDict, job_dict), _api_client=api_client)
+
+
+class Job(Result):
+    """
+    Deprecated class. `Job` extends the `Result` class and is retained for backward compatibility.
+    Please use the `Result` class instead.
+    """

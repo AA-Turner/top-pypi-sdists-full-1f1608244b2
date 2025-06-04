@@ -5,7 +5,7 @@ import inspect
 import sys
 import uuid
 from dataclasses import dataclass
-from typing import Any, Optional, cast
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 import executing
 import pyarrow as pa
@@ -16,7 +16,9 @@ from chalk._expression.converter import (
     convert_proto_expr_to_literal,
 )
 from chalk._gen.chalk.expression.v1 import expression_pb2 as expr_pb2
-from chalk.features._encoding.converter import TPrimitive
+
+if TYPE_CHECKING:
+    from chalk.features._encoding.converter import TPrimitive
 from chalk.utils.environment_parsing import env_var_bool
 from chalk.utils.source_parsing import should_skip_source_code_parsing
 

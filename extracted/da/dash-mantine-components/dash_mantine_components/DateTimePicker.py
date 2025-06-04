@@ -141,8 +141,10 @@ Keyword arguments:
 - disabled (boolean; optional):
     Sets `disabled` attribute on the `input` element.
 
-- disabledDates (list of strings; optional):
-    Specifies days that should be disabled.
+- disabledDates (boolean | number | string | dict | list; optional):
+    Specifies days that should be disabled.  Either a list of dates or
+    a function. See
+    https://www.dash-mantine-components.com/functions-as-props.
 
 - display (optional)
 
@@ -1130,6 +1132,10 @@ Keyword arguments:
         Determines whether dropdown and target elements should have
         accessible roles, `True` by default.
 
+    - hideDetached (boolean; optional):
+        If set, the dropdown is hidden when the element is hidden with
+        styles or not visible on the screen, `True` by default.
+
     - position (a value equal to: 'top', 'left', 'bottom', 'right', 'top-end', 'top-start', 'left-end', 'left-start', 'bottom-end', 'bottom-start', 'right-end', 'right-start'; optional):
         Dropdown position relative to the target element, `'bottom'`
         by default.
@@ -1392,296 +1398,8 @@ Keyword arguments:
 - td (string | number; optional):
     TextDecoration.
 
-- timeInputProps (dict; optional):
-    TimeInput component props.
-
-    `timeInputProps` is a dict with keys:
-
-    - withSeconds (boolean; optional):
-        Determines whether seconds input should be rendered.
-
-    - minTime (string; optional):
-        Minimum possible string time, if withSeconds is True, time
-        should be in format HH:mm:ss, otherwise HH:mm.
-
-    - maxTime (string; optional):
-        Maximum possible string time, if withSeconds is True, time
-        should be in format HH:mm:ss, otherwise HH:mm.
-
-    - className (string; optional):
-        Class added to the root element, if applicable.
-
-    - style (optional):
-        Inline style added to root component element, can subscribe to
-        theme defined on MantineProvider.
-
-    - hiddenFrom (optional):
-        Breakpoint above which the component is hidden with `display:
-        none`.
-
-    - visibleFrom (optional):
-        Breakpoint below which the component is hidden with `display:
-        none`.
-
-    - lightHidden (boolean; optional):
-        Determines whether component should be hidden in light color
-        scheme with `display: none`.
-
-    - darkHidden (boolean; optional):
-        Determines whether component should be hidden in dark color
-        scheme with `display: none`.
-
-    - mod (string | dict with strings as keys and values of type boolean | number | string | dict | list; optional):
-        Element modifiers transformed into `data-` attributes, for
-        example, `{ 'data-size': 'xl' }`, falsy values are removed.
-
-    - m (number; optional):
-        Margin, theme key: theme.spacing.
-
-    - my (number; optional):
-        MarginBlock, theme key: theme.spacing.
-
-    - mx (number; optional):
-        MarginInline, theme key: theme.spacing.
-
-    - mt (number; optional):
-        MarginTop, theme key: theme.spacing.
-
-    - mb (number; optional):
-        MarginBottom, theme key: theme.spacing.
-
-    - ms (number; optional):
-        MarginInlineStart, theme key: theme.spacing.
-
-    - me (number; optional):
-        MarginInlineEnd, theme key: theme.spacing.
-
-    - ml (number; optional):
-        MarginLeft, theme key: theme.spacing.
-
-    - mr (number; optional):
-        MarginRight, theme key: theme.spacing.
-
-    - p (number; optional):
-        Padding, theme key: theme.spacing.
-
-    - py (number; optional):
-        PaddingBlock, theme key: theme.spacing.
-
-    - px (number; optional):
-        PaddingInline, theme key: theme.spacing.
-
-    - pt (number; optional):
-        PaddingTop, theme key: theme.spacing.
-
-    - pb (number; optional):
-        PaddingBottom, theme key: theme.spacing.
-
-    - ps (number; optional):
-        PaddingInlineStart, theme key: theme.spacing.
-
-    - pe (number; optional):
-        PaddingInlineEnd, theme key: theme.spacing.
-
-    - pl (number; optional):
-        PaddingLeft, theme key: theme.spacing.
-
-    - pr (number; optional):
-        PaddingRight, theme key: theme.spacing.
-
-    - bd (string | number; optional):
-        Border.
-
-    - bg (optional):
-        Background, theme key: theme.colors.
-
-    - c (optional):
-        Color.
-
-    - opacity (optional)
-
-    - ff (optional):
-        FontFamily.
-
-    - fz (number; optional):
-        FontSize, theme key: theme.fontSizes.
-
-    - fw (optional):
-        FontWeight.
-
-    - lts (string | number; optional):
-        LetterSpacing.
-
-    - ta (optional):
-        TextAlign.
-
-    - lh (number; optional):
-        LineHeight, theme key: lineHeights.
-
-    - fs (optional):
-        FontStyle.
-
-    - tt (optional):
-        TextTransform.
-
-    - td (string | number; optional):
-        TextDecoration.
-
-    - w (string | number; optional):
-        Width, theme key: theme.spacing.
-
-    - miw (string | number; optional):
-        MinWidth, theme key: theme.spacing.
-
-    - maw (string | number; optional):
-        MaxWidth, theme key: theme.spacing.
-
-    - h (string | number; optional):
-        Height, theme key: theme.spacing.
-
-    - mih (string | number; optional):
-        MinHeight, theme key: theme.spacing.
-
-    - mah (string | number; optional):
-        MaxHeight, theme key: theme.spacing.
-
-    - bgsz (string | number; optional):
-        BackgroundSize.
-
-    - bgp (string | number; optional):
-        BackgroundPosition.
-
-    - bgr (optional):
-        BackgroundRepeat.
-
-    - bga (optional):
-        BackgroundAttachment.
-
-    - pos (optional):
-        Position.
-
-    - top (string | number; optional)
-
-    - left (string | number; optional)
-
-    - bottom (string | number; optional)
-
-    - right (string | number; optional)
-
-    - inset (string | number; optional)
-
-    - display (optional)
-
-    - flex (string | number; optional)
-
-    - wrapperProps (dict with strings as keys and values of type boolean | number | string | dict | list; optional):
-        Props passed down to the root element.
-
-    - readOnly (boolean; optional):
-        Readonly.
-
-    - label (a list of or a singular dash component, string or number; optional):
-        Contents of `Input.Label` component. If not set, label is not
-        rendered.
-
-    - description (a list of or a singular dash component, string or number; optional):
-        Contents of `Input.Description` component. If not set,
-        description is not rendered.
-
-    - error (a list of or a singular dash component, string or number; optional):
-        Contents of `Input.Error` component. If not set, error is not
-        rendered.
-
-    - required (boolean; optional):
-        Adds required attribute to the input and a red asterisk on the
-        right side of label, `False` by default.
-
-    - withAsterisk (boolean; optional):
-        Determines whether the required asterisk should be displayed.
-        Overrides `required` prop. Does not add required attribute to
-        the input. `False` by default.
-
-    - labelProps (dict with strings as keys and values of type boolean | number | string | dict | list; optional):
-        Props passed down to the `Input.Label` component.
-
-    - descriptionProps (dict with strings as keys and values of type boolean | number | string | dict | list; optional):
-        Props passed down to the `Input.Description` component.
-
-    - errorProps (dict with strings as keys and values of type boolean | number | string | dict | list; optional):
-        Props passed down to the `Input.Error` component.
-
-    - inputWrapperOrder (list of a value equal to: 'label', 'description', 'error', 'input's; optional):
-        Controls order of the elements, `['label', 'description',
-        'input', 'error']` by default.
-
-    - size (optional):
-        Controls input `height` and horizontal `padding`, `'sm'` by
-        default.
-
-    - leftSection (a list of or a singular dash component, string or number; optional):
-        Content section rendered on the left side of the input.
-
-    - leftSectionWidth (string | number; optional):
-        Left section width, used to set `width` of the section and
-        input `padding-left`, by default equals to the input height.
-
-    - leftSectionProps (dict; optional):
-        Props passed down to the `leftSection` element.
-
-    - leftSectionPointerEvents (a value equal to: '-moz-initial', 'inherit', 'initial', 'revert', 'revert-layer', 'unset', 'auto', 'none', 'all', 'fill', 'painted', 'stroke', 'visible', 'visibleFill', 'visiblePainted', 'visibleStroke'; optional):
-        Sets `pointer-events` styles on the `leftSection` element,
-        `'none'` by default.
-
-    - rightSection (a list of or a singular dash component, string or number; optional):
-        Content section rendered on the right side of the input.
-
-    - rightSectionWidth (string | number; optional):
-        Right section width, used to set `width` of the section and
-        input `padding-right`, by default equals to the input height.
-
-    - rightSectionProps (dict; optional):
-        Props passed down to the `rightSection` element.
-
-    - rightSectionPointerEvents (a value equal to: '-moz-initial', 'inherit', 'initial', 'revert', 'revert-layer', 'unset', 'auto', 'none', 'all', 'fill', 'painted', 'stroke', 'visible', 'visibleFill', 'visiblePainted', 'visibleStroke'; optional):
-        Sets `pointer-events` styles on the `rightSection` element,
-        `'none'` by default.
-
-    - radius (number; optional):
-        Key of `theme.radius` or any valid CSS value to set
-        `border-radius`, numbers are converted to rem,
-        `theme.defaultRadius` by default.
-
-    - disabled (boolean; optional):
-        Sets `disabled` attribute on the `input` element.
-
-    - pointer (boolean; optional):
-        Determines whether the input should have `cursor: pointer`
-        style, `False` by default.
-
-    - withErrorStyles (boolean; optional):
-        Determines whether the input should have red border and red
-        text color when the `error` prop is set, `True` by default.
-
-    - placeholder (string; optional):
-        Placeholder.
-
-    - name (string; optional):
-        Name prop.
-
-    - inputProps (dict with strings as keys and values of type boolean | number | string | dict | list; optional):
-        Props passed down to the `Input` component.
-
-    - classNames (dict; optional):
-        Adds class names to Mantine components.
-
-    - styles (boolean | number | string | dict | list; optional):
-        Mantine styles API.
-
-    - unstyled (boolean; optional):
-        Remove all Mantine styling from the component.
-
-    - variant (string; optional):
-        variant.
+- timePickerProps (dict; optional):
+    Props passed the TimePicker component.
 
 - top (string | number; optional)
 
@@ -1731,6 +1449,10 @@ Keyword arguments:
 - withSeconds (boolean; optional):
     Determines whether seconds input should be rendered.
 
+- withWeekNumbers (boolean; optional):
+    Determines whether week numbers should be displayed, False by
+    default.
+
 - wrapperProps (dict with strings as keys and values of type boolean | number | string | dict | list; optional):
     Props passed down to the root element.
 
@@ -1740,106 +1462,10 @@ Keyword arguments:
 
 - yearsListFormat (string; optional):
     dayjs format for years list, `'YYYY'` by default."""
-    _children_props = ['timeInputProps.label', 'timeInputProps.description', 'timeInputProps.error', 'timeInputProps.leftSection', 'timeInputProps.rightSection', 'leftSection', 'rightSection', 'label', 'description', 'error', 'popoverProps.middlewares.flip.boundary', 'clearButtonProps.children', 'clearButtonProps.icon', 'modalProps.overlayProps.children', 'modalProps.title', 'modalProps.closeButtonProps.children', 'modalProps.closeButtonProps.icon', 'nextIcon', 'previousIcon']
+    _children_props = ['leftSection', 'rightSection', 'label', 'description', 'error', 'popoverProps.middlewares.flip.boundary', 'clearButtonProps.children', 'clearButtonProps.icon', 'modalProps.overlayProps.children', 'modalProps.title', 'modalProps.closeButtonProps.children', 'modalProps.closeButtonProps.icon', 'nextIcon', 'previousIcon']
     _base_nodes = ['leftSection', 'rightSection', 'label', 'description', 'error', 'nextIcon', 'previousIcon', 'children']
     _namespace = 'dash_mantine_components'
     _type = 'DateTimePicker'
-    TimeInputProps = TypedDict(
-        "TimeInputProps",
-            {
-            "withSeconds": NotRequired[bool],
-            "minTime": NotRequired[str],
-            "maxTime": NotRequired[str],
-            "className": NotRequired[str],
-            "style": NotRequired[typing.Union[typing.Any]],
-            "hiddenFrom": NotRequired[typing.Union[Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "visibleFrom": NotRequired[typing.Union[Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "lightHidden": NotRequired[bool],
-            "darkHidden": NotRequired[bool],
-            "mod": NotRequired[typing.Union[str, typing.Dict[typing.Union[str, float, int], typing.Any]]],
-            "m": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "my": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "mx": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "mt": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "mb": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "ms": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "me": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "ml": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "mr": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "p": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "py": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "px": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "pt": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "pb": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "ps": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "pe": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "pl": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "pr": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "bd": NotRequired[typing.Union[str, NumberType]],
-            "bg": NotRequired[typing.Union[Literal["blue"], Literal["cyan"], Literal["gray"], Literal["green"], Literal["indigo"], Literal["lime"], Literal["orange"], Literal["pink"], Literal["red"], Literal["teal"], Literal["violet"], Literal["yellow"], Literal["dark"], Literal["grape"]]],
-            "c": NotRequired[typing.Union[Literal["blue"], Literal["cyan"], Literal["gray"], Literal["green"], Literal["indigo"], Literal["lime"], Literal["orange"], Literal["pink"], Literal["red"], Literal["teal"], Literal["violet"], Literal["yellow"], Literal["dark"], Literal["grape"]]],
-            "opacity": NotRequired[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"]]],
-            "ff": NotRequired[typing.Union[Literal["monospace"], Literal["text"], Literal["heading"]]],
-            "fz": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"], Literal["h1"], Literal["h2"], Literal["h3"], Literal["h4"], Literal["h5"], Literal["h6"]]],
-            "fw": NotRequired[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["bold"], Literal["normal"], Literal["bolder"], Literal["lighter"]]],
-            "lts": NotRequired[typing.Union[str, NumberType]],
-            "ta": NotRequired[typing.Union[Literal["left"], Literal["right"], Literal["end"], Literal["start"], Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["center"], Literal["-webkit-match-parent"], Literal["justify"], Literal["match-parent"]]],
-            "lh": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"], Literal["h1"], Literal["h2"], Literal["h3"], Literal["h4"], Literal["h5"], Literal["h6"]]],
-            "fs": NotRequired[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["normal"], Literal["italic"], Literal["oblique"]]],
-            "tt": NotRequired[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["none"], Literal["capitalize"], Literal["full-size-kana"], Literal["full-width"], Literal["lowercase"], Literal["uppercase"]]],
-            "td": NotRequired[typing.Union[str, NumberType]],
-            "w": NotRequired[typing.Union[str, NumberType]],
-            "miw": NotRequired[typing.Union[str, NumberType]],
-            "maw": NotRequired[typing.Union[str, NumberType]],
-            "h": NotRequired[typing.Union[str, NumberType]],
-            "mih": NotRequired[typing.Union[str, NumberType]],
-            "mah": NotRequired[typing.Union[str, NumberType]],
-            "bgsz": NotRequired[typing.Union[str, NumberType]],
-            "bgp": NotRequired[typing.Union[str, NumberType]],
-            "bgr": NotRequired[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["no-repeat"], Literal["repeat"], Literal["repeat-x"], Literal["repeat-y"], Literal["round"], Literal["space"]]],
-            "bga": NotRequired[typing.Union[Literal["local"], Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["fixed"], Literal["scroll"]]],
-            "pos": NotRequired[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["absolute"], Literal["fixed"], Literal["-webkit-sticky"], Literal["relative"], Literal["static"], Literal["sticky"]]],
-            "top": NotRequired[typing.Union[str, NumberType]],
-            "left": NotRequired[typing.Union[str, NumberType]],
-            "bottom": NotRequired[typing.Union[str, NumberType]],
-            "right": NotRequired[typing.Union[str, NumberType]],
-            "inset": NotRequired[typing.Union[str, NumberType]],
-            "display": NotRequired[typing.Union[Literal["flex"], Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["none"], Literal["block"], Literal["inline"], Literal["run-in"], Literal["-ms-flexbox"], Literal["-ms-grid"], Literal["-webkit-flex"], Literal["flow"], Literal["flow-root"], Literal["grid"], Literal["ruby"], Literal["table"], Literal["ruby-base"], Literal["ruby-base-container"], Literal["ruby-text"], Literal["ruby-text-container"], Literal["table-caption"], Literal["table-cell"], Literal["table-column"], Literal["table-column-group"], Literal["table-footer-group"], Literal["table-header-group"], Literal["table-row"], Literal["table-row-group"], Literal["-ms-inline-flexbox"], Literal["-ms-inline-grid"], Literal["-webkit-inline-flex"], Literal["inline-block"], Literal["inline-flex"], Literal["inline-grid"], Literal["inline-list-item"], Literal["inline-table"], Literal["contents"], Literal["list-item"]]],
-            "flex": NotRequired[typing.Union[str, NumberType]],
-            "wrapperProps": NotRequired[typing.Dict[typing.Union[str, float, int], typing.Any]],
-            "readOnly": NotRequired[bool],
-            "label": NotRequired[ComponentType],
-            "description": NotRequired[ComponentType],
-            "error": NotRequired[ComponentType],
-            "required": NotRequired[bool],
-            "withAsterisk": NotRequired[bool],
-            "labelProps": NotRequired[typing.Dict[typing.Union[str, float, int], typing.Any]],
-            "descriptionProps": NotRequired[typing.Dict[typing.Union[str, float, int], typing.Any]],
-            "errorProps": NotRequired[typing.Dict[typing.Union[str, float, int], typing.Any]],
-            "inputWrapperOrder": NotRequired[typing.Sequence[Literal["label", "description", "error", "input"]]],
-            "size": NotRequired[typing.Union[Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "leftSection": NotRequired[ComponentType],
-            "leftSectionWidth": NotRequired[typing.Union[str, NumberType]],
-            "leftSectionProps": NotRequired[dict],
-            "leftSectionPointerEvents": NotRequired[Literal["-moz-initial", "inherit", "initial", "revert", "revert-layer", "unset", "auto", "none", "all", "fill", "painted", "stroke", "visible", "visibleFill", "visiblePainted", "visibleStroke"]],
-            "rightSection": NotRequired[ComponentType],
-            "rightSectionWidth": NotRequired[typing.Union[str, NumberType]],
-            "rightSectionProps": NotRequired[dict],
-            "rightSectionPointerEvents": NotRequired[Literal["-moz-initial", "inherit", "initial", "revert", "revert-layer", "unset", "auto", "none", "all", "fill", "painted", "stroke", "visible", "visibleFill", "visiblePainted", "visibleStroke"]],
-            "radius": NotRequired[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]],
-            "disabled": NotRequired[bool],
-            "pointer": NotRequired[bool],
-            "withErrorStyles": NotRequired[bool],
-            "placeholder": NotRequired[str],
-            "name": NotRequired[str],
-            "inputProps": NotRequired[typing.Dict[typing.Union[str, float, int], typing.Any]],
-            "classNames": NotRequired[dict],
-            "styles": NotRequired[typing.Any],
-            "unstyled": NotRequired[bool],
-            "variant": NotRequired[str]
-        }
-    )
-
     LoadingState = TypedDict(
         "LoadingState",
             {
@@ -1933,6 +1559,7 @@ Keyword arguments:
             "trapFocus": NotRequired[bool],
             "closeOnEscape": NotRequired[bool],
             "withRoles": NotRequired[bool],
+            "hideDetached": NotRequired[bool],
             "position": NotRequired[Literal["top", "left", "bottom", "right", "top-end", "top-start", "left-end", "left-start", "bottom-end", "bottom-start", "right-end", "right-start"]],
             "offset": NotRequired[typing.Union[NumberType]],
             "positionDependencies": NotRequired[typing.Sequence[typing.Any]],
@@ -2239,10 +1866,10 @@ Keyword arguments:
         self,
         valueFormat: typing.Optional[str] = None,
         value: typing.Optional[str] = None,
-        timeInputProps: typing.Optional["TimeInputProps"] = None,
+        timePickerProps: typing.Optional[dict] = None,
         submitButtonProps: typing.Optional[typing.Any] = None,
         withSeconds: typing.Optional[bool] = None,
-        disabledDates: typing.Optional[typing.Sequence[str]] = None,
+        disabledDates: typing.Optional[typing.Any] = None,
         n_submit: typing.Optional[NumberType] = None,
         debounce: typing.Optional[NumberType] = None,
         highlightToday: typing.Optional[bool] = None,
@@ -2364,15 +1991,16 @@ Keyword arguments:
         weekendDays: typing.Optional[typing.Sequence[Literal[0, 1, 2, 3, 4, 5, 6]]] = None,
         hideOutsideDates: typing.Optional[bool] = None,
         hideWeekdays: typing.Optional[bool] = None,
+        withWeekNumbers: typing.Optional[bool] = None,
         classNames: typing.Optional[dict] = None,
         styles: typing.Optional[typing.Any] = None,
         unstyled: typing.Optional[bool] = None,
         variant: typing.Optional[str] = None,
         **kwargs
     ):
-        self._prop_names = ['id', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'dropdownType', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'labelSeparator', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'modalProps', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_submit', 'name', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'sortDates', 'style', 'styles', 'submitButtonProps', 'ta', 'tabIndex', 'td', 'timeInputProps', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withSeconds', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
+        self._prop_names = ['id', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'dropdownType', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'labelSeparator', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'modalProps', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_submit', 'name', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'sortDates', 'style', 'styles', 'submitButtonProps', 'ta', 'tabIndex', 'td', 'timePickerProps', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withSeconds', 'withWeekNumbers', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['id', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'dropdownType', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'labelSeparator', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'modalProps', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_submit', 'name', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'sortDates', 'style', 'styles', 'submitButtonProps', 'ta', 'tabIndex', 'td', 'timeInputProps', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withSeconds', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
+        self.available_properties = ['id', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'dropdownType', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'labelSeparator', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'modalProps', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_submit', 'name', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'sortDates', 'style', 'styles', 'submitButtonProps', 'ta', 'tabIndex', 'td', 'timePickerProps', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withSeconds', 'withWeekNumbers', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

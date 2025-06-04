@@ -8,19 +8,19 @@ use crate::error::{
 	Error as AppError,
 	Result,
 };
+use git_conventional::{
+	Commit as ConventionalCommit,
+	Footer as ConventionalFooter,
+};
 #[cfg(feature = "repo")]
 use git2::{
 	Commit as GitCommit,
 	Signature as CommitSignature,
 };
-use git_conventional::{
-	Commit as ConventionalCommit,
-	Footer as ConventionalFooter,
-};
 use lazy_regex::{
-	lazy_regex,
 	Lazy,
 	Regex,
+	lazy_regex,
 };
 use serde::ser::{
 	SerializeStruct,
@@ -94,6 +94,25 @@ impl<'a> From<CommitSignature<'a>> for Signature {
 			name:      signature.name().map(String::from),
 			email:     signature.email().map(String::from),
 			timestamp: signature.when().seconds(),
+		}
+	}
+}
+
+/// Commit range (from..to)
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Range {
+	/// Full commit SHA the range starts at
+	from: String,
+	/// Full commit SHA the range ends at
+	to:   String,
+}
+
+impl Range {
+	/// Creates a new [`Range`] from [`crate::commit::Commit`].
+	pub fn new(from: &Commit, to: &Commit) -> Self {
+		Self {
+			from: from.id.clone(),
+			to:   to.id.clone(),
 		}
 	}
 }
@@ -177,8 +196,8 @@ impl From<String> for Commit<'_> {
 }
 
 #[cfg(feature = "repo")]
-impl<'a> From<&GitCommit<'a>> for Commit<'a> {
-	fn from(commit: &GitCommit<'a>) -> Self {
+impl From<&GitCommit<'_>> for Commit<'_> {
+	fn from(commit: &GitCommit<'_>) -> Self {
 		Commit {
 			id: commit.id().to_string(),
 			message: commit.message().unwrap_or_default().trim_end().to_string(),
@@ -212,28 +231,26 @@ impl Commit<'_> {
 	/// * extracts links and generates URLs
 	pub fn process(&self, config: &GitConfig) -> Result<Self> {
 		let mut commit = self.clone();
-		if let Some(preprocessors) = &config.commit_preprocessors {
-			commit = commit.preprocess(preprocessors)?;
-		}
-		if config.conventional_commits.unwrap_or(true) {
-			if config.filter_unconventional.unwrap_or(true) &&
-				!config.split_commits.unwrap_or(false)
+		commit = commit.preprocess(&config.commit_preprocessors)?;
+		if config.conventional_commits {
+			if !config.require_conventional &&
+				config.filter_unconventional &&
+				!config.split_commits
 			{
 				commit = commit.into_conventional()?;
 			} else if let Ok(conv_commit) = commit.clone().into_conventional() {
 				commit = conv_commit;
 			}
 		}
-		if let Some(parsers) = &config.commit_parsers {
-			commit = commit.parse(
-				parsers,
-				config.protect_breaking_commits.unwrap_or(false),
-				config.filter_commits.unwrap_or(false),
-			)?;
-		}
-		if let Some(parsers) = &config.link_parsers {
-			commit = commit.parse_links(parsers)?;
-		}
+
+		commit = commit.parse(
+			&config.commit_parsers,
+			config.protect_breaking_commits,
+			config.filter_commits,
+		)?;
+
+		commit = commit.parse_links(&config.link_parsers)?;
+
 		Ok(commit)
 	}
 
@@ -318,8 +335,15 @@ impl Commit<'_> {
 				let value = if field_name == "body" {
 					body.clone()
 				} else {
-					tera::dotted_pointer(&lookup_context, field_name)
-						.map(|v| v.to_string())
+					tera::dotted_pointer(&lookup_context, field_name).and_then(|v| {
+						match &v {
+							Value::String(s) => Some(s.clone()),
+							Value::Number(_) | Value::Bool(_) | Value::Null => {
+								Some(v.to_string())
+							}
+							_ => None,
+						}
+					})
 				};
 				match value {
 					Some(value) => {
@@ -327,7 +351,8 @@ impl Commit<'_> {
 					}
 					None => {
 						return Err(AppError::FieldError(format!(
-							"field {field_name} does not have a value",
+							"field '{field_name}' is missing or has unsupported \
+							 type (expected String, Number, Bool, or Null)",
 						)));
 					}
 				}
@@ -554,7 +579,7 @@ mod test {
 	#[test]
 	fn conventional_footers() {
 		let cfg = crate::config::GitConfig {
-			conventional_commits: Some(true),
+			conventional_commits: true,
 			..Default::default()
 		};
 		let test_cases = vec![
@@ -692,7 +717,7 @@ mod test {
 	}
 
 	#[test]
-	fn parse_commit_field() -> Result<()> {
+	fn parse_commit_fields() -> Result<()> {
 		let mut commit = Commit::new(
 			String::from("8f55e69eba6e6ce811ace32bd84cc82215673cb6"),
 			String::from("feat: do something"),
@@ -704,7 +729,15 @@ mod test {
 			timestamp: 0x0,
 		};
 
-		let parsed_commit = commit.parse(
+		commit.remote = Some(crate::contributor::RemoteContributor {
+			username:      None,
+			pr_title:      Some("feat: do something".to_string()),
+			pr_number:     None,
+			pr_labels:     Vec::new(),
+			is_first_time: true,
+		});
+
+		let parsed_commit = commit.clone().parse(
 			&[CommitParser {
 				sha:           None,
 				message:       None,
@@ -722,6 +755,49 @@ mod test {
 		)?;
 
 		assert_eq!(Some(String::from("Test group")), parsed_commit.group);
+
+		let parsed_commit = commit.clone().parse(
+			&[CommitParser {
+				sha:           None,
+				message:       None,
+				body:          None,
+				footer:        None,
+				group:         Some(String::from("Test group")),
+				default_scope: None,
+				scope:         None,
+				skip:          None,
+				field:         Some(String::from("remote.pr_title")),
+				pattern:       Regex::new("^feat").ok(),
+			}],
+			false,
+			false,
+		)?;
+
+		assert_eq!(Some(String::from("Test group")), parsed_commit.group);
+
+		let parse_result = commit.clone().parse(
+			&[CommitParser {
+				sha:           None,
+				message:       None,
+				body:          None,
+				footer:        None,
+				group:         Some(String::from("Invalid group")),
+				default_scope: None,
+				scope:         None,
+				skip:          None,
+				field:         Some(String::from("remote.pr_labels")),
+				pattern:       Regex::new(".*").ok(),
+			}],
+			false,
+			false,
+		);
+
+		assert!(
+			parse_result.is_err(),
+			"Expected error when using unsupported field `remote.pr_labels`, but \
+			 got Ok"
+		);
+
 		Ok(())
 	}
 

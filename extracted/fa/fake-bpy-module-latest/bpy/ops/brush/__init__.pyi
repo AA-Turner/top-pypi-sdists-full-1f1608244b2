@@ -2,14 +2,15 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def asset_activate(
     execution_context: int | str | None = None,
     undo: bool | None = None,
     /,
     *,
-    asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None = "LOCAL",
+    asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems
+    | None = "LOCAL",
     asset_library_identifier: str = "",
     relative_asset_identifier: str = "",
     use_toggle: bool | None = False,
@@ -19,7 +20,7 @@ def asset_activate(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param asset_library_type: Asset Library Type
-    :type asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None
+    :type asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems | None
     :param asset_library_identifier: Asset Library Identifier
     :type asset_library_identifier: str
     :param relative_asset_identifier: Relative Asset Identifier

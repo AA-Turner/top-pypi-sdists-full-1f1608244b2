@@ -12,11 +12,11 @@ use std::collections::{
 };
 use std::error::Error as ErrorImpl;
 use tera::{
-	ast,
 	Context as TeraContext,
 	Result as TeraResult,
 	Tera,
 	Value,
+	ast,
 };
 
 /// Wrapper for [`Tera`].
@@ -215,10 +215,12 @@ mod test {
 			.into_iter()
 			.filter_map(|c| c.into_conventional().ok())
 			.collect(),
+			commit_range: None,
 			commit_id: None,
 			timestamp: 0,
 			previous: None,
 			repository: Some(String::from("/root/repo")),
+			submodule_commits: HashMap::new(),
 			#[cfg(feature = "github")]
 			github: crate::remote::RemoteReleaseMetadata {
 				contributors: vec![],

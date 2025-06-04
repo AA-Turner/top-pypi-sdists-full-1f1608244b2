@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import bpy.types
 
 def bake_keys(execution_context: int | str | None = None, undo: bool | None = None):
@@ -292,14 +292,14 @@ def duplicate(
     undo: bool | None = None,
     /,
     *,
-    mode: bpy._typing.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
+    mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
 ):
     """Make a copy of all selected keyframes
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param mode: Mode
-    :type mode: bpy._typing.rna_enums.TransformModeTypeItems | None
+    :type mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None
     """
 
 def duplicate_move(
@@ -343,14 +343,14 @@ def easing_type(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.BeztripleInterpolationEasingItems | None = "AUTO",
+    type: bpy.stub_internal.rna_enums.BeztripleInterpolationEasingItems | None = "AUTO",
 ):
     """Set easing type for the F-Curve segments starting from the selected keyframes
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.BeztripleInterpolationEasingItems | None
+    :type type: bpy.stub_internal.rna_enums.BeztripleInterpolationEasingItems | None
     """
 
 def equalize_handles(
@@ -423,7 +423,7 @@ def fmodifier_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.FmodifierTypeItems | None = "NULL",
+    type: bpy.stub_internal.rna_enums.FmodifierTypeItems | None = "NULL",
     only_active: bool | None = False,
 ):
     """Add F-Modifier to the active/selected F-Curves
@@ -431,7 +431,7 @@ def fmodifier_add(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.FmodifierTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.FmodifierTypeItems | None
     :param only_active: Only Active, Only add F-Modifier to active F-Curve
     :type only_active: bool | None
     """
@@ -514,14 +514,14 @@ def handle_type(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.KeyframeHandleTypeItems | None = "FREE",
+    type: bpy.stub_internal.rna_enums.KeyframeHandleTypeItems | None = "FREE",
 ):
     """Set type of handle for selected keyframes
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.KeyframeHandleTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.KeyframeHandleTypeItems | None
     """
 
 def hide(
@@ -544,14 +544,15 @@ def interpolation_type(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.BeztripleInterpolationModeItems | None = "CONSTANT",
+    type: bpy.stub_internal.rna_enums.BeztripleInterpolationModeItems
+    | None = "CONSTANT",
 ):
     """Set interpolation mode for the F-Curve segments starting from the selected keyframes
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.BeztripleInterpolationModeItems | None
+    :type type: bpy.stub_internal.rna_enums.BeztripleInterpolationModeItems | None
     """
 
 def keyframe_insert(
@@ -659,9 +660,10 @@ def paste(
     undo: bool | None = None,
     /,
     *,
-    offset: bpy._typing.rna_enums.KeyframePasteOffsetItems | None = "START",
-    value_offset: bpy._typing.rna_enums.KeyframePasteOffsetValueItems | None = "NONE",
-    merge: bpy._typing.rna_enums.KeyframePasteMergeItems | None = "MIX",
+    offset: bpy.stub_internal.rna_enums.KeyframePasteOffsetItems | None = "START",
+    value_offset: bpy.stub_internal.rna_enums.KeyframePasteOffsetValueItems
+    | None = "NONE",
+    merge: bpy.stub_internal.rna_enums.KeyframePasteMergeItems | None = "MIX",
     flipped: bool | None = False,
 ):
     """Paste keyframes from the internal clipboard for the selected channels, starting on the current frame
@@ -669,11 +671,11 @@ def paste(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param offset: Frame Offset, Paste time offset of keys
-    :type offset: bpy._typing.rna_enums.KeyframePasteOffsetItems | None
+    :type offset: bpy.stub_internal.rna_enums.KeyframePasteOffsetItems | None
     :param value_offset: Value Offset, Paste keys with a value offset
-    :type value_offset: bpy._typing.rna_enums.KeyframePasteOffsetValueItems | None
+    :type value_offset: bpy.stub_internal.rna_enums.KeyframePasteOffsetValueItems | None
     :param merge: Type, Method of merging pasted keys and existing
-    :type merge: bpy._typing.rna_enums.KeyframePasteMergeItems | None
+    :type merge: bpy.stub_internal.rna_enums.KeyframePasteMergeItems | None
     :param flipped: Flipped, Paste keyframes from mirrored bones if they exist
     :type flipped: bool | None
     """

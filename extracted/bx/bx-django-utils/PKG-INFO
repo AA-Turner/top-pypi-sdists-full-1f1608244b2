@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bx_django_utils
-Version: 88
+Version: 89
 Summary: Various Django utility functions
 Project-URL: Documentation, https://github.com/boxine/bx_django_utils/
 Project-URL: Source, https://github.com/boxine/bx_django_utils/
@@ -324,7 +324,7 @@ Utilities to manage text fixtures in JSON files.
 
 #### bx_django_utils.test_utils.model_primary_key
 
-* [`deterministic_primary_key()`](https://github.com/boxine/bx_django_utils/blob/master/bx_django_utils/test_utils/model_primary_key.py#L11-L50) - Context manager for unittests to use deterministic primary key for a model creation.
+* [`deterministic_primary_key()`](https://github.com/boxine/bx_django_utils/blob/master/bx_django_utils/test_utils/model_primary_key.py#L11-L57) - Context manager for unittests to use deterministic primary key for a model creation.
 
 #### bx_django_utils.test_utils.playwright
 

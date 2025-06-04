@@ -367,5 +367,6 @@ def brush_shared_settings(layout, context, brush, popover=False):
     """Draw simple brush settings that are shared between different paint modes."""
 
 def brush_texture_settings(layout, brush, sculpt): ...
+def color_jitter_panel(layout, context, brush): ...
 def draw_color_settings(context, layout, brush, color_type=False):
     """Draw color wheel and gradient settings."""

@@ -3,7 +3,7 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 import bl_ui.properties_data_grease_pencil
-import bl_ui.space_toolsystem_common
+import bl_ui.utils
 import bpy.types
 import rna_prop_ui
 
@@ -696,7 +696,7 @@ class DOPESHEET_PT_grease_pencil_mode(
         """
 
 class DOPESHEET_PT_playhead_snapping(
-    bl_ui.space_toolsystem_common.PlayheadSnappingPanel, bpy.types.Panel
+    bl_ui.utils.PlayheadSnappingPanel, bpy.types.Panel
 ):
     bl_label: typing.Any
     bl_region_type: typing.Any

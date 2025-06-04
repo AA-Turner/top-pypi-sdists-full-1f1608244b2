@@ -22,6 +22,7 @@ Usage::
         GetRouteResponsesPaginator,
         GetRoutesPaginator,
         GetStagesPaginator,
+        ListRoutingRulesPaginator,
     )
 
     session = Session()
@@ -37,6 +38,7 @@ Usage::
     get_route_responses_paginator: GetRouteResponsesPaginator = client.get_paginator("get_route_responses")
     get_routes_paginator: GetRoutesPaginator = client.get_paginator("get_routes")
     get_stages_paginator: GetStagesPaginator = client.get_paginator("get_stages")
+    list_routing_rules_paginator: ListRoutingRulesPaginator = client.get_paginator("list_routing_rules")
     ```
 """
 
@@ -68,6 +70,8 @@ from .type_defs import (
     GetRoutesResponseTypeDef,
     GetStagesRequestPaginateTypeDef,
     GetStagesResponseTypeDef,
+    ListRoutingRulesRequestPaginateTypeDef,
+    ListRoutingRulesResponseTypeDef,
 )
 
 if sys.version_info >= (3, 12):
@@ -86,6 +90,7 @@ __all__ = (
     "GetRouteResponsesPaginator",
     "GetRoutesPaginator",
     "GetStagesPaginator",
+    "ListRoutingRulesPaginator",
 )
 
 if TYPE_CHECKING:
@@ -266,4 +271,22 @@ class GetStagesPaginator(_GetStagesPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/paginator/GetStages.html#ApiGatewayV2.Paginator.GetStages.paginate)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/paginators/#getstagespaginator)
+        """
+
+if TYPE_CHECKING:
+    _ListRoutingRulesPaginatorBase = Paginator[ListRoutingRulesResponseTypeDef]
+else:
+    _ListRoutingRulesPaginatorBase = Paginator  # type: ignore[assignment]
+
+class ListRoutingRulesPaginator(_ListRoutingRulesPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/paginator/ListRoutingRules.html#ApiGatewayV2.Paginator.ListRoutingRules)
+    [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/paginators/#listroutingrulespaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListRoutingRulesRequestPaginateTypeDef]
+    ) -> PageIterator[ListRoutingRulesResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/apigatewayv2/paginator/ListRoutingRules.html#ApiGatewayV2.Paginator.ListRoutingRules.paginate)
+        [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_apigatewayv2/paginators/#listroutingrulespaginator)
         """

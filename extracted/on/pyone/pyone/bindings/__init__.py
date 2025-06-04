@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 #
-# Generated Tue Feb 18 17:07:19 2025 by generateDS.py version 2.44.3.
-# Python 3.10.12 (main, Jan 17 2025, 14:35:34) [GCC 11.4.0]
+# Generated Thu May 29 01:07:37 2025 by generateDS.py version 2.44.3.
+# Python 3.10.12 (main, Feb  4 2025, 14:57:36) [GCC 11.4.0]
 #
 # Command line options:
 #   ('-q', '')
@@ -17,7 +17,7 @@
 #   ../../../share/doc/xsd/index.xsd
 #
 # Command line:
-#   /home/one/init-build-jenkins.4Ppvoe/one/src/oca/python/bin/generateDS -q -f -o "pyone/bindings/supbind.py" -s "pyone/bindings/__init__.py" --super="supbind" --external-encoding="utf-8" --silence ../../../share/doc/xsd/index.xsd
+#   /home/one/init-build-jenkins.p7F3uQ/one/src/oca/python/bin/generateDS -q -f -o "pyone/bindings/supbind.py" -s "pyone/bindings/__init__.py" --super="supbind" --external-encoding="utf-8" --silence ../../../share/doc/xsd/index.xsd
 #
 # Current working directory (os.getcwd()):
 #   python

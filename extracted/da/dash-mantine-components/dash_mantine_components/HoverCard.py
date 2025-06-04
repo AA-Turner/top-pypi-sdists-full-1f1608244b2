@@ -73,6 +73,10 @@ Keyword arguments:
     strategy](https://floating-ui.com/docs/usefloating#strategy),
     `'absolute'` by default.
 
+- hideDetached (boolean; optional):
+    If set, the dropdown is hidden when the element is hidden with
+    styles or not visible on the screen, `True` by default.
+
 - keepMounted (boolean; optional):
     If set dropdown will not be unmounted from the DOM when it is
     hidden, `display: none` styles will be added instead.
@@ -357,6 +361,7 @@ Keyword arguments:
         trapFocus: typing.Optional[bool] = None,
         closeOnEscape: typing.Optional[bool] = None,
         withRoles: typing.Optional[bool] = None,
+        hideDetached: typing.Optional[bool] = None,
         position: typing.Optional[Literal["top", "right", "bottom", "left", "top-end", "top-start", "right-end", "right-start", "bottom-end", "bottom-start", "left-end", "left-start"]] = None,
         offset: typing.Optional[typing.Union[NumberType]] = None,
         positionDependencies: typing.Optional[typing.Sequence[typing.Any]] = None,
@@ -388,9 +393,9 @@ Keyword arguments:
         loading_state: typing.Optional["LoadingState"] = None,
         **kwargs
     ):
-        self._prop_names = ['children', 'id', 'aria-*', 'arrowOffset', 'arrowPosition', 'arrowRadius', 'arrowSize', 'classNames', 'clickOutsideEvents', 'closeDelay', 'closeOnClickOutside', 'closeOnEscape', 'data-*', 'disabled', 'floatingStrategy', 'keepMounted', 'loading_state', 'middlewares', 'offset', 'openDelay', 'overlayProps', 'portalProps', 'position', 'positionDependencies', 'radius', 'returnFocus', 'shadow', 'styles', 'tabIndex', 'transitionProps', 'trapFocus', 'unstyled', 'variant', 'width', 'withArrow', 'withOverlay', 'withRoles', 'withinPortal', 'zIndex']
+        self._prop_names = ['children', 'id', 'aria-*', 'arrowOffset', 'arrowPosition', 'arrowRadius', 'arrowSize', 'classNames', 'clickOutsideEvents', 'closeDelay', 'closeOnClickOutside', 'closeOnEscape', 'data-*', 'disabled', 'floatingStrategy', 'hideDetached', 'keepMounted', 'loading_state', 'middlewares', 'offset', 'openDelay', 'overlayProps', 'portalProps', 'position', 'positionDependencies', 'radius', 'returnFocus', 'shadow', 'styles', 'tabIndex', 'transitionProps', 'trapFocus', 'unstyled', 'variant', 'width', 'withArrow', 'withOverlay', 'withRoles', 'withinPortal', 'zIndex']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['children', 'id', 'aria-*', 'arrowOffset', 'arrowPosition', 'arrowRadius', 'arrowSize', 'classNames', 'clickOutsideEvents', 'closeDelay', 'closeOnClickOutside', 'closeOnEscape', 'data-*', 'disabled', 'floatingStrategy', 'keepMounted', 'loading_state', 'middlewares', 'offset', 'openDelay', 'overlayProps', 'portalProps', 'position', 'positionDependencies', 'radius', 'returnFocus', 'shadow', 'styles', 'tabIndex', 'transitionProps', 'trapFocus', 'unstyled', 'variant', 'width', 'withArrow', 'withOverlay', 'withRoles', 'withinPortal', 'zIndex']
+        self.available_properties = ['children', 'id', 'aria-*', 'arrowOffset', 'arrowPosition', 'arrowRadius', 'arrowSize', 'classNames', 'clickOutsideEvents', 'closeDelay', 'closeOnClickOutside', 'closeOnEscape', 'data-*', 'disabled', 'floatingStrategy', 'hideDetached', 'keepMounted', 'loading_state', 'middlewares', 'offset', 'openDelay', 'overlayProps', 'portalProps', 'position', 'positionDependencies', 'radius', 'returnFocus', 'shadow', 'styles', 'tabIndex', 'transitionProps', 'trapFocus', 'unstyled', 'variant', 'width', 'withArrow', 'withOverlay', 'withRoles', 'withinPortal', 'zIndex']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

@@ -194,7 +194,7 @@ def normalize_plugin_info(
 
 
 async def normalize_all_plugin_info(
-    plugin_info: Mapping[str, Mapping[str, t.Any]]
+    plugin_info: Mapping[str, Mapping[str, t.Any]],
 ) -> tuple[dict[str, MutableMapping[str, t.Any]], PluginErrorsRT]:
     """
     Normalize the data in plugin_info so that it is ready to be passed to the templates.
@@ -234,7 +234,7 @@ async def normalize_all_plugin_info(
     for (plugin_type, plugin_name), plugin_record in zip(normalizers, results):
         # Errors which broke doc parsing (and therefore we won't have enough info to
         # build a docs page)
-        if isinstance(plugin_record, Exception):
+        if isinstance(plugin_record, BaseException):
             # An exception means there is no usable documentation for this plugin
             # Record a nonfatal error and then move on
             nonfatal_errors[plugin_type][plugin_name].append(str(plugin_record))

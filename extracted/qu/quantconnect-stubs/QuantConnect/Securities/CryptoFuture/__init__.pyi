@@ -10,22 +10,6 @@ import QuantConnect.Securities.CryptoFuture
 import System
 
 
-class BinanceFutureMarginInterestRateModel(System.Object, QuantConnect.Securities.IMarginInterestRateModel):
-    """The responsability of this model is to apply future funding rate cash flows to the portfolio based on open positions"""
-
-    def apply_margin_interest_rate(self, margin_interest_rate_parameters: QuantConnect.Securities.MarginInterestRateParameters) -> None:
-        """
-        Apply margin interest rates to the portfolio
-        
-        :param margin_interest_rate_parameters: The parameters to use
-        """
-        ...
-
-
-class BybitFutureMarginInterestRateModel(QuantConnect.Securities.CryptoFuture.BinanceFutureMarginInterestRateModel):
-    """The responsibility of this model is to apply future funding rate cash flows to the portfolio based on open positions"""
-
-
 class CryptoFutureMarginModel(QuantConnect.Securities.SecurityMarginModel):
     """The crypto future margin model which supports both Coin and USDT futures"""
 
@@ -71,26 +55,20 @@ class CryptoFutureMarginModel(QuantConnect.Securities.SecurityMarginModel):
         ...
 
 
-class CryptoFutureExchange(QuantConnect.Securities.SecurityExchange):
-    """Crypto future exchange class - information and helper tools for Crypto future exchange properties"""
+class BinanceFutureMarginInterestRateModel(System.Object, QuantConnect.Securities.IMarginInterestRateModel):
+    """The responsability of this model is to apply future funding rate cash flows to the portfolio based on open positions"""
 
-    @overload
-    def __init__(self, market: str) -> None:
+    def apply_margin_interest_rate(self, margin_interest_rate_parameters: QuantConnect.Securities.MarginInterestRateParameters) -> None:
         """
-        Initializes a new instance of the CryptoFutureExchange class using market hours
-        derived from the market-hours-database for the Crypto future market
-        """
-        ...
-
-    @overload
-    def __init__(self, exchange_hours: QuantConnect.Securities.SecurityExchangeHours) -> None:
-        """
-        Initializes a new instance of the CryptoFutureExchange class using the specified
-        exchange hours to determine open/close times
+        Apply margin interest rates to the portfolio
         
-        :param exchange_hours: Contains the weekly exchange schedule plus holidays
+        :param margin_interest_rate_parameters: The parameters to use
         """
         ...
+
+
+class BybitFutureMarginInterestRateModel(QuantConnect.Securities.CryptoFuture.BinanceFutureMarginInterestRateModel):
+    """The responsibility of this model is to apply future funding rate cash flows to the portfolio based on open positions"""
 
 
 class CryptoFutureHolding(QuantConnect.Securities.SecurityHolding):
@@ -149,6 +127,28 @@ class CryptoFuture(QuantConnect.Securities.Security, QuantConnect.Securities.IBa
         Checks whether the security is a crypto coin future
         
         :returns: True if the security is a crypto coin future.
+        """
+        ...
+
+
+class CryptoFutureExchange(QuantConnect.Securities.SecurityExchange):
+    """Crypto future exchange class - information and helper tools for Crypto future exchange properties"""
+
+    @overload
+    def __init__(self, market: str) -> None:
+        """
+        Initializes a new instance of the CryptoFutureExchange class using market hours
+        derived from the market-hours-database for the Crypto future market
+        """
+        ...
+
+    @overload
+    def __init__(self, exchange_hours: QuantConnect.Securities.SecurityExchangeHours) -> None:
+        """
+        Initializes a new instance of the CryptoFutureExchange class using the specified
+        exchange hours to determine open/close times
+        
+        :param exchange_hours: Contains the weekly exchange schedule plus holidays
         """
         ...
 

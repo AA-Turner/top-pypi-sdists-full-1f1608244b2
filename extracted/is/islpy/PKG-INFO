@@ -1,40 +1,25 @@
 Metadata-Version: 2.4
 Name: islpy
-Version: 2025.1.5
+Version: 2025.2
 Summary: Wrapper around isl, an integer set library
-Home-page: http://documen.tician.de/islpy
-Author: Andreas Kloeckner
-Author-email: inform@tiker.net
-License: MIT
+Author-Email: Andreas Kloeckner <inform@tiker.net>
+License-Expression: MIT
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Other Audience
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Natural Language :: English
 Classifier: Programming Language :: C++
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Topic :: Multimedia :: Graphics :: 3D Modeling
 Classifier: Topic :: Scientific/Engineering
 Classifier: Topic :: Scientific/Engineering :: Mathematics
 Classifier: Topic :: Scientific/Engineering :: Physics
 Classifier: Topic :: Scientific/Engineering :: Visualization
 Classifier: Topic :: Software Development :: Libraries
-Requires-Python: ~=3.8
+Project-URL: Documentation, https://documen.tician.de/islpy
+Project-URL: Repository, https://github.com/inducer/islpy
+Requires-Python: ~=3.10
 Description-Content-Type: text/x-rst
-Provides-Extra: test
-Requires-Dist: pytest>=2; extra == "test"
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: license
-Dynamic: provides-extra
-Dynamic: requires-python
-Dynamic: summary
 
 islpy: Polyhedral Analysis from Python
 ======================================
@@ -42,9 +27,9 @@ islpy: Polyhedral Analysis from Python
 .. image:: https://gitlab.tiker.net/inducer/islpy/badges/main/pipeline.svg
     :alt: Gitlab Build Status
     :target: https://gitlab.tiker.net/inducer/islpy/commits/main
-.. image:: https://github.com/inducer/islpy/workflows/CI/badge.svg?branch=main
+.. image:: https://github.com/inducer/islpy/actions/workflows/ci.yml/badge.svg
     :alt: Github Build Status
-    :target: https://github.com/inducer/islpy/actions?query=branch%3Amain+workflow%3ACI
+    :target: https://github.com/inducer/islpy/actions/workflows/ci.yml
 .. image:: https://badge.fury.io/py/islpy.svg
     :alt: Python Package Index Release Page
     :target: https://pypi.org/project/islpy/

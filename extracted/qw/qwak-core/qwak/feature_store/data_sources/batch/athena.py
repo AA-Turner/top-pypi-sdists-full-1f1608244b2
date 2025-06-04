@@ -118,9 +118,9 @@ class AthenaSource(JdbcSource):
             )
         )
 
-        time_partition_columns: Optional[
-            TimePartitionColumns
-        ] = AthenaSource._extract_partition_column(proto_athena_source)
+        time_partition_columns: Optional[TimePartitionColumns] = (
+            AthenaSource._extract_partition_column(proto_athena_source)
+        )
         workgroup: Optional[str] = (
             proto_athena_source.workgroup
             if proto_athena_source.HasField("workgroup")

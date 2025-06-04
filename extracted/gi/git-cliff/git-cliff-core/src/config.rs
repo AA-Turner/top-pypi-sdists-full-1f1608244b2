@@ -1,4 +1,5 @@
 use crate::command;
+use crate::embed::EmbeddedConfig;
 use crate::error::Result;
 use regex::{
 	Regex,
@@ -72,15 +73,15 @@ pub struct ChangelogConfig {
 	/// Changelog header.
 	pub header:         Option<String>,
 	/// Changelog body, template.
-	pub body:           Option<String>,
+	pub body:           String,
 	/// Changelog footer.
 	pub footer:         Option<String>,
 	/// Trim the template.
-	pub trim:           Option<bool>,
+	pub trim:           bool,
 	/// Always render the body template.
-	pub render_always:  Option<bool>,
+	pub render_always:  bool,
 	/// Changelog postprocessors.
-	pub postprocessors: Option<Vec<TextProcessor>>,
+	pub postprocessors: Vec<TextProcessor>,
 	/// Output file path.
 	pub output:         Option<PathBuf>,
 }
@@ -88,45 +89,55 @@ pub struct ChangelogConfig {
 /// Git configuration
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct GitConfig {
-	/// Whether to enable parsing conventional commits.
-	pub conventional_commits:  Option<bool>,
-	/// Whether to filter out unconventional commits.
-	pub filter_unconventional: Option<bool>,
-	/// Whether to split commits by line, processing each line as an individual
-	/// commit.
-	pub split_commits:         Option<bool>,
+	/// Parse commits according to the conventional commits specification.
+	pub conventional_commits:  bool,
+	/// Require all commits to be conventional.
+	/// Takes precedence over filter_unconventional.
+	pub require_conventional:  bool,
+	/// Exclude commits that do not match the conventional commits specification
+	/// from the changelog.
+	pub filter_unconventional: bool,
+	/// Split commits on newlines, treating each line as an individual commit.
+	pub split_commits:         bool,
 
-	/// Git commit preprocessors.
-	pub commit_preprocessors:     Option<Vec<TextProcessor>>,
-	/// Git commit parsers.
-	pub commit_parsers:           Option<Vec<CommitParser>>,
-	/// Whether to protect all breaking changes from being skipped by a commit
-	/// parser.
-	pub protect_breaking_commits: Option<bool>,
-	/// Link parsers.
-	pub link_parsers:             Option<Vec<LinkParser>>,
-	/// Whether to filter out commits.
-	pub filter_commits:           Option<bool>,
-	/// Blob pattern for git tags.
+	/// An array of regex based parsers to modify commit messages prior to
+	/// further processing.
+	pub commit_preprocessors:     Vec<TextProcessor>,
+	/// An array of regex based parsers for extracting data from the commit
+	/// message.
+	pub commit_parsers:           Vec<CommitParser>,
+	/// Prevent commits having the `BREAKING CHANGE:` footer from being excluded
+	/// by commit parsers.
+	pub protect_breaking_commits: bool,
+	/// An array of regex based parsers to extract links from the commit message
+	/// and add them to the commit's context.
+	pub link_parsers:             Vec<LinkParser>,
+	/// Exclude commits that are not matched by any commit parser.
+	pub filter_commits:           bool,
+	/// Regex to select git tags that represent releases.
 	#[serde(with = "serde_regex", default)]
 	pub tag_pattern:              Option<Regex>,
-	/// Regex to skip matched tags.
+	/// Regex to select git tags that do not represent proper releases.
 	#[serde(with = "serde_regex", default)]
 	pub skip_tags:                Option<Regex>,
-	/// Regex to ignore matched tags.
+	/// Regex to exclude git tags after applying the tag_pattern.
 	#[serde(with = "serde_regex", default)]
 	pub ignore_tags:              Option<Regex>,
 	/// Regex to count matched tags.
 	#[serde(with = "serde_regex", default)]
 	pub count_tags:               Option<Regex>,
 	/// Include only the tags that belong to the current branch.
-	pub use_branch_tags:          Option<bool>,
-	/// Whether to sort tags topologically.
-	pub topo_order:               Option<bool>,
-	/// Sorting of the commits inside sections.
-	pub sort_commits:             Option<String>,
-	/// Limit the number of commits included in the changelog.
+	pub use_branch_tags:          bool,
+	/// Order releases topologically instead of chronologically.
+	pub topo_order:               bool,
+	/// Order commits chronologically instead of topologically.
+	pub topo_order_commits:       bool,
+	/// How to order commits in each group/release within the changelog.
+	pub sort_commits:             String,
+	/// Limit the total number of commits included in the changelog.
 	pub limit_commits:            Option<usize>,
+	/// Read submodule commits.
+	pub recurse_submodules:       Option<bool>,
 }
 
 /// Remote configuration.
@@ -246,6 +257,7 @@ impl Remote {
 
 /// Version bump type.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Eq, PartialEq)]
+#[serde(rename_all = "lowercase")]
 pub enum BumpType {
 	/// Bump major version.
 	Major,
@@ -415,7 +427,15 @@ impl Config {
 
 	/// Parses the config file from string and returns the values.
 	pub fn parse_from_str(contents: &str) -> Result<Config> {
+		// Adding sources one after another overwrites the previous values.
+		// Thus adding the default config initializes the config with default values.
+		let default_config_str = EmbeddedConfig::get_config()?;
+
 		Ok(config::Config::builder()
+			.add_source(config::File::from_str(
+				&default_config_str,
+				config::FileFormat::Toml,
+			))
 			.add_source(config::File::from_str(contents, config::FileFormat::Toml))
 			.add_source(
 				config::Environment::with_prefix("GIT_CLIFF").separator("__"),
@@ -435,7 +455,14 @@ impl Config {
 			}
 		}
 
+		// Adding sources one after another overwrites the previous values.
+		// Thus adding the default config initializes the config with default values.
+		let default_config_str = EmbeddedConfig::get_config()?;
 		Ok(config::Config::builder()
+			.add_source(config::File::from_str(
+				&default_config_str,
+				config::FileFormat::Toml,
+			))
 			.add_source(config::File::from(path))
 			.add_source(
 				config::Environment::with_prefix("GIT_CLIFF").separator("__"),
@@ -463,9 +490,11 @@ mod test {
 		const TAG_PATTERN_VALUE: &str = ".*[0-9].*";
 		const IGNORE_TAGS_VALUE: &str = "v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+";
 
-		env::set_var("GIT_CLIFF__CHANGELOG__FOOTER", FOOTER_VALUE);
-		env::set_var("GIT_CLIFF__GIT__TAG_PATTERN", TAG_PATTERN_VALUE);
-		env::set_var("GIT_CLIFF__GIT__IGNORE_TAGS", IGNORE_TAGS_VALUE);
+		unsafe {
+			env::set_var("GIT_CLIFF__CHANGELOG__FOOTER", FOOTER_VALUE);
+			env::set_var("GIT_CLIFF__GIT__TAG_PATTERN", TAG_PATTERN_VALUE);
+			env::set_var("GIT_CLIFF__GIT__IGNORE_TAGS", IGNORE_TAGS_VALUE);
+		};
 
 		let config = Config::parse(&path)?;
 

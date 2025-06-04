@@ -29,7 +29,8 @@ def init() -> None:
 
     try:
         # First pass: check for conflicts
-        for root, _, filenames in os.walk(template_dir):
+        for root, dirs, filenames in os.walk(template_dir):
+            dirs[:] = [d for d in dirs if '__pycache__' not in d]
             relative_dir = os.path.relpath(root, template_dir)
             destination_dir = cwd if relative_dir == '.' else os.path.join(cwd, relative_dir)
             for filename in filenames:
@@ -48,7 +49,8 @@ def init() -> None:
         replace_app_uri = app_uri if app_uri else 'PUT_APP_URI_HERE'
 
         # Second pass: copy files (only if no conflicts)
-        for root, _, filenames in os.walk(template_dir):
+        for root, dirs, filenames in os.walk(template_dir):
+            dirs[:] = [d for d in dirs if '__pycache__' not in d]
             relative_dir = os.path.relpath(root, template_dir)
             destination_dir = os.path.join(cwd, relative_dir)
             os.makedirs(destination_dir, exist_ok=True)

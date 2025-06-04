@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import mathutils
 
 def attribute_set(
@@ -306,7 +306,7 @@ def bridge_edge_loops(
     interpolation: typing.Literal["LINEAR", "PATH", "SURFACE"] | None = "PATH",
     smoothness: float | None = 1.0,
     profile_shape_factor: float | None = 0.0,
-    profile_shape: bpy._typing.rna_enums.ProportionalFalloffCurveOnlyItems
+    profile_shape: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems
     | None = "SMOOTH",
 ):
     """Create a bridge of faces between two or more selected edge loops
@@ -330,7 +330,7 @@ def bridge_edge_loops(
     :param profile_shape_factor: Profile Factor, How much intermediary new edges are shrunk/expanded
     :type profile_shape_factor: float | None
     :param profile_shape: Profile Shape, Shape of the profile
-    :type profile_shape: bpy._typing.rna_enums.ProportionalFalloffCurveOnlyItems | None
+    :type profile_shape: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems | None
     """
 
 def colors_reverse(
@@ -463,7 +463,7 @@ def decimate(
     vertex_group_factor: float | None = 1.0,
     invert_vertex_group: bool | None = False,
     use_symmetry: bool | None = False,
-    symmetry_axis: bpy._typing.rna_enums.AxisXyzItems | None = "Y",
+    symmetry_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "Y",
 ):
     """Simplify geometry by collapsing edges
 
@@ -480,7 +480,7 @@ def decimate(
     :param use_symmetry: Symmetry, Maintain symmetry on an axis
     :type use_symmetry: bool | None
     :param symmetry_axis: Axis, Axis of symmetry
-    :type symmetry_axis: bpy._typing.rna_enums.AxisXyzItems | None
+    :type symmetry_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None
     """
 
 def delete(
@@ -590,7 +590,7 @@ def dissolve_limited(
     *,
     angle_limit: float | None = 0.0872665,
     use_dissolve_boundaries: bool | None = False,
-    delimit: set[bpy._typing.rna_enums.MeshDelimitModeItems] | None = {"NORMAL"},
+    delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None = {"NORMAL"},
 ):
     """Dissolve selected edges and vertices, limited by the angle of surrounding geometry
 
@@ -601,7 +601,7 @@ def dissolve_limited(
     :param use_dissolve_boundaries: All Boundaries, Dissolve all vertices in between face boundaries
     :type use_dissolve_boundaries: bool | None
     :param delimit: Delimit, Delimit dissolve operation
-    :type delimit: set[bpy._typing.rna_enums.MeshDelimitModeItems] | None
+    :type delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None
     """
 
 def dissolve_mode(
@@ -1439,7 +1439,7 @@ def loopcut(
     *,
     number_cuts: int | None = 1,
     smoothness: float | None = 0.0,
-    falloff: bpy._typing.rna_enums.ProportionalFalloffCurveOnlyItems
+    falloff: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems
     | None = "INVERSE_SQUARE",
     object_index: int | None = -1,
     edge_index: int | None = -1,
@@ -1458,7 +1458,7 @@ def loopcut(
     :param smoothness: Smoothness, Smoothness factor
     :type smoothness: float | None
     :param falloff: Falloff, Falloff type of the feather
-    :type falloff: bpy._typing.rna_enums.ProportionalFalloffCurveOnlyItems | None
+    :type falloff: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems | None
     :param object_index: Object Index
     :type object_index: int | None
     :param edge_index: Edge Index
@@ -1750,7 +1750,7 @@ def polybuild_delete_at_cursor(
     *,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -1767,7 +1767,7 @@ def polybuild_delete_at_cursor(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -1818,7 +1818,7 @@ def polybuild_face_at_cursor(
     create_quads: bool | None = True,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -1837,7 +1837,7 @@ def polybuild_face_at_cursor(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -1875,7 +1875,7 @@ def polybuild_split_at_cursor(
     *,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -1892,7 +1892,7 @@ def polybuild_split_at_cursor(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -1930,7 +1930,7 @@ def polybuild_transform_at_cursor(
     *,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -1947,7 +1947,7 @@ def polybuild_transform_at_cursor(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -2627,9 +2627,9 @@ def quads_convert_to_tris(
     undo: bool | None = None,
     /,
     *,
-    quad_method: bpy._typing.rna_enums.ModifierTriangulateQuadMethodItems
+    quad_method: bpy.stub_internal.rna_enums.ModifierTriangulateQuadMethodItems
     | None = "BEAUTY",
-    ngon_method: bpy._typing.rna_enums.ModifierTriangulateNgonMethodItems
+    ngon_method: bpy.stub_internal.rna_enums.ModifierTriangulateNgonMethodItems
     | None = "BEAUTY",
 ):
     """Triangulate selected faces
@@ -2637,9 +2637,9 @@ def quads_convert_to_tris(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param quad_method: Quad Method, Method for splitting the quads into triangles
-    :type quad_method: bpy._typing.rna_enums.ModifierTriangulateQuadMethodItems | None
+    :type quad_method: bpy.stub_internal.rna_enums.ModifierTriangulateQuadMethodItems | None
     :param ngon_method: N-gon Method, Method for splitting the n-gons into triangles
-    :type ngon_method: bpy._typing.rna_enums.ModifierTriangulateNgonMethodItems | None
+    :type ngon_method: bpy.stub_internal.rna_enums.ModifierTriangulateNgonMethodItems | None
     """
 
 def region_to_loop(
@@ -2694,7 +2694,7 @@ def rip(
     *,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -2712,7 +2712,7 @@ def rip(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -2734,7 +2734,7 @@ def rip_edge(
     *,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -2751,7 +2751,7 @@ def rip_edge(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -2856,9 +2856,9 @@ def select_axis(
     undo: bool | None = None,
     /,
     *,
-    orientation: bpy._typing.rna_enums.TransformOrientationItems | None = "LOCAL",
+    orientation: bpy.stub_internal.rna_enums.TransformOrientationItems | None = "LOCAL",
     sign: typing.Literal["POS", "NEG", "ALIGN"] | None = "POS",
-    axis: bpy._typing.rna_enums.AxisXyzItems | None = "X",
+    axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "X",
     threshold: float | None = 0.0001,
 ):
     """Select all data in the mesh on a single axis
@@ -2866,11 +2866,11 @@ def select_axis(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param orientation: Axis Mode, Axis orientation
-    :type orientation: bpy._typing.rna_enums.TransformOrientationItems | None
+    :type orientation: bpy.stub_internal.rna_enums.TransformOrientationItems | None
     :param sign: Axis Sign, Side to select
     :type sign: typing.Literal['POS','NEG','ALIGN'] | None
     :param axis: Axis, Select the axis to compare each vertex on
-    :type axis: bpy._typing.rna_enums.AxisXyzItems | None
+    :type axis: bpy.stub_internal.rna_enums.AxisXyzItems | None
     :param threshold: Threshold
     :type threshold: float | None
     """
@@ -2958,14 +2958,14 @@ def select_linked(
     undo: bool | None = None,
     /,
     *,
-    delimit: set[bpy._typing.rna_enums.MeshDelimitModeItems] | None = {"SEAM"},
+    delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None = {"SEAM"},
 ):
     """Select all vertices connected to the current selection
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param delimit: Delimit, Delimit selected region
-    :type delimit: set[bpy._typing.rna_enums.MeshDelimitModeItems] | None
+    :type delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None
     """
 
 def select_linked_pick(
@@ -2974,7 +2974,7 @@ def select_linked_pick(
     /,
     *,
     deselect: bool | None = False,
-    delimit: set[bpy._typing.rna_enums.MeshDelimitModeItems] | None = {"SEAM"},
+    delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None = {"SEAM"},
     object_index: int | None = -1,
     index: int | None = -1,
 ):
@@ -2985,7 +2985,7 @@ def select_linked_pick(
     :param deselect: Deselect
     :type deselect: bool | None
     :param delimit: Delimit, Delimit selected region
-    :type delimit: set[bpy._typing.rna_enums.MeshDelimitModeItems] | None
+    :type delimit: set[bpy.stub_internal.rna_enums.MeshDelimitModeItems] | None
     :type object_index: int | None
     :type index: int | None
     """
@@ -3010,7 +3010,7 @@ def select_mirror(
     undo: bool | None = None,
     /,
     *,
-    axis: set[bpy._typing.rna_enums.AxisFlagXyzItems] | None = {"X"},
+    axis: set[bpy.stub_internal.rna_enums.AxisFlagXyzItems] | None = {"X"},
     extend: bool | None = False,
 ):
     """Select mesh items at mirrored locations
@@ -3018,7 +3018,7 @@ def select_mirror(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param axis: Axis
-    :type axis: set[bpy._typing.rna_enums.AxisFlagXyzItems] | None
+    :type axis: set[bpy.stub_internal.rna_enums.AxisFlagXyzItems] | None
     :param extend: Extend, Extend the existing selection
     :type extend: bool | None
     """
@@ -3030,7 +3030,7 @@ def select_mode(
     *,
     use_extend: bool | None = False,
     use_expand: bool | None = False,
-    type: bpy._typing.rna_enums.MeshSelectModeItems | None = "VERT",
+    type: bpy.stub_internal.rna_enums.MeshSelectModeItems | None = "VERT",
     action: typing.Literal["DISABLE", "ENABLE", "TOGGLE"] | None = "TOGGLE",
 ):
     """Change selection mode
@@ -3042,7 +3042,7 @@ def select_mode(
         :param use_expand: Expand
         :type use_expand: bool | None
         :param type: Type
-        :type type: bpy._typing.rna_enums.MeshSelectModeItems | None
+        :type type: bpy.stub_internal.rna_enums.MeshSelectModeItems | None
         :param action: Action, Selection action to execute
 
     DISABLE
@@ -3538,7 +3538,7 @@ def subdivide_edgering(
     interpolation: typing.Literal["LINEAR", "PATH", "SURFACE"] | None = "PATH",
     smoothness: float | None = 1.0,
     profile_shape_factor: float | None = 0.0,
-    profile_shape: bpy._typing.rna_enums.ProportionalFalloffCurveOnlyItems
+    profile_shape: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems
     | None = "SMOOTH",
 ):
     """Subdivide perpendicular edges to the selected edge-ring
@@ -3554,7 +3554,7 @@ def subdivide_edgering(
     :param profile_shape_factor: Profile Factor, How much intermediary new edges are shrunk/expanded
     :type profile_shape_factor: float | None
     :param profile_shape: Profile Shape, Shape of the profile
-    :type profile_shape: bpy._typing.rna_enums.ProportionalFalloffCurveOnlyItems | None
+    :type profile_shape: bpy.stub_internal.rna_enums.ProportionalFalloffCurveOnlyItems | None
     """
 
 def symmetrize(
@@ -3562,7 +3562,8 @@ def symmetrize(
     undo: bool | None = None,
     /,
     *,
-    direction: bpy._typing.rna_enums.SymmetrizeDirectionItems | None = "NEGATIVE_X",
+    direction: bpy.stub_internal.rna_enums.SymmetrizeDirectionItems
+    | None = "NEGATIVE_X",
     threshold: float | None = 0.0001,
 ):
     """Enforce symmetry (both form and topological) across an axis
@@ -3570,7 +3571,7 @@ def symmetrize(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param direction: Direction, Which sides to copy from and to
-    :type direction: bpy._typing.rna_enums.SymmetrizeDirectionItems | None
+    :type direction: bpy.stub_internal.rna_enums.SymmetrizeDirectionItems | None
     :param threshold: Threshold, Limit for snap middle vertices to the axis center
     :type threshold: float | None
     """
@@ -3580,7 +3581,8 @@ def symmetry_snap(
     undo: bool | None = None,
     /,
     *,
-    direction: bpy._typing.rna_enums.SymmetrizeDirectionItems | None = "NEGATIVE_X",
+    direction: bpy.stub_internal.rna_enums.SymmetrizeDirectionItems
+    | None = "NEGATIVE_X",
     threshold: float | None = 0.05,
     factor: float | None = 0.5,
     use_center: bool | None = True,
@@ -3590,7 +3592,7 @@ def symmetry_snap(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param direction: Direction, Which sides to copy from and to
-    :type direction: bpy._typing.rna_enums.SymmetrizeDirectionItems | None
+    :type direction: bpy.stub_internal.rna_enums.SymmetrizeDirectionItems | None
     :param threshold: Threshold, Distance within which matching vertices are searched
     :type threshold: float | None
     :param factor: Factor, Mix factor of the locations of the vertices

@@ -1,9 +1,10 @@
 Metadata-Version: 2.4
 Name: pyvex
-Version: 9.2.158
+Version: 9.2.159
 Summary: A Python interface to libVEX and VEX IR
-Home-page: https://github.com/angr/pyvex
 License: BSD-2-Clause
+Project-URL: Homepage, https://api.angr.io/projects/pyvex/en/latest/
+Project-URL: Repository, https://github.com/angr/pyvex
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Programming Language :: Python :: 3.10

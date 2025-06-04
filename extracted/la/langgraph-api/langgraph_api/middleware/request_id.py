@@ -1,6 +1,7 @@
 """Middleware to handle setting request IDs for logging."""
 
 import re
+import time
 import uuid
 
 from starlette.types import ASGIApp, Receive, Scope, Send
@@ -27,4 +28,5 @@ class RequestIdMiddleware:
             if request_id is None:
                 request_id = str(uuid.uuid4()).encode()
                 scope["headers"].append((b"x-request-id", request_id))
+            scope["request_start_time_ms"] = int(time.time() * 1000)
         await self.app(scope, receive, send)

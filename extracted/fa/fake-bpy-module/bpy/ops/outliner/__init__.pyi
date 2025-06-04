@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def action_set(
     execution_context: int | str | None = None,
@@ -64,14 +64,14 @@ def collection_color_tag_set(
     undo: bool | None = None,
     /,
     *,
-    color: bpy._typing.rna_enums.CollectionColorItems | None = "NONE",
+    color: bpy.stub_internal.rna_enums.CollectionColorItems | None = "NONE",
 ):
     """Set a color tag for the selected collections
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param color: Color Tag
-    :type color: bpy._typing.rna_enums.CollectionColorItems | None
+    :type color: bpy.stub_internal.rna_enums.CollectionColorItems | None
     """
 
 def collection_disable(
@@ -495,7 +495,7 @@ def id_remap(
     undo: bool | None = None,
     /,
     *,
-    id_type: bpy._typing.rna_enums.IdTypeItems | None = "OBJECT",
+    id_type: bpy.stub_internal.rna_enums.IdTypeItems | None = "OBJECT",
     old_id: str | None = "",
     new_id: str | None = "",
 ):
@@ -504,7 +504,7 @@ def id_remap(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param id_type: ID Type
-    :type id_type: bpy._typing.rna_enums.IdTypeItems | None
+    :type id_type: bpy.stub_internal.rna_enums.IdTypeItems | None
     :param old_id: Old ID, Old ID to replace
     :type old_id: str | None
     :param new_id: New ID, New ID to remap all selected IDs' users to

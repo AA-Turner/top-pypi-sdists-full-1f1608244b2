@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -36,10 +36,12 @@ def add_texture_paint_slot(
     width: int | None = 1024,
     height: int | None = 1024,
     alpha: bool | None = True,
-    generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None = "BLANK",
+    generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems
+    | None = "BLANK",
     float: bool | None = False,
-    domain: bpy._typing.rna_enums.ColorAttributeDomainItems | None = "POINT",
-    data_type: bpy._typing.rna_enums.ColorAttributeTypeItems | None = "FLOAT_COLOR",
+    domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None = "POINT",
+    data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems
+    | None = "FLOAT_COLOR",
 ):
     """Add a paint slot
 
@@ -60,13 +62,13 @@ def add_texture_paint_slot(
     :param alpha: Alpha, Create an image with an alpha channel
     :type alpha: bool | None
     :param generated_type: Generated Type, Fill the image with a grid for UV map testing
-    :type generated_type: bpy._typing.rna_enums.ImageGeneratedTypeItems | None
+    :type generated_type: bpy.stub_internal.rna_enums.ImageGeneratedTypeItems | None
     :param float: 32-bit Float, Create image with 32-bit floating-point bit depth
     :type float: bool | None
     :param domain: Domain, Type of element that attribute is stored on
-    :type domain: bpy._typing.rna_enums.ColorAttributeDomainItems | None
+    :type domain: bpy.stub_internal.rna_enums.ColorAttributeDomainItems | None
     :param data_type: Data Type, Type of data stored in attribute
-    :type data_type: bpy._typing.rna_enums.ColorAttributeTypeItems | None
+    :type data_type: bpy.stub_internal.rna_enums.ColorAttributeTypeItems | None
     """
 
 def brush_colors_flip(

@@ -10,13 +10,85 @@ import System.Runtime.ConstrainedExecution
 import System.Threading
 
 
-class MemoryFailPoint(System.Runtime.ConstrainedExecution.CriticalFinalizerObject, System.IDisposable):
+class GCLargeObjectHeapCompactionMode(Enum):
     """This class has no documentation."""
 
-    def __init__(self, size_in_megabytes: int) -> None:
+    DEFAULT = 1
+
+    COMPACT_ONCE = 2
+
+
+class GCLatencyMode(Enum):
+    """This class has no documentation."""
+
+    BATCH = 0
+
+    INTERACTIVE = 1
+
+    LOW_LATENCY = 2
+
+    SUSTAINED_LOW_LATENCY = 3
+
+    NO_GC_REGION = 4
+
+
+class GCSettings(System.Object):
+    """This class has no documentation."""
+
+    latency_mode: System.Runtime.GCLatencyMode
+
+    large_object_heap_compaction_mode: System.Runtime.GCLargeObjectHeapCompactionMode
+
+    IS_SERVER_GC: bool
+
+
+class AmbiguousImplementationException(System.Exception):
+    """This class has no documentation."""
+
+    @overload
+    def __init__(self) -> None:
         ...
 
-    def dispose(self) -> None:
+    @overload
+    def __init__(self, message: str) -> None:
+        ...
+
+    @overload
+    def __init__(self, message: str, inner_exception: System.Exception) -> None:
+        ...
+
+
+class ProfileOptimization(System.Object):
+    """This class has no documentation."""
+
+    @staticmethod
+    def set_profile_root(directory_path: str) -> None:
+        ...
+
+    @staticmethod
+    def start_profile(profile: str) -> None:
+        ...
+
+
+class AssemblyTargetedPatchBandAttribute(System.Attribute):
+    """This class has no documentation."""
+
+    @property
+    def targeted_patch_band(self) -> str:
+        ...
+
+    def __init__(self, targeted_patch_band: str) -> None:
+        ...
+
+
+class TargetedPatchingOptOutAttribute(System.Attribute):
+    """This class has no documentation."""
+
+    @property
+    def reason(self) -> str:
+        ...
+
+    def __init__(self, reason: str) -> None:
         ...
 
 
@@ -57,85 +129,13 @@ class JitInfo(System.Object):
         ...
 
 
-class ProfileOptimization(System.Object):
+class MemoryFailPoint(System.Runtime.ConstrainedExecution.CriticalFinalizerObject, System.IDisposable):
     """This class has no documentation."""
 
-    @staticmethod
-    def set_profile_root(directory_path: str) -> None:
+    def __init__(self, size_in_megabytes: int) -> None:
         ...
 
-    @staticmethod
-    def start_profile(profile: str) -> None:
-        ...
-
-
-class AmbiguousImplementationException(System.Exception):
-    """This class has no documentation."""
-
-    @overload
-    def __init__(self) -> None:
-        ...
-
-    @overload
-    def __init__(self, message: str) -> None:
-        ...
-
-    @overload
-    def __init__(self, message: str, inner_exception: System.Exception) -> None:
-        ...
-
-
-class GCLargeObjectHeapCompactionMode(Enum):
-    """This class has no documentation."""
-
-    DEFAULT = 1
-
-    COMPACT_ONCE = 2
-
-
-class GCLatencyMode(Enum):
-    """This class has no documentation."""
-
-    BATCH = 0
-
-    INTERACTIVE = 1
-
-    LOW_LATENCY = 2
-
-    SUSTAINED_LOW_LATENCY = 3
-
-    NO_GC_REGION = 4
-
-
-class GCSettings(System.Object):
-    """This class has no documentation."""
-
-    latency_mode: System.Runtime.GCLatencyMode
-
-    large_object_heap_compaction_mode: System.Runtime.GCLargeObjectHeapCompactionMode
-
-    IS_SERVER_GC: bool
-
-
-class AssemblyTargetedPatchBandAttribute(System.Attribute):
-    """This class has no documentation."""
-
-    @property
-    def targeted_patch_band(self) -> str:
-        ...
-
-    def __init__(self, targeted_patch_band: str) -> None:
-        ...
-
-
-class TargetedPatchingOptOutAttribute(System.Attribute):
-    """This class has no documentation."""
-
-    @property
-    def reason(self) -> str:
-        ...
-
-    def __init__(self, reason: str) -> None:
+    def dispose(self) -> None:
         ...
 
 

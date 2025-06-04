@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: bbot
-Version: 2.4.2
+Version: 2.5.0
 Summary: OSINT automation for hackers.
 License: GPL-3.0
 Keywords: python,cli,automation,osint,threat-intel,intelligence,neo4j,scanner,python-library,hacking,recursion,pentesting,recon,command-line-tool,bugbounty,subdomains,security-tools,subdomain-scanner,osint-framework,attack-surface,subdomain-enumeration,osint-tool
@@ -18,8 +18,8 @@ Classifier: Topic :: Security
 Requires-Dist: ansible-core (>=2.15.13,<3.0.0)
 Requires-Dist: ansible-runner (>=2.3.2,<3.0.0)
 Requires-Dist: beautifulsoup4 (>=4.12.2,<5.0.0)
-Requires-Dist: cachetools (>=5.3.2,<6.0.0)
-Requires-Dist: cloudcheck (>=7.0.12,<8.0.0)
+Requires-Dist: cachetools (>=5.3.2,<7.0.0)
+Requires-Dist: cloudcheck (>=7.2.11,<8.0.0)
 Requires-Dist: deepdiff (>=8.0.0,<9.0.0)
 Requires-Dist: dnspython (>=2.4.2,<3.0.0)
 Requires-Dist: httpx (>=0.28.1,<0.29.0)
@@ -438,6 +438,7 @@ For details, see [Configuration](https://www.blacklanternsecurity.com/bbot/Stabl
         - [List of Modules](https://www.blacklanternsecurity.com/bbot/Stable/modules/list_of_modules)
         - [Nuclei](https://www.blacklanternsecurity.com/bbot/Stable/modules/nuclei)
         - [Custom YARA Rules](https://www.blacklanternsecurity.com/bbot/Stable/modules/custom_yara_rules)
+        - [Lightfuzz](https://www.blacklanternsecurity.com/bbot/Stable/modules/lightfuzz)
     - **Misc**
         - [Contribution](https://www.blacklanternsecurity.com/bbot/Stable/contribution)
         - [Release History](https://www.blacklanternsecurity.com/bbot/Stable/release_history)

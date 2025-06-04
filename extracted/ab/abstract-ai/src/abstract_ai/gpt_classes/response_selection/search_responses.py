@@ -4,65 +4,6 @@ from collections import defaultdict
 from abstract_utilities import *
 from abstract_solcatcher_database import get_timestamp_from_data
 
-
-def detect_language_from_text(text: str):
-    patterns = {
-        'js': [
-            r'\binterface\s+\w+\s*{',
-            r'\btype\s+\w+\s*=',
-            r'\blet\s+\w+:\s+\w+',
-            r'\bfunction\s+\w+\s*\(.*:\s*\w+\)',
-            r'\bimport\s+.*\s+from\s+[\'"]',
-            r'\bexport\s+(default|function|const|class)'
-        ],
-        'python': [
-            r'\bdef\s+\w+\(',
-            r'\bclass\s+\w+\s*:',
-            r'\bimport\s+\w+',
-            r'\bfrom\s+\w+\s+import\s+\w+',
-            r'\bif\s+__name__\s*==\s*[\'"]__main__[\'"]',
-            r'@\w+',
-            r'\blambda\s+'
-        ],
-        'html': [
-            r'<!DOCTYPE\s+html>',
-            r'<html[^>]*>',
-            r'<head>',
-            r'<body>',
-            r'<div[^>]*>',
-            r'<script[^>]*>',
-            r'</\w+>'
-        ],
-        'php': [
-            r'<\?php',
-            r'\$\w+\s*=',
-            r'echo\s+["\']',
-            r'->\w+\(',
-            r'function\s+\w+\s*\(',
-            r'\bclass\s+\w+\s*{'
-        ],
-        'bash': [
-            r'#!/bin/bash',
-            r'\becho\s+["\']',
-            r'\bif\s+\[\[?',
-            r'\bthen\b',
-            r'\bfi\b',
-            r'\bfor\s+\w+\s+in\b',
-            r'\bdo\b',
-            r'\bdone\b'
-        ]
-    }
-    text = str(text)
-    scores = {lang: sum(bool(re.search(p, text)) for p in pats) for lang, pats in patterns.items()}
-    max_score = max(scores.values(), default=0)
-
-    if max_score == 0:
-        return 'neither'
-
-    likely = [lang for lang, score in scores.items() if score == max_score]
-    return likely[0] if len(likely) == 1 else 'uncertain'
-
-
 class PathManager:
     @staticmethod
     def get_abs_path():
@@ -120,26 +61,6 @@ def get_conversation_manager(file_path=None):
 def get_convo_data(file_path=None):
     return get_conversation_manager(file_path).conversation_data
 
-
-def is_valid_time(comp_timestamp, timestamp=None, before=True):
-    if timestamp is None:
-        return True
-    return (timestamp >= comp_timestamp) if before else (timestamp <= comp_timestamp)
-
-
-def find_for_string(string, parts):
-    return [part for part in parts if string.lower() in str(part).lower()]
-
-
-def is_strings_in_string(strings, parts):
-    strings = make_list(strings)
-    for string in strings:
-        parts = find_for_string(string, parts)
-        if not parts:
-            return []
-    return parts
-
-
 def get_parts(data):
     parts = []
     for path in find_paths_to_key(json_data=data, key_to_find="message"):
@@ -149,30 +70,34 @@ def get_parts(data):
             parts.extend([p for p in parts_value if p])
     return parts
 
-
-def capitalize(string):
-    return string[:1].upper() + string[1:].lower() if string else string
-
-
-def if_true_get_string(data, key):
-    return key if data.get(key) else None
-
-
 def split_language(text, **lang_flags):
-    enabled = [lang for lang, active in lang_flags.items() if active]
+    enabled_aliases = {
+        'js': ['js', 'javascript'],
+        'ts': ['ts', 'typescript'],
+        'python': ['py', 'python'],
+        'html': ['html'],
+        'bash': ['bash', 'sh'],
+        # Add more as needed
+    }
+
+    enabled = []
+    for lang, active in lang_flags.items():
+        if active and lang in enabled_aliases:
+            enabled.extend(enabled_aliases[lang])
+
     if not enabled:
         return {}
-    pattern = re.compile(rf'```({"|".join(enabled)})\s*(.*?)```', re.DOTALL)
+
+    pattern = re.compile(rf'```(?:{"|".join(enabled)})\s*(.*?)```', re.DOTALL)
     results = defaultdict(list)
-    for lang, code in pattern.findall(text):
-        results[lang].append(code.strip())
+
+    for match in pattern.findall(text):
+        for lang, aliases in enabled_aliases.items():
+            if any(match.startswith(alias) for alias in aliases):
+                results[lang].append(match.strip())
+                break
+
     return dict(results)
-
-
-def search_code(code_languages, parts):
-    return [data for datas in parts for data in make_list(datas)
-            if detect_language_from_text(data) in code_languages]
-
 
 def search_in_conversation(strings=None, *args, **kwargs):
     strings = make_list(strings or '')
@@ -193,7 +118,7 @@ def search_in_conversation(strings=None, *args, **kwargs):
 
     # Language filtering
     requested_langs = [
-        lang for lang in ['neither', 'uncertain', 'js', 'python', 'bash', 'html', 'php']
+        lang for lang in ['neither', 'uncertain', 'javascript','typescript', 'python', 'bash', 'html', 'php']
         if if_true_get_string(kwargs, lang)
     ]
     split_requested = kwargs.get('split_code', False)

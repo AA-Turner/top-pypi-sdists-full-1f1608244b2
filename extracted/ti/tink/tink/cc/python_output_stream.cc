@@ -17,14 +17,14 @@
 #include "tink/cc/python_output_stream.h"
 
 #include <algorithm>
+#include <cstdint>
+#include <cstring>
 #include <memory>
 
-#include "absl/memory/memory.h"
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
-#include "tink/output_stream.h"
 #include "tink/subtle/subtle_util.h"
-#include "tink/util/status.h"
-#include "tink/util/statusor.h"
 #include "tink/cc/python_file_object_adapter.h"
 
 namespace crypto {
@@ -73,6 +73,16 @@ absl::StatusOr<int> PythonOutputStream::Next(void** data) {
 
   // Some data was written, so we can return some portion of buffer_.
   int written = write_result.value();
+
+  // This should not happen, because the only implementation of
+  // PythonFileObjectAdapter we have is FileObjectAdapter in
+  // _file_object_adapter.py, which never returns a value larger than the buffer
+  // size.
+  if (written > buffer_.size()) {
+    return status_ = absl::Status(absl::StatusCode::kInternal,
+                                  "Invalid value returned by Write");
+  }
+
   position_ += written;
   count_in_buffer_ = buffer_.size();
   buffer_offset_ = buffer_.size() - written;

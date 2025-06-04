@@ -16,39 +16,6 @@ import System
 import System.Collections.Generic
 
 
-class LiveCustomDataSubscriptionEnumeratorFactory(System.Object, QuantConnect.Data.ISubscriptionEnumeratorFactory):
-    """Provides an implementation of ISubscriptionEnumeratorFactory to handle live custom data."""
-
-    def __init__(self, time_provider: QuantConnect.ITimeProvider, object_store: QuantConnect.Interfaces.IObjectStore, date_adjustment: typing.Callable[[datetime.datetime], datetime.datetime] = None, minimum_interval_check: typing.Optional[datetime.timedelta] = None) -> None:
-        """
-        Initializes a new instance of the LiveCustomDataSubscriptionEnumeratorFactory class
-        
-        :param time_provider: Time provider from data feed
-        :param object_store: The object store to use
-        :param date_adjustment: Func that allows adjusting the datetime to use
-        :param minimum_interval_check: Allows specifying the minimum interval between each enumerator refresh and data check, default is 30 minutes
-        """
-        ...
-
-    def create_enumerator(self, request: QuantConnect.Data.UniverseSelection.SubscriptionRequest, data_provider: QuantConnect.Interfaces.IDataProvider) -> System.Collections.Generic.IEnumerator[QuantConnect.Data.BaseData]:
-        """
-        Creates an enumerator to read the specified request.
-        
-        :param request: The subscription request to be read
-        :param data_provider: Provider used to get data when it is not present on disk
-        :returns: An enumerator reading the subscription request.
-        """
-        ...
-
-    def get_subscription_data_source_reader(self, source: QuantConnect.Data.SubscriptionDataSource, data_cache_provider: QuantConnect.Interfaces.IDataCacheProvider, config: QuantConnect.Data.SubscriptionDataConfig, date: typing.Union[datetime.datetime, datetime.date], base_data_instance: QuantConnect.Data.BaseData, data_provider: QuantConnect.Interfaces.IDataProvider) -> QuantConnect.Lean.Engine.DataFeeds.ISubscriptionDataSourceReader:
-        """
-        Gets the ISubscriptionDataSourceReader for the specified source
-        
-        This method is protected.
-        """
-        ...
-
-
 class BaseDataCollectionSubscriptionEnumeratorFactory(System.Object, QuantConnect.Data.ISubscriptionEnumeratorFactory):
     """
     Provides an implementation of ISubscriptionEnumeratorFactory that reads
@@ -101,6 +68,34 @@ class CorporateEventEnumeratorFactory(System.Object):
         ...
 
 
+class TimeTriggeredUniverseSubscriptionEnumeratorFactory(System.Object, QuantConnect.Data.ISubscriptionEnumeratorFactory):
+    """
+    Provides an implementation of ISubscriptionEnumeratorFactory to emit
+    ticks based on UserDefinedUniverse.GetTriggerTimes, allowing universe
+    selection to fire at planned times.
+    """
+
+    def __init__(self, universe: QuantConnect.Data.UniverseSelection.ITimeTriggeredUniverse, market_hours_database: QuantConnect.Securities.MarketHoursDatabase, time_provider: QuantConnect.ITimeProvider) -> None:
+        """
+        Initializes a new instance of the TimeTriggeredUniverseSubscriptionEnumeratorFactory class
+        
+        :param universe: The user defined universe
+        :param market_hours_database: The market hours database
+        :param time_provider: The time provider
+        """
+        ...
+
+    def create_enumerator(self, request: QuantConnect.Data.UniverseSelection.SubscriptionRequest, data_provider: QuantConnect.Interfaces.IDataProvider) -> System.Collections.Generic.IEnumerator[QuantConnect.Data.BaseData]:
+        """
+        Creates an enumerator to read the specified request
+        
+        :param request: The subscription request to be read
+        :param data_provider: Provider used to get data when it is not present on disk
+        :returns: An enumerator reading the subscription request.
+        """
+        ...
+
+
 class SubscriptionDataReaderSubscriptionEnumeratorFactory(System.Object, QuantConnect.Data.ISubscriptionEnumeratorFactory, System.IDisposable):
     """Provides an implementation of ISubscriptionEnumeratorFactory that used the SubscriptionDataReader"""
 
@@ -132,30 +127,35 @@ class SubscriptionDataReaderSubscriptionEnumeratorFactory(System.Object, QuantCo
         ...
 
 
-class TimeTriggeredUniverseSubscriptionEnumeratorFactory(System.Object, QuantConnect.Data.ISubscriptionEnumeratorFactory):
-    """
-    Provides an implementation of ISubscriptionEnumeratorFactory to emit
-    ticks based on UserDefinedUniverse.GetTriggerTimes, allowing universe
-    selection to fire at planned times.
-    """
+class LiveCustomDataSubscriptionEnumeratorFactory(System.Object, QuantConnect.Data.ISubscriptionEnumeratorFactory):
+    """Provides an implementation of ISubscriptionEnumeratorFactory to handle live custom data."""
 
-    def __init__(self, universe: QuantConnect.Data.UniverseSelection.ITimeTriggeredUniverse, market_hours_database: QuantConnect.Securities.MarketHoursDatabase, time_provider: QuantConnect.ITimeProvider) -> None:
+    def __init__(self, time_provider: QuantConnect.ITimeProvider, object_store: QuantConnect.Interfaces.IObjectStore, date_adjustment: typing.Callable[[datetime.datetime], datetime.datetime] = None, minimum_interval_check: typing.Optional[datetime.timedelta] = None) -> None:
         """
-        Initializes a new instance of the TimeTriggeredUniverseSubscriptionEnumeratorFactory class
+        Initializes a new instance of the LiveCustomDataSubscriptionEnumeratorFactory class
         
-        :param universe: The user defined universe
-        :param market_hours_database: The market hours database
-        :param time_provider: The time provider
+        :param time_provider: Time provider from data feed
+        :param object_store: The object store to use
+        :param date_adjustment: Func that allows adjusting the datetime to use
+        :param minimum_interval_check: Allows specifying the minimum interval between each enumerator refresh and data check, default is 30 minutes
         """
         ...
 
     def create_enumerator(self, request: QuantConnect.Data.UniverseSelection.SubscriptionRequest, data_provider: QuantConnect.Interfaces.IDataProvider) -> System.Collections.Generic.IEnumerator[QuantConnect.Data.BaseData]:
         """
-        Creates an enumerator to read the specified request
+        Creates an enumerator to read the specified request.
         
         :param request: The subscription request to be read
         :param data_provider: Provider used to get data when it is not present on disk
         :returns: An enumerator reading the subscription request.
+        """
+        ...
+
+    def get_subscription_data_source_reader(self, source: QuantConnect.Data.SubscriptionDataSource, data_cache_provider: QuantConnect.Interfaces.IDataCacheProvider, config: QuantConnect.Data.SubscriptionDataConfig, date: typing.Union[datetime.datetime, datetime.date], base_data_instance: QuantConnect.Data.BaseData, data_provider: QuantConnect.Interfaces.IDataProvider) -> QuantConnect.Lean.Engine.DataFeeds.ISubscriptionDataSourceReader:
+        """
+        Gets the ISubscriptionDataSourceReader for the specified source
+        
+        This method is protected.
         """
         ...
 

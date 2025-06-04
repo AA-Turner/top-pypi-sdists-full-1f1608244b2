@@ -210,9 +210,21 @@ fn install_python(version: &str) -> PyResult<String> {
         .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))
 }
 
+#[pyfunction]
+fn get_venv_activation_info(venv_path: &str) -> PyResult<integrations::uv::ActivationInfo> {
+    let venv = UvVirtualEnv {
+        path: PathBuf::from(venv_path),
+    };
+    venv.get_activation_info()
+        .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(e.to_string()))
+}
+
 /// Handle the tree command
 fn handle_tree_command(sub_matches: &clap::ArgMatches, in_angreal_project: bool) -> PyResult<()> {
-    use crate::builder::command_tree::CommandNode;
+    use crate::builder::command_tree::{ArgumentSchema, CommandNode};
+    use crate::builder::select_args;
+    #[allow(unused_imports)]
+    use crate::task::{AngrealCommand, AngrealGroup};
 
     // Build command tree from registered tasks
     let mut root = CommandNode::new_group("angreal".to_string(), None);
@@ -227,8 +239,59 @@ fn handle_tree_command(sub_matches: &clap::ArgMatches, in_angreal_project: bool)
     let json_output = sub_matches.is_present("json");
 
     if json_output {
-        // Output JSON format
-        match root.to_json() {
+        // Output new schema JSON format
+        let mut schema = root.to_project_schema();
+
+        // Populate arguments for each command
+        for command_schema in &mut schema.commands {
+            let args = select_args(&command_schema.name);
+
+            command_schema.arguments = args
+                .into_iter()
+                .map(|arg| {
+                    let flag = if let Some(long) = &arg.long {
+                        format!("--{}", long)
+                    } else if let Some(short) = arg.short {
+                        format!("-{}", short)
+                    } else {
+                        arg.name.clone()
+                    };
+
+                    let arg_type = if arg.is_flag.unwrap_or(false) {
+                        "flag".to_string()
+                    } else if arg.name.starts_with("--") || arg.name.starts_with("-") {
+                        "parameter".to_string()
+                    } else {
+                        "positional".to_string()
+                    };
+
+                    let default_value = arg.default_value.map(|v| {
+                        match arg.python_type.as_deref().unwrap_or("str") {
+                            "int" => serde_json::Value::Number(serde_json::Number::from(
+                                v.parse::<i64>().unwrap_or(0),
+                            )),
+                            "float" => serde_json::Value::Number(
+                                serde_json::Number::from_f64(v.parse::<f64>().unwrap_or(0.0))
+                                    .unwrap(),
+                            ),
+                            "bool" => serde_json::Value::Bool(v.parse::<bool>().unwrap_or(false)),
+                            _ => serde_json::Value::String(v),
+                        }
+                    });
+
+                    ArgumentSchema {
+                        name: arg.name,
+                        flag,
+                        arg_type,
+                        required: arg.required.unwrap_or(false),
+                        description: arg.help,
+                        default: default_value,
+                    }
+                })
+                .collect();
+        }
+
+        match serde_json::to_string_pretty(&schema) {
             Ok(json) => println!("{}", json),
             Err(e) => {
                 error!("Failed to serialize command tree to JSON: {}", e);
@@ -236,13 +299,63 @@ fn handle_tree_command(sub_matches: &clap::ArgMatches, in_angreal_project: bool)
             }
         }
     } else {
-        // Output human-readable tree format
-        if in_angreal_project && !root.children.is_empty() {
-            println!("{}", root.display_tree());
-        } else {
-            println!("No commands available");
-            if !in_angreal_project {
-                println!("(Not in an angreal project - only 'init' command is available)");
+        // Always output JSON format by default
+        let mut schema = root.to_project_schema();
+
+        // Populate arguments for each command
+        for command_schema in &mut schema.commands {
+            let args = select_args(&command_schema.name);
+
+            command_schema.arguments = args
+                .into_iter()
+                .map(|arg| {
+                    let flag = if let Some(long) = &arg.long {
+                        format!("--{}", long)
+                    } else if let Some(short) = arg.short {
+                        format!("-{}", short)
+                    } else {
+                        arg.name.clone()
+                    };
+
+                    let arg_type = if arg.is_flag.unwrap_or(false) {
+                        "flag".to_string()
+                    } else if arg.name.starts_with("--") || arg.name.starts_with("-") {
+                        "parameter".to_string()
+                    } else {
+                        "positional".to_string()
+                    };
+
+                    let default_value = arg.default_value.map(|v| {
+                        match arg.python_type.as_deref().unwrap_or("str") {
+                            "int" => serde_json::Value::Number(serde_json::Number::from(
+                                v.parse::<i64>().unwrap_or(0),
+                            )),
+                            "float" => serde_json::Value::Number(
+                                serde_json::Number::from_f64(v.parse::<f64>().unwrap_or(0.0))
+                                    .unwrap(),
+                            ),
+                            "bool" => serde_json::Value::Bool(v.parse::<bool>().unwrap_or(false)),
+                            _ => serde_json::Value::String(v),
+                        }
+                    });
+
+                    ArgumentSchema {
+                        name: arg.name,
+                        flag,
+                        arg_type,
+                        required: arg.required.unwrap_or(false),
+                        description: arg.help,
+                        default: default_value,
+                    }
+                })
+                .collect();
+        }
+
+        match serde_json::to_string_pretty(&schema) {
+            Ok(json) => println!("{}", json),
+            Err(e) => {
+                error!("Failed to serialize command tree to JSON: {}", e);
+                std::process::exit(1);
             }
         }
     }
@@ -483,6 +596,8 @@ fn angreal(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(install_requirements, m)?)?;
     m.add_function(wrap_pyfunction!(discover_pythons, m)?)?;
     m.add_function(wrap_pyfunction!(install_python, m)?)?;
+    m.add_function(wrap_pyfunction!(get_venv_activation_info, m)?)?;
+    m.add_class::<integrations::uv::ActivationInfo>()?;
 
     m.add_wrapped(wrap_pymodule!(_integrations))?;
 

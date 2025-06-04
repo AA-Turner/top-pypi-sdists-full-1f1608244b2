@@ -4646,6 +4646,168 @@ class AdvSimd(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
         ...
 
 
+class Rdm(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
+    """Provides access to the ARMv8.1-RDMA hardware instructions via intrinsics."""
+
+    class Arm64(System.Runtime.Intrinsics.Arm.AdvSimd.Arm64, metaclass=abc.ABCMeta):
+        """Provides access to the ARMv8.1-RDMA hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def multiply_rounded_doubling_and_add_saturate_high_scalar(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
+            """int16_t vqrdmlahh_s16 (int16_t a, int16_t b, int16_t c)  A64: SQRDMLAH Hd, Hn, Hm"""
+            ...
+
+        @staticmethod
+        def multiply_rounded_doubling_and_subtract_saturate_high_scalar(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
+            """int16_t vqrdmlshh_s16 (int16_t a, int16_t b, int16_t c)  A64: SQRDMLSH Hd, Hn, Hm"""
+            ...
+
+        @staticmethod
+        @overload
+        def multiply_rounded_doubling_scalar_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+            """int16_t vqrdmlahh_lane_s16 (int16_t a, int16_t b, int16x4_t v, const int lane)  A64: SQRDMLAH Hd, Hn, Vm.H[lane]"""
+            ...
+
+        @staticmethod
+        @overload
+        def multiply_rounded_doubling_scalar_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+            """int16_t vqrdmlahh_laneq_s16 (int16_t a, int16_t b, int16x8_t v, const int lane)  A64: SQRDMLAH Hd, Hn, Vm.H[lane]"""
+            ...
+
+        @staticmethod
+        @overload
+        def multiply_rounded_doubling_scalar_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+            """int16_t vqrdmlshh_lane_s16 (int16_t a, int16_t b, int16x4_t v, const int lane)  A64: SQRDMLSH Hd, Hn, Vm.H[lane]"""
+            ...
+
+        @staticmethod
+        @overload
+        def multiply_rounded_doubling_scalar_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+            """int16_t vqrdmlshh_laneq_s16 (int16_t a, int16_t b, int16x8_t v, const int lane)  A64: SQRDMLSH Hd, Hn, Vm.H[lane]"""
+            ...
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
+        """int16x4_t vqrdmlah_s16 (int16x4_t a, int16x4_t b, int16x4_t c)  A32: VQRDMLAH.S16 Dd, Dn, Dm  A64: SQRDMLAH Vd.4H, Vn.4H, Vm.4H"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """int16x8_t vqrdmlahq_s16 (int16x8_t a, int16x8_t b, int16x8_t c)  A32: VQRDMLAH.S16 Qd, Qn, Qm  A64: SQRDMLAH Vd.8H, Vn.8H, Vm.8H"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
+        """int16x4_t vqrdmlsh_s16 (int16x4_t a, int16x4_t b, int16x4_t c)  A32: VQRDMLSH.S16 Dd, Dn, Dm  A64: SQRDMLSH Vd.4H, Vn.4H, Vm.4H"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """int16x8_t vqrdmlshq_s16 (int16x8_t a, int16x8_t b, int16x8_t c)  A32: VQRDMLSH.S16 Qd, Qn, Qm  A64: SQRDMLSH Vd.8H, Vn.8H, Vm.8H"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+        """int16x4_t vqrdmlah_lane_s16 (int16x4_t a, int16x4_t b, int16x4_t v, const int lane)  A32: VQRDMLAH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLAH Vd.4H, Vn.4H, Vm.H[lane]"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+        """int16x4_t vqrdmlah_laneq_s16 (int16x4_t a, int16x4_t b, int16x8_t v, const int lane)  A32: VQRDMLAH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLAH Vd.4H, Vn.4H, Vm.H[lane]"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
+        """int16x8_t vqrdmlahq_lane_s16 (int16x8_t a, int16x8_t b, int16x4_t v, const int lane)  A32: VQRDMLAH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLAH Vd.8H, Vn.8H, Vm.H[lane]"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
+        """int16x8_t vqrdmlahq_laneq_s16 (int16x8_t a, int16x8_t b, int16x8_t v, const int lane)  A32: VQRDMLAH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLAH Vd.8H, Vn.8H, Vm.H[lane]"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+        """int16x4_t vqrdmlsh_lane_s16 (int16x4_t a, int16x4_t b, int16x4_t v, const int lane)  A32: VQRDMLSH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLSH Vd.4H, Vn.4H, Vm.H[lane]"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
+        """int16x4_t vqrdmlsh_laneq_s16 (int16x4_t a, int16x4_t b, int16x8_t v, const int lane)  A32: VQRDMLSH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLSH Vd.4H, Vn.4H, Vm.H[lane]"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
+        """int16x8_t vqrdmlshq_lane_s16 (int16x8_t a, int16x8_t b, int16x4_t v, const int lane)  A32: VQRDMLSH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLSH Vd.8H, Vn.8H, Vm.H[lane]"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
+        """int16x8_t vqrdmlshq_laneq_s16 (int16x8_t a, int16x8_t b, int16x8_t v, const int lane)  A32: VQRDMLSH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLSH Vd.8H, Vn.8H, Vm.H[lane]"""
+        ...
+
+
+class Sha1(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
+    """Provides access to the ARM SHA1 hardware instructions via intrinsics."""
+
+    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
+        """Provides access to the ARM SHA1 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def fixed_rotate(hash_e: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
+        """uint32_t vsha1h_u32 (uint32_t hash_e)  A32: SHA1H.32 Qd, Qm  A64: SHA1H Sd, Sn"""
+        ...
+
+    @staticmethod
+    def hash_update_choose(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_e: System.Runtime.Intrinsics.Vector64[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha1cq_u32 (uint32x4_t hash_abcd, uint32_t hash_e, uint32x4_t wk)  A32: SHA1C.32 Qd, Qn, Qm  A64: SHA1C Qd, Sn, Vm.4S"""
+        ...
+
+    @staticmethod
+    def hash_update_majority(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_e: System.Runtime.Intrinsics.Vector64[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha1mq_u32 (uint32x4_t hash_abcd, uint32_t hash_e, uint32x4_t wk)  A32: SHA1M.32 Qd, Qn, Qm  A64: SHA1M Qd, Sn, Vm.4S"""
+        ...
+
+    @staticmethod
+    def hash_update_parity(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_e: System.Runtime.Intrinsics.Vector64[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha1pq_u32 (uint32x4_t hash_abcd, uint32_t hash_e, uint32x4_t wk)  A32: SHA1P.32 Qd, Qn, Qm  A64: SHA1P Qd, Sn, Vm.4S"""
+        ...
+
+    @staticmethod
+    def schedule_update_0(w_0_3: System.Runtime.Intrinsics.Vector128[int], w_4_7: System.Runtime.Intrinsics.Vector128[int], w_8_11: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha1su0q_u32 (uint32x4_t w_0_3, uint32x4_t w_4_7, uint32x4_t w_8_11)  A32: SHA1SU0.32 Qd, Qn, Qm  A64: SHA1SU0 Vd.4S, Vn.4S, Vm.4S"""
+        ...
+
+    @staticmethod
+    def schedule_update_1(tw_0_3: System.Runtime.Intrinsics.Vector128[int], w_12_15: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha1su1q_u32 (uint32x4_t tw_0_3, uint32x4_t w_12_15)  A32: SHA1SU1.32 Qd, Qm  A64: SHA1SU1 Vd.4S, Vn.4S"""
+        ...
+
+
 class SveMaskPattern(Enum):
     """This class has no documentation."""
 
@@ -6249,23 +6411,23 @@ class Sve(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
         ...
 
     @staticmethod
-    def prefetch_bytes(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
-        """void svprfb(svbool_t pg, const void *base, enum svprfop op)  PRFB op, Pg, [Xbase, #0, MUL VL]"""
-        ...
-
-    @staticmethod
-    def prefetch_int_16(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
+    def prefetch_16_bit(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
         """void svprfh(svbool_t pg, const void *base, enum svprfop op)  PRFH op, Pg, [Xbase, #0, MUL VL]"""
         ...
 
     @staticmethod
-    def prefetch_int_32(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
+    def prefetch_32_bit(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
         """void svprfw(svbool_t pg, const void *base, enum svprfop op)  PRFW op, Pg, [Xbase, #0, MUL VL]"""
         ...
 
     @staticmethod
-    def prefetch_int_64(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
+    def prefetch_64_bit(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
         """void svprfd(svbool_t pg, const void *base, enum svprfop op)  PRFD op, Pg, [Xbase, #0, MUL VL]"""
+        ...
+
+    @staticmethod
+    def prefetch_8_bit(mask: System.Numerics.Vector[int], address: typing.Any, prefetch_type: System.Runtime.Intrinsics.Arm.SvePrefetchType) -> None:
+        """void svprfb(svbool_t pg, const void *base, enum svprfop op)  PRFB op, Pg, [Xbase, #0, MUL VL]"""
         ...
 
     @staticmethod
@@ -6814,165 +6976,94 @@ class Sve(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
         ...
 
 
-class Sha1(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
-    """Provides access to the ARM SHA1 hardware instructions via intrinsics."""
+class Sve2(System.Runtime.Intrinsics.Arm.Sve, metaclass=abc.ABCMeta):
+    """This class provides access to the ARM SVE hardware instructions via intrinsics"""
 
-    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
-        """Provides access to the ARM SHA1 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def fixed_rotate(hash_e: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
-        """uint32_t vsha1h_u32 (uint32_t hash_e)  A32: SHA1H.32 Qd, Qm  A64: SHA1H Sd, Sn"""
-        ...
-
-    @staticmethod
-    def hash_update_choose(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_e: System.Runtime.Intrinsics.Vector64[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha1cq_u32 (uint32x4_t hash_abcd, uint32_t hash_e, uint32x4_t wk)  A32: SHA1C.32 Qd, Qn, Qm  A64: SHA1C Qd, Sn, Vm.4S"""
-        ...
-
-    @staticmethod
-    def hash_update_majority(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_e: System.Runtime.Intrinsics.Vector64[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha1mq_u32 (uint32x4_t hash_abcd, uint32_t hash_e, uint32x4_t wk)  A32: SHA1M.32 Qd, Qn, Qm  A64: SHA1M Qd, Sn, Vm.4S"""
-        ...
-
-    @staticmethod
-    def hash_update_parity(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_e: System.Runtime.Intrinsics.Vector64[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha1pq_u32 (uint32x4_t hash_abcd, uint32_t hash_e, uint32x4_t wk)  A32: SHA1P.32 Qd, Qn, Qm  A64: SHA1P Qd, Sn, Vm.4S"""
-        ...
-
-    @staticmethod
-    def schedule_update_0(w_0_3: System.Runtime.Intrinsics.Vector128[int], w_4_7: System.Runtime.Intrinsics.Vector128[int], w_8_11: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha1su0q_u32 (uint32x4_t w_0_3, uint32x4_t w_4_7, uint32x4_t w_8_11)  A32: SHA1SU0.32 Qd, Qn, Qm  A64: SHA1SU0 Vd.4S, Vn.4S, Vm.4S"""
-        ...
-
-    @staticmethod
-    def schedule_update_1(tw_0_3: System.Runtime.Intrinsics.Vector128[int], w_12_15: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha1su1q_u32 (uint32x4_t tw_0_3, uint32x4_t w_12_15)  A32: SHA1SU1.32 Qd, Qm  A64: SHA1SU1 Vd.4S, Vn.4S"""
-        ...
-
-
-class Rdm(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
-    """Provides access to the ARMv8.1-RDMA hardware instructions via intrinsics."""
-
-    class Arm64(System.Runtime.Intrinsics.Arm.AdvSimd.Arm64, metaclass=abc.ABCMeta):
-        """Provides access to the ARMv8.1-RDMA hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+    class Arm64(System.Runtime.Intrinsics.Arm.Sve.Arm64, metaclass=abc.ABCMeta):
+        """This class has no documentation."""
 
         IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def multiply_rounded_doubling_and_add_saturate_high_scalar(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
-            """int16_t vqrdmlahh_s16 (int16_t a, int16_t b, int16_t c)  A64: SQRDMLAH Hd, Hn, Hm"""
-            ...
-
-        @staticmethod
-        def multiply_rounded_doubling_and_subtract_saturate_high_scalar(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
-            """int16_t vqrdmlshh_s16 (int16_t a, int16_t b, int16_t c)  A64: SQRDMLSH Hd, Hn, Hm"""
-            ...
-
-        @staticmethod
-        @overload
-        def multiply_rounded_doubling_scalar_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-            """int16_t vqrdmlahh_lane_s16 (int16_t a, int16_t b, int16x4_t v, const int lane)  A64: SQRDMLAH Hd, Hn, Vm.H[lane]"""
-            ...
-
-        @staticmethod
-        @overload
-        def multiply_rounded_doubling_scalar_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-            """int16_t vqrdmlahh_laneq_s16 (int16_t a, int16_t b, int16x8_t v, const int lane)  A64: SQRDMLAH Hd, Hn, Vm.H[lane]"""
-            ...
-
-        @staticmethod
-        @overload
-        def multiply_rounded_doubling_scalar_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-            """int16_t vqrdmlshh_lane_s16 (int16_t a, int16_t b, int16x4_t v, const int lane)  A64: SQRDMLSH Hd, Hn, Vm.H[lane]"""
-            ...
-
-        @staticmethod
-        @overload
-        def multiply_rounded_doubling_scalar_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-            """int16_t vqrdmlshh_laneq_s16 (int16_t a, int16_t b, int16x8_t v, const int lane)  A64: SQRDMLSH Hd, Hn, Vm.H[lane]"""
-            ...
 
     IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
-        """int16x4_t vqrdmlah_s16 (int16x4_t a, int16x4_t b, int16x4_t c)  A32: VQRDMLAH.S16 Dd, Dn, Dm  A64: SQRDMLAH Vd.4H, Vn.4H, Vm.4H"""
+    def absolute_difference_add(addend: System.Numerics.Vector[int], left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svaba[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
+          UABA Ztied1.B, Zop2.B, Zop3.B
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """int16x8_t vqrdmlahq_s16 (int16x8_t a, int16x8_t b, int16x8_t c)  A32: VQRDMLAH.S16 Qd, Qn, Qm  A64: SQRDMLAH Vd.8H, Vn.8H, Vm.8H"""
+    def absolute_difference_add_widening_lower(addend: System.Numerics.Vector[int], left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svint16_t svabalb[_s16](svint16_t op1, svint8_t op2, svint8_t op3)
+          SABALB Ztied1.H, Zop2.B, Zop3.B
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector64[int]:
-        """int16x4_t vqrdmlsh_s16 (int16x4_t a, int16x4_t b, int16x4_t c)  A32: VQRDMLSH.S16 Dd, Dn, Dm  A64: SQRDMLSH Vd.4H, Vn.4H, Vm.4H"""
+    def absolute_difference_add_widening_upper(addend: System.Numerics.Vector[int], left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svint16_t svabalt[_s16](svint16_t op1, svint8_t op2, svint8_t op3)
+          SABALT Ztied1.H, Zop2.B, Zop3.B
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """int16x8_t vqrdmlshq_s16 (int16x8_t a, int16x8_t b, int16x8_t c)  A32: VQRDMLSH.S16 Qd, Qn, Qm  A64: SQRDMLSH Vd.8H, Vn.8H, Vm.8H"""
+    def bitwise_clear_xor(xor: System.Numerics.Vector[int], value: System.Numerics.Vector[int], mask: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svbcax[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
+          BCAX Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-        """int16x4_t vqrdmlah_lane_s16 (int16x4_t a, int16x4_t b, int16x4_t v, const int lane)  A32: VQRDMLAH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLAH Vd.4H, Vn.4H, Vm.H[lane]"""
+    def bitwise_select(select: System.Numerics.Vector[int], left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svbsl[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
+          BSL Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-        """int16x4_t vqrdmlah_laneq_s16 (int16x4_t a, int16x4_t b, int16x8_t v, const int lane)  A32: VQRDMLAH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLAH Vd.4H, Vn.4H, Vm.H[lane]"""
+    def bitwise_select_left_inverted(select: System.Numerics.Vector[int], left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svbsl1n[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
+          BSL1N Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
-        """int16x8_t vqrdmlahq_lane_s16 (int16x8_t a, int16x8_t b, int16x4_t v, const int lane)  A32: VQRDMLAH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLAH Vd.8H, Vn.8H, Vm.H[lane]"""
+    def bitwise_select_right_inverted(select: System.Numerics.Vector[int], left: System.Numerics.Vector[int], right: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svbsl2n[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
+          BSL2N Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_add_saturate_high(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
-        """int16x8_t vqrdmlahq_laneq_s16 (int16x8_t a, int16x8_t b, int16x8_t v, const int lane)  A32: VQRDMLAH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLAH Vd.8H, Vn.8H, Vm.H[lane]"""
+    def shift_left_and_insert(left: System.Numerics.Vector[int], right: System.Numerics.Vector[int], shift: int) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svsli[_n_u8](svuint8_t op1, svuint8_t op2, uint64_t imm3)
+          SLI Ztied1.B, Zop2.B, #imm3
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-        """int16x4_t vqrdmlsh_lane_s16 (int16x4_t a, int16x4_t b, int16x4_t v, const int lane)  A32: VQRDMLSH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLSH Vd.4H, Vn.4H, Vm.H[lane]"""
+    def xor(value_1: System.Numerics.Vector[int], value_2: System.Numerics.Vector[int], value_3: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t sveor3[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
+          EOR3 Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
+        """
         ...
 
     @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector64[int], left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector64[int]:
-        """int16x4_t vqrdmlsh_laneq_s16 (int16x4_t a, int16x4_t b, int16x8_t v, const int lane)  A32: VQRDMLSH.S16 Dd, Dn, Dm[lane]  A64: SQRDMLSH Vd.4H, Vn.4H, Vm.H[lane]"""
-        ...
-
-    @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector64[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
-        """int16x8_t vqrdmlshq_lane_s16 (int16x8_t a, int16x8_t b, int16x4_t v, const int lane)  A32: VQRDMLSH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLSH Vd.8H, Vn.8H, Vm.H[lane]"""
-        ...
-
-    @staticmethod
-    @overload
-    def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
-        """int16x8_t vqrdmlshq_laneq_s16 (int16x8_t a, int16x8_t b, int16x8_t v, const int lane)  A32: VQRDMLSH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLSH Vd.8H, Vn.8H, Vm.H[lane]"""
+    def xor_rotate_right(left: System.Numerics.Vector[int], right: System.Numerics.Vector[int], count: int) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svxar[_n_u8](svuint8_t op1, svuint8_t op2, uint64_t imm3)
+          XAR Ztied1.B, Ztied1.B, Zop2.B, #imm3
+        """
         ...
 
 
@@ -7042,76 +7133,6 @@ class Crc32(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
         ...
 
 
-class Sve2(System.Runtime.Intrinsics.Arm.Sve, metaclass=abc.ABCMeta):
-    """This class provides access to the ARM SVE hardware instructions via intrinsics"""
-
-    class Arm64(System.Runtime.Intrinsics.Arm.Sve.Arm64, metaclass=abc.ABCMeta):
-        """This class has no documentation."""
-
-        IS_SUPPORTED: bool
-
-    IS_SUPPORTED: bool
-
-    @staticmethod
-    def bitwise_clear_xor(xor: System.Numerics.Vector[int], value: System.Numerics.Vector[int], mask: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
-        """
-        svuint8_t svbcax[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
-          BCAX Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
-        """
-        ...
-
-    @staticmethod
-    def shift_left_and_insert(left: System.Numerics.Vector[int], right: System.Numerics.Vector[int], shift: int) -> System.Numerics.Vector[int]:
-        """
-        svuint8_t svsli[_n_u8](svuint8_t op1, svuint8_t op2, uint64_t imm3)
-          SLI Ztied1.B, Zop2.B, #imm3
-        """
-        ...
-
-
-class Aes(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
-    """Provides access to the ARM AES hardware instructions via intrinsics."""
-
-    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
-        """Provides access to the ARM AES hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def decrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaesdq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESD.8 Qd, Qm  A64: AESD Vd.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def encrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaeseq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESE.8 Qd, Qm  A64: AESE Vd.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def inverse_mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaesimcq_u8 (uint8x16_t data)  A32: AESIMC.8 Qd, Qm  A64: AESIMC Vd.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaesmcq_u8 (uint8x16_t data)  A32: AESMC.8 Qd, Qm  A64: AESMC V>.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def polynomial_multiply_widening_lower(left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """poly128_t vmull_p64 (poly64_t a, poly64_t b)  A32: VMULL.P8 Qd, Dn, Dm  A64: PMULL Vd.1Q, Vn.1D, Vm.1D"""
-        ...
-
-    @staticmethod
-    def polynomial_multiply_widening_upper(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """poly128_t vmull_high_p64 (poly64x2_t a, poly64x2_t b)  A32: VMULL.P8 Qd, Dn+1, Dm+1  A64: PMULL2 Vd.1Q, Vn.2D, Vm.2D"""
-        ...
-
-
 class Dp(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
     """Provides access to the ARMv8.2-DotProd hardware instructions via intrinsics."""
 
@@ -7158,6 +7179,49 @@ class Dp(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
     @overload
     def dot_product_by_selected_quadruplet(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector64[int], right_scaled_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
         """int32x4_t vdotq_lane_s32 (int32x4_t r, int8x16_t a, int8x8_t b, const int lane)  A32: VSDOT.S8 Qd, Qn, Dm[lane]  A64: SDOT Vd.4S, Vn.16B, Vm.4B[lane]"""
+        ...
+
+
+class Aes(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
+    """Provides access to the ARM AES hardware instructions via intrinsics."""
+
+    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
+        """Provides access to the ARM AES hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def decrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaesdq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESD.8 Qd, Qm  A64: AESD Vd.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def encrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaeseq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESE.8 Qd, Qm  A64: AESE Vd.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def inverse_mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaesimcq_u8 (uint8x16_t data)  A32: AESIMC.8 Qd, Qm  A64: AESIMC Vd.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaesmcq_u8 (uint8x16_t data)  A32: AESMC.8 Qd, Qm  A64: AESMC V>.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def polynomial_multiply_widening_lower(left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """poly128_t vmull_p64 (poly64_t a, poly64_t b)  A32: VMULL.P8 Qd, Dn, Dm  A64: PMULL Vd.1Q, Vn.1D, Vm.1D"""
+        ...
+
+    @staticmethod
+    def polynomial_multiply_widening_upper(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """poly128_t vmull_high_p64 (poly64x2_t a, poly64x2_t b)  A32: VMULL.P8 Qd, Dn+1, Dm+1  A64: PMULL2 Vd.1Q, Vn.2D, Vm.2D"""
         ...
 
 

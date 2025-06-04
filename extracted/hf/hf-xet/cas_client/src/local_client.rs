@@ -92,7 +92,7 @@ impl LocalClient {
         let shard_directory_ = shard_dir.clone();
         let shard_manager = tokio::task::block_in_place(|| {
             Handle::current()
-                .block_on(async move { ShardFileManager::new_in_session_directory(shard_directory_).await })
+                .block_on(async move { ShardFileManager::new_in_session_directory(shard_directory_, true).await })
         })?;
 
         Ok(Self {
@@ -643,7 +643,7 @@ mod tests {
         )
         .unwrap();
 
-        let new_shard_path = shard_in.write_to_directory(&shard_dir_1).unwrap();
+        let new_shard_path = shard_in.write_to_directory(&shard_dir_1, None).unwrap();
 
         let shard_hash = parse_shard_filename(&new_shard_path).unwrap();
 

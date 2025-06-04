@@ -41,7 +41,7 @@ overwritten_to_random: bool = False
 valid_occ_types: list = ["geometric", "euclid", "signed_harmonic", "signed_minkowski", "weighted_euclid", "composite"]
 joined_valid_occ_types: str = ", ".join(valid_occ_types)
 
-SUPPORTED_MODELS: list = ["SOBOL", "FACTORIAL", "SAASBO", "BOTORCH_MODULAR", "UNIFORM", "BO_MIXED", "RANDOMFOREST", "EXTERNAL_GENERATOR", "PSEUDORANDOM"]
+SUPPORTED_MODELS: list = ["SOBOL", "FACTORIAL", "SAASBO", "BOTORCH_MODULAR", "UNIFORM", "BO_MIXED", "RANDOMFOREST", "EXTERNAL_GENERATOR", "PSEUDORANDOM", "TPE"]
 joined_supported_models: str = ", ".join(SUPPORTED_MODELS)
 
 special_col_names: list = ["arm_name", "generation_method", "trial_index", "trial_status", "generation_node", "idxs"]
@@ -556,6 +556,7 @@ class ConfigLoader:
     follow: bool
     show_generation_and_submission_sixel: bool
     n_estimators_randomforest: int
+    max_num_of_parallel_sruns: int
     checkout_to_latest_tested_version: bool
     load_data_from_existing_jobs: List[str]
     time: str
@@ -659,6 +660,7 @@ class ConfigLoader:
         speed.add_argument('--dont_jit_compile', help='Disable JIT-compiling the model', action='store_true', default=False)
         speed.add_argument('--num_restarts', help='num_restarts option for optimizer_options', type=int, default=20)
         speed.add_argument('--raw_samples', help='raw_samples option for optimizer_options', type=int, default=1024)
+        speed.add_argument('--max_num_of_parallel_sruns', help='Maximal number of parallel sruns', type=int, default=16)
         speed.add_argument('--no_transform_inputs', help='Disable input transformations', action='store_true', default=False)
         speed.add_argument('--no_normalize_y', help='Disable target normalization', action='store_true', default=False)
 
@@ -4941,8 +4943,12 @@ def get_type_short(typename: str) -> str:
     return typename
 
 @beartype
-def parse_single_experiment_parameter_table(classic_params: Union[list, dict]) -> list:
+def parse_single_experiment_parameter_table(classic_params: Optional[Union[list, dict]]) -> list:
     rows: list = []
+
+    if classic_params is None:
+        print_red("parse_single_experiment_parameter_table: classic_param is None")
+        return rows
 
     k = 0
 
@@ -5130,7 +5136,7 @@ def print_experiment_param_table_to_file(filtered_columns: list, filtered_data: 
         print_red(f"Error trying to write file {fn}: {e}")
 
 @beartype
-def print_experiment_parameters_table(classic_param: Union[list, dict]) -> None:
+def print_experiment_parameters_table(classic_param: Optional[Union[list, dict]]) -> None:
     if not classic_param:
         print_red("Cannot determine classic_param. No parameter table will be shown.")
         return
@@ -5161,10 +5167,7 @@ def print_experiment_parameters_table(classic_param: Union[list, dict]) -> None:
     print_experiment_param_table_to_file(filtered_columns, filtered_data)
 
 @beartype
-def print_overview_tables(classic_params: Optional[Union[list, dict]], experiment_parameters: Union[list, dict], experiment_args: dict) -> None:
-    if classic_params is None or len(classic_params) == 0:
-        classic_params = experiment_parameters
-
+def print_overview_tables(classic_params: Optional[Union[list, dict]], experiment_args: dict) -> None:
     print_experiment_parameters_table(classic_params)
 
     print_ax_parameter_constraints_table(experiment_args)
@@ -6567,6 +6570,8 @@ def execute_evaluation(_params: list) -> Optional[int]:
         trial_counter += 1
 
         progressbar_description(["started new job"])
+
+        save_results_csv()
     except submitit.core.utils.FailedJobError as error:
         handle_failed_job(error, trial_index, new_job)
         trial_counter += 1
@@ -7492,6 +7497,11 @@ def create_node(model_name: str, threshold: int, next_model_name: Optional[str])
 
         return node
 
+    if model_name == "TPE":
+        node = ExternalProgramGenerationNode(f"python3 {script_dir}/.tpe.py", "TPE")
+
+        return node
+
     if model_name == "PSEUDORANDOM":
         node = ExternalProgramGenerationNode(f"python3 {script_dir}/.random_generator.py", "PSEUDORANDOM")
 
@@ -7705,7 +7715,9 @@ def execute_trials(
 
     cnt = 0
 
-    with ThreadPoolExecutor(max_workers=min(len(index_param_list), 16)) as tp_executor:
+    nr_workers = max(1, min(len(index_param_list), args.max_num_of_parallel_sruns))
+
+    with ThreadPoolExecutor(max_workers=nr_workers) as tp_executor:
         future_to_args = {tp_executor.submit(execute_evaluation, args): args for args in index_param_list}
 
         for future in as_completed(future_to_args):
@@ -9239,7 +9251,7 @@ def main() -> None:
     checkpoint_parameters_filepath = f"{get_current_run_folder()}/state_files/checkpoint.json.parameters.json"
     save_experiment_parameters(checkpoint_parameters_filepath, experiment_parameters)
 
-    print_overview_tables(classic_params, experiment_parameters, experiment_args)
+    print_overview_tables(experiment_parameters, experiment_args)
 
     write_files_and_show_overviews()
 

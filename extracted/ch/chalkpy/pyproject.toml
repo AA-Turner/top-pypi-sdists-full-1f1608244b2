@@ -197,7 +197,7 @@ clickhouse = [
 
 
 spanner = [
-    "sqlalchemy-spanner",
+    "sqlalchemy-spanner<1.12.0",
     "google-auth",
     # And the sql dependencies
     # [[[cog
@@ -443,7 +443,7 @@ all = [
     "snowflake-sqlalchemy>=1.5.0,<1.7",
     "sqlalchemy-bigquery>=1.5.0,<1.12",
     "sqlalchemy-redshift>=0.8.11,<0.9",
-    "sqlalchemy-spanner",
+    "sqlalchemy-spanner<1.12.0",
     "sqlalchemy[asyncio]>=1.4.26,<2",
     "sqlglot>=19.0.0,<22",
     "tiktoken>=0.5.1,<0.9",

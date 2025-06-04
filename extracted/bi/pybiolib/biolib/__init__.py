@@ -11,7 +11,7 @@ from biolib.biolib_errors import BioLibError
 from biolib.biolib_logging import logger as _logger, logger_no_user_data as _logger_no_user_data
 from biolib.experiments.experiment import Experiment
 from biolib.biolib_api_client import BiolibApiClient as _BioLibApiClient, App
-from biolib.jobs import Job as _Job
+from biolib.jobs.job import Result as _Result
 from biolib import user as _user
 from biolib.typing_utils import List, Optional, cast as _cast
 from biolib._data_record.data_record import DataRecord as _DataRecord
@@ -82,7 +82,7 @@ def search(
     return apps
 
 
-def get_job(job_id: str, job_token: Optional[str] = None) -> _Job:
+def get_job(job_id: str, job_token: Optional[str] = None) -> _Result:
     r"""Get a job by its ID.
 
     Args:
@@ -99,10 +99,10 @@ def get_job(job_id: str, job_token: Optional[str] = None) -> _Job:
         >>> # Access shared job
         >>> job = biolib.get_job('abc123', job_token='xyz789')
     """
-    return _Job.create_from_uuid(uuid=job_id, auth_token=job_token)
+    return _Result.create_from_uuid(uuid=job_id, auth_token=job_token)
 
 
-def get_result(result_id: str, result_token: Optional[str] = None) -> _Job:
+def get_result(result_id: str, result_token: Optional[str] = None) -> _Result:
     r"""Get a result by its ID.
 
     Args:
@@ -119,7 +119,7 @@ def get_result(result_id: str, result_token: Optional[str] = None) -> _Job:
         >>> # Access shared result
         >>> result = biolib.get_result('abc123', result_token='xyz789')
     """
-    return _Job.create_from_uuid(uuid=result_id, auth_token=result_token)
+    return _Result.create_from_uuid(uuid=result_id, auth_token=result_token)
 
 
 def get_data_record(uri: str) -> _DataRecord:
@@ -138,7 +138,7 @@ def get_data_record(uri: str) -> _DataRecord:
     return _DataRecord.get_by_uri(uri)
 
 
-def fetch_jobs(count: int = 25, status: Optional[str] = None) -> List[_Job]:
+def fetch_jobs(count: int = 25, status: Optional[str] = None) -> List[_Result]:
     r"""Fetch a list of jobs from the server.
 
     Args:
@@ -156,7 +156,7 @@ def fetch_jobs(count: int = 25, status: Optional[str] = None) -> List[_Job]:
         >>> # Get last 100 jobs of any status
         >>> all_jobs = biolib.fetch_jobs(100)
     """
-    return _Job.fetch_jobs(count, status)
+    return _Result.fetch_jobs(count, status)
 
 
 def fetch_data_records(uri: Optional[str] = None, count: Optional[int] = None) -> List[_DataRecord]:
@@ -216,7 +216,7 @@ def show_jobs(count: int = 25) -> None:
         >>> biolib.show_jobs()  # Show last 25 jobs
         >>> biolib.show_jobs(100)  # Show last 100 jobs
     """
-    _Job.show_jobs(count=count)
+    _Result.show_jobs(count=count)
 
 
 def show_experiments(count: int = 25) -> None:

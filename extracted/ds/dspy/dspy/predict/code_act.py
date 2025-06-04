@@ -1,15 +1,14 @@
-import logging
 import inspect
-
-from typing import Callable, Union, Type
+import logging
 from inspect import Signature
+from typing import Callable, Type, Union
 
 import dspy
-from dspy.primitives.python_interpreter import PythonInterpreter
-from dspy.primitives.tool import Tool
-from dspy.signatures.signature import ensure_signature
-from dspy.predict.react import ReAct
+from dspy.adapters.types.tool import Tool
 from dspy.predict.program_of_thought import ProgramOfThought
+from dspy.predict.react import ReAct
+from dspy.primitives.python_interpreter import PythonInterpreter
+from dspy.signatures.signature import ensure_signature
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +68,7 @@ class CodeAct(ReAct, ProgramOfThought):
         self.extractor = dspy.ChainOfThought(extract_signature)
         # It will raises exception when dspy cannot find available deno instance by now.
         self.interpreter = PythonInterpreter()
-    
+
     def _build_instructions(self, signature, tools):
         instructions = [f"{signature.instructions}\n"] if signature.instructions else []
         inputs = ", ".join([f"`{k}`" for k in signature.input_fields.keys()])
@@ -86,14 +85,14 @@ class CodeAct(ReAct, ProgramOfThought):
 
         for idx, tool in enumerate(tools.values()):
             instructions.append(f"({idx + 1}) {tool}")
-        
+
         return instructions
 
     def forward(self, **kwargs):
         # Define the tool funcitons in the interpreter
         for tool in self.tools.values():
             self.interpreter(inspect.getsource(tool.func))
-        
+
         trajectory = {}
         max_iters = kwargs.pop("max_iters", self.max_iters)
         for idx in range(max_iters):
@@ -112,7 +111,7 @@ class CodeAct(ReAct, ProgramOfThought):
                 trajectory[f"code_output_{idx}"] = output
             else:
                 trajectory[f"observation_{idx}"] = f"Failed to execute the generated code: {error}"
-            
+
             if code_data.finished:
                 break
 

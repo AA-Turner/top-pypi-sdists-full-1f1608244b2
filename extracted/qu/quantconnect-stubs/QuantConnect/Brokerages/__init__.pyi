@@ -24,11 +24,34 @@ import System.Collections.Generic
 
 QuantConnect_Brokerages_WebSocketClientWrapper_MessageData = typing.Any
 
-QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T = typing.TypeVar("QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T")
 QuantConnect_Brokerages_IOrderBookUpdater_K = typing.TypeVar("QuantConnect_Brokerages_IOrderBookUpdater_K")
 QuantConnect_Brokerages_IOrderBookUpdater_V = typing.TypeVar("QuantConnect_Brokerages_IOrderBookUpdater_V")
+QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T = typing.TypeVar("QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T")
 QuantConnect_Brokerages__EventContainer_Callable = typing.TypeVar("QuantConnect_Brokerages__EventContainer_Callable")
 QuantConnect_Brokerages__EventContainer_ReturnType = typing.TypeVar("QuantConnect_Brokerages__EventContainer_ReturnType")
+
+
+class WebSocketError(System.Object):
+    """Defines data returned from a web socket error"""
+
+    @property
+    def message(self) -> str:
+        """Gets the message"""
+        ...
+
+    @property
+    def exception(self) -> System.Exception:
+        """Gets the exception raised"""
+        ...
+
+    def __init__(self, message: str, exception: System.Exception) -> None:
+        """
+        Initializes a new instance of the WebSocketError class
+        
+        :param message: The message
+        :param exception: The error
+        """
+        ...
 
 
 class WebSocketCloseData(System.Object):
@@ -56,29 +79,6 @@ class WebSocketCloseData(System.Object):
         :param code: The status code for the connection close
         :param reason: The reaspn for the connection close
         :param was_clean: True if the connection has been closed cleanly, false otherwise
-        """
-        ...
-
-
-class WebSocketError(System.Object):
-    """Defines data returned from a web socket error"""
-
-    @property
-    def message(self) -> str:
-        """Gets the message"""
-        ...
-
-    @property
-    def exception(self) -> System.Exception:
-        """Gets the exception raised"""
-        ...
-
-    def __init__(self, message: str, exception: System.Exception) -> None:
-        """
-        Initializes a new instance of the WebSocketError class
-        
-        :param message: The message
-        :param exception: The error
         """
         ...
 
@@ -328,6 +328,154 @@ class WebSocketMessage(System.Object):
         ...
 
 
+class BrokerageMultiWebSocketSubscriptionManager(QuantConnect.Data.EventBasedDataQueueHandlerSubscriptionManager, System.IDisposable):
+    """Handles brokerage data subscriptions with multiple websocket connections, with optional symbol weighting"""
+
+    def __init__(self, web_socket_url: str, maximum_symbols_per_web_socket: int, maximum_web_socket_connections: int, symbol_weights: System.Collections.Generic.Dictionary[QuantConnect.Symbol, int], web_socket_factory: typing.Callable[[], QuantConnect.Brokerages.WebSocketClientWrapper], subscribe_func: typing.Callable[[QuantConnect.Brokerages.IWebSocket, QuantConnect.Symbol], bool], unsubscribe_func: typing.Callable[[QuantConnect.Brokerages.IWebSocket, QuantConnect.Symbol], bool], message_handler: typing.Callable[[QuantConnect.Brokerages.WebSocketMessage], None], web_socket_connection_duration: datetime.timedelta, connection_rate_limiter: QuantConnect.Util.RateGate = None) -> None:
+        """
+        Initializes a new instance of the BrokerageMultiWebSocketSubscriptionManager class
+        
+        :param web_socket_url: The URL for websocket connections
+        :param maximum_symbols_per_web_socket: The maximum number of symbols per websocket connection
+        :param maximum_web_socket_connections: The maximum number of websocket connections allowed (if zero, symbol weighting is disabled)
+        :param symbol_weights: A dictionary for the symbol weights
+        :param web_socket_factory: A function which returns a new websocket instance
+        :param subscribe_func: A function which subscribes a symbol
+        :param unsubscribe_func: A function which unsubscribes a symbol
+        :param message_handler: The websocket message handler
+        :param web_socket_connection_duration: The maximum duration of the websocket connection, TimeSpan.Zero for no duration limit
+        :param connection_rate_limiter: The rate limiter for creating new websocket connections
+        """
+        ...
+
+    def dispose(self) -> None:
+        """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
+        ...
+
+    def subscribe(self, symbols: typing.List[QuantConnect.Symbol], tick_type: QuantConnect.TickType) -> bool:
+        """
+        Subscribes to the symbols
+        
+        This method is protected.
+        
+        :param symbols: Symbols to subscribe
+        :param tick_type: Type of tick data
+        """
+        ...
+
+    def unsubscribe(self, symbols: typing.List[QuantConnect.Symbol], tick_type: QuantConnect.TickType) -> bool:
+        """
+        Unsubscribes from the symbols
+        
+        This method is protected.
+        
+        :param symbols: Symbols to subscribe
+        :param tick_type: Type of tick data
+        """
+        ...
+
+
+class BrokerageException(System.Exception):
+    """Represents an error retuned from a broker's server"""
+
+    @overload
+    def __init__(self, message: str) -> None:
+        """
+        Creates a new BrokerageException with the specified message.
+        
+        :param message: The error message that explains the reason for the exception.
+        """
+        ...
+
+    @overload
+    def __init__(self, message: str, inner: System.Exception) -> None:
+        """
+        Creates a new BrokerageException with the specified message.
+        
+        :param message: The error message that explains the reason for the exception.
+        :param inner: The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.
+        """
+        ...
+
+
+class OptionNotificationEventArgs(System.EventArgs):
+    """Event arguments class for the IBrokerage.OptionNotification event"""
+
+    @property
+    def symbol(self) -> QuantConnect.Symbol:
+        """Gets the option symbol which has received a notification"""
+        ...
+
+    @property
+    def position(self) -> float:
+        """Gets the new option position (positive for long, zero for flat, negative for short)"""
+        ...
+
+    @property
+    def tag(self) -> str:
+        """The tag that will be used in the order"""
+        ...
+
+    @overload
+    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], position: float) -> None:
+        """
+        Initializes a new instance of the OptionNotificationEventArgs class
+        
+        :param symbol: The symbol
+        :param position: The new option position
+        """
+        ...
+
+    @overload
+    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], position: float, tag: str) -> None:
+        """
+        Initializes a new instance of the OptionNotificationEventArgs class
+        
+        :param symbol: The symbol
+        :param position: The new option position
+        :param tag: The tag to be used for the order
+        """
+        ...
+
+    def to_string(self) -> str:
+        """Returns the string representation of this event"""
+        ...
+
+
+class NewBrokerageOrderNotificationEventArgs(System.Object):
+    """Event arguments class for the IBrokerage.NewBrokerageOrderNotification event"""
+
+    @property
+    def order(self) -> QuantConnect.Orders.Order:
+        """The new brokerage side generated order"""
+        ...
+
+    @order.setter
+    def order(self, value: QuantConnect.Orders.Order) -> None:
+        ...
+
+    def __init__(self, order: QuantConnect.Orders.Order) -> None:
+        """Creates a new instance"""
+        ...
+
+
+class DelistingNotificationEventArgs(System.Object):
+    """Event arguments class for the IBrokerage.DelistingNotification event"""
+
+    @property
+    def symbol(self) -> QuantConnect.Symbol:
+        """Gets the option symbol which has received a notification"""
+        ...
+
+    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
+        """
+        Initializes a new instance of the DelistingNotificationEventArgs class
+        
+        :param symbol: The symbol
+        """
+        ...
+
+
 class BrokerageMessageType(Enum):
     """Specifies the type of message received from an IBrokerage implementation"""
 
@@ -412,866 +560,6 @@ class BrokerageMessageEvent(System.Object):
         Returns a string that represents the current object.
         
         :returns: A string that represents the current object.
-        """
-        ...
-
-
-class IBrokerageModel(metaclass=abc.ABCMeta):
-    """Models brokerage transactions, fees, and order"""
-
-    @property
-    @abc.abstractmethod
-    def account_type(self) -> QuantConnect.AccountType:
-        """Gets the account type used by this model"""
-        ...
-
-    @property
-    @abc.abstractmethod
-    def required_free_buying_power_percent(self) -> float:
-        """
-        Gets the brokerages model percentage factor used to determine the required unused buying power for the account.
-        From 1 to 0. Example: 0 means no unused buying power is required. 0.5 means 50% of the buying power should be left unused.
-        """
-        ...
-
-    @property
-    @abc.abstractmethod
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def apply_split(self, tickets: typing.List[QuantConnect.Orders.OrderTicket], split: QuantConnect.Data.Market.Split) -> None:
-        """
-        Applies the split to the specified order ticket
-        
-        :param tickets: The open tickets matching the split event
-        :param split: The split event data
-        """
-        ...
-
-    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
-        """
-        Returns true if the brokerage would be able to execute this order at this time assuming
-        market prices are sufficient for the fill to take place. This is used to emulate the
-        brokerage fills in backtesting and paper trading. For example some brokerages may not perform
-        executions during extended market hours. This is not intended to be checking whether or not
-        the exchange is open, that is handled in the Security.Exchange property.
-        
-        :param security: The security being ordered
-        :param order: The order to test for execution
-        :returns: True if the brokerage would be able to perform the execution, false otherwise.
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security being ordered
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage would allow updating the order as specified by the request
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The requested updated to be made to the order
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the brokerage would allow updating the order, false otherwise.
-        """
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    @overload
-    def get_buying_power_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IBuyingPowerModel:
-        """
-        Gets a new buying power model for the security
-        
-        :param security: The security to get a buying power model for
-        :returns: The buying power model for this brokerage/security.
-        """
-        ...
-
-    @overload
-    def get_buying_power_model(self, security: QuantConnect.Securities.Security, account_type: QuantConnect.AccountType) -> QuantConnect.Securities.IBuyingPowerModel:
-        """
-        Gets a new buying power model for the security
-        
-        Flagged deprecated and will remove December 1st 2018
-        
-        :param security: The security to get a buying power model for
-        :param account_type: The account type
-        :returns: The buying power model for this brokerage/security.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Gets a new fee model that represents this brokerage's fee structure
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-    def get_fill_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fills.IFillModel:
-        """
-        Gets a new fill model that represents this brokerage's fill behavior
-        
-        :param security: The security to get fill model for
-        :returns: The new fill model for this brokerage.
-        """
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """
-        Gets the brokerage's leverage for the specified security
-        
-        :param security: The security's whose leverage we seek
-        :returns: The leverage for the specified security.
-        """
-        ...
-
-    def get_margin_interest_rate_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IMarginInterestRateModel:
-        """
-        Gets a new margin interest rate model for the security
-        
-        :param security: The security to get a margin interest rate model for
-        :returns: The margin interest rate model for this brokerage.
-        """
-        ...
-
-    @overload
-    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
-        """
-        Gets a new settlement model for the security
-        
-        :param security: The security to get a settlement model for
-        :returns: The settlement model for this brokerage.
-        """
-        ...
-
-    @overload
-    def get_settlement_model(self, security: QuantConnect.Securities.Security, account_type: QuantConnect.AccountType) -> QuantConnect.Securities.ISettlementModel:
-        """
-        Gets a new settlement model for the security
-        
-        Flagged deprecated and will remove December 1st 2018
-        
-        :param security: The security to get a settlement model for
-        :param account_type: The account type
-        :returns: The settlement model for this brokerage.
-        """
-        ...
-
-    def get_shortable_provider(self, security: QuantConnect.Securities.Security) -> QuantConnect.Interfaces.IShortableProvider:
-        """
-        Gets the shortable provider
-        
-        :returns: Shortable provider.
-        """
-        ...
-
-    def get_slippage_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Slippage.ISlippageModel:
-        """
-        Gets a new slippage model that represents this brokerage's fill slippage behavior
-        
-        :param security: The security to get a slippage model for
-        :returns: The new slippage model for this brokerage.
-        """
-        ...
-
-
-class NewBrokerageOrderNotificationEventArgs(System.Object):
-    """Event arguments class for the IBrokerage.NewBrokerageOrderNotification event"""
-
-    @property
-    def order(self) -> QuantConnect.Orders.Order:
-        """The new brokerage side generated order"""
-        ...
-
-    @order.setter
-    def order(self, value: QuantConnect.Orders.Order) -> None:
-        ...
-
-    def __init__(self, order: QuantConnect.Orders.Order) -> None:
-        """Creates a new instance"""
-        ...
-
-
-class IBrokerageMessageHandler(metaclass=abc.ABCMeta):
-    """
-    Provides an plugin point to allow algorithms to directly handle the messages
-    that come from their brokerage
-    """
-
-    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
-        """
-        Handles the message
-        
-        :param message: The message to be handled
-        """
-        ...
-
-    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
-        """
-        Handles a new order placed manually in the brokerage side
-        
-        :param event_args: The new order event
-        :returns: Whether the order should be added to the transaction handler.
-        """
-        ...
-
-
-class BrokerageFactory(System.Object, QuantConnect.Interfaces.IBrokerageFactory, metaclass=abc.ABCMeta):
-    """Provides a base implementation of IBrokerageFactory that provides a helper for reading data from a job's brokerage data dictionary"""
-
-    @property
-    def brokerage_type(self) -> typing.Type:
-        """Gets the type of brokerage produced by this factory"""
-        ...
-
-    @property
-    @abc.abstractmethod
-    def brokerage_data(self) -> System.Collections.Generic.Dictionary[str, str]:
-        """Gets the brokerage data required to run the brokerage from configuration/disk"""
-        ...
-
-    def __init__(self, brokerage_type: typing.Type) -> None:
-        """
-        Initializes a new instance of the BrokerageFactory class for the specified
-        
-        This method is protected.
-        
-        :param brokerage_type: The type of brokerage created by this factory
-        """
-        ...
-
-    def create_brokerage(self, job: QuantConnect.Packets.LiveNodePacket, algorithm: QuantConnect.Interfaces.IAlgorithm) -> QuantConnect.Interfaces.IBrokerage:
-        """
-        Creates a new IBrokerage instance
-        
-        :param job: The job packet to create the brokerage for
-        :param algorithm: The algorithm instance
-        :returns: A new brokerage instance.
-        """
-        ...
-
-    def create_brokerage_message_handler(self, algorithm: QuantConnect.Interfaces.IAlgorithm, job: QuantConnect.Packets.AlgorithmNodePacket, api: QuantConnect.Interfaces.IApi) -> QuantConnect.Brokerages.IBrokerageMessageHandler:
-        """Gets a brokerage message handler"""
-        ...
-
-    def dispose(self) -> None:
-        """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
-        ...
-
-    def get_brokerage_model(self, order_provider: QuantConnect.Securities.IOrderProvider) -> QuantConnect.Brokerages.IBrokerageModel:
-        """
-        Gets a brokerage model that can be used to model this brokerage's unique behaviors
-        
-        :param order_provider: The order provider
-        """
-        ...
-
-
-class ISymbolMapper(metaclass=abc.ABCMeta):
-    """Provides the mapping between Lean symbols and brokerage specific symbols."""
-
-    def get_brokerage_symbol(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> str:
-        """
-        Converts a Lean symbol instance to a brokerage symbol
-        
-        :param symbol: A Lean symbol instance
-        :returns: The brokerage symbol.
-        """
-        ...
-
-    def get_lean_symbol(self, brokerage_symbol: str, security_type: QuantConnect.SecurityType, market: str, expiration_date: typing.Union[datetime.datetime, datetime.date] = ..., strike: float = 0, option_right: QuantConnect.OptionRight = 0) -> QuantConnect.Symbol:
-        """
-        Converts a brokerage symbol to a Lean symbol instance
-        
-        :param brokerage_symbol: The brokerage symbol
-        :param security_type: The security type
-        :param market: The market
-        :param expiration_date: Expiration date of the security(if applicable)
-        :param strike: The strike of the security (if applicable)
-        :param option_right: The option right of the security (if applicable)
-        :returns: A new Lean Symbol instance.
-        """
-        ...
-
-
-class IConnectionHandler(System.IDisposable, metaclass=abc.ABCMeta):
-    """Provides handling of a brokerage or data feed connection"""
-
-    @property
-    @abc.abstractmethod
-    def connection_lost(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
-        """Event that fires when a connection loss is detected"""
-        ...
-
-    @connection_lost.setter
-    def connection_lost(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def connection_restored(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
-        """Event that fires when a lost connection is restored"""
-        ...
-
-    @connection_restored.setter
-    def connection_restored(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def reconnect_requested(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
-        """Event that fires when a reconnection attempt is required"""
-        ...
-
-    @reconnect_requested.setter
-    def reconnect_requested(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def is_connection_lost(self) -> bool:
-        """Returns true if the connection has been lost"""
-        ...
-
-    def enable_monitoring(self, is_enabled: bool) -> None:
-        """
-        Enables/disables monitoring of the connection
-        
-        :param is_enabled: True to enable monitoring, false otherwise
-        """
-        ...
-
-    def initialize(self, connection_id: str) -> None:
-        """
-        Initializes the connection handler
-        
-        :param connection_id: The connection id
-        """
-        ...
-
-    def keep_alive(self, last_data_received_time: typing.Union[datetime.datetime, datetime.date]) -> None:
-        """
-        Notifies the connection handler that new data was received
-        
-        :param last_data_received_time: The UTC timestamp of the last data point received
-        """
-        ...
-
-
-class DefaultConnectionHandler(System.Object, QuantConnect.Brokerages.IConnectionHandler):
-    """
-    A default implementation of IConnectionHandler
-    which signals disconnection if no data is received for a given time span
-    and attempts to reconnect automatically.
-    """
-
-    @property
-    def connection_lost(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
-        """Event that fires when a connection loss is detected"""
-        ...
-
-    @connection_lost.setter
-    def connection_lost(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
-        ...
-
-    @property
-    def connection_restored(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
-        """Event that fires when a lost connection is restored"""
-        ...
-
-    @connection_restored.setter
-    def connection_restored(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
-        ...
-
-    @property
-    def reconnect_requested(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
-        """Event that fires when a reconnection attempt is required"""
-        ...
-
-    @reconnect_requested.setter
-    def reconnect_requested(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
-        ...
-
-    @property
-    def maximum_idle_time_span(self) -> datetime.timedelta:
-        """The elapsed time with no received data after which a connection loss is reported"""
-        ...
-
-    @maximum_idle_time_span.setter
-    def maximum_idle_time_span(self, value: datetime.timedelta) -> None:
-        ...
-
-    @property
-    def minimum_seconds_for_next_reconnection_attempt(self) -> int:
-        """The minimum time in seconds to wait before attempting to reconnect"""
-        ...
-
-    @minimum_seconds_for_next_reconnection_attempt.setter
-    def minimum_seconds_for_next_reconnection_attempt(self, value: int) -> None:
-        ...
-
-    @property
-    def maximum_seconds_for_next_reconnection_attempt(self) -> int:
-        """The maximum time in seconds to wait before attempting to reconnect"""
-        ...
-
-    @maximum_seconds_for_next_reconnection_attempt.setter
-    def maximum_seconds_for_next_reconnection_attempt(self, value: int) -> None:
-        ...
-
-    @property
-    def connection_id(self) -> str:
-        """The unique Id for the connection"""
-        ...
-
-    @property
-    def is_connection_lost(self) -> bool:
-        """Returns true if the connection has been lost"""
-        ...
-
-    def dispose(self) -> None:
-        """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
-        ...
-
-    def enable_monitoring(self, is_enabled: bool) -> None:
-        """
-        Enables/disables monitoring of the connection
-        
-        :param is_enabled: True to enable monitoring, false otherwise
-        """
-        ...
-
-    def initialize(self, connection_id: str) -> None:
-        """
-        Initializes the connection handler
-        
-        :param connection_id: The connection id
-        """
-        ...
-
-    def keep_alive(self, last_data_received_time: typing.Union[datetime.datetime, datetime.date]) -> None:
-        """
-        Notifies the connection handler that new data was received
-        
-        :param last_data_received_time: The UTC timestamp of the last data point received
-        """
-        ...
-
-    def on_connection_lost(self) -> None:
-        """
-        Event invocator for the ConnectionLost event
-        
-        This method is protected.
-        """
-        ...
-
-    def on_connection_restored(self) -> None:
-        """
-        Event invocator for the ConnectionRestored event
-        
-        This method is protected.
-        """
-        ...
-
-    def on_reconnect_requested(self) -> None:
-        """
-        Event invocator for the ReconnectRequested event
-        
-        This method is protected.
-        """
-        ...
-
-
-class BestBidAskUpdatedEventArgs(System.EventArgs):
-    """Event arguments class for the DefaultOrderBook.BestBidAskUpdated event"""
-
-    @property
-    def symbol(self) -> QuantConnect.Symbol:
-        """Gets the new best bid price"""
-        ...
-
-    @property
-    def best_bid_price(self) -> float:
-        """Gets the new best bid price"""
-        ...
-
-    @property
-    def best_bid_size(self) -> float:
-        """Gets the new best bid size"""
-        ...
-
-    @property
-    def best_ask_price(self) -> float:
-        """Gets the new best ask price"""
-        ...
-
-    @property
-    def best_ask_size(self) -> float:
-        """Gets the new best ask size"""
-        ...
-
-    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], best_bid_price: float, best_bid_size: float, best_ask_price: float, best_ask_size: float) -> None:
-        """
-        Initializes a new instance of the BestBidAskUpdatedEventArgs class
-        
-        :param symbol: The symbol
-        :param best_bid_price: The newly updated best bid price
-        :param best_bid_size: >The newly updated best bid size
-        :param best_ask_price: The newly updated best ask price
-        :param best_ask_size: The newly updated best ask size
-        """
-        ...
-
-
-class DefaultOrderBook(System.Object, QuantConnect.Brokerages.IOrderBookUpdater[float, float]):
-    """
-    Represents a full order book for a security.
-    It contains prices and order sizes for each bid and ask level.
-    The best bid and ask prices are also kept up to date.
-    """
-
-    @property
-    def bids(self) -> System.Collections.Generic.SortedDictionary[float, float]:
-        """
-        Represents bid prices and sizes
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def asks(self) -> System.Collections.Generic.SortedDictionary[float, float]:
-        """
-        Represents ask prices and sizes
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def symbol(self) -> QuantConnect.Symbol:
-        """Represents a unique security identifier of current Order Book"""
-        ...
-
-    @property
-    def best_bid_ask_updated(self) -> _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]:
-        """Event fired each time BestBidPrice or BestAskPrice are changed"""
-        ...
-
-    @best_bid_ask_updated.setter
-    def best_bid_ask_updated(self, value: _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]) -> None:
-        ...
-
-    @property
-    def best_bid_price(self) -> float:
-        """The best bid price"""
-        ...
-
-    @property
-    def best_bid_size(self) -> float:
-        """The best bid size"""
-        ...
-
-    @property
-    def best_ask_price(self) -> float:
-        """The best ask price"""
-        ...
-
-    @property
-    def best_ask_size(self) -> float:
-        """The best ask size"""
-        ...
-
-    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
-        """
-        Initializes a new instance of the DefaultOrderBook class
-        
-        :param symbol: The symbol for the order book
-        """
-        ...
-
-    def clear(self) -> None:
-        """Clears all bid/ask levels and prices."""
-        ...
-
-    def remove_ask_row(self, price: float) -> None:
-        """
-        Removes an ask price level from the order book
-        
-        :param price: The ask price level to be removed
-        """
-        ...
-
-    def remove_bid_row(self, price: float) -> None:
-        """
-        Removes a bid price level from the order book
-        
-        :param price: The bid price level to be removed
-        """
-        ...
-
-    def remove_price_level(self, price_level: float) -> None:
-        """Common price level removal method"""
-        ...
-
-    def update_ask_row(self, price: float, size: float) -> None:
-        """
-        Updates or inserts an ask price level in the order book
-        
-        :param price: The ask price level to be inserted or updated
-        :param size: The new size at the ask price level
-        """
-        ...
-
-    def update_bid_row(self, price: float, size: float) -> None:
-        """
-        Updates or inserts a bid price level in the order book
-        
-        :param price: The bid price level to be inserted or updated
-        :param size: The new size at the bid price level
-        """
-        ...
-
-
-class BrokerageMultiWebSocketEntry(System.Object):
-    """Helper class for BrokerageMultiWebSocketSubscriptionManager"""
-
-    @property
-    def web_socket(self) -> QuantConnect.Brokerages.IWebSocket:
-        """Gets the web socket instance"""
-        ...
-
-    @property
-    def total_weight(self) -> int:
-        """Gets the sum of symbol weights for this web socket"""
-        ...
-
-    @property
-    def symbol_count(self) -> int:
-        """Gets the number of symbols subscribed"""
-        ...
-
-    @property
-    def symbols(self) -> typing.Sequence[QuantConnect.Symbol]:
-        """Returns the list of subscribed symbols"""
-        ...
-
-    @overload
-    def __init__(self, symbol_weights: System.Collections.Generic.Dictionary[QuantConnect.Symbol, int], web_socket: QuantConnect.Brokerages.IWebSocket) -> None:
-        """
-        Initializes a new instance of the BrokerageMultiWebSocketEntry class
-        
-        :param symbol_weights: A dictionary of symbol weights
-        :param web_socket: The web socket instance
-        """
-        ...
-
-    @overload
-    def __init__(self, web_socket: QuantConnect.Brokerages.IWebSocket) -> None:
-        """
-        Initializes a new instance of the BrokerageMultiWebSocketEntry class
-        
-        :param web_socket: The web socket instance
-        """
-        ...
-
-    def add_symbol(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
-        """
-        Adds a symbol to the entry
-        
-        :param symbol: The symbol to add
-        """
-        ...
-
-    def contains(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> bool:
-        """Returns whether the symbol is subscribed"""
-        ...
-
-    def remove_symbol(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
-        """
-        Removes a symbol from the entry
-        
-        :param symbol: The symbol to remove
-        """
-        ...
-
-
-class BrokerageConcurrentMessageHandler(typing.Generic[QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T], System.Object):
-    """Brokerage helper class to lock message stream while executing an action, for example placing an order"""
-
-    def __init__(self, process_messages: typing.Callable[[QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T], None]) -> None:
-        """
-        Creates a new instance
-        
-        :param process_messages: The action to call for each new message
-        """
-        ...
-
-    def handle_new_message(self, message: QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T) -> None:
-        """
-        Will process or enqueue a message for later processing it
-        
-        :param message: The new message
-        """
-        ...
-
-    def with_locked_stream(self, code: typing.Callable[[], None]) -> None:
-        """Lock the streaming processing while we're sending orders as sometimes they fill before the call returns."""
-        ...
-
-
-class BrokerageException(System.Exception):
-    """Represents an error retuned from a broker's server"""
-
-    @overload
-    def __init__(self, message: str) -> None:
-        """
-        Creates a new BrokerageException with the specified message.
-        
-        :param message: The error message that explains the reason for the exception.
-        """
-        ...
-
-    @overload
-    def __init__(self, message: str, inner: System.Exception) -> None:
-        """
-        Creates a new BrokerageException with the specified message.
-        
-        :param message: The error message that explains the reason for the exception.
-        :param inner: The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.
-        """
-        ...
-
-
-class IOrderBookUpdater(typing.Generic[QuantConnect_Brokerages_IOrderBookUpdater_K, QuantConnect_Brokerages_IOrderBookUpdater_V], metaclass=abc.ABCMeta):
-    """
-    Represents an orderbook updater interface for a security.
-    Provides the ability to update orderbook price level and to be alerted about updates
-    """
-
-    @property
-    @abc.abstractmethod
-    def best_bid_ask_updated(self) -> _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]:
-        """Event fired each time BestBidPrice or BestAskPrice are changed"""
-        ...
-
-    @best_bid_ask_updated.setter
-    def best_bid_ask_updated(self, value: _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]) -> None:
-        ...
-
-    def remove_ask_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K) -> None:
-        """
-        Removes an ask price level from the order book
-        
-        :param price: The ask price level to be removed
-        """
-        ...
-
-    def remove_bid_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K) -> None:
-        """
-        Removes a bid price level from the order book
-        
-        :param price: The bid price level to be removed
-        """
-        ...
-
-    def update_ask_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K, size: QuantConnect_Brokerages_IOrderBookUpdater_V) -> None:
-        """
-        Updates or inserts an ask price level in the order book
-        
-        :param price: The ask price level to be inserted or updated
-        :param size: The new size at the ask price level
-        """
-        ...
-
-    def update_bid_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K, size: QuantConnect_Brokerages_IOrderBookUpdater_V) -> None:
-        """
-        Updates or inserts a bid price level in the order book
-        
-        :param price: The bid price level to be inserted or updated
-        :param size: The new size at the bid price level
-        """
-        ...
-
-
-class OptionNotificationEventArgs(System.EventArgs):
-    """Event arguments class for the IBrokerage.OptionNotification event"""
-
-    @property
-    def symbol(self) -> QuantConnect.Symbol:
-        """Gets the option symbol which has received a notification"""
-        ...
-
-    @property
-    def position(self) -> float:
-        """Gets the new option position (positive for long, zero for flat, negative for short)"""
-        ...
-
-    @property
-    def tag(self) -> str:
-        """The tag that will be used in the order"""
-        ...
-
-    @overload
-    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], position: float) -> None:
-        """
-        Initializes a new instance of the OptionNotificationEventArgs class
-        
-        :param symbol: The symbol
-        :param position: The new option position
-        """
-        ...
-
-    @overload
-    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], position: float, tag: str) -> None:
-        """
-        Initializes a new instance of the OptionNotificationEventArgs class
-        
-        :param symbol: The symbol
-        :param position: The new option position
-        :param tag: The tag to be used for the order
-        """
-        ...
-
-    def to_string(self) -> str:
-        """Returns the string representation of this event"""
-        ...
-
-
-class DelistingNotificationEventArgs(System.Object):
-    """Event arguments class for the IBrokerage.DelistingNotification event"""
-
-    @property
-    def symbol(self) -> QuantConnect.Symbol:
-        """Gets the option symbol which has received a notification"""
-        ...
-
-    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
-        """
-        Initializes a new instance of the DelistingNotificationEventArgs class
-        
-        :param symbol: The symbol
         """
         ...
 
@@ -1710,6 +998,527 @@ class Brokerage(System.Object, QuantConnect.Interfaces.IBrokerage, metaclass=abc
         ...
 
 
+class IConnectionHandler(System.IDisposable, metaclass=abc.ABCMeta):
+    """Provides handling of a brokerage or data feed connection"""
+
+    @property
+    @abc.abstractmethod
+    def connection_lost(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
+        """Event that fires when a connection loss is detected"""
+        ...
+
+    @connection_lost.setter
+    def connection_lost(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def connection_restored(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
+        """Event that fires when a lost connection is restored"""
+        ...
+
+    @connection_restored.setter
+    def connection_restored(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def reconnect_requested(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
+        """Event that fires when a reconnection attempt is required"""
+        ...
+
+    @reconnect_requested.setter
+    def reconnect_requested(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def is_connection_lost(self) -> bool:
+        """Returns true if the connection has been lost"""
+        ...
+
+    def enable_monitoring(self, is_enabled: bool) -> None:
+        """
+        Enables/disables monitoring of the connection
+        
+        :param is_enabled: True to enable monitoring, false otherwise
+        """
+        ...
+
+    def initialize(self, connection_id: str) -> None:
+        """
+        Initializes the connection handler
+        
+        :param connection_id: The connection id
+        """
+        ...
+
+    def keep_alive(self, last_data_received_time: typing.Union[datetime.datetime, datetime.date]) -> None:
+        """
+        Notifies the connection handler that new data was received
+        
+        :param last_data_received_time: The UTC timestamp of the last data point received
+        """
+        ...
+
+
+class BestBidAskUpdatedEventArgs(System.EventArgs):
+    """Event arguments class for the DefaultOrderBook.BestBidAskUpdated event"""
+
+    @property
+    def symbol(self) -> QuantConnect.Symbol:
+        """Gets the new best bid price"""
+        ...
+
+    @property
+    def best_bid_price(self) -> float:
+        """Gets the new best bid price"""
+        ...
+
+    @property
+    def best_bid_size(self) -> float:
+        """Gets the new best bid size"""
+        ...
+
+    @property
+    def best_ask_price(self) -> float:
+        """Gets the new best ask price"""
+        ...
+
+    @property
+    def best_ask_size(self) -> float:
+        """Gets the new best ask size"""
+        ...
+
+    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], best_bid_price: float, best_bid_size: float, best_ask_price: float, best_ask_size: float) -> None:
+        """
+        Initializes a new instance of the BestBidAskUpdatedEventArgs class
+        
+        :param symbol: The symbol
+        :param best_bid_price: The newly updated best bid price
+        :param best_bid_size: >The newly updated best bid size
+        :param best_ask_price: The newly updated best ask price
+        :param best_ask_size: The newly updated best ask size
+        """
+        ...
+
+
+class DefaultOrderBook(System.Object, QuantConnect.Brokerages.IOrderBookUpdater[float, float]):
+    """
+    Represents a full order book for a security.
+    It contains prices and order sizes for each bid and ask level.
+    The best bid and ask prices are also kept up to date.
+    """
+
+    @property
+    def bids(self) -> System.Collections.Generic.SortedDictionary[float, float]:
+        """
+        Represents bid prices and sizes
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def asks(self) -> System.Collections.Generic.SortedDictionary[float, float]:
+        """
+        Represents ask prices and sizes
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def symbol(self) -> QuantConnect.Symbol:
+        """Represents a unique security identifier of current Order Book"""
+        ...
+
+    @property
+    def best_bid_ask_updated(self) -> _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]:
+        """Event fired each time BestBidPrice or BestAskPrice are changed"""
+        ...
+
+    @best_bid_ask_updated.setter
+    def best_bid_ask_updated(self, value: _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]) -> None:
+        ...
+
+    @property
+    def best_bid_price(self) -> float:
+        """The best bid price"""
+        ...
+
+    @property
+    def best_bid_size(self) -> float:
+        """The best bid size"""
+        ...
+
+    @property
+    def best_ask_price(self) -> float:
+        """The best ask price"""
+        ...
+
+    @property
+    def best_ask_size(self) -> float:
+        """The best ask size"""
+        ...
+
+    def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
+        """
+        Initializes a new instance of the DefaultOrderBook class
+        
+        :param symbol: The symbol for the order book
+        """
+        ...
+
+    def clear(self) -> None:
+        """Clears all bid/ask levels and prices."""
+        ...
+
+    def remove_ask_row(self, price: float) -> None:
+        """
+        Removes an ask price level from the order book
+        
+        :param price: The ask price level to be removed
+        """
+        ...
+
+    def remove_bid_row(self, price: float) -> None:
+        """
+        Removes a bid price level from the order book
+        
+        :param price: The bid price level to be removed
+        """
+        ...
+
+    def remove_price_level(self, price_level: float) -> None:
+        """Common price level removal method"""
+        ...
+
+    def update_ask_row(self, price: float, size: float) -> None:
+        """
+        Updates or inserts an ask price level in the order book
+        
+        :param price: The ask price level to be inserted or updated
+        :param size: The new size at the ask price level
+        """
+        ...
+
+    def update_bid_row(self, price: float, size: float) -> None:
+        """
+        Updates or inserts a bid price level in the order book
+        
+        :param price: The bid price level to be inserted or updated
+        :param size: The new size at the bid price level
+        """
+        ...
+
+
+class IBrokerageModel(metaclass=abc.ABCMeta):
+    """Models brokerage transactions, fees, and order"""
+
+    @property
+    @abc.abstractmethod
+    def account_type(self) -> QuantConnect.AccountType:
+        """Gets the account type used by this model"""
+        ...
+
+    @property
+    @abc.abstractmethod
+    def required_free_buying_power_percent(self) -> float:
+        """
+        Gets the brokerages model percentage factor used to determine the required unused buying power for the account.
+        From 1 to 0. Example: 0 means no unused buying power is required. 0.5 means 50% of the buying power should be left unused.
+        """
+        ...
+
+    @property
+    @abc.abstractmethod
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def apply_split(self, tickets: typing.List[QuantConnect.Orders.OrderTicket], split: QuantConnect.Data.Market.Split) -> None:
+        """
+        Applies the split to the specified order ticket
+        
+        :param tickets: The open tickets matching the split event
+        :param split: The split event data
+        """
+        ...
+
+    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
+        """
+        Returns true if the brokerage would be able to execute this order at this time assuming
+        market prices are sufficient for the fill to take place. This is used to emulate the
+        brokerage fills in backtesting and paper trading. For example some brokerages may not perform
+        executions during extended market hours. This is not intended to be checking whether or not
+        the exchange is open, that is handled in the Security.Exchange property.
+        
+        :param security: The security being ordered
+        :param order: The order to test for execution
+        :returns: True if the brokerage would be able to perform the execution, false otherwise.
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security being ordered
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage would allow updating the order as specified by the request
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested updated to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage would allow updating the order, false otherwise.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    @overload
+    def get_buying_power_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IBuyingPowerModel:
+        """
+        Gets a new buying power model for the security
+        
+        :param security: The security to get a buying power model for
+        :returns: The buying power model for this brokerage/security.
+        """
+        ...
+
+    @overload
+    def get_buying_power_model(self, security: QuantConnect.Securities.Security, account_type: QuantConnect.AccountType) -> QuantConnect.Securities.IBuyingPowerModel:
+        """
+        Gets a new buying power model for the security
+        
+        Flagged deprecated and will remove December 1st 2018
+        
+        :param security: The security to get a buying power model for
+        :param account_type: The account type
+        :returns: The buying power model for this brokerage/security.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Gets a new fee model that represents this brokerage's fee structure
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+    def get_fill_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fills.IFillModel:
+        """
+        Gets a new fill model that represents this brokerage's fill behavior
+        
+        :param security: The security to get fill model for
+        :returns: The new fill model for this brokerage.
+        """
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """
+        Gets the brokerage's leverage for the specified security
+        
+        :param security: The security's whose leverage we seek
+        :returns: The leverage for the specified security.
+        """
+        ...
+
+    def get_margin_interest_rate_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IMarginInterestRateModel:
+        """
+        Gets a new margin interest rate model for the security
+        
+        :param security: The security to get a margin interest rate model for
+        :returns: The margin interest rate model for this brokerage.
+        """
+        ...
+
+    @overload
+    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
+        """
+        Gets a new settlement model for the security
+        
+        :param security: The security to get a settlement model for
+        :returns: The settlement model for this brokerage.
+        """
+        ...
+
+    @overload
+    def get_settlement_model(self, security: QuantConnect.Securities.Security, account_type: QuantConnect.AccountType) -> QuantConnect.Securities.ISettlementModel:
+        """
+        Gets a new settlement model for the security
+        
+        Flagged deprecated and will remove December 1st 2018
+        
+        :param security: The security to get a settlement model for
+        :param account_type: The account type
+        :returns: The settlement model for this brokerage.
+        """
+        ...
+
+    def get_shortable_provider(self, security: QuantConnect.Securities.Security) -> QuantConnect.Interfaces.IShortableProvider:
+        """
+        Gets the shortable provider
+        
+        :returns: Shortable provider.
+        """
+        ...
+
+    def get_slippage_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Slippage.ISlippageModel:
+        """
+        Gets a new slippage model that represents this brokerage's fill slippage behavior
+        
+        :param security: The security to get a slippage model for
+        :returns: The new slippage model for this brokerage.
+        """
+        ...
+
+
+class IBrokerageMessageHandler(metaclass=abc.ABCMeta):
+    """
+    Provides an plugin point to allow algorithms to directly handle the messages
+    that come from their brokerage
+    """
+
+    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
+        """
+        Handles the message
+        
+        :param message: The message to be handled
+        """
+        ...
+
+    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
+        """
+        Handles a new order placed manually in the brokerage side
+        
+        :param event_args: The new order event
+        :returns: Whether the order should be added to the transaction handler.
+        """
+        ...
+
+
+class BrokerageFactory(System.Object, QuantConnect.Interfaces.IBrokerageFactory, metaclass=abc.ABCMeta):
+    """Provides a base implementation of IBrokerageFactory that provides a helper for reading data from a job's brokerage data dictionary"""
+
+    @property
+    def brokerage_type(self) -> typing.Type:
+        """Gets the type of brokerage produced by this factory"""
+        ...
+
+    @property
+    @abc.abstractmethod
+    def brokerage_data(self) -> System.Collections.Generic.Dictionary[str, str]:
+        """Gets the brokerage data required to run the brokerage from configuration/disk"""
+        ...
+
+    def __init__(self, brokerage_type: typing.Type) -> None:
+        """
+        Initializes a new instance of the BrokerageFactory class for the specified
+        
+        This method is protected.
+        
+        :param brokerage_type: The type of brokerage created by this factory
+        """
+        ...
+
+    def create_brokerage(self, job: QuantConnect.Packets.LiveNodePacket, algorithm: QuantConnect.Interfaces.IAlgorithm) -> QuantConnect.Interfaces.IBrokerage:
+        """
+        Creates a new IBrokerage instance
+        
+        :param job: The job packet to create the brokerage for
+        :param algorithm: The algorithm instance
+        :returns: A new brokerage instance.
+        """
+        ...
+
+    def create_brokerage_message_handler(self, algorithm: QuantConnect.Interfaces.IAlgorithm, job: QuantConnect.Packets.AlgorithmNodePacket, api: QuantConnect.Interfaces.IApi) -> QuantConnect.Brokerages.IBrokerageMessageHandler:
+        """Gets a brokerage message handler"""
+        ...
+
+    def dispose(self) -> None:
+        """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
+        ...
+
+    def get_brokerage_model(self, order_provider: QuantConnect.Securities.IOrderProvider) -> QuantConnect.Brokerages.IBrokerageModel:
+        """
+        Gets a brokerage model that can be used to model this brokerage's unique behaviors
+        
+        :param order_provider: The order provider
+        """
+        ...
+
+
+class IOrderBookUpdater(typing.Generic[QuantConnect_Brokerages_IOrderBookUpdater_K, QuantConnect_Brokerages_IOrderBookUpdater_V], metaclass=abc.ABCMeta):
+    """
+    Represents an orderbook updater interface for a security.
+    Provides the ability to update orderbook price level and to be alerted about updates
+    """
+
+    @property
+    @abc.abstractmethod
+    def best_bid_ask_updated(self) -> _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]:
+        """Event fired each time BestBidPrice or BestAskPrice are changed"""
+        ...
+
+    @best_bid_ask_updated.setter
+    def best_bid_ask_updated(self, value: _EventContainer[typing.Callable[[System.Object, QuantConnect.Brokerages.BestBidAskUpdatedEventArgs], None], None]) -> None:
+        ...
+
+    def remove_ask_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K) -> None:
+        """
+        Removes an ask price level from the order book
+        
+        :param price: The ask price level to be removed
+        """
+        ...
+
+    def remove_bid_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K) -> None:
+        """
+        Removes a bid price level from the order book
+        
+        :param price: The bid price level to be removed
+        """
+        ...
+
+    def update_ask_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K, size: QuantConnect_Brokerages_IOrderBookUpdater_V) -> None:
+        """
+        Updates or inserts an ask price level in the order book
+        
+        :param price: The ask price level to be inserted or updated
+        :param size: The new size at the ask price level
+        """
+        ...
+
+    def update_bid_row(self, price: QuantConnect_Brokerages_IOrderBookUpdater_K, size: QuantConnect_Brokerages_IOrderBookUpdater_V) -> None:
+        """
+        Updates or inserts a bid price level in the order book
+        
+        :param price: The bid price level to be inserted or updated
+        :param size: The new size at the bid price level
+        """
+        ...
+
+
 class BaseWebsocketsBrokerage(QuantConnect.Brokerages.Brokerage, metaclass=abc.ABCMeta):
     """Provides shared brokerage websockets implementation"""
 
@@ -1874,49 +1683,29 @@ class BaseWebsocketsBrokerage(QuantConnect.Brokerages.Brokerage, metaclass=abc.A
         ...
 
 
-class BrokerageMultiWebSocketSubscriptionManager(QuantConnect.Data.EventBasedDataQueueHandlerSubscriptionManager, System.IDisposable):
-    """Handles brokerage data subscriptions with multiple websocket connections, with optional symbol weighting"""
+class ISymbolMapper(metaclass=abc.ABCMeta):
+    """Provides the mapping between Lean symbols and brokerage specific symbols."""
 
-    def __init__(self, web_socket_url: str, maximum_symbols_per_web_socket: int, maximum_web_socket_connections: int, symbol_weights: System.Collections.Generic.Dictionary[QuantConnect.Symbol, int], web_socket_factory: typing.Callable[[], QuantConnect.Brokerages.WebSocketClientWrapper], subscribe_func: typing.Callable[[QuantConnect.Brokerages.IWebSocket, QuantConnect.Symbol], bool], unsubscribe_func: typing.Callable[[QuantConnect.Brokerages.IWebSocket, QuantConnect.Symbol], bool], message_handler: typing.Callable[[QuantConnect.Brokerages.WebSocketMessage], None], web_socket_connection_duration: datetime.timedelta, connection_rate_limiter: QuantConnect.Util.RateGate = None) -> None:
+    def get_brokerage_symbol(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> str:
         """
-        Initializes a new instance of the BrokerageMultiWebSocketSubscriptionManager class
+        Converts a Lean symbol instance to a brokerage symbol
         
-        :param web_socket_url: The URL for websocket connections
-        :param maximum_symbols_per_web_socket: The maximum number of symbols per websocket connection
-        :param maximum_web_socket_connections: The maximum number of websocket connections allowed (if zero, symbol weighting is disabled)
-        :param symbol_weights: A dictionary for the symbol weights
-        :param web_socket_factory: A function which returns a new websocket instance
-        :param subscribe_func: A function which subscribes a symbol
-        :param unsubscribe_func: A function which unsubscribes a symbol
-        :param message_handler: The websocket message handler
-        :param web_socket_connection_duration: The maximum duration of the websocket connection, TimeSpan.Zero for no duration limit
-        :param connection_rate_limiter: The rate limiter for creating new websocket connections
+        :param symbol: A Lean symbol instance
+        :returns: The brokerage symbol.
         """
         ...
 
-    def dispose(self) -> None:
-        """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
-        ...
-
-    def subscribe(self, symbols: typing.List[QuantConnect.Symbol], tick_type: QuantConnect.TickType) -> bool:
+    def get_lean_symbol(self, brokerage_symbol: str, security_type: QuantConnect.SecurityType, market: str, expiration_date: typing.Union[datetime.datetime, datetime.date] = ..., strike: float = 0, option_right: QuantConnect.OptionRight = 0) -> QuantConnect.Symbol:
         """
-        Subscribes to the symbols
+        Converts a brokerage symbol to a Lean symbol instance
         
-        This method is protected.
-        
-        :param symbols: Symbols to subscribe
-        :param tick_type: Type of tick data
-        """
-        ...
-
-    def unsubscribe(self, symbols: typing.List[QuantConnect.Symbol], tick_type: QuantConnect.TickType) -> bool:
-        """
-        Unsubscribes from the symbols
-        
-        This method is protected.
-        
-        :param symbols: Symbols to subscribe
-        :param tick_type: Type of tick data
+        :param brokerage_symbol: The brokerage symbol
+        :param security_type: The security type
+        :param market: The market
+        :param expiration_date: Expiration date of the security(if applicable)
+        :param strike: The strike of the security (if applicable)
+        :param option_right: The option right of the security (if applicable)
+        :returns: A new Lean Symbol instance.
         """
         ...
 
@@ -1983,111 +1772,264 @@ class SymbolPropertiesDatabaseSymbolMapper(System.Object, QuantConnect.Brokerage
         ...
 
 
-class BrokerageName(Enum):
-    """Specifices what transaction model and submit/execution rules to use"""
+class BrokerageMultiWebSocketEntry(System.Object):
+    """Helper class for BrokerageMultiWebSocketSubscriptionManager"""
 
-    DEFAULT = 0
-    """Transaction and submit/execution rules will be the default as initialized"""
+    @property
+    def web_socket(self) -> QuantConnect.Brokerages.IWebSocket:
+        """Gets the web socket instance"""
+        ...
 
-    QUANT_CONNECT_BROKERAGE = ...
+    @property
+    def total_weight(self) -> int:
+        """Gets the sum of symbol weights for this web socket"""
+        ...
+
+    @property
+    def symbol_count(self) -> int:
+        """Gets the number of symbols subscribed"""
+        ...
+
+    @property
+    def symbols(self) -> typing.Sequence[QuantConnect.Symbol]:
+        """Returns the list of subscribed symbols"""
+        ...
+
+    @overload
+    def __init__(self, symbol_weights: System.Collections.Generic.Dictionary[QuantConnect.Symbol, int], web_socket: QuantConnect.Brokerages.IWebSocket) -> None:
+        """
+        Initializes a new instance of the BrokerageMultiWebSocketEntry class
+        
+        :param symbol_weights: A dictionary of symbol weights
+        :param web_socket: The web socket instance
+        """
+        ...
+
+    @overload
+    def __init__(self, web_socket: QuantConnect.Brokerages.IWebSocket) -> None:
+        """
+        Initializes a new instance of the BrokerageMultiWebSocketEntry class
+        
+        :param web_socket: The web socket instance
+        """
+        ...
+
+    def add_symbol(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
+        """
+        Adds a symbol to the entry
+        
+        :param symbol: The symbol to add
+        """
+        ...
+
+    def contains(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> bool:
+        """Returns whether the symbol is subscribed"""
+        ...
+
+    def remove_symbol(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
+        """
+        Removes a symbol from the entry
+        
+        :param symbol: The symbol to remove
+        """
+        ...
+
+
+class DefaultConnectionHandler(System.Object, QuantConnect.Brokerages.IConnectionHandler):
     """
-    Transaction and submit/execution rules will be the default as initialized
-    Alternate naming for default brokerage
+    A default implementation of IConnectionHandler
+    which signals disconnection if no data is received for a given time span
+    and attempts to reconnect automatically.
     """
 
-    INTERACTIVE_BROKERS_BROKERAGE = 2
-    """Transaction and submit/execution rules will use interactive brokers models"""
+    @property
+    def connection_lost(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
+        """Event that fires when a connection loss is detected"""
+        ...
 
-    TRADIER_BROKERAGE = 3
-    """Transaction and submit/execution rules will use tradier models"""
+    @connection_lost.setter
+    def connection_lost(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
+        ...
 
-    OANDA_BROKERAGE = 4
-    """Transaction and submit/execution rules will use oanda models"""
+    @property
+    def connection_restored(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
+        """Event that fires when a lost connection is restored"""
+        ...
 
-    FXCM_BROKERAGE = 5
-    """Transaction and submit/execution rules will use fxcm models"""
+    @connection_restored.setter
+    def connection_restored(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
+        ...
 
-    BITFINEX = 6
-    """Transaction and submit/execution rules will use bitfinex models"""
+    @property
+    def reconnect_requested(self) -> _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]:
+        """Event that fires when a reconnection attempt is required"""
+        ...
 
-    BINANCE = 7
-    """Transaction and submit/execution rules will use binance models"""
+    @reconnect_requested.setter
+    def reconnect_requested(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
+        ...
 
-    GDAX = 12
+    @property
+    def maximum_idle_time_span(self) -> datetime.timedelta:
+        """The elapsed time with no received data after which a connection loss is reported"""
+        ...
+
+    @maximum_idle_time_span.setter
+    def maximum_idle_time_span(self, value: datetime.timedelta) -> None:
+        ...
+
+    @property
+    def minimum_seconds_for_next_reconnection_attempt(self) -> int:
+        """The minimum time in seconds to wait before attempting to reconnect"""
+        ...
+
+    @minimum_seconds_for_next_reconnection_attempt.setter
+    def minimum_seconds_for_next_reconnection_attempt(self, value: int) -> None:
+        ...
+
+    @property
+    def maximum_seconds_for_next_reconnection_attempt(self) -> int:
+        """The maximum time in seconds to wait before attempting to reconnect"""
+        ...
+
+    @maximum_seconds_for_next_reconnection_attempt.setter
+    def maximum_seconds_for_next_reconnection_attempt(self, value: int) -> None:
+        ...
+
+    @property
+    def connection_id(self) -> str:
+        """The unique Id for the connection"""
+        ...
+
+    @property
+    def is_connection_lost(self) -> bool:
+        """Returns true if the connection has been lost"""
+        ...
+
+    def dispose(self) -> None:
+        """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
+        ...
+
+    def enable_monitoring(self, is_enabled: bool) -> None:
+        """
+        Enables/disables monitoring of the connection
+        
+        :param is_enabled: True to enable monitoring, false otherwise
+        """
+        ...
+
+    def initialize(self, connection_id: str) -> None:
+        """
+        Initializes the connection handler
+        
+        :param connection_id: The connection id
+        """
+        ...
+
+    def keep_alive(self, last_data_received_time: typing.Union[datetime.datetime, datetime.date]) -> None:
+        """
+        Notifies the connection handler that new data was received
+        
+        :param last_data_received_time: The UTC timestamp of the last data point received
+        """
+        ...
+
+    def on_connection_lost(self) -> None:
+        """
+        Event invocator for the ConnectionLost event
+        
+        This method is protected.
+        """
+        ...
+
+    def on_connection_restored(self) -> None:
+        """
+        Event invocator for the ConnectionRestored event
+        
+        This method is protected.
+        """
+        ...
+
+    def on_reconnect_requested(self) -> None:
+        """
+        Event invocator for the ReconnectRequested event
+        
+        This method is protected.
+        """
+        ...
+
+
+class BrokerageConcurrentMessageHandler(typing.Generic[QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T], System.Object):
+    """Brokerage helper class to lock message stream while executing an action, for example placing an order"""
+
+    def __init__(self, process_messages: typing.Callable[[QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T], None]) -> None:
+        """
+        Creates a new instance
+        
+        :param process_messages: The action to call for each new message
+        """
+        ...
+
+    def handle_new_message(self, message: QuantConnect_Brokerages_BrokerageConcurrentMessageHandler_T) -> None:
+        """
+        Will process or enqueue a message for later processing it
+        
+        :param message: The new message
+        """
+        ...
+
+    def with_locked_stream(self, code: typing.Callable[[], None]) -> None:
+        """Lock the streaming processing while we're sending orders as sometimes they fill before the call returns."""
+        ...
+
+
+class DefaultBrokerageMessageHandler(System.Object, QuantConnect.Brokerages.IBrokerageMessageHandler):
     """
-    Transaction and submit/execution rules will use gdax models
-    
-    GDAX brokerage name is deprecated. Use Coinbase instead.
+    Provides a default implementation o IBrokerageMessageHandler that will forward
+    messages as follows:
+    Information -> IResultHandler.Debug
+    Warning     -> IResultHandler.Error && IApi.SendUserEmail
+    Error       -> IResultHandler.Error && IAlgorithm.RunTimeError
     """
 
-    ALPACA = 9
-    """Transaction and submit/execution rules will use alpaca models"""
+    @overload
+    def __init__(self, algorithm: QuantConnect.Interfaces.IAlgorithm, initial_delay: typing.Optional[datetime.timedelta] = None, open_threshold: typing.Optional[datetime.timedelta] = None) -> None:
+        """
+        Initializes a new instance of the DefaultBrokerageMessageHandler class
+        
+        :param algorithm: The running algorithm
+        :param open_threshold: Defines how long before market open to re-check for brokerage reconnect message
+        """
+        ...
 
-    ALPHA_STREAMS = 10
-    """Transaction and submit/execution rules will use AlphaStream models"""
+    @overload
+    def __init__(self, algorithm: QuantConnect.Interfaces.IAlgorithm, job: QuantConnect.Packets.AlgorithmNodePacket, api: QuantConnect.Interfaces.IApi, initial_delay: typing.Optional[datetime.timedelta] = None, open_threshold: typing.Optional[datetime.timedelta] = None) -> None:
+        """
+        Initializes a new instance of the DefaultBrokerageMessageHandler class
+        
+        :param algorithm: The running algorithm
+        :param job: The job that produced the algorithm
+        :param api: The api for the algorithm
+        :param open_threshold: Defines how long before market open to re-check for brokerage reconnect message
+        """
+        ...
 
-    ZERODHA = 11
-    """Transaction and submit/execution rules will use Zerodha models"""
+    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
+        """
+        Handles the message
+        
+        :param message: The message to be handled
+        """
+        ...
 
-    SAMCO = 12
-    """Transaction and submit/execution rules will use Samco models"""
-
-    ATREYU = 13
-    """Transaction and submit/execution rules will use atreyu models"""
-
-    TRADING_TECHNOLOGIES = 14
-    """Transaction and submit/execution rules will use TradingTechnologies models"""
-
-    KRAKEN = 15
-    """Transaction and submit/execution rules will use Kraken models"""
-
-    FTX = 16
-    """Transaction and submit/execution rules will use ftx models"""
-
-    FTXUS = 17
-    """Transaction and submit/execution rules will use ftx us models"""
-
-    EXANTE = 18
-    """Transaction and submit/execution rules will use Exante models"""
-
-    BINANCE_US = 19
-    """Transaction and submit/execution rules will use Binance.US models"""
-
-    WOLVERINE = 20
-    """Transaction and submit/execution rules will use Wolverine models"""
-
-    TD_AMERITRADE = 21
-    """Transaction and submit/execution rules will use TDameritrade models"""
-
-    BINANCE_FUTURES = 22
-    """Binance Futures USDⓈ-Margined contracts are settled and collateralized in their quote cryptocurrency, USDT or BUSD"""
-
-    BINANCE_COIN_FUTURES = 23
-    """Binance Futures COIN-Margined contracts are settled and collateralized in their based cryptocurrency."""
-
-    RBI = 24
-    """Transaction and submit/execution rules will use RBI models"""
-
-    BYBIT = 25
-    """Transaction and submit/execution rules will use Bybit models"""
-
-    EZE = 26
-    """Transaction and submit/execution rules will use Eze models"""
-
-    AXOS = 27
-    """Transaction and submit/execution rules will use Axos models"""
-
-    COINBASE = 28
-    """Transaction and submit/execution rules will use Coinbase broker's model"""
-
-    TRADE_STATION = 29
-    """Transaction and submit/execution rules will use TradeStation models"""
-
-    TERMINAL_LINK = 30
-    """Transaction and submit/execution rules will use Terminal link models"""
-
-    CHARLES_SCHWAB = 31
-    """Transaction and submit/execution rules will use Charles Schwab models"""
+    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
+        """
+        Handles a new order placed manually in the brokerage side
+        
+        :param event_args: The new order event
+        :returns: Whether the order should be added to the transaction handler.
+        """
+        ...
 
 
 class DefaultBrokerageModel(System.Object, QuantConnect.Brokerages.IBrokerageModel):
@@ -2294,17 +2236,8 @@ class DefaultBrokerageModel(System.Object, QuantConnect.Brokerages.IBrokerageMod
         ...
 
 
-class BybitBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides Bybit specific properties"""
-
-    @property
-    def market_name(self) -> str:
-        """
-        Market name
-        
-        This property is protected.
-        """
-        ...
+class BitfinexBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides Bitfinex specific properties"""
 
     @property
     def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
@@ -2313,9 +2246,9 @@ class BybitBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
 
     def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
         """
-        Initializes a new instance of the BybitBrokerageModel class
+        Initializes a new instance of the BitfinexBrokerageModel class
         
-        :param account_type: The type of account to be modeled, defaults to AccountType.Cash
+        :param account_type: The type of account to be modeled, defaults to AccountType.Margin
         """
         ...
 
@@ -2333,14 +2266,13 @@ class BybitBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
 
     def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
         """
-        Returns true if the brokerage could accept this order update. This takes into account
-        order type, security type, and order size limits. Bybit can only update inverse, linear, and option orders
+        Checks whether an order can be updated or not in the Bitfinex brokerage model
         
         :param security: The security of the order
         :param order: The order to be updated
-        :param request: The requested update to be made to the order
+        :param request: The update request
         :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the brokerage could update the order, false otherwise.
+        :returns: True if the update requested quantity is valid, false otherwise.
         """
         ...
 
@@ -2354,32 +2286,11 @@ class BybitBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
         ...
 
     def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """Provides Bybit fee model"""
+        """Provides Bitfinex fee model"""
         ...
 
     def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """Bybit global leverage rule"""
-        ...
-
-    def get_margin_interest_rate_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IMarginInterestRateModel:
-        """
-        Gets a new margin interest rate model for the security
-        
-        :param security: The security to get a margin interest rate model for
-        :returns: The margin interest rate model for this brokerage.
-        """
-        ...
-
-    def is_order_size_large_enough(self, security: QuantConnect.Securities.Security, order_quantity: float) -> bool:
-        """
-        Returns true if the order size is large enough for the given security.
-        
-        This method is protected.
-        
-        :param security: The security of the order
-        :param order_quantity: The order quantity
-        :returns: True if the order size is large enough, false otherwise.
-        """
+        """Bitfinex global leverage rule"""
         ...
 
 
@@ -2471,11 +2382,26 @@ class FTXBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
         ...
 
 
-class TradingTechnologiesBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides properties specific to Trading Technologies"""
+class BinanceBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides Binance specific properties"""
 
-    DEFAULT_MARKET_MAP: System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str] = ...
-    """The default markets for Trading Technologies"""
+    @property
+    def base_api_endpoint(self) -> str:
+        """
+        The base Binance API endpoint URL.
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def market_name(self) -> str:
+        """
+        Market name
+        
+        This property is protected.
+        """
+        ...
 
     @property
     def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
@@ -2484,22 +2410,9 @@ class TradingTechnologiesBrokerageModel(QuantConnect.Brokerages.DefaultBrokerage
 
     def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
         """
-        Initializes a new instance of the TradingTechnologiesBrokerageModel class
+        Initializes a new instance of the BinanceBrokerageModel class
         
-        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
-        """
-        ...
-
-    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
-        """
-        Returns true if the brokerage would be able to execute this order at this time assuming
-        market prices are sufficient for the fill to take place. This is used to emulate the
-        brokerage fills in backtesting and paper trading. For example some brokerages may not perform
-        executions during extended market hours. This is not intended to be checking whether or not
-        the exchange is open, that is handled in the Security.Exchange property.
-        
-        :param order: The order to test for execution
-        :returns: True if the brokerage would be able to perform the execution, false otherwise.
+        :param account_type: The type of account to be modeled, defaults to AccountType.Cash
         """
         ...
 
@@ -2508,7 +2421,7 @@ class TradingTechnologiesBrokerageModel(QuantConnect.Brokerages.DefaultBrokerage
         Returns true if the brokerage could accept this order. This takes into account
         order type, security type, and order size limits.
         
-        :param security: The security being ordered
+        :param security: The security of the order
         :param order: The order to be processed
         :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
         :returns: True if the brokerage could process the order, false otherwise.
@@ -2517,14 +2430,48 @@ class TradingTechnologiesBrokerageModel(QuantConnect.Brokerages.DefaultBrokerage
 
     def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
         """
-        Returns true if the brokerage would allow updating the order as specified by the request
+        Binance does not support update of orders
         
         :param security: The security of the order
         :param order: The order to be updated
         :param request: The requested update to be made to the order
         :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the brokerage would allow updating the order, false otherwise.
+        :returns: Binance does not support update of orders, so it will always return false.
         """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    @staticmethod
+    def get_default_markets(market_name: str) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """
+        Returns a readonly dictionary of binance default markets
+        
+        This method is protected.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """Provides Binance fee model"""
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """Binance global leverage rule"""
+        ...
+
+
+class BinanceFuturesBrokerageModel(QuantConnect.Brokerages.BinanceBrokerageModel):
+    """Provides Binance Futures specific properties"""
+
+    def __init__(self, account_type: QuantConnect.AccountType) -> None:
+        """Creates a new instance"""
         ...
 
     def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
@@ -2538,86 +2485,59 @@ class TradingTechnologiesBrokerageModel(QuantConnect.Brokerages.DefaultBrokerage
 
     def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
         """
-        Gets a new fee model that represents this brokerage's fee structure
+        Provides Binance Futures fee model
         
         :param security: The security to get a fee model for
         :returns: The new fee model for this brokerage.
         """
         ...
 
-
-class DowngradeErrorCodeToWarningBrokerageMessageHandler(System.Object, QuantConnect.Brokerages.IBrokerageMessageHandler):
-    """Provides an implementation of IBrokerageMessageHandler that converts specified error codes into warnings"""
-
-    def __init__(self, brokerage_message_handler: QuantConnect.Brokerages.IBrokerageMessageHandler, error_codes_to_ignore: typing.List[str]) -> None:
+    def get_margin_interest_rate_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IMarginInterestRateModel:
         """
-        Initializes a new instance of the DowngradeErrorCodeToWarningBrokerageMessageHandler class
+        Gets a new margin interest rate model for the security
         
-        :param brokerage_message_handler: The brokerage message handler to be wrapped
-        :param error_codes_to_ignore: The error codes to convert to warning messages
-        """
-        ...
-
-    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
-        """
-        Handles the message
-        
-        :param message: The message to be handled
-        """
-        ...
-
-    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
-        """
-        Handles a new order placed manually in the brokerage side
-        
-        :param event_args: The new order event
-        :returns: Whether the order should be added to the transaction handler.
+        :param security: The security to get a margin interest rate model for
+        :returns: The margin interest rate model for this brokerage.
         """
         ...
 
 
-class RBIBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """RBI Brokerage model"""
+class BinanceUSBrokerageModel(QuantConnect.Brokerages.BinanceBrokerageModel):
+    """Provides Binance.US specific properties"""
+
+    @property
+    def base_api_endpoint(self) -> str:
+        """
+        The base Binance Futures API endpoint URL.
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def market_name(self) -> str:
+        """
+        Market name
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
 
     def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
         """
-        Constructor for RBI brokerage model
+        Initializes a new instance of the BinanceBrokerageModel class
         
-        :param account_type: Cash or Margin
+        :param account_type: The type of account to be modeled, defaults to AccountType.Cash
         """
         ...
 
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        RBI supports UpdateOrder
-        
-        :param security: Security
-        :param order: Order that should be updated
-        :param request: Update request
-        :param message: Outgoing message
-        :returns: True if the brokerage would allow updating the order, false otherwise.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides RBI fee model
-        
-        :param security: Security
-        :returns: RBI fee model.
-        """
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """Binance global leverage rule"""
         ...
 
 
@@ -2715,6 +2635,912 @@ class CoinbaseBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
         ...
 
 
+class FxcmBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides FXCM specific properties"""
+
+    DEFAULT_MARKET_MAP: System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str] = ...
+    """The default markets for the fxcm brokerage"""
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the DefaultBrokerageModel class
+        
+        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage would allow updating the order as specified by the request
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested update to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage would allow updating the order, false otherwise.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Gets a new fee model that represents this brokerage's fee structure
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
+        """
+        Gets a new settlement model for the security
+        
+        :param security: The security to get a settlement model for
+        :returns: The settlement model for this brokerage.
+        """
+        ...
+
+
+class BrokerageName(Enum):
+    """Specifices what transaction model and submit/execution rules to use"""
+
+    DEFAULT = 0
+    """Transaction and submit/execution rules will be the default as initialized"""
+
+    QUANT_CONNECT_BROKERAGE = ...
+    """
+    Transaction and submit/execution rules will be the default as initialized
+    Alternate naming for default brokerage
+    """
+
+    INTERACTIVE_BROKERS_BROKERAGE = 2
+    """Transaction and submit/execution rules will use interactive brokers models"""
+
+    TRADIER_BROKERAGE = 3
+    """Transaction and submit/execution rules will use tradier models"""
+
+    OANDA_BROKERAGE = 4
+    """Transaction and submit/execution rules will use oanda models"""
+
+    FXCM_BROKERAGE = 5
+    """Transaction and submit/execution rules will use fxcm models"""
+
+    BITFINEX = 6
+    """Transaction and submit/execution rules will use bitfinex models"""
+
+    BINANCE = 7
+    """Transaction and submit/execution rules will use binance models"""
+
+    GDAX = 12
+    """
+    Transaction and submit/execution rules will use gdax models
+    
+    GDAX brokerage name is deprecated. Use Coinbase instead.
+    """
+
+    ALPACA = 9
+    """Transaction and submit/execution rules will use alpaca models"""
+
+    ALPHA_STREAMS = 10
+    """Transaction and submit/execution rules will use AlphaStream models"""
+
+    ZERODHA = 11
+    """Transaction and submit/execution rules will use Zerodha models"""
+
+    SAMCO = 12
+    """Transaction and submit/execution rules will use Samco models"""
+
+    ATREYU = 13
+    """Transaction and submit/execution rules will use atreyu models"""
+
+    TRADING_TECHNOLOGIES = 14
+    """Transaction and submit/execution rules will use TradingTechnologies models"""
+
+    KRAKEN = 15
+    """Transaction and submit/execution rules will use Kraken models"""
+
+    FTX = 16
+    """Transaction and submit/execution rules will use ftx models"""
+
+    FTXUS = 17
+    """Transaction and submit/execution rules will use ftx us models"""
+
+    EXANTE = 18
+    """Transaction and submit/execution rules will use Exante models"""
+
+    BINANCE_US = 19
+    """Transaction and submit/execution rules will use Binance.US models"""
+
+    WOLVERINE = 20
+    """Transaction and submit/execution rules will use Wolverine models"""
+
+    TD_AMERITRADE = 21
+    """Transaction and submit/execution rules will use TDameritrade models"""
+
+    BINANCE_FUTURES = 22
+    """Binance Futures USDⓈ-Margined contracts are settled and collateralized in their quote cryptocurrency, USDT or BUSD"""
+
+    BINANCE_COIN_FUTURES = 23
+    """Binance Futures COIN-Margined contracts are settled and collateralized in their based cryptocurrency."""
+
+    RBI = 24
+    """Transaction and submit/execution rules will use RBI models"""
+
+    BYBIT = 25
+    """Transaction and submit/execution rules will use Bybit models"""
+
+    EZE = 26
+    """Transaction and submit/execution rules will use Eze models"""
+
+    AXOS = 27
+    """Transaction and submit/execution rules will use Axos models"""
+
+    COINBASE = 28
+    """Transaction and submit/execution rules will use Coinbase broker's model"""
+
+    TRADE_STATION = 29
+    """Transaction and submit/execution rules will use TradeStation models"""
+
+    TERMINAL_LINK = 30
+    """Transaction and submit/execution rules will use Terminal link models"""
+
+    CHARLES_SCHWAB = 31
+    """Transaction and submit/execution rules will use Charles Schwab models"""
+
+
+class BrokerageModel(System.Object):
+    """Provides factory method for creating an IBrokerageModel from the BrokerageName enum"""
+
+    @staticmethod
+    def create(order_provider: QuantConnect.Securities.IOrderProvider, brokerage: QuantConnect.Brokerages.BrokerageName, account_type: QuantConnect.AccountType) -> QuantConnect.Brokerages.IBrokerageModel:
+        """
+        Creates a new IBrokerageModel for the specified BrokerageName
+        
+        :param order_provider: The order provider
+        :param brokerage: The name of the brokerage
+        :param account_type: The account type
+        :returns: The model for the specified brokerage.
+        """
+        ...
+
+    @staticmethod
+    def get_brokerage_name(brokerage_model: QuantConnect.Brokerages.IBrokerageModel) -> QuantConnect.Brokerages.BrokerageName:
+        """
+        Gets the corresponding BrokerageName for the specified IBrokerageModel
+        
+        :param brokerage_model: The brokerage model
+        :returns: The BrokerageName for the specified brokerage model.
+        """
+        ...
+
+
+class WolverineBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Wolverine Brokerage model"""
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Constructor for Wolverine brokerage model
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security of the order
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Wolverine does not support update of orders
+        
+        :param security: Security
+        :param order: Order that should be updated
+        :param request: Update request
+        :param message: Outgoing message
+        :returns: Always false as Wolverine does not support update of orders.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides Wolverine fee model
+        
+        :param security: Security
+        :returns: Wolverine fee model.
+        """
+        ...
+
+
+class OandaBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Oanda Brokerage Model Implementation for Back Testing."""
+
+    DEFAULT_MARKET_MAP: System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str] = ...
+    """The default markets for the fxcm brokerage"""
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the DefaultBrokerageModel class
+        
+        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Gets a new fee model that represents this brokerage's fee structure
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
+        """
+        Gets a new settlement model for the security
+        
+        :param security: The security to get a settlement model for
+        :returns: The settlement model for this brokerage.
+        """
+        ...
+
+
+class ExanteBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Exante Brokerage Model Implementation for Back Testing."""
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Constructor for Exante brokerage model
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security being ordered
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Gets a new fee model that represents this brokerage's fee structure
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """
+        Exante global leverage rule
+        
+        :param security: The security's whose leverage we seek
+        :returns: The leverage for the specified security.
+        """
+        ...
+
+
+class BybitBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides Bybit specific properties"""
+
+    @property
+    def market_name(self) -> str:
+        """
+        Market name
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the BybitBrokerageModel class
+        
+        :param account_type: The type of account to be modeled, defaults to AccountType.Cash
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security of the order
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order update. This takes into account
+        order type, security type, and order size limits. Bybit can only update inverse, linear, and option orders
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested update to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage could update the order, false otherwise.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """Provides Bybit fee model"""
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """Bybit global leverage rule"""
+        ...
+
+    def get_margin_interest_rate_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IMarginInterestRateModel:
+        """
+        Gets a new margin interest rate model for the security
+        
+        :param security: The security to get a margin interest rate model for
+        :returns: The margin interest rate model for this brokerage.
+        """
+        ...
+
+    def is_order_size_large_enough(self, security: QuantConnect.Securities.Security, order_quantity: float) -> bool:
+        """
+        Returns true if the order size is large enough for the given security.
+        
+        This method is protected.
+        
+        :param security: The security of the order
+        :param order_quantity: The order quantity
+        :returns: True if the order size is large enough, false otherwise.
+        """
+        ...
+
+
+class ZerodhaBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Brokerage Model implementation for Zerodha"""
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the ZerodhaBrokerageModel class
+        
+        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
+        """
+        ...
+
+    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
+        """
+        Returns true if the brokerage would be able to execute this order at this time assuming
+        market prices are sufficient for the fill to take place. This is used to emulate the
+        brokerage fills in backtesting and paper trading. For example some brokerages may not perform
+        executions during extended market hours. This is not intended to be checking whether or not
+        the exchange is open, that is handled in the Security.Exchange property.
+        
+        :param order: The order to test for execution
+        :returns: True if the brokerage would be able to perform the execution, false otherwise.
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security being ordered
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage would allow updating the order as specified by the request
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested update to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage would allow updating the order, false otherwise.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """Provides Zerodha fee model"""
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """Zerodha global leverage rule"""
+        ...
+
+
+class DowngradeErrorCodeToWarningBrokerageMessageHandler(System.Object, QuantConnect.Brokerages.IBrokerageMessageHandler):
+    """Provides an implementation of IBrokerageMessageHandler that converts specified error codes into warnings"""
+
+    def __init__(self, brokerage_message_handler: QuantConnect.Brokerages.IBrokerageMessageHandler, error_codes_to_ignore: typing.List[str]) -> None:
+        """
+        Initializes a new instance of the DowngradeErrorCodeToWarningBrokerageMessageHandler class
+        
+        :param brokerage_message_handler: The brokerage message handler to be wrapped
+        :param error_codes_to_ignore: The error codes to convert to warning messages
+        """
+        ...
+
+    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
+        """
+        Handles the message
+        
+        :param message: The message to be handled
+        """
+        ...
+
+    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
+        """
+        Handles a new order placed manually in the brokerage side
+        
+        :param event_args: The new order event
+        :returns: Whether the order should be added to the transaction handler.
+        """
+        ...
+
+
+class GDAXBrokerageModel(QuantConnect.Brokerages.CoinbaseBrokerageModel):
+    """
+    Provides GDAX specific properties
+    
+    GDAXBrokerageModel is deprecated. Use CoinbaseBrokerageModel instead.
+    """
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the GDAXBrokerageModel class
+        
+        :param account_type: The type of account to be modelled, defaults to AccountType.Cash
+        """
+        ...
+
+
+class TDAmeritradeBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """TDAmeritrade"""
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Constructor for TDAmeritrade brokerage model
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security of the order
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        TDAmeritrade support Update Order
+        
+        :param security: Security
+        :param order: Order that should be updated
+        :param request: Update request
+        :param message: Outgoing message
+        :returns: True if the brokerage would allow updating the order, false otherwise.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides TDAmeritrade fee model
+        
+        :param security: Security
+        :returns: TDAmeritrade fee model.
+        """
+        ...
+
+
+class TradingTechnologiesBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides properties specific to Trading Technologies"""
+
+    DEFAULT_MARKET_MAP: System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str] = ...
+    """The default markets for Trading Technologies"""
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the TradingTechnologiesBrokerageModel class
+        
+        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
+        """
+        ...
+
+    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
+        """
+        Returns true if the brokerage would be able to execute this order at this time assuming
+        market prices are sufficient for the fill to take place. This is used to emulate the
+        brokerage fills in backtesting and paper trading. For example some brokerages may not perform
+        executions during extended market hours. This is not intended to be checking whether or not
+        the exchange is open, that is handled in the Security.Exchange property.
+        
+        :param order: The order to test for execution
+        :returns: True if the brokerage would be able to perform the execution, false otherwise.
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security being ordered
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage would allow updating the order as specified by the request
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested update to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage would allow updating the order, false otherwise.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Gets a new fee model that represents this brokerage's fee structure
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+
+class EzeBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides Eze specific properties"""
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Constructor for Eze brokerage model
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security of the order
+        :param order: The order to be processed
+        :param message: >If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order update. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested update to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage could update the order, false otherwise.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides Eze fee model
+        
+        :param security: Security
+        :returns: Eze Fee model.
+        """
+        ...
+
+
+class SamcoBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Brokerage Model implementation for Samco"""
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the SamcoBrokerageModel class
+        
+        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
+        """
+        ...
+
+    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
+        """
+        Returns true if the brokerage would be able to execute this order at this time assuming
+        market prices are sufficient for the fill to take place. This is used to emulate the
+        brokerage fills in backtesting and paper trading. For example some brokerages may not
+        perform executions during extended market hours. This is not intended to be checking
+        whether or not the exchange is open, that is handled in the Security.Exchange property.
+        
+        :param order: The order to test for execution
+        :returns: True if the brokerage would be able to perform the execution, false otherwise.
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account order
+        type, security type, and order size limits.
+        
+        :param security: The security being ordered
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage would allow updating the order as specified by the request
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested update to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage would allow updating the order, false otherwise.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """Provides Samco fee model"""
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """Samco global leverage rule"""
+        ...
+
+
+class BinanceCoinFuturesBrokerageModel(QuantConnect.Brokerages.BinanceFuturesBrokerageModel):
+    """Provides Binance Coin Futures specific properties"""
+
+    def __init__(self, account_type: QuantConnect.AccountType) -> None:
+        """Creates a new instance"""
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides Binance Coin Futures fee model
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+
+class AlphaStreamsBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides properties specific to Alpha Streams"""
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Initializes a new instance of the AlphaStreamsBrokerageModel class
+        
+        :param account_type: The type of account to be modeled, defaults to AccountType.Margin does not accept AccountType.Cash.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Gets a new fee model that represents this brokerage's fee structure
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """
+        Gets the brokerage's leverage for the specified security
+        
+        :param security: The security's whose leverage we seek
+        :returns: The leverage for the specified security.
+        """
+        ...
+
+    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
+        """
+        Gets a new settlement model for the security
+        
+        :param security: The security to get a settlement model for
+        :returns: The settlement model for this brokerage.
+        """
+        ...
+
+    def get_slippage_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Slippage.ISlippageModel:
+        """
+        Gets a new slippage model that represents this brokerage's fill slippage behavior
+        
+        :param security: The security to get a slippage model for
+        :returns: The new slippage model for this brokerage.
+        """
+        ...
+
+
+class AlpacaBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Provides an implementation of the DefaultBrokerageModel specific to Alpaca brokerage."""
+
+    def __init__(self) -> None:
+        """Initializes a new instance of the AlpacaBrokerageModel class"""
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security being ordered
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage would allow updating the order as specified by the request
+        
+        :param security: The security of the order
+        :param order: The order to be updated
+        :param request: The requested updated to be made to the order
+        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
+        :returns: True if the brokerage would allow updating the order, false otherwise.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Gets a new fee model that represents this brokerage's fee structure
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
+        """
+        ...
+
+
 class TradierBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
     """Provides tradier specific properties"""
 
@@ -2804,647 +3630,6 @@ class BrokerageFactoryAttribute(System.Attribute):
         ...
 
 
-class WolverineBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Wolverine Brokerage model"""
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Constructor for Wolverine brokerage model
-        
-        :param account_type: Cash or Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Wolverine does not support update of orders
-        
-        :param security: Security
-        :param order: Order that should be updated
-        :param request: Update request
-        :param message: Outgoing message
-        :returns: Always false as Wolverine does not support update of orders.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides Wolverine fee model
-        
-        :param security: Security
-        :returns: Wolverine fee model.
-        """
-        ...
-
-
-class BitfinexBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides Bitfinex specific properties"""
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the BitfinexBrokerageModel class
-        
-        :param account_type: The type of account to be modeled, defaults to AccountType.Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Checks whether an order can be updated or not in the Bitfinex brokerage model
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The update request
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the update requested quantity is valid, false otherwise.
-        """
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """Provides Bitfinex fee model"""
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """Bitfinex global leverage rule"""
-        ...
-
-
-class BinanceBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides Binance specific properties"""
-
-    @property
-    def base_api_endpoint(self) -> str:
-        """
-        The base Binance API endpoint URL.
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def market_name(self) -> str:
-        """
-        Market name
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the BinanceBrokerageModel class
-        
-        :param account_type: The type of account to be modeled, defaults to AccountType.Cash
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Binance does not support update of orders
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The requested update to be made to the order
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: Binance does not support update of orders, so it will always return false.
-        """
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    @staticmethod
-    def get_default_markets(market_name: str) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """
-        Returns a readonly dictionary of binance default markets
-        
-        This method is protected.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """Provides Binance fee model"""
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """Binance global leverage rule"""
-        ...
-
-
-class BinanceUSBrokerageModel(QuantConnect.Brokerages.BinanceBrokerageModel):
-    """Provides Binance.US specific properties"""
-
-    @property
-    def base_api_endpoint(self) -> str:
-        """
-        The base Binance Futures API endpoint URL.
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def market_name(self) -> str:
-        """
-        Market name
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the BinanceBrokerageModel class
-        
-        :param account_type: The type of account to be modeled, defaults to AccountType.Cash
-        """
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """Binance global leverage rule"""
-        ...
-
-
-class CharlesSchwabBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Represents a brokerage model specific to Charles Schwab."""
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Constructor for Charles Schwab brokerage model
-        
-        :param account_type: Cash or Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides TradeStation fee model
-        
-        :param security: Security
-        :returns: TradeStation fee model.
-        """
-        ...
-
-
-class AlpacaBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides an implementation of the DefaultBrokerageModel specific to Alpaca brokerage."""
-
-    def __init__(self) -> None:
-        """Initializes a new instance of the AlpacaBrokerageModel class"""
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security being ordered
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage would allow updating the order as specified by the request
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The requested updated to be made to the order
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the brokerage would allow updating the order, false otherwise.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Gets a new fee model that represents this brokerage's fee structure
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-
-class BrokerageExtensions(System.Object):
-    """Provides extension methods for handling brokerage operations."""
-
-    @staticmethod
-    def order_crosses_zero(holding_quantity: float, order_quantity: float) -> bool:
-        """
-        Determines if executing the specified order will cross the zero holdings threshold.
-        
-        :param holding_quantity: The current quantity of holdings.
-        :param order_quantity: The quantity of the order to be evaluated.
-        :returns: true if the order will change the holdings from positive to negative or vice versa; otherwise, false.
-        """
-        ...
-
-
-class ExanteBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Exante Brokerage Model Implementation for Back Testing."""
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Constructor for Exante brokerage model
-        
-        :param account_type: Cash or Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security being ordered
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Gets a new fee model that represents this brokerage's fee structure
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """
-        Exante global leverage rule
-        
-        :param security: The security's whose leverage we seek
-        :returns: The leverage for the specified security.
-        """
-        ...
-
-
-class FTXUSBrokerageModel(QuantConnect.Brokerages.FTXBrokerageModel):
-    """FTX.US Brokerage model"""
-
-    @property
-    def market_name(self) -> str:
-        """
-        Market name
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Creates an instance of FTXUSBrokerageModel class
-        
-        :param account_type: Cash or Margin
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides FTX.US fee model
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-
-class ZerodhaBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Brokerage Model implementation for Zerodha"""
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the ZerodhaBrokerageModel class
-        
-        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
-        """
-        ...
-
-    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
-        """
-        Returns true if the brokerage would be able to execute this order at this time assuming
-        market prices are sufficient for the fill to take place. This is used to emulate the
-        brokerage fills in backtesting and paper trading. For example some brokerages may not perform
-        executions during extended market hours. This is not intended to be checking whether or not
-        the exchange is open, that is handled in the Security.Exchange property.
-        
-        :param order: The order to test for execution
-        :returns: True if the brokerage would be able to perform the execution, false otherwise.
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security being ordered
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage would allow updating the order as specified by the request
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The requested update to be made to the order
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the brokerage would allow updating the order, false otherwise.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """Provides Zerodha fee model"""
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """Zerodha global leverage rule"""
-        ...
-
-
-class BinanceFuturesBrokerageModel(QuantConnect.Brokerages.BinanceBrokerageModel):
-    """Provides Binance Futures specific properties"""
-
-    def __init__(self, account_type: QuantConnect.AccountType) -> None:
-        """Creates a new instance"""
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides Binance Futures fee model
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-    def get_margin_interest_rate_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.IMarginInterestRateModel:
-        """
-        Gets a new margin interest rate model for the security
-        
-        :param security: The security to get a margin interest rate model for
-        :returns: The margin interest rate model for this brokerage.
-        """
-        ...
-
-
-class TradeStationBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Represents a brokerage model specific to TradeStation."""
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Constructor for TradeStation brokerage model
-        
-        :param account_type: Cash or Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        TradeStation support Update Order
-        
-        :param security: Security
-        :param order: Order that should be updated
-        :param request: Update request
-        :param message: Outgoing message
-        :returns: True if the brokerage would allow updating the order, false otherwise.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides TradeStation fee model
-        
-        :param security: Security
-        :returns: TradeStation fee model.
-        """
-        ...
-
-
-class BinanceCoinFuturesBrokerageModel(QuantConnect.Brokerages.BinanceFuturesBrokerageModel):
-    """Provides Binance Coin Futures specific properties"""
-
-    def __init__(self, account_type: QuantConnect.AccountType) -> None:
-        """Creates a new instance"""
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides Binance Coin Futures fee model
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-
-class SamcoBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Brokerage Model implementation for Samco"""
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the SamcoBrokerageModel class
-        
-        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
-        """
-        ...
-
-    def can_execute_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> bool:
-        """
-        Returns true if the brokerage would be able to execute this order at this time assuming
-        market prices are sufficient for the fill to take place. This is used to emulate the
-        brokerage fills in backtesting and paper trading. For example some brokerages may not
-        perform executions during extended market hours. This is not intended to be checking
-        whether or not the exchange is open, that is handled in the Security.Exchange property.
-        
-        :param order: The order to test for execution
-        :returns: True if the brokerage would be able to perform the execution, false otherwise.
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account order
-        type, security type, and order size limits.
-        
-        :param security: The security being ordered
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage would allow updating the order as specified by the request
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The requested update to be made to the order
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the brokerage would allow updating the order, false otherwise.
-        """
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """Provides Samco fee model"""
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """Samco global leverage rule"""
-        ...
-
-
 class InteractiveBrokersBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
     """Provides properties specific to interactive brokers"""
 
@@ -3529,22 +3714,60 @@ class InteractiveBrokersBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageM
         ...
 
 
-class KrakenBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Kraken Brokerage model"""
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    @property
-    def coin_leverage(self) -> System.Collections.Generic.IReadOnlyDictionary[str, float]:
-        """Leverage map of different coins"""
-        ...
+class CharlesSchwabBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Represents a brokerage model specific to Charles Schwab."""
 
     def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
         """
-        Constructor for Kraken brokerage model
+        Constructor for Charles Schwab brokerage model
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security of the order
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides TradeStation fee model
+        
+        :param security: Security
+        :returns: TradeStation fee model.
+        """
+        ...
+
+
+class BrokerageExtensions(System.Object):
+    """Provides extension methods for handling brokerage operations."""
+
+    @staticmethod
+    def order_crosses_zero(holding_quantity: float, order_quantity: float) -> bool:
+        """
+        Determines if executing the specified order will cross the zero holdings threshold.
+        
+        :param holding_quantity: The current quantity of holdings.
+        :param order_quantity: The quantity of the order to be evaluated.
+        :returns: true if the order will change the holdings from positive to negative or vice versa; otherwise, false.
+        """
+        ...
+
+
+class TradeStationBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Represents a brokerage model specific to TradeStation."""
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Constructor for TradeStation brokerage model
         
         :param account_type: Cash or Margin
         """
@@ -3564,209 +3787,22 @@ class KrakenBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
 
     def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
         """
-        Kraken does not support update of orders
+        TradeStation support Update Order
         
         :param security: Security
         :param order: Order that should be updated
         :param request: Update request
         :param message: Outgoing message
-        :returns: Always false as Kraken does not support update of orders.
-        """
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides Kraken fee model
-        
-        :param security: Security
-        :returns: Kraken fee model.
-        """
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """Kraken global leverage rule"""
-        ...
-
-
-class OandaBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Oanda Brokerage Model Implementation for Back Testing."""
-
-    DEFAULT_MARKET_MAP: System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str] = ...
-    """The default markets for the fxcm brokerage"""
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the DefaultBrokerageModel class
-        
-        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Gets a new fee model that represents this brokerage's fee structure
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
-        """
-        Gets a new settlement model for the security
-        
-        :param security: The security to get a settlement model for
-        :returns: The settlement model for this brokerage.
-        """
-        ...
-
-
-class EzeBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides Eze specific properties"""
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Constructor for Eze brokerage model
-        
-        :param account_type: Cash or Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be processed
-        :param message: >If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order update. This takes into account
-        order type, security type, and order size limits.
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The requested update to be made to the order
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
-        :returns: True if the brokerage could update the order, false otherwise.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Provides Eze fee model
-        
-        :param security: Security
-        :returns: Eze Fee model.
-        """
-        ...
-
-
-class FxcmBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides FXCM specific properties"""
-
-    DEFAULT_MARKET_MAP: System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str] = ...
-    """The default markets for the fxcm brokerage"""
-
-    @property
-    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
-        """Gets a map of the default markets to be used for each security type"""
-        ...
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the DefaultBrokerageModel class
-        
-        :param account_type: The type of account to be modelled, defaults to AccountType.Margin
-        """
-        ...
-
-    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage could accept this order. This takes into account
-        order type, security type, and order size limits.
-        
-        :param order: The order to be processed
-        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
-        :returns: True if the brokerage could process the order, false otherwise.
-        """
-        ...
-
-    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
-        """
-        Returns true if the brokerage would allow updating the order as specified by the request
-        
-        :param security: The security of the order
-        :param order: The order to be updated
-        :param request: The requested update to be made to the order
-        :param message: If this function returns false, a brokerage message detailing why the order may not be updated
         :returns: True if the brokerage would allow updating the order, false otherwise.
         """
         ...
 
-    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
-        """
-        Get the benchmark for this model
-        
-        :param securities: SecurityService to create the security with if needed
-        :returns: The benchmark for this brokerage.
-        """
-        ...
-
     def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
         """
-        Gets a new fee model that represents this brokerage's fee structure
+        Provides TradeStation fee model
         
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
-        """
-        Gets a new settlement model for the security
-        
-        :param security: The security to get a settlement model for
-        :returns: The settlement model for this brokerage.
+        :param security: Security
+        :returns: TradeStation fee model.
         """
         ...
 
@@ -3836,151 +3872,12 @@ class AxosClearingBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
         ...
 
 
-class GDAXBrokerageModel(QuantConnect.Brokerages.CoinbaseBrokerageModel):
-    """
-    Provides GDAX specific properties
-    
-    GDAXBrokerageModel is deprecated. Use CoinbaseBrokerageModel instead.
-    """
+class RBIBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """RBI Brokerage model"""
 
     def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
         """
-        Initializes a new instance of the GDAXBrokerageModel class
-        
-        :param account_type: The type of account to be modelled, defaults to AccountType.Cash
-        """
-        ...
-
-
-class AlphaStreamsBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """Provides properties specific to Alpha Streams"""
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Initializes a new instance of the AlphaStreamsBrokerageModel class
-        
-        :param account_type: The type of account to be modeled, defaults to AccountType.Margin does not accept AccountType.Cash.
-        """
-        ...
-
-    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
-        """
-        Gets a new fee model that represents this brokerage's fee structure
-        
-        :param security: The security to get a fee model for
-        :returns: The new fee model for this brokerage.
-        """
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """
-        Gets the brokerage's leverage for the specified security
-        
-        :param security: The security's whose leverage we seek
-        :returns: The leverage for the specified security.
-        """
-        ...
-
-    def get_settlement_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Securities.ISettlementModel:
-        """
-        Gets a new settlement model for the security
-        
-        :param security: The security to get a settlement model for
-        :returns: The settlement model for this brokerage.
-        """
-        ...
-
-    def get_slippage_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Slippage.ISlippageModel:
-        """
-        Gets a new slippage model that represents this brokerage's fill slippage behavior
-        
-        :param security: The security to get a slippage model for
-        :returns: The new slippage model for this brokerage.
-        """
-        ...
-
-
-class DefaultBrokerageMessageHandler(System.Object, QuantConnect.Brokerages.IBrokerageMessageHandler):
-    """
-    Provides a default implementation o IBrokerageMessageHandler that will forward
-    messages as follows:
-    Information -> IResultHandler.Debug
-    Warning     -> IResultHandler.Error && IApi.SendUserEmail
-    Error       -> IResultHandler.Error && IAlgorithm.RunTimeError
-    """
-
-    @overload
-    def __init__(self, algorithm: QuantConnect.Interfaces.IAlgorithm, initial_delay: typing.Optional[datetime.timedelta] = None, open_threshold: typing.Optional[datetime.timedelta] = None) -> None:
-        """
-        Initializes a new instance of the DefaultBrokerageMessageHandler class
-        
-        :param algorithm: The running algorithm
-        :param open_threshold: Defines how long before market open to re-check for brokerage reconnect message
-        """
-        ...
-
-    @overload
-    def __init__(self, algorithm: QuantConnect.Interfaces.IAlgorithm, job: QuantConnect.Packets.AlgorithmNodePacket, api: QuantConnect.Interfaces.IApi, initial_delay: typing.Optional[datetime.timedelta] = None, open_threshold: typing.Optional[datetime.timedelta] = None) -> None:
-        """
-        Initializes a new instance of the DefaultBrokerageMessageHandler class
-        
-        :param algorithm: The running algorithm
-        :param job: The job that produced the algorithm
-        :param api: The api for the algorithm
-        :param open_threshold: Defines how long before market open to re-check for brokerage reconnect message
-        """
-        ...
-
-    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
-        """
-        Handles the message
-        
-        :param message: The message to be handled
-        """
-        ...
-
-    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
-        """
-        Handles a new order placed manually in the brokerage side
-        
-        :param event_args: The new order event
-        :returns: Whether the order should be added to the transaction handler.
-        """
-        ...
-
-
-class BrokerageModel(System.Object):
-    """Provides factory method for creating an IBrokerageModel from the BrokerageName enum"""
-
-    @staticmethod
-    def create(order_provider: QuantConnect.Securities.IOrderProvider, brokerage: QuantConnect.Brokerages.BrokerageName, account_type: QuantConnect.AccountType) -> QuantConnect.Brokerages.IBrokerageModel:
-        """
-        Creates a new IBrokerageModel for the specified BrokerageName
-        
-        :param order_provider: The order provider
-        :param brokerage: The name of the brokerage
-        :param account_type: The account type
-        :returns: The model for the specified brokerage.
-        """
-        ...
-
-    @staticmethod
-    def get_brokerage_name(brokerage_model: QuantConnect.Brokerages.IBrokerageModel) -> QuantConnect.Brokerages.BrokerageName:
-        """
-        Gets the corresponding BrokerageName for the specified IBrokerageModel
-        
-        :param brokerage_model: The brokerage model
-        :returns: The BrokerageName for the specified brokerage model.
-        """
-        ...
-
-
-class TDAmeritradeBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
-    """TDAmeritrade"""
-
-    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
-        """
-        Constructor for TDAmeritrade brokerage model
+        Constructor for RBI brokerage model
         
         :param account_type: Cash or Margin
         """
@@ -4000,7 +3897,7 @@ class TDAmeritradeBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
 
     def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
         """
-        TDAmeritrade support Update Order
+        RBI supports UpdateOrder
         
         :param security: Security
         :param order: Order that should be updated
@@ -4012,10 +3909,113 @@ class TDAmeritradeBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
 
     def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
         """
-        Provides TDAmeritrade fee model
+        Provides RBI fee model
         
         :param security: Security
-        :returns: TDAmeritrade fee model.
+        :returns: RBI fee model.
+        """
+        ...
+
+
+class KrakenBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Kraken Brokerage model"""
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    @property
+    def coin_leverage(self) -> System.Collections.Generic.IReadOnlyDictionary[str, float]:
+        """Leverage map of different coins"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Constructor for Kraken brokerage model
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account
+        order type, security type, and order size limits.
+        
+        :param security: The security of the order
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def can_update_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, request: QuantConnect.Orders.UpdateOrderRequest, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Kraken does not support update of orders
+        
+        :param security: Security
+        :param order: Order that should be updated
+        :param request: Update request
+        :param message: Outgoing message
+        :returns: Always false as Kraken does not support update of orders.
+        """
+        ...
+
+    def get_benchmark(self, securities: QuantConnect.Securities.SecurityManager) -> QuantConnect.Benchmarks.IBenchmark:
+        """
+        Get the benchmark for this model
+        
+        :param securities: SecurityService to create the security with if needed
+        :returns: The benchmark for this brokerage.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides Kraken fee model
+        
+        :param security: Security
+        :returns: Kraken fee model.
+        """
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """Kraken global leverage rule"""
+        ...
+
+
+class FTXUSBrokerageModel(QuantConnect.Brokerages.FTXBrokerageModel):
+    """FTX.US Brokerage model"""
+
+    @property
+    def market_name(self) -> str:
+        """
+        Market name
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def default_markets(self) -> System.Collections.Generic.IReadOnlyDictionary[QuantConnect.SecurityType, str]:
+        """Gets a map of the default markets to be used for each security type"""
+        ...
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Creates an instance of FTXUSBrokerageModel class
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides FTX.US fee model
+        
+        :param security: The security to get a fee model for
+        :returns: The new fee model for this brokerage.
         """
         ...
 

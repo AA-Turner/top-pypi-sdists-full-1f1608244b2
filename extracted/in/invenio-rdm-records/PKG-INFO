@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: invenio-rdm-records
-Version: 18.14.0
+Version: 19.0.0
 Summary: InvenioRDM module for the communities feature.
 Home-page: https://github.com/inveniosoftware/invenio-rdm-records
 Author: CERN
@@ -22,18 +22,17 @@ Requires-Dist: dcxml<1.0.0,>=0.1.2
 Requires-Dist: Faker>=2.0.3
 Requires-Dist: flask-iiif<2.0.0,>=1.0.0
 Requires-Dist: ftfy<5.0.0,>=4.4.3
-Requires-Dist: invenio-administration<4.0.0,>=3.0.0
-Requires-Dist: invenio-collections<1.0.0,>=0.4.0
-Requires-Dist: invenio-communities<19.0.0,>=18.2.0
-Requires-Dist: invenio-drafts-resources<7.0.0,>=6.0.0
-Requires-Dist: invenio-records-resources<8.0.0,>=7.3.0
-Requires-Dist: invenio-github<3.0.0,>=2.0.0
+Requires-Dist: invenio-administration<5.0.0,>=4.0.0
+Requires-Dist: invenio-communities<20.0.0,>=19.0.0
+Requires-Dist: invenio-drafts-resources<8.0.0,>=7.0.0
+Requires-Dist: invenio-records-resources<9.0.0,>=8.0.0
+Requires-Dist: invenio-github<4.0.0,>=3.0.0
 Requires-Dist: invenio-i18n<4.0.0,>=3.0.0
-Requires-Dist: invenio-jobs<4.0.0,>=3.0.0
+Requires-Dist: invenio-jobs<5.0.0,>=4.0.0
 Requires-Dist: invenio-oaiserver<4.0.0,>=3.0.0
 Requires-Dist: invenio-oauth2server<4.0.0,>=3.0.0
 Requires-Dist: invenio-stats<6.0.0,>=5.0.0
-Requires-Dist: invenio-vocabularies<8.0.0,>=7.0.0
+Requires-Dist: invenio-vocabularies<9.0.0,>=8.0.0
 Requires-Dist: nameparser>=1.1.1
 Requires-Dist: pycountry>=22.3.5
 Requires-Dist: pydash<7.0.0,>=6.0.0
@@ -121,6 +120,20 @@ Tests
 
 Changes
 =======
+
+Version v19.0.0 (released 2025-06-03)
+
+- setup: version bump on dependent packages
+- fix: added permissions for getting/setting transfer metadata
+  * Added extra permissions to get/update transfer metadata. These permissions
+  are not used by REST API, they are used in background tasks, at this
+  moment for fetch transfer (not enabled by default and not supported in UI)
+- test: fixed test - file key is now required
+- permissions: multipart upload with local fs storage
+- Implementation of RFC 0072 - Pluggable transfer types
+  * IfFileIsLocal is not used anymore as it was handling just one type of transport
+  * Switched to IfTransferType permission generators
+- installation: remove collections dependency
 
 Version v18.14.0 (released 2025-06-02)
 

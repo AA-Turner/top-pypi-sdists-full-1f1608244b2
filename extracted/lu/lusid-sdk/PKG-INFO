@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: lusid-sdk
-Version: 2.1.813
+Version: 2.1.815
 Summary: LUSID API
 Home-page: https://github.com/finbourne/lusid-sdk-python
 License: MIT
@@ -804,6 +804,7 @@ Class | Method | HTTP request | Description
  - [CdsCreditEvent](docs/CdsCreditEvent.md)
  - [CdsFlowConventions](docs/CdsFlowConventions.md)
  - [CdsIndex](docs/CdsIndex.md)
+ - [CdsModelOptions](docs/CdsModelOptions.md)
  - [CdsProtectionDetailSpecification](docs/CdsProtectionDetailSpecification.md)
  - [CdxCreditEvent](docs/CdxCreditEvent.md)
  - [Change](docs/Change.md)

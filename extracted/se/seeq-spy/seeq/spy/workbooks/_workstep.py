@@ -88,7 +88,13 @@ class Workstep(Item):
                                                          worksheet_id=worksheet_id,
                                                          workstep_id=workstep_id)  # type: WorkstepOutputV1
 
-            self._definition['Data'] = json.loads(workstep_output.data)
+            try:
+                self._definition['Data'] = json.loads(workstep_output.data)
+            except json.JSONDecodeError as e:
+                message = (f'Failed to decode workstep data for {workbook_id}/{worksheet_id}/{workstep_id}\n\nJSON:\n'
+                           f'{workstep_output.data}\n\nError:\n{e}')
+                status.raise_or_callback(message)
+
             self.previous_workstep_id = workstep_output.previous
 
         _request_workstep()

@@ -2,21 +2,21 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def rule_add(
     execution_context: int | str | None = None,
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.BoidruleTypeItems | None = "GOAL",
+    type: bpy.stub_internal.rna_enums.BoidruleTypeItems | None = "GOAL",
 ):
     """Add a boid rule to the current boid state
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.BoidruleTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.BoidruleTypeItems | None
     """
 
 def rule_del(execution_context: int | str | None = None, undo: bool | None = None):

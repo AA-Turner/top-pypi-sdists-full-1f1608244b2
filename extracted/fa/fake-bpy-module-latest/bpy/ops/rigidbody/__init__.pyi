@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def bake_to_keyframes(
     execution_context: int | str | None = None,
@@ -101,14 +101,14 @@ def constraint_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.RigidbodyConstraintTypeItems | None = "FIXED",
+    type: bpy.stub_internal.rna_enums.RigidbodyConstraintTypeItems | None = "FIXED",
 ):
     """Add Rigid Body Constraint to active object
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Rigid Body Constraint Type
-    :type type: bpy._typing.rna_enums.RigidbodyConstraintTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.RigidbodyConstraintTypeItems | None
     """
 
 def constraint_remove(
@@ -143,14 +143,14 @@ def object_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.RigidbodyObjectTypeItems | None = "ACTIVE",
+    type: bpy.stub_internal.rna_enums.RigidbodyObjectTypeItems | None = "ACTIVE",
 ):
     """Add active object as Rigid Body
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Rigid Body Type
-    :type type: bpy._typing.rna_enums.RigidbodyObjectTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.RigidbodyObjectTypeItems | None
     """
 
 def object_remove(execution_context: int | str | None = None, undo: bool | None = None):
@@ -174,14 +174,14 @@ def objects_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.RigidbodyObjectTypeItems | None = "ACTIVE",
+    type: bpy.stub_internal.rna_enums.RigidbodyObjectTypeItems | None = "ACTIVE",
 ):
     """Add selected objects as Rigid Bodies
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Rigid Body Type
-    :type type: bpy._typing.rna_enums.RigidbodyObjectTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.RigidbodyObjectTypeItems | None
     """
 
 def objects_remove(
@@ -198,14 +198,14 @@ def shape_change(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.RigidbodyObjectShapeItems | None = "MESH",
+    type: bpy.stub_internal.rna_enums.RigidbodyObjectShapeItems | None = "MESH",
 ):
     """Change collision shapes for selected Rigid Body Objects
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Rigid Body Shape
-    :type type: bpy._typing.rna_enums.RigidbodyObjectShapeItems | None
+    :type type: bpy.stub_internal.rna_enums.RigidbodyObjectShapeItems | None
     """
 
 def world_add(execution_context: int | str | None = None, undo: bool | None = None):

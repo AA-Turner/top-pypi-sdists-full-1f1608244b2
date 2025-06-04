@@ -1,3 +1,5 @@
+from abc import abstractmethod
+from functools import partial
 from typing import Optional
 
 from pyspark.sql import DataFrame
@@ -6,12 +8,13 @@ from pyspark.sql.functions import expr
 from fabricks.context import IS_UNITY_CATALOG, SECRET_SCOPE
 from fabricks.context.log import DEFAULT_LOGGER
 from fabricks.core.jobs.base.error import (
-    PostRunCheckFailedException,
-    PostRunCheckWarningException,
-    PostRunInvokerFailedException,
-    PreRunCheckFailedException,
-    PreRunCheckWarningException,
-    PreRunInvokerFailedException,
+    PostRunCheckException,
+    PostRunCheckWarning,
+    PostRunInvokeException,
+    PreRunCheckException,
+    PreRunCheckWarning,
+    PreRunInvokeException,
+    SkipRunCheckWarning,
 )
 from fabricks.core.jobs.base.invoker import Invoker
 from fabricks.utils.write import write_stream
@@ -68,22 +71,22 @@ class Processor(Invoker):
                 assert last_batch == self.table.get_property("fabricks.last_batch")
                 assert self.paths.commits.join(last_batch).exists()
 
-    def _for_each_batch(self, df: DataFrame, batch: Optional[int] = None):
+    def _for_each_batch(self, df: DataFrame, batch: Optional[int] = None, **kwargs):
         DEFAULT_LOGGER.debug("for each batch starts", extra={"job": self})
         if batch is not None:
             DEFAULT_LOGGER.debug(f"batch {batch}", extra={"job": self})
 
         df = self.base_transform(df)
 
-        drift = self.table.schema_drifted(df)
-        if drift:
-            if self.schema_drift:
+        if self.schema_drifted(df):
+            if self.schema_drift or kwargs.get("reload", False):
                 DEFAULT_LOGGER.warning("schema drifted", extra={"job": self})
                 self.update_schema(df=df)
+
             else:
                 raise ValueError("schema drifted")
 
-        self.for_each_batch(df, batch)
+        self.for_each_batch(df, batch, **kwargs)
 
         if batch is not None:
             self.table.set_property("fabricks.last_batch", batch)
@@ -91,7 +94,7 @@ class Processor(Invoker):
         self.table.create_restore_point()
         DEFAULT_LOGGER.debug("for each batch ends", extra={"job": self})
 
-    def for_each_run(self, schedule: Optional[str] = None):
+    def for_each_run(self, **kwargs):
         DEFAULT_LOGGER.debug("for each run starts", extra={"job": self})
 
         if self.virtual:
@@ -103,6 +106,8 @@ class Processor(Invoker):
             df = self.get_data(self.stream)
             assert df is not None, "no data"
 
+            partial(self._for_each_batch, **kwargs)
+
             if self.stream:
                 DEFAULT_LOGGER.debug("stream enabled", extra={"job": self})
                 write_stream(
@@ -112,7 +117,7 @@ class Processor(Invoker):
                     timeout=self.timeout,
                 )
             else:
-                self._for_each_batch(df)
+                self._for_each_batch(df, **kwargs)
 
         else:
             raise ValueError(f"{self.mode} - not allowed")
@@ -125,6 +130,7 @@ class Processor(Invoker):
         schedule: Optional[str] = None,
         schedule_id: Optional[str] = None,
         invoke: Optional[bool] = True,
+        reload: Optional[bool] = None,
     ):
         """
         Run the processor.
@@ -151,65 +157,59 @@ class Processor(Invoker):
 
         try:
             DEFAULT_LOGGER.info("run starts", extra={"job": self})
+            if reload:
+                DEFAULT_LOGGER.debug("force reload", extra={"job": self})
 
             if invoke:
                 self.invoke_pre_run(schedule=schedule)
 
-            self.pre_run_check()
+            if not reload:
+                self.check_skip_run()
 
-            self.for_each_run(schedule=schedule)
+            self.check_pre_run()
 
-            self.post_run_check()
-            self.post_run_extra_check()
+            self.for_each_run(schedule=schedule, reload=reload)
+
+            self.check_post_run()
+            self.check_post_run_extra()
 
             if invoke:
                 self.invoke_post_run(schedule=schedule)
 
             DEFAULT_LOGGER.info("run ends", extra={"job": self})
 
-        except (PreRunCheckWarningException, PostRunCheckWarningException) as e:
-            DEFAULT_LOGGER.exception("🙈 (no retry)", extra={"job": self})
+        except SkipRunCheckWarning as e:
+            DEFAULT_LOGGER.warning("skip run", extra={"job": self})
             raise e
 
-        except (PreRunInvokerFailedException, PostRunInvokerFailedException) as e:
-            DEFAULT_LOGGER.exception("🙈 (no retry)", extra={"job": self})
+        except (PreRunCheckWarning, PostRunCheckWarning) as e:
+            DEFAULT_LOGGER.warning("could not pass warning check", extra={"job": self})
             raise e
 
-        except (PreRunCheckFailedException, PostRunCheckFailedException) as e:
-            DEFAULT_LOGGER.exception("🙈 (no retry)", extra={"job": self})
+        except (PreRunInvokeException, PostRunInvokeException) as e:
+            DEFAULT_LOGGER.exception("could not run invoker", extra={"job": self})
+            raise e
+
+        except (PreRunCheckException, PostRunCheckException) as e:
+            DEFAULT_LOGGER.exception("could not pass check", extra={"job": self})
             self.restore(last_version, last_batch)
             raise e
 
         except AssertionError as e:
-            DEFAULT_LOGGER.exception("🙈", extra={"job": self})
+            DEFAULT_LOGGER.exception("could not run", extra={"job": self})
             self.restore(last_version, last_batch)
             raise e
 
         except Exception as e:
             if not self.stream or not retry:
-                DEFAULT_LOGGER.exception("🙈 (no retry)", extra={"job": self})
+                DEFAULT_LOGGER.exception("could not run", extra={"job": self})
                 self.restore(last_version, last_batch)
                 raise e
+
             else:
-                DEFAULT_LOGGER.exception("🙈 (retry)", extra={"job": self})
+                DEFAULT_LOGGER.warning("retry to run", extra={"job": self})
                 self.run(retry=False, schedule_id=schedule_id)
 
+    @abstractmethod
     def overwrite(self):
-        """
-        Executes the overwrite job.
-
-        This method truncates the data, overwrites the schema, and runs the job.
-        If an exception occurs during the execution, it is logged and re-raised.
-
-        Raises:
-            Exception: If an error occurs during the execution of the job.
-        """
-        try:
-            DEFAULT_LOGGER.warning("overwrite job", extra={"job": self})
-            self.truncate()
-            self.overwrite_schema()
-            self.run(retry=False)
-
-        except Exception as e:
-            DEFAULT_LOGGER.exception("🙈", extra={"job": self})
-            raise e
+        raise NotImplementedError()

@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -13,7 +13,7 @@ def add(
     /,
     *,
     radius: float | None = 1.0,
-    type: bpy._typing.rna_enums.ObjectTypeItems | None = "EMPTY",
+    type: bpy.stub_internal.rna_enums.ObjectTypeItems | None = "EMPTY",
     enter_editmode: bool | None = False,
     align: typing.Literal["WORLD", "VIEW", "CURSOR"] | None = "WORLD",
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (
@@ -35,7 +35,7 @@ def add(
         :param radius: Radius
         :type radius: float | None
         :param type: Type
-        :type type: bpy._typing.rna_enums.ObjectTypeItems | None
+        :type type: bpy.stub_internal.rna_enums.ObjectTypeItems | None
         :param enter_editmode: Enter Edit Mode, Enter edit mode when adding this object
         :type enter_editmode: bool | None
         :param align: Align, The alignment of the new object
@@ -218,23 +218,23 @@ def bake(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.BakePassTypeItems | None = "COMBINED",
-    pass_filter: set[bpy._typing.rna_enums.BakePassFilterTypeItems] | None = {},
+    type: bpy.stub_internal.rna_enums.BakePassTypeItems | None = "COMBINED",
+    pass_filter: set[bpy.stub_internal.rna_enums.BakePassFilterTypeItems] | None = {},
     filepath: str = "",
     width: int | None = 512,
     height: int | None = 512,
     margin: int | None = 16,
-    margin_type: bpy._typing.rna_enums.BakeMarginTypeItems | None = "EXTEND",
+    margin_type: bpy.stub_internal.rna_enums.BakeMarginTypeItems | None = "EXTEND",
     use_selected_to_active: bool | None = False,
     max_ray_distance: float | None = 0.0,
     cage_extrusion: float | None = 0.0,
     cage_object: str = "",
-    normal_space: bpy._typing.rna_enums.NormalSpaceItems | None = "TANGENT",
-    normal_r: bpy._typing.rna_enums.NormalSwizzleItems | None = "POS_X",
-    normal_g: bpy._typing.rna_enums.NormalSwizzleItems | None = "POS_Y",
-    normal_b: bpy._typing.rna_enums.NormalSwizzleItems | None = "POS_Z",
-    target: bpy._typing.rna_enums.BakeTargetItems | None = "IMAGE_TEXTURES",
-    save_mode: bpy._typing.rna_enums.BakeSaveModeItems | None = "INTERNAL",
+    normal_space: bpy.stub_internal.rna_enums.NormalSpaceItems | None = "TANGENT",
+    normal_r: bpy.stub_internal.rna_enums.NormalSwizzleItems | None = "POS_X",
+    normal_g: bpy.stub_internal.rna_enums.NormalSwizzleItems | None = "POS_Y",
+    normal_b: bpy.stub_internal.rna_enums.NormalSwizzleItems | None = "POS_Z",
+    target: bpy.stub_internal.rna_enums.BakeTargetItems | None = "IMAGE_TEXTURES",
+    save_mode: bpy.stub_internal.rna_enums.BakeSaveModeItems | None = "INTERNAL",
     use_clear: bool | None = False,
     use_cage: bool | None = False,
     use_split_materials: bool | None = False,
@@ -246,9 +246,9 @@ def bake(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type, Type of pass to bake, some of them may not be supported by the current render engine
-    :type type: bpy._typing.rna_enums.BakePassTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.BakePassTypeItems | None
     :param pass_filter: Pass Filter, Filter to combined, diffuse, glossy, transmission and subsurface passes
-    :type pass_filter: set[bpy._typing.rna_enums.BakePassFilterTypeItems] | None
+    :type pass_filter: set[bpy.stub_internal.rna_enums.BakePassFilterTypeItems] | None
     :param filepath: File Path, Image filepath to use when saving externally
     :type filepath: str
     :param width: Width, Horizontal dimension of the baking map (external only)
@@ -258,7 +258,7 @@ def bake(
     :param margin: Margin, Extends the baked result as a post process filter
     :type margin: int | None
     :param margin_type: Margin Type, Which algorithm to use to generate the margin
-    :type margin_type: bpy._typing.rna_enums.BakeMarginTypeItems | None
+    :type margin_type: bpy.stub_internal.rna_enums.BakeMarginTypeItems | None
     :param use_selected_to_active: Selected to Active, Bake shading on the surface of selected objects to the active object
     :type use_selected_to_active: bool | None
     :param max_ray_distance: Max Ray Distance, The maximum ray distance for matching points between the active and selected objects. If zero, there is no limit
@@ -268,17 +268,17 @@ def bake(
     :param cage_object: Cage Object, Object to use as cage, instead of calculating the cage from the active object with cage extrusion
     :type cage_object: str
     :param normal_space: Normal Space, Choose normal space for baking
-    :type normal_space: bpy._typing.rna_enums.NormalSpaceItems | None
+    :type normal_space: bpy.stub_internal.rna_enums.NormalSpaceItems | None
     :param normal_r: R, Axis to bake in red channel
-    :type normal_r: bpy._typing.rna_enums.NormalSwizzleItems | None
+    :type normal_r: bpy.stub_internal.rna_enums.NormalSwizzleItems | None
     :param normal_g: G, Axis to bake in green channel
-    :type normal_g: bpy._typing.rna_enums.NormalSwizzleItems | None
+    :type normal_g: bpy.stub_internal.rna_enums.NormalSwizzleItems | None
     :param normal_b: B, Axis to bake in blue channel
-    :type normal_b: bpy._typing.rna_enums.NormalSwizzleItems | None
+    :type normal_b: bpy.stub_internal.rna_enums.NormalSwizzleItems | None
     :param target: Target, Where to output the baked map
-    :type target: bpy._typing.rna_enums.BakeTargetItems | None
+    :type target: bpy.stub_internal.rna_enums.BakeTargetItems | None
     :param save_mode: Save Mode, Where to save baked image textures
-    :type save_mode: bpy._typing.rna_enums.BakeSaveModeItems | None
+    :type save_mode: bpy.stub_internal.rna_enums.BakeSaveModeItems | None
     :param use_clear: Clear, Clear images before baking (only for internal saving)
     :type use_clear: bool | None
     :param use_cage: Cage, Cast rays to active object from a cage
@@ -721,7 +721,7 @@ def data_instance_add(
     *,
     name: str = "",
     session_uid: int | None = 0,
-    type: bpy._typing.rna_enums.IdTypeItems | None = "ACTION",
+    type: bpy.stub_internal.rna_enums.IdTypeItems | None = "ACTION",
     align: typing.Literal["WORLD", "VIEW", "CURSOR"] | None = "WORLD",
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (
         0.0,
@@ -746,7 +746,7 @@ def data_instance_add(
         :param session_uid: Session UID, Session UID of the data-block to use by the operator
         :type session_uid: int | None
         :param type: Type
-        :type type: bpy._typing.rna_enums.IdTypeItems | None
+        :type type: bpy.stub_internal.rna_enums.IdTypeItems | None
         :param align: Align, The alignment of the new object
 
     WORLD
@@ -794,19 +794,22 @@ def data_transfer(
     ]
     | None = "",
     use_create: bool | None = True,
-    vert_mapping: bpy._typing.rna_enums.DtMethodVertexItems | None = "NEAREST",
-    edge_mapping: bpy._typing.rna_enums.DtMethodEdgeItems | None = "NEAREST",
-    loop_mapping: bpy._typing.rna_enums.DtMethodLoopItems | None = "NEAREST_POLYNOR",
-    poly_mapping: bpy._typing.rna_enums.DtMethodPolyItems | None = "NEAREST",
+    vert_mapping: bpy.stub_internal.rna_enums.DtMethodVertexItems | None = "NEAREST",
+    edge_mapping: bpy.stub_internal.rna_enums.DtMethodEdgeItems | None = "NEAREST",
+    loop_mapping: bpy.stub_internal.rna_enums.DtMethodLoopItems
+    | None = "NEAREST_POLYNOR",
+    poly_mapping: bpy.stub_internal.rna_enums.DtMethodPolyItems | None = "NEAREST",
     use_auto_transform: bool | None = False,
     use_object_transform: bool | None = True,
     use_max_distance: bool | None = False,
     max_distance: float | None = 1.0,
     ray_radius: float | None = 0.0,
     islands_precision: float | None = 0.1,
-    layers_select_src: bpy._typing.rna_enums.DtLayersSelectSrcItems | None = "ACTIVE",
-    layers_select_dst: bpy._typing.rna_enums.DtLayersSelectDstItems | None = "ACTIVE",
-    mix_mode: bpy._typing.rna_enums.DtMixModeItems | None = "REPLACE",
+    layers_select_src: bpy.stub_internal.rna_enums.DtLayersSelectSrcItems
+    | None = "ACTIVE",
+    layers_select_dst: bpy.stub_internal.rna_enums.DtLayersSelectDstItems
+    | None = "ACTIVE",
+    mix_mode: bpy.stub_internal.rna_enums.DtMixModeItems | None = "REPLACE",
     mix_factor: float | None = 1.0,
 ):
     """Transfer data layer(s) (weights, edge sharp, etc.) from active to selected meshes
@@ -861,13 +864,13 @@ def data_transfer(
         :param use_create: Create Data, Add data layers on destination meshes if needed
         :type use_create: bool | None
         :param vert_mapping: Vertex Mapping, Method used to map source vertices to destination ones
-        :type vert_mapping: bpy._typing.rna_enums.DtMethodVertexItems | None
+        :type vert_mapping: bpy.stub_internal.rna_enums.DtMethodVertexItems | None
         :param edge_mapping: Edge Mapping, Method used to map source edges to destination ones
-        :type edge_mapping: bpy._typing.rna_enums.DtMethodEdgeItems | None
+        :type edge_mapping: bpy.stub_internal.rna_enums.DtMethodEdgeItems | None
         :param loop_mapping: Face Corner Mapping, Method used to map source faces' corners to destination ones
-        :type loop_mapping: bpy._typing.rna_enums.DtMethodLoopItems | None
+        :type loop_mapping: bpy.stub_internal.rna_enums.DtMethodLoopItems | None
         :param poly_mapping: Face Mapping, Method used to map source faces to destination ones
-        :type poly_mapping: bpy._typing.rna_enums.DtMethodPolyItems | None
+        :type poly_mapping: bpy.stub_internal.rna_enums.DtMethodPolyItems | None
         :param use_auto_transform: Auto Transform, Automatically compute transformation to get the best possible match between source and destination meshes.Warning: Results will never be as good as manual matching of objects
         :type use_auto_transform: bool | None
         :param use_object_transform: Object Transform, Evaluate source and destination meshes in global space
@@ -881,11 +884,11 @@ def data_transfer(
         :param islands_precision: Islands Precision, Factor controlling precision of islands handling (the higher, the better the results)
         :type islands_precision: float | None
         :param layers_select_src: Source Layers Selection, Which layers to transfer, in case of multi-layers types
-        :type layers_select_src: bpy._typing.rna_enums.DtLayersSelectSrcItems | None
+        :type layers_select_src: bpy.stub_internal.rna_enums.DtLayersSelectSrcItems | None
         :param layers_select_dst: Destination Layers Matching, How to match source and destination layers
-        :type layers_select_dst: bpy._typing.rna_enums.DtLayersSelectDstItems | None
+        :type layers_select_dst: bpy.stub_internal.rna_enums.DtLayersSelectDstItems | None
         :param mix_mode: Mix Mode, How to affect destination elements with source values
-        :type mix_mode: bpy._typing.rna_enums.DtMixModeItems | None
+        :type mix_mode: bpy.stub_internal.rna_enums.DtMixModeItems | None
         :param mix_factor: Mix Factor, Factor to use when applying data to destination (exact behavior depends on mix mode)
         :type mix_factor: float | None
     """
@@ -913,8 +916,10 @@ def datalayout_transfer(
     ]
     | None = "",
     use_delete: bool | None = False,
-    layers_select_src: bpy._typing.rna_enums.DtLayersSelectSrcItems | None = "ACTIVE",
-    layers_select_dst: bpy._typing.rna_enums.DtLayersSelectDstItems | None = "ACTIVE",
+    layers_select_src: bpy.stub_internal.rna_enums.DtLayersSelectSrcItems
+    | None = "ACTIVE",
+    layers_select_dst: bpy.stub_internal.rna_enums.DtLayersSelectDstItems
+    | None = "ACTIVE",
 ):
     """Transfer layout of data layer(s) from active to selected meshes
 
@@ -966,9 +971,9 @@ def datalayout_transfer(
         :param use_delete: Exact Match, Also delete some data layers from destination if necessary, so that it matches exactly source
         :type use_delete: bool | None
         :param layers_select_src: Source Layers Selection, Which layers to transfer, in case of multi-layers types
-        :type layers_select_src: bpy._typing.rna_enums.DtLayersSelectSrcItems | None
+        :type layers_select_src: bpy.stub_internal.rna_enums.DtLayersSelectSrcItems | None
         :param layers_select_dst: Destination Layers Matching, How to match source and destination layers
-        :type layers_select_dst: bpy._typing.rna_enums.DtLayersSelectDstItems | None
+        :type layers_select_dst: bpy.stub_internal.rna_enums.DtLayersSelectDstItems | None
     """
 
 def delete(
@@ -1031,7 +1036,7 @@ def duplicate(
     /,
     *,
     linked: bool | None = False,
-    mode: bpy._typing.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
+    mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
 ):
     """Duplicate selected objects
 
@@ -1040,7 +1045,7 @@ def duplicate(
     :param linked: Linked, Duplicate object but not object data, linking to the original data
     :type linked: bool | None
     :param mode: Mode
-    :type mode: bpy._typing.rna_enums.TransformModeTypeItems | None
+    :type mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None
     """
 
 def duplicate_move(
@@ -1176,7 +1181,7 @@ def empty_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.ObjectEmptyDrawtypeItems | None = "PLAIN_AXES",
+    type: bpy.stub_internal.rna_enums.ObjectEmptyDrawtypeItems | None = "PLAIN_AXES",
     radius: float | None = 1.0,
     align: typing.Literal["WORLD", "VIEW", "CURSOR"] | None = "WORLD",
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (
@@ -1196,7 +1201,7 @@ def empty_add(
         :type execution_context: int | str | None
         :type undo: bool | None
         :param type: Type
-        :type type: bpy._typing.rna_enums.ObjectEmptyDrawtypeItems | None
+        :type type: bpy.stub_internal.rna_enums.ObjectEmptyDrawtypeItems | None
         :param radius: Radius
         :type radius: float | None
         :param align: Align, The alignment of the new object
@@ -1546,7 +1551,7 @@ def grease_pencil_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.ObjectGpencilTypeItems | None = "EMPTY",
+    type: bpy.stub_internal.rna_enums.ObjectGpencilTypeItems | None = "EMPTY",
     use_in_front: bool | None = True,
     stroke_depth_offset: float | None = 0.05,
     use_lights: bool | None = False,
@@ -1570,7 +1575,7 @@ def grease_pencil_add(
         :type execution_context: int | str | None
         :type undo: bool | None
         :param type: Type
-        :type type: bpy._typing.rna_enums.ObjectGpencilTypeItems | None
+        :type type: bpy.stub_internal.rna_enums.ObjectGpencilTypeItems | None
         :param use_in_front: Show In Front, Show Line Art Grease Pencil in front of everything
         :type use_in_front: bool | None
         :param stroke_depth_offset: Stroke Offset, Stroke offset for the Line Art modifier
@@ -1944,7 +1949,7 @@ def light_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.LightTypeItems | None = "POINT",
+    type: bpy.stub_internal.rna_enums.LightTypeItems | None = "POINT",
     radius: float | None = 1.0,
     align: typing.Literal["WORLD", "VIEW", "CURSOR"] | None = "WORLD",
     location: collections.abc.Sequence[float] | mathutils.Vector | None = (
@@ -1964,7 +1969,7 @@ def light_add(
         :type execution_context: int | str | None
         :type undo: bool | None
         :param type: Type
-        :type type: bpy._typing.rna_enums.LightTypeItems | None
+        :type type: bpy.stub_internal.rna_enums.LightTypeItems | None
         :param radius: Radius
         :type radius: float | None
         :param align: Align, The alignment of the new object
@@ -2489,7 +2494,7 @@ def metaball_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.MetaelemTypeItems | None = "BALL",
+    type: bpy.stub_internal.rna_enums.MetaelemTypeItems | None = "BALL",
     radius: float | None = 2.0,
     enter_editmode: bool | None = False,
     align: typing.Literal["WORLD", "VIEW", "CURSOR"] | None = "WORLD",
@@ -2510,7 +2515,7 @@ def metaball_add(
         :type execution_context: int | str | None
         :type undo: bool | None
         :param type: Primitive
-        :type type: bpy._typing.rna_enums.MetaelemTypeItems | None
+        :type type: bpy.stub_internal.rna_enums.MetaelemTypeItems | None
         :param radius: Radius
         :type radius: float | None
         :param enter_editmode: Enter Edit Mode, Enter edit mode when adding this object
@@ -2539,7 +2544,7 @@ def mode_set(
     undo: bool | None = None,
     /,
     *,
-    mode: bpy._typing.rna_enums.ObjectModeItems | None = "OBJECT",
+    mode: bpy.stub_internal.rna_enums.ObjectModeItems | None = "OBJECT",
     toggle: bool | None = False,
 ):
     """Sets the object interaction mode
@@ -2547,7 +2552,7 @@ def mode_set(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param mode: Mode
-    :type mode: bpy._typing.rna_enums.ObjectModeItems | None
+    :type mode: bpy.stub_internal.rna_enums.ObjectModeItems | None
     :param toggle: Toggle
     :type toggle: bool | None
     """
@@ -2557,20 +2562,20 @@ def mode_set_with_submode(
     undo: bool | None = None,
     /,
     *,
-    mode: bpy._typing.rna_enums.ObjectModeItems | None = "OBJECT",
+    mode: bpy.stub_internal.rna_enums.ObjectModeItems | None = "OBJECT",
     toggle: bool | None = False,
-    mesh_select_mode: set[bpy._typing.rna_enums.MeshSelectModeItems] | None = {},
+    mesh_select_mode: set[bpy.stub_internal.rna_enums.MeshSelectModeItems] | None = {},
 ):
     """Sets the object interaction mode
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param mode: Mode
-    :type mode: bpy._typing.rna_enums.ObjectModeItems | None
+    :type mode: bpy.stub_internal.rna_enums.ObjectModeItems | None
     :param toggle: Toggle
     :type toggle: bool | None
     :param mesh_select_mode: Mesh Mode
-    :type mesh_select_mode: set[bpy._typing.rna_enums.MeshSelectModeItems] | None
+    :type mesh_select_mode: set[bpy.stub_internal.rna_enums.MeshSelectModeItems] | None
     """
 
 def modifier_add(
@@ -2578,7 +2583,7 @@ def modifier_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.ObjectModifierTypeItems | None = "SUBSURF",
+    type: bpy.stub_internal.rna_enums.ObjectModifierTypeItems | None = "SUBSURF",
     use_selected_objects: bool | None = False,
 ):
     """Add a procedural operation/effect to the active object
@@ -2586,7 +2591,7 @@ def modifier_add(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.ObjectModifierTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.ObjectModifierTypeItems | None
     :param use_selected_objects: Selected Objects, Affect all selected objects instead of just the active object
     :type use_selected_objects: bool | None
     """
@@ -2596,7 +2601,8 @@ def modifier_add_node_group(
     undo: bool | None = None,
     /,
     *,
-    asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None = "LOCAL",
+    asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems
+    | None = "LOCAL",
     asset_library_identifier: str = "",
     relative_asset_identifier: str = "",
     session_uid: int | None = 0,
@@ -2607,7 +2613,7 @@ def modifier_add_node_group(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param asset_library_type: Asset Library Type
-    :type asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None
+    :type asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems | None
     :param asset_library_identifier: Asset Library Identifier
     :type asset_library_identifier: str
     :param relative_asset_identifier: Relative Asset Identifier
@@ -3232,17 +3238,18 @@ def paths_calculate(
     undo: bool | None = None,
     /,
     *,
-    display_type: bpy._typing.rna_enums.MotionpathDisplayTypeItems | None = "RANGE",
-    range: bpy._typing.rna_enums.MotionpathRangeItems | None = "SCENE",
+    display_type: bpy.stub_internal.rna_enums.MotionpathDisplayTypeItems
+    | None = "RANGE",
+    range: bpy.stub_internal.rna_enums.MotionpathRangeItems | None = "SCENE",
 ):
     """Generate motion paths for the selected objects
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param display_type: Display type
-    :type display_type: bpy._typing.rna_enums.MotionpathDisplayTypeItems | None
+    :type display_type: bpy.stub_internal.rna_enums.MotionpathDisplayTypeItems | None
     :param range: Computation Range
-    :type range: bpy._typing.rna_enums.MotionpathRangeItems | None
+    :type range: bpy.stub_internal.rna_enums.MotionpathRangeItems | None
     """
 
 def paths_clear(
@@ -3590,7 +3597,7 @@ def select_by_type(
     /,
     *,
     extend: bool | None = False,
-    type: bpy._typing.rna_enums.ObjectTypeItems | None = "MESH",
+    type: bpy.stub_internal.rna_enums.ObjectTypeItems | None = "MESH",
 ):
     """Select all visible objects that are of a type
 
@@ -3599,7 +3606,7 @@ def select_by_type(
     :param extend: Extend, Extend selection instead of deselecting everything first
     :type extend: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.ObjectTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.ObjectTypeItems | None
     """
 
 def select_camera(
@@ -3883,14 +3890,14 @@ def shaderfx_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.ObjectShaderfxTypeItems | None = "FX_BLUR",
+    type: bpy.stub_internal.rna_enums.ObjectShaderfxTypeItems | None = "FX_BLUR",
 ):
     """Add a visual effect to the active object
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.ObjectShaderfxTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.ObjectShaderfxTypeItems | None
     """
 
 def shaderfx_copy(
