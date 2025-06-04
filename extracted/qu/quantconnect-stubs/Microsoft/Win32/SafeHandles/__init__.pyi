@@ -32,10 +32,6 @@ class SafeFileHandle(Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInval
         ...
 
     @overload
-    def __init__(self) -> None:
-        ...
-
-    @overload
     def __init__(self, preexisting_handle: System.IntPtr, owns_handle: bool) -> None:
         """
         Creates a Microsoft.Win32.SafeHandles.SafeFileHandle around a file handle.
@@ -45,7 +41,23 @@ class SafeFileHandle(Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInval
         """
         ...
 
+    @overload
+    def __init__(self) -> None:
+        ...
+
     def release_handle(self) -> bool:
+        """This method is protected."""
+        ...
+
+
+class SafeHandleMinusOneIsInvalid(System.Runtime.InteropServices.SafeHandle, metaclass=abc.ABCMeta):
+    """This class has no documentation."""
+
+    @property
+    def is_invalid(self) -> bool:
+        ...
+
+    def __init__(self, owns_handle: bool) -> None:
         """This method is protected."""
         ...
 
@@ -73,7 +85,7 @@ class SafeWaitHandle(Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInval
         ...
 
 
-class CriticalHandleMinusOneIsInvalid(System.Runtime.InteropServices.CriticalHandle, metaclass=abc.ABCMeta):
+class CriticalHandleZeroOrMinusOneIsInvalid(System.Runtime.InteropServices.CriticalHandle, metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
     @property
@@ -85,19 +97,7 @@ class CriticalHandleMinusOneIsInvalid(System.Runtime.InteropServices.CriticalHan
         ...
 
 
-class SafeHandleMinusOneIsInvalid(System.Runtime.InteropServices.SafeHandle, metaclass=abc.ABCMeta):
-    """This class has no documentation."""
-
-    @property
-    def is_invalid(self) -> bool:
-        ...
-
-    def __init__(self, owns_handle: bool) -> None:
-        """This method is protected."""
-        ...
-
-
-class CriticalHandleZeroOrMinusOneIsInvalid(System.Runtime.InteropServices.CriticalHandle, metaclass=abc.ABCMeta):
+class CriticalHandleMinusOneIsInvalid(System.Runtime.InteropServices.CriticalHandle, metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
     @property

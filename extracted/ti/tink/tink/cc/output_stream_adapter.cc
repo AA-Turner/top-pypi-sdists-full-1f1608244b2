@@ -17,10 +17,13 @@
 #include "tink/cc/output_stream_adapter.h"
 
 #include <algorithm>
+#include <cstdint>
+#include <cstring>
 
+#include "absl/log/check.h"
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
 #include "absl/strings/string_view.h"
-#include "tink/util/status.h"
-#include "tink/util/statusor.h"
 
 namespace crypto {
 namespace tink {
@@ -38,6 +41,7 @@ absl::StatusOr<int64_t> OutputStreamAdapter::Write(absl::string_view data) {
     if (write_count < available) stream_->BackUp(available - write_count);
     written += write_count;
   }
+  CHECK(written == data.size());
   return written;
 }
 

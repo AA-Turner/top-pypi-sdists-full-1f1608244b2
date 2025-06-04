@@ -16,7 +16,7 @@ from biolib.biolib_errors import BioLibError, JobResultNonZeroExitCodeError
 from biolib.biolib_logging import logger
 from biolib.compute_node.job_worker.job_worker import JobWorker
 from biolib.experiments.experiment import Experiment
-from biolib.jobs import Job
+from biolib.jobs.job import Result
 from biolib.typing_utils import Dict, Optional
 from biolib.utils.app_uri import parse_app_uri
 from biolib._runtime.runtime import Runtime
@@ -75,7 +75,7 @@ class BioLibApp:
         temporary_client_secrets: Optional[Dict[str, str]] = None,
         check: bool = False,
         stream_logs: bool = False,
-    ) -> Job:
+    ) -> Result:
         if experiment_id and experiment:
             raise ValueError('Only one of experiment_id and experiment can be specified')
 
@@ -100,7 +100,7 @@ class BioLibApp:
 
             return self._run_locally(module_input_serialized)
 
-        job = Job._start_job_in_cloud(  # pylint: disable=protected-access
+        job = Result._start_job_in_cloud(  # pylint: disable=protected-access
             app_uri=self._app_uri,
             app_version_uuid=self._app_version['public_id'],
             experiment_id=experiment_id,
@@ -225,12 +225,12 @@ Example: "app.cli('--help')"
         )
         return module_input_serialized
 
-    def _run_locally(self, module_input_serialized: bytes) -> Job:
+    def _run_locally(self, module_input_serialized: bytes) -> Result:
         job_dict = BiolibJobApi.create(
             app_version_id=self._app_version['public_id'],
             app_resource_name_prefix=parse_app_uri(self._app_uri)['resource_name_prefix'],
         )
-        job = Job(job_dict)
+        job = Result(job_dict)
 
         try:
             BiolibJobApi.update_state(job.id, JobState.IN_PROGRESS)
@@ -243,7 +243,7 @@ Example: "app.cli('--help')"
 
         return job
 
-    def run(self, **kwargs) -> Job:
+    def run(self, **kwargs) -> Result:
         args = []
         biolib_kwargs = {}
         for key, value in kwargs.items():
@@ -273,5 +273,5 @@ Example: "app.cli('--help')"
 
         return self.cli(args, **biolib_kwargs)
 
-    def start(self, **kwargs) -> Job:
+    def start(self, **kwargs) -> Result:
         return self.run(biolib_blocking=False, **kwargs)

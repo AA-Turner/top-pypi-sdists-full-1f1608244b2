@@ -17,6 +17,7 @@ mod templating;
 use cors::Cors;
 use handling::request_handler::handle_request;
 use handling::response_handler::handle_response;
+use into_response::convert_to_response;
 use multipart::File;
 use pyo3::types::PyDict;
 use request::Request;
@@ -259,6 +260,7 @@ fn oxapy(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(head, m)?)?;
     m.add_function(wrap_pyfunction!(options, m)?)?;
     m.add_function(wrap_pyfunction!(static_file, m)?)?;
+    m.add_function(wrap_pyfunction!(convert_to_response, m)?)?;
 
     templating::templating_submodule(m)?;
     serializer::serializer_submodule(m)?;

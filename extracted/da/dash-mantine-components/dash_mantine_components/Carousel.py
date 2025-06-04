@@ -34,10 +34,6 @@ Keyword arguments:
     The index of the current slide. Read only.  Use initialSlide to
     set the current slide.
 
-- align (a value equal to: 'start', 'center', 'end'; optional):
-    Determines how slides will be aligned relative to the container.
-    `'center'` by default.
-
 - aria-* (string; optional):
     Wild card aria attributes.
 
@@ -76,11 +72,6 @@ Keyword arguments:
 - classNames (dict; optional):
     Adds class names to Mantine components.
 
-- containScroll (a value equal to: '', 'trimSnaps', 'keepSnaps'; optional):
-    Clear leading and trailing empty space that causes excessive
-    scrolling. Use `trimSnaps` to only use snap points that trigger
-    scrolling or keepSnaps to keep them.
-
 - controlSize (string | number; optional):
     Controls size of the next and previous controls, `26` by default.
 
@@ -97,9 +88,8 @@ Keyword arguments:
 
 - display (optional)
 
-- dragFree (boolean; optional):
-    Determines whether momentum scrolling should be enabled, `False`
-    by default.
+- emblaOptions (dict; optional):
+    options to pass to the embla component.
 
 - ff (optional):
     FontFamily.
@@ -124,11 +114,6 @@ Keyword arguments:
 - hiddenFrom (optional):
     Breakpoint above which the component is hidden with `display:
     none`.
-
-- inViewThreshold (number; optional):
-    Choose a fraction representing the percentage portion of a slide
-    that needs to be visible in order to be considered in view. For
-    example, 0.5 equals 50%.
 
 - includeGapInSize (boolean; optional):
     Determines whether gap between slides should be treated as part of
@@ -162,10 +147,6 @@ Keyword arguments:
 
     - component_name (string; required):
         Holds the name of the component that is loading.
-
-- loop (boolean; optional):
-    Enables infinite looping. `True` by default, automatically falls
-    back to `False` if slide content isn't enough to loop.
 
 - lts (string | number; optional):
     LetterSpacing.
@@ -256,20 +237,11 @@ Keyword arguments:
 
 - right (string | number; optional)
 
-- skipSnaps (boolean; optional):
-    Allow the carousel to skip scroll snaps if it is dragged
-    vigorously. Note that this option will be ignored if the dragFree
-    option is set to `True`, `False` by default.
-
 - slideGap (number; optional):
     Key of theme.spacing or number to set gap between slides.
 
 - slideSize (string | number; optional):
     Controls slide width based on viewport width, `'100%'` by default.
-
-- slidesToScroll (number; optional):
-    Number of slides that will be scrolled with next/previous buttons,
-    `1` by default.
 
 - styles (boolean | number | string | dict | list; optional):
     Mantine styles API.
@@ -340,23 +312,17 @@ Keyword arguments:
         slideGap: typing.Optional[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]] = None,
         orientation: typing.Optional[Literal["horizontal", "vertical"]] = None,
         height: typing.Optional[typing.Union[str, NumberType]] = None,
-        align: typing.Optional[Literal["start", "center", "end"]] = None,
-        slidesToScroll: typing.Optional[typing.Union[NumberType, Literal["auto"]]] = None,
         includeGapInSize: typing.Optional[bool] = None,
-        dragFree: typing.Optional[bool] = None,
-        loop: typing.Optional[bool] = None,
         initialSlide: typing.Optional[NumberType] = None,
-        inViewThreshold: typing.Optional[NumberType] = None,
         withControls: typing.Optional[bool] = None,
         withIndicators: typing.Optional[bool] = None,
         nextControlIcon: typing.Optional[ComponentType] = None,
         previousControlIcon: typing.Optional[ComponentType] = None,
-        skipSnaps: typing.Optional[bool] = None,
-        containScroll: typing.Optional[Literal["", "trimSnaps", "keepSnaps"]] = None,
         withKeyboardEvents: typing.Optional[bool] = None,
         autoplay: typing.Optional[typing.Any] = None,
         autoScroll: typing.Optional[typing.Any] = None,
         type: typing.Optional[Literal["media", "container"]] = None,
+        emblaOptions: typing.Optional[dict] = None,
         className: typing.Optional[str] = None,
         style: typing.Optional[typing.Any] = None,
         hiddenFrom: typing.Optional[typing.Union[Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]] = None,
@@ -390,7 +356,7 @@ Keyword arguments:
         fz: typing.Optional[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"], Literal["h1"], Literal["h2"], Literal["h3"], Literal["h4"], Literal["h5"], Literal["h6"]]] = None,
         fw: typing.Optional[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["bold"], Literal["normal"], Literal["bolder"], Literal["lighter"]]] = None,
         lts: typing.Optional[typing.Union[str, NumberType]] = None,
-        ta: typing.Optional[typing.Union[Literal["left"], Literal["right"], Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["start"], Literal["center"], Literal["end"], Literal["-webkit-match-parent"], Literal["justify"], Literal["match-parent"]]] = None,
+        ta: typing.Optional[typing.Union[Literal["left"], Literal["right"], Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["-webkit-match-parent"], Literal["center"], Literal["end"], Literal["justify"], Literal["match-parent"], Literal["start"]]] = None,
         lh: typing.Optional[typing.Union[NumberType, Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"], Literal["h1"], Literal["h2"], Literal["h3"], Literal["h4"], Literal["h5"], Literal["h6"]]] = None,
         fs: typing.Optional[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["normal"], Literal["italic"], Literal["oblique"]]] = None,
         tt: typing.Optional[typing.Union[Literal["-moz-initial"], Literal["inherit"], Literal["initial"], Literal["revert"], Literal["revert-layer"], Literal["unset"], Literal["none"], Literal["capitalize"], Literal["full-size-kana"], Literal["full-width"], Literal["lowercase"], Literal["uppercase"]]] = None,
@@ -422,9 +388,9 @@ Keyword arguments:
         loading_state: typing.Optional["LoadingState"] = None,
         **kwargs
     ):
-        self._prop_names = ['children', 'id', 'active', 'align', 'aria-*', 'autoScroll', 'autoplay', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'containScroll', 'controlSize', 'controlsOffset', 'darkHidden', 'data-*', 'display', 'dragFree', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'height', 'hiddenFrom', 'inViewThreshold', 'includeGapInSize', 'initialSlide', 'inset', 'left', 'lh', 'lightHidden', 'loading_state', 'loop', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'nextControlIcon', 'opacity', 'orientation', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'previousControlIcon', 'ps', 'pt', 'px', 'py', 'right', 'skipSnaps', 'slideGap', 'slideSize', 'slidesToScroll', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'type', 'unstyled', 'variant', 'visibleFrom', 'w', 'withControls', 'withIndicators', 'withKeyboardEvents']
+        self._prop_names = ['children', 'id', 'active', 'aria-*', 'autoScroll', 'autoplay', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'controlSize', 'controlsOffset', 'darkHidden', 'data-*', 'display', 'emblaOptions', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'height', 'hiddenFrom', 'includeGapInSize', 'initialSlide', 'inset', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'nextControlIcon', 'opacity', 'orientation', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'previousControlIcon', 'ps', 'pt', 'px', 'py', 'right', 'slideGap', 'slideSize', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'type', 'unstyled', 'variant', 'visibleFrom', 'w', 'withControls', 'withIndicators', 'withKeyboardEvents']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['children', 'id', 'active', 'align', 'aria-*', 'autoScroll', 'autoplay', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'containScroll', 'controlSize', 'controlsOffset', 'darkHidden', 'data-*', 'display', 'dragFree', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'height', 'hiddenFrom', 'inViewThreshold', 'includeGapInSize', 'initialSlide', 'inset', 'left', 'lh', 'lightHidden', 'loading_state', 'loop', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'nextControlIcon', 'opacity', 'orientation', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'previousControlIcon', 'ps', 'pt', 'px', 'py', 'right', 'skipSnaps', 'slideGap', 'slideSize', 'slidesToScroll', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'type', 'unstyled', 'variant', 'visibleFrom', 'w', 'withControls', 'withIndicators', 'withKeyboardEvents']
+        self.available_properties = ['children', 'id', 'active', 'aria-*', 'autoScroll', 'autoplay', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'controlSize', 'controlsOffset', 'darkHidden', 'data-*', 'display', 'emblaOptions', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'height', 'hiddenFrom', 'includeGapInSize', 'initialSlide', 'inset', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'nextControlIcon', 'opacity', 'orientation', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'previousControlIcon', 'ps', 'pt', 'px', 'py', 'right', 'slideGap', 'slideSize', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'type', 'unstyled', 'variant', 'visibleFrom', 'w', 'withControls', 'withIndicators', 'withKeyboardEvents']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

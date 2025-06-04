@@ -13,6 +13,10 @@ class CfdCache(QuantConnect.Securities.SecurityCache):
     """CFD specific caching support"""
 
 
+class CfdDataFilter(QuantConnect.Securities.SecurityDataFilter):
+    """CFD packet by packet data filtering mechanism for dynamically detecting bad ticks."""
+
+
 class Cfd(QuantConnect.Securities.Security):
     """CFD Security Object Implementation for CFD Assets"""
 
@@ -97,9 +101,5 @@ class CfdExchange(QuantConnect.Securities.SecurityExchange):
         :param exchange_hours: Contains the weekly exchange schedule plus holidays
         """
         ...
-
-
-class CfdDataFilter(QuantConnect.Securities.SecurityDataFilter):
-    """CFD packet by packet data filtering mechanism for dynamically detecting bad ticks."""
 
 

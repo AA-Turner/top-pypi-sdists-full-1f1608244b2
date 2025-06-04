@@ -1,5 +1,10 @@
 """
-Classes for matching variables and constraints
+Classes for matching variables and constraints (obsolete)
+
+**These classes and functions are now obsolete** and should be replaced by
+:doc:`variables <at.lattice.lattice_variables>`,
+:doc:`observables <at.latticetools.observables>`,
+:doc:`matching <at.latticetools.matching>`.
 """
 from __future__ import annotations
 from itertools import chain
@@ -10,6 +15,10 @@ from scipy.optimize import least_squares
 from itertools import repeat
 from at.lattice import Lattice, Refpts, bool_refpts
 from at.physics import get_optics, ohmi_envelope, find_orbit
+
+__all__ = ['Variable', 'ElementVariable', 'Constraints', 'ElementConstraints',
+           'LinoptConstraints', 'OrbitConstraints', 'EnvelopeConstraints',
+           'match']
 
 
 class Variable(object):
@@ -649,7 +658,7 @@ def match(ring: Lattice, variables: Sequence[Variable],
           max_nfev: int = 1000,
           diff_step: float = 1.0e-10,
           method=None, copy: bool = True):
-    """Perform matching of constraints by varying variables
+    """Perform matching of constraints by varying variables (obsolete)
 
     Parameters:
         ring:               Lattice description

@@ -49,10 +49,12 @@ class InstanceTemplateManagementClient:
 
     def list_instance_templates(self) -> List[InstanceTemplateSpec]:
         try:
-            result: ListInstanceTemplatesResponse = self._instance_template_service.ListInstanceTemplates(
-                ListInstanceTemplatesRequest(
-                    optional_instance_filter=InstanceFilter(
-                        instance_type_filter=InstanceTypeFilter.INSTANCE_TYPE_FILTER_ALL
+            result: ListInstanceTemplatesResponse = (
+                self._instance_template_service.ListInstanceTemplates(
+                    ListInstanceTemplatesRequest(
+                        optional_instance_filter=InstanceFilter(
+                            instance_type_filter=InstanceTypeFilter.INSTANCE_TYPE_FILTER_ALL
+                        )
                     )
                 )
             )

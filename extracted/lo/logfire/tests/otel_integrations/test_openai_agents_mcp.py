@@ -104,7 +104,7 @@ async def test_mcp(exporter: TestExporter):
                         'params': {
                             'meta': None,
                             'protocolVersion': IsStr(),
-                            'capabilities': {'experimental': None, 'sampling': {}, 'roots': {'listChanged': True}},
+                            'capabilities': {'experimental': None, 'sampling': None, 'roots': None},
                             'clientInfo': {'name': 'mcp', 'version': '0.1.0'},
                         },
                     },
@@ -132,43 +132,24 @@ async def test_mcp(exporter: TestExporter):
                         'properties': {
                             'request': {
                                 'type': 'object',
-                                'title': 'ClientRequest',
+                                'title': 'InitializeRequest',
                                 'x-python-datatype': 'PydanticModel',
                                 'properties': {
-                                    'root': {
+                                    'params': {
                                         'type': 'object',
-                                        'title': 'InitializeRequest',
+                                        'title': 'InitializeRequestParams',
                                         'x-python-datatype': 'PydanticModel',
                                         'properties': {
-                                            'params': {
+                                            'capabilities': {
                                                 'type': 'object',
-                                                'title': 'InitializeRequestParams',
+                                                'title': 'ClientCapabilities',
                                                 'x-python-datatype': 'PydanticModel',
-                                                'properties': {
-                                                    'capabilities': {
-                                                        'type': 'object',
-                                                        'title': 'ClientCapabilities',
-                                                        'x-python-datatype': 'PydanticModel',
-                                                        'properties': {
-                                                            'sampling': {
-                                                                'type': 'object',
-                                                                'title': 'SamplingCapability',
-                                                                'x-python-datatype': 'PydanticModel',
-                                                            },
-                                                            'roots': {
-                                                                'type': 'object',
-                                                                'title': 'RootsCapability',
-                                                                'x-python-datatype': 'PydanticModel',
-                                                            },
-                                                        },
-                                                    },
-                                                    'clientInfo': {
-                                                        'type': 'object',
-                                                        'title': 'Implementation',
-                                                        'x-python-datatype': 'PydanticModel',
-                                                    },
-                                                },
-                                            }
+                                            },
+                                            'clientInfo': {
+                                                'type': 'object',
+                                                'title': 'Implementation',
+                                                'x-python-datatype': 'PydanticModel',
+                                            },
                                         },
                                     }
                                 },
@@ -215,16 +196,67 @@ async def test_mcp(exporter: TestExporter):
                 },
             },
             {
+                'name': 'MCP server handle request: tools/list',
+                'context': {'trace_id': 2, 'span_id': 11, 'is_remote': False},
+                'parent': {'trace_id': 2, 'span_id': 9, 'is_remote': True},
+                'start_time': 7000000000,
+                'end_time': 8000000000,
+                'attributes': {
+                    'request': {
+                        'method': 'tools/list',
+                        'params': {
+                            'meta': {
+                                'progressToken': None,
+                                'traceparent': '00-00000000000000000000000000000002-0000000000000009-01',
+                            },
+                            'cursor': None,
+                        },
+                        'jsonrpc': '2.0',
+                        'id': 1,
+                    },
+                    'logfire.msg_template': 'MCP server handle request: tools/list',
+                    'logfire.msg': 'MCP server handle request: tools/list',
+                    'logfire.json_schema': {
+                        'type': 'object',
+                        'properties': {
+                            'request': {
+                                'type': 'object',
+                                'title': 'ListToolsRequest',
+                                'x-python-datatype': 'PydanticModel',
+                                'properties': {
+                                    'params': {
+                                        'type': 'object',
+                                        'title': 'PaginatedRequestParams',
+                                        'x-python-datatype': 'PydanticModel',
+                                        'properties': {
+                                            'meta': {
+                                                'type': 'object',
+                                                'title': 'Meta',
+                                                'x-python-datatype': 'PydanticModel',
+                                            }
+                                        },
+                                    }
+                                },
+                            }
+                        },
+                    },
+                    'logfire.span_type': 'span',
+                },
+            },
+            {
                 'name': 'MCP request: tools/list',
                 'context': {'trace_id': 2, 'span_id': 9, 'is_remote': False},
                 'parent': {'trace_id': 2, 'span_id': 7, 'is_remote': False},
                 'start_time': 6000000000,
-                'end_time': 7000000000,
+                'end_time': 9000000000,
                 'attributes': {
                     'code.filepath': 'test_openai_agents_mcp.py',
                     'code.function': 'test_mcp',
                     'code.lineno': 123,
-                    'request': {'method': 'tools/list', 'params': None},
+                    'request': {
+                        'method': 'tools/list',
+                        'params': None,
+                    },
                     'rpc.system': 'jsonrpc',
                     'rpc.jsonrpc.version': '2.0',
                     'rpc.method': 'tools/list',
@@ -248,15 +280,8 @@ async def test_mcp(exporter: TestExporter):
                         'properties': {
                             'request': {
                                 'type': 'object',
-                                'title': 'ClientRequest',
+                                'title': 'ListToolsRequest',
                                 'x-python-datatype': 'PydanticModel',
-                                'properties': {
-                                    'root': {
-                                        'type': 'object',
-                                        'title': 'ListToolsRequest',
-                                        'x-python-datatype': 'PydanticModel',
-                                    }
-                                },
                             },
                             'rpc.system': {},
                             'rpc.jsonrpc.version': {},
@@ -285,7 +310,7 @@ async def test_mcp(exporter: TestExporter):
                 'context': {'trace_id': 2, 'span_id': 7, 'is_remote': False},
                 'parent': {'trace_id': 2, 'span_id': 5, 'is_remote': False},
                 'start_time': 5000000000,
-                'end_time': 8000000000,
+                'end_time': 10000000000,
                 'attributes': {
                     'code.filepath': 'test_openai_agents_mcp.py',
                     'code.function': 'test_mcp',
@@ -304,10 +329,10 @@ async def test_mcp(exporter: TestExporter):
             },
             {
                 'name': 'Responses API with {gen_ai.request.model!r}',
-                'context': {'trace_id': 2, 'span_id': 11, 'is_remote': False},
+                'context': {'trace_id': 2, 'span_id': 13, 'is_remote': False},
                 'parent': {'trace_id': 2, 'span_id': 5, 'is_remote': False},
-                'start_time': 9000000000,
-                'end_time': 10000000000,
+                'start_time': 11000000000,
+                'end_time': 12000000000,
                 'attributes': {
                     'model_settings': {
                         'temperature': None,
@@ -387,18 +412,15 @@ async def test_mcp(exporter: TestExporter):
                     'events': [
                         {'event.name': 'gen_ai.user.message', 'content': 'Give me a random number', 'role': 'user'},
                         {
-                            'event.name': 'gen_ai.choice',
-                            'index': 0,
-                            'message': {
-                                'role': 'assistant',
-                                'tool_calls': [
-                                    {
-                                        'id': 'call_jfYaCkab5PQtyNrcrSgMdlRf',
-                                        'type': 'function',
-                                        'function': {'name': 'random_number', 'arguments': '{}'},
-                                    }
-                                ],
-                            },
+                            'event.name': 'gen_ai.assistant.message',
+                            'role': 'assistant',
+                            'tool_calls': [
+                                {
+                                    'id': 'call_jfYaCkab5PQtyNrcrSgMdlRf',
+                                    'type': 'function',
+                                    'function': {'name': 'random_number', 'arguments': '{}'},
+                                }
+                            ],
                         },
                     ],
                     'gen_ai.usage.input_tokens': 51,
@@ -484,10 +506,10 @@ async def test_mcp(exporter: TestExporter):
             },
             {
                 'name': 'MCP server log',
-                'context': {'trace_id': 3, 'span_id': 17, 'is_remote': False},
+                'context': {'trace_id': 3, 'span_id': 21, 'is_remote': False},
                 'parent': None,
-                'start_time': 13000000000,
-                'end_time': 13000000000,
+                'start_time': 16000000000,
+                'end_time': 16000000000,
                 'attributes': {
                     'logfire.span_type': 'log',
                     'logfire.level_num': 9,
@@ -499,10 +521,10 @@ async def test_mcp(exporter: TestExporter):
             },
             {
                 'name': 'MCP server log from my_logger',
-                'context': {'trace_id': 4, 'span_id': 18, 'is_remote': False},
+                'context': {'trace_id': 4, 'span_id': 22, 'is_remote': False},
                 'parent': None,
-                'start_time': 14000000000,
-                'end_time': 14000000000,
+                'start_time': 17000000000,
+                'end_time': 17000000000,
                 'attributes': {
                     'logfire.span_type': 'log',
                     'logfire.level_num': 21,
@@ -513,11 +535,60 @@ async def test_mcp(exporter: TestExporter):
                 },
             },
             {
+                'name': 'MCP server handle request: tools/call',
+                'context': {'trace_id': 2, 'span_id': 19, 'is_remote': False},
+                'parent': {'trace_id': 2, 'span_id': 17, 'is_remote': True},
+                'start_time': 15000000000,
+                'end_time': 18000000000,
+                'attributes': {
+                    'request': {
+                        'method': 'tools/call',
+                        'params': {
+                            'meta': {
+                                'progressToken': None,
+                                'traceparent': '00-00000000000000000000000000000002-0000000000000011-01',
+                            },
+                            'name': 'random_number',
+                            'arguments': {},
+                        },
+                        'jsonrpc': '2.0',
+                        'id': 2,
+                    },
+                    'logfire.msg_template': 'MCP server handle request: tools/call',
+                    'logfire.msg': 'MCP server handle request: tools/call',
+                    'logfire.json_schema': {
+                        'type': 'object',
+                        'properties': {
+                            'request': {
+                                'type': 'object',
+                                'title': 'CallToolRequest',
+                                'x-python-datatype': 'PydanticModel',
+                                'properties': {
+                                    'params': {
+                                        'type': 'object',
+                                        'title': 'CallToolRequestParams',
+                                        'x-python-datatype': 'PydanticModel',
+                                        'properties': {
+                                            'meta': {
+                                                'type': 'object',
+                                                'title': 'Meta',
+                                                'x-python-datatype': 'PydanticModel',
+                                            }
+                                        },
+                                    }
+                                },
+                            }
+                        },
+                    },
+                    'logfire.span_type': 'span',
+                },
+            },
+            {
                 'name': 'MCP request: tools/call random_number',
-                'context': {'trace_id': 2, 'span_id': 15, 'is_remote': False},
-                'parent': {'trace_id': 2, 'span_id': 13, 'is_remote': False},
-                'start_time': 12000000000,
-                'end_time': 15000000000,
+                'context': {'trace_id': 2, 'span_id': 17, 'is_remote': False},
+                'parent': {'trace_id': 2, 'span_id': 15, 'is_remote': False},
+                'start_time': 14000000000,
+                'end_time': 19000000000,
                 'attributes': {
                     'request': {
                         'method': 'tools/call',
@@ -539,20 +610,13 @@ async def test_mcp(exporter: TestExporter):
                         'properties': {
                             'request': {
                                 'type': 'object',
-                                'title': 'ClientRequest',
+                                'title': 'CallToolRequest',
                                 'x-python-datatype': 'PydanticModel',
                                 'properties': {
-                                    'root': {
+                                    'params': {
                                         'type': 'object',
-                                        'title': 'CallToolRequest',
+                                        'title': 'CallToolRequestParams',
                                         'x-python-datatype': 'PydanticModel',
-                                        'properties': {
-                                            'params': {
-                                                'type': 'object',
-                                                'title': 'CallToolRequestParams',
-                                                'x-python-datatype': 'PydanticModel',
-                                            }
-                                        },
                                     }
                                 },
                             },
@@ -580,10 +644,10 @@ async def test_mcp(exporter: TestExporter):
             },
             {
                 'name': 'Function: {name}',
-                'context': {'trace_id': 2, 'span_id': 13, 'is_remote': False},
+                'context': {'trace_id': 2, 'span_id': 15, 'is_remote': False},
                 'parent': {'trace_id': 2, 'span_id': 5, 'is_remote': False},
-                'start_time': 11000000000,
-                'end_time': 16000000000,
+                'start_time': 13000000000,
+                'end_time': 20000000000,
                 'attributes': {
                     'logfire.msg_template': 'Function: {name}',
                     'logfire.span_type': 'span',
@@ -607,10 +671,10 @@ async def test_mcp(exporter: TestExporter):
             },
             {
                 'name': 'Responses API with {gen_ai.request.model!r}',
-                'context': {'trace_id': 2, 'span_id': 19, 'is_remote': False},
+                'context': {'trace_id': 2, 'span_id': 23, 'is_remote': False},
                 'parent': {'trace_id': 2, 'span_id': 5, 'is_remote': False},
-                'start_time': 17000000000,
-                'end_time': 18000000000,
+                'start_time': 21000000000,
+                'end_time': 22000000000,
                 'attributes': {
                     'code.filepath': 'test_openai_agents_mcp.py',
                     'code.function': 'test_mcp',
@@ -655,6 +719,7 @@ async def test_mcp(exporter: TestExporter):
                                         'annotations': [],
                                         'text': "Here's a random number for you: 4",
                                         'type': 'output_text',
+                                        'logprobs': None,
                                     }
                                 ],
                                 'role': 'assistant',
@@ -728,11 +793,12 @@ async def test_mcp(exporter: TestExporter):
                             'role': 'tool',
                             'id': 'call_jfYaCkab5PQtyNrcrSgMdlRf',
                             'content': '{"type":"text","text":"4","annotations":null}',
+                            'name': 'random_number',
                         },
                         {
-                            'event.name': 'gen_ai.choice',
-                            'index': 0,
-                            'message': {'content': "Here's a random number for you: 4", 'role': 'assistant'},
+                            'event.name': 'gen_ai.assistant.message',
+                            'content': "Here's a random number for you: 4",
+                            'role': 'assistant',
                         },
                     ],
                     'gen_ai.usage.input_tokens': 83,
@@ -831,7 +897,7 @@ async def test_mcp(exporter: TestExporter):
                 'context': {'trace_id': 2, 'span_id': 5, 'is_remote': False},
                 'parent': {'trace_id': 2, 'span_id': 3, 'is_remote': False},
                 'start_time': 4000000000,
-                'end_time': 19000000000,
+                'end_time': 23000000000,
                 'attributes': {
                     'code.filepath': 'test_openai_agents_mcp.py',
                     'code.function': 'test_mcp',
@@ -861,7 +927,7 @@ async def test_mcp(exporter: TestExporter):
                 'context': {'trace_id': 2, 'span_id': 3, 'is_remote': False},
                 'parent': None,
                 'start_time': 3000000000,
-                'end_time': 20000000000,
+                'end_time': 24000000000,
                 'attributes': {
                     'code.filepath': 'test_openai_agents_mcp.py',
                     'code.function': 'test_mcp',

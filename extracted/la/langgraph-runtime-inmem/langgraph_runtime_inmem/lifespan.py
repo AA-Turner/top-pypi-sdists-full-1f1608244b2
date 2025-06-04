@@ -28,9 +28,12 @@ async def lifespan(
     from langgraph_api.js.ui import start_ui_bundler, stop_ui_bundler
     from langgraph_api.metadata import metadata_loop
 
+    from langgraph_runtime_inmem import __version__ as langgraph_runtime_inmem_version
+
     await logger.ainfo(
-        f"Starting In-Memory runtime with langgraph-api={__version__}",
+        f"Starting In-Memory runtime with langgraph-api={__version__} and in-memory runtime={langgraph_runtime_inmem_version}",
         version=__version__,
+        langgraph_runtime_inmem_version=langgraph_runtime_inmem_version,
     )
     try:
         current_loop = asyncio.get_running_loop()

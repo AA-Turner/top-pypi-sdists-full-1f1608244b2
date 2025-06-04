@@ -2,8 +2,7 @@ import re
 from urllib.request import urlopen
 
 
-_conf_url = \
-        "https://raw.githubusercontent.com/inducer/sphinxconfig/main/sphinxconfig.py"
+_conf_url = "https://tiker.net/sphinxconfig-v0.py"
 with urlopen(_conf_url) as _inf:
     exec(compile(_inf.read(), _conf_url, "exec"), globals())
 
@@ -24,27 +23,7 @@ intersphinx_mapping = {
         }
 
 
-def autodoc_process_signature(app, what, name, obj, options, signature,
-        return_annotation):
-    from inspect import ismethod
-    if ismethod(obj) and obj.__doc__:
-        import re
-        pattern = r"^[ \n]*%s(\([a-z_0-9, ]+\))" % re.escape(obj.__name__)
-        func_match = re.match(pattern, obj.__doc__)
-
-        if func_match is not None:
-            signature = func_match.group(1)
-        elif obj.__name__ == "is_valid":
-            signature = "()"
-
-    return (signature, return_annotation)
-
-
-def autodoc_process_docstring(app, what, name, obj, options, lines):
-    # clear out redundant pybind-generated member list
-    if any("Members" in ln for ln in lines):
-        del lines[:]
-
+def autodoc_process_docstring(app, what, name, obj, options, lines: list[str]):
     arg_list_re = re.compile(r"^([a-zA-Z0-9_]+)\((.*?)\)")
 
     from inspect import isclass, isroutine
@@ -54,9 +33,9 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
                 if isroutine(getattr(obj, nm))
                 and (not nm.startswith("_") or nm in UNDERSCORE_WHITELIST)]
 
-        def gen_method_string(meth_name):
+        def gen_method_string(meth_name: str):
             try:
-                result = ":meth:`%s`" % meth_name
+                result: str = ":meth:`%s`" % meth_name
                 meth_obj = getattr(obj, meth_name)
                 if meth_obj.__doc__ is None:
                     return result
@@ -83,7 +62,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
                     for meth_name in methods] + lines
 
             for nm in methods:
-                underscore_autodoc = []
+                underscore_autodoc: list[str] = []
                 if nm in UNDERSCORE_WHITELIST:
                     underscore_autodoc.append(".. automethod:: %s" % nm)
 
@@ -92,6 +71,10 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
                     lines.extend(underscore_autodoc)
 
 
+autodoc_default_options = {
+    "undoc-members": True,
+}
+
+
 def setup(app):
     app.connect("autodoc-process-docstring", autodoc_process_docstring)
-    app.connect("autodoc-process-signature", autodoc_process_signature)

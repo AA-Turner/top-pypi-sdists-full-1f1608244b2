@@ -259,6 +259,10 @@ Keyword arguments:
 - unstyled (boolean; optional):
     Remove all Mantine styling from the component.
 
+- valueFormatter (boolean | number | string | dict | list; optional):
+    A function to format values on Y axis and inside the tooltip. See
+    https://www.dash-mantine-components.com/functions-as-props.
+
 - variant (string; optional):
     variant.
 
@@ -387,9 +391,9 @@ Keyword arguments:
         loading_state: typing.Optional["LoadingState"] = None,
         **kwargs
     ):
-        self._prop_names = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'color', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridColor', 'h', 'hiddenFrom', 'hoverData', 'inset', 'label', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'range', 'right', 'scatterProps', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tooltipProps', 'top', 'tt', 'unstyled', 'variant', 'visibleFrom', 'w', 'withTooltip', 'xAxisProps', 'yAxisProps', 'zAxisProps']
+        self._prop_names = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'color', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridColor', 'h', 'hiddenFrom', 'hoverData', 'inset', 'label', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'range', 'right', 'scatterProps', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tooltipProps', 'top', 'tt', 'unstyled', 'valueFormatter', 'variant', 'visibleFrom', 'w', 'withTooltip', 'xAxisProps', 'yAxisProps', 'zAxisProps']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'color', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridColor', 'h', 'hiddenFrom', 'hoverData', 'inset', 'label', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'range', 'right', 'scatterProps', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tooltipProps', 'top', 'tt', 'unstyled', 'variant', 'visibleFrom', 'w', 'withTooltip', 'xAxisProps', 'yAxisProps', 'zAxisProps']
+        self.available_properties = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'color', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridColor', 'h', 'hiddenFrom', 'hoverData', 'inset', 'label', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'range', 'right', 'scatterProps', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tooltipProps', 'top', 'tt', 'unstyled', 'valueFormatter', 'variant', 'visibleFrom', 'w', 'withTooltip', 'xAxisProps', 'yAxisProps', 'zAxisProps']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.2", "setuptools-rust", "pyvex==9.2.158"]
+requires = ["setuptools>=61.2", "setuptools-rust", "pyvex==9.2.159"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -19,13 +19,12 @@ requires-python = ">=3.10"
 dependencies = [
     "cxxheaderparser",
     "GitPython",
-    "ailment==9.2.158",
-    "archinfo==9.2.158",
+    "archinfo==9.2.159",
     "cachetools",
     "capstone==5.0.3",
     "cffi>=1.14.0",
-    "claripy==9.2.158",
-    "cle==9.2.158",
+    "claripy==9.2.159",
+    "cle==9.2.159",
     "mulpyplexer",
     "networkx!=2.8.1,>=2.0",
     "protobuf>=5.28.2",
@@ -34,10 +33,11 @@ dependencies = [
     "pydemumble",
     "pyformlang",
     "pypcode>=3.2.1,<4.0",
-    "pyvex==9.2.158",
+    "pyvex==9.2.159",
     "rich>=13.1.0",
     "sortedcontainers",
     "sympy",
+    "typing-extensions",
     "unique-log-filter",
     "colorama;platform_system=='Windows'",
 ]
@@ -101,7 +101,6 @@ archinfo = { git = "https://github.com/angr/archinfo.git", branch = "master" }
 pyvex = { git = "https://github.com/angr/pyvex.git", branch = "master" }
 cle = { git = "https://github.com/angr/cle.git", branch = "master" }
 claripy = { git = "https://github.com/angr/claripy.git", branch = "master" }
-ailment = { git = "https://github.com/angr/ailment.git", branch = "master" }
 
 [tool.black]
 line-length = 120
@@ -141,6 +140,7 @@ ignore = [
     "UP038",  # Use `X | Y` in `isinstance` call instead of `(X, Y)`; it is slower
     "RUF007", # Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
     "B905",   # Zip calls without an explicit strict parameter
+    "RET501", # rewrites "return None" to "return" if it's the only return statement; pylint then removes the return
 ]
 
 [tool.ruff.lint.per-file-ignores]

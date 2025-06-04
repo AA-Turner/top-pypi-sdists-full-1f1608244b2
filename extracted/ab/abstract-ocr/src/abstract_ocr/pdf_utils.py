@@ -4,15 +4,23 @@ from .functions import (argparse,
                         os,
                         PyPDF2,
                         clean_text,
-                        write_to_file)
+                        write_to_file,
+                        logger,
+                        convert_from_path)
 from .ocr_utils import (preprocess_image,
-                        convert_image_to_text)
-def images_to_pdf(image_paths, output_pdf):
+                        convert_image_to_text,)
+def images_to_pdf(image_paths, output_pdf=None):
+    
+    image_paths - image_paths 
     if not image_paths:
         raise ValueError("No image files provided for conversion.")
 
     # Open the first image and convert to RGB if necessary
     first_image = Image.open(image_paths[0])
+    dirname = os.path.dirname(first_image)
+    processed_pdf_path = os.path.join(dirname,'processed_pdf.pdf')
+    output_pdf = output_pdf or processed_pdf_path
+    os.makedirs(pdf_pages_dir, exist_ok=True)
     if first_image.mode in ("RGBA", "P"):
         first_image = first_image.convert("RGB")
 
@@ -26,12 +34,16 @@ def images_to_pdf(image_paths, output_pdf):
 
     # Save all images into a single PDF file
     first_image.save(output_pdf, "PDF", resolution=100.0, save_all=True, append_images=image_list)
-    print(f"PDF saved as: {output_pdf}")
-def process_pdf(main_pdf_path: str, pdf_output_dir: str) -> None:
+    print(f"from config import DEFAULT_PATHS PDF saved as: {output_pdf}")
+def process_pdf(main_pdf_path: str, pdf_output_dir: str=None) -> None:
     """Process a PDF into pages, images, text, preprocessed images, preprocessed text, and cleaned preprocessed text."""
     # Get PDF filename without extension
-    pdf_name = os.path.splitext(os.path.basename(main_pdf_path))[0]
-
+    dirname = os.path.dirname(main_pdf_path)
+    basename = os.path.basename(main_pdf_path)
+    pdf_name = os.path.splitext(basename)[0]
+    processed_pdf_dir = os.path.join(dirname,'processed_pdf')
+    pdf_output_dir = pdf_output_dir or processed_pdf_dir
+    os.makedirs(pdf_output_dir, exist_ok=True)
     # Create subdirectories for this PDF
     pdf_pages_dir = os.path.join(pdf_output_dir, 'pdf_pages')
     os.makedirs(pdf_pages_dir, exist_ok=True)
@@ -51,7 +63,7 @@ def process_pdf(main_pdf_path: str, pdf_output_dir: str) -> None:
 
     pdf_reader = PyPDF2.PdfReader(main_pdf_path)
     num_pages = len(pdf_reader.pages)
-    logging.info(f"Processing {pdf_name} with {num_pages} pages")
+    logger.info(f"Processing {pdf_name} with {num_pages} pages")
 
     for page_num in range(num_pages):
         
@@ -104,4 +116,4 @@ def process_pdf(main_pdf_path: str, pdf_output_dir: str) -> None:
                 preprocessed_cleaned_txt_path = os.path.join(cleaned_preprocessed_text_dir, preprocessed_cleaned_basename_txt)
                 write_to_file(file_path=preprocessed_cleaned_txt_path, contents=preprocessed_cleaned_text)
                     
-                logging.info(f"Processed page {page_num + 1} of {pdf_name}")
+                logger.info(f"Processed page {page_num + 1} of {pdf_name}")

@@ -63,6 +63,7 @@ __all__ = (
     "RegionName",
     "ResourceOwnerType",
     "ResourceServiceName",
+    "RoutingModeType",
     "SecurityPolicyType",
     "ServiceName",
     "UnauthorizedCacheControlHeaderStrategyType",
@@ -149,6 +150,9 @@ OpType = Literal["add", "copy", "move", "remove", "replace", "test"]
 PutModeType = Literal["merge", "overwrite"]
 QuotaPeriodTypeType = Literal["DAY", "MONTH", "WEEK"]
 ResourceOwnerType = Literal["OTHER_ACCOUNTS", "SELF"]
+RoutingModeType = Literal[
+    "BASE_PATH_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_BASE_PATH_MAPPING"
+]
 SecurityPolicyType = Literal["TLS_1_0", "TLS_1_2"]
 UnauthorizedCacheControlHeaderStrategyType = Literal[
     "FAIL_WITH_403", "SUCCEED_WITHOUT_RESPONSE_HEADER", "SUCCEED_WITH_RESPONSE_HEADER"
@@ -452,7 +456,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -513,7 +516,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -521,6 +523,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

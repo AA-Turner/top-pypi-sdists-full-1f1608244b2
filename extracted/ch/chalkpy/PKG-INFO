@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: chalkpy
-Version: 2.81.27
+Version: 2.81.29
 Summary: Python SDK for Chalk
 Author: Chalk AI, Inc.
 Project-URL: Homepage, https://chalk.ai
@@ -133,7 +133,7 @@ Requires-Dist: s3fs; extra == "clickhouse"
 Requires-Dist: sqlalchemy[asyncio]<2,>=1.4.26; extra == "clickhouse"
 Requires-Dist: sqlglot<22,>=19.0.0; extra == "clickhouse"
 Provides-Extra: spanner
-Requires-Dist: sqlalchemy-spanner; extra == "spanner"
+Requires-Dist: sqlalchemy-spanner<1.12.0; extra == "spanner"
 Requires-Dist: google-auth; extra == "spanner"
 Requires-Dist: duckdb<1.2.0,>=0.6; extra == "spanner"
 Requires-Dist: fsspec; extra == "spanner"
@@ -287,7 +287,7 @@ Requires-Dist: snowflake-connector-python<4,>=3.12.4; extra == "all"
 Requires-Dist: snowflake-sqlalchemy<1.7,>=1.5.0; extra == "all"
 Requires-Dist: sqlalchemy-bigquery<1.12,>=1.5.0; extra == "all"
 Requires-Dist: sqlalchemy-redshift<0.9,>=0.8.11; extra == "all"
-Requires-Dist: sqlalchemy-spanner; extra == "all"
+Requires-Dist: sqlalchemy-spanner<1.12.0; extra == "all"
 Requires-Dist: sqlalchemy[asyncio]<2,>=1.4.26; extra == "all"
 Requires-Dist: sqlglot<22,>=19.0.0; extra == "all"
 Requires-Dist: tiktoken<0.9,>=0.5.1; extra == "all"

@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -157,7 +157,7 @@ def curve_type_set(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.CurvesTypeItems | None = "POLY",
+    type: bpy.stub_internal.rna_enums.CurvesTypeItems | None = "POLY",
     use_handles: bool | None = False,
 ):
     """Set type of selected curves
@@ -165,7 +165,7 @@ def curve_type_set(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type, Curve type
-    :type type: bpy._typing.rna_enums.CurvesTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.CurvesTypeItems | None
     :param use_handles: Handles, Take handle information into account in the conversion
     :type use_handles: bool | None
     """
@@ -190,7 +190,7 @@ def draw(
     /,
     *,
     error_threshold: float | None = 0.0,
-    fit_method: bpy._typing.rna_enums.CurveFitMethodItems | None = "REFIT",
+    fit_method: bpy.stub_internal.rna_enums.CurveFitMethodItems | None = "REFIT",
     corner_angle: float | None = 1.22173,
     use_cyclic: bool | None = True,
     stroke: bpy.types.bpy_prop_collection[bpy.types.OperatorStrokeElement]
@@ -206,7 +206,7 @@ def draw(
     :param error_threshold: Error, Error distance threshold (in object units)
     :type error_threshold: float | None
     :param fit_method: Fit Method
-    :type fit_method: bpy._typing.rna_enums.CurveFitMethodItems | None
+    :type fit_method: bpy.stub_internal.rna_enums.CurveFitMethodItems | None
     :param corner_angle: Corner Angle
     :type corner_angle: float | None
     :param use_cyclic: Cyclic
@@ -276,14 +276,14 @@ def handle_type_set(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.CurvesHandleTypeItems | None = "AUTO",
+    type: bpy.stub_internal.rna_enums.CurvesHandleTypeItems | None = "AUTO",
 ):
     """Set the handle type for bezier curves
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.CurvesHandleTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.CurvesHandleTypeItems | None
     """
 
 def sculptmode_toggle(
@@ -406,14 +406,14 @@ def set_selection_domain(
     undo: bool | None = None,
     /,
     *,
-    domain: bpy._typing.rna_enums.AttributeCurvesDomainItems | None = "POINT",
+    domain: bpy.stub_internal.rna_enums.AttributeCurvesDomainItems | None = "POINT",
 ):
     """Change the mode used for selection masking in curves sculpt mode
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param domain: Domain
-    :type domain: bpy._typing.rna_enums.AttributeCurvesDomainItems | None
+    :type domain: bpy.stub_internal.rna_enums.AttributeCurvesDomainItems | None
     """
 
 def snap_curves_to_surface(

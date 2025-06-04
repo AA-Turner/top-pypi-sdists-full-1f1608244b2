@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from typing import Optional
+import queue
+import types
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field
+from datetime import timedelta
+from typing import Callable, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -15,9 +20,56 @@ from seeq.spy._status import Status
 from seeq.spy.workbooks._folder import SYNTHETIC_FOLDERS, synthetic_folder_to_content_filter
 
 
+@dataclass
+class WorkbookSearchContext:
+    session: Session
+    status: Status
+    top_level_query: dict
+    all_properties: bool
+    recursive: bool
+    include_archived: bool
+    executor: ThreadPoolExecutor
+
+    futures_queue: queue.Queue = field(default_factory=queue.Queue)
+    total_processed_queue: queue.Queue = field(default_factory=queue.Queue)
+    results_queue: queue.Queue = field(default_factory=queue.Queue)
+    results: Dict[str, dict] = field(default_factory=dict)
+    update_timer: timedelta = field(default_factory=lambda: _common.timer_start())
+
+    def add_future(self, future):
+        self.futures_queue.put(future)
+
+    def add_to_total_processed(self, count):
+        self.total_processed_queue.put(count)
+
+    def add_result(self, result):
+        self.results_queue.put(result)
+
+    def drain_queues(self):
+        while not self.total_processed_queue.empty():
+            self.status.df.at[0, 'Total Processed'] += self.total_processed_queue.get()
+            self.total_processed_queue.task_done()
+
+        while not self.results_queue.empty():
+            self.results.update(self.results_queue.get())
+            self.status.df.at[0, 'Total Returned'] = len(self.results)
+            self.results_queue.task_done()
+
+        self.status.df.at[0, 'Time'] = self.status.get_timer()
+
+        if _common.timer_elapsed(self.update_timer) > timedelta(seconds=5):
+            self.post_message()
+            self.update_timer = _common.timer_start()
+
+    def post_message(self):
+        self.status.update('Searching' + (' and retrieving all properties' if self.all_properties else ''),
+                           Status.RUNNING)
+
+
 @Status.handle_keyboard_interrupt()
-def search(query, *, content_filter='owner', all_properties=False, recursive=False, include_archived=False,
-           errors=None, quiet=None, status=None, session: Optional[Session] = None):
+def search(query: dict, *, content_filter: str = 'owner', all_properties: bool = False, recursive: bool = False,
+           include_archived: bool = False, errors: Optional[str] = None, quiet: Optional[bool] = None,
+           status: Optional[Status] = None, session: Optional[Session] = None):
     """
     Issues a query to the Seeq Server to retrieve metadata for workbooks.
     This metadata can be used to pull workbook definitions into memory.
@@ -97,7 +149,7 @@ def search(query, *, content_filter='owner', all_properties=False, recursive=Fal
         property.
 
     """
-    _common.validate_argument_types([
+    input_args = _common.validate_argument_types([
         (query, 'query', dict),
         (content_filter, 'content_filter', str),
         (all_properties, 'all_properties', bool),
@@ -114,32 +166,66 @@ def search(query, *, content_filter='owner', all_properties=False, recursive=Fal
 
     status.reset_timer()
 
+    status.df = pd.DataFrame([{
+        'Time': timedelta(0),
+        'Total Processed': 0,
+        'Total Returned': 0
+    }])
+
     try:
-        results_df = _search(session, query, content_filter=content_filter, all_properties=all_properties,
-                             recursive=recursive, include_archived=include_archived, status=status)
+        # We don't use status.execute_jobs() here because this can be a recursive operation that adds more jobs
+        # as the search progresses, which is something that Status doesn't support.
+        with ThreadPoolExecutor(max_workers=session.options.max_concurrent_requests) as executor:
+            context = WorkbookSearchContext(
+                session=session,
+                status=status,
+                top_level_query=query,
+                all_properties=all_properties,
+                recursive=recursive,
+                include_archived=include_archived,
+                executor=executor,
+            )
+
+            # Call post_message() to ensure that the status message is initialized
+            context.post_message()
+
+            _search(context, query, content_filter.upper())
+
+            while not context.futures_queue.empty():
+                try:
+                    # Call Future.result() so that we can catch any exceptions that may have occurred
+                    context.futures_queue.get().result(timeout=0.5)
+                except TimeoutError:
+                    pass
+
+                context.drain_queues()
 
     except KeyboardInterrupt:
-        status.update('Query canceled.', Status.CANCELED)
+        context.drain_queues()
+        status.update('Search canceled.', Status.CANCELED)
         return
 
-    status.metrics({
-        'Results': {
-            'Time': status.get_timer(),
-            'Count': len(results_df)
-        }
-    })
-    status.update('Query successful.', Status.SUCCESS)
+    context.drain_queues()
 
-    return results_df
+    output_df = pd.DataFrame.from_dict(context.results, orient='index')
+    output_df.reset_index(inplace=True, drop=True)
+
+    status.update('Search successful.', Status.SUCCESS)
+
+    output_df_properties = types.SimpleNamespace(
+        func='spy.workbooks.search',
+        kwargs=input_args,
+        status=status)
+
+    _common.put_properties_on_df(output_df, output_df_properties)
+
+    return output_df
 
 
-def _search(session: Session, query, status: Status, *, content_filter, all_properties, recursive, include_archived,
-            parent_id=None, parent_path='', search_folder_id=None) -> pd.DataFrame:
-    items_api = ItemsApi(session.client)
-    workbooks_api = WorkbooksApi(session.client)
-    results_df = pd.DataFrame()
+def _search(context: WorkbookSearchContext, query: dict, content_filter, *, parent_id=None, parent_path='',
+            search_folder_id=None, top_level=True) -> None:
+    workbooks_api = WorkbooksApi(context.session.client)
 
-    content_filter = content_filter.upper()
     # allowed_content_filter must be updated every time there is a change to the ItemWithOwner#Filter
     allowed_content_filters = ['OWNER', 'SHARED', 'PUBLIC', 'CORPORATE', 'ALL', 'USERS', 'SHAREDORPUBLIC']
     if content_filter not in allowed_content_filters:
@@ -155,9 +241,9 @@ def _search(session: Session, query, status: Status, *, content_filter, all_prop
         workbook_output: Optional[WorkbookOutputV1] = safely(
             lambda: workbooks_api.get_workbook(id=query['ID']),
             action_description=f'get the details for Workbook {query["ID"]}',
-            status=status)
+            status=context.status)
         if workbook_output is None:
-            return pd.DataFrame()
+            return
 
         content_dict = {
             'ID': workbook_output.id,
@@ -170,6 +256,7 @@ def _search(session: Session, query, status: Status, *, content_filter, all_prop
             'Created At': pd.to_datetime(workbook_output.created_at),
             'Updated At': pd.to_datetime(workbook_output.updated_at)
         }
+
         if workbook_output.owner:
             content_dict['Owner Name'] = workbook_output.owner.name
             content_dict['Owner Username'] = workbook_output.owner.username
@@ -179,7 +266,8 @@ def _search(session: Session, query, status: Status, *, content_filter, all_prop
             content_dict['Creator Username'] = workbook_output.creator.username
             content_dict['Creator ID'] = workbook_output.creator.id
 
-        return pd.DataFrame([content_dict])
+        context.add_result({content_dict['ID']: content_dict})
+        return
 
     path_filter = query['Path'] if 'Path' in query else None
 
@@ -200,139 +288,152 @@ def _search(session: Session, query, status: Status, *, content_filter, all_prop
 
         new_content_filter = synthetic_folder_to_content_filter(path_start)
 
-        if content_filter != new_content_filter and status is not None:
-            status.warn(warning_message)
+        if content_filter != new_content_filter and context.status is not None:
+            context.status.warn(warning_message)
         # Apply the corresponding content_filter and use the rest of the path
         content_filter = new_content_filter
         path_filter_parts.pop(0)
+
     contents: list[WorkbenchSearchResultPreviewV1] = list()
 
     _folder_id_sub_description = f'within {parent_id} ' if parent_id else ''
     _request_folder_contents_description = f'get Folders {_folder_id_sub_description}using filter {content_filter}'
 
+    def _status_callback(count: int):
+        context.add_to_total_processed(count)
+        if top_level:
+            context.drain_queues()
+
     @request_safely(action_description=_request_folder_contents_description,
-                    additional_errors=[400], status=status)
+                    additional_errors=[400], status=context.status)
     def _add_to_folder_contents(archived):
-        folder_output_list = get_folders(session,
+        folder_output_list = get_folders(context.session,
                                          content_filter=content_filter,
                                          folder_id=parent_id,
-                                         archived=archived)
+                                         archived=archived,
+                                         status_callback=_status_callback)
         contents.extend(folder_output_list)
 
     _add_to_folder_contents(False)
-    if include_archived:
+    if context.include_archived:
         _add_to_folder_contents(True)
 
-    for content in contents:  # type: WorkbenchSearchResultPreviewV1
-        path_matches = False
-        props_match = True
-        if content.type == 'Folder' and len(path_filter_parts) > 0 and \
-                _common.does_query_fragment_match(path_filter_parts[0], content.name, contains=False):
-            path_matches = True
+    for content in contents:
+        context.add_future(
+            context.executor.submit(_process_content, context, content, content_filter,
+                                    parent_path, path_filter_parts, search_folder_id)
+        )
 
-        for query_key, content_key in [('Name', 'name'), ('Description', 'description')]:
-            attr_value = getattr(content, content_key)
-            if query_key in query and (attr_value is None or
-                                       not _common.does_query_fragment_match(query[query_key], attr_value)):
-                props_match = False
-                break
 
-        workbook_type = content.type
+def _process_content(context: WorkbookSearchContext, content: WorkbenchSearchResultPreviewV1, content_filter: str,
+                     parent_path: str, path_filter_parts: List[str], search_folder_id: str) -> None:
+    items_api = ItemsApi(context.session.client)
+    path_matches = False
+    props_match = True
+    if content.type == 'Folder' and len(path_filter_parts) > 0 and \
+            _common.does_query_fragment_match(path_filter_parts[0], content.name, contains=False):
+        path_matches = True
 
-        if 'Workbook Type' in query and not _common.does_query_fragment_match(query['Workbook Type'], workbook_type):
+    for query_key, content_key in [('Name', 'name'), ('Description', 'description')]:
+        attr_value = getattr(content, content_key)
+        if query_key in context.top_level_query and (attr_value is None or
+                                                     not _common.does_query_fragment_match(
+                                                         context.top_level_query[query_key], attr_value)):
             props_match = False
+            break
 
-        absolute_path = parent_path
+    workbook_type = content.type
 
-        _type = content.type or np.nan
-        if _type in ['Analysis', 'Topic']:
-            # This is for backward compatibility with .49 and earlier, which used the same type (Workbook) for both
-            # Analysis and Topic. Eventually we may want to deprecate "Workbook Type" and fold it into the "Type"
-            # property.
-            _type = 'Workbook'
+    if ('Workbook Type' in context.top_level_query and
+            not _common.does_query_fragment_match(context.top_level_query['Workbook Type'], workbook_type)):
+        props_match = False
 
-        if props_match and len(path_filter_parts) == 0:
-            content_dict = {
-                'ID': content.id or np.nan,
-                'Type': _type,
-                'Workbook Type': workbook_type,
-                'Path': absolute_path,
-                'Name': content.name or np.nan,
-                'Archived': content.is_archived or np.nan,
-                'Pinned': content.is_pinned or np.nan,
-                'Created At': pd.to_datetime(content.created_at),
-                'Updated At': pd.to_datetime(content.updated_at)
-            }
+    absolute_path = parent_path
 
-            if content.owner:
-                content_dict['Owner Name'] = content.owner.name
-                content_dict['Owner Username'] = content.owner.username
-                content_dict['Owner ID'] = content.owner.id
-            if content.creator:
-                content_dict['Creator Name'] = content.creator.name
-                content_dict['Creator Username'] = content.creator.username
-                content_dict['Creator ID'] = content.creator.id
+    _type = content.type or np.nan
+    if _type in ['Analysis', 'Topic']:
+        # This is for backward compatibility with .49 and earlier, which used the same type (Workbook) for both
+        # Analysis and Topic. Eventually we may want to deprecate "Workbook Type" and fold it into the "Type"
+        # property.
+        _type = 'Workbook'
 
-            if search_folder_id:
-                content_dict['Search Folder ID'] = search_folder_id
+    if props_match and len(path_filter_parts) == 0:
+        content_dict = {
+            'ID': content.id or np.nan,
+            'Type': _type,
+            'Workbook Type': workbook_type,
+            'Path': absolute_path,
+            'Name': content.name or np.nan,
+            'Archived': content.is_archived or np.nan,
+            'Pinned': content.is_pinned or np.nan,
+            'Created At': pd.to_datetime(content.created_at),
+            'Updated At': pd.to_datetime(content.updated_at)
+        }
 
-            if all_properties:
-                excluded_properties = [
-                    # Exclude these because they're in ns-since-epoch when we retrieve them this way
-                    'Created At', 'Updated At',
+        if content.owner:
+            content_dict['Owner Name'] = content.owner.name
+            content_dict['Owner Username'] = content.owner.username
+            content_dict['Owner ID'] = content.owner.id
+        if content.creator:
+            content_dict['Creator Name'] = content.creator.name
+            content_dict['Creator Username'] = content.creator.username
+            content_dict['Creator ID'] = content.creator.id
 
-                    # Exclude this because it's a bunch of JSON that will clutter up the DataFrame
-                    'Data', 'workbookState'
-                ]
+        if search_folder_id:
+            content_dict['Search Folder ID'] = search_folder_id
 
-                def _add_error_message_and_warn(msg):
-                    content_dict['Pull Result'] = msg
-                    status.warn(msg)
+        if context.all_properties:
+            excluded_properties = [
+                # Exclude these because they're in ns-since-epoch when we retrieve them this way
+                'Created At', 'Updated At',
 
-                @request_safely(action_description=f'get all properties for Workbook "{content.name}" {content.id}',
-                                status=status, on_error=_add_error_message_and_warn)
-                def _request_workbook_properties():
-                    _item: ItemOutputV1 = items_api.get_item_and_all_properties(id=content.id)
-                    for prop in _item.properties:  # type: PropertyOutputV1
-                        if prop.name not in excluded_properties:
-                            content_dict[prop.name] = _common.none_to_nan(prop.value)
+                # Exclude this because it's a bunch of JSON that will clutter up the DataFrame
+                'Data', 'workbookState'
+            ]
 
-                _request_workbook_properties()
+            def _add_error_message_and_warn(msg):
+                content_dict['Pull Result'] = msg
+                context.status.warn(msg)
 
-            results_df = pd.concat([results_df, pd.DataFrame([content_dict])], ignore_index=True)
+            @request_safely(action_description=f'get all properties for Workbook "{content.name}" {content.id}',
+                            status=context.status, on_error=_add_error_message_and_warn)
+            def _request_workbook_properties():
+                _item: ItemOutputV1 = items_api.get_item_and_all_properties(id=content.id)
+                for prop in _item.properties:  # type: PropertyOutputV1
+                    if prop.name not in excluded_properties:
+                        content_dict[prop.name] = _common.none_to_nan(prop.value)
 
-        if content.type == 'Folder' and ((recursive and len(path_filter_parts) == 0) or path_matches):
-            child_path_filter = None
-            if path_filter_parts and len(path_filter_parts) > 1:
-                child_path_filter = _common.path_list_to_string(path_filter_parts[1:])
+            _request_workbook_properties()
 
-            if len(parent_path) == 0:
-                new_parent_path = content.name
-            else:
-                new_parent_path = parent_path + ' >> ' + content.name
+        context.add_result({content_dict['ID']: content_dict})
 
-            child_query = dict(query)
-            if not child_path_filter and 'Path' in child_query:
-                # We've finished drilling down using the provided 'Path' so now we can use the current folder ID as the
-                # "root" from which all paths can be made relative (if desired)
-                search_folder_id = content.id
-                del child_query['Path']
-            else:
-                child_query['Path'] = child_path_filter
+    if content.type == 'Folder' and ((context.recursive and len(path_filter_parts) == 0) or path_matches):
+        child_path_filter = None
+        if path_filter_parts and len(path_filter_parts) > 1:
+            child_path_filter = _common.path_list_to_string(path_filter_parts[1:])
 
-            child_results_df = _search(session, child_query, status, content_filter=content_filter,
-                                       all_properties=all_properties, recursive=recursive,
-                                       include_archived=include_archived, parent_id=content.id,
-                                       parent_path=new_parent_path, search_folder_id=search_folder_id)
+        if len(parent_path) == 0:
+            new_parent_path = content.name
+        else:
+            new_parent_path = parent_path + ' >> ' + content.name
 
-            results_df = pd.concat([results_df, child_results_df], ignore_index=True, sort=True)
+        child_query = dict(context.top_level_query)
+        if not child_path_filter and 'Path' in child_query:
+            # We've finished drilling down using the provided 'Path' so now we can use the current folder ID as the
+            # "root" from which all paths can be made relative (if desired)
+            search_folder_id = content.id
+            del child_query['Path']
+        else:
+            child_query['Path'] = child_path_filter
 
-    return results_df
+        _search(context, child_query, content_filter, parent_id=content.id, parent_path=new_parent_path,
+                search_folder_id=search_folder_id, top_level=False)
 
 
 def get_folders(session: Session, content_filter: str = 'ALL', folder_id: Optional[str] = None, archived: bool = False,
                 sort_order: str = 'createdAt ASC', only_pinned: bool = False, name_equals_filter: Optional[str] = None,
-                types_filter: Optional[list[str]] = None) -> list[WorkbenchSearchResultPreviewV1]:
+                types_filter: Optional[list[str]] = None,
+                status_callback: Optional[Callable] = None) -> list[WorkbenchSearchResultPreviewV1]:
     folders_api = FoldersApi(session.client)
     offset = 0
     limit = session.options.search_page_size
@@ -360,8 +461,13 @@ def get_folders(session: Session, content_filter: str = 'ALL', folder_id: Option
     while True:
         folders = folders_api.get_folders(**kwargs)
         results.extend(folders.content)
+
+        if status_callback is not None:
+            status_callback(len(folders.content))
+
         if len(folders.content) < limit:
             break
+
         offset += limit
         kwargs['offset'] = offset
 

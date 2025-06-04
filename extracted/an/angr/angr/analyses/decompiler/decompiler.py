@@ -7,7 +7,7 @@ from typing import Any, TYPE_CHECKING
 
 import networkx
 from cle import SymbolType
-import ailment
+import angr.ailment as ailment
 
 from angr.analyses.cfg import CFGFast
 from angr.knowledge_plugins.functions.function import Function
@@ -671,14 +671,16 @@ class Decompiler(Analysis):
         )
 
     def _transform_graph_from_ssa(self, ail_graph: networkx.DiGraph) -> networkx.DiGraph:
+        variable_kb = self._variable_kb
         dephication = self.project.analyses.GraphDephication(
-            self.func, ail_graph, rewrite=True, kb=self.kb, fail_fast=self._fail_fast
+            self.func, ail_graph, rewrite=True, variable_kb=variable_kb, kb=self.kb, fail_fast=self._fail_fast
         )
         return dephication.output
 
     def _transform_seqnode_from_ssa(self, seq_node: SequenceNode) -> SequenceNode:
+        variable_kb = self._variable_kb
         dephication = self.project.analyses.SeqNodeDephication(
-            self.func, seq_node, rewrite=True, kb=self.kb, fail_fast=self._fail_fast
+            self.func, seq_node, rewrite=True, variable_kb=variable_kb, kb=self.kb, fail_fast=self._fail_fast
         )
         return dephication.output
 

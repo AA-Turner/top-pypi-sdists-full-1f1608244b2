@@ -10,13 +10,15 @@ use futures::AsyncReadExt;
 use mdb_shard::chunk_verification::range_hash_from_chunks;
 use merkledb::constants::{IDEAL_CAS_BLOCK_SIZE, TARGET_CDC_CHUNK_SIZE};
 use merkledb::prelude::MerkleDBHighLevelMethodsV1;
-use merkledb::{Chunk, MerkleMemDB};
+use merkledb::{ChunkInfo, MerkleMemDB};
 use merklehash::{DataHash, MerkleHash};
+use more_asserts::*;
 use serde::Serialize;
 use tracing::warn;
 use utils::serialization_utils::*;
 
 use crate::cas_chunk_format::{deserialize_chunk, serialize_chunk};
+use crate::constants::CAS_OBJECT_COMPRESSION_SCHEME_RETEST_INTERVAL;
 use crate::error::{CasObjectError, Validate};
 use crate::{CASChunkHeader, CompressionScheme};
 
@@ -959,10 +961,7 @@ impl CasObject {
         Ok(Self { info, info_length })
     }
 
-    pub fn serialize_given_info<W: Write + Seek>(
-        w: &mut W,
-        info: CasObjectInfoV1,
-    ) -> Result<(Self, usize), CasObjectError> {
+    pub fn serialize_given_info<W: Write>(w: &mut W, info: CasObjectInfoV1) -> Result<(Self, usize), CasObjectError> {
         let mut total_written_bytes: usize = 0;
         let info_length = info.serialize(w)? as u32;
         total_written_bytes += info_length as usize;
@@ -993,7 +992,7 @@ impl CasObject {
         };
 
         // 2. walk chunks from Info
-        let mut hash_chunks: Vec<Chunk> = Vec::new();
+        let mut hash_chunks: Vec<ChunkInfo> = Vec::new();
         let mut cumulative_compressed_length: u32 = 0;
         let mut unpacked_chunk_offset = 0;
 
@@ -1011,7 +1010,7 @@ impl CasObject {
             };
 
             let chunk_hash = merklehash::compute_data_hash(&data);
-            hash_chunks.push(Chunk {
+            hash_chunks.push(ChunkInfo {
                 hash: chunk_hash,
                 length: chunk_uncompressed_length as usize,
             });
@@ -1303,10 +1302,42 @@ impl SerializedCasObject {
         {
             let mut writer = Cursor::new(&mut serialized_data);
 
-            for chunk in xorb.data {
-                // now serialize chunk directly to writer (since chunks come first!)
-                serialize_chunk(&chunk, &mut writer, compression_scheme)?;
-                cas.info.chunk_boundary_offsets.push(writer.stream_position()? as u32);
+            // Set the periodic retesting interval
+            let retest_interval = if *CAS_OBJECT_COMPRESSION_SCHEME_RETEST_INTERVAL > 0 {
+                *CAS_OBJECT_COMPRESSION_SCHEME_RETEST_INTERVAL
+            } else {
+                num_chunks
+            };
+
+            if compression_scheme.is_none() && num_chunks != 0 {
+                debug_assert!(xorb.file_boundaries.is_sorted());
+                debug_assert_ge!(xorb.file_boundaries.len(), 0);
+                debug_assert_lt!(*xorb.file_boundaries.last().unwrap(), xorb.data.len());
+
+                for (f_idx, &start_idx) in xorb.file_boundaries.iter().enumerate() {
+                    let end_idx = *xorb.file_boundaries.get(f_idx + 1).unwrap_or(&num_chunks);
+
+                    let mut s_idx = start_idx;
+                    while s_idx < end_idx {
+                        let n_idx = (s_idx + retest_interval).min(end_idx);
+
+                        // Choose the compression scheme for this block.
+                        let compression_scheme = CompressionScheme::choose_from_data(&xorb.data[s_idx]);
+
+                        for chunk in &xorb.data[s_idx..n_idx] {
+                            // now serialize chunk directly to writer (since chunks come first!)
+                            serialize_chunk(chunk, &mut writer, Some(compression_scheme))?;
+                            cas.info.chunk_boundary_offsets.push(writer.stream_position()? as u32);
+                        }
+                        s_idx = n_idx;
+                    }
+                }
+            } else {
+                for chunk in xorb.data {
+                    // now serialize chunk directly to writer (since chunks come first!)
+                    serialize_chunk(&chunk, &mut writer, compression_scheme)?;
+                    cas.info.chunk_boundary_offsets.push(writer.stream_position()? as u32);
+                }
             }
 
             // Fill in the boundary offsets
@@ -1330,7 +1361,7 @@ impl SerializedCasObject {
 
 pub mod test_utils {
     use merkledb::prelude::MerkleDBHighLevelMethodsV1;
-    use merkledb::{Chunk, MerkleMemDB};
+    use merkledb::{ChunkInfo, MerkleMemDB};
     use rand::Rng;
 
     use super::*;
@@ -1484,7 +1515,7 @@ pub mod test_utils {
             });
         }
 
-        RawXorbData::from_chunks(&chunks)
+        RawXorbData::from_chunks(&chunks, vec![0])
 
         // Now, validate that this is actually the same
     }
@@ -1531,7 +1562,7 @@ pub mod test_utils {
             let bytes = gen_random_bytes(chunk_size);
 
             let chunk_hash = merklehash::compute_data_hash(&bytes);
-            chunks.push(Chunk {
+            chunks.push(ChunkInfo {
                 hash: chunk_hash,
                 length: bytes.len(),
             });

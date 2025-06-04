@@ -182,12 +182,12 @@ class OnlineClient:
         )
         ordered_entities = [entity[0] for entity in ordered_entities_tuple]
 
-        request_chunks: List[
-            Tuple[RequestedEntitiesMatrix, pd.DataFrame]
-        ] = OnlineClient._split_entities(
-            entity_names=ordered_entities,
-            population_df=df,
-            max_entities_per_split=max_keys_per_request,
+        request_chunks: List[Tuple[RequestedEntitiesMatrix, pd.DataFrame]] = (
+            OnlineClient._split_entities(
+                entity_names=ordered_entities,
+                population_df=df,
+                max_entities_per_split=max_keys_per_request,
+            )
         )
 
         results: List[pd.DataFrame] = []

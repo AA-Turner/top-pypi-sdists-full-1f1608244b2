@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class Context(PydanticBaseModel):
     compiled: str
     file: str
-    query: str
+    query: Optional[str] = None
 
 
 class CodeContextFile(PydanticBaseModel):
@@ -137,7 +137,7 @@ class ClientApplication(DbBaseModel):
 
 
 class KhojUser(AbstractUser):
-    uuid = models.UUIDField(models.UUIDField(default=uuid.uuid4, editable=False))
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     phone_number = PhoneNumberField(null=True, default=None, blank=True)
     verified_phone_number = models.BooleanField(default=False)
     verified_email = models.BooleanField(default=False)

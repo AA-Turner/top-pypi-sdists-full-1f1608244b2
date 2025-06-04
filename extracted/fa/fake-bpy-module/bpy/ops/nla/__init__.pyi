@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 
 def action_pushdown(
     execution_context: int | str | None = None,
@@ -253,7 +253,7 @@ def fmodifier_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.FmodifierTypeItems | None = "NULL",
+    type: bpy.stub_internal.rna_enums.FmodifierTypeItems | None = "NULL",
     only_active: bool | None = True,
 ):
     """Add F-Modifier to the active/selected NLA-Strips
@@ -261,7 +261,7 @@ def fmodifier_add(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.FmodifierTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.FmodifierTypeItems | None
     :param only_active: Only Active, Only add a F-Modifier of the specified type to the active strip
     :type only_active: bool | None
     """

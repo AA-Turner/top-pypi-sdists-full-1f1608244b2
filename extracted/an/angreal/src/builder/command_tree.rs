@@ -30,6 +30,49 @@ pub struct SerializableCommand {
     pub group: Option<Vec<String>>,
 }
 
+/// New schema structures for the desired JSON output format
+#[derive(Debug, Clone, Serialize)]
+pub struct ProjectSchema {
+    pub name: String,
+    pub commands: Vec<CommandSchema>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct CommandSchema {
+    pub name: String,
+    pub path: String,
+    pub description: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub group: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub arguments: Vec<ArgumentSchema>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub examples: Vec<ExampleSchema>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct ArgumentSchema {
+    pub name: String,
+    pub flag: String,
+    #[serde(rename = "type")]
+    pub arg_type: String,
+    pub required: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub default: Option<serde_json::Value>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct ExampleSchema {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub command: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub args: Vec<String>,
+}
+
 impl CommandNode {
     /// Create a new group node
     pub fn new_group(name: String, about: Option<String>) -> Self {
@@ -91,49 +134,63 @@ impl CommandNode {
         }
     }
 
-    /// Display the command tree in human-readable format
-    pub fn display_tree(&self) -> String {
-        let mut output = String::new();
-        self.display_tree_recursive(&mut output, "", true);
-        output
+    /// Convert to new schema format
+    pub fn to_project_schema(&self) -> ProjectSchema {
+        let mut commands = Vec::new();
+        self.collect_commands(&mut commands, vec![]);
+
+        ProjectSchema {
+            name: self.name.clone(),
+            commands,
+        }
     }
 
-    /// Recursive helper for tree display
-    fn display_tree_recursive(&self, output: &mut String, prefix: &str, is_last: bool) {
-        // Don't show the root node
-        if self.name != "root" {
-            let connector = if is_last { "└── " } else { "├── " };
-            output.push_str(&format!("{}{}{}", prefix, connector, self.name));
-
-            // Add description if available
-            if let Some(about) = &self.about {
-                output.push_str(&format!(" - {}", about));
-            } else if let Some(command) = &self.command {
-                if let Some(about) = &command.about {
-                    output.push_str(&format!(" - {}", about));
-                }
-            }
-            output.push('\n');
-        }
-
-        // Sort children for consistent output
-        let mut children: Vec<_> = self.children.iter().collect();
-        children.sort_by_key(|(name, _)| *name);
-
-        for (i, (_, child)) in children.iter().enumerate() {
-            let is_last_child = i == children.len() - 1;
-            let new_prefix = if self.name == "root" {
-                String::new()
+    /// Recursively collect all commands from the tree
+    fn collect_commands(&self, commands: &mut Vec<CommandSchema>, path_segments: Vec<String>) {
+        // If this node has a command, add it to the list
+        if let Some(command) = &self.command {
+            let full_path = if path_segments.is_empty() {
+                self.name.clone()
             } else {
-                format!("{}{}    ", prefix, if is_last { " " } else { "│" })
+                format!("{} {}", path_segments.join(" "), self.name)
             };
-            child.display_tree_recursive(output, &new_prefix, is_last_child);
+
+            let group = command
+                .group
+                .as_ref()
+                .and_then(|groups| groups.first().cloned());
+
+            commands.push(CommandSchema {
+                name: self.name.clone(),
+                path: full_path,
+                description: command.about.clone().unwrap_or_default(),
+                group,
+                arguments: vec![], // Will be populated by caller with actual arguments
+                examples: vec![],  // Could be extended in the future
+            });
+        }
+
+        // Recursively process children (skip argument groups)
+        for (child_name, child) in &self.children {
+            if !child_name.contains("arguments") {
+                let mut new_path = path_segments.clone();
+                if self.name != "root" && self.name != "angreal" {
+                    new_path.push(self.name.clone());
+                }
+                child.collect_commands(commands, new_path);
+            }
         }
     }
 
-    /// Convert to JSON format
+    /// Convert to JSON format (legacy)
     pub fn to_json(&self) -> Result<String, serde_json::Error> {
         serde_json::to_string_pretty(self)
+    }
+
+    /// Convert to new schema JSON format
+    pub fn to_schema_json(&self) -> Result<String, serde_json::Error> {
+        let schema = self.to_project_schema();
+        serde_json::to_string_pretty(&schema)
     }
 }
 
@@ -245,6 +302,35 @@ mod tests {
             assert_eq!(cmd_node.name, "nested_cmd");
             assert_eq!(cmd_node.about, Some("Nested command".to_string()));
             assert!(cmd_node.command.is_some());
+        });
+    }
+
+    #[test]
+    fn test_to_project_schema() {
+        Python::with_gil(|py| {
+            let mut root = CommandNode::new_group("angreal".to_string(), None);
+
+            // Create a command
+            let command = AngrealCommand {
+                name: "test_cmd".to_string(),
+                about: Some("Test command".to_string()),
+                long_about: None,
+                group: Some(vec![crate::task::AngrealGroup {
+                    name: "test".to_string(),
+                    about: Some("Test group".to_string()),
+                }]),
+                func: py.None(),
+            };
+
+            root.add_command(command);
+
+            let schema = root.to_project_schema();
+
+            assert_eq!(schema.name, "angreal");
+            assert_eq!(schema.commands.len(), 1);
+            assert_eq!(schema.commands[0].name, "test_cmd");
+            assert_eq!(schema.commands[0].description, "Test command");
+            assert_eq!(schema.commands[0].group, Some("test".to_string()));
         });
     }
 }

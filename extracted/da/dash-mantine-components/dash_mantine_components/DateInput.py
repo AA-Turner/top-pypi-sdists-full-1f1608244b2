@@ -150,8 +150,10 @@ Keyword arguments:
 - disabled (boolean; optional):
     Sets `disabled` attribute on the `input` element.
 
-- disabledDates (list of strings; optional):
-    Specifies days that should be disabled.
+- disabledDates (boolean | number | string | dict | list; optional):
+    Specifies days that should be disabled.  Either a list of dates or
+    a function. See
+    https://www.dash-mantine-components.com/functions-as-props.
 
 - display (optional)
 
@@ -438,6 +440,10 @@ Keyword arguments:
         Determines whether dropdown and target elements should have
         accessible roles, `True` by default.
 
+    - hideDetached (boolean; optional):
+        If set, the dropdown is hidden when the element is hidden with
+        styles or not visible on the screen, `True` by default.
+
     - position (a value equal to: 'top', 'left', 'bottom', 'right', 'top-end', 'top-start', 'left-end', 'left-start', 'bottom-end', 'bottom-start', 'right-end', 'right-start'; optional):
         Dropdown position relative to the target element, `'bottom'`
         by default.
@@ -610,10 +616,6 @@ Keyword arguments:
 - pr (number; optional):
     PaddingRight, theme key: theme.spacing.
 
-- preserveTime (boolean; optional):
-    Determines whether time (hours, minutes, seconds and milliseconds)
-    should be preserved when new date is picked, True by default.
-
 - previousDisabled (boolean; optional):
     Determines whether previous control should be disabled, defaults
     to True.
@@ -731,6 +733,10 @@ Keyword arguments:
     Determines whether previous control should be rendered, defaults
     to True.
 
+- withWeekNumbers (boolean; optional):
+    Determines whether week numbers should be displayed, False by
+    default.
+
 - wrapperProps (dict; optional):
     Props passed down to the root element.
 
@@ -811,6 +817,7 @@ Keyword arguments:
             "trapFocus": NotRequired[bool],
             "closeOnEscape": NotRequired[bool],
             "withRoles": NotRequired[bool],
+            "hideDetached": NotRequired[bool],
             "position": NotRequired[Literal["top", "left", "bottom", "right", "top-end", "top-start", "left-end", "left-start", "bottom-end", "bottom-start", "right-end", "right-start"]],
             "offset": NotRequired[typing.Union[NumberType]],
             "positionDependencies": NotRequired[typing.Sequence[typing.Any]],
@@ -886,10 +893,9 @@ Keyword arguments:
         valueFormat: typing.Optional[str] = None,
         fixOnBlur: typing.Optional[bool] = None,
         allowDeselect: typing.Optional[bool] = None,
-        preserveTime: typing.Optional[bool] = None,
         maxLevel: typing.Optional[Literal["month", "year", "decade"]] = None,
         level: typing.Optional[Literal["month", "year", "decade"]] = None,
-        disabledDates: typing.Optional[typing.Sequence[str]] = None,
+        disabledDates: typing.Optional[typing.Any] = None,
         highlightToday: typing.Optional[bool] = None,
         id: typing.Optional[typing.Union[str, dict]] = None,
         tabIndex: typing.Optional[NumberType] = None,
@@ -1008,15 +1014,16 @@ Keyword arguments:
         weekendDays: typing.Optional[typing.Sequence[Literal[0, 1, 2, 3, 4, 5, 6]]] = None,
         hideOutsideDates: typing.Optional[bool] = None,
         hideWeekdays: typing.Optional[bool] = None,
+        withWeekNumbers: typing.Optional[bool] = None,
         classNames: typing.Optional[dict] = None,
         styles: typing.Optional[typing.Any] = None,
         unstyled: typing.Optional[bool] = None,
         variant: typing.Optional[str] = None,
         **kwargs
     ):
-        self._prop_names = ['id', 'allowDeselect', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'fixOnBlur', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'maxLevel', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_blur', 'n_submit', 'name', 'nextDisabled', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'preserveTime', 'previousDisabled', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withNext', 'withPrevious', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
+        self._prop_names = ['id', 'allowDeselect', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'fixOnBlur', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'maxLevel', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_blur', 'n_submit', 'name', 'nextDisabled', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'previousDisabled', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withNext', 'withPrevious', 'withWeekNumbers', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['id', 'allowDeselect', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'fixOnBlur', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'maxLevel', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_blur', 'n_submit', 'name', 'nextDisabled', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'preserveTime', 'previousDisabled', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withNext', 'withPrevious', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
+        self.available_properties = ['id', 'allowDeselect', 'aria-*', 'ariaLabels', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clearButtonProps', 'clearable', 'columnsToScroll', 'darkHidden', 'data-*', 'debounce', 'decadeLabelFormat', 'description', 'descriptionProps', 'disabled', 'disabledDates', 'display', 'error', 'errorProps', 'ff', 'firstDayOfWeek', 'fixOnBlur', 'flex', 'fs', 'fw', 'fz', 'h', 'hasNextLevel', 'hiddenFrom', 'hideOutsideDates', 'hideWeekdays', 'highlightToday', 'inputProps', 'inputWrapperOrder', 'inset', 'label', 'labelProps', 'left', 'leftSection', 'leftSectionPointerEvents', 'leftSectionProps', 'leftSectionWidth', 'level', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxDate', 'maxLevel', 'mb', 'me', 'mih', 'minDate', 'miw', 'ml', 'mod', 'monthLabelFormat', 'monthsListFormat', 'mr', 'ms', 'mt', 'mx', 'my', 'n_blur', 'n_submit', 'name', 'nextDisabled', 'nextIcon', 'nextLabel', 'numberOfColumns', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'placeholder', 'pointer', 'popoverProps', 'pos', 'pr', 'previousDisabled', 'previousIcon', 'previousLabel', 'ps', 'pt', 'px', 'py', 'radius', 'readOnly', 'required', 'right', 'rightSection', 'rightSectionPointerEvents', 'rightSectionProps', 'rightSectionWidth', 'size', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'unstyled', 'value', 'valueFormat', 'variant', 'visibleFrom', 'w', 'weekdayFormat', 'weekendDays', 'withAsterisk', 'withCellSpacing', 'withErrorStyles', 'withNext', 'withPrevious', 'withWeekNumbers', 'wrapperProps', 'yearLabelFormat', 'yearsListFormat']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

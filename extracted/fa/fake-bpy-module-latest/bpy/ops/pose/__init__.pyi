@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def armature_apply(
     execution_context: int | str | None = None,
@@ -222,14 +222,14 @@ def constraint_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.ConstraintTypeItems | None = "",
+    type: bpy.stub_internal.rna_enums.ConstraintTypeItems | None = "",
 ):
     """Add a constraint to the active bone
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.ConstraintTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.ConstraintTypeItems | None
     """
 
 def constraint_add_with_targets(
@@ -237,14 +237,14 @@ def constraint_add_with_targets(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.ConstraintTypeItems | None = "",
+    type: bpy.stub_internal.rna_enums.ConstraintTypeItems | None = "",
 ):
     """Add a constraint to the active bone, with target (where applicable) set to the selected Objects/Bones
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.ConstraintTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.ConstraintTypeItems | None
     """
 
 def constraints_clear(
@@ -354,20 +354,22 @@ def paths_calculate(
     undo: bool | None = None,
     /,
     *,
-    display_type: bpy._typing.rna_enums.MotionpathDisplayTypeItems | None = "RANGE",
-    range: bpy._typing.rna_enums.MotionpathRangeItems | None = "SCENE",
-    bake_location: bpy._typing.rna_enums.MotionpathBakeLocationItems | None = "HEADS",
+    display_type: bpy.stub_internal.rna_enums.MotionpathDisplayTypeItems
+    | None = "RANGE",
+    range: bpy.stub_internal.rna_enums.MotionpathRangeItems | None = "SCENE",
+    bake_location: bpy.stub_internal.rna_enums.MotionpathBakeLocationItems
+    | None = "HEADS",
 ):
     """Calculate paths for the selected bones
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param display_type: Display type
-    :type display_type: bpy._typing.rna_enums.MotionpathDisplayTypeItems | None
+    :type display_type: bpy.stub_internal.rna_enums.MotionpathDisplayTypeItems | None
     :param range: Computation Range
-    :type range: bpy._typing.rna_enums.MotionpathRangeItems | None
+    :type range: bpy.stub_internal.rna_enums.MotionpathRangeItems | None
     :param bake_location: Bake Location, Which point on the bones is used when calculating paths
-    :type bake_location: bpy._typing.rna_enums.MotionpathBakeLocationItems | None
+    :type bake_location: bpy.stub_internal.rna_enums.MotionpathBakeLocationItems | None
     """
 
 def paths_clear(
@@ -597,14 +599,14 @@ def rotation_mode_set(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.ObjectRotationModeItems | None = "QUATERNION",
+    type: bpy.stub_internal.rna_enums.ObjectRotationModeItems | None = "QUATERNION",
 ):
     """Set the rotation representation used by selected bones
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Rotation Mode
-    :type type: bpy._typing.rna_enums.ObjectRotationModeItems | None
+    :type type: bpy.stub_internal.rna_enums.ObjectRotationModeItems | None
     """
 
 def scale_clear(execution_context: int | str | None = None, undo: bool | None = None):

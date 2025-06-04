@@ -26,6 +26,7 @@ from .exceptions import (
     MaxTurnsExceeded,
     ModelBehaviorError,
     OutputGuardrailTripwireTriggered,
+    RunErrorDetails,
 )
 from .guardrail import InputGuardrail, InputGuardrailResult, OutputGuardrail, OutputGuardrailResult
 from .handoffs import Handoff, HandoffInputFilter, handoff
@@ -180,6 +181,8 @@ class Runner:
 
             try:
                 while True:
+                    all_tools = await cls._get_all_tools(current_agent, context_wrapper)
+
                     # Start an agent span if we don't have one. This span is ended if the current
                     # agent changes, or if the agent loop ends.
                     if current_span is None:
@@ -195,8 +198,6 @@ class Runner:
                             output_type=output_type_name,
                         )
                         current_span.start(mark_as_current=True)
-
-                        all_tools = await cls._get_all_tools(current_agent)
                         current_span.span_data.tools = [t.name for t in all_tools]
 
                     current_turn += 1
@@ -283,6 +284,17 @@ class Runner:
                         raise AgentsException(
                             f"Unknown next step type: {type(turn_result.next_step)}"
                         )
+            except AgentsException as exc:
+                exc.run_data = RunErrorDetails(
+                    input=original_input,
+                    new_items=generated_items,
+                    raw_responses=model_responses,
+                    last_agent=current_agent,
+                    context_wrapper=context_wrapper,
+                    input_guardrail_results=input_guardrail_results,
+                    output_guardrail_results=[],
+                )
+                raise
             finally:
                 if current_span:
                     current_span.finish(reset_current=True)
@@ -513,6 +525,8 @@ class Runner:
                 if streamed_result.is_complete:
                     break
 
+                all_tools = await cls._get_all_tools(current_agent, context_wrapper)
+
                 # Start an agent span if we don't have one. This span is ended if the current
                 # agent changes, or if the agent loop ends.
                 if current_span is None:
@@ -528,8 +542,6 @@ class Runner:
                         output_type=output_type_name,
                     )
                     current_span.start(mark_as_current=True)
-
-                    all_tools = await cls._get_all_tools(current_agent)
                     tool_names = [t.name for t in all_tools]
                     current_span.span_data.tools = tool_names
                 current_turn += 1
@@ -609,6 +621,19 @@ class Runner:
                         streamed_result._event_queue.put_nowait(QueueCompleteSentinel())
                     elif isinstance(turn_result.next_step, NextStepRunAgain):
                         pass
+                except AgentsException as exc:
+                    streamed_result.is_complete = True
+                    streamed_result._event_queue.put_nowait(QueueCompleteSentinel())
+                    exc.run_data = RunErrorDetails(
+                        input=streamed_result.input,
+                        new_items=streamed_result.new_items,
+                        raw_responses=streamed_result.raw_responses,
+                        last_agent=current_agent,
+                        context_wrapper=context_wrapper,
+                        input_guardrail_results=streamed_result.input_guardrail_results,
+                        output_guardrail_results=streamed_result.output_guardrail_results,
+                    )
+                    raise
                 except Exception as e:
                     if current_span:
                         _error_tracing.attach_error_to_span(
@@ -955,8 +980,10 @@ class Runner:
         return handoffs
 
     @classmethod
-    async def _get_all_tools(cls, agent: Agent[Any]) -> list[Tool]:
-        return await agent.get_all_tools()
+    async def _get_all_tools(
+        cls, agent: Agent[Any], context_wrapper: RunContextWrapper[Any]
+    ) -> list[Tool]:
+        return await agent.get_all_tools(context_wrapper)
 
     @classmethod
     def _get_model(cls, agent: Agent[Any], run_config: RunConfig) -> Model:

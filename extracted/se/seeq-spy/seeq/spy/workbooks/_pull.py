@@ -229,17 +229,21 @@ def do_pull(workbooks: Union[pd.DataFrame, str], *, status: Status, session: Ses
                         workbook = preprocess_callback(item_id)
 
                     if workbook is None:
-                        workbook = Workbook.pull(item_id,
-                                                 extra_workstep_tuples=pull_info.worksteps,
-                                                 specific_worksheet_ids=specific_worksheet_ids,
-                                                 include_inventory=include_inventory,
-                                                 include_annotations=include_annotations,
-                                                 include_images=include_images,
-                                                 include_access_control=include_access_control,
-                                                 include_archived=include_archived,
-                                                 item_cache=item_cache,
-                                                 status=status,
-                                                 session=session)  # type: Workbook
+                        try:
+                            workbook = Workbook.pull(item_id,
+                                                     extra_workstep_tuples=pull_info.worksteps,
+                                                     specific_worksheet_ids=specific_worksheet_ids,
+                                                     include_inventory=include_inventory,
+                                                     include_annotations=include_annotations,
+                                                     include_images=include_images,
+                                                     include_access_control=include_access_control,
+                                                     include_archived=include_archived,
+                                                     item_cache=item_cache,
+                                                     status=status,
+                                                     session=session)  # type: Workbook
+                        except (SPyException, ApiException) as e:
+                            status.raise_or_put(e, 'Result')
+                            continue
 
                         if include_rendered_content:
                             status.put('Result', 'Pulling rendered content')
@@ -248,9 +252,9 @@ def do_pull(workbooks: Union[pd.DataFrame, str], *, status: Status, session: Ses
                                 session=session)
                     else:
                         status.put('Errors', len(workbook.pull_errors))
-                        status.update('[%d/%d] Already pulled %s "%s"' %
+                        status.update('[%d/%d] Already pulled %s "%s" (%s)' %
                                       (len(status.df[status.df['Result'] != 'Queued']),
-                                       len(status.df), workbook['Workbook Type'], workbook['Name']),
+                                       len(status.df), workbook['Workbook Type'], workbook['Name'], workbook['ID']),
                                       Status.RUNNING)
 
                         already_pulled = True

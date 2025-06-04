@@ -275,7 +275,7 @@ def set_file_handler_log_file(
     logger: logging.Logger, handler_name: str, log_file: Path
 ):
     existing_handler = get_handler_from_logger(logger, handler_name)
-    if type(existing_handler) != RotatingFileHandler:
+    if not isinstance(existing_handler, RotatingFileHandler):
         raise QwakException(
             f"Error in setting log file. Error message: handler of name {handler_name} is not a file logger handler"
         )

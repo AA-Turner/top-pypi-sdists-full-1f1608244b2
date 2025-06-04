@@ -23,6 +23,58 @@ JsonConverter = typing.Any
 QuantConnect_Report_NullResultValueTypeJsonConverter_T = typing.TypeVar("QuantConnect_Report_NullResultValueTypeJsonConverter_T")
 
 
+class ResultsUtil(System.Object):
+    """Utility methods for dealing with the Result objects"""
+
+    @staticmethod
+    def benchmark_points(result: QuantConnect.Result) -> System.Collections.Generic.SortedList[datetime.datetime, float]:
+        """
+        Gets the points of the benchmark
+        
+        :param result: Backtesting or live results
+        :returns: Sorted list keyed by date and value.
+        """
+        ...
+
+    @staticmethod
+    def equity_points(result: QuantConnect.Result, series_name: str = None) -> System.Collections.Generic.SortedList[datetime.datetime, float]:
+        """
+        Get the points, from the Series name given, in Strategy Equity chart
+        
+        :param result: Result object to extract the chart points
+        :param series_name: Series name from which the points will be extracted. By default is Equity series
+        """
+        ...
+
+
+class Rolling(System.Object):
+    """Rolling window functions"""
+
+    @staticmethod
+    def beta(performance_points: System.Collections.Generic.SortedList[datetime.datetime, float], benchmark_points: System.Collections.Generic.SortedList[datetime.datetime, float], window_size: int = 132) -> typing.Any:
+        """
+        Calculate the rolling beta with the given window size (in days)
+        
+        :param performance_points: The performance points you want to measure beta for
+        :param benchmark_points: The benchmark/points you want to calculate beta with
+        :param window_size: Days/window to lookback
+        :returns: Rolling beta.
+        """
+        ...
+
+    @staticmethod
+    def sharpe(equity_curve: typing.Any, months: int, trading_day_per_year: int) -> typing.Any:
+        """
+        Get the rolling sharpe of the given series with a lookback of . The risk free rate is adjustable
+        
+        :param equity_curve: Equity curve to calculate rolling sharpe for
+        :param months: Number of months to calculate the rolling period for
+        :param trading_day_per_year: The number of trading days per year to increase result of Annual statistics
+        :returns: Rolling sharpe ratio.
+        """
+        ...
+
+
 class DrawdownPeriod(System.Object):
     """Represents a period of time where the drawdown ranks amongst the top N drawdowns."""
 
@@ -53,34 +105,6 @@ class DrawdownPeriod(System.Object):
         :param start: Start of the drawdown period
         :param end: End of the drawdown period
         :param drawdown: Max drawdown of the period
-        """
-        ...
-
-
-class Rolling(System.Object):
-    """Rolling window functions"""
-
-    @staticmethod
-    def beta(performance_points: System.Collections.Generic.SortedList[datetime.datetime, float], benchmark_points: System.Collections.Generic.SortedList[datetime.datetime, float], window_size: int = 132) -> typing.Any:
-        """
-        Calculate the rolling beta with the given window size (in days)
-        
-        :param performance_points: The performance points you want to measure beta for
-        :param benchmark_points: The benchmark/points you want to calculate beta with
-        :param window_size: Days/window to lookback
-        :returns: Rolling beta.
-        """
-        ...
-
-    @staticmethod
-    def sharpe(equity_curve: typing.Any, months: int, trading_day_per_year: int) -> typing.Any:
-        """
-        Get the rolling sharpe of the given series with a lookback of . The risk free rate is adjustable
-        
-        :param equity_curve: Equity curve to calculate rolling sharpe for
-        :param months: Number of months to calculate the rolling period for
-        :param trading_day_per_year: The number of trading days per year to increase result of Annual statistics
-        :returns: Rolling sharpe ratio.
         """
         ...
 
@@ -194,126 +218,102 @@ class DrawdownCollection(System.Object):
         ...
 
 
-class DeedleUtil(System.Object):
-    """Utility extension methods for Deedle series/frames"""
+class PointInTimePortfolio(System.Object):
+    """Lightweight portfolio at a point in time"""
 
-    @staticmethod
-    def cumulative_max(input: typing.Any) -> typing.Any:
-        """Calculates the cumulative max of the series. This is equal to the python pandas method: `df.cummax()`."""
+    class PointInTimeHolding(System.Object):
+        """Holding of an asset at a point in time"""
+
+        @property
+        def symbol(self) -> QuantConnect.Symbol:
+            """Symbol of the holding"""
+            ...
+
+        @property
+        def holdings_value(self) -> float:
+            """Value of the holdings of the asset. Can be negative if shorting an asset"""
+            ...
+
+        @property
+        def quantity(self) -> float:
+            """Quantity of the asset. Can be negative if shorting an asset"""
+            ...
+
+        @property
+        def absolute_holdings_value(self) -> float:
+            """Absolute value of the holdings."""
+            ...
+
+        @property
+        def absolute_holdings_quantity(self) -> float:
+            """Absolute value of the quantity"""
+            ...
+
+        def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], holdings_value: float, holdings_quantity: float) -> None:
+            """
+            Creates an instance of PointInTimeHolding, representing a holding at a given point in time
+            
+            :param symbol: Symbol of the holding
+            :param holdings_value: Value of the holding
+            :param holdings_quantity: Quantity of the holding
+            """
+            ...
+
+    @property
+    def time(self) -> datetime.datetime:
+        """Time that this point in time portfolio is for"""
         ...
 
-    @staticmethod
-    def cumulative_product(input: typing.Any) -> typing.Any:
+    @property
+    def total_portfolio_value(self) -> float:
+        """The total value of the portfolio. This is cash + absolute value of holdings"""
+        ...
+
+    @property
+    def cash(self) -> float:
+        """The cash the portfolio has"""
+        ...
+
+    @property
+    def order(self) -> QuantConnect.Orders.Order:
+        """The order we just processed"""
+        ...
+
+    @property
+    def holdings(self) -> typing.List[QuantConnect.Report.PointInTimePortfolio.PointInTimeHolding]:
+        """A list of holdings at the current moment in time"""
+        ...
+
+    @property
+    def leverage(self) -> float:
+        """Portfolio leverage - provided for convenience"""
+        ...
+
+    @overload
+    def __init__(self, order: QuantConnect.Orders.Order, portfolio: QuantConnect.Securities.SecurityPortfolioManager) -> None:
         """
-        Calculates the cumulative product of the series. This is equal to the python pandas method: `df.cumprod()`
+        Creates an instance of the PointInTimePortfolio object
         
-        :param input: Input series
-        :returns: Cumulative product.
+        :param order: Order applied to the portfolio
+        :param portfolio: Algorithm portfolio at a point in time
         """
         ...
 
-    @staticmethod
-    def cumulative_returns(input: typing.Any) -> typing.Any:
+    @overload
+    def __init__(self, portfolio: QuantConnect.Report.PointInTimePortfolio, time: typing.Union[datetime.datetime, datetime.date]) -> None:
         """
-        Calculates the cumulative returns series of the given input equity curve
+        Clones the provided portfolio
         
-        :param input: Equity curve series
-        :returns: Cumulative returns over time.
+        :param portfolio: Portfolio
+        :param time: Time
         """
         ...
 
-    @staticmethod
-    def cumulative_sum(input: typing.Any) -> typing.Any:
+    def no_empty_holdings(self) -> QuantConnect.Report.PointInTimePortfolio:
         """
-        Calculates the cumulative sum for the given series
+        Filters out any empty holdings from the current Holdings
         
-        :param input: Series to calculate cumulative sum for
-        :returns: Cumulative sum in series form.
-        """
-        ...
-
-    @staticmethod
-    def percent_change(input: typing.Any) -> typing.Any:
-        """
-        Calculates the percentage change from the previous value to the current
-        
-        :param input: Series to calculate percentage change for
-        :returns: Percentage change in series form.
-        """
-        ...
-
-    @staticmethod
-    def total_returns(input: typing.Any) -> float:
-        """
-        Calculates the total returns over a period of time for the given input
-        
-        :param input: Equity curve series
-        :returns: Total returns over time.
-        """
-        ...
-
-
-class OrderTypeNormalizingJsonConverter(JsonConverter):
-    """
-    Normalizes the "Type" field to a value that will allow for
-    successful deserialization in the OrderJsonConverter class.
-    """
-
-    def can_convert(self, object_type: typing.Type) -> bool:
-        """
-        Determine if this Converter can convert a given object type
-        
-        :param object_type: Object type to convert
-        :returns: True if assignable from Order.
-        """
-        ...
-
-    def read_json(self, reader: typing.Any, object_type: typing.Type, existing_value: typing.Any, serializer: typing.Any) -> System.Object:
-        """
-        Read Json and convert
-        
-        :returns: Resulting Order.
-        """
-        ...
-
-    def write_json(self, writer: typing.Any, value: typing.Any, serializer: typing.Any) -> None:
-        """Write Json; Not implemented"""
-        ...
-
-
-class Report(System.Object):
-    """Report class"""
-
-    STATISTICS_FILE_NAME: str = "report-statistics.json"
-    """File name for statistics"""
-
-    def __init__(self, name: str, description: str, version: str, backtest: QuantConnect.Packets.BacktestResult, live: QuantConnect.Packets.LiveResult, point_in_time_portfolio_destination: str = None, css_override: str = None, html_custom: str = None) -> None:
-        """
-        Create beautiful HTML and PDF Reports based on backtest and live data.
-        
-        :param name: Name of the strategy
-        :param description: Description of the strategy
-        :param version: Version number of the strategy
-        :param backtest: Backtest result object
-        :param live: Live result object
-        :param point_in_time_portfolio_destination: Point in time portfolio json output base filename
-        :param css_override: CSS file that overrides some of the default rules defined in report.css
-        :param html_custom: Custom HTML file to replace the default template
-        """
-        ...
-
-    def compile(self, html: typing.Optional[str], report_statistics: typing.Optional[str]) -> typing.Tuple[None, str, str]:
-        """Compile the backtest data into a report"""
-        ...
-
-    @staticmethod
-    def get_regex_in_input(pattern: str, input: str) -> str:
-        """
-        Gets the regex pattern in the given input string
-        
-        :param pattern: Regex pattern to be find the input string
-        :param input: Input string that may contain the regex pattern
-        :returns: The regex pattern in the input string if found. Otherwise, null.
+        :returns: Current object, but without empty holdings.
         """
         ...
 
@@ -433,102 +433,158 @@ class Crisis(System.Object):
         ...
 
 
-class PointInTimePortfolio(System.Object):
-    """Lightweight portfolio at a point in time"""
+class NullResultValueTypeJsonConverter(typing.Generic[QuantConnect_Report_NullResultValueTypeJsonConverter_T], JsonConverter):
+    """
+    Removes null values in the Result object's x,y values so that
+    deserialization can occur without exceptions.
+    """
 
-    class PointInTimeHolding(System.Object):
-        """Holding of an asset at a point in time"""
-
-        @property
-        def symbol(self) -> QuantConnect.Symbol:
-            """Symbol of the holding"""
-            ...
-
-        @property
-        def holdings_value(self) -> float:
-            """Value of the holdings of the asset. Can be negative if shorting an asset"""
-            ...
-
-        @property
-        def quantity(self) -> float:
-            """Quantity of the asset. Can be negative if shorting an asset"""
-            ...
-
-        @property
-        def absolute_holdings_value(self) -> float:
-            """Absolute value of the holdings."""
-            ...
-
-        @property
-        def absolute_holdings_quantity(self) -> float:
-            """Absolute value of the quantity"""
-            ...
-
-        def __init__(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], holdings_value: float, holdings_quantity: float) -> None:
-            """
-            Creates an instance of PointInTimeHolding, representing a holding at a given point in time
-            
-            :param symbol: Symbol of the holding
-            :param holdings_value: Value of the holding
-            :param holdings_quantity: Quantity of the holding
-            """
-            ...
-
-    @property
-    def time(self) -> datetime.datetime:
-        """Time that this point in time portfolio is for"""
+    def __init__(self) -> None:
+        """Initialize a new instance of NullResultValueTypeJsonConverter{T}"""
         ...
 
-    @property
-    def total_portfolio_value(self) -> float:
-        """The total value of the portfolio. This is cash + absolute value of holdings"""
-        ...
-
-    @property
-    def cash(self) -> float:
-        """The cash the portfolio has"""
-        ...
-
-    @property
-    def order(self) -> QuantConnect.Orders.Order:
-        """The order we just processed"""
-        ...
-
-    @property
-    def holdings(self) -> typing.List[QuantConnect.Report.PointInTimePortfolio.PointInTimeHolding]:
-        """A list of holdings at the current moment in time"""
-        ...
-
-    @property
-    def leverage(self) -> float:
-        """Portfolio leverage - provided for convenience"""
-        ...
-
-    @overload
-    def __init__(self, order: QuantConnect.Orders.Order, portfolio: QuantConnect.Securities.SecurityPortfolioManager) -> None:
+    def can_convert(self, object_type: typing.Type) -> bool:
         """
-        Creates an instance of the PointInTimePortfolio object
+        Determine if this converter can convert a given type
         
-        :param order: Order applied to the portfolio
-        :param portfolio: Algorithm portfolio at a point in time
+        :param object_type: Object type to convert
+        :returns: Always true.
         """
         ...
 
-    @overload
-    def __init__(self, portfolio: QuantConnect.Report.PointInTimePortfolio, time: typing.Union[datetime.datetime, datetime.date]) -> None:
+    def read_json(self, reader: typing.Any, object_type: typing.Type, existing_value: typing.Any, serializer: typing.Any) -> System.Object:
         """
-        Clones the provided portfolio
+        Read Json for conversion
         
-        :param portfolio: Portfolio
-        :param time: Time
+        :returns: Resulting object.
         """
         ...
 
-    def no_empty_holdings(self) -> QuantConnect.Report.PointInTimePortfolio:
+    def write_json(self, writer: typing.Any, value: typing.Any, serializer: typing.Any) -> None:
+        """Write Json; Not implemented"""
+        ...
+
+
+class OrderTypeNormalizingJsonConverter(JsonConverter):
+    """
+    Normalizes the "Type" field to a value that will allow for
+    successful deserialization in the OrderJsonConverter class.
+    """
+
+    def can_convert(self, object_type: typing.Type) -> bool:
         """
-        Filters out any empty holdings from the current Holdings
+        Determine if this Converter can convert a given object type
         
-        :returns: Current object, but without empty holdings.
+        :param object_type: Object type to convert
+        :returns: True if assignable from Order.
+        """
+        ...
+
+    def read_json(self, reader: typing.Any, object_type: typing.Type, existing_value: typing.Any, serializer: typing.Any) -> System.Object:
+        """
+        Read Json and convert
+        
+        :returns: Resulting Order.
+        """
+        ...
+
+    def write_json(self, writer: typing.Any, value: typing.Any, serializer: typing.Any) -> None:
+        """Write Json; Not implemented"""
+        ...
+
+
+class DeedleUtil(System.Object):
+    """Utility extension methods for Deedle series/frames"""
+
+    @staticmethod
+    def cumulative_max(input: typing.Any) -> typing.Any:
+        """Calculates the cumulative max of the series. This is equal to the python pandas method: `df.cummax()`."""
+        ...
+
+    @staticmethod
+    def cumulative_product(input: typing.Any) -> typing.Any:
+        """
+        Calculates the cumulative product of the series. This is equal to the python pandas method: `df.cumprod()`
+        
+        :param input: Input series
+        :returns: Cumulative product.
+        """
+        ...
+
+    @staticmethod
+    def cumulative_returns(input: typing.Any) -> typing.Any:
+        """
+        Calculates the cumulative returns series of the given input equity curve
+        
+        :param input: Equity curve series
+        :returns: Cumulative returns over time.
+        """
+        ...
+
+    @staticmethod
+    def cumulative_sum(input: typing.Any) -> typing.Any:
+        """
+        Calculates the cumulative sum for the given series
+        
+        :param input: Series to calculate cumulative sum for
+        :returns: Cumulative sum in series form.
+        """
+        ...
+
+    @staticmethod
+    def percent_change(input: typing.Any) -> typing.Any:
+        """
+        Calculates the percentage change from the previous value to the current
+        
+        :param input: Series to calculate percentage change for
+        :returns: Percentage change in series form.
+        """
+        ...
+
+    @staticmethod
+    def total_returns(input: typing.Any) -> float:
+        """
+        Calculates the total returns over a period of time for the given input
+        
+        :param input: Equity curve series
+        :returns: Total returns over time.
+        """
+        ...
+
+
+class Report(System.Object):
+    """Report class"""
+
+    STATISTICS_FILE_NAME: str = "report-statistics.json"
+    """File name for statistics"""
+
+    def __init__(self, name: str, description: str, version: str, backtest: QuantConnect.Packets.BacktestResult, live: QuantConnect.Packets.LiveResult, point_in_time_portfolio_destination: str = None, css_override: str = None, html_custom: str = None) -> None:
+        """
+        Create beautiful HTML and PDF Reports based on backtest and live data.
+        
+        :param name: Name of the strategy
+        :param description: Description of the strategy
+        :param version: Version number of the strategy
+        :param backtest: Backtest result object
+        :param live: Live result object
+        :param point_in_time_portfolio_destination: Point in time portfolio json output base filename
+        :param css_override: CSS file that overrides some of the default rules defined in report.css
+        :param html_custom: Custom HTML file to replace the default template
+        """
+        ...
+
+    def compile(self, html: typing.Optional[str], report_statistics: typing.Optional[str]) -> typing.Tuple[None, str, str]:
+        """Compile the backtest data into a report"""
+        ...
+
+    @staticmethod
+    def get_regex_in_input(pattern: str, input: str) -> str:
+        """
+        Gets the regex pattern in the given input string
+        
+        :param pattern: Regex pattern to be find the input string
+        :param input: Input string that may contain the regex pattern
+        :returns: The regex pattern in the input string if found. Otherwise, null.
         """
         ...
 
@@ -606,62 +662,6 @@ class Metrics(System.Object):
         :param portfolios: Point in time portfolios
         :returns: Series of leverage utilization.
         """
-        ...
-
-
-class ResultsUtil(System.Object):
-    """Utility methods for dealing with the Result objects"""
-
-    @staticmethod
-    def benchmark_points(result: QuantConnect.Result) -> System.Collections.Generic.SortedList[datetime.datetime, float]:
-        """
-        Gets the points of the benchmark
-        
-        :param result: Backtesting or live results
-        :returns: Sorted list keyed by date and value.
-        """
-        ...
-
-    @staticmethod
-    def equity_points(result: QuantConnect.Result, series_name: str = None) -> System.Collections.Generic.SortedList[datetime.datetime, float]:
-        """
-        Get the points, from the Series name given, in Strategy Equity chart
-        
-        :param result: Result object to extract the chart points
-        :param series_name: Series name from which the points will be extracted. By default is Equity series
-        """
-        ...
-
-
-class NullResultValueTypeJsonConverter(typing.Generic[QuantConnect_Report_NullResultValueTypeJsonConverter_T], JsonConverter):
-    """
-    Removes null values in the Result object's x,y values so that
-    deserialization can occur without exceptions.
-    """
-
-    def __init__(self) -> None:
-        """Initialize a new instance of NullResultValueTypeJsonConverter{T}"""
-        ...
-
-    def can_convert(self, object_type: typing.Type) -> bool:
-        """
-        Determine if this converter can convert a given type
-        
-        :param object_type: Object type to convert
-        :returns: Always true.
-        """
-        ...
-
-    def read_json(self, reader: typing.Any, object_type: typing.Type, existing_value: typing.Any, serializer: typing.Any) -> System.Object:
-        """
-        Read Json for conversion
-        
-        :returns: Resulting object.
-        """
-        ...
-
-    def write_json(self, writer: typing.Any, value: typing.Any, serializer: typing.Any) -> None:
-        """Write Json; Not implemented"""
         ...
 
 

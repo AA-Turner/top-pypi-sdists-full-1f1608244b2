@@ -35,8 +35,6 @@ Keyword arguments:
 
     - locale (string; optional)
 
-    - timezone (string; optional)
-
     - firstDayOfWeek (a value equal to: 0, 1, 2, 3, 4, 5, 6; optional)
 
     - weekendDays (list of a value equal to: 0, 1, 2, 3, 4, 5, 6s; optional)
@@ -52,7 +50,6 @@ Keyword arguments:
         "Settings",
             {
             "locale": NotRequired[str],
-            "timezone": NotRequired[str],
             "firstDayOfWeek": NotRequired[Literal[0, 1, 2, 3, 4, 5, 6]],
             "weekendDays": NotRequired[typing.Sequence[Literal[0, 1, 2, 3, 4, 5, 6]]],
             "labelSeparator": NotRequired[str],

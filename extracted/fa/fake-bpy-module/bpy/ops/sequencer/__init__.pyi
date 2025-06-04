@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -1962,14 +1962,14 @@ def strip_color_tag_set(
     undo: bool | None = None,
     /,
     *,
-    color: bpy._typing.rna_enums.StripColorItems | None = "NONE",
+    color: bpy.stub_internal.rna_enums.StripColorItems | None = "NONE",
 ):
     """Set a color tag for the selected strips
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param color: Color Tag
-    :type color: bpy._typing.rna_enums.StripColorItems | None
+    :type color: bpy.stub_internal.rna_enums.StripColorItems | None
     """
 
 def strip_jump(

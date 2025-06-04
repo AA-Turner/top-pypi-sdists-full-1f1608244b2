@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def delete(execution_context: int | str | None = None, undo: bool | None = None):
     """Delete active scene
@@ -34,14 +34,15 @@ def freestyle_alpha_modifier_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.LinestyleAlphaModifierTypeItems | None = "ALONG_STROKE",
+    type: bpy.stub_internal.rna_enums.LinestyleAlphaModifierTypeItems
+    | None = "ALONG_STROKE",
 ):
     """Add an alpha transparency modifier to the line style associated with the active lineset
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.LinestyleAlphaModifierTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.LinestyleAlphaModifierTypeItems | None
     """
 
 def freestyle_color_modifier_add(
@@ -49,14 +50,15 @@ def freestyle_color_modifier_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.LinestyleColorModifierTypeItems | None = "ALONG_STROKE",
+    type: bpy.stub_internal.rna_enums.LinestyleColorModifierTypeItems
+    | None = "ALONG_STROKE",
 ):
     """Add a line color modifier to the line style associated with the active lineset
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.LinestyleColorModifierTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.LinestyleColorModifierTypeItems | None
     """
 
 def freestyle_fill_range_by_selection(
@@ -91,14 +93,15 @@ def freestyle_geometry_modifier_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.LinestyleGeometryModifierTypeItems | None = "2D_OFFSET",
+    type: bpy.stub_internal.rna_enums.LinestyleGeometryModifierTypeItems
+    | None = "2D_OFFSET",
 ):
     """Add a stroke geometry modifier to the line style associated with the active lineset
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.LinestyleGeometryModifierTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.LinestyleGeometryModifierTypeItems | None
     """
 
 def freestyle_lineset_add(
@@ -259,7 +262,7 @@ def freestyle_thickness_modifier_add(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.LinestyleThicknessModifierTypeItems
+    type: bpy.stub_internal.rna_enums.LinestyleThicknessModifierTypeItems
     | None = "ALONG_STROKE",
 ):
     """Add a line thickness modifier to the line style associated with the active lineset
@@ -267,7 +270,7 @@ def freestyle_thickness_modifier_add(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.LinestyleThicknessModifierTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.LinestyleThicknessModifierTypeItems | None
     """
 
 def gltf2_action_filter_refresh(

@@ -492,10 +492,6 @@ class FutureFillModel(QuantConnect.Orders.Fills.ImmediateFillModel):
         ...
 
 
-class FutureOptionFillModel(QuantConnect.Orders.Fills.FutureFillModel):
-    """Represents the default fill model used to simulate order fills for future options"""
-
-
 class LatestPriceFillModel(QuantConnect.Orders.Fills.ImmediateFillModel):
     """
     This fill model is provided for cases where the trade/quote distinction should be
@@ -513,5 +509,9 @@ class LatestPriceFillModel(QuantConnect.Orders.Fills.ImmediateFillModel):
         :param direction: The order direction, decides whether to pick bid or ask
         """
         ...
+
+
+class FutureOptionFillModel(QuantConnect.Orders.Fills.FutureFillModel):
+    """Represents the default fill model used to simulate order fills for future options"""
 
 

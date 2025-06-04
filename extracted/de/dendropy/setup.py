@@ -92,26 +92,16 @@ setup(
     },
     license='BSD',
     description="A Python library for phylogenetics and phylogenetic computing: reading, writing, simulation, processing and manipulation of phylogenetic trees (phylogenies) and characters.",
-    long_description=_read(["README.rst"]).replace(
-""".. raw:: html
-
-   <div align="center">
-""", ""
-    ).replace(
-""".. raw:: html
-
-   </div>
-""", ""
-    ),
-    # long_description_content_type="text/markdown",
-    long_description_content_type="text/x-rst",
+    long_description=_read(["README.md"]),
+    long_description_content_type="text/markdown",
+    # long_description_content_type="text/x-rst",
     # install_requires=_read_requirements("requirements.txt"),
     # extras_require={"test": _read_requirements("requirements-test.txt")},
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
     install_requires = ['setuptools'],
     zip_safe = True,
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     classifiers = [
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
@@ -119,15 +109,15 @@ setup(
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Programming Language :: Python",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
         ],
     keywords='phylogenetics phylogeny phylogenies phylogeography evolution evolutionary biology systematics coalescent population genetics phyloinformatics bioinformatics',
 )
-

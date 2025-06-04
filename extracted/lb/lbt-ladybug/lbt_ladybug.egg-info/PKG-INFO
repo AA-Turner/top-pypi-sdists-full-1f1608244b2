@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: lbt-ladybug
-Version: 0.27.144
+Version: 0.27.145
 Summary: Collection of several Ladybug core Python libraries
 Home-page: https://github.com/ladybug-tools/lbt-ladybug
 Author: Ladybug Tools
@@ -14,7 +14,7 @@ Classifier: License :: OSI Approved :: GNU Affero General Public License v3
 Classifier: Operating System :: OS Independent
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: ladybug-comfort==0.18.80
+Requires-Dist: ladybug-comfort==0.18.81
 Requires-Dist: ladybug-radiance==0.2.11
 Requires-Dist: ladybug-display==0.13.2
 

@@ -7,7 +7,8 @@ from .functions import (VideoFileClip,
                         logger,
                         generate_file_id,
                         get_all_file_types,
-                        sort_frames)
+                        sort_frames,
+                        extract_audio_from_video)
 from .ocr_utils import extract_image_texts_from_directory
 def clip_frames(items,initial=None,end=None):
     initial = initial or 35
@@ -112,22 +113,4 @@ def get_video_metadata(file_path):
     
     video.close()
     return metadata
-def extract_audio_from_video(video_path, audio_path=None):
-    """Extract audio from a video file using moviepy."""
-    if audio_path == None:
-        video_directory = os.path.dirname(video_path)
-        audio_path = video_directory
-    if os.path.isdir(audio_path):
-        audio_path = os.path.join(audio_path,'audio.wav')
-    try:
-        logger.info(f"Extracting audio from {video_path} to {audio_path}")
-        video = mp.VideoFileClip(video_path)
-        video.audio.write_audiofile(audio_path)
-        video.close()
-        if not os.path.exists(audio_path):
-            raise FileNotFoundError(f"Audio file {audio_path} was not created.")
-        logger.info(f"Audio extracted successfully: {audio_path}")
-        return audio_path
-    except Exception as e:
-        logger.error(f"Error extracting audio from {video_path}: {e}")
-        return None
+

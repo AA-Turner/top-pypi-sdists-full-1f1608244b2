@@ -174,6 +174,7 @@ class SchedulerConfigurationTypeDef(TypedDict):
 class CancelJobRunRequestTypeDef(TypedDict):
     applicationId: str
     jobRunId: str
+    shutdownGracePeriodInSeconds: NotRequired[int]
 
 
 class ResponseMetadataTypeDef(TypedDict):

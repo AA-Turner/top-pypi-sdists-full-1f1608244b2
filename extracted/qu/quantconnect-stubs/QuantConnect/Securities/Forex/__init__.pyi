@@ -64,20 +64,11 @@ class Forex(QuantConnect.Securities.Security, QuantConnect.Securities.IBaseCurre
         ...
 
 
-class ForexHolding(QuantConnect.Securities.SecurityHolding):
-    """FOREX holdings implementation of the base securities class"""
+class ForexCache(QuantConnect.Securities.SecurityCache):
+    """Forex specific caching support"""
 
-    def __init__(self, security: QuantConnect.Securities.Forex.Forex, currency_converter: QuantConnect.Securities.ICurrencyConverter) -> None:
-        """
-        Forex Holding Class
-        
-        :param security: The forex security being held
-        :param currency_converter: A currency converter instance
-        """
-        ...
-
-    def total_close_profit_pips(self) -> float:
-        """Profit in pips if we closed the holdings right now including the approximate fees"""
+    def __init__(self) -> None:
+        """Initialize forex cache"""
         ...
 
 
@@ -95,6 +86,23 @@ class ForexDataFilter(QuantConnect.Securities.SecurityDataFilter):
         :param vehicle: Security asset
         :param data: Data object we're scanning to filter
         """
+        ...
+
+
+class ForexHolding(QuantConnect.Securities.SecurityHolding):
+    """FOREX holdings implementation of the base securities class"""
+
+    def __init__(self, security: QuantConnect.Securities.Forex.Forex, currency_converter: QuantConnect.Securities.ICurrencyConverter) -> None:
+        """
+        Forex Holding Class
+        
+        :param security: The forex security being held
+        :param currency_converter: A currency converter instance
+        """
+        ...
+
+    def total_close_profit_pips(self) -> float:
+        """Profit in pips if we closed the holdings right now including the approximate fees"""
         ...
 
 
@@ -122,14 +130,6 @@ class ForexExchange(QuantConnect.Securities.SecurityExchange):
         
         :param exchange_hours: Contains the weekly exchange schedule plus holidays
         """
-        ...
-
-
-class ForexCache(QuantConnect.Securities.SecurityCache):
-    """Forex specific caching support"""
-
-    def __init__(self) -> None:
-        """Initialize forex cache"""
         ...
 
 

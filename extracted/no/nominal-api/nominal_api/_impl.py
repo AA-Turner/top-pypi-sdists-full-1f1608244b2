@@ -6569,6 +6569,7 @@ class event_HistogramFilterQuery(ConjureUnionType):
     _priority: Optional["scout_api_Priority"] = None
     _assignee: Optional[str] = None
     _event_type: Optional["event_EventType"] = None
+    _created_by: Optional[str] = None
     _label: Optional[str] = None
     _property: Optional["api_Property"] = None
     _and_: Optional[List["event_HistogramFilterQuery"]] = None
@@ -6590,6 +6591,7 @@ class event_HistogramFilterQuery(ConjureUnionType):
             'priority': ConjureFieldDefinition('priority', scout_api_Priority),
             'assignee': ConjureFieldDefinition('assignee', scout_rids_api_UserRid),
             'event_type': ConjureFieldDefinition('eventType', event_EventType),
+            'created_by': ConjureFieldDefinition('createdBy', scout_rids_api_UserRid),
             'label': ConjureFieldDefinition('label', api_Label),
             'property': ConjureFieldDefinition('property', api_Property),
             'and_': ConjureFieldDefinition('and', List[event_HistogramFilterQuery]),
@@ -6611,6 +6613,7 @@ class event_HistogramFilterQuery(ConjureUnionType):
             priority: Optional["scout_api_Priority"] = None,
             assignee: Optional[str] = None,
             event_type: Optional["event_EventType"] = None,
+            created_by: Optional[str] = None,
             label: Optional[str] = None,
             property: Optional["api_Property"] = None,
             and_: Optional[List["event_HistogramFilterQuery"]] = None,
@@ -6620,7 +6623,7 @@ class event_HistogramFilterQuery(ConjureUnionType):
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (search_text is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
+            if (search_text is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (created_by is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if search_text is not None:
@@ -6656,6 +6659,9 @@ class event_HistogramFilterQuery(ConjureUnionType):
             if event_type is not None:
                 self._event_type = event_type
                 self._type = 'eventType'
+            if created_by is not None:
+                self._created_by = created_by
+                self._type = 'createdBy'
             if label is not None:
                 self._label = label
                 self._type = 'label'
@@ -6730,6 +6736,11 @@ class event_HistogramFilterQuery(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._event_type = event_type
             self._type = 'eventType'
+        elif type_of_union == 'createdBy':
+            if created_by is None:
+                raise ValueError('a union value must not be None')
+            self._created_by = created_by
+            self._type = 'createdBy'
         elif type_of_union == 'label':
             if label is None:
                 raise ValueError('a union value must not be None')
@@ -6806,6 +6817,10 @@ class event_HistogramFilterQuery(ConjureUnionType):
         return self._event_type
 
     @builtins.property
+    def created_by(self) -> Optional[str]:
+        return self._created_by
+
+    @builtins.property
     def label(self) -> Optional[str]:
         return self._label
 
@@ -6854,6 +6869,8 @@ class event_HistogramFilterQuery(ConjureUnionType):
             return visitor._assignee(self.assignee)
         if self._type == 'eventType' and self.event_type is not None:
             return visitor._event_type(self.event_type)
+        if self._type == 'createdBy' and self.created_by is not None:
+            return visitor._created_by(self.created_by)
         if self._type == 'label' and self.label is not None:
             return visitor._label(self.label)
         if self._type == 'property' and self.property is not None:
@@ -6917,6 +6934,10 @@ class event_HistogramFilterQueryVisitor:
 
     @abstractmethod
     def _event_type(self, event_type: "event_EventType") -> Any:
+        pass
+
+    @abstractmethod
+    def _created_by(self, created_by: str) -> Any:
         pass
 
     @abstractmethod
@@ -7067,6 +7088,7 @@ class event_SearchQuery(ConjureUnionType):
     _priority: Optional["scout_api_Priority"] = None
     _assignee: Optional[str] = None
     _event_type: Optional["event_EventType"] = None
+    _created_by: Optional[str] = None
     _label: Optional[str] = None
     _property: Optional["api_Property"] = None
     _and_: Optional[List["event_SearchQuery"]] = None
@@ -7090,6 +7112,7 @@ class event_SearchQuery(ConjureUnionType):
             'priority': ConjureFieldDefinition('priority', scout_api_Priority),
             'assignee': ConjureFieldDefinition('assignee', scout_rids_api_UserRid),
             'event_type': ConjureFieldDefinition('eventType', event_EventType),
+            'created_by': ConjureFieldDefinition('createdBy', scout_rids_api_UserRid),
             'label': ConjureFieldDefinition('label', api_Label),
             'property': ConjureFieldDefinition('property', api_Property),
             'and_': ConjureFieldDefinition('and', List[event_SearchQuery]),
@@ -7113,6 +7136,7 @@ class event_SearchQuery(ConjureUnionType):
             priority: Optional["scout_api_Priority"] = None,
             assignee: Optional[str] = None,
             event_type: Optional["event_EventType"] = None,
+            created_by: Optional[str] = None,
             label: Optional[str] = None,
             property: Optional["api_Property"] = None,
             and_: Optional[List["event_SearchQuery"]] = None,
@@ -7122,7 +7146,7 @@ class event_SearchQuery(ConjureUnionType):
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (search_text is not None) + (after is not None) + (before is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
+            if (search_text is not None) + (after is not None) + (before is not None) + (asset is not None) + (template is not None) + (workbook is not None) + (data_review is not None) + (origin_type is not None) + (data_review_check is not None) + (disposition_status is not None) + (priority is not None) + (assignee is not None) + (event_type is not None) + (created_by is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if search_text is not None:
@@ -7164,6 +7188,9 @@ class event_SearchQuery(ConjureUnionType):
             if event_type is not None:
                 self._event_type = event_type
                 self._type = 'eventType'
+            if created_by is not None:
+                self._created_by = created_by
+                self._type = 'createdBy'
             if label is not None:
                 self._label = label
                 self._type = 'label'
@@ -7248,6 +7275,11 @@ class event_SearchQuery(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._event_type = event_type
             self._type = 'eventType'
+        elif type_of_union == 'createdBy':
+            if created_by is None:
+                raise ValueError('a union value must not be None')
+            self._created_by = created_by
+            self._type = 'createdBy'
         elif type_of_union == 'label':
             if label is None:
                 raise ValueError('a union value must not be None')
@@ -7338,6 +7370,10 @@ class event_SearchQuery(ConjureUnionType):
         return self._event_type
 
     @builtins.property
+    def created_by(self) -> Optional[str]:
+        return self._created_by
+
+    @builtins.property
     def label(self) -> Optional[str]:
         return self._label
 
@@ -7390,6 +7426,8 @@ class event_SearchQuery(ConjureUnionType):
             return visitor._assignee(self.assignee)
         if self._type == 'eventType' and self.event_type is not None:
             return visitor._event_type(self.event_type)
+        if self._type == 'createdBy' and self.created_by is not None:
+            return visitor._created_by(self.created_by)
         if self._type == 'label' and self.label is not None:
             return visitor._label(self.label)
         if self._type == 'property' and self.property is not None:
@@ -7461,6 +7499,10 @@ class event_SearchQueryVisitor:
 
     @abstractmethod
     def _event_type(self, event_type: "event_EventType") -> Any:
+        pass
+
+    @abstractmethod
+    def _created_by(self, created_by: str) -> Any:
         pass
 
     @abstractmethod
@@ -77393,6 +77435,85 @@ storage_writer_api_ArrayPointsVisitor.__qualname__ = "ArrayPointsVisitor"
 storage_writer_api_ArrayPointsVisitor.__module__ = "nominal_api.storage_writer_api"
 
 
+class storage_writer_api_ArraysValues(ConjureUnionType):
+    """Each element within the outer list corresponds to an Array point. Subsequent inner lists contain the array 
+values recorded for that point."""
+    _strings1d: Optional[List[List[str]]] = None
+    _doubles1d: Optional[List[List[float]]] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'strings1d': ConjureFieldDefinition('strings1d', List[List[str]]),
+            'doubles1d': ConjureFieldDefinition('doubles1d', List[List[float]])
+        }
+
+    def __init__(
+            self,
+            strings1d: Optional[List[List[str]]] = None,
+            doubles1d: Optional[List[List[float]]] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (strings1d is not None) + (doubles1d is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if strings1d is not None:
+                self._strings1d = strings1d
+                self._type = 'strings1d'
+            if doubles1d is not None:
+                self._doubles1d = doubles1d
+                self._type = 'doubles1d'
+
+        elif type_of_union == 'strings1d':
+            if strings1d is None:
+                raise ValueError('a union value must not be None')
+            self._strings1d = strings1d
+            self._type = 'strings1d'
+        elif type_of_union == 'doubles1d':
+            if doubles1d is None:
+                raise ValueError('a union value must not be None')
+            self._doubles1d = doubles1d
+            self._type = 'doubles1d'
+
+    @builtins.property
+    def strings1d(self) -> Optional[List[List[str]]]:
+        return self._strings1d
+
+    @builtins.property
+    def doubles1d(self) -> Optional[List[List[float]]]:
+        return self._doubles1d
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, storage_writer_api_ArraysValuesVisitor):
+            raise ValueError('{} is not an instance of storage_writer_api_ArraysValuesVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'strings1d' and self.strings1d is not None:
+            return visitor._strings1d(self.strings1d)
+        if self._type == 'doubles1d' and self.doubles1d is not None:
+            return visitor._doubles1d(self.doubles1d)
+
+
+storage_writer_api_ArraysValues.__name__ = "ArraysValues"
+storage_writer_api_ArraysValues.__qualname__ = "ArraysValues"
+storage_writer_api_ArraysValues.__module__ = "nominal_api.storage_writer_api"
+
+
+class storage_writer_api_ArraysValuesVisitor:
+
+    @abstractmethod
+    def _strings1d(self, strings1d: List[List[str]]) -> Any:
+        pass
+
+    @abstractmethod
+    def _doubles1d(self, doubles1d: List[List[float]]) -> Any:
+        pass
+
+
+storage_writer_api_ArraysValuesVisitor.__name__ = "ArraysValuesVisitor"
+storage_writer_api_ArraysValuesVisitor.__qualname__ = "ArraysValuesVisitor"
+storage_writer_api_ArraysValuesVisitor.__module__ = "nominal_api.storage_writer_api"
+
+
 class storage_writer_api_ColumnBatch(ConjureBeanType):
     """
     Batch of data to stream for a single channel with their associated timestamps.
@@ -77440,7 +77561,7 @@ provided MUST match the number of columnar values provided, otherwise a 400 erro
     @builtins.property
     def values(self) -> "storage_writer_api_ColumnValues":
         """
-        List of timeseries values that should be ingested to a single channel. The number of columnar values
+        List of time series values that should be ingested to a single channel. The number of columnar values
 provided MUST match the number of timestamps provided, otherwise a 400 error will be returned.
         """
         return self._values
@@ -77452,17 +77573,19 @@ storage_writer_api_ColumnBatch.__module__ = "nominal_api.storage_writer_api"
 
 
 class storage_writer_api_ColumnValues(ConjureUnionType):
-    """List of values that correspond to subsequent values to ingest from a single channel."""
+    """List of values for a set of points to ingest from a single channel."""
     _strings: Optional[List[str]] = None
     _doubles: Optional[List[float]] = None
     _ints: Optional[List[int]] = None
+    _arrays: Optional["storage_writer_api_ArraysValues"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'strings': ConjureFieldDefinition('strings', List[str]),
             'doubles': ConjureFieldDefinition('doubles', List[float]),
-            'ints': ConjureFieldDefinition('ints', List[int])
+            'ints': ConjureFieldDefinition('ints', List[int]),
+            'arrays': ConjureFieldDefinition('arrays', storage_writer_api_ArraysValues)
         }
 
     def __init__(
@@ -77470,10 +77593,11 @@ class storage_writer_api_ColumnValues(ConjureUnionType):
             strings: Optional[List[str]] = None,
             doubles: Optional[List[float]] = None,
             ints: Optional[List[int]] = None,
+            arrays: Optional["storage_writer_api_ArraysValues"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (strings is not None) + (doubles is not None) + (ints is not None) != 1:
+            if (strings is not None) + (doubles is not None) + (ints is not None) + (arrays is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if strings is not None:
@@ -77485,6 +77609,9 @@ class storage_writer_api_ColumnValues(ConjureUnionType):
             if ints is not None:
                 self._ints = ints
                 self._type = 'ints'
+            if arrays is not None:
+                self._arrays = arrays
+                self._type = 'arrays'
 
         elif type_of_union == 'strings':
             if strings is None:
@@ -77501,6 +77628,11 @@ class storage_writer_api_ColumnValues(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._ints = ints
             self._type = 'ints'
+        elif type_of_union == 'arrays':
+            if arrays is None:
+                raise ValueError('a union value must not be None')
+            self._arrays = arrays
+            self._type = 'arrays'
 
     @builtins.property
     def strings(self) -> Optional[List[str]]:
@@ -77514,6 +77646,10 @@ class storage_writer_api_ColumnValues(ConjureUnionType):
     def ints(self) -> Optional[List[int]]:
         return self._ints
 
+    @builtins.property
+    def arrays(self) -> Optional["storage_writer_api_ArraysValues"]:
+        return self._arrays
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, storage_writer_api_ColumnValuesVisitor):
             raise ValueError('{} is not an instance of storage_writer_api_ColumnValuesVisitor'.format(visitor.__class__.__name__))
@@ -77523,6 +77659,8 @@ class storage_writer_api_ColumnValues(ConjureUnionType):
             return visitor._doubles(self.doubles)
         if self._type == 'ints' and self.ints is not None:
             return visitor._ints(self.ints)
+        if self._type == 'arrays' and self.arrays is not None:
+            return visitor._arrays(self.arrays)
 
 
 storage_writer_api_ColumnValues.__name__ = "ColumnValues"
@@ -77542,6 +77680,10 @@ class storage_writer_api_ColumnValuesVisitor:
 
     @abstractmethod
     def _ints(self, ints: List[int]) -> Any:
+        pass
+
+    @abstractmethod
+    def _arrays(self, arrays: "storage_writer_api_ArraysValues") -> Any:
         pass
 
 

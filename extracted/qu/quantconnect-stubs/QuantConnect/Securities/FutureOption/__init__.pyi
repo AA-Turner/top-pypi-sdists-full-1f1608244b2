@@ -61,24 +61,6 @@ class FuturesOptionsExpiryFunctions(System.Object):
         ...
 
 
-class FuturesOptionsUnderlyingMapper(System.Object):
-    """Creates the underlying Symbol that corresponds to a futures options contract"""
-
-    @staticmethod
-    def get_underlying_future_from_future_option(future_option_ticker: str, market: str, future_option_expiration: typing.Union[datetime.datetime, datetime.date], date: typing.Optional[datetime.datetime] = None) -> QuantConnect.Symbol:
-        """
-        Gets the FOP's underlying Future. The underlying Future's contract month might not match
-        the contract month of the Future Option when providing CBOT or COMEX based FOPs contracts to this method.
-        
-        :param future_option_ticker: Future option ticker
-        :param market: Market of the Future Option
-        :param future_option_expiration: Expiration date of the future option
-        :param date: Date to search the future chain provider with. Optional, but required for CBOT based contracts
-        :returns: Symbol if there is an underlying for the FOP, null if there's no underlying found for the Future Option.
-        """
-        ...
-
-
 class FutureOption(QuantConnect.Securities.Option.Option):
     """Futures Options security"""
 
@@ -94,6 +76,24 @@ class FutureOption(QuantConnect.Securities.Option.Option):
         :param registered_types: Provides all data types registered to the algorithm
         :param security_cache: Cache of security objects
         :param underlying: Future underlying security
+        """
+        ...
+
+
+class FuturesOptionsUnderlyingMapper(System.Object):
+    """Creates the underlying Symbol that corresponds to a futures options contract"""
+
+    @staticmethod
+    def get_underlying_future_from_future_option(future_option_ticker: str, market: str, future_option_expiration: typing.Union[datetime.datetime, datetime.date], date: typing.Optional[datetime.datetime] = None) -> QuantConnect.Symbol:
+        """
+        Gets the FOP's underlying Future. The underlying Future's contract month might not match
+        the contract month of the Future Option when providing CBOT or COMEX based FOPs contracts to this method.
+        
+        :param future_option_ticker: Future option ticker
+        :param market: Market of the Future Option
+        :param future_option_expiration: Expiration date of the future option
+        :param date: Date to search the future chain provider with. Optional, but required for CBOT based contracts
+        :returns: Symbol if there is an underlying for the FOP, null if there's no underlying found for the Future Option.
         """
         ...
 

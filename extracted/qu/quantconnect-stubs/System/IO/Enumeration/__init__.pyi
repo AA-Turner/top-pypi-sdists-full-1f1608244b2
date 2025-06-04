@@ -9,82 +9,65 @@ import System.IO
 import System.IO.Enumeration
 import System.Runtime.ConstrainedExecution
 
-System_IO_Enumeration_FileSystemEnumerator_TResult = typing.TypeVar("System_IO_Enumeration_FileSystemEnumerator_TResult")
 System_IO_Enumeration_FileSystemEnumerable_TResult = typing.TypeVar("System_IO_Enumeration_FileSystemEnumerable_TResult")
+System_IO_Enumeration_FileSystemEnumerator_TResult = typing.TypeVar("System_IO_Enumeration_FileSystemEnumerator_TResult")
 
 
 class FileSystemEntry:
-    """Provides a lower level view of FileSystemInfo to help process and filter find results."""
+    """Lower level view of FileSystemInfo used for processing and filtering find results."""
+
+    @property
+    def file_name(self) -> System.ReadOnlySpan[str]:
+        ...
 
     @property
     def directory(self) -> System.ReadOnlySpan[str]:
-        """Gets the full path of the directory this entry resides in."""
+        """The full path of the directory this entry resides in."""
         ...
 
     @property
     def root_directory(self) -> System.ReadOnlySpan[str]:
-        """Gets the full path of the root directory used for the enumeration."""
+        """The full path of the root directory used for the enumeration."""
         ...
 
     @property
     def original_root_directory(self) -> System.ReadOnlySpan[str]:
-        """Gets the root directory for the enumeration as specified in the constructor."""
-        ...
-
-    @property
-    def file_name(self) -> System.ReadOnlySpan[str]:
-        """Gets the file name for this entry."""
+        """The root directory for the enumeration as specified in the constructor."""
         ...
 
     @property
     def attributes(self) -> System.IO.FileAttributes:
-        """Gets the attributes for this entry."""
         ...
 
     @property
     def length(self) -> int:
-        """Gets the length of the file, in bytes."""
         ...
 
     @property
     def creation_time_utc(self) -> System.DateTimeOffset:
-        """Gets the creation time for the entry or the oldest available time stamp if the operating system does not support creation time stamps."""
         ...
 
     @property
     def last_access_time_utc(self) -> System.DateTimeOffset:
-        """Gets a datetime offset that represents the last access time in UTC."""
         ...
 
     @property
     def last_write_time_utc(self) -> System.DateTimeOffset:
-        """Gets a datetime offset that represents the last write time in UTC."""
-        ...
-
-    @property
-    def is_directory(self) -> bool:
-        """Gets a value that indicates whether this entry is a directory."""
         ...
 
     @property
     def is_hidden(self) -> bool:
-        """Gets a value that indicates whether the file has the hidden attribute."""
+        ...
+
+    @property
+    def is_directory(self) -> bool:
         ...
 
     def to_file_system_info(self) -> System.IO.FileSystemInfo:
-        """
-        Converts the value of this instance to a FileSystemInfo.
-        
-        :returns: The value of this instance as a FileSystemInfo.
-        """
         ...
 
     def to_full_path(self) -> str:
-        """
-        Returns the full path of the find result.
-        
-        :returns: A string representing the full path.
-        """
+        """Returns the full path of the find result."""
         ...
 
     def to_specified_full_path(self) -> str:
@@ -93,6 +76,43 @@ class FileSystemEntry:
         
         :returns: A string representing the full path.
         """
+        ...
+
+
+class FileSystemEnumerable(typing.Generic[System_IO_Enumeration_FileSystemEnumerable_TResult], System.Object, System.Collections.Generic.IEnumerable[System_IO_Enumeration_FileSystemEnumerable_TResult], typing.Iterable[System_IO_Enumeration_FileSystemEnumerable_TResult]):
+    """Enumerable that allows utilizing custom filter predicates and transform delegates."""
+
+    @property
+    def should_include_predicate(self) -> typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]:
+        ...
+
+    @should_include_predicate.setter
+    def should_include_predicate(self, value: typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]) -> None:
+        ...
+
+    @property
+    def should_recurse_predicate(self) -> typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]:
+        ...
+
+    @should_recurse_predicate.setter
+    def should_recurse_predicate(self, value: typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]) -> None:
+        ...
+
+    def __init__(self, directory: str, transform: typing.Callable[[System.IO.Enumeration.FileSystemEntry], System_IO_Enumeration_FileSystemEnumerable_TResult], options: System.IO.EnumerationOptions = None) -> None:
+        ...
+
+    def __iter__(self) -> typing.Iterator[System_IO_Enumeration_FileSystemEnumerable_TResult]:
+        ...
+
+    def find_predicate(self, entry: System.IO.Enumeration.FileSystemEntry) -> bool:
+        """Delegate for filtering out find results."""
+        ...
+
+    def find_transform(self, entry: System.IO.Enumeration.FileSystemEntry) -> System_IO_Enumeration_FileSystemEnumerable_TResult:
+        """Delegate for transforming raw find data into a result."""
+        ...
+
+    def get_enumerator(self) -> System.Collections.Generic.IEnumerator[System_IO_Enumeration_FileSystemEnumerable_TResult]:
         ...
 
 
@@ -231,43 +251,6 @@ class FileSystemName(System.Object):
         :param expression: The expression to translate.
         :returns: A string with the translated Win32 expression.
         """
-        ...
-
-
-class FileSystemEnumerable(typing.Generic[System_IO_Enumeration_FileSystemEnumerable_TResult], System.Object, System.Collections.Generic.IEnumerable[System_IO_Enumeration_FileSystemEnumerable_TResult], typing.Iterable[System_IO_Enumeration_FileSystemEnumerable_TResult]):
-    """Enumerable that allows utilizing custom filter predicates and transform delegates."""
-
-    @property
-    def should_include_predicate(self) -> typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]:
-        ...
-
-    @should_include_predicate.setter
-    def should_include_predicate(self, value: typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]) -> None:
-        ...
-
-    @property
-    def should_recurse_predicate(self) -> typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]:
-        ...
-
-    @should_recurse_predicate.setter
-    def should_recurse_predicate(self, value: typing.Callable[[System.IO.Enumeration.FileSystemEntry], bool]) -> None:
-        ...
-
-    def __init__(self, directory: str, transform: typing.Callable[[System.IO.Enumeration.FileSystemEntry], System_IO_Enumeration_FileSystemEnumerable_TResult], options: System.IO.EnumerationOptions = None) -> None:
-        ...
-
-    def __iter__(self) -> typing.Iterator[System_IO_Enumeration_FileSystemEnumerable_TResult]:
-        ...
-
-    def find_predicate(self, entry: System.IO.Enumeration.FileSystemEntry) -> bool:
-        """Delegate for filtering out find results."""
-        ...
-
-    def find_transform(self, entry: System.IO.Enumeration.FileSystemEntry) -> System_IO_Enumeration_FileSystemEnumerable_TResult:
-        """Delegate for transforming raw find data into a result."""
-        ...
-
-    def get_enumerator(self) -> System.Collections.Generic.IEnumerator[System_IO_Enumeration_FileSystemEnumerable_TResult]:
         ...
 
 

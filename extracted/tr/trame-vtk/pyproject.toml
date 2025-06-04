@@ -1,6 +1,6 @@
 [project]
 name = "trame-vtk"
-version = "2.8.16"
+version = "2.8.17"
 description = "VTK widgets for trame"
 authors = [
     {name = "Kitware Inc."},
@@ -40,9 +40,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 include = [
-  "/src/trame_vtk/**/*.py",
+  "/src/**/*.py",
+  "/src/**/*.html",
   "/src/trame_vtk/modules/common/serve/**",
-  "/src/trame/**/*.py",
 ]
 
 [tool.hatch.build.targets.wheel]

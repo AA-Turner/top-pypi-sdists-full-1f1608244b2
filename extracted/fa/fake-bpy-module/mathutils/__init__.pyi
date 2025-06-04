@@ -1476,23 +1476,21 @@ class Quaternion:
         """
 
     @typing.overload
-    def __matmul__(
-        self, other: collections.abc.Sequence[float] | typing_extensions.Self
-    ) -> typing_extensions.Self:
+    def __matmul__(self, other: typing_extensions.Self) -> typing_extensions.Self:
         """
 
         :param other:
-        :type other: collections.abc.Sequence[float] | typing_extensions.Self
+        :type other: typing_extensions.Self
         :return:
         :rtype: typing_extensions.Self
         """
 
     @typing.overload
-    def __matmul__(self, other: Vector | collections.abc.Sequence[float]) -> Vector:
+    def __matmul__(self, other: Vector) -> Vector:
         """
 
         :param other:
-        :type other: Vector | collections.abc.Sequence[float]
+        :type other: Vector
         :return:
         :rtype: Vector
         """

@@ -103,8 +103,9 @@ Keyword arguments:
     `False` by default.
 
 - label (a list of or a singular dash component, string or number; optional):
-    Function to generate label or any react node to render instead,
-    set to None to disable label.
+    Function to generate label (See
+    https://www.dash-mantine-components.com/functions-as-props) or any
+    react node to render instead, set to None to disable label.
 
 - labelAlwaysOn (boolean; optional):
     Determines whether the label should be visible when the slider is
@@ -294,6 +295,11 @@ Keyword arguments:
 
 - right (string | number; optional)
 
+- scale (boolean | number | string | dict | list; optional):
+    Function to generate scale (See
+    https://www.dash-mantine-components.com/functions-as-props) A
+    transformation function to change the scale of the slider.
+
 - showLabelOnHover (boolean; optional):
     Determines whether the label should be displayed when the slider
     is hovered, `True` by default.
@@ -373,7 +379,7 @@ Keyword arguments:
         "LabelTransitionProps",
             {
             "keepMounted": NotRequired[bool],
-            "transition": NotRequired[typing.Union[Literal["fade"], Literal["fade-down"], Literal["fade-up"], Literal["fade-left"], Literal["fade-right"], Literal["skew-up"], Literal["skew-down"], Literal["rotate-right"], Literal["rotate-left"], Literal["slide-down"], Literal["slide-up"], Literal["slide-right"], Literal["slide-left"], Literal["scale-y"], Literal["scale-x"], Literal["scale"], Literal["pop"], Literal["pop-top-left"], Literal["pop-top-right"], Literal["pop-bottom-left"], Literal["pop-bottom-right"]]],
+            "transition": NotRequired[typing.Union[Literal["scale"], Literal["fade"], Literal["fade-down"], Literal["fade-up"], Literal["fade-left"], Literal["fade-right"], Literal["skew-up"], Literal["skew-down"], Literal["rotate-right"], Literal["rotate-left"], Literal["slide-down"], Literal["slide-up"], Literal["slide-right"], Literal["slide-left"], Literal["scale-y"], Literal["scale-x"], Literal["pop"], Literal["pop-top-left"], Literal["pop-top-right"], Literal["pop-bottom-left"], Literal["pop-bottom-right"]]],
             "duration": NotRequired[NumberType],
             "exitDuration": NotRequired[NumberType],
             "timingFunction": NotRequired[str],
@@ -417,6 +423,7 @@ Keyword arguments:
         thumbToLabel: typing.Optional[str] = None,
         updatemode: typing.Optional[Literal["mouseup", "drag"]] = None,
         restrictToMarks: typing.Optional[bool] = None,
+        scale: typing.Optional[typing.Any] = None,
         className: typing.Optional[str] = None,
         style: typing.Optional[typing.Any] = None,
         hiddenFrom: typing.Optional[typing.Union[Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]] = None,
@@ -485,9 +492,9 @@ Keyword arguments:
         persistence_type: typing.Optional[Literal["local", "session", "memory"]] = None,
         **kwargs
     ):
-        self._prop_names = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'color', 'darkHidden', 'data-*', 'disabled', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'inset', 'inverted', 'label', 'labelAlwaysOn', 'labelTransitionProps', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'marks', 'maw', 'max', 'maxRange', 'mb', 'me', 'mih', 'min', 'minRange', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'name', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'pos', 'pr', 'precision', 'ps', 'pt', 'px', 'py', 'radius', 'restrictToMarks', 'right', 'showLabelOnHover', 'size', 'step', 'style', 'styles', 'ta', 'tabIndex', 'td', 'thumbChildren', 'thumbFromLabel', 'thumbSize', 'thumbToLabel', 'top', 'tt', 'unstyled', 'updatemode', 'value', 'variant', 'visibleFrom', 'w']
+        self._prop_names = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'color', 'darkHidden', 'data-*', 'disabled', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'inset', 'inverted', 'label', 'labelAlwaysOn', 'labelTransitionProps', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'marks', 'maw', 'max', 'maxRange', 'mb', 'me', 'mih', 'min', 'minRange', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'name', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'pos', 'pr', 'precision', 'ps', 'pt', 'px', 'py', 'radius', 'restrictToMarks', 'right', 'scale', 'showLabelOnHover', 'size', 'step', 'style', 'styles', 'ta', 'tabIndex', 'td', 'thumbChildren', 'thumbFromLabel', 'thumbSize', 'thumbToLabel', 'top', 'tt', 'unstyled', 'updatemode', 'value', 'variant', 'visibleFrom', 'w']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'color', 'darkHidden', 'data-*', 'disabled', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'inset', 'inverted', 'label', 'labelAlwaysOn', 'labelTransitionProps', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'marks', 'maw', 'max', 'maxRange', 'mb', 'me', 'mih', 'min', 'minRange', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'name', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'pos', 'pr', 'precision', 'ps', 'pt', 'px', 'py', 'radius', 'restrictToMarks', 'right', 'showLabelOnHover', 'size', 'step', 'style', 'styles', 'ta', 'tabIndex', 'td', 'thumbChildren', 'thumbFromLabel', 'thumbSize', 'thumbToLabel', 'top', 'tt', 'unstyled', 'updatemode', 'value', 'variant', 'visibleFrom', 'w']
+        self.available_properties = ['id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'color', 'darkHidden', 'data-*', 'disabled', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'inset', 'inverted', 'label', 'labelAlwaysOn', 'labelTransitionProps', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'marks', 'maw', 'max', 'maxRange', 'mb', 'me', 'mih', 'min', 'minRange', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'name', 'opacity', 'p', 'pb', 'pe', 'persisted_props', 'persistence', 'persistence_type', 'pl', 'pos', 'pr', 'precision', 'ps', 'pt', 'px', 'py', 'radius', 'restrictToMarks', 'right', 'scale', 'showLabelOnHover', 'size', 'step', 'style', 'styles', 'ta', 'tabIndex', 'td', 'thumbChildren', 'thumbFromLabel', 'thumbSize', 'thumbToLabel', 'top', 'tt', 'unstyled', 'updatemode', 'value', 'variant', 'visibleFrom', 'w']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

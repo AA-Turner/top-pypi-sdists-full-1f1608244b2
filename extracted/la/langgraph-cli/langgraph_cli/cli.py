@@ -4,7 +4,8 @@ import os
 import pathlib
 import shutil
 import sys
-from typing import Callable, List, Optional, Sequence, Tuple
+from collections.abc import Sequence
+from typing import Callable, Optional
 
 import click
 import click.exceptions
@@ -19,6 +20,7 @@ from langgraph_cli.docker import DockerCapabilities
 from langgraph_cli.exec import Runner, subp_exec
 from langgraph_cli.progress import Progress
 from langgraph_cli.templates import TEMPLATE_HELP_STRING, create_new
+from langgraph_cli.util import warn_non_wolfi_distro
 from langgraph_cli.version import __version__
 
 OPT_DOCKER_COMPOSE = click.option(
@@ -206,7 +208,7 @@ def up(
 ):
     click.secho("Starting LangGraph API server...", fg="green")
     click.secho(
-        """For local dev, requires env var LANGSMITH_API_KEY with access to LangGraph Cloud closed beta.
+        """For local dev, requires env var LANGSMITH_API_KEY with access to LangGraph Platform closed beta.
 For production use, requires a license key in env var LANGGRAPH_CLOUD_LICENSE_KEY.""",
     )
     with Runner() as runner, Progress(message="Pulling...") as set:
@@ -374,6 +376,7 @@ def build(
         if shutil.which("docker") is None:
             raise click.UsageError("Docker not installed") from None
         config_json = langgraph_cli.config.validate_config_file(config)
+        warn_non_wolfi_distro(config_json)
         _build(
             runner, set, config, config_json, base_image, pull, tag, docker_build_args
         )
@@ -465,6 +468,7 @@ def dockerfile(
     save_path = pathlib.Path(save_path).absolute()
     secho(f"🔍 Validating configuration at path: {config}", fg="yellow")
     config_json = langgraph_cli.config.validate_config_file(config)
+    warn_non_wolfi_distro(config_json)
     secho("✅ Configuration validated!", fg="green")
 
     secho(f"📝 Generating Dockerfile at {save_path}", fg="yellow")
@@ -529,7 +533,7 @@ def dockerfile(
                         "\n",
                         "# LANGSMITH_API_KEY=your-api-key",
                         "\n",
-                        "# Or if you have a LangGraph Cloud license key, "
+                        "# Or if you have a LangGraph Platform license key, "
                         "then uncomment the following line: ",
                         "\n",
                         "# LANGGRAPH_CLOUD_LICENSE_KEY=your-license-key",
@@ -741,7 +745,7 @@ def prepare_args_and_stdin(
     image: Optional[str] = None,
     # Like "langchain/langgraphjs-api" or "langchain/langgraph-api
     base_image: Optional[str] = None,
-) -> Tuple[List[str], str]:
+) -> tuple[list[str], str]:
     assert config_path.exists(), f"Config file not found: {config_path}"
     # prepare args
     stdin = langgraph_cli.docker.compose(
@@ -787,9 +791,10 @@ def prepare(
     postgres_uri: Optional[str] = None,
     image: Optional[str] = None,
     base_image: Optional[str] = None,
-) -> Tuple[List[str], str]:
+) -> tuple[list[str], str]:
     """Prepare the arguments and stdin for running the LangGraph API server."""
     config_json = langgraph_cli.config.validate_config_file(config_path)
+    warn_non_wolfi_distro(config_json)
     # pull latest images
     if pull:
         runner.run(

@@ -99,7 +99,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 import bpy.types
 
 def BoolProperty(
@@ -108,10 +108,10 @@ def BoolProperty(
     description: str | None = "",
     translation_context: str | None = "*",
     default=False,
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
-    subtype: bpy._typing.rna_enums.PropertySubtypeNumberItems = "NONE",
+    subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberItems = "NONE",
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], bool] | None = None,
@@ -126,12 +126,12 @@ def BoolProperty(
         :param translation_context: Text used as context to disambiguate translations.
         :type translation_context: str | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param subtype: Enumerator in `rna_enum_property_subtype_number_items`.
-        :type subtype: bpy._typing.rna_enums.PropertySubtypeNumberItems
+        :type subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberItems
         :param update: Function to be called when this value is modified,
     This function must take 2 values (self, context) and return None.
     Warning there are no safety checks to avoid infinite recursion.
@@ -150,10 +150,10 @@ def BoolVectorProperty(
     description: str | None = "",
     translation_context: str | None = "*",
     default: collections.abc.Sequence[bool] | None = (False, False, False),
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
-    subtype: bpy._typing.rna_enums.PropertySubtypeNumberArrayItems = "NONE",
+    subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberArrayItems = "NONE",
     size: collections.abc.Sequence[int] | int | None = 3,
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
@@ -175,12 +175,12 @@ def BoolVectorProperty(
         :param default: sequence of booleans the length of size.
         :type default: collections.abc.Sequence[bool] | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param subtype: Enumerator in `rna_enum_property_subtype_number_array_items`.
-        :type subtype: bpy._typing.rna_enums.PropertySubtypeNumberArrayItems
+        :type subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberArrayItems
         :param size: Vector dimensions in [1, 32]. An int sequence can be used to define multi-dimension arrays.
         :type size: collections.abc.Sequence[int] | int | None
         :param update: Function to be called when this value is modified,
@@ -201,8 +201,10 @@ def CollectionProperty(
     name: str | None = "",
     description: str | None = "",
     translation_context: str | None = "*",
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagCollectionItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[
+        bpy.stub_internal.rna_enums.PropertyOverrideFlagCollectionItems
+    ] = set(),
     tags=set(),
 ):
     """Returns a new collection property definition.
@@ -216,9 +218,9 @@ def CollectionProperty(
     :param translation_context: Text used as context to disambiguate translations.
     :type translation_context: str | None
     :param options: Enumerator in `rna_enum_property_flag_items`.
-    :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+    :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
     :param override: Enumerator in `rna_enum_property_override_flag_collection_items`.
-    :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagCollectionItems]
+    :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagCollectionItems]
     :param tags: Enumerator of tags that are defined by parent class.
     """
 
@@ -243,8 +245,8 @@ def EnumProperty(
     description: str | None = "",
     translation_context: str | None = "*",
     default: int | str | None = None,
-    options: set[bpy._typing.rna_enums.PropertyFlagEnumItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagEnumItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
@@ -307,9 +309,9 @@ def EnumProperty(
     (i.e. if a callback function is given as items parameter).
         :type default: int | str | None
         :param options: Enumerator in `rna_enum_property_flag_enum_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagEnumItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagEnumItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param update: Function to be called when this value is modified,
     This function must take 2 values (self, context) and return None.
@@ -335,11 +337,11 @@ def FloatProperty(
     soft_max: float | None = 3.402823e38,
     step: int | None = 3,
     precision: int | None = 2,
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
-    subtype: bpy._typing.rna_enums.PropertySubtypeNumberItems = "NONE",
-    unit: bpy._typing.rna_enums.PropertyUnitItems = "NONE",
+    subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberItems = "NONE",
+    unit: bpy.stub_internal.rna_enums.PropertyUnitItems = "NONE",
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], float] | None = None,
@@ -366,14 +368,14 @@ def FloatProperty(
         :param precision: Maximum number of decimal digits to display, in [0, 6]. Fraction is automatically hidden for exact integer values of fields with unit 'NONE' or 'TIME' (frame count) and step divisible by 100.
         :type precision: int | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param subtype: Enumerator in `rna_enum_property_subtype_number_items`.
-        :type subtype: bpy._typing.rna_enums.PropertySubtypeNumberItems
+        :type subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberItems
         :param unit: Enumerator in `rna_enum_property_unit_items`.
-        :type unit: bpy._typing.rna_enums.PropertyUnitItems
+        :type unit: bpy.stub_internal.rna_enums.PropertyUnitItems
         :param update: Function to be called when this value is modified,
     This function must take 2 values (self, context) and return None.
     Warning there are no safety checks to avoid infinite recursion.
@@ -398,11 +400,11 @@ def FloatVectorProperty(
     soft_max: float | None = sys.float_info.max,
     step: int | None = 3,
     precision: int | None = 2,
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
-    subtype: bpy._typing.rna_enums.PropertySubtypeNumberArrayItems = "NONE",
-    unit: bpy._typing.rna_enums.PropertyUnitItems = "NONE",
+    subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberArrayItems = "NONE",
+    unit: bpy.stub_internal.rna_enums.PropertyUnitItems = "NONE",
     size: collections.abc.Sequence[int] | int | None = 3,
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
@@ -436,14 +438,14 @@ def FloatVectorProperty(
         :param precision: Maximum number of decimal digits to display, in [0, 6]. Fraction is automatically hidden for exact integer values of fields with unit 'NONE' or 'TIME' (frame count) and step divisible by 100.
         :type precision: int | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param subtype: Enumerator in `rna_enum_property_subtype_number_array_items`.
-        :type subtype: bpy._typing.rna_enums.PropertySubtypeNumberArrayItems
+        :type subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberArrayItems
         :param unit: Enumerator in `rna_enum_property_unit_items`.
-        :type unit: bpy._typing.rna_enums.PropertyUnitItems
+        :type unit: bpy.stub_internal.rna_enums.PropertyUnitItems
         :param size: Vector dimensions in [1, 32]. An int sequence can be used to define multi-dimension arrays.
         :type size: collections.abc.Sequence[int] | int | None
         :param update: Function to be called when this value is modified,
@@ -469,10 +471,10 @@ def IntProperty(
     soft_min: int | None = None,
     soft_max: int | None = None,
     step: int | None = 1,
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
-    subtype: bpy._typing.rna_enums.PropertySubtypeNumberItems = "NONE",
+    subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberItems = "NONE",
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], int] | None = None,
@@ -497,12 +499,12 @@ def IntProperty(
         :param step: Step of increment/decrement in UI, in [1, 100], defaults to 1 (WARNING: unused currently!).
         :type step: int | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param subtype: Enumerator in `rna_enum_property_subtype_number_items`.
-        :type subtype: bpy._typing.rna_enums.PropertySubtypeNumberItems
+        :type subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberItems
         :param update: Function to be called when this value is modified,
     This function must take 2 values (self, context) and return None.
     Warning there are no safety checks to avoid infinite recursion.
@@ -526,10 +528,10 @@ def IntVectorProperty(
     soft_min: int | None = None,
     soft_max: int | None = None,
     step: int | None = 1,
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
-    subtype: bpy._typing.rna_enums.PropertySubtypeNumberArrayItems = "NONE",
+    subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberArrayItems = "NONE",
     size: collections.abc.Sequence[int] | int | None = 3,
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
@@ -559,12 +561,12 @@ def IntVectorProperty(
         :param step: Step of increment/decrement in UI, in [1, 100], defaults to 1 (WARNING: unused currently!).
         :type step: int | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param subtype: Enumerator in `rna_enum_property_subtype_number_array_items`.
-        :type subtype: bpy._typing.rna_enums.PropertySubtypeNumberArrayItems
+        :type subtype: bpy.stub_internal.rna_enums.PropertySubtypeNumberArrayItems
         :param size: Vector dimensions in [1, 32]. An int sequence can be used to define multi-dimension arrays.
         :type size: collections.abc.Sequence[int] | int | None
         :param update: Function to be called when this value is modified,
@@ -585,8 +587,8 @@ def PointerProperty(
     name: str | None = "",
     description: str | None = "",
     translation_context: str | None = "*",
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
     poll: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.ID], bool]
     | None = None,
@@ -604,9 +606,9 @@ def PointerProperty(
         :param translation_context: Text used as context to disambiguate translations.
         :type translation_context: str | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param poll: Function that determines whether an item is valid for this property.
     The function must take 2 values (self, object) and return a boolean.
@@ -635,10 +637,10 @@ def StringProperty(
     translation_context: str | None = "*",
     default: str | None = "",
     maxlen: int | None = 0,
-    options: set[bpy._typing.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
-    override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems] = set(),
+    options: set[bpy.stub_internal.rna_enums.PropertyFlagItems] = {"ANIMATABLE"},
+    override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems] = set(),
     tags=set(),
-    subtype: bpy._typing.rna_enums.PropertySubtypeStringItems = "NONE",
+    subtype: bpy.stub_internal.rna_enums.PropertySubtypeStringItems = "NONE",
     update: collections.abc.Callable[[bpy.types.bpy_struct, bpy.types.Context], None]
     | None = None,
     get: collections.abc.Callable[[bpy.types.bpy_struct], str] | None = None,
@@ -660,12 +662,12 @@ def StringProperty(
         :param maxlen: maximum length of the string.
         :type maxlen: int | None
         :param options: Enumerator in `rna_enum_property_flag_items`.
-        :type options: set[bpy._typing.rna_enums.PropertyFlagItems]
+        :type options: set[bpy.stub_internal.rna_enums.PropertyFlagItems]
         :param override: Enumerator in `rna_enum_property_override_flag_items`.
-        :type override: set[bpy._typing.rna_enums.PropertyOverrideFlagItems]
+        :type override: set[bpy.stub_internal.rna_enums.PropertyOverrideFlagItems]
         :param tags: Enumerator of tags that are defined by parent class.
         :param subtype: Enumerator in `rna_enum_property_subtype_string_items`.
-        :type subtype: bpy._typing.rna_enums.PropertySubtypeStringItems
+        :type subtype: bpy.stub_internal.rna_enums.PropertySubtypeStringItems
         :param update: Function to be called when this value is modified,
     This function must take 2 values (self, context) and return None.
     Warning there are no safety checks to avoid infinite recursion.

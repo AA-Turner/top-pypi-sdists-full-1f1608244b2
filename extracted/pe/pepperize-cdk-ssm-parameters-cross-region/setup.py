@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.cdk-ssm-parameters-cross-region",
-    "version": "0.0.531",
+    "version": "0.0.532",
     "description": "Store, read and lookup AWS SSM Parameters cross-region",
     "license": "MIT",
     "url": "https://github.com/pepperize/cdk-ssm-parameters-cross-region.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_cdk_ssm_parameters_cross_region._jsii": [
-            "cdk-ssm-parameters-cross-region@0.0.531.jsii.tgz"
+            "cdk-ssm-parameters-cross-region@0.0.532.jsii.tgz"
         ],
         "pepperize_cdk_ssm_parameters_cross_region": [
             "py.typed"

@@ -278,9 +278,9 @@ class Workbook(ItemWithOwnerAndAcl):
         definition = Item._dict_from_item_output(item_output)
         workbook = Workbook._instantiate(definition, provenance=Item.PULL)
 
-        status.update('[%d/%d] Pulling %s "%s"' %
+        status.update('[%d/%d] Pulling %s "%s" (%s)' %
                       (len(status.df[status.df['Result'] != 'Queued']),
-                       len(status.df), workbook['Workbook Type'], workbook['Name']),
+                       len(status.df), workbook['Workbook Type'], workbook['Name'], workbook['ID']),
                       Status.RUNNING)
 
         # noinspection PyBroadException

@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def flip(
     execution_context: int | str | None = None,
@@ -65,7 +65,7 @@ def select_mirror(
     undo: bool | None = None,
     /,
     *,
-    axis: set[bpy._typing.rna_enums.AxisFlagXyzItems] | None = {"X"},
+    axis: set[bpy.stub_internal.rna_enums.AxisFlagXyzItems] | None = {"X"},
     extend: bool | None = False,
 ):
     """Select mirrored lattice points
@@ -73,7 +73,7 @@ def select_mirror(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param axis: Axis
-    :type axis: set[bpy._typing.rna_enums.AxisFlagXyzItems] | None
+    :type axis: set[bpy.stub_internal.rna_enums.AxisFlagXyzItems] | None
     :param extend: Extend, Extend the selection
     :type extend: bool | None
     """

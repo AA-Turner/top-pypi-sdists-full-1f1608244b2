@@ -1,7 +1,7 @@
 r'''
 # `google_compute_router_nat`
 
-Refer to the Terraform Registry for docs: [`google_compute_router_nat`](https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat).
+Refer to the Terraform Registry for docs: [`google_compute_router_nat`](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ComputeRouterNat(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.computeRouterNat.ComputeRouterNat",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat google_compute_router_nat}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat google_compute_router_nat}.'''
 
     def __init__(
         self,
@@ -65,11 +65,13 @@ class ComputeRouterNat(
         log_config: typing.Optional[typing.Union["ComputeRouterNatLogConfig", typing.Dict[builtins.str, typing.Any]]] = None,
         max_ports_per_vm: typing.Optional[jsii.Number] = None,
         min_ports_per_vm: typing.Optional[jsii.Number] = None,
+        nat64_subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ComputeRouterNatNat64Subnetwork", typing.Dict[builtins.str, typing.Any]]]]] = None,
         nat_ip_allocate_option: typing.Optional[builtins.str] = None,
         nat_ips: typing.Optional[typing.Sequence[builtins.str]] = None,
         project: typing.Optional[builtins.str] = None,
         region: typing.Optional[builtins.str] = None,
         rules: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ComputeRouterNatRules", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        source_subnetwork_ip_ranges_to_nat64: typing.Optional[builtins.str] = None,
         subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ComputeRouterNatSubnetwork", typing.Dict[builtins.str, typing.Any]]]]] = None,
         tcp_established_idle_timeout_sec: typing.Optional[jsii.Number] = None,
         tcp_time_wait_timeout_sec: typing.Optional[jsii.Number] = None,
@@ -85,36 +87,38 @@ class ComputeRouterNat(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat google_compute_router_nat} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat google_compute_router_nat} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
-        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#router ComputeRouterNat#router}
-        :param source_subnetwork_ip_ranges_to_nat: How NAT should be configured per Subnetwork. If 'ALL_SUBNETWORKS_ALL_IP_RANGES', all of the IP ranges in every Subnetwork are allowed to Nat. If 'ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES', all of the primary IP ranges in every Subnetwork are allowed to Nat. 'LIST_OF_SUBNETWORKS': A list of Subnetworks are allowed to Nat (specified in the field subnetwork below). Note that if this field contains ALL_SUBNETWORKS_ALL_IP_RANGES or ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES, then there should not be any other RouterNat section in any Router for this network in this region. Possible values: ["ALL_SUBNETWORKS_ALL_IP_RANGES", "ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES", "LIST_OF_SUBNETWORKS"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat ComputeRouterNat#source_subnetwork_ip_ranges_to_nat}
-        :param auto_network_tier: The network tier to use when automatically reserving NAT IP addresses. Must be one of: PREMIUM, STANDARD. If not specified, then the current project-level default tier is used. Possible values: ["PREMIUM", "STANDARD"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#auto_network_tier ComputeRouterNat#auto_network_tier}
-        :param drain_nat_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#drain_nat_ips ComputeRouterNat#drain_nat_ips}
-        :param enable_dynamic_port_allocation: Enable Dynamic Port Allocation. If minPortsPerVm is set, minPortsPerVm must be set to a power of two greater than or equal to 32. If minPortsPerVm is not set, a minimum of 32 ports will be allocated to a VM from this NAT config. If maxPortsPerVm is set, maxPortsPerVm must be set to a power of two greater than minPortsPerVm. If maxPortsPerVm is not set, a maximum of 65536 ports will be allocated to a VM from this NAT config. Mutually exclusive with enableEndpointIndependentMapping. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable_dynamic_port_allocation ComputeRouterNat#enable_dynamic_port_allocation}
-        :param enable_endpoint_independent_mapping: Enable endpoint independent mapping. For more information see the `official documentation <https://cloud.google.com/nat/docs/overview#specs-rfcs>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable_endpoint_independent_mapping ComputeRouterNat#enable_endpoint_independent_mapping}
-        :param endpoint_types: Specifies the endpoint Types supported by the NAT Gateway. Supported values include: 'ENDPOINT_TYPE_VM', 'ENDPOINT_TYPE_SWG', 'ENDPOINT_TYPE_MANAGED_PROXY_LB'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#endpoint_types ComputeRouterNat#endpoint_types}
-        :param icmp_idle_timeout_sec: Timeout (in seconds) for ICMP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#icmp_idle_timeout_sec ComputeRouterNat#icmp_idle_timeout_sec}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#id ComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param initial_nat_ips: Self-links of NAT IPs to be used as initial value for creation alongside a RouterNatAddress resource. Conflicts with natIps and drainNatIps. Only valid if natIpAllocateOption is set to MANUAL_ONLY. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#initial_nat_ips ComputeRouterNat#initial_nat_ips}
-        :param log_config: log_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#log_config ComputeRouterNat#log_config}
-        :param max_ports_per_vm: Maximum number of ports allocated to a VM from this NAT. This field can only be set when enableDynamicPortAllocation is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#max_ports_per_vm ComputeRouterNat#max_ports_per_vm}
-        :param min_ports_per_vm: Minimum number of ports allocated to a VM from this NAT. Defaults to 64 for static port allocation and 32 dynamic port allocation if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#min_ports_per_vm ComputeRouterNat#min_ports_per_vm}
-        :param nat_ip_allocate_option: How external IPs should be allocated for this NAT. Valid values are 'AUTO_ONLY' for only allowing NAT IPs allocated by Google Cloud Platform, or 'MANUAL_ONLY' for only user-allocated NAT IP addresses. Possible values: ["MANUAL_ONLY", "AUTO_ONLY"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#nat_ip_allocate_option ComputeRouterNat#nat_ip_allocate_option}
-        :param nat_ips: Self-links of NAT IPs. Only valid if natIpAllocateOption is set to MANUAL_ONLY. If this field is used alongside with a count created list of address resources 'google_compute_address.foobar.*.self_link', the access level resource for the address resource must have a 'lifecycle' block with 'create_before_destroy = true' so the number of resources can be increased/decreased without triggering the 'resourceInUseByAnotherResource' error. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#nat_ips ComputeRouterNat#nat_ips}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#project ComputeRouterNat#project}.
-        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#region ComputeRouterNat#region}
-        :param rules: rules block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#rules ComputeRouterNat#rules}
-        :param subnetwork: subnetwork block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#subnetwork ComputeRouterNat#subnetwork}
-        :param tcp_established_idle_timeout_sec: Timeout (in seconds) for TCP established connections. Defaults to 1200s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_established_idle_timeout_sec ComputeRouterNat#tcp_established_idle_timeout_sec}
-        :param tcp_time_wait_timeout_sec: Timeout (in seconds) for TCP connections that are in TIME_WAIT state. Defaults to 120s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_time_wait_timeout_sec ComputeRouterNat#tcp_time_wait_timeout_sec}
-        :param tcp_transitory_idle_timeout_sec: Timeout (in seconds) for TCP transitory connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_transitory_idle_timeout_sec ComputeRouterNat#tcp_transitory_idle_timeout_sec}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#timeouts ComputeRouterNat#timeouts}
-        :param type: Indicates whether this NAT is used for public or private IP translation. If unspecified, it defaults to PUBLIC. If 'PUBLIC' NAT used for public IP translation. If 'PRIVATE' NAT used for private IP translation. Default value: "PUBLIC" Possible values: ["PUBLIC", "PRIVATE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#type ComputeRouterNat#type}
-        :param udp_idle_timeout_sec: Timeout (in seconds) for UDP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#udp_idle_timeout_sec ComputeRouterNat#udp_idle_timeout_sec}
+        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
+        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#router ComputeRouterNat#router}
+        :param source_subnetwork_ip_ranges_to_nat: How NAT should be configured per Subnetwork. If 'ALL_SUBNETWORKS_ALL_IP_RANGES', all of the IP ranges in every Subnetwork are allowed to Nat. If 'ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES', all of the primary IP ranges in every Subnetwork are allowed to Nat. 'LIST_OF_SUBNETWORKS': A list of Subnetworks are allowed to Nat (specified in the field subnetwork below). Note that if this field contains ALL_SUBNETWORKS_ALL_IP_RANGES or ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES, then there should not be any other RouterNat section in any Router for this network in this region. Possible values: ["ALL_SUBNETWORKS_ALL_IP_RANGES", "ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES", "LIST_OF_SUBNETWORKS"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat ComputeRouterNat#source_subnetwork_ip_ranges_to_nat}
+        :param auto_network_tier: The network tier to use when automatically reserving NAT IP addresses. Must be one of: PREMIUM, STANDARD. If not specified, then the current project-level default tier is used. Possible values: ["PREMIUM", "STANDARD"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#auto_network_tier ComputeRouterNat#auto_network_tier}
+        :param drain_nat_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#drain_nat_ips ComputeRouterNat#drain_nat_ips}
+        :param enable_dynamic_port_allocation: Enable Dynamic Port Allocation. If minPortsPerVm is set, minPortsPerVm must be set to a power of two greater than or equal to 32. If minPortsPerVm is not set, a minimum of 32 ports will be allocated to a VM from this NAT config. If maxPortsPerVm is set, maxPortsPerVm must be set to a power of two greater than minPortsPerVm. If maxPortsPerVm is not set, a maximum of 65536 ports will be allocated to a VM from this NAT config. Mutually exclusive with enableEndpointIndependentMapping. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable_dynamic_port_allocation ComputeRouterNat#enable_dynamic_port_allocation}
+        :param enable_endpoint_independent_mapping: Enable endpoint independent mapping. For more information see the `official documentation <https://cloud.google.com/nat/docs/overview#specs-rfcs>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable_endpoint_independent_mapping ComputeRouterNat#enable_endpoint_independent_mapping}
+        :param endpoint_types: Specifies the endpoint Types supported by the NAT Gateway. Supported values include: 'ENDPOINT_TYPE_VM', 'ENDPOINT_TYPE_SWG', 'ENDPOINT_TYPE_MANAGED_PROXY_LB'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#endpoint_types ComputeRouterNat#endpoint_types}
+        :param icmp_idle_timeout_sec: Timeout (in seconds) for ICMP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#icmp_idle_timeout_sec ComputeRouterNat#icmp_idle_timeout_sec}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#id ComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param initial_nat_ips: Self-links of NAT IPs to be used as initial value for creation alongside a RouterNatAddress resource. Conflicts with natIps and drainNatIps. Only valid if natIpAllocateOption is set to MANUAL_ONLY. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#initial_nat_ips ComputeRouterNat#initial_nat_ips}
+        :param log_config: log_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#log_config ComputeRouterNat#log_config}
+        :param max_ports_per_vm: Maximum number of ports allocated to a VM from this NAT. This field can only be set when enableDynamicPortAllocation is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#max_ports_per_vm ComputeRouterNat#max_ports_per_vm}
+        :param min_ports_per_vm: Minimum number of ports allocated to a VM from this NAT. Defaults to 64 for static port allocation and 32 dynamic port allocation if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#min_ports_per_vm ComputeRouterNat#min_ports_per_vm}
+        :param nat64_subnetwork: nat64_subnetwork block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat64_subnetwork ComputeRouterNat#nat64_subnetwork}
+        :param nat_ip_allocate_option: How external IPs should be allocated for this NAT. Valid values are 'AUTO_ONLY' for only allowing NAT IPs allocated by Google Cloud Platform, or 'MANUAL_ONLY' for only user-allocated NAT IP addresses. Possible values: ["MANUAL_ONLY", "AUTO_ONLY"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat_ip_allocate_option ComputeRouterNat#nat_ip_allocate_option}
+        :param nat_ips: Self-links of NAT IPs. Only valid if natIpAllocateOption is set to MANUAL_ONLY. If this field is used alongside with a count created list of address resources 'google_compute_address.foobar.*.self_link', the access level resource for the address resource must have a 'lifecycle' block with 'create_before_destroy = true' so the number of resources can be increased/decreased without triggering the 'resourceInUseByAnotherResource' error. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat_ips ComputeRouterNat#nat_ips}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#project ComputeRouterNat#project}.
+        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#region ComputeRouterNat#region}
+        :param rules: rules block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#rules ComputeRouterNat#rules}
+        :param source_subnetwork_ip_ranges_to_nat64: Specify the Nat option for NAT64, which can take one of the following values: ALL_IPV6_SUBNETWORKS: All of the IP ranges in every Subnetwork are allowed to Nat. LIST_OF_IPV6_SUBNETWORKS: A list of Subnetworks are allowed to Nat (specified in the field nat64Subnetwork below). Note that if this field contains NAT64_ALL_V6_SUBNETWORKS no other Router.Nat section in this region can also enable NAT64 for any Subnetworks in this network. Other Router.Nat sections can still be present to enable NAT44 only. Possible values: ["ALL_IPV6_SUBNETWORKS", "LIST_OF_IPV6_SUBNETWORKS"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat64 ComputeRouterNat#source_subnetwork_ip_ranges_to_nat64}
+        :param subnetwork: subnetwork block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#subnetwork ComputeRouterNat#subnetwork}
+        :param tcp_established_idle_timeout_sec: Timeout (in seconds) for TCP established connections. Defaults to 1200s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_established_idle_timeout_sec ComputeRouterNat#tcp_established_idle_timeout_sec}
+        :param tcp_time_wait_timeout_sec: Timeout (in seconds) for TCP connections that are in TIME_WAIT state. Defaults to 120s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_time_wait_timeout_sec ComputeRouterNat#tcp_time_wait_timeout_sec}
+        :param tcp_transitory_idle_timeout_sec: Timeout (in seconds) for TCP transitory connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_transitory_idle_timeout_sec ComputeRouterNat#tcp_transitory_idle_timeout_sec}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#timeouts ComputeRouterNat#timeouts}
+        :param type: Indicates whether this NAT is used for public or private IP translation. If unspecified, it defaults to PUBLIC. If 'PUBLIC' NAT used for public IP translation. If 'PRIVATE' NAT used for private IP translation. Default value: "PUBLIC" Possible values: ["PUBLIC", "PRIVATE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#type ComputeRouterNat#type}
+        :param udp_idle_timeout_sec: Timeout (in seconds) for UDP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#udp_idle_timeout_sec ComputeRouterNat#udp_idle_timeout_sec}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -142,11 +146,13 @@ class ComputeRouterNat(
             log_config=log_config,
             max_ports_per_vm=max_ports_per_vm,
             min_ports_per_vm=min_ports_per_vm,
+            nat64_subnetwork=nat64_subnetwork,
             nat_ip_allocate_option=nat_ip_allocate_option,
             nat_ips=nat_ips,
             project=project,
             region=region,
             rules=rules,
+            source_subnetwork_ip_ranges_to_nat64=source_subnetwork_ip_ranges_to_nat64,
             subnetwork=subnetwork,
             tcp_established_idle_timeout_sec=tcp_established_idle_timeout_sec,
             tcp_time_wait_timeout_sec=tcp_time_wait_timeout_sec,
@@ -178,7 +184,7 @@ class ComputeRouterNat(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ComputeRouterNat to import.
-        :param import_from_id: The id of the existing ComputeRouterNat that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ComputeRouterNat that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ComputeRouterNat to import is found.
         '''
         if __debug__:
@@ -197,12 +203,25 @@ class ComputeRouterNat(
         filter: builtins.str,
     ) -> None:
         '''
-        :param enable: Indicates whether or not to export logs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable ComputeRouterNat#enable}
-        :param filter: Specifies the desired filtering of logs on this NAT. Possible values: ["ERRORS_ONLY", "TRANSLATIONS_ONLY", "ALL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#filter ComputeRouterNat#filter}
+        :param enable: Indicates whether or not to export logs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable ComputeRouterNat#enable}
+        :param filter: Specifies the desired filtering of logs on this NAT. Possible values: ["ERRORS_ONLY", "TRANSLATIONS_ONLY", "ALL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#filter ComputeRouterNat#filter}
         '''
         value = ComputeRouterNatLogConfig(enable=enable, filter=filter)
 
         return typing.cast(None, jsii.invoke(self, "putLogConfig", [value]))
+
+    @jsii.member(jsii_name="putNat64Subnetwork")
+    def put_nat64_subnetwork(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ComputeRouterNatNat64Subnetwork", typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__dabed10e1bc13360dd44a355a367148ad239ea59874bc7f701573fa4f7b00c72)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putNat64Subnetwork", [value]))
 
     @jsii.member(jsii_name="putRules")
     def put_rules(
@@ -239,9 +258,9 @@ class ComputeRouterNat(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#create ComputeRouterNat#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#delete ComputeRouterNat#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#update ComputeRouterNat#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#create ComputeRouterNat#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#delete ComputeRouterNat#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#update ComputeRouterNat#update}.
         '''
         value = ComputeRouterNatTimeouts(create=create, delete=delete, update=update)
 
@@ -291,6 +310,10 @@ class ComputeRouterNat(
     def reset_min_ports_per_vm(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetMinPortsPerVm", []))
 
+    @jsii.member(jsii_name="resetNat64Subnetwork")
+    def reset_nat64_subnetwork(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetNat64Subnetwork", []))
+
     @jsii.member(jsii_name="resetNatIpAllocateOption")
     def reset_nat_ip_allocate_option(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetNatIpAllocateOption", []))
@@ -310,6 +333,10 @@ class ComputeRouterNat(
     @jsii.member(jsii_name="resetRules")
     def reset_rules(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetRules", []))
+
+    @jsii.member(jsii_name="resetSourceSubnetworkIpRangesToNat64")
+    def reset_source_subnetwork_ip_ranges_to_nat64(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetSourceSubnetworkIpRangesToNat64", []))
 
     @jsii.member(jsii_name="resetSubnetwork")
     def reset_subnetwork(self) -> None:
@@ -356,6 +383,11 @@ class ComputeRouterNat(
     @jsii.member(jsii_name="logConfig")
     def log_config(self) -> "ComputeRouterNatLogConfigOutputReference":
         return typing.cast("ComputeRouterNatLogConfigOutputReference", jsii.get(self, "logConfig"))
+
+    @builtins.property
+    @jsii.member(jsii_name="nat64Subnetwork")
+    def nat64_subnetwork(self) -> "ComputeRouterNatNat64SubnetworkList":
+        return typing.cast("ComputeRouterNatNat64SubnetworkList", jsii.get(self, "nat64Subnetwork"))
 
     @builtins.property
     @jsii.member(jsii_name="rules")
@@ -437,6 +469,13 @@ class ComputeRouterNat(
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "nameInput"))
 
     @builtins.property
+    @jsii.member(jsii_name="nat64SubnetworkInput")
+    def nat64_subnetwork_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatNat64Subnetwork"]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatNat64Subnetwork"]]], jsii.get(self, "nat64SubnetworkInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="natIpAllocateOptionInput")
     def nat_ip_allocate_option_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "natIpAllocateOptionInput"))
@@ -467,6 +506,13 @@ class ComputeRouterNat(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatRules"]]]:
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatRules"]]], jsii.get(self, "rulesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="sourceSubnetworkIpRangesToNat64Input")
+    def source_subnetwork_ip_ranges_to_nat64_input(
+        self,
+    ) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "sourceSubnetworkIpRangesToNat64Input"))
 
     @builtins.property
     @jsii.member(jsii_name="sourceSubnetworkIpRangesToNatInput")
@@ -727,6 +773,18 @@ class ComputeRouterNat(
         jsii.set(self, "sourceSubnetworkIpRangesToNat", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
+    @jsii.member(jsii_name="sourceSubnetworkIpRangesToNat64")
+    def source_subnetwork_ip_ranges_to_nat64(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "sourceSubnetworkIpRangesToNat64"))
+
+    @source_subnetwork_ip_ranges_to_nat64.setter
+    def source_subnetwork_ip_ranges_to_nat64(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a9e40b9930689f1a0cd1093396c6b641262f96d5d6bf2f7169dc184a3576b05c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "sourceSubnetworkIpRangesToNat64", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
     @jsii.member(jsii_name="tcpEstablishedIdleTimeoutSec")
     def tcp_established_idle_timeout_sec(self) -> jsii.Number:
         return typing.cast(jsii.Number, jsii.get(self, "tcpEstablishedIdleTimeoutSec"))
@@ -812,11 +870,13 @@ class ComputeRouterNat(
         "log_config": "logConfig",
         "max_ports_per_vm": "maxPortsPerVm",
         "min_ports_per_vm": "minPortsPerVm",
+        "nat64_subnetwork": "nat64Subnetwork",
         "nat_ip_allocate_option": "natIpAllocateOption",
         "nat_ips": "natIps",
         "project": "project",
         "region": "region",
         "rules": "rules",
+        "source_subnetwork_ip_ranges_to_nat64": "sourceSubnetworkIpRangesToNat64",
         "subnetwork": "subnetwork",
         "tcp_established_idle_timeout_sec": "tcpEstablishedIdleTimeoutSec",
         "tcp_time_wait_timeout_sec": "tcpTimeWaitTimeoutSec",
@@ -851,11 +911,13 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         log_config: typing.Optional[typing.Union["ComputeRouterNatLogConfig", typing.Dict[builtins.str, typing.Any]]] = None,
         max_ports_per_vm: typing.Optional[jsii.Number] = None,
         min_ports_per_vm: typing.Optional[jsii.Number] = None,
+        nat64_subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ComputeRouterNatNat64Subnetwork", typing.Dict[builtins.str, typing.Any]]]]] = None,
         nat_ip_allocate_option: typing.Optional[builtins.str] = None,
         nat_ips: typing.Optional[typing.Sequence[builtins.str]] = None,
         project: typing.Optional[builtins.str] = None,
         region: typing.Optional[builtins.str] = None,
         rules: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ComputeRouterNatRules", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        source_subnetwork_ip_ranges_to_nat64: typing.Optional[builtins.str] = None,
         subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["ComputeRouterNatSubnetwork", typing.Dict[builtins.str, typing.Any]]]]] = None,
         tcp_established_idle_timeout_sec: typing.Optional[jsii.Number] = None,
         tcp_time_wait_timeout_sec: typing.Optional[jsii.Number] = None,
@@ -872,32 +934,34 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
-        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#router ComputeRouterNat#router}
-        :param source_subnetwork_ip_ranges_to_nat: How NAT should be configured per Subnetwork. If 'ALL_SUBNETWORKS_ALL_IP_RANGES', all of the IP ranges in every Subnetwork are allowed to Nat. If 'ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES', all of the primary IP ranges in every Subnetwork are allowed to Nat. 'LIST_OF_SUBNETWORKS': A list of Subnetworks are allowed to Nat (specified in the field subnetwork below). Note that if this field contains ALL_SUBNETWORKS_ALL_IP_RANGES or ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES, then there should not be any other RouterNat section in any Router for this network in this region. Possible values: ["ALL_SUBNETWORKS_ALL_IP_RANGES", "ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES", "LIST_OF_SUBNETWORKS"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat ComputeRouterNat#source_subnetwork_ip_ranges_to_nat}
-        :param auto_network_tier: The network tier to use when automatically reserving NAT IP addresses. Must be one of: PREMIUM, STANDARD. If not specified, then the current project-level default tier is used. Possible values: ["PREMIUM", "STANDARD"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#auto_network_tier ComputeRouterNat#auto_network_tier}
-        :param drain_nat_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#drain_nat_ips ComputeRouterNat#drain_nat_ips}
-        :param enable_dynamic_port_allocation: Enable Dynamic Port Allocation. If minPortsPerVm is set, minPortsPerVm must be set to a power of two greater than or equal to 32. If minPortsPerVm is not set, a minimum of 32 ports will be allocated to a VM from this NAT config. If maxPortsPerVm is set, maxPortsPerVm must be set to a power of two greater than minPortsPerVm. If maxPortsPerVm is not set, a maximum of 65536 ports will be allocated to a VM from this NAT config. Mutually exclusive with enableEndpointIndependentMapping. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable_dynamic_port_allocation ComputeRouterNat#enable_dynamic_port_allocation}
-        :param enable_endpoint_independent_mapping: Enable endpoint independent mapping. For more information see the `official documentation <https://cloud.google.com/nat/docs/overview#specs-rfcs>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable_endpoint_independent_mapping ComputeRouterNat#enable_endpoint_independent_mapping}
-        :param endpoint_types: Specifies the endpoint Types supported by the NAT Gateway. Supported values include: 'ENDPOINT_TYPE_VM', 'ENDPOINT_TYPE_SWG', 'ENDPOINT_TYPE_MANAGED_PROXY_LB'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#endpoint_types ComputeRouterNat#endpoint_types}
-        :param icmp_idle_timeout_sec: Timeout (in seconds) for ICMP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#icmp_idle_timeout_sec ComputeRouterNat#icmp_idle_timeout_sec}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#id ComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param initial_nat_ips: Self-links of NAT IPs to be used as initial value for creation alongside a RouterNatAddress resource. Conflicts with natIps and drainNatIps. Only valid if natIpAllocateOption is set to MANUAL_ONLY. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#initial_nat_ips ComputeRouterNat#initial_nat_ips}
-        :param log_config: log_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#log_config ComputeRouterNat#log_config}
-        :param max_ports_per_vm: Maximum number of ports allocated to a VM from this NAT. This field can only be set when enableDynamicPortAllocation is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#max_ports_per_vm ComputeRouterNat#max_ports_per_vm}
-        :param min_ports_per_vm: Minimum number of ports allocated to a VM from this NAT. Defaults to 64 for static port allocation and 32 dynamic port allocation if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#min_ports_per_vm ComputeRouterNat#min_ports_per_vm}
-        :param nat_ip_allocate_option: How external IPs should be allocated for this NAT. Valid values are 'AUTO_ONLY' for only allowing NAT IPs allocated by Google Cloud Platform, or 'MANUAL_ONLY' for only user-allocated NAT IP addresses. Possible values: ["MANUAL_ONLY", "AUTO_ONLY"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#nat_ip_allocate_option ComputeRouterNat#nat_ip_allocate_option}
-        :param nat_ips: Self-links of NAT IPs. Only valid if natIpAllocateOption is set to MANUAL_ONLY. If this field is used alongside with a count created list of address resources 'google_compute_address.foobar.*.self_link', the access level resource for the address resource must have a 'lifecycle' block with 'create_before_destroy = true' so the number of resources can be increased/decreased without triggering the 'resourceInUseByAnotherResource' error. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#nat_ips ComputeRouterNat#nat_ips}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#project ComputeRouterNat#project}.
-        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#region ComputeRouterNat#region}
-        :param rules: rules block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#rules ComputeRouterNat#rules}
-        :param subnetwork: subnetwork block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#subnetwork ComputeRouterNat#subnetwork}
-        :param tcp_established_idle_timeout_sec: Timeout (in seconds) for TCP established connections. Defaults to 1200s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_established_idle_timeout_sec ComputeRouterNat#tcp_established_idle_timeout_sec}
-        :param tcp_time_wait_timeout_sec: Timeout (in seconds) for TCP connections that are in TIME_WAIT state. Defaults to 120s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_time_wait_timeout_sec ComputeRouterNat#tcp_time_wait_timeout_sec}
-        :param tcp_transitory_idle_timeout_sec: Timeout (in seconds) for TCP transitory connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_transitory_idle_timeout_sec ComputeRouterNat#tcp_transitory_idle_timeout_sec}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#timeouts ComputeRouterNat#timeouts}
-        :param type: Indicates whether this NAT is used for public or private IP translation. If unspecified, it defaults to PUBLIC. If 'PUBLIC' NAT used for public IP translation. If 'PRIVATE' NAT used for private IP translation. Default value: "PUBLIC" Possible values: ["PUBLIC", "PRIVATE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#type ComputeRouterNat#type}
-        :param udp_idle_timeout_sec: Timeout (in seconds) for UDP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#udp_idle_timeout_sec ComputeRouterNat#udp_idle_timeout_sec}
+        :param name: Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
+        :param router: The name of the Cloud Router in which this NAT will be configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#router ComputeRouterNat#router}
+        :param source_subnetwork_ip_ranges_to_nat: How NAT should be configured per Subnetwork. If 'ALL_SUBNETWORKS_ALL_IP_RANGES', all of the IP ranges in every Subnetwork are allowed to Nat. If 'ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES', all of the primary IP ranges in every Subnetwork are allowed to Nat. 'LIST_OF_SUBNETWORKS': A list of Subnetworks are allowed to Nat (specified in the field subnetwork below). Note that if this field contains ALL_SUBNETWORKS_ALL_IP_RANGES or ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES, then there should not be any other RouterNat section in any Router for this network in this region. Possible values: ["ALL_SUBNETWORKS_ALL_IP_RANGES", "ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES", "LIST_OF_SUBNETWORKS"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat ComputeRouterNat#source_subnetwork_ip_ranges_to_nat}
+        :param auto_network_tier: The network tier to use when automatically reserving NAT IP addresses. Must be one of: PREMIUM, STANDARD. If not specified, then the current project-level default tier is used. Possible values: ["PREMIUM", "STANDARD"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#auto_network_tier ComputeRouterNat#auto_network_tier}
+        :param drain_nat_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#drain_nat_ips ComputeRouterNat#drain_nat_ips}
+        :param enable_dynamic_port_allocation: Enable Dynamic Port Allocation. If minPortsPerVm is set, minPortsPerVm must be set to a power of two greater than or equal to 32. If minPortsPerVm is not set, a minimum of 32 ports will be allocated to a VM from this NAT config. If maxPortsPerVm is set, maxPortsPerVm must be set to a power of two greater than minPortsPerVm. If maxPortsPerVm is not set, a maximum of 65536 ports will be allocated to a VM from this NAT config. Mutually exclusive with enableEndpointIndependentMapping. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable_dynamic_port_allocation ComputeRouterNat#enable_dynamic_port_allocation}
+        :param enable_endpoint_independent_mapping: Enable endpoint independent mapping. For more information see the `official documentation <https://cloud.google.com/nat/docs/overview#specs-rfcs>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable_endpoint_independent_mapping ComputeRouterNat#enable_endpoint_independent_mapping}
+        :param endpoint_types: Specifies the endpoint Types supported by the NAT Gateway. Supported values include: 'ENDPOINT_TYPE_VM', 'ENDPOINT_TYPE_SWG', 'ENDPOINT_TYPE_MANAGED_PROXY_LB'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#endpoint_types ComputeRouterNat#endpoint_types}
+        :param icmp_idle_timeout_sec: Timeout (in seconds) for ICMP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#icmp_idle_timeout_sec ComputeRouterNat#icmp_idle_timeout_sec}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#id ComputeRouterNat#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param initial_nat_ips: Self-links of NAT IPs to be used as initial value for creation alongside a RouterNatAddress resource. Conflicts with natIps and drainNatIps. Only valid if natIpAllocateOption is set to MANUAL_ONLY. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#initial_nat_ips ComputeRouterNat#initial_nat_ips}
+        :param log_config: log_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#log_config ComputeRouterNat#log_config}
+        :param max_ports_per_vm: Maximum number of ports allocated to a VM from this NAT. This field can only be set when enableDynamicPortAllocation is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#max_ports_per_vm ComputeRouterNat#max_ports_per_vm}
+        :param min_ports_per_vm: Minimum number of ports allocated to a VM from this NAT. Defaults to 64 for static port allocation and 32 dynamic port allocation if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#min_ports_per_vm ComputeRouterNat#min_ports_per_vm}
+        :param nat64_subnetwork: nat64_subnetwork block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat64_subnetwork ComputeRouterNat#nat64_subnetwork}
+        :param nat_ip_allocate_option: How external IPs should be allocated for this NAT. Valid values are 'AUTO_ONLY' for only allowing NAT IPs allocated by Google Cloud Platform, or 'MANUAL_ONLY' for only user-allocated NAT IP addresses. Possible values: ["MANUAL_ONLY", "AUTO_ONLY"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat_ip_allocate_option ComputeRouterNat#nat_ip_allocate_option}
+        :param nat_ips: Self-links of NAT IPs. Only valid if natIpAllocateOption is set to MANUAL_ONLY. If this field is used alongside with a count created list of address resources 'google_compute_address.foobar.*.self_link', the access level resource for the address resource must have a 'lifecycle' block with 'create_before_destroy = true' so the number of resources can be increased/decreased without triggering the 'resourceInUseByAnotherResource' error. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat_ips ComputeRouterNat#nat_ips}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#project ComputeRouterNat#project}.
+        :param region: Region where the router and NAT reside. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#region ComputeRouterNat#region}
+        :param rules: rules block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#rules ComputeRouterNat#rules}
+        :param source_subnetwork_ip_ranges_to_nat64: Specify the Nat option for NAT64, which can take one of the following values: ALL_IPV6_SUBNETWORKS: All of the IP ranges in every Subnetwork are allowed to Nat. LIST_OF_IPV6_SUBNETWORKS: A list of Subnetworks are allowed to Nat (specified in the field nat64Subnetwork below). Note that if this field contains NAT64_ALL_V6_SUBNETWORKS no other Router.Nat section in this region can also enable NAT64 for any Subnetworks in this network. Other Router.Nat sections can still be present to enable NAT44 only. Possible values: ["ALL_IPV6_SUBNETWORKS", "LIST_OF_IPV6_SUBNETWORKS"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat64 ComputeRouterNat#source_subnetwork_ip_ranges_to_nat64}
+        :param subnetwork: subnetwork block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#subnetwork ComputeRouterNat#subnetwork}
+        :param tcp_established_idle_timeout_sec: Timeout (in seconds) for TCP established connections. Defaults to 1200s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_established_idle_timeout_sec ComputeRouterNat#tcp_established_idle_timeout_sec}
+        :param tcp_time_wait_timeout_sec: Timeout (in seconds) for TCP connections that are in TIME_WAIT state. Defaults to 120s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_time_wait_timeout_sec ComputeRouterNat#tcp_time_wait_timeout_sec}
+        :param tcp_transitory_idle_timeout_sec: Timeout (in seconds) for TCP transitory connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_transitory_idle_timeout_sec ComputeRouterNat#tcp_transitory_idle_timeout_sec}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#timeouts ComputeRouterNat#timeouts}
+        :param type: Indicates whether this NAT is used for public or private IP translation. If unspecified, it defaults to PUBLIC. If 'PUBLIC' NAT used for public IP translation. If 'PRIVATE' NAT used for private IP translation. Default value: "PUBLIC" Possible values: ["PUBLIC", "PRIVATE"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#type ComputeRouterNat#type}
+        :param udp_idle_timeout_sec: Timeout (in seconds) for UDP connections. Defaults to 30s if not set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#udp_idle_timeout_sec ComputeRouterNat#udp_idle_timeout_sec}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -928,11 +992,13 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument log_config", value=log_config, expected_type=type_hints["log_config"])
             check_type(argname="argument max_ports_per_vm", value=max_ports_per_vm, expected_type=type_hints["max_ports_per_vm"])
             check_type(argname="argument min_ports_per_vm", value=min_ports_per_vm, expected_type=type_hints["min_ports_per_vm"])
+            check_type(argname="argument nat64_subnetwork", value=nat64_subnetwork, expected_type=type_hints["nat64_subnetwork"])
             check_type(argname="argument nat_ip_allocate_option", value=nat_ip_allocate_option, expected_type=type_hints["nat_ip_allocate_option"])
             check_type(argname="argument nat_ips", value=nat_ips, expected_type=type_hints["nat_ips"])
             check_type(argname="argument project", value=project, expected_type=type_hints["project"])
             check_type(argname="argument region", value=region, expected_type=type_hints["region"])
             check_type(argname="argument rules", value=rules, expected_type=type_hints["rules"])
+            check_type(argname="argument source_subnetwork_ip_ranges_to_nat64", value=source_subnetwork_ip_ranges_to_nat64, expected_type=type_hints["source_subnetwork_ip_ranges_to_nat64"])
             check_type(argname="argument subnetwork", value=subnetwork, expected_type=type_hints["subnetwork"])
             check_type(argname="argument tcp_established_idle_timeout_sec", value=tcp_established_idle_timeout_sec, expected_type=type_hints["tcp_established_idle_timeout_sec"])
             check_type(argname="argument tcp_time_wait_timeout_sec", value=tcp_time_wait_timeout_sec, expected_type=type_hints["tcp_time_wait_timeout_sec"])
@@ -981,6 +1047,8 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["max_ports_per_vm"] = max_ports_per_vm
         if min_ports_per_vm is not None:
             self._values["min_ports_per_vm"] = min_ports_per_vm
+        if nat64_subnetwork is not None:
+            self._values["nat64_subnetwork"] = nat64_subnetwork
         if nat_ip_allocate_option is not None:
             self._values["nat_ip_allocate_option"] = nat_ip_allocate_option
         if nat_ips is not None:
@@ -991,6 +1059,8 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["region"] = region
         if rules is not None:
             self._values["rules"] = rules
+        if source_subnetwork_ip_ranges_to_nat64 is not None:
+            self._values["source_subnetwork_ip_ranges_to_nat64"] = source_subnetwork_ip_ranges_to_nat64
         if subnetwork is not None:
             self._values["subnetwork"] = subnetwork
         if tcp_established_idle_timeout_sec is not None:
@@ -1074,7 +1144,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the NAT service. The name must be 1-63 characters long and comply with RFC1035.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1084,7 +1154,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def router(self) -> builtins.str:
         '''The name of the Cloud Router in which this NAT will be configured.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#router ComputeRouterNat#router}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#router ComputeRouterNat#router}
         '''
         result = self._values.get("router")
         assert result is not None, "Required property 'router' is missing"
@@ -1104,7 +1174,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES, then there should not be any
         other RouterNat section in any Router for this network in this region. Possible values: ["ALL_SUBNETWORKS_ALL_IP_RANGES", "ALL_SUBNETWORKS_ALL_PRIMARY_IP_RANGES", "LIST_OF_SUBNETWORKS"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat ComputeRouterNat#source_subnetwork_ip_ranges_to_nat}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat ComputeRouterNat#source_subnetwork_ip_ranges_to_nat}
         '''
         result = self._values.get("source_subnetwork_ip_ranges_to_nat")
         assert result is not None, "Required property 'source_subnetwork_ip_ranges_to_nat' is missing"
@@ -1117,7 +1187,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         Must be one of: PREMIUM, STANDARD. If not specified, then the current
         project-level default tier is used. Possible values: ["PREMIUM", "STANDARD"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#auto_network_tier ComputeRouterNat#auto_network_tier}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#auto_network_tier ComputeRouterNat#auto_network_tier}
         '''
         result = self._values.get("auto_network_tier")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1129,7 +1199,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         These IPs must be
         valid static external IPs that have been assigned to the NAT.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#drain_nat_ips ComputeRouterNat#drain_nat_ips}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#drain_nat_ips ComputeRouterNat#drain_nat_ips}
         '''
         result = self._values.get("drain_nat_ips")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1147,7 +1217,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Mutually exclusive with enableEndpointIndependentMapping.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable_dynamic_port_allocation ComputeRouterNat#enable_dynamic_port_allocation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable_dynamic_port_allocation ComputeRouterNat#enable_dynamic_port_allocation}
         '''
         result = self._values.get("enable_dynamic_port_allocation")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1158,7 +1228,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable endpoint independent mapping. For more information see the `official documentation <https://cloud.google.com/nat/docs/overview#specs-rfcs>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable_endpoint_independent_mapping ComputeRouterNat#enable_endpoint_independent_mapping}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable_endpoint_independent_mapping ComputeRouterNat#enable_endpoint_independent_mapping}
         '''
         result = self._values.get("enable_endpoint_independent_mapping")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1171,7 +1241,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         'ENDPOINT_TYPE_VM', 'ENDPOINT_TYPE_SWG',
         'ENDPOINT_TYPE_MANAGED_PROXY_LB'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#endpoint_types ComputeRouterNat#endpoint_types}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#endpoint_types ComputeRouterNat#endpoint_types}
         '''
         result = self._values.get("endpoint_types")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1180,14 +1250,14 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def icmp_idle_timeout_sec(self) -> typing.Optional[jsii.Number]:
         '''Timeout (in seconds) for ICMP connections. Defaults to 30s if not set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#icmp_idle_timeout_sec ComputeRouterNat#icmp_idle_timeout_sec}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#icmp_idle_timeout_sec ComputeRouterNat#icmp_idle_timeout_sec}
         '''
         result = self._values.get("icmp_idle_timeout_sec")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#id ComputeRouterNat#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#id ComputeRouterNat#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1201,7 +1271,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Conflicts with natIps and drainNatIps. Only valid if natIpAllocateOption is set to MANUAL_ONLY.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#initial_nat_ips ComputeRouterNat#initial_nat_ips}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#initial_nat_ips ComputeRouterNat#initial_nat_ips}
         '''
         result = self._values.get("initial_nat_ips")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1210,7 +1280,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def log_config(self) -> typing.Optional["ComputeRouterNatLogConfig"]:
         '''log_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#log_config ComputeRouterNat#log_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#log_config ComputeRouterNat#log_config}
         '''
         result = self._values.get("log_config")
         return typing.cast(typing.Optional["ComputeRouterNatLogConfig"], result)
@@ -1221,7 +1291,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This field can only be set when enableDynamicPortAllocation is enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#max_ports_per_vm ComputeRouterNat#max_ports_per_vm}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#max_ports_per_vm ComputeRouterNat#max_ports_per_vm}
         '''
         result = self._values.get("max_ports_per_vm")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1232,10 +1302,21 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Defaults to 64 for static port allocation and 32 dynamic port allocation if not set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#min_ports_per_vm ComputeRouterNat#min_ports_per_vm}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#min_ports_per_vm ComputeRouterNat#min_ports_per_vm}
         '''
         result = self._values.get("min_ports_per_vm")
         return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def nat64_subnetwork(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatNat64Subnetwork"]]]:
+        '''nat64_subnetwork block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat64_subnetwork ComputeRouterNat#nat64_subnetwork}
+        '''
+        result = self._values.get("nat64_subnetwork")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatNat64Subnetwork"]]], result)
 
     @builtins.property
     def nat_ip_allocate_option(self) -> typing.Optional[builtins.str]:
@@ -1245,7 +1326,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         'AUTO_ONLY' for only allowing NAT IPs allocated by Google Cloud
         Platform, or 'MANUAL_ONLY' for only user-allocated NAT IP addresses. Possible values: ["MANUAL_ONLY", "AUTO_ONLY"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#nat_ip_allocate_option ComputeRouterNat#nat_ip_allocate_option}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat_ip_allocate_option ComputeRouterNat#nat_ip_allocate_option}
         '''
         result = self._values.get("nat_ip_allocate_option")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1260,14 +1341,14 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         the access level resource for the address resource must have a 'lifecycle' block with 'create_before_destroy = true' so
         the number of resources can be increased/decreased without triggering the 'resourceInUseByAnotherResource' error.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#nat_ips ComputeRouterNat#nat_ips}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#nat_ips ComputeRouterNat#nat_ips}
         '''
         result = self._values.get("nat_ips")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#project ComputeRouterNat#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#project ComputeRouterNat#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1275,7 +1356,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def region(self) -> typing.Optional[builtins.str]:
         '''Region where the router and NAT reside.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#region ComputeRouterNat#region}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#region ComputeRouterNat#region}
         '''
         result = self._values.get("region")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1286,10 +1367,23 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatRules"]]]:
         '''rules block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#rules ComputeRouterNat#rules}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#rules ComputeRouterNat#rules}
         '''
         result = self._values.get("rules")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatRules"]]], result)
+
+    @builtins.property
+    def source_subnetwork_ip_ranges_to_nat64(self) -> typing.Optional[builtins.str]:
+        '''Specify the Nat option for NAT64, which can take one of the following values: ALL_IPV6_SUBNETWORKS: All of the IP ranges in every Subnetwork are allowed to Nat.
+
+        LIST_OF_IPV6_SUBNETWORKS: A list of Subnetworks are allowed to Nat (specified in the field nat64Subnetwork below).
+        Note that if this field contains NAT64_ALL_V6_SUBNETWORKS no other Router.Nat section in this region can also enable NAT64 for any Subnetworks in this network.
+        Other Router.Nat sections can still be present to enable NAT44 only. Possible values: ["ALL_IPV6_SUBNETWORKS", "LIST_OF_IPV6_SUBNETWORKS"]
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_subnetwork_ip_ranges_to_nat64 ComputeRouterNat#source_subnetwork_ip_ranges_to_nat64}
+        '''
+        result = self._values.get("source_subnetwork_ip_ranges_to_nat64")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def subnetwork(
@@ -1297,7 +1391,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatSubnetwork"]]]:
         '''subnetwork block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#subnetwork ComputeRouterNat#subnetwork}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#subnetwork ComputeRouterNat#subnetwork}
         '''
         result = self._values.get("subnetwork")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ComputeRouterNatSubnetwork"]]], result)
@@ -1306,7 +1400,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def tcp_established_idle_timeout_sec(self) -> typing.Optional[jsii.Number]:
         '''Timeout (in seconds) for TCP established connections. Defaults to 1200s if not set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_established_idle_timeout_sec ComputeRouterNat#tcp_established_idle_timeout_sec}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_established_idle_timeout_sec ComputeRouterNat#tcp_established_idle_timeout_sec}
         '''
         result = self._values.get("tcp_established_idle_timeout_sec")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1315,7 +1409,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def tcp_time_wait_timeout_sec(self) -> typing.Optional[jsii.Number]:
         '''Timeout (in seconds) for TCP connections that are in TIME_WAIT state. Defaults to 120s if not set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_time_wait_timeout_sec ComputeRouterNat#tcp_time_wait_timeout_sec}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_time_wait_timeout_sec ComputeRouterNat#tcp_time_wait_timeout_sec}
         '''
         result = self._values.get("tcp_time_wait_timeout_sec")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1324,7 +1418,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def tcp_transitory_idle_timeout_sec(self) -> typing.Optional[jsii.Number]:
         '''Timeout (in seconds) for TCP transitory connections. Defaults to 30s if not set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#tcp_transitory_idle_timeout_sec ComputeRouterNat#tcp_transitory_idle_timeout_sec}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#tcp_transitory_idle_timeout_sec ComputeRouterNat#tcp_transitory_idle_timeout_sec}
         '''
         result = self._values.get("tcp_transitory_idle_timeout_sec")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1333,7 +1427,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["ComputeRouterNatTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#timeouts ComputeRouterNat#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#timeouts ComputeRouterNat#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["ComputeRouterNatTimeouts"], result)
@@ -1346,7 +1440,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         If 'PUBLIC' NAT used for public IP translation.
         If 'PRIVATE' NAT used for private IP translation. Default value: "PUBLIC" Possible values: ["PUBLIC", "PRIVATE"]
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#type ComputeRouterNat#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#type ComputeRouterNat#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1355,7 +1449,7 @@ class ComputeRouterNatConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def udp_idle_timeout_sec(self) -> typing.Optional[jsii.Number]:
         '''Timeout (in seconds) for UDP connections. Defaults to 30s if not set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#udp_idle_timeout_sec ComputeRouterNat#udp_idle_timeout_sec}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#udp_idle_timeout_sec ComputeRouterNat#udp_idle_timeout_sec}
         '''
         result = self._values.get("udp_idle_timeout_sec")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1385,8 +1479,8 @@ class ComputeRouterNatLogConfig:
         filter: builtins.str,
     ) -> None:
         '''
-        :param enable: Indicates whether or not to export logs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable ComputeRouterNat#enable}
-        :param filter: Specifies the desired filtering of logs on this NAT. Possible values: ["ERRORS_ONLY", "TRANSLATIONS_ONLY", "ALL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#filter ComputeRouterNat#filter}
+        :param enable: Indicates whether or not to export logs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable ComputeRouterNat#enable}
+        :param filter: Specifies the desired filtering of logs on this NAT. Possible values: ["ERRORS_ONLY", "TRANSLATIONS_ONLY", "ALL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#filter ComputeRouterNat#filter}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9ac7e9111b29dd0c3195cf35bae9c3fd93f9c2cef0237e0b8ed89bc083a12df0)
@@ -1401,7 +1495,7 @@ class ComputeRouterNatLogConfig:
     def enable(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
         '''Indicates whether or not to export logs.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#enable ComputeRouterNat#enable}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#enable ComputeRouterNat#enable}
         '''
         result = self._values.get("enable")
         assert result is not None, "Required property 'enable' is missing"
@@ -1411,7 +1505,7 @@ class ComputeRouterNatLogConfig:
     def filter(self) -> builtins.str:
         '''Specifies the desired filtering of logs on this NAT. Possible values: ["ERRORS_ONLY", "TRANSLATIONS_ONLY", "ALL"].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#filter ComputeRouterNat#filter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#filter ComputeRouterNat#filter}
         '''
         result = self._values.get("filter")
         assert result is not None, "Required property 'filter' is missing"
@@ -1502,6 +1596,199 @@ class ComputeRouterNatLogConfigOutputReference(
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-google.computeRouterNat.ComputeRouterNatNat64Subnetwork",
+    jsii_struct_bases=[],
+    name_mapping={"name": "name"},
+)
+class ComputeRouterNatNat64Subnetwork:
+    def __init__(self, *, name: builtins.str) -> None:
+        '''
+        :param name: Self-link of the subnetwork resource that will use NAT64. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__58881a9600e55d739b5c3f410f9be5cdaa6437d561f6cc81ec85f03745d31b4a)
+            check_type(argname="argument name", value=name, expected_type=type_hints["name"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "name": name,
+        }
+
+    @builtins.property
+    def name(self) -> builtins.str:
+        '''Self-link of the subnetwork resource that will use NAT64.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
+        '''
+        result = self._values.get("name")
+        assert result is not None, "Required property 'name' is missing"
+        return typing.cast(builtins.str, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "ComputeRouterNatNat64Subnetwork(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class ComputeRouterNatNat64SubnetworkList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.computeRouterNat.ComputeRouterNatNat64SubnetworkList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__29ab0d5f45eec4626b95d414010c4f4f3e979b9afbc0c73f02d85e6dd38876ed)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "ComputeRouterNatNat64SubnetworkOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b85d4b46312ef9ff3c34aeac44c49ddc063754e83577e89843847e3794c0239c)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("ComputeRouterNatNat64SubnetworkOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__059095611602b77af2a55d60f80bf4c8d9d4b386d9f4f305e7112fb5e08acf9d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6ec6338c0e9ad4453b8665666c08a6e190964f990f22d24abdc22c300e109456)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__51bb7cb5adb9872a772eaa483a6016e6796379ac3a934e5d411d838b44beaba7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ComputeRouterNatNat64Subnetwork]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ComputeRouterNatNat64Subnetwork]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ComputeRouterNatNat64Subnetwork]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__55899cab8c0e6a1184fbccbfa1a597ca61880a2a7dcbca7ae1750d30248c579e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class ComputeRouterNatNat64SubnetworkOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.computeRouterNat.ComputeRouterNatNat64SubnetworkOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1cc2b13ed57f84162840960fa11d060107ff39df81879759a7484564a6fa0047)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="nameInput")
+    def name_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "nameInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="name")
+    def name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "name"))
+
+    @name.setter
+    def name(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2c8e9dbaab70fcc7611c3aaf1c5a74b554e64716d0fe81c642d657c59b2945d4)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "name", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ComputeRouterNatNat64Subnetwork]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ComputeRouterNatNat64Subnetwork]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ComputeRouterNatNat64Subnetwork]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3a12fd2a41d11cb700b55dfda0336965b08f9da8c033ace4737667911a4fc5a6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-google.computeRouterNat.ComputeRouterNatRules",
     jsii_struct_bases=[],
     name_mapping={
@@ -1521,10 +1808,10 @@ class ComputeRouterNatRules:
         description: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param match: CEL expression that specifies the match condition that egress traffic from a VM is evaluated against. If it evaluates to true, the corresponding action is enforced. The following examples are valid match expressions for public NAT: "inIpRange(destination.ip, '1.1.0.0/16') || inIpRange(destination.ip, '2.2.0.0/16')" "destination.ip == '1.1.0.1' || destination.ip == '8.8.8.8'" The following example is a valid match expression for private NAT: "nexthop.hub == 'https://networkconnectivity.googleapis.com/v1alpha1/projects/my-project/global/hub/hub-1'" Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#match ComputeRouterNat#match}
-        :param rule_number: An integer uniquely identifying a rule in the list. The rule number must be a positive value between 0 and 65000, and must be unique among rules within a NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#rule_number ComputeRouterNat#rule_number}
-        :param action: action block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#action ComputeRouterNat#action}
-        :param description: An optional description of this rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#description ComputeRouterNat#description}
+        :param match: CEL expression that specifies the match condition that egress traffic from a VM is evaluated against. If it evaluates to true, the corresponding action is enforced. The following examples are valid match expressions for public NAT: "inIpRange(destination.ip, '1.1.0.0/16') || inIpRange(destination.ip, '2.2.0.0/16')" "destination.ip == '1.1.0.1' || destination.ip == '8.8.8.8'" The following example is a valid match expression for private NAT: "nexthop.hub == 'https://networkconnectivity.googleapis.com/v1alpha1/projects/my-project/global/hub/hub-1'" Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#match ComputeRouterNat#match}
+        :param rule_number: An integer uniquely identifying a rule in the list. The rule number must be a positive value between 0 and 65000, and must be unique among rules within a NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#rule_number ComputeRouterNat#rule_number}
+        :param action: action block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#action ComputeRouterNat#action}
+        :param description: An optional description of this rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#description ComputeRouterNat#description}
         '''
         if isinstance(action, dict):
             action = ComputeRouterNatRulesAction(**action)
@@ -1559,7 +1846,7 @@ class ComputeRouterNatRules:
 
         "nexthop.hub == 'https://networkconnectivity.googleapis.com/v1alpha1/projects/my-project/global/hub/hub-1'"
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#match ComputeRouterNat#match}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#match ComputeRouterNat#match}
         '''
         result = self._values.get("match")
         assert result is not None, "Required property 'match' is missing"
@@ -1571,7 +1858,7 @@ class ComputeRouterNatRules:
 
         The rule number must be a positive value between 0 and 65000, and must be unique among rules within a NAT.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#rule_number ComputeRouterNat#rule_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#rule_number ComputeRouterNat#rule_number}
         '''
         result = self._values.get("rule_number")
         assert result is not None, "Required property 'rule_number' is missing"
@@ -1581,7 +1868,7 @@ class ComputeRouterNatRules:
     def action(self) -> typing.Optional["ComputeRouterNatRulesAction"]:
         '''action block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#action ComputeRouterNat#action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#action ComputeRouterNat#action}
         '''
         result = self._values.get("action")
         return typing.cast(typing.Optional["ComputeRouterNatRulesAction"], result)
@@ -1590,7 +1877,7 @@ class ComputeRouterNatRules:
     def description(self) -> typing.Optional[builtins.str]:
         '''An optional description of this rule.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#description ComputeRouterNat#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#description ComputeRouterNat#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1627,10 +1914,10 @@ class ComputeRouterNatRulesAction:
         source_nat_drain_ranges: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param source_nat_active_ips: A list of URLs of the IP resources used for this NAT rule. These IP addresses must be valid static external IP addresses assigned to the project. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_active_ips ComputeRouterNat#source_nat_active_ips}
-        :param source_nat_active_ranges: A list of URLs of the subnetworks used as source ranges for this NAT Rule. These subnetworks must have purpose set to PRIVATE_NAT. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_active_ranges ComputeRouterNat#source_nat_active_ranges}
-        :param source_nat_drain_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. These IPs should be used for updating/patching a NAT rule only. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_drain_ips ComputeRouterNat#source_nat_drain_ips}
-        :param source_nat_drain_ranges: A list of URLs of subnetworks representing source ranges to be drained. This is only supported on patch/update, and these subnetworks must have previously been used as active ranges in this NAT Rule. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_drain_ranges ComputeRouterNat#source_nat_drain_ranges}
+        :param source_nat_active_ips: A list of URLs of the IP resources used for this NAT rule. These IP addresses must be valid static external IP addresses assigned to the project. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_active_ips ComputeRouterNat#source_nat_active_ips}
+        :param source_nat_active_ranges: A list of URLs of the subnetworks used as source ranges for this NAT Rule. These subnetworks must have purpose set to PRIVATE_NAT. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_active_ranges ComputeRouterNat#source_nat_active_ranges}
+        :param source_nat_drain_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. These IPs should be used for updating/patching a NAT rule only. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_drain_ips ComputeRouterNat#source_nat_drain_ips}
+        :param source_nat_drain_ranges: A list of URLs of subnetworks representing source ranges to be drained. This is only supported on patch/update, and these subnetworks must have previously been used as active ranges in this NAT Rule. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_drain_ranges ComputeRouterNat#source_nat_drain_ranges}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f2ad1aa18d1d1653ddbd93335602de2a80da3cf76047fbb80604bfe924a3973c)
@@ -1655,7 +1942,7 @@ class ComputeRouterNatRulesAction:
         These IP addresses must be valid static external IP addresses assigned to the project.
         This field is used for public NAT.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_active_ips ComputeRouterNat#source_nat_active_ips}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_active_ips ComputeRouterNat#source_nat_active_ips}
         '''
         result = self._values.get("source_nat_active_ips")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1667,7 +1954,7 @@ class ComputeRouterNatRulesAction:
         These subnetworks must have purpose set to PRIVATE_NAT.
         This field is used for private NAT.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_active_ranges ComputeRouterNat#source_nat_active_ranges}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_active_ranges ComputeRouterNat#source_nat_active_ranges}
         '''
         result = self._values.get("source_nat_active_ranges")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1680,7 +1967,7 @@ class ComputeRouterNatRulesAction:
         These IPs should be used for updating/patching a NAT rule only.
         This field is used for public NAT.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_drain_ips ComputeRouterNat#source_nat_drain_ips}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_drain_ips ComputeRouterNat#source_nat_drain_ips}
         '''
         result = self._values.get("source_nat_drain_ips")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1692,7 +1979,7 @@ class ComputeRouterNatRulesAction:
         This is only supported on patch/update, and these subnetworks must have previously been used as active ranges in this NAT Rule.
         This field is used for private NAT.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_drain_ranges ComputeRouterNat#source_nat_drain_ranges}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_drain_ranges ComputeRouterNat#source_nat_drain_ranges}
         '''
         result = self._values.get("source_nat_drain_ranges")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1959,10 +2246,10 @@ class ComputeRouterNatRulesOutputReference(
         source_nat_drain_ranges: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param source_nat_active_ips: A list of URLs of the IP resources used for this NAT rule. These IP addresses must be valid static external IP addresses assigned to the project. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_active_ips ComputeRouterNat#source_nat_active_ips}
-        :param source_nat_active_ranges: A list of URLs of the subnetworks used as source ranges for this NAT Rule. These subnetworks must have purpose set to PRIVATE_NAT. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_active_ranges ComputeRouterNat#source_nat_active_ranges}
-        :param source_nat_drain_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. These IPs should be used for updating/patching a NAT rule only. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_drain_ips ComputeRouterNat#source_nat_drain_ips}
-        :param source_nat_drain_ranges: A list of URLs of subnetworks representing source ranges to be drained. This is only supported on patch/update, and these subnetworks must have previously been used as active ranges in this NAT Rule. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_nat_drain_ranges ComputeRouterNat#source_nat_drain_ranges}
+        :param source_nat_active_ips: A list of URLs of the IP resources used for this NAT rule. These IP addresses must be valid static external IP addresses assigned to the project. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_active_ips ComputeRouterNat#source_nat_active_ips}
+        :param source_nat_active_ranges: A list of URLs of the subnetworks used as source ranges for this NAT Rule. These subnetworks must have purpose set to PRIVATE_NAT. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_active_ranges ComputeRouterNat#source_nat_active_ranges}
+        :param source_nat_drain_ips: A list of URLs of the IP resources to be drained. These IPs must be valid static external IPs that have been assigned to the NAT. These IPs should be used for updating/patching a NAT rule only. This field is used for public NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_drain_ips ComputeRouterNat#source_nat_drain_ips}
+        :param source_nat_drain_ranges: A list of URLs of subnetworks representing source ranges to be drained. This is only supported on patch/update, and these subnetworks must have previously been used as active ranges in this NAT Rule. This field is used for private NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_nat_drain_ranges ComputeRouterNat#source_nat_drain_ranges}
         '''
         value = ComputeRouterNatRulesAction(
             source_nat_active_ips=source_nat_active_ips,
@@ -2078,9 +2365,9 @@ class ComputeRouterNatSubnetwork:
         secondary_ip_range_names: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param name: Self-link of subnetwork to NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
-        :param source_ip_ranges_to_nat: List of options for which source IPs in the subnetwork should have NAT enabled. Supported values include: 'ALL_IP_RANGES', 'LIST_OF_SECONDARY_IP_RANGES', 'PRIMARY_IP_RANGE'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_ip_ranges_to_nat ComputeRouterNat#source_ip_ranges_to_nat}
-        :param secondary_ip_range_names: List of the secondary ranges of the subnetwork that are allowed to use NAT. This can be populated only if 'LIST_OF_SECONDARY_IP_RANGES' is one of the values in sourceIpRangesToNat Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#secondary_ip_range_names ComputeRouterNat#secondary_ip_range_names}
+        :param name: Self-link of subnetwork to NAT. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
+        :param source_ip_ranges_to_nat: List of options for which source IPs in the subnetwork should have NAT enabled. Supported values include: 'ALL_IP_RANGES', 'LIST_OF_SECONDARY_IP_RANGES', 'PRIMARY_IP_RANGE'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_ip_ranges_to_nat ComputeRouterNat#source_ip_ranges_to_nat}
+        :param secondary_ip_range_names: List of the secondary ranges of the subnetwork that are allowed to use NAT. This can be populated only if 'LIST_OF_SECONDARY_IP_RANGES' is one of the values in sourceIpRangesToNat Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#secondary_ip_range_names ComputeRouterNat#secondary_ip_range_names}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__359abc45e51d4ac084be009d4fa980c89340e830a3fbcc7518add50cc03fd1d1)
@@ -2098,7 +2385,7 @@ class ComputeRouterNatSubnetwork:
     def name(self) -> builtins.str:
         '''Self-link of subnetwork to NAT.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#name ComputeRouterNat#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -2108,7 +2395,7 @@ class ComputeRouterNatSubnetwork:
     def source_ip_ranges_to_nat(self) -> typing.List[builtins.str]:
         '''List of options for which source IPs in the subnetwork should have NAT enabled. Supported values include: 'ALL_IP_RANGES', 'LIST_OF_SECONDARY_IP_RANGES', 'PRIMARY_IP_RANGE'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#source_ip_ranges_to_nat ComputeRouterNat#source_ip_ranges_to_nat}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#source_ip_ranges_to_nat ComputeRouterNat#source_ip_ranges_to_nat}
         '''
         result = self._values.get("source_ip_ranges_to_nat")
         assert result is not None, "Required property 'source_ip_ranges_to_nat' is missing"
@@ -2122,7 +2409,7 @@ class ComputeRouterNatSubnetwork:
         'LIST_OF_SECONDARY_IP_RANGES' is one of the values in
         sourceIpRangesToNat
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#secondary_ip_range_names ComputeRouterNat#secondary_ip_range_names}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#secondary_ip_range_names ComputeRouterNat#secondary_ip_range_names}
         '''
         result = self._values.get("secondary_ip_range_names")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2346,9 +2633,9 @@ class ComputeRouterNatTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#create ComputeRouterNat#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#delete ComputeRouterNat#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#update ComputeRouterNat#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#create ComputeRouterNat#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#delete ComputeRouterNat#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#update ComputeRouterNat#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__af7f86c8a0c5e314fb956845df5a83f13e9a1542c72cc8a7b6e0116e308fffbf)
@@ -2365,19 +2652,19 @@ class ComputeRouterNatTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#create ComputeRouterNat#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#create ComputeRouterNat#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#delete ComputeRouterNat#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#delete ComputeRouterNat#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs/resources/compute_router_nat#update ComputeRouterNat#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs/resources/compute_router_nat#update ComputeRouterNat#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2499,6 +2786,9 @@ __all__ = [
     "ComputeRouterNatConfig",
     "ComputeRouterNatLogConfig",
     "ComputeRouterNatLogConfigOutputReference",
+    "ComputeRouterNatNat64Subnetwork",
+    "ComputeRouterNatNat64SubnetworkList",
+    "ComputeRouterNatNat64SubnetworkOutputReference",
     "ComputeRouterNatRules",
     "ComputeRouterNatRulesAction",
     "ComputeRouterNatRulesActionOutputReference",
@@ -2531,11 +2821,13 @@ def _typecheckingstub__ae60cc72bda42e6a3f764beb311fa2ef6b29ace4eae8271a19188ee79
     log_config: typing.Optional[typing.Union[ComputeRouterNatLogConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     max_ports_per_vm: typing.Optional[jsii.Number] = None,
     min_ports_per_vm: typing.Optional[jsii.Number] = None,
+    nat64_subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[ComputeRouterNatNat64Subnetwork, typing.Dict[builtins.str, typing.Any]]]]] = None,
     nat_ip_allocate_option: typing.Optional[builtins.str] = None,
     nat_ips: typing.Optional[typing.Sequence[builtins.str]] = None,
     project: typing.Optional[builtins.str] = None,
     region: typing.Optional[builtins.str] = None,
     rules: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[ComputeRouterNatRules, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    source_subnetwork_ip_ranges_to_nat64: typing.Optional[builtins.str] = None,
     subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[ComputeRouterNatSubnetwork, typing.Dict[builtins.str, typing.Any]]]]] = None,
     tcp_established_idle_timeout_sec: typing.Optional[jsii.Number] = None,
     tcp_time_wait_timeout_sec: typing.Optional[jsii.Number] = None,
@@ -2559,6 +2851,12 @@ def _typecheckingstub__b5f5e6d62a05f472fbe0a7a14aba0e0f23ca591a317261aa38c0281ef
     import_to_id: builtins.str,
     import_from_id: builtins.str,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__dabed10e1bc13360dd44a355a367148ad239ea59874bc7f701573fa4f7b00c72(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[ComputeRouterNatNat64Subnetwork, typing.Dict[builtins.str, typing.Any]]]],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -2677,6 +2975,12 @@ def _typecheckingstub__e40da5030a63141d60a16677492f8d9cbae12d769e030bb1d1da087eb
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__a9e40b9930689f1a0cd1093396c6b641262f96d5d6bf2f7169dc184a3576b05c(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__039b6b7adcf7809a7c98536a8198975185ecae8c6b99322702c053f61ee8ba30(
     value: jsii.Number,
 ) -> None:
@@ -2730,11 +3034,13 @@ def _typecheckingstub__4206e3123f14db114b0b184e0ac18276ac7bd0ccd157247ee559a2600
     log_config: typing.Optional[typing.Union[ComputeRouterNatLogConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     max_ports_per_vm: typing.Optional[jsii.Number] = None,
     min_ports_per_vm: typing.Optional[jsii.Number] = None,
+    nat64_subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[ComputeRouterNatNat64Subnetwork, typing.Dict[builtins.str, typing.Any]]]]] = None,
     nat_ip_allocate_option: typing.Optional[builtins.str] = None,
     nat_ips: typing.Optional[typing.Sequence[builtins.str]] = None,
     project: typing.Optional[builtins.str] = None,
     region: typing.Optional[builtins.str] = None,
     rules: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[ComputeRouterNatRules, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    source_subnetwork_ip_ranges_to_nat64: typing.Optional[builtins.str] = None,
     subnetwork: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[ComputeRouterNatSubnetwork, typing.Dict[builtins.str, typing.Any]]]]] = None,
     tcp_established_idle_timeout_sec: typing.Optional[jsii.Number] = None,
     tcp_time_wait_timeout_sec: typing.Optional[jsii.Number] = None,
@@ -2775,6 +3081,72 @@ def _typecheckingstub__4c69bb065015c9dde1d1f36db98ae2df780331561f5a2ee78c27b8385
 
 def _typecheckingstub__9a4ccfa44d87a0e056e8745c1911fc29e9163a655b0551407ee550b59731849f(
     value: typing.Optional[ComputeRouterNatLogConfig],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__58881a9600e55d739b5c3f410f9be5cdaa6437d561f6cc81ec85f03745d31b4a(
+    *,
+    name: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__29ab0d5f45eec4626b95d414010c4f4f3e979b9afbc0c73f02d85e6dd38876ed(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b85d4b46312ef9ff3c34aeac44c49ddc063754e83577e89843847e3794c0239c(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__059095611602b77af2a55d60f80bf4c8d9d4b386d9f4f305e7112fb5e08acf9d(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6ec6338c0e9ad4453b8665666c08a6e190964f990f22d24abdc22c300e109456(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__51bb7cb5adb9872a772eaa483a6016e6796379ac3a934e5d411d838b44beaba7(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__55899cab8c0e6a1184fbccbfa1a597ca61880a2a7dcbca7ae1750d30248c579e(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ComputeRouterNatNat64Subnetwork]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1cc2b13ed57f84162840960fa11d060107ff39df81879759a7484564a6fa0047(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2c8e9dbaab70fcc7611c3aaf1c5a74b554e64716d0fe81c642d657c59b2945d4(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3a12fd2a41d11cb700b55dfda0336965b08f9da8c033ace4737667911a4fc5a6(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ComputeRouterNatNat64Subnetwork]],
 ) -> None:
     """Type checking stubs"""
     pass

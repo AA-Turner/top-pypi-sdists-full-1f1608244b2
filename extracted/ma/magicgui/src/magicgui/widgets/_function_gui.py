@@ -25,7 +25,6 @@ from psygnal import Signal
 from magicgui._type_resolution import resolve_single_type
 from magicgui.signature import MagicSignature, magic_signature
 from magicgui.widgets import Container, MainWindow, ProgressBar, PushButton
-from magicgui.widgets.bases import BaseValueWidget
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -36,6 +35,7 @@ if TYPE_CHECKING:
     from magicgui.application import Application, AppRef  # noqa: F401
     from magicgui.type_map import TypeMap
     from magicgui.widgets import TextEdit
+    from magicgui.widgets.bases import BaseValueWidget
     from magicgui.widgets.protocols import ContainerProtocol, MainWindowProtocol
 
     _P = ParamSpec("_P")
@@ -229,7 +229,7 @@ class FunctionGui(Container, Generic[_P, _R]):
                 @self._call_button.changed.connect
                 def _disable_button_and_call() -> None:
                     # disable the call button until the function has finished
-                    self._call_button = cast(PushButton, self._call_button)
+                    self._call_button = cast("PushButton", self._call_button)
                     self._call_button.enabled = False
                     try:
                         self.__call__()  # type: ignore [call-arg]
@@ -241,7 +241,7 @@ class FunctionGui(Container, Generic[_P, _R]):
         self._result_widget: BaseValueWidget | None = None
         if result_widget:
             self._result_widget = cast(
-                BaseValueWidget,
+                "BaseValueWidget",
                 type_map.create_widget(
                     value=None,
                     annotation=self._return_annotation,
@@ -495,7 +495,7 @@ def _docstring_to_html(docs: str) -> str:
 
     ptemp = "<li><p><strong>{}</strong> (<em>{}</em>) - {}</p></li>"
     plist = [ptemp.format(p.arg_name, p.type_name, p.description) for p in ds.params]
-    params = f'<h3>Parameters</h3><ul>{"".join(plist)}</ul>'
+    params = f"<h3>Parameters</h3><ul>{''.join(plist)}</ul>"
     short = f"<p>{ds.short_description}</p>" if ds.short_description else ""
     long = f"<p>{ds.long_description}</p>" if ds.long_description else ""
     return re.sub(r"`?([^`]+)`?", r"<code>\1</code>", f"{short}{long}{params}")

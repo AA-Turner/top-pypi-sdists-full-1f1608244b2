@@ -15,7 +15,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 from . import handlers as handlers
 from . import icons as icons
@@ -29,11 +29,11 @@ def help_text(all: bool | None = False):
     :type all: bool | None
     """
 
-def is_job_running(job_type: bpy._typing.rna_enums.WmJobTypeItems):
+def is_job_running(job_type: bpy.stub_internal.rna_enums.WmJobTypeItems):
     """Check whether a job of the given type is running.
 
     :param job_type: job type in `rna_enum_wm_job_type_items`.
-    :type job_type: bpy._typing.rna_enums.WmJobTypeItems
+    :type job_type: bpy.stub_internal.rna_enums.WmJobTypeItems
     :return: Whether a job of the given type is currently running.
     """
 

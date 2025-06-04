@@ -12,16 +12,20 @@ use git2::{
 	Repository as GitRepository,
 	Sort,
 	TreeWalkMode,
+	Worktree,
 };
 use glob::Pattern;
 use indexmap::IndexMap;
 use lazy_regex::{
-	lazy_regex,
 	Lazy,
 	Regex,
+	lazy_regex,
 };
 use std::io;
-use std::path::PathBuf;
+use std::path::{
+	Path,
+	PathBuf,
+};
 use std::result::Result as StdResult;
 use url::Url;
 
@@ -43,6 +47,15 @@ pub struct Repository {
 	path:                     PathBuf,
 	/// Cache path for the changed files of the commits.
 	changed_files_cache_path: PathBuf,
+}
+
+/// Range of commits in a submodule.
+pub struct SubmoduleRange {
+	/// Repository object to which this range belongs.
+	pub repository: Repository,
+	/// Commit range in "<first_submodule_commit>..<last_submodule_commit>" or
+	/// "<last_submodule_commit>" format.
+	pub range:      String,
 }
 
 impl Repository {
@@ -76,12 +89,25 @@ impl Repository {
 	}
 
 	/// Returns the path of the repository.
-	pub fn path(&self) -> PathBuf {
-		let mut path = self.inner.path().to_path_buf();
+	pub fn root_path(&self) -> Result<PathBuf> {
+		let mut path = if self.inner.is_worktree() {
+			let worktree = Worktree::open_from_repository(&self.inner)?;
+			worktree.path().to_path_buf()
+		} else {
+			self.inner.path().to_path_buf()
+		};
 		if path.ends_with(".git") {
 			path.pop();
 		}
-		path
+		Ok(path)
+	}
+
+	/// Returns the initial path of the repository.
+	///
+	/// In case of a submodule this is the relative path to the toplevel
+	/// repository.
+	pub fn path(&self) -> &PathBuf {
+		&self.path
 	}
 
 	/// Sets the range for the commit search.
@@ -112,9 +138,15 @@ impl Repository {
 		range: Option<&str>,
 		include_path: Option<Vec<Pattern>>,
 		exclude_path: Option<Vec<Pattern>>,
+		topo_order_commits: bool,
 	) -> Result<Vec<Commit>> {
 		let mut revwalk = self.inner.revwalk()?;
-		revwalk.set_sorting(Sort::TOPOLOGICAL)?;
+		if topo_order_commits {
+			revwalk.set_sorting(Sort::TOPOLOGICAL)?;
+		} else {
+			revwalk.set_sorting(Sort::TIME)?;
+		}
+
 		Self::set_commit_range(&mut revwalk, range).map_err(|e| {
 			Error::SetCommitRangeError(
 				range.map(String::from).unwrap_or_else(|| "?".to_string()),
@@ -143,6 +175,59 @@ impl Repository {
 		Ok(commits)
 	}
 
+	/// Returns submodule repositories for a given commit range.
+	///
+	/// For one or two given commits in this repository, a list of changed
+	/// submodules is calculated. If only one commit is given, then all
+	/// submodule commits up to the referenced commit will be included. This is
+	/// usually the case if a submodule is added to the repository.
+	///
+	///  For each submodule a [`SubmoduleRange`] object is created
+	///
+	/// This can then be used to query the submodule's commits by using
+	/// [`Repository::commits`].
+	pub fn submodules_range(
+		&self,
+		old_commit: Option<Commit<'_>>,
+		new_commit: Commit<'_>,
+	) -> Result<Vec<SubmoduleRange>> {
+		let old_tree = old_commit.and_then(|commit| commit.tree().ok());
+		let new_tree = new_commit.tree().ok();
+		let diff = self.inner.diff_tree_to_tree(
+			old_tree.as_ref(),
+			new_tree.as_ref(),
+			None,
+		)?;
+		// iterate through all diffs and accumulate old/new commit ids
+		let before_and_after_deltas = diff.deltas().filter_map(|delta| {
+			let old_file_id = delta.old_file().id();
+			let new_file_id = delta.new_file().id();
+			let range = if old_file_id == new_file_id || new_file_id.is_zero() {
+				// no changes or submodule removed
+				None
+			} else if old_file_id.is_zero() {
+				// submodule added
+				Some(new_file_id.to_string())
+			} else {
+				// submodule updated
+				Some(format!("{}..{}", old_file_id, new_file_id))
+			};
+			trace!("Release commit range for submodules: {:?}", range);
+			delta.new_file().path().and_then(Path::to_str).zip(range)
+		});
+		// iterate through all path diffs and find corresponding submodule if
+		// possible
+		let submodule_range = before_and_after_deltas.filter_map(|(path, range)| {
+			let repository = self
+				.inner
+				.find_submodule(path)
+				.ok()
+				.and_then(|submodule| Self::init(submodule.path().into()).ok());
+			repository.map(|repository| SubmoduleRange { repository, range })
+		});
+		Ok(submodule_range.collect())
+	}
+
 	/// Normalizes the glob pattern to match the git diff paths.
 	///
 	/// It removes the leading `./` and adds `**` to the end if the pattern is a
@@ -153,12 +238,11 @@ impl Repository {
 				.expect("failed to add '**' to the end of glob"),
 			_ => pattern,
 		};
-		let pattern_normal = match star_added.as_str().strip_prefix("./") {
+		match star_added.as_str().strip_prefix("./") {
 			Some(stripped) => Pattern::new(stripped)
 				.expect("failed to remove leading ./ from glob"),
 			None => star_added,
-		};
-		pattern_normal
+		}
 	}
 
 	/// Calculates whether the commit should be retained or not.
@@ -615,7 +699,7 @@ mod test {
 	#[test]
 	fn get_latest_commit() -> Result<()> {
 		let repository = get_repository()?;
-		let commits = repository.commits(None, None, None)?;
+		let commits = repository.commits(None, None, None, false)?;
 		let last_commit =
 			AppCommit::from(&commits.first().expect("no commits found").clone());
 		assert_eq!(get_last_commit_hash()?, last_commit.id);
@@ -625,9 +709,11 @@ mod test {
 	#[test]
 	fn commit_search() -> Result<()> {
 		let repository = get_repository()?;
-		assert!(repository
-			.find_commit("e936ed571533ea6c41a1dd2b1a29d085c8dbada5")
-			.is_some());
+		assert!(
+			repository
+				.find_commit("e936ed571533ea6c41a1dd2b1a29d085c8dbada5")
+				.is_some()
+		);
 		Ok(())
 	}
 
@@ -733,7 +819,7 @@ mod test {
 		let repository = get_repository()?;
 		// a close descendant of the root commit
 		let range = Some("eea3914c7ab07472841aa85c36d11bdb2589a234");
-		let commits = repository.commits(range, None, None)?;
+		let commits = repository.commits(range, None, None, false)?;
 		let root_commit =
 			AppCommit::from(&commits.last().expect("no commits found").clone());
 		assert_eq!(get_root_commit_hash()?, root_commit.id);
@@ -827,10 +913,12 @@ mod test {
 
 		assert!(result.is_err());
 		if let Err(error) = result {
-			assert!(format!("{error:?}").contains(
-				format!("could not find repository at '{}'", path.display())
-					.as_str()
-			))
+			assert!(
+				format!("{error:?}").contains(
+					format!("could not find repository at '{}'", path.display())
+						.as_str()
+				)
+			)
 		}
 	}
 
@@ -860,13 +948,10 @@ mod test {
 			.expect("failed to execute git commit");
 		assert!(output.status.success(), "git commit failed {:?}", output);
 
-		let last_commit = repo
-			.inner
+		repo.inner
 			.head()
 			.and_then(|head| head.peel_to_commit())
-			.expect("failed to get the last commit");
-
-		last_commit
+			.expect("failed to get the last commit")
 	}
 
 	#[test]

@@ -11,11 +11,147 @@ import System.ComponentModel.Design.Serialization
 import System.IO
 import System.Reflection
 
-IServiceProvider = typing.Any
 System_ComponentModel_Design_Serialization_MemberRelationship = typing.Any
+IServiceProvider = typing.Any
 
 System_ComponentModel_Design_Serialization__EventContainer_Callable = typing.TypeVar("System_ComponentModel_Design_Serialization__EventContainer_Callable")
 System_ComponentModel_Design_Serialization__EventContainer_ReturnType = typing.TypeVar("System_ComponentModel_Design_Serialization__EventContainer_ReturnType")
+
+
+class InstanceDescriptor(System.Object):
+    """
+    EventArgs for the ResolveNameEventHandler. This event is used
+    by the serialization process to match a name to an object
+    instance.
+    """
+
+    @property
+    def arguments(self) -> System.Collections.ICollection:
+        """
+        The collection of arguments that should be passed to
+        MemberInfo in order to create an instance.
+        """
+        ...
+
+    @property
+    def is_complete(self) -> bool:
+        """
+        Determines if the contents of this instance descriptor completely identify the instance.
+        This will normally be the case, but some objects may be too complex for a single method
+        or constructor to represent. IsComplete can be used to identify these objects and take
+        additional steps to further describe their state.
+        """
+        ...
+
+    @property
+    def member_info(self) -> System.Reflection.MemberInfo:
+        """
+        The MemberInfo object that was passed into the constructor
+        of this InstanceDescriptor.
+        """
+        ...
+
+    @overload
+    def __init__(self, member: System.Reflection.MemberInfo, arguments: System.Collections.ICollection) -> None:
+        """Creates a new InstanceDescriptor."""
+        ...
+
+    @overload
+    def __init__(self, member: System.Reflection.MemberInfo, arguments: System.Collections.ICollection, is_complete: bool) -> None:
+        """Creates a new InstanceDescriptor."""
+        ...
+
+    def invoke(self) -> System.Object:
+        """
+        Invokes this instance descriptor, returning the object
+        the descriptor describes.
+        """
+        ...
+
+
+class IDesignerLoaderHost(System.ComponentModel.Design.IDesignerHost, metaclass=abc.ABCMeta):
+    """
+    IDesignerLoaderHost. This is an extension of IDesignerHost that is passed
+    to the designer loader in the BeginLoad method. It is isolated from
+    IDesignerHost to emphasize that all loading and reloading of the design
+    document actually should be initiated by the designer loader, and not by
+    the designer host. However, the loader must inform the designer host that
+    it wishes to invoke a load or reload.
+    """
+
+    def end_load(self, base_class_name: str, successful: bool, error_collection: System.Collections.ICollection) -> None:
+        """
+        This is called by the designer loader to indicate that the load has
+        terminated. If there were errors, they should be passed in the error_collection
+        as a collection of exceptions (if they are not exceptions the designer
+        loader host may just call ToString on them). If the load was successful then
+        error_collection should either be null or contain an empty collection.
+        """
+        ...
+
+    def reload(self) -> None:
+        """
+        This is called by the designer loader when it wishes to reload the
+        design document. The reload will happen immediately so the caller
+        should ensure that it is in a state where BeginLoad may be called again.
+        """
+        ...
+
+
+class DesignerLoader(System.Object, metaclass=abc.ABCMeta):
+    """
+    DesignerLoader. This class is responsible for loading a designer document.
+    Where and how this load occurs is a private matter for the designer loader.
+    The designer loader will be handed to an IDesignerHost instance. This instance,
+    when it is ready to load the document, will call BeginLoad, passing an instance
+    of IDesignerLoaderHost. The designer loader will load up the design surface
+    using the host interface, and call EndLoad on the interface when it is done.
+    The error collection passed into EndLoad should be empty or null to indicate a
+    successful load, or it should contain a collection of exceptions that
+    describe the error.
+    
+    Once a document is loaded, the designer loader is also responsible for
+    writing any changes made to the document back whatever storage the
+    loader used when loading the document.
+    """
+
+    @property
+    def loading(self) -> bool:
+        """
+        Returns true when the designer is in the process of loading. Clients that are
+        sinking notifications from the designer often want to ignore them while the designer is loading
+        and only respond to them if they result from user interactions.
+        """
+        ...
+
+    def begin_load(self, host: System.ComponentModel.Design.Serialization.IDesignerLoaderHost) -> None:
+        """
+        Called by the designer host to begin the loading process. The designer
+        host passes in an instance of a designer loader host (which is typically
+        the same object as the designer host. This loader host allows
+        the designer loader to reload the design document and also allows
+        the designer loader to indicate that it has finished loading the
+        design document.
+        """
+        ...
+
+    def dispose(self) -> None:
+        """
+        Disposes this designer loader. The designer host will call this method
+        when the design document itself is being destroyed. Once called, the
+        designer loader will never be called again.
+        """
+        ...
+
+    def flush(self) -> None:
+        """
+        The designer host will call this periodically when it wants to
+        ensure that any changes that have been made to the document
+        have been saved by the designer loader. This method allows
+        designer loaders to implement a lazy-write scheme to improve
+        performance. The default implementation does nothing.
+        """
+        ...
 
 
 class ContextStack(System.Object):
@@ -83,31 +219,186 @@ class ContextStack(System.Object):
         ...
 
 
-class IDesignerSerializationProvider(metaclass=abc.ABCMeta):
+class RootDesignerSerializerAttribute(System.Attribute):
     """
-    This interface defines a custom serialization provider. This
-    allows outside objects to control serialization by providing
-    their own serializer objects.
+    This attribute can be placed on a class to indicate what serialization
+    object should be used to serialize the class at design time if it is
+    being used as a root object.
+    
+    RootDesignerSerializerAttribute has been deprecated. Use DesignerSerializerAttribute instead. For example, to specify a root designer for CodeDom, use DesignerSerializerAttribute(...,typeof(TypeCodeDomSerializer)) instead.
     """
 
-    def get_serializer(self, manager: System.ComponentModel.Design.Serialization.IDesignerSerializationManager, current_serializer: typing.Any, object_type: typing.Type, serializer_type: typing.Type) -> System.Object:
+    @property
+    def reloadable(self) -> bool:
         """
-        This will be called by the serialization manager when it
-        is trying to locate a serializer for an object type.
-        If this serialization provider can provide a serializer
-        that is of the correct type, it should return it.
-        Otherwise, it should return null.
+        Indicates that this root serializer supports reloading. If false, the design document
+        will not automatically perform a reload on behalf of the user. It will be the user's
+        responsibility to reload the document themselves.
+        """
+        ...
+
+    @property
+    def serializer_type_name(self) -> str:
+        """Retrieves the fully qualified type name of the serializer."""
+        ...
+
+    @property
+    def serializer_base_type_name(self) -> str:
+        """Retrieves the fully qualified type name of the serializer base type."""
+        ...
+
+    @property
+    def type_id(self) -> System.Object:
+        """
+        This defines a unique ID for this attribute type. It is used
+        by filtering algorithms to identify two attributes that are
+        the same type. For most attributes, this just returns the
+        Type instance for the attribute. EditorAttribute overrides
+        this to include the type of the editor base type.
+        """
+        ...
+
+    @overload
+    def __init__(self, serializer_type: typing.Type, base_serializer_type: typing.Type, reloadable: bool) -> None:
+        """Creates a new designer serialization attribute."""
+        ...
+
+    @overload
+    def __init__(self, serializer_type_name: str, base_serializer_type: typing.Type, reloadable: bool) -> None:
+        """Creates a new designer serialization attribute."""
+        ...
+
+    @overload
+    def __init__(self, serializer_type_name: str, base_serializer_type_name: str, reloadable: bool) -> None:
+        """Creates a new designer serialization attribute."""
+        ...
+
+
+class MemberRelationship(System.IEquatable[System_ComponentModel_Design_Serialization_MemberRelationship]):
+    """This class represents a single relationship between an object and a member."""
+
+    EMPTY: System.ComponentModel.Design.Serialization.MemberRelationship
+
+    @property
+    def is_empty(self) -> bool:
+        """Returns true if this relationship is empty."""
+        ...
+
+    @property
+    def member(self) -> System.ComponentModel.MemberDescriptor:
+        """The member in this relationship."""
+        ...
+
+    @property
+    def owner(self) -> System.Object:
+        """The object owning the member."""
+        ...
+
+    def __eq__(self, right: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
+        """Infrastructure support to make this a first class struct"""
+        ...
+
+    def __init__(self, owner: typing.Any, member: System.ComponentModel.MemberDescriptor) -> None:
+        """Creates a new member relationship."""
+        ...
+
+    def __ne__(self, right: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
+        """Infrastructure support to make this a first class struct"""
+        ...
+
+    @overload
+    def equals(self, obj: typing.Any) -> bool:
+        """Infrastructure support to make this a first class struct"""
+        ...
+
+    @overload
+    def equals(self, other: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
+        """Infrastructure support to make this a first class struct"""
+        ...
+
+    def get_hash_code(self) -> int:
+        """Infrastructure support to make this a first class struct"""
+        ...
+
+
+class MemberRelationshipService(System.Object, metaclass=abc.ABCMeta):
+    """
+    A member relationship service is used by a serializer to announce that one
+    property is related to a property on another object. Consider a code
+    based serialization scheme where code is of the following form:
+    
+    object1.Property1 = object2.Property2
+    
+    Upon interpretation of this code, Property1 on object1 will be
+    set to the return value of object2.Property2. But the relationship
+    between these two objects is lost. Serialization schemes that
+    wish to maintain this relationship may install a MemberRelationshipService
+    into the serialization manager. When an object is deserialized
+    this service will be notified of these relationships. It is up to the service
+    to act on these notifications if it wishes. During serialization, the
+    service is also consulted. If a relationship exists the same
+    relationship is maintained by the serializer.
+    """
+
+    @overload
+    def __getitem__(self, source_owner: typing.Any, source_member: System.ComponentModel.MemberDescriptor) -> System.ComponentModel.Design.Serialization.MemberRelationship:
+        """
+        Returns the current relationship associated with the source, or null if there is no relationship.
+        Also sets a relationship between two objects. Null can be passed as the property value, in which
+        case the relationship will be cleared.
+        """
+        ...
+
+    @overload
+    def __getitem__(self, source: System.ComponentModel.Design.Serialization.MemberRelationship) -> System.ComponentModel.Design.Serialization.MemberRelationship:
+        """
+        Returns the current relationship associated with the source, or MemberRelationship.Empty if
+        there is no relationship. Also sets a relationship between two objects. Empty
+        can also be passed as the property value, in which case the relationship will
+        be cleared.
+        """
+        ...
+
+    @overload
+    def __setitem__(self, source_owner: typing.Any, source_member: System.ComponentModel.MemberDescriptor, value: System.ComponentModel.Design.Serialization.MemberRelationship) -> None:
+        """
+        Returns the current relationship associated with the source, or null if there is no relationship.
+        Also sets a relationship between two objects. Null can be passed as the property value, in which
+        case the relationship will be cleared.
+        """
+        ...
+
+    @overload
+    def __setitem__(self, source: System.ComponentModel.Design.Serialization.MemberRelationship, value: System.ComponentModel.Design.Serialization.MemberRelationship) -> None:
+        """
+        Returns the current relationship associated with the source, or MemberRelationship.Empty if
+        there is no relationship. Also sets a relationship between two objects. Empty
+        can also be passed as the property value, in which case the relationship will
+        be cleared.
+        """
+        ...
+
+    def get_relationship(self, source: System.ComponentModel.Design.Serialization.MemberRelationship) -> System.ComponentModel.Design.Serialization.MemberRelationship:
+        """
+        This is the implementation API for returning relationships. The default implementation stores the
+        relationship in a table. Relationships are stored weakly, so they do not keep an object alive.
         
-        In order to break order dependencies between multiple
-        serialization providers the serialization manager will
-        loop through all serialization providers until the
-        serializer returned reaches steady state. Because
-        of this you should always check current_serializer
-        before returning a new serializer. If current_serializer
-        is an instance of your serializer, then you should
-        either return it or return null to prevent an infinite
-        loop.
+        This method is protected.
         """
+        ...
+
+    def set_relationship(self, source: System.ComponentModel.Design.Serialization.MemberRelationship, relationship: System.ComponentModel.Design.Serialization.MemberRelationship) -> None:
+        """
+        This is the implementation API for returning relationships. The default implementation stores the
+        relationship in a table. Relationships are stored weakly, so they do not keep an object alive. Empty can be
+        passed in for relationship to remove the relationship.
+        
+        This method is protected.
+        """
+        ...
+
+    def supports_relationship(self, source: System.ComponentModel.Design.Serialization.MemberRelationship, relationship: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
+        """Returns true if the provided relationship is supported."""
         ...
 
 
@@ -279,6 +570,34 @@ class IDesignerSerializationManager(IServiceProvider, metaclass=abc.ABCMeta):
         ...
 
 
+class IDesignerSerializationProvider(metaclass=abc.ABCMeta):
+    """
+    This interface defines a custom serialization provider. This
+    allows outside objects to control serialization by providing
+    their own serializer objects.
+    """
+
+    def get_serializer(self, manager: System.ComponentModel.Design.Serialization.IDesignerSerializationManager, current_serializer: typing.Any, object_type: typing.Type, serializer_type: typing.Type) -> System.Object:
+        """
+        This will be called by the serialization manager when it
+        is trying to locate a serializer for an object type.
+        If this serialization provider can provide a serializer
+        that is of the correct type, it should return it.
+        Otherwise, it should return null.
+        
+        In order to break order dependencies between multiple
+        serialization providers the serialization manager will
+        loop through all serialization providers until the
+        serializer returned reaches steady state. Because
+        of this you should always check current_serializer
+        before returning a new serializer. If current_serializer
+        is an instance of your serializer, then you should
+        either return it or return null to prevent an infinite
+        loop.
+        """
+        ...
+
+
 class DefaultSerializationProviderAttribute(System.Attribute):
     """
     The default serialization provider attribute is placed on a serializer
@@ -304,120 +623,74 @@ class DefaultSerializationProviderAttribute(System.Attribute):
         ...
 
 
-class IDesignerSerializationService(metaclass=abc.ABCMeta):
+class IDesignerLoaderHost2(System.ComponentModel.Design.Serialization.IDesignerLoaderHost, metaclass=abc.ABCMeta):
     """
-    This service provides a way to exchange a collection of objects
-    for a serializable object that represents them. The returned
-    object contains live references to objects in the collection.
-    This returned object can then be passed to any runtime
-    serialization mechanism. The object itself serializes
-    components the same way designers write source for them; by picking
-    them apart property by property. Many objects do not support
-    runtime serialization because their internal state cannot be
-    adequately duplicated. All components that support a designer,
-    however, must support serialization by walking their public
-    properties, methods and events. This interface uses this
-    technique to convert a collection of components into a single
-    opaque object that does support runtime serialization.
-    """
-
-    def deserialize(self, serialization_data: typing.Any) -> System.Collections.ICollection:
-        """
-        Deserializes the provided serialization data object and
-        returns a collection of objects contained within that data.
-        """
-        ...
-
-    def serialize(self, objects: System.Collections.ICollection) -> System.Object:
-        """
-        Serializes the given collection of objects and
-        stores them in an opaque serialization data object.
-        The returning object fully supports runtime serialization.
-        """
-        ...
-
-
-class IDesignerLoaderHost(System.ComponentModel.Design.IDesignerHost, metaclass=abc.ABCMeta):
-    """
-    IDesignerLoaderHost. This is an extension of IDesignerHost that is passed
-    to the designer loader in the BeginLoad method. It is isolated from
-    IDesignerHost to emphasize that all loading and reloading of the design
-    document actually should be initiated by the designer loader, and not by
-    the designer host. However, the loader must inform the designer host that
-    it wishes to invoke a load or reload.
-    """
-
-    def end_load(self, base_class_name: str, successful: bool, error_collection: System.Collections.ICollection) -> None:
-        """
-        This is called by the designer loader to indicate that the load has
-        terminated. If there were errors, they should be passed in the error_collection
-        as a collection of exceptions (if they are not exceptions the designer
-        loader host may just call ToString on them). If the load was successful then
-        error_collection should either be null or contain an empty collection.
-        """
-        ...
-
-    def reload(self) -> None:
-        """
-        This is called by the designer loader when it wishes to reload the
-        design document. The reload will happen immediately so the caller
-        should ensure that it is in a state where BeginLoad may be called again.
-        """
-        ...
-
-
-class DesignerLoader(System.Object, metaclass=abc.ABCMeta):
-    """
-    DesignerLoader. This class is responsible for loading a designer document.
-    Where and how this load occurs is a private matter for the designer loader.
-    The designer loader will be handed to an IDesignerHost instance. This instance,
-    when it is ready to load the document, will call BeginLoad, passing an instance
-    of IDesignerLoaderHost. The designer loader will load up the design surface
-    using the host interface, and call EndLoad on the interface when it is done.
-    The error collection passed into EndLoad should be empty or null to indicate a
-    successful load, or it should contain a collection of exceptions that
-    describe the error.
-    
-    Once a document is loaded, the designer loader is also responsible for
-    writing any changes made to the document back whatever storage the
-    loader used when loading the document.
+    IgnoreErrorsDuringReload - specifies whether errors should be ignored when Reload() is called.
+                      We only allow to set to true if we CanReloadWithErrors. If we cannot
+                      we simply ignore rather than throwing an exception. We probably should,
+                      but we are avoiding localization.
+    CanReloadWithErrors - specifies whether it is possible to reload with errors. There are certain
+                 scenarios where errors cannot be ignored.
     """
 
     @property
-    def loading(self) -> bool:
+    @abc.abstractmethod
+    def ignore_errors_during_reload(self) -> bool:
+        ...
+
+    @ignore_errors_during_reload.setter
+    def ignore_errors_during_reload(self, value: bool) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def can_reload_with_errors(self) -> bool:
+        ...
+
+    @can_reload_with_errors.setter
+    def can_reload_with_errors(self, value: bool) -> None:
+        ...
+
+
+class IDesignerLoaderService(metaclass=abc.ABCMeta):
+    """
+    This interface may be optionally implemented by the designer loader to provide
+    load services to outside components. It provides support for asynchronous loading
+    of the designer and allows other objects to initiate a reload of othe
+    design surface. Designer loaders do not need to implement this but it is
+    recommended. We do not directly put this on DesignerLoader so we can prevent
+    outside objects from interacting with the main methods of a designer loader.
+    These should only be called by the designer host.
+    """
+
+    def add_load_dependency(self) -> None:
         """
-        Returns true when the designer is in the process of loading. Clients that are
-        sinking notifications from the designer often want to ignore them while the designer is loading
-        and only respond to them if they result from user interactions.
+        Adds a load dependency to this loader. This indicates that some other
+        object is also participating in the load, and that the designer loader
+        should not call EndLoad on the loader host until all load dependencies
+        have called DependentLoadComplete on the designer loader.
         """
         ...
 
-    def begin_load(self, host: System.ComponentModel.Design.Serialization.IDesignerLoaderHost) -> None:
+    def dependent_load_complete(self, successful: bool, error_collection: System.Collections.ICollection) -> None:
         """
-        Called by the designer host to begin the loading process. The designer
-        host passes in an instance of a designer loader host (which is typically
-        the same object as the designer host. This loader host allows
-        the designer loader to reload the design document and also allows
-        the designer loader to indicate that it has finished loading the
-        design document.
-        """
-        ...
-
-    def dispose(self) -> None:
-        """
-        Disposes this designer loader. The designer host will call this method
-        when the design document itself is being destroyed. Once called, the
-        designer loader will never be called again.
+        This is called by any object that has previously called
+        AddLoadDependency to signal that the dependent load has completed.
+        The caller should pass either an empty collection or null to indicate
+        a successful load, or a collection of exceptions that indicate the
+        reason(s) for failure.
         """
         ...
 
-    def flush(self) -> None:
+    def reload(self) -> bool:
         """
-        The designer host will call this periodically when it wants to
-        ensure that any changes that have been made to the document
-        have been saved by the designer loader. This method allows
-        designer loaders to implement a lazy-write scheme to improve
-        performance. The default implementation does nothing.
+        This can be called by an outside object to request that the loader
+        reload the design document. If it supports reloading and wants to
+        comply with the reload, the designer loader should return true. Otherwise
+        it should return false, indicating that the reload will not occur.
+        Callers should not rely on the reload happening immediately; the
+        designer loader may schedule this for some other time, or it may
+        try to reload at once.
         """
         ...
 
@@ -585,312 +858,6 @@ class ComponentSerializationService(System.Object, metaclass=abc.ABCMeta):
         ...
 
 
-class IDesignerLoaderHost2(System.ComponentModel.Design.Serialization.IDesignerLoaderHost, metaclass=abc.ABCMeta):
-    """
-    IgnoreErrorsDuringReload - specifies whether errors should be ignored when Reload() is called.
-                      We only allow to set to true if we CanReloadWithErrors. If we cannot
-                      we simply ignore rather than throwing an exception. We probably should,
-                      but we are avoiding localization.
-    CanReloadWithErrors - specifies whether it is possible to reload with errors. There are certain
-                 scenarios where errors cannot be ignored.
-    """
-
-    @property
-    @abc.abstractmethod
-    def ignore_errors_during_reload(self) -> bool:
-        ...
-
-    @ignore_errors_during_reload.setter
-    def ignore_errors_during_reload(self, value: bool) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def can_reload_with_errors(self) -> bool:
-        ...
-
-    @can_reload_with_errors.setter
-    def can_reload_with_errors(self, value: bool) -> None:
-        ...
-
-
-class InstanceDescriptor(System.Object):
-    """
-    EventArgs for the ResolveNameEventHandler. This event is used
-    by the serialization process to match a name to an object
-    instance.
-    """
-
-    @property
-    def arguments(self) -> System.Collections.ICollection:
-        """
-        The collection of arguments that should be passed to
-        MemberInfo in order to create an instance.
-        """
-        ...
-
-    @property
-    def is_complete(self) -> bool:
-        """
-        Determines if the contents of this instance descriptor completely identify the instance.
-        This will normally be the case, but some objects may be too complex for a single method
-        or constructor to represent. IsComplete can be used to identify these objects and take
-        additional steps to further describe their state.
-        """
-        ...
-
-    @property
-    def member_info(self) -> System.Reflection.MemberInfo:
-        """
-        The MemberInfo object that was passed into the constructor
-        of this InstanceDescriptor.
-        """
-        ...
-
-    @overload
-    def __init__(self, member: System.Reflection.MemberInfo, arguments: System.Collections.ICollection) -> None:
-        """Creates a new InstanceDescriptor."""
-        ...
-
-    @overload
-    def __init__(self, member: System.Reflection.MemberInfo, arguments: System.Collections.ICollection, is_complete: bool) -> None:
-        """Creates a new InstanceDescriptor."""
-        ...
-
-    def invoke(self) -> System.Object:
-        """
-        Invokes this instance descriptor, returning the object
-        the descriptor describes.
-        """
-        ...
-
-
-class RootDesignerSerializerAttribute(System.Attribute):
-    """
-    This attribute can be placed on a class to indicate what serialization
-    object should be used to serialize the class at design time if it is
-    being used as a root object.
-    
-    RootDesignerSerializerAttribute has been deprecated. Use DesignerSerializerAttribute instead. For example, to specify a root designer for CodeDom, use DesignerSerializerAttribute(...,typeof(TypeCodeDomSerializer)) instead.
-    """
-
-    @property
-    def reloadable(self) -> bool:
-        """
-        Indicates that this root serializer supports reloading. If false, the design document
-        will not automatically perform a reload on behalf of the user. It will be the user's
-        responsibility to reload the document themselves.
-        """
-        ...
-
-    @property
-    def serializer_type_name(self) -> str:
-        """Retrieves the fully qualified type name of the serializer."""
-        ...
-
-    @property
-    def serializer_base_type_name(self) -> str:
-        """Retrieves the fully qualified type name of the serializer base type."""
-        ...
-
-    @property
-    def type_id(self) -> System.Object:
-        """
-        This defines a unique ID for this attribute type. It is used
-        by filtering algorithms to identify two attributes that are
-        the same type. For most attributes, this just returns the
-        Type instance for the attribute. EditorAttribute overrides
-        this to include the type of the editor base type.
-        """
-        ...
-
-    @overload
-    def __init__(self, serializer_type: typing.Type, base_serializer_type: typing.Type, reloadable: bool) -> None:
-        """Creates a new designer serialization attribute."""
-        ...
-
-    @overload
-    def __init__(self, serializer_type_name: str, base_serializer_type: typing.Type, reloadable: bool) -> None:
-        """Creates a new designer serialization attribute."""
-        ...
-
-    @overload
-    def __init__(self, serializer_type_name: str, base_serializer_type_name: str, reloadable: bool) -> None:
-        """Creates a new designer serialization attribute."""
-        ...
-
-
-class IDesignerLoaderService(metaclass=abc.ABCMeta):
-    """
-    This interface may be optionally implemented by the designer loader to provide
-    load services to outside components. It provides support for asynchronous loading
-    of the designer and allows other objects to initiate a reload of othe
-    design surface. Designer loaders do not need to implement this but it is
-    recommended. We do not directly put this on DesignerLoader so we can prevent
-    outside objects from interacting with the main methods of a designer loader.
-    These should only be called by the designer host.
-    """
-
-    def add_load_dependency(self) -> None:
-        """
-        Adds a load dependency to this loader. This indicates that some other
-        object is also participating in the load, and that the designer loader
-        should not call EndLoad on the loader host until all load dependencies
-        have called DependentLoadComplete on the designer loader.
-        """
-        ...
-
-    def dependent_load_complete(self, successful: bool, error_collection: System.Collections.ICollection) -> None:
-        """
-        This is called by any object that has previously called
-        AddLoadDependency to signal that the dependent load has completed.
-        The caller should pass either an empty collection or null to indicate
-        a successful load, or a collection of exceptions that indicate the
-        reason(s) for failure.
-        """
-        ...
-
-    def reload(self) -> bool:
-        """
-        This can be called by an outside object to request that the loader
-        reload the design document. If it supports reloading and wants to
-        comply with the reload, the designer loader should return true. Otherwise
-        it should return false, indicating that the reload will not occur.
-        Callers should not rely on the reload happening immediately; the
-        designer loader may schedule this for some other time, or it may
-        try to reload at once.
-        """
-        ...
-
-
-class MemberRelationship(System.IEquatable[System_ComponentModel_Design_Serialization_MemberRelationship]):
-    """This class represents a single relationship between an object and a member."""
-
-    EMPTY: System.ComponentModel.Design.Serialization.MemberRelationship
-
-    @property
-    def is_empty(self) -> bool:
-        """Returns true if this relationship is empty."""
-        ...
-
-    @property
-    def member(self) -> System.ComponentModel.MemberDescriptor:
-        """The member in this relationship."""
-        ...
-
-    @property
-    def owner(self) -> System.Object:
-        """The object owning the member."""
-        ...
-
-    def __eq__(self, right: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
-        """Infrastructure support to make this a first class struct"""
-        ...
-
-    def __init__(self, owner: typing.Any, member: System.ComponentModel.MemberDescriptor) -> None:
-        """Creates a new member relationship."""
-        ...
-
-    def __ne__(self, right: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
-        """Infrastructure support to make this a first class struct"""
-        ...
-
-    @overload
-    def equals(self, obj: typing.Any) -> bool:
-        """Infrastructure support to make this a first class struct"""
-        ...
-
-    @overload
-    def equals(self, other: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
-        """Infrastructure support to make this a first class struct"""
-        ...
-
-    def get_hash_code(self) -> int:
-        """Infrastructure support to make this a first class struct"""
-        ...
-
-
-class MemberRelationshipService(System.Object, metaclass=abc.ABCMeta):
-    """
-    A member relationship service is used by a serializer to announce that one
-    property is related to a property on another object. Consider a code
-    based serialization scheme where code is of the following form:
-    
-    object1.Property1 = object2.Property2
-    
-    Upon interpretation of this code, Property1 on object1 will be
-    set to the return value of object2.Property2. But the relationship
-    between these two objects is lost. Serialization schemes that
-    wish to maintain this relationship may install a MemberRelationshipService
-    into the serialization manager. When an object is deserialized
-    this service will be notified of these relationships. It is up to the service
-    to act on these notifications if it wishes. During serialization, the
-    service is also consulted. If a relationship exists the same
-    relationship is maintained by the serializer.
-    """
-
-    @overload
-    def __getitem__(self, source_owner: typing.Any, source_member: System.ComponentModel.MemberDescriptor) -> System.ComponentModel.Design.Serialization.MemberRelationship:
-        """
-        Returns the current relationship associated with the source, or null if there is no relationship.
-        Also sets a relationship between two objects. Null can be passed as the property value, in which
-        case the relationship will be cleared.
-        """
-        ...
-
-    @overload
-    def __getitem__(self, source: System.ComponentModel.Design.Serialization.MemberRelationship) -> System.ComponentModel.Design.Serialization.MemberRelationship:
-        """
-        Returns the current relationship associated with the source, or MemberRelationship.Empty if
-        there is no relationship. Also sets a relationship between two objects. Empty
-        can also be passed as the property value, in which case the relationship will
-        be cleared.
-        """
-        ...
-
-    @overload
-    def __setitem__(self, source_owner: typing.Any, source_member: System.ComponentModel.MemberDescriptor, value: System.ComponentModel.Design.Serialization.MemberRelationship) -> None:
-        """
-        Returns the current relationship associated with the source, or null if there is no relationship.
-        Also sets a relationship between two objects. Null can be passed as the property value, in which
-        case the relationship will be cleared.
-        """
-        ...
-
-    @overload
-    def __setitem__(self, source: System.ComponentModel.Design.Serialization.MemberRelationship, value: System.ComponentModel.Design.Serialization.MemberRelationship) -> None:
-        """
-        Returns the current relationship associated with the source, or MemberRelationship.Empty if
-        there is no relationship. Also sets a relationship between two objects. Empty
-        can also be passed as the property value, in which case the relationship will
-        be cleared.
-        """
-        ...
-
-    def get_relationship(self, source: System.ComponentModel.Design.Serialization.MemberRelationship) -> System.ComponentModel.Design.Serialization.MemberRelationship:
-        """
-        This is the implementation API for returning relationships. The default implementation stores the
-        relationship in a table. Relationships are stored weakly, so they do not keep an object alive.
-        
-        This method is protected.
-        """
-        ...
-
-    def set_relationship(self, source: System.ComponentModel.Design.Serialization.MemberRelationship, relationship: System.ComponentModel.Design.Serialization.MemberRelationship) -> None:
-        """
-        This is the implementation API for returning relationships. The default implementation stores the
-        relationship in a table. Relationships are stored weakly, so they do not keep an object alive. Empty can be
-        passed in for relationship to remove the relationship.
-        
-        This method is protected.
-        """
-        ...
-
-    def supports_relationship(self, source: System.ComponentModel.Design.Serialization.MemberRelationship, relationship: System.ComponentModel.Design.Serialization.MemberRelationship) -> bool:
-        """Returns true if the provided relationship is supported."""
-        ...
-
-
 class INameCreationService(metaclass=abc.ABCMeta):
     """
     This service may be provided by a designer loader to provide
@@ -927,6 +894,39 @@ class INameCreationService(metaclass=abc.ABCMeta):
         that this method will throw an exception if the
         name is invalid. This allows implementors to provide
         rich information in the exception message.
+        """
+        ...
+
+
+class IDesignerSerializationService(metaclass=abc.ABCMeta):
+    """
+    This service provides a way to exchange a collection of objects
+    for a serializable object that represents them. The returned
+    object contains live references to objects in the collection.
+    This returned object can then be passed to any runtime
+    serialization mechanism. The object itself serializes
+    components the same way designers write source for them; by picking
+    them apart property by property. Many objects do not support
+    runtime serialization because their internal state cannot be
+    adequately duplicated. All components that support a designer,
+    however, must support serialization by walking their public
+    properties, methods and events. This interface uses this
+    technique to convert a collection of components into a single
+    opaque object that does support runtime serialization.
+    """
+
+    def deserialize(self, serialization_data: typing.Any) -> System.Collections.ICollection:
+        """
+        Deserializes the provided serialization data object and
+        returns a collection of objects contained within that data.
+        """
+        ...
+
+    def serialize(self, objects: System.Collections.ICollection) -> System.Object:
+        """
+        Serializes the given collection of objects and
+        stores them in an opaque serialization data object.
+        The returning object fully supports runtime serialization.
         """
         ...
 

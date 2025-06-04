@@ -71,6 +71,11 @@ class PlanningResponse(BaseModel):
 
         # Create and return a customized response model with the enum
         class PlanningResponseWithTool(PlanningResponse):
+            """
+            Use the scratchpad to reason about which tool to use next and the query to send to the tool.
+            Pick tool from provided options and your query to send to the tool.
+            """
+
             tool: tool_enum = Field(..., description="Name of the tool to use")
             query: str = Field(..., description="Detailed query for the selected tool")
 
@@ -193,6 +198,8 @@ async def apick_next_tool(
 
     try:
         response = load_complex_json(response)
+        if not isinstance(response, dict):
+            raise ValueError(f"Expected dict response, got {type(response).__name__}: {response}")
         selected_tool = response.get("tool", None)
         generated_query = response.get("query", None)
         scratchpad = response.get("scratchpad", None)

@@ -1,9 +1,12 @@
-import re,math,spacy,pytesseract,cv2,PyPDF2,argparse,whisper,shutil,os,sys,json,logging,glob,hashlib
+import torch
+from abstract_hugpy import *
+import os,json,unicodedata,hashlib,re,math,pytesseract,cv2,PyPDF2,argparse,whisper,shutil,os,sys,json,logging,glob,hashlib
 from datetime import datetime
 from  datetime import timedelta 
 from PIL import Image
 import numpy as np
 from pathlib import Path
+import moviepy.editor as mp
 from pdf2image import convert_from_path
 import speech_recognition as sr
 from pydub.silence import detect_nonsilent
@@ -13,9 +16,6 @@ from abstract_math import (divide_it,
                            multiply_it)
 from typing import *
 from urllib.parse import quote
-import moviepy.editor as mp
-from moviepy.editor import *
-
 from abstract_utilities import (timestamp_to_milliseconds,
                                 format_timestamp,
                                 get_time_now_iso,
@@ -39,15 +39,13 @@ from abstract_utilities import (timestamp_to_milliseconds,
                                 safe_load_from_json)
                                 
 
-from keybert import KeyBERT
-from transformers import pipeline
-import torch,os,json,unicodedata,hashlib
-from transformers import LEDTokenizer,LEDForConditionalGeneration
+class importManager():
+    def __init__(self):
+        self.imports = {}
+    def get_spacy(self):
+        import spacy
+        
 
-summarizer = pipeline("summarization", model="Falconsai/text_summarization")
-keyword_extractor = pipeline("feature-extraction", model="distilbert-base-uncased")
-generator = pipeline('text-generation', model='distilgpt2', device= -1)
-kw_model = KeyBERT(model=keyword_extractor.model)                           
 logger = get_logFile('vid_to_aud')
 logger.debug(f"Logger initialized with {len(logger.handlers)} handlers: {[h.__class__.__name__ for h in logger.handlers]}")
 
@@ -385,6 +383,7 @@ def get_key_vars(keys,req=None,data=None,info_data= None):
             elif key == 'base_url':
                 new_data[key] = DOMAIN
             elif key == 'generator':
+                generator = get_generator()
                 new_data[key] = generator
             elif key == 'LEDTokenizer':
                 new_data[key] = LEDTokenizer

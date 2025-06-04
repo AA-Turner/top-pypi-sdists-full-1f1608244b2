@@ -1,7 +1,7 @@
 r'''
 # `snowflake_api_authentication_integration_with_authorization_code_grant`
 
-Refer to the Terraform Registry for docs: [`snowflake_api_authentication_integration_with_authorization_code_grant`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant).
+Refer to the Terraform Registry for docs: [`snowflake_api_authentication_integration_with_authorization_code_grant`](https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrant(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.apiAuthenticationIntegrationWithAuthorizationCodeGrant.ApiAuthenticationIntegrationWithAuthorizationCodeGrant",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant snowflake_api_authentication_integration_with_authorization_code_grant}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant snowflake_api_authentication_integration_with_authorization_code_grant}.'''
 
     def __init__(
         self,
@@ -72,23 +72,23 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrant(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant snowflake_api_authentication_integration_with_authorization_code_grant} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant snowflake_api_authentication_integration_with_authorization_code_grant} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param enabled: Specifies whether this security integration is enabled or disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#enabled ApiAuthenticationIntegrationWithAuthorizationCodeGrant#enabled}
-        :param name: Specifies the identifier (i.e. name) for the integration. This value must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#name ApiAuthenticationIntegrationWithAuthorizationCodeGrant#name}
-        :param oauth_client_id: Specifies the client ID for the OAuth application in the external service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_id}
-        :param oauth_client_secret: Specifies the client secret for the OAuth application in the ServiceNow instance from the previous step. The connector uses this to request an access token from the ServiceNow instance. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_secret ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_secret}
-        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#comment ApiAuthenticationIntegrationWithAuthorizationCodeGrant#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param oauth_access_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies the default lifetime of the OAuth access token (in seconds) issued by an OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_access_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_access_token_validity}
-        :param oauth_allowed_scopes: Specifies a list of scopes to use when making a request from the OAuth by a role with USAGE on the integration during the OAuth client credentials flow. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_allowed_scopes ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_allowed_scopes}
-        :param oauth_authorization_endpoint: Specifies the URL for authenticating to the external service. If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_authorization_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_authorization_endpoint}
-        :param oauth_client_auth_method: Specifies that POST is used as the authentication method to the external service. If removed from the config, the resource is recreated. Valid values are (case-insensitive): ``CLIENT_SECRET_POST``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_auth_method ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_auth_method}
-        :param oauth_refresh_token_validity: Specifies the value to determine the validity of the refresh token obtained from the OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_refresh_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_refresh_token_validity}
-        :param oauth_token_endpoint: Specifies the token endpoint used by the client to obtain an access token by presenting its authorization grant or refresh token. The token endpoint is used with every authorization grant except for the implicit grant type (since an access token is issued directly). If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_token_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_token_endpoint}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#timeouts ApiAuthenticationIntegrationWithAuthorizationCodeGrant#timeouts}
+        :param enabled: Specifies whether this security integration is enabled or disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#enabled ApiAuthenticationIntegrationWithAuthorizationCodeGrant#enabled}
+        :param name: Specifies the identifier (i.e. name) for the integration. This value must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#name ApiAuthenticationIntegrationWithAuthorizationCodeGrant#name}
+        :param oauth_client_id: Specifies the client ID for the OAuth application in the external service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_id}
+        :param oauth_client_secret: Specifies the client secret for the OAuth application in the ServiceNow instance from the previous step. The connector uses this to request an access token from the ServiceNow instance. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_secret ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_secret}
+        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#comment ApiAuthenticationIntegrationWithAuthorizationCodeGrant#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param oauth_access_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies the default lifetime of the OAuth access token (in seconds) issued by an OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_access_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_access_token_validity}
+        :param oauth_allowed_scopes: Specifies a list of scopes to use when making a request from the OAuth by a role with USAGE on the integration during the OAuth client credentials flow. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_allowed_scopes ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_allowed_scopes}
+        :param oauth_authorization_endpoint: Specifies the URL for authenticating to the external service. If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_authorization_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_authorization_endpoint}
+        :param oauth_client_auth_method: Specifies that POST is used as the authentication method to the external service. If removed from the config, the resource is recreated. Valid values are (case-insensitive): ``CLIENT_SECRET_POST``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_auth_method ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_auth_method}
+        :param oauth_refresh_token_validity: Specifies the value to determine the validity of the refresh token obtained from the OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_refresh_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_refresh_token_validity}
+        :param oauth_token_endpoint: Specifies the token endpoint used by the client to obtain an access token by presenting its authorization grant or refresh token. The token endpoint is used with every authorization grant except for the implicit grant type (since an access token is issued directly). If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_token_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_token_endpoint}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#timeouts ApiAuthenticationIntegrationWithAuthorizationCodeGrant#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -139,7 +139,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrant(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ApiAuthenticationIntegrationWithAuthorizationCodeGrant to import.
-        :param import_from_id: The id of the existing ApiAuthenticationIntegrationWithAuthorizationCodeGrant that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ApiAuthenticationIntegrationWithAuthorizationCodeGrant that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ApiAuthenticationIntegrationWithAuthorizationCodeGrant to import is found.
         '''
         if __debug__:
@@ -160,10 +160,10 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrant(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#create ApiAuthenticationIntegrationWithAuthorizationCodeGrant#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#delete ApiAuthenticationIntegrationWithAuthorizationCodeGrant#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#read ApiAuthenticationIntegrationWithAuthorizationCodeGrant#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#update ApiAuthenticationIntegrationWithAuthorizationCodeGrant#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#create ApiAuthenticationIntegrationWithAuthorizationCodeGrant#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#delete ApiAuthenticationIntegrationWithAuthorizationCodeGrant#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#read ApiAuthenticationIntegrationWithAuthorizationCodeGrant#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#update ApiAuthenticationIntegrationWithAuthorizationCodeGrant#update}.
         '''
         value = ApiAuthenticationIntegrationWithAuthorizationCodeGrantTimeouts(
             create=create, delete=delete, read=read, update=update
@@ -524,19 +524,19 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param enabled: Specifies whether this security integration is enabled or disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#enabled ApiAuthenticationIntegrationWithAuthorizationCodeGrant#enabled}
-        :param name: Specifies the identifier (i.e. name) for the integration. This value must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#name ApiAuthenticationIntegrationWithAuthorizationCodeGrant#name}
-        :param oauth_client_id: Specifies the client ID for the OAuth application in the external service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_id}
-        :param oauth_client_secret: Specifies the client secret for the OAuth application in the ServiceNow instance from the previous step. The connector uses this to request an access token from the ServiceNow instance. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_secret ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_secret}
-        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#comment ApiAuthenticationIntegrationWithAuthorizationCodeGrant#comment}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param oauth_access_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies the default lifetime of the OAuth access token (in seconds) issued by an OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_access_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_access_token_validity}
-        :param oauth_allowed_scopes: Specifies a list of scopes to use when making a request from the OAuth by a role with USAGE on the integration during the OAuth client credentials flow. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_allowed_scopes ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_allowed_scopes}
-        :param oauth_authorization_endpoint: Specifies the URL for authenticating to the external service. If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_authorization_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_authorization_endpoint}
-        :param oauth_client_auth_method: Specifies that POST is used as the authentication method to the external service. If removed from the config, the resource is recreated. Valid values are (case-insensitive): ``CLIENT_SECRET_POST``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_auth_method ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_auth_method}
-        :param oauth_refresh_token_validity: Specifies the value to determine the validity of the refresh token obtained from the OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_refresh_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_refresh_token_validity}
-        :param oauth_token_endpoint: Specifies the token endpoint used by the client to obtain an access token by presenting its authorization grant or refresh token. The token endpoint is used with every authorization grant except for the implicit grant type (since an access token is issued directly). If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_token_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_token_endpoint}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#timeouts ApiAuthenticationIntegrationWithAuthorizationCodeGrant#timeouts}
+        :param enabled: Specifies whether this security integration is enabled or disabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#enabled ApiAuthenticationIntegrationWithAuthorizationCodeGrant#enabled}
+        :param name: Specifies the identifier (i.e. name) for the integration. This value must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#name ApiAuthenticationIntegrationWithAuthorizationCodeGrant#name}
+        :param oauth_client_id: Specifies the client ID for the OAuth application in the external service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_id}
+        :param oauth_client_secret: Specifies the client secret for the OAuth application in the ServiceNow instance from the previous step. The connector uses this to request an access token from the ServiceNow instance. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_secret ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_secret}
+        :param comment: Specifies a comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#comment ApiAuthenticationIntegrationWithAuthorizationCodeGrant#comment}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param oauth_access_token_validity: (Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies the default lifetime of the OAuth access token (in seconds) issued by an OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_access_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_access_token_validity}
+        :param oauth_allowed_scopes: Specifies a list of scopes to use when making a request from the OAuth by a role with USAGE on the integration during the OAuth client credentials flow. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_allowed_scopes ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_allowed_scopes}
+        :param oauth_authorization_endpoint: Specifies the URL for authenticating to the external service. If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_authorization_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_authorization_endpoint}
+        :param oauth_client_auth_method: Specifies that POST is used as the authentication method to the external service. If removed from the config, the resource is recreated. Valid values are (case-insensitive): ``CLIENT_SECRET_POST``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_auth_method ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_auth_method}
+        :param oauth_refresh_token_validity: Specifies the value to determine the validity of the refresh token obtained from the OAuth server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_refresh_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_refresh_token_validity}
+        :param oauth_token_endpoint: Specifies the token endpoint used by the client to obtain an access token by presenting its authorization grant or refresh token. The token endpoint is used with every authorization grant except for the implicit grant type (since an access token is issued directly). If removed from the config, the resource is recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_token_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_token_endpoint}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#timeouts ApiAuthenticationIntegrationWithAuthorizationCodeGrant#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -671,7 +671,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
         '''Specifies whether this security integration is enabled or disabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#enabled ApiAuthenticationIntegrationWithAuthorizationCodeGrant#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#enabled ApiAuthenticationIntegrationWithAuthorizationCodeGrant#enabled}
         '''
         result = self._values.get("enabled")
         assert result is not None, "Required property 'enabled' is missing"
@@ -681,7 +681,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def name(self) -> builtins.str:
         '''Specifies the identifier (i.e. name) for the integration. This value must be unique in your account. Due to technical limitations (read more `here <../guides/identifiers_rework_design_decisions#known-limitations-and-identifier-recommendations>`_), avoid using the following characters: ``|``, ``.``, ``"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#name ApiAuthenticationIntegrationWithAuthorizationCodeGrant#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#name ApiAuthenticationIntegrationWithAuthorizationCodeGrant#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -691,7 +691,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def oauth_client_id(self) -> builtins.str:
         '''Specifies the client ID for the OAuth application in the external service.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_id}
         '''
         result = self._values.get("oauth_client_id")
         assert result is not None, "Required property 'oauth_client_id' is missing"
@@ -703,7 +703,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
 
         The connector uses this to request an access token from the ServiceNow instance. External changes for this field won't be detected. In case you want to apply external changes, you can re-create the resource manually using "terraform taint".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_secret ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_secret ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_secret}
         '''
         result = self._values.get("oauth_client_secret")
         assert result is not None, "Required property 'oauth_client_secret' is missing"
@@ -713,14 +713,14 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def comment(self) -> typing.Optional[builtins.str]:
         '''Specifies a comment for the integration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#comment ApiAuthenticationIntegrationWithAuthorizationCodeGrant#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#comment ApiAuthenticationIntegrationWithAuthorizationCodeGrant#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#id ApiAuthenticationIntegrationWithAuthorizationCodeGrant#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -732,7 +732,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def oauth_access_token_validity(self) -> typing.Optional[jsii.Number]:
         '''(Default: fallback to Snowflake default - uses special value that cannot be set in the configuration manually (``-1``)) Specifies the default lifetime of the OAuth access token (in seconds) issued by an OAuth server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_access_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_access_token_validity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_access_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_access_token_validity}
         '''
         result = self._values.get("oauth_access_token_validity")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -741,7 +741,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def oauth_allowed_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of scopes to use when making a request from the OAuth by a role with USAGE on the integration during the OAuth client credentials flow.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_allowed_scopes ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_allowed_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_allowed_scopes ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_allowed_scopes}
         '''
         result = self._values.get("oauth_allowed_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -750,7 +750,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def oauth_authorization_endpoint(self) -> typing.Optional[builtins.str]:
         '''Specifies the URL for authenticating to the external service. If removed from the config, the resource is recreated.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_authorization_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_authorization_endpoint}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_authorization_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_authorization_endpoint}
         '''
         result = self._values.get("oauth_authorization_endpoint")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -761,7 +761,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
 
         If removed from the config, the resource is recreated. Valid values are (case-insensitive): ``CLIENT_SECRET_POST``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_auth_method ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_auth_method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_client_auth_method ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_client_auth_method}
         '''
         result = self._values.get("oauth_client_auth_method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -770,7 +770,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     def oauth_refresh_token_validity(self) -> typing.Optional[jsii.Number]:
         '''Specifies the value to determine the validity of the refresh token obtained from the OAuth server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_refresh_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_refresh_token_validity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_refresh_token_validity ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_refresh_token_validity}
         '''
         result = self._values.get("oauth_refresh_token_validity")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -781,7 +781,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
 
         The token endpoint is used with every authorization grant except for the implicit grant type (since an access token is issued directly). If removed from the config, the resource is recreated.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_token_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_token_endpoint}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#oauth_token_endpoint ApiAuthenticationIntegrationWithAuthorizationCodeGrant#oauth_token_endpoint}
         '''
         result = self._values.get("oauth_token_endpoint")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -792,7 +792,7 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantConfig(
     ) -> typing.Optional["ApiAuthenticationIntegrationWithAuthorizationCodeGrantTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#timeouts ApiAuthenticationIntegrationWithAuthorizationCodeGrant#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#timeouts ApiAuthenticationIntegrationWithAuthorizationCodeGrant#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["ApiAuthenticationIntegrationWithAuthorizationCodeGrantTimeouts"], result)
@@ -2034,167 +2034,6 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthC
 
 
 @jsii.data_type(
-    jsii_type="@cdktf/provider-snowflake.apiAuthenticationIntegrationWithAuthorizationCodeGrant.ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId",
-    jsii_struct_bases=[],
-    name_mapping={},
-)
-class ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId:
-    def __init__(self) -> None:
-        self._values: typing.Dict[builtins.str, typing.Any] = {}
-
-    def __eq__(self, rhs: typing.Any) -> builtins.bool:
-        return isinstance(rhs, self.__class__) and rhs._values == self._values
-
-    def __ne__(self, rhs: typing.Any) -> builtins.bool:
-        return not (rhs == self)
-
-    def __repr__(self) -> str:
-        return "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId(%s)" % ", ".join(
-            k + "=" + repr(v) for k, v in self._values.items()
-        )
-
-
-class ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdList(
-    _cdktf_9a9027ec.ComplexList,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.apiAuthenticationIntegrationWithAuthorizationCodeGrant.ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdList",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        wraps_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__61055d29eb3cb4cfaa29e664e1366bc6b34f04d2645e544216ea26c48345482f)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
-
-    @jsii.member(jsii_name="get")
-    def get(
-        self,
-        index: jsii.Number,
-    ) -> "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdOutputReference":
-        '''
-        :param index: the index of the item to return.
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__5fd96ac2b096ac4848c8dc6d97b86efc730c8f211eb5a3964d102cf39692325c)
-            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
-        return typing.cast("ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdOutputReference", jsii.invoke(self, "get", [index]))
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformAttribute")
-    def _terraform_attribute(self) -> builtins.str:
-        '''The attribute on the parent resource this class is referencing.'''
-        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
-
-    @_terraform_attribute.setter
-    def _terraform_attribute(self, value: builtins.str) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__00b861186cc6cb89f30e37cb90a2b7738585bc21f04e14e9244b72064be379a9)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformResource")
-    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
-        '''The parent resource.'''
-        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
-
-    @_terraform_resource.setter
-    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__22a237e94df547d098155431546692842544f2da2499ddd7eacb2b320cc75b90)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="wrapsSet")
-    def _wraps_set(self) -> builtins.bool:
-        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
-        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
-
-    @_wraps_set.setter
-    def _wraps_set(self, value: builtins.bool) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__4d74233b9d2f3b5d035b4f0f3fe76a6c7480a787923ceb99fd7889381b874ac7)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
-
-
-class ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdOutputReference(
-    _cdktf_9a9027ec.ComplexObject,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.apiAuthenticationIntegrationWithAuthorizationCodeGrant.ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdOutputReference",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        complex_object_index: jsii.Number,
-        complex_object_is_from_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param complex_object_index: the index of this item in the list.
-        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__45a1a4ce5b44aa6cf482e677f5c528116afdb8e027ddd92546a7a7f5a8bafc52)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
-            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
-
-    @builtins.property
-    @jsii.member(jsii_name="default")
-    def default(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "default"))
-
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "name"))
-
-    @builtins.property
-    @jsii.member(jsii_name="type")
-    def type(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "type"))
-
-    @builtins.property
-    @jsii.member(jsii_name="value")
-    def value(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "value"))
-
-    @builtins.property
-    @jsii.member(jsii_name="internalValue")
-    def internal_value(
-        self,
-    ) -> typing.Optional[ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId]:
-        return typing.cast(typing.Optional[ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId], jsii.get(self, "internalValue"))
-
-    @internal_value.setter
-    def internal_value(
-        self,
-        value: typing.Optional[ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId],
-    ) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__71377a82a6f5296787cb37bdc801c0ee6a69e87da18a9d79dbf278c0840f9f3c)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
-
-
-@jsii.data_type(
     jsii_type="@cdktf/provider-snowflake.apiAuthenticationIntegrationWithAuthorizationCodeGrant.ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthGrant",
     jsii_struct_bases=[],
     name_mapping={},
@@ -2753,13 +2592,6 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOutput
         return typing.cast(ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientAuthMethodList, jsii.get(self, "oauthClientAuthMethod"))
 
     @builtins.property
-    @jsii.member(jsii_name="oauthClientId")
-    def oauth_client_id(
-        self,
-    ) -> ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdList:
-        return typing.cast(ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdList, jsii.get(self, "oauthClientId"))
-
-    @builtins.property
     @jsii.member(jsii_name="oauthGrant")
     def oauth_grant(
         self,
@@ -3157,10 +2989,10 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#create ApiAuthenticationIntegrationWithAuthorizationCodeGrant#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#delete ApiAuthenticationIntegrationWithAuthorizationCodeGrant#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#read ApiAuthenticationIntegrationWithAuthorizationCodeGrant#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#update ApiAuthenticationIntegrationWithAuthorizationCodeGrant#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#create ApiAuthenticationIntegrationWithAuthorizationCodeGrant#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#delete ApiAuthenticationIntegrationWithAuthorizationCodeGrant#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#read ApiAuthenticationIntegrationWithAuthorizationCodeGrant#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#update ApiAuthenticationIntegrationWithAuthorizationCodeGrant#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e3847c502204b17fc87b75da384116a8ee46778f09e26222b073624dbfc28a02)
@@ -3180,25 +3012,25 @@ class ApiAuthenticationIntegrationWithAuthorizationCodeGrantTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#create ApiAuthenticationIntegrationWithAuthorizationCodeGrant#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#create ApiAuthenticationIntegrationWithAuthorizationCodeGrant#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#delete ApiAuthenticationIntegrationWithAuthorizationCodeGrant#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#delete ApiAuthenticationIntegrationWithAuthorizationCodeGrant#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#read ApiAuthenticationIntegrationWithAuthorizationCodeGrant#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#read ApiAuthenticationIntegrationWithAuthorizationCodeGrant#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/api_authentication_integration_with_authorization_code_grant#update ApiAuthenticationIntegrationWithAuthorizationCodeGrant#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/resources/api_authentication_integration_with_authorization_code_grant#update ApiAuthenticationIntegrationWithAuthorizationCodeGrant#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -3362,9 +3194,6 @@ __all__ = [
     "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientAuthMethod",
     "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientAuthMethodList",
     "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientAuthMethodOutputReference",
-    "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId",
-    "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdList",
-    "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientIdOutputReference",
     "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthGrant",
     "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthGrantList",
     "ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthGrantOutputReference",
@@ -3879,53 +3708,6 @@ def _typecheckingstub__e662239fafd65eccc6d3871b02163eff34527a406ab324e6e65727cef
 
 def _typecheckingstub__36ef379ba13723d002afb718ec9edaaf36d76a04f0018ca06f2cc121c0b9c6ab(
     value: typing.Optional[ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientAuthMethod],
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__61055d29eb3cb4cfaa29e664e1366bc6b34f04d2645e544216ea26c48345482f(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    wraps_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__5fd96ac2b096ac4848c8dc6d97b86efc730c8f211eb5a3964d102cf39692325c(
-    index: jsii.Number,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__00b861186cc6cb89f30e37cb90a2b7738585bc21f04e14e9244b72064be379a9(
-    value: builtins.str,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__22a237e94df547d098155431546692842544f2da2499ddd7eacb2b320cc75b90(
-    value: _cdktf_9a9027ec.IInterpolatingParent,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__4d74233b9d2f3b5d035b4f0f3fe76a6c7480a787923ceb99fd7889381b874ac7(
-    value: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__45a1a4ce5b44aa6cf482e677f5c528116afdb8e027ddd92546a7a7f5a8bafc52(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    complex_object_index: jsii.Number,
-    complex_object_is_from_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__71377a82a6f5296787cb37bdc801c0ee6a69e87da18a9d79dbf278c0840f9f3c(
-    value: typing.Optional[ApiAuthenticationIntegrationWithAuthorizationCodeGrantDescribeOutputOauthClientId],
 ) -> None:
     """Type checking stubs"""
     pass

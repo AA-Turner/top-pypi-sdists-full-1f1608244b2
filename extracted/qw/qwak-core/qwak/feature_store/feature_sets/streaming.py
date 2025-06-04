@@ -120,9 +120,9 @@ def feature_set(
             offline_scheduling_policy=offline_scheduling_policy,
         )
 
-        streaming_backfill: Optional[
-            StreamingBackfill
-        ] = StreamingBackfill.get_streaming_backfill_from_function(function=function)
+        streaming_backfill: Optional[StreamingBackfill] = (
+            StreamingBackfill.get_streaming_backfill_from_function(function=function)
+        )
 
         fs_name = name or function.__name__
         streaming_feature_set = StreamingFeatureSet(

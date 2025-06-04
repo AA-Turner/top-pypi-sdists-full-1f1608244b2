@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def actionzone(
     execution_context: int | str | None = None,
@@ -316,14 +316,14 @@ def region_toggle(
     undo: bool | None = None,
     /,
     *,
-    region_type: bpy._typing.rna_enums.RegionTypeItems | None = "WINDOW",
+    region_type: bpy.stub_internal.rna_enums.RegionTypeItems | None = "WINDOW",
 ):
     """Hide or unhide the region
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param region_type: Region Type, Type of the region to toggle
-    :type region_type: bpy._typing.rna_enums.RegionTypeItems | None
+    :type region_type: bpy.stub_internal.rna_enums.RegionTypeItems | None
     """
 
 def repeat_history(
@@ -602,14 +602,14 @@ def space_type_set_or_cycle(
     undo: bool | None = None,
     /,
     *,
-    space_type: bpy._typing.rna_enums.SpaceTypeItems | None = "EMPTY",
+    space_type: bpy.stub_internal.rna_enums.SpaceTypeItems | None = "EMPTY",
 ):
     """Set the space type or cycle subtype
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param space_type: Type
-    :type space_type: bpy._typing.rna_enums.SpaceTypeItems | None
+    :type space_type: bpy.stub_internal.rna_enums.SpaceTypeItems | None
     """
 
 def spacedata_cleanup(
@@ -626,14 +626,14 @@ def userpref_show(
     undo: bool | None = None,
     /,
     *,
-    section: bpy._typing.rna_enums.PreferenceSectionItems | None = "INTERFACE",
+    section: bpy.stub_internal.rna_enums.PreferenceSectionItems | None = "INTERFACE",
 ):
     """Edit user preferences and system settings
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param section: Section to activate in the Preferences
-    :type section: bpy._typing.rna_enums.PreferenceSectionItems | None
+    :type section: bpy.stub_internal.rna_enums.PreferenceSectionItems | None
     """
 
 def workspace_cycle(

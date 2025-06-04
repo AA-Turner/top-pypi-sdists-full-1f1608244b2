@@ -636,7 +636,7 @@ class Account(base.Base, authenticable.Authenticable):
         return cls == admin_part.account_c
 
     @classmethod
-    def _get_fido2_server(cls):
+    def _get_fido2_server(cls, owner=None):
         if hasattr(cls, "_fido2_server") and cls._fido2_server:
             return cls._fido2_server
 
@@ -645,8 +645,15 @@ class Account(base.Base, authenticable.Authenticable):
         import fido2.webauthn
         import fido2.server
 
+        owner = owner or appier.get_app()
+
+        base_url = owner.base_url()
+        base_domain = appier.legacy.urlparse(base_url).netloc.split(":")[0]
+
         fido2.webauthn.webauthn_json_mapping.enabled = True
-        rp = fido2.webauthn.PublicKeyCredentialRpEntity(name="Appier", id="localhost")
+        rp = fido2.webauthn.PublicKeyCredentialRpEntity(
+            name=owner.description, id=base_domain
+        )
         cls._fido2_server = fido2.server.Fido2Server(rp, verify_origin=lambda _: True)
 
         return cls._fido2_server
@@ -900,7 +907,7 @@ class Account(base.Base, authenticable.Authenticable):
         file_t = (image, mime, data)
         self.avatar = appier.File(file_t)
 
-    def _get_avatar_url(self, absolute=True, owner=None):
+    def _get_avatar_url(self, absolute=True):
         cls = self.__class__
         return cls._get_avatar_url_g(self.username, absolute=absolute, owner=self.owner)
 
@@ -934,6 +941,8 @@ class Account(base.Base, authenticable.Authenticable):
         code.add_data(self.otp_uri)
         code.make(fit=True)
         image = code.make_image(fill_color="black", back_color="white")
+        if hasattr(image, "new_image"):
+            image = image.copy()
         buffer = appier.legacy.BytesIO()
         image.save(buffer, format="PNG")
         image_data = buffer.getvalue()

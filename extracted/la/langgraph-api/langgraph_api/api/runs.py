@@ -38,6 +38,7 @@ async def create_run(request: ApiRequest):
             thread_id,
             payload,
             request.headers,
+            request_start_time=request.scope.get("request_start_time_ms"),
         )
     return ApiResponse(
         run,
@@ -55,6 +56,7 @@ async def create_stateless_run(request: ApiRequest):
             None,
             payload,
             request.headers,
+            request_start_time=request.scope.get("request_start_time_ms"),
         )
     return ApiResponse(
         run,
@@ -75,6 +77,7 @@ async def create_stateless_run_batch(request: ApiRequest):
                 payload,
                 request.headers,
                 barrier,
+                request_start_time=request.scope.get("request_start_time_ms"),
             )
             for payload in batch_payload
         ]
@@ -100,6 +103,7 @@ async def stream_run(
                 payload,
                 request.headers,
                 run_id=run_id,
+                request_start_time=request.scope.get("request_start_time_ms"),
             )
     except Exception:
         if not sub.cancelled():
@@ -139,6 +143,7 @@ async def stream_run_stateless(
                 payload,
                 request.headers,
                 run_id=run_id,
+                request_start_time=request.scope.get("request_start_time_ms"),
             )
     except Exception:
         if not sub.cancelled():
@@ -178,6 +183,7 @@ async def wait_run(request: ApiRequest):
                 payload,
                 request.headers,
                 run_id=run_id,
+                request_start_time=request.scope.get("request_start_time_ms"),
             )
     except Exception:
         if not sub.cancelled():
@@ -250,6 +256,7 @@ async def wait_run_stateless(request: ApiRequest):
                 payload,
                 request.headers,
                 run_id=run_id,
+                request_start_time=request.scope.get("request_start_time_ms"),
             )
     except Exception:
         if not sub.cancelled():

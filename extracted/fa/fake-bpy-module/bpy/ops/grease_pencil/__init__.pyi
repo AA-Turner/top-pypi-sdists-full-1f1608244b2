@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import bpy.types
 
 def active_frame_delete(
@@ -459,7 +459,8 @@ def interpolate_sequence(
         "ELASTIC",
     ]
     | None = "LINEAR",
-    easing: bpy._typing.rna_enums.BeztripleInterpolationEasingItems | None = "EASE_IN",
+    easing: bpy.stub_internal.rna_enums.BeztripleInterpolationEasingItems
+    | None = "EASE_IN",
     back: float | None = 1.702,
     amplitude: float | None = 0.15,
     period: float | None = 0.15,
@@ -521,7 +522,7 @@ def interpolate_sequence(
     Elastic -- Exponentially decaying sine wave, like an elastic band.
         :type type: typing.Literal['LINEAR','CUSTOM','SINE','QUAD','CUBIC','QUART','QUINT','EXPO','CIRC','BACK','BOUNCE','ELASTIC'] | None
         :param easing: Easing, Which ends of the segment between the preceding and following Grease Pencil frames easing interpolation is applied to
-        :type easing: bpy._typing.rna_enums.BeztripleInterpolationEasingItems | None
+        :type easing: bpy.stub_internal.rna_enums.BeztripleInterpolationEasingItems | None
         :param back: Back, Amount of overshoot for 'back' easing
         :type back: float | None
         :param amplitude: Amplitude, Amount to boost elastic bounces for 'elastic' easing
@@ -930,6 +931,31 @@ def move_to_layer(
     :type add_new_layer: bool | None
     """
 
+def outline(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    type: typing.Literal["VIEW", "FRONT", "SIDE", "TOP", "CURSOR", "CAMERA"]
+    | None = "VIEW",
+    radius: float | None = 0.01,
+    offset_factor: float | None = -1.0,
+    corner_subdivisions: int | None = 2,
+):
+    """Convert selected strokes to perimeter
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param type: Projection Mode
+    :type type: typing.Literal['VIEW','FRONT','SIDE','TOP','CURSOR','CAMERA'] | None
+    :param radius: Radius
+    :type radius: float | None
+    :param offset_factor: Offset Factor
+    :type offset_factor: float | None
+    :param corner_subdivisions: Corner Subdivisions
+    :type corner_subdivisions: int | None
+    """
+
 def paintmode_toggle(
     execution_context: int | str | None = None,
     undo: bool | None = None,
@@ -1093,6 +1119,21 @@ def relative_layer_mask_add(
     :type undo: bool | None
     :param mode: Mode, Which relative layer (above or below) to use as a mask
     :type mode: typing.Literal['ABOVE','BELOW'] | None
+    """
+
+def remove_fill_guides(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    mode: typing.Literal["ACTIVE_FRAME", "ALL_FRAMES"] | None = "ALL_FRAMES",
+):
+    """Remove all the strokes that were created from the fill tool as guides
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param mode: Mode
+    :type mode: typing.Literal['ACTIVE_FRAME','ALL_FRAMES'] | None
     """
 
 def reorder(
@@ -1386,7 +1427,7 @@ def set_curve_type(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.CurvesTypeItems | None = "POLY",
+    type: bpy.stub_internal.rna_enums.CurvesTypeItems | None = "POLY",
     use_handles: bool | None = False,
 ):
     """Set type of selected curves
@@ -1394,7 +1435,7 @@ def set_curve_type(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type, Curve type
-    :type type: bpy._typing.rna_enums.CurvesTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.CurvesTypeItems | None
     :param use_handles: Handles, Take handle information into account in the conversion
     :type use_handles: bool | None
     """
@@ -1404,14 +1445,14 @@ def set_handle_type(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.CurvesHandleTypeItems | None = "AUTO",
+    type: bpy.stub_internal.rna_enums.CurvesHandleTypeItems | None = "AUTO",
 ):
     """Set the handle type for bezier curves
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.CurvesHandleTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.CurvesHandleTypeItems | None
     """
 
 def set_material(
@@ -1434,14 +1475,14 @@ def set_selection_mode(
     undo: bool | None = None,
     /,
     *,
-    mode: bpy._typing.rna_enums.GreasePencilSelectmodeItems | None = "POINT",
+    mode: bpy.stub_internal.rna_enums.GreasePencilSelectmodeItems | None = "POINT",
 ):
     """Change the selection mode for Grease Pencil strokes
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param mode: Mode
-    :type mode: bpy._typing.rna_enums.GreasePencilSelectmodeItems | None
+    :type mode: bpy.stub_internal.rna_enums.GreasePencilSelectmodeItems | None
     """
 
 def set_start_point(

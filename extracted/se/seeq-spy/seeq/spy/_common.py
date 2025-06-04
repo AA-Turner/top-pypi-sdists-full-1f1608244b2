@@ -5,7 +5,6 @@ import json
 import os
 import re
 import string
-import sys
 import traceback
 import types
 import uuid
@@ -16,6 +15,7 @@ from typing import Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 import pytz
+import sys
 from deprecated import deprecated
 
 from seeq.base import util
@@ -176,6 +176,24 @@ def is_guid(s: object):
 
 def sanitize_guid(g):
     return g.upper()
+
+
+def sanitize_path(path: str, replacement: str = "_") -> str:
+    drive, path_rest = os.path.splitdrive(path)
+    directory, filename = os.path.split(path_rest)
+
+    # Match:
+    # - control chars (ASCII 0–31 and 127)
+    # - illegal Windows characters: <>:"|?*
+    # - optionally, Unicode line/paragraph separators \u2028 \u2029
+    illegal_pattern = r'[<>:"|?*\x00-\x1F\x7F\u2028\u2029]'
+
+    directory = re.sub(illegal_pattern, replacement, directory)
+
+    # Strip trailing spaces or dots (invalid for Windows filenames)
+    directory = directory.rstrip(' .')
+
+    return os.path.join(drive, directory, filename)
 
 
 def new_placeholder_guid():

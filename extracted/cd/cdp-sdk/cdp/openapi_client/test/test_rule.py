@@ -37,13 +37,13 @@ class TestRule(unittest.TestCase):
         if include_optional:
             return Rule(
                 action = 'accept',
-                operation = 'signSolTransaction',
+                operation = 'signEvmHash',
                 criteria = [{type=solAddress, addresses=[HpabPRRCFbBKSuJr5PdkVvQc85FyxyTWkFM2obBRSvHT], operator=in}]
             )
         else:
             return Rule(
                 action = 'accept',
-                operation = 'signSolTransaction',
+                operation = 'signEvmHash',
                 criteria = [{type=solAddress, addresses=[HpabPRRCFbBKSuJr5PdkVvQc85FyxyTWkFM2obBRSvHT], operator=in}],
         )
         """

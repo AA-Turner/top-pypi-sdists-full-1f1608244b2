@@ -218,7 +218,7 @@ class StreamingBackfill:
 
     @staticmethod
     def _get_normalized_backfill_sources_spec(
-        data_sources: Union[List[str], List[DataSourceBackfillSpec]]
+        data_sources: Union[List[str], List[DataSourceBackfillSpec]],
     ) -> List[DataSourceBackfillSpec]:
         # reformat all data source specs to 'DataSourceBackfillSpec'
         return [

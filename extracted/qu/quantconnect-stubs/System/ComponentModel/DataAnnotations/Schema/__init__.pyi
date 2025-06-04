@@ -30,6 +30,32 @@ class ForeignKeyAttribute(System.Attribute):
         ...
 
 
+class TableAttribute(System.Attribute):
+    """Specifies the database table that a class is mapped to."""
+
+    @property
+    def name(self) -> str:
+        """The name of the table the class is mapped to."""
+        ...
+
+    @property
+    def schema(self) -> str:
+        """The schema of the table the class is mapped to."""
+        ...
+
+    @schema.setter
+    def schema(self, value: str) -> None:
+        ...
+
+    def __init__(self, name: str) -> None:
+        """
+        Initializes a new instance of the TableAttribute class.
+        
+        :param name: The name of the table the class is mapped to.
+        """
+        ...
+
+
 class DatabaseGeneratedOption(Enum):
     """The pattern used to generate values for a property in the database."""
 
@@ -41,6 +67,23 @@ class DatabaseGeneratedOption(Enum):
 
     COMPUTED = 2
     """The database generates a value when a row is inserted or updated."""
+
+
+class DatabaseGeneratedAttribute(System.Attribute):
+    """Specifies how the database generates values for a property."""
+
+    @property
+    def database_generated_option(self) -> System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption:
+        """The pattern used to generate values for the property in the database."""
+        ...
+
+    def __init__(self, database_generated_option: System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption) -> None:
+        """
+        Initializes a new instance of the DatabaseGeneratedAttribute class.
+        
+        :param database_generated_option: The pattern used to generate values for the property in the database.
+        """
+        ...
 
 
 class ColumnAttribute(System.Attribute):
@@ -112,48 +155,5 @@ class ComplexTypeAttribute(System.Attribute):
         entities.
         Complex types do not have keys and cannot be managed by the Entity Framework apart from the parent object.
     """
-
-
-class TableAttribute(System.Attribute):
-    """Specifies the database table that a class is mapped to."""
-
-    @property
-    def name(self) -> str:
-        """The name of the table the class is mapped to."""
-        ...
-
-    @property
-    def schema(self) -> str:
-        """The schema of the table the class is mapped to."""
-        ...
-
-    @schema.setter
-    def schema(self, value: str) -> None:
-        ...
-
-    def __init__(self, name: str) -> None:
-        """
-        Initializes a new instance of the TableAttribute class.
-        
-        :param name: The name of the table the class is mapped to.
-        """
-        ...
-
-
-class DatabaseGeneratedAttribute(System.Attribute):
-    """Specifies how the database generates values for a property."""
-
-    @property
-    def database_generated_option(self) -> System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption:
-        """The pattern used to generate values for the property in the database."""
-        ...
-
-    def __init__(self, database_generated_option: System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption) -> None:
-        """
-        Initializes a new instance of the DatabaseGeneratedAttribute class.
-        
-        :param database_generated_option: The pattern used to generate values for the property in the database.
-        """
-        ...
 
 

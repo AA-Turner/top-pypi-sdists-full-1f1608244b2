@@ -1,16 +1,20 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: seedir
-Version: 0.5.0
+Version: 0.5.1
 Summary: Package for creating, editing, and reading folder tree diagrams.
 Home-page: https://github.com/earnestt1234/seedir
 Author: Tom Earnest
-Author-email: earnestt1234@gmail.com
+Author-email: Tom Earnest <earnestt1234@gmail.com>
 License: MIT
+Project-URL: Homepage, https://github.com/earnestt1234/seedir
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: natsort
 Provides-Extra: emoji
 Requires-Dist: emoji; extra == "emoji"
+Dynamic: author
+Dynamic: home-page
+Dynamic: license-file
 
 # seedir
 A Python package for creating, editing, and reading folder tree diagrams.

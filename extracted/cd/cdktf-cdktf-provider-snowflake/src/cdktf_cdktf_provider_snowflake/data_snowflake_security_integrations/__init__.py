@@ -1,7 +1,7 @@
 r'''
 # `data_snowflake_security_integrations`
 
-Refer to the Terraform Registry for docs: [`data_snowflake_security_integrations`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations).
+Refer to the Terraform Registry for docs: [`data_snowflake_security_integrations`](https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataSnowflakeSecurityIntegrations(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrations",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations snowflake_security_integrations}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations snowflake_security_integrations}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class DataSnowflakeSecurityIntegrations(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations snowflake_security_integrations} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations snowflake_security_integrations} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#id DataSnowflakeSecurityIntegrations#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param like: Filters the output with **case-insensitive** pattern, with support for SQL wildcard characters (``%`` and ``_``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#like DataSnowflakeSecurityIntegrations#like}
-        :param with_describe: (Default: ``true``) Runs DESC SECURITY INTEGRATION for each security integration returned by SHOW SECURITY INTEGRATIONS. The output of describe is saved to the description field. By default this value is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#with_describe DataSnowflakeSecurityIntegrations#with_describe}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#id DataSnowflakeSecurityIntegrations#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param like: Filters the output with **case-insensitive** pattern, with support for SQL wildcard characters (``%`` and ``_``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#like DataSnowflakeSecurityIntegrations#like}
+        :param with_describe: (Default: ``true``) Runs DESC SECURITY INTEGRATION for each security integration returned by SHOW SECURITY INTEGRATIONS. The output of describe is saved to the description field. By default this value is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#with_describe DataSnowflakeSecurityIntegrations#with_describe}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class DataSnowflakeSecurityIntegrations(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataSnowflakeSecurityIntegrations to import.
-        :param import_from_id: The id of the existing DataSnowflakeSecurityIntegrations that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataSnowflakeSecurityIntegrations that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataSnowflakeSecurityIntegrations to import is found.
         '''
         if __debug__:
@@ -248,9 +248,9 @@ class DataSnowflakeSecurityIntegrationsConfig(_cdktf_9a9027ec.TerraformMetaArgum
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#id DataSnowflakeSecurityIntegrations#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param like: Filters the output with **case-insensitive** pattern, with support for SQL wildcard characters (``%`` and ``_``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#like DataSnowflakeSecurityIntegrations#like}
-        :param with_describe: (Default: ``true``) Runs DESC SECURITY INTEGRATION for each security integration returned by SHOW SECURITY INTEGRATIONS. The output of describe is saved to the description field. By default this value is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#with_describe DataSnowflakeSecurityIntegrations#with_describe}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#id DataSnowflakeSecurityIntegrations#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param like: Filters the output with **case-insensitive** pattern, with support for SQL wildcard characters (``%`` and ``_``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#like DataSnowflakeSecurityIntegrations#like}
+        :param with_describe: (Default: ``true``) Runs DESC SECURITY INTEGRATION for each security integration returned by SHOW SECURITY INTEGRATIONS. The output of describe is saved to the description field. By default this value is set to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#with_describe DataSnowflakeSecurityIntegrations#with_describe}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -354,7 +354,7 @@ class DataSnowflakeSecurityIntegrationsConfig(_cdktf_9a9027ec.TerraformMetaArgum
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#id DataSnowflakeSecurityIntegrations#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#id DataSnowflakeSecurityIntegrations#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -366,7 +366,7 @@ class DataSnowflakeSecurityIntegrationsConfig(_cdktf_9a9027ec.TerraformMetaArgum
     def like(self) -> typing.Optional[builtins.str]:
         '''Filters the output with **case-insensitive** pattern, with support for SQL wildcard characters (``%`` and ``_``).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#like DataSnowflakeSecurityIntegrations#like}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#like DataSnowflakeSecurityIntegrations#like}
         '''
         result = self._values.get("like")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -379,7 +379,7 @@ class DataSnowflakeSecurityIntegrationsConfig(_cdktf_9a9027ec.TerraformMetaArgum
 
         The output of describe is saved to the description field. By default this value is set to true.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/data-sources/security_integrations#with_describe DataSnowflakeSecurityIntegrations#with_describe}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/2.1.0/docs/data-sources/security_integrations#with_describe DataSnowflakeSecurityIntegrations#with_describe}
         '''
         result = self._values.get("with_describe")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -4540,167 +4540,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthCl
 
 
 @jsii.data_type(
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId",
-    jsii_struct_bases=[],
-    name_mapping={},
-)
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId:
-    def __init__(self) -> None:
-        self._values: typing.Dict[builtins.str, typing.Any] = {}
-
-    def __eq__(self, rhs: typing.Any) -> builtins.bool:
-        return isinstance(rhs, self.__class__) and rhs._values == self._values
-
-    def __ne__(self, rhs: typing.Any) -> builtins.bool:
-        return not (rhs == self)
-
-    def __repr__(self) -> str:
-        return "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId(%s)" % ", ".join(
-            k + "=" + repr(v) for k, v in self._values.items()
-        )
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdList(
-    _cdktf_9a9027ec.ComplexList,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdList",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        wraps_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__d9f12fce51a7cf4c9106ffe6a2b2b8c4af04e869e42b41be76fe1b792f81df01)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
-
-    @jsii.member(jsii_name="get")
-    def get(
-        self,
-        index: jsii.Number,
-    ) -> "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdOutputReference":
-        '''
-        :param index: the index of the item to return.
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__6d1fefb5e381e615808e92cb3b38c6dbf64b242f58faa37226c2c235f68032f0)
-            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
-        return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdOutputReference", jsii.invoke(self, "get", [index]))
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformAttribute")
-    def _terraform_attribute(self) -> builtins.str:
-        '''The attribute on the parent resource this class is referencing.'''
-        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
-
-    @_terraform_attribute.setter
-    def _terraform_attribute(self, value: builtins.str) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__73811b90729a02a8666dd7ca0e9827262bde644335196f46ec57ae468866b298)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformResource")
-    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
-        '''The parent resource.'''
-        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
-
-    @_terraform_resource.setter
-    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__5f25a1c1dde3ffcea3aa45066cf9edd579794311310771b191257ba877718427)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="wrapsSet")
-    def _wraps_set(self) -> builtins.bool:
-        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
-        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
-
-    @_wraps_set.setter
-    def _wraps_set(self, value: builtins.bool) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__d3610519df400d1ab438caf986320ed3d4db3af593a7deb7bb3e4c390a5bdabb)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdOutputReference(
-    _cdktf_9a9027ec.ComplexObject,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdOutputReference",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        complex_object_index: jsii.Number,
-        complex_object_is_from_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param complex_object_index: the index of this item in the list.
-        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__ee3ec00ad80bb3a30a9fa9ad6540af7da8779d6407b29e4eced029e642fe59b0)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
-            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
-
-    @builtins.property
-    @jsii.member(jsii_name="default")
-    def default(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "default"))
-
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "name"))
-
-    @builtins.property
-    @jsii.member(jsii_name="type")
-    def type(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "type"))
-
-    @builtins.property
-    @jsii.member(jsii_name="value")
-    def value(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "value"))
-
-    @builtins.property
-    @jsii.member(jsii_name="internalValue")
-    def internal_value(
-        self,
-    ) -> typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId]:
-        return typing.cast(typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId], jsii.get(self, "internalValue"))
-
-    @internal_value.setter
-    def internal_value(
-        self,
-        value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId],
-    ) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__d31d8dfe62d2a2291e9843acaeb819afde579c689053c3b4123957b917cd78eb)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
-
-
-@jsii.data_type(
     jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientRsaPublicKey2Fp",
     jsii_struct_bases=[],
     name_mapping={},
@@ -5667,167 +5506,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthIs
 
 
 @jsii.data_type(
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri",
-    jsii_struct_bases=[],
-    name_mapping={},
-)
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri:
-    def __init__(self) -> None:
-        self._values: typing.Dict[builtins.str, typing.Any] = {}
-
-    def __eq__(self, rhs: typing.Any) -> builtins.bool:
-        return isinstance(rhs, self.__class__) and rhs._values == self._values
-
-    def __ne__(self, rhs: typing.Any) -> builtins.bool:
-        return not (rhs == self)
-
-    def __repr__(self) -> str:
-        return "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri(%s)" % ", ".join(
-            k + "=" + repr(v) for k, v in self._values.items()
-        )
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriList(
-    _cdktf_9a9027ec.ComplexList,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriList",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        wraps_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__3c05f302a5bf715a811832020751c46ddbbe5d8e9fa361332709818ea22130e1)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
-
-    @jsii.member(jsii_name="get")
-    def get(
-        self,
-        index: jsii.Number,
-    ) -> "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriOutputReference":
-        '''
-        :param index: the index of the item to return.
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__8aa3430d46cc910370a4f005f3b732e2e721e51266557a73dbf326751bd7b219)
-            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
-        return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriOutputReference", jsii.invoke(self, "get", [index]))
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformAttribute")
-    def _terraform_attribute(self) -> builtins.str:
-        '''The attribute on the parent resource this class is referencing.'''
-        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
-
-    @_terraform_attribute.setter
-    def _terraform_attribute(self, value: builtins.str) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__3e97582020444dbf8e38c1af6b4449a1a2677383745a2a4cf572b72448ad7b0b)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformResource")
-    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
-        '''The parent resource.'''
-        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
-
-    @_terraform_resource.setter
-    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__9f6535a976539c8e25138a77b27329a4b0cf8a861bb6ed82bdd5b8855ead380d)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="wrapsSet")
-    def _wraps_set(self) -> builtins.bool:
-        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
-        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
-
-    @_wraps_set.setter
-    def _wraps_set(self, value: builtins.bool) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__b74d997055a501db82943116f43559ffd2122db62f8af18e565605e0e5c6494e)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriOutputReference(
-    _cdktf_9a9027ec.ComplexObject,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriOutputReference",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        complex_object_index: jsii.Number,
-        complex_object_is_from_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param complex_object_index: the index of this item in the list.
-        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__cfb41d2a1b054a0ec9ee425dd602fc4017b34f399ac3c200e3580e2172fbbaff)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
-            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
-
-    @builtins.property
-    @jsii.member(jsii_name="default")
-    def default(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "default"))
-
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "name"))
-
-    @builtins.property
-    @jsii.member(jsii_name="type")
-    def type(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "type"))
-
-    @builtins.property
-    @jsii.member(jsii_name="value")
-    def value(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "value"))
-
-    @builtins.property
-    @jsii.member(jsii_name="internalValue")
-    def internal_value(
-        self,
-    ) -> typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri]:
-        return typing.cast(typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri], jsii.get(self, "internalValue"))
-
-    @internal_value.setter
-    def internal_value(
-        self,
-        value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri],
-    ) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__3af0a28f57c4b2255150cd894cdd31f81f46193563ced90922628ba5e90e4c11)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
-
-
-@jsii.data_type(
     jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRefreshTokenValidity",
     jsii_struct_bases=[],
     name_mapping={},
@@ -6512,13 +6190,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOutputR
         return typing.cast(DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientAuthMethodList, jsii.get(self, "oauthClientAuthMethod"))
 
     @builtins.property
-    @jsii.member(jsii_name="oauthClientId")
-    def oauth_client_id(
-        self,
-    ) -> DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdList:
-        return typing.cast(DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdList, jsii.get(self, "oauthClientId"))
-
-    @builtins.property
     @jsii.member(jsii_name="oauthClientRsaPublicKey2Fp")
     def oauth_client_rsa_public_key2_fp(
         self,
@@ -6559,13 +6230,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOutputR
         self,
     ) -> DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthIssueRefreshTokensList:
         return typing.cast(DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthIssueRefreshTokensList, jsii.get(self, "oauthIssueRefreshTokens"))
-
-    @builtins.property
-    @jsii.member(jsii_name="oauthRedirectUri")
-    def oauth_redirect_uri(
-        self,
-    ) -> DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriList:
-        return typing.cast(DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriList, jsii.get(self, "oauthRedirectUri"))
 
     @builtins.property
     @jsii.member(jsii_name="oauthRefreshTokenValidity")
@@ -6694,13 +6358,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOutputR
         return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeMetadataList", jsii.get(self, "saml2SnowflakeMetadata"))
 
     @builtins.property
-    @jsii.member(jsii_name="saml2SnowflakeX509Cert")
-    def saml2_snowflake_x509_cert(
-        self,
-    ) -> "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertList":
-        return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertList", jsii.get(self, "saml2SnowflakeX509Cert"))
-
-    @builtins.property
     @jsii.member(jsii_name="saml2SpInitiatedLoginPageLabel")
     def saml2_sp_initiated_login_page_label(
         self,
@@ -6713,13 +6370,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOutputR
         self,
     ) -> "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SsoUrlList":
         return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SsoUrlList", jsii.get(self, "saml2SsoUrl"))
-
-    @builtins.property
-    @jsii.member(jsii_name="saml2X509Cert")
-    def saml2_x509_cert(
-        self,
-    ) -> "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertList":
-        return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertList", jsii.get(self, "saml2X509Cert"))
 
     @builtins.property
     @jsii.member(jsii_name="syncPassword")
@@ -9162,167 +8812,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2Sn
 
 
 @jsii.data_type(
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert",
-    jsii_struct_bases=[],
-    name_mapping={},
-)
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert:
-    def __init__(self) -> None:
-        self._values: typing.Dict[builtins.str, typing.Any] = {}
-
-    def __eq__(self, rhs: typing.Any) -> builtins.bool:
-        return isinstance(rhs, self.__class__) and rhs._values == self._values
-
-    def __ne__(self, rhs: typing.Any) -> builtins.bool:
-        return not (rhs == self)
-
-    def __repr__(self) -> str:
-        return "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert(%s)" % ", ".join(
-            k + "=" + repr(v) for k, v in self._values.items()
-        )
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertList(
-    _cdktf_9a9027ec.ComplexList,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertList",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        wraps_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__6ddcefbb92b596023983d290084a5db087c6448e5cb51e20b3eea50332e53436)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
-
-    @jsii.member(jsii_name="get")
-    def get(
-        self,
-        index: jsii.Number,
-    ) -> "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertOutputReference":
-        '''
-        :param index: the index of the item to return.
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__832e0902a97e4b41b5e8cf2938e5617b6dee4fca896749b4ae0c3a19120c2b5d)
-            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
-        return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertOutputReference", jsii.invoke(self, "get", [index]))
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformAttribute")
-    def _terraform_attribute(self) -> builtins.str:
-        '''The attribute on the parent resource this class is referencing.'''
-        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
-
-    @_terraform_attribute.setter
-    def _terraform_attribute(self, value: builtins.str) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__5f8c2267f47071e15c9684d1c3c30f389371ca050cf2936e63a81f93c5f99ed6)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformResource")
-    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
-        '''The parent resource.'''
-        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
-
-    @_terraform_resource.setter
-    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__988b5830f7f2847c0fee536247dace27bf58dbe115ce5116cc370a79aaa3bb40)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="wrapsSet")
-    def _wraps_set(self) -> builtins.bool:
-        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
-        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
-
-    @_wraps_set.setter
-    def _wraps_set(self, value: builtins.bool) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__e8f619913fa64ad3a21c588c458255ad962f689cd7d892cc028b6b9568da54d4)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertOutputReference(
-    _cdktf_9a9027ec.ComplexObject,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertOutputReference",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        complex_object_index: jsii.Number,
-        complex_object_is_from_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param complex_object_index: the index of this item in the list.
-        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__ba068687c33f92d0fe10fe147609402766082214d602c533ff6ded6737c28cec)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
-            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
-
-    @builtins.property
-    @jsii.member(jsii_name="default")
-    def default(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "default"))
-
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "name"))
-
-    @builtins.property
-    @jsii.member(jsii_name="type")
-    def type(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "type"))
-
-    @builtins.property
-    @jsii.member(jsii_name="value")
-    def value(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "value"))
-
-    @builtins.property
-    @jsii.member(jsii_name="internalValue")
-    def internal_value(
-        self,
-    ) -> typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert]:
-        return typing.cast(typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert], jsii.get(self, "internalValue"))
-
-    @internal_value.setter
-    def internal_value(
-        self,
-        value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert],
-    ) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__ceeac051f6dcb513ee276402abf75a4784e67d4c44b141fccf72e9845ee76b47)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
-
-
-@jsii.data_type(
     jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SpInitiatedLoginPageLabel",
     jsii_struct_bases=[],
     name_mapping={},
@@ -9640,167 +9129,6 @@ class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2Ss
     ) -> None:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b077da7f57ffbbbc4dfa38604920cc54aeb3bea9ddbbf0616aec9d3581891f05)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
-
-
-@jsii.data_type(
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert",
-    jsii_struct_bases=[],
-    name_mapping={},
-)
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert:
-    def __init__(self) -> None:
-        self._values: typing.Dict[builtins.str, typing.Any] = {}
-
-    def __eq__(self, rhs: typing.Any) -> builtins.bool:
-        return isinstance(rhs, self.__class__) and rhs._values == self._values
-
-    def __ne__(self, rhs: typing.Any) -> builtins.bool:
-        return not (rhs == self)
-
-    def __repr__(self) -> str:
-        return "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert(%s)" % ", ".join(
-            k + "=" + repr(v) for k, v in self._values.items()
-        )
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertList(
-    _cdktf_9a9027ec.ComplexList,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertList",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        wraps_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__af34415d23a25998b282fc9105aa1105576a027c31c4759b400173dc63aae1d9)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
-
-    @jsii.member(jsii_name="get")
-    def get(
-        self,
-        index: jsii.Number,
-    ) -> "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertOutputReference":
-        '''
-        :param index: the index of the item to return.
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__d9debd1bca042e2016d32d695ccd708bdbc68c20b9d08db41cbb2cbcf3aefa9a)
-            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
-        return typing.cast("DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertOutputReference", jsii.invoke(self, "get", [index]))
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformAttribute")
-    def _terraform_attribute(self) -> builtins.str:
-        '''The attribute on the parent resource this class is referencing.'''
-        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
-
-    @_terraform_attribute.setter
-    def _terraform_attribute(self, value: builtins.str) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__6ea63e4800d2a628ea29cf0f751ca408ae0e92d06ffcadf2f41c0fd149142053)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="terraformResource")
-    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
-        '''The parent resource.'''
-        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
-
-    @_terraform_resource.setter
-    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__57903864dc26947121f031673e7e96c4cda8a459e886672824a1ff62a70bdb80)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="wrapsSet")
-    def _wraps_set(self) -> builtins.bool:
-        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
-        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
-
-    @_wraps_set.setter
-    def _wraps_set(self, value: builtins.bool) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__5163c3ec5afd80007fb1bb46457f2c11df4f139948ad734949c5e442936b6d4e)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
-
-
-class DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertOutputReference(
-    _cdktf_9a9027ec.ComplexObject,
-    metaclass=jsii.JSIIMeta,
-    jsii_type="@cdktf/provider-snowflake.dataSnowflakeSecurityIntegrations.DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertOutputReference",
-):
-    def __init__(
-        self,
-        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-        terraform_attribute: builtins.str,
-        complex_object_index: jsii.Number,
-        complex_object_is_from_set: builtins.bool,
-    ) -> None:
-        '''
-        :param terraform_resource: The parent resource.
-        :param terraform_attribute: The attribute on the parent resource this class is referencing.
-        :param complex_object_index: the index of this item in the list.
-        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
-        '''
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__3f078369bc92357f27c5f1755b8c07b4e123271bf637c88cd6f4830834c83aa8)
-            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
-            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
-            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
-            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
-        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
-
-    @builtins.property
-    @jsii.member(jsii_name="default")
-    def default(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "default"))
-
-    @builtins.property
-    @jsii.member(jsii_name="name")
-    def name(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "name"))
-
-    @builtins.property
-    @jsii.member(jsii_name="type")
-    def type(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "type"))
-
-    @builtins.property
-    @jsii.member(jsii_name="value")
-    def value(self) -> builtins.str:
-        return typing.cast(builtins.str, jsii.get(self, "value"))
-
-    @builtins.property
-    @jsii.member(jsii_name="internalValue")
-    def internal_value(
-        self,
-    ) -> typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert]:
-        return typing.cast(typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert], jsii.get(self, "internalValue"))
-
-    @internal_value.setter
-    def internal_value(
-        self,
-        value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert],
-    ) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__41860a6ff51a6ae3a9a9935f456d91ce3bfc55321291297649a067cd96d82424)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
@@ -10352,9 +9680,6 @@ __all__ = [
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientAuthMethod",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientAuthMethodList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientAuthMethodOutputReference",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdList",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientIdOutputReference",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientRsaPublicKey2Fp",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientRsaPublicKey2FpList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientRsaPublicKey2FpOutputReference",
@@ -10373,9 +9698,6 @@ __all__ = [
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthIssueRefreshTokens",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthIssueRefreshTokensList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthIssueRefreshTokensOutputReference",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriList",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUriOutputReference",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRefreshTokenValidity",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRefreshTokenValidityList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRefreshTokenValidityOutputReference",
@@ -10431,18 +9753,12 @@ __all__ = [
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeMetadata",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeMetadataList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeMetadataOutputReference",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertList",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509CertOutputReference",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SpInitiatedLoginPageLabel",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SpInitiatedLoginPageLabelList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SpInitiatedLoginPageLabelOutputReference",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SsoUrl",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SsoUrlList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SsoUrlOutputReference",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertList",
-    "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509CertOutputReference",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSyncPassword",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSyncPasswordList",
     "DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSyncPasswordOutputReference",
@@ -11723,53 +11039,6 @@ def _typecheckingstub__4d22e93b52ba1fb44e1d991731e95debc4482709cee1cac61455c2693
     """Type checking stubs"""
     pass
 
-def _typecheckingstub__d9f12fce51a7cf4c9106ffe6a2b2b8c4af04e869e42b41be76fe1b792f81df01(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    wraps_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__6d1fefb5e381e615808e92cb3b38c6dbf64b242f58faa37226c2c235f68032f0(
-    index: jsii.Number,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__73811b90729a02a8666dd7ca0e9827262bde644335196f46ec57ae468866b298(
-    value: builtins.str,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__5f25a1c1dde3ffcea3aa45066cf9edd579794311310771b191257ba877718427(
-    value: _cdktf_9a9027ec.IInterpolatingParent,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__d3610519df400d1ab438caf986320ed3d4db3af593a7deb7bb3e4c390a5bdabb(
-    value: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__ee3ec00ad80bb3a30a9fa9ad6540af7da8779d6407b29e4eced029e642fe59b0(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    complex_object_index: jsii.Number,
-    complex_object_is_from_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__d31d8dfe62d2a2291e9843acaeb819afde579c689053c3b4123957b917cd78eb(
-    value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthClientId],
-) -> None:
-    """Type checking stubs"""
-    pass
-
 def _typecheckingstub__c03a63a2a10841e993f30d3bbf7e135094f8ea7a8a26bd5b90e5d46226bf7d81(
     terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
     terraform_attribute: builtins.str,
@@ -12048,53 +11317,6 @@ def _typecheckingstub__2e64a84b5306ad05aff6b6b0c44f6e480f1f4040dba6e0d91796d327f
 
 def _typecheckingstub__28004a4b7d5fb01a9e37ee23557d7878bc8eda69e806667dbad7b46eb3487dbe(
     value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthIssueRefreshTokens],
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__3c05f302a5bf715a811832020751c46ddbbe5d8e9fa361332709818ea22130e1(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    wraps_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__8aa3430d46cc910370a4f005f3b732e2e721e51266557a73dbf326751bd7b219(
-    index: jsii.Number,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__3e97582020444dbf8e38c1af6b4449a1a2677383745a2a4cf572b72448ad7b0b(
-    value: builtins.str,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__9f6535a976539c8e25138a77b27329a4b0cf8a861bb6ed82bdd5b8855ead380d(
-    value: _cdktf_9a9027ec.IInterpolatingParent,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__b74d997055a501db82943116f43559ffd2122db62f8af18e565605e0e5c6494e(
-    value: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__cfb41d2a1b054a0ec9ee425dd602fc4017b34f399ac3c200e3580e2172fbbaff(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    complex_object_index: jsii.Number,
-    complex_object_is_from_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__3af0a28f57c4b2255150cd894cdd31f81f46193563ced90922628ba5e90e4c11(
-    value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputOauthRedirectUri],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -12960,53 +12182,6 @@ def _typecheckingstub__fae9c0a69de8a3ec961c29d91bb2e5e6434429c4f5d10acc82d64e41c
     """Type checking stubs"""
     pass
 
-def _typecheckingstub__6ddcefbb92b596023983d290084a5db087c6448e5cb51e20b3eea50332e53436(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    wraps_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__832e0902a97e4b41b5e8cf2938e5617b6dee4fca896749b4ae0c3a19120c2b5d(
-    index: jsii.Number,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__5f8c2267f47071e15c9684d1c3c30f389371ca050cf2936e63a81f93c5f99ed6(
-    value: builtins.str,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__988b5830f7f2847c0fee536247dace27bf58dbe115ce5116cc370a79aaa3bb40(
-    value: _cdktf_9a9027ec.IInterpolatingParent,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__e8f619913fa64ad3a21c588c458255ad962f689cd7d892cc028b6b9568da54d4(
-    value: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__ba068687c33f92d0fe10fe147609402766082214d602c533ff6ded6737c28cec(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    complex_object_index: jsii.Number,
-    complex_object_is_from_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__ceeac051f6dcb513ee276402abf75a4784e67d4c44b141fccf72e9845ee76b47(
-    value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SnowflakeX509Cert],
-) -> None:
-    """Type checking stubs"""
-    pass
-
 def _typecheckingstub__2b253674b4465e8baf7e14195e2dd9b4ad3294cbb9e7dde9102256060d5bc161(
     terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
     terraform_attribute: builtins.str,
@@ -13097,53 +12272,6 @@ def _typecheckingstub__0d9b9841409241904a18df80a62b164423082dd6227362218f30c87a2
 
 def _typecheckingstub__b077da7f57ffbbbc4dfa38604920cc54aeb3bea9ddbbf0616aec9d3581891f05(
     value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2SsoUrl],
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__af34415d23a25998b282fc9105aa1105576a027c31c4759b400173dc63aae1d9(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    wraps_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__d9debd1bca042e2016d32d695ccd708bdbc68c20b9d08db41cbb2cbcf3aefa9a(
-    index: jsii.Number,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__6ea63e4800d2a628ea29cf0f751ca408ae0e92d06ffcadf2f41c0fd149142053(
-    value: builtins.str,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__57903864dc26947121f031673e7e96c4cda8a459e886672824a1ff62a70bdb80(
-    value: _cdktf_9a9027ec.IInterpolatingParent,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__5163c3ec5afd80007fb1bb46457f2c11df4f139948ad734949c5e442936b6d4e(
-    value: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__3f078369bc92357f27c5f1755b8c07b4e123271bf637c88cd6f4830834c83aa8(
-    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
-    terraform_attribute: builtins.str,
-    complex_object_index: jsii.Number,
-    complex_object_is_from_set: builtins.bool,
-) -> None:
-    """Type checking stubs"""
-    pass
-
-def _typecheckingstub__41860a6ff51a6ae3a9a9935f456d91ce3bfc55321291297649a067cd96d82424(
-    value: typing.Optional[DataSnowflakeSecurityIntegrationsSecurityIntegrationsDescribeOutputSaml2X509Cert],
 ) -> None:
     """Type checking stubs"""
     pass

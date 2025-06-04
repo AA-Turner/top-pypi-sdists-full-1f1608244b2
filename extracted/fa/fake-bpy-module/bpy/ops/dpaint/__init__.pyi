@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def bake(execution_context: int | str | None = None, undo: bool | None = None):
     """Bake dynamic paint image sequence surface
@@ -49,12 +49,12 @@ def type_toggle(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.PropDynamicpaintTypeItems | None = "CANVAS",
+    type: bpy.stub_internal.rna_enums.PropDynamicpaintTypeItems | None = "CANVAS",
 ):
     """Toggle whether given type is active or not
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.PropDynamicpaintTypeItems | None
+    :type type: bpy.stub_internal.rna_enums.PropDynamicpaintTypeItems | None
     """

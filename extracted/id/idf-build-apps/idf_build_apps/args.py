@@ -29,8 +29,8 @@ from pydantic_settings import (
 from typing_extensions import Concatenate, ParamSpec
 
 from . import SESSION_ARGS, App, CMakeApp, MakeApp, setup_logging
-from .constants import ALL_TARGETS, IDF_BUILD_APPS_TOML_FN, SUPPORTED_TARGETS
-from .manifest.manifest import FolderRule, Manifest
+from .constants import ALL_TARGETS, IDF_BUILD_APPS_TOML_FN
+from .manifest.manifest import DEFAULT_BUILD_TARGETS, Manifest, reset_default_build_targets
 from .utils import InvalidCommand, files_matches_patterns, semicolon_separated_str_to_list, to_absolute_path, to_list
 from .vendors.pydantic_sources import PyprojectTomlConfigSettingsSource, TomlConfigSettingsSource
 
@@ -39,7 +39,6 @@ LOGGER = logging.getLogger(__name__)
 
 class ValidateMethod(str, enum.Enum):
     TO_LIST = 'to_list'
-    EXPAND_VARS = 'expand_vars'
 
 
 @dataclass
@@ -174,12 +173,17 @@ class BaseArguments(BaseSettings):
         if info.field_name and info.field_name in cls.model_fields:
             f = cls.model_fields[info.field_name]
             meta = get_meta(f)
+
+            # always expand vars for all fields
+            if isinstance(v, str):
+                v = expand_vars(v)
+            elif isinstance(v, list):
+                v = [expand_vars(item) if isinstance(item, str) else item for item in v]
+
             if meta and meta.validate_method:
                 for method in meta.validate_method:
                     if method == ValidateMethod.TO_LIST:
                         v = to_list(v)
-                    elif method == ValidateMethod.EXPAND_VARS:
-                        v = expand_vars(v)
                     else:
                         raise NotImplementedError(f'Unknown validate method: {method}')
 
@@ -241,9 +245,7 @@ class DependencyDrivenBuildArguments(GlobalArguments):
         default=None,  # type: ignore
     )
     manifest_rootpath: str = field(
-        FieldMetadata(
-            validate_method=[ValidateMethod.EXPAND_VARS],
-        ),
+        None,
         description='Root path to resolve the relative paths defined in the manifest files. '
         'By default set to the current directory. Support environment variables.',
         default=os.curdir,  # type: ignore
@@ -420,6 +422,15 @@ class FindBuildArguments(DependencyDrivenBuildArguments):
         description='Filter the apps by target. By default set to "all"',
         default='all',  # type: ignore
     )
+    extra_pythonpaths: t.Optional[t.List[str]] = field(
+        FieldMetadata(
+            validate_method=[ValidateMethod.TO_LIST],
+            nargs='+',
+        ),
+        description='space-separated list of additional Python paths to search for the app classes. '
+        'Will be injected into the head of sys.path.',
+        default=None,  # type: ignore
+    )
     build_system: t.Union[str, t.Type[App]] = field(
         None,
         description='Filter the apps by build system. By default set to "cmake". '
@@ -519,15 +530,17 @@ class FindBuildArguments(DependencyDrivenBuildArguments):
             nargs='+',
         ),
         description='space-separated list of the default enabled build targets for the apps. '
-        'When not specified, the default value is the targets listed by `idf.py --list-targets`',
+        'When not specified, the default value is the targets listed by `idf.py --list-targets`. '
+        'Cannot be used together with --enable-preview-targets',
         default=None,  # type: ignore
     )
     enable_preview_targets: bool = field(
         FieldMetadata(
             action='store_true',
         ),
-        description='When enabled, the default build targets will be set to all apps, '
-        'including the preview targets. As the targets defined in `idf.py --list-targets --preview`',
+        description='When enabled, all targets will be enabled by default, '
+        'including the preview targets. As the targets defined in `idf.py --list-targets --preview`. '
+        'Cannot be used together with --default-build-targets',
         default=False,  # type: ignore
     )
     disable_targets: t.Optional[t.List[str]] = field(
@@ -570,6 +583,14 @@ class FindBuildArguments(DependencyDrivenBuildArguments):
             LOGGER.debug('--target is missing. Set --target as "all".')
             self.target = 'all'
 
+        # Validate mutual exclusivity of enable_preview_targets and default_build_targets
+        if self.enable_preview_targets and self.default_build_targets:
+            raise InvalidCommand(
+                'Cannot specify both --enable-preview-targets and --default-build-targets at the same time. '
+                'Please use only one of these options.'
+            )
+
+        reset_default_build_targets()  # reset first then judge again
         if self.default_build_targets:
             default_build_targets = []
             for target in self.default_build_targets:
@@ -582,24 +603,29 @@ class FindBuildArguments(DependencyDrivenBuildArguments):
                     default_build_targets.append(target)
             self.default_build_targets = default_build_targets
             LOGGER.info('Overriding default build targets to %s', self.default_build_targets)
-            FolderRule.DEFAULT_BUILD_TARGETS = self.default_build_targets
+            DEFAULT_BUILD_TARGETS.set(self.default_build_targets)
         elif self.enable_preview_targets:
             self.default_build_targets = deepcopy(ALL_TARGETS)
             LOGGER.info('Overriding default build targets to %s', self.default_build_targets)
-            FolderRule.DEFAULT_BUILD_TARGETS = self.default_build_targets
-        else:
-            # restore default build targets
-            FolderRule.DEFAULT_BUILD_TARGETS = SUPPORTED_TARGETS
+            DEFAULT_BUILD_TARGETS.set(self.default_build_targets)  # type: ignore
 
-        if self.disable_targets and FolderRule.DEFAULT_BUILD_TARGETS:
+        if self.disable_targets and DEFAULT_BUILD_TARGETS.get():
             LOGGER.info('Disable targets: %s', self.disable_targets)
             self.default_build_targets = [
-                _target for _target in FolderRule.DEFAULT_BUILD_TARGETS if _target not in self.disable_targets
+                _target for _target in DEFAULT_BUILD_TARGETS.get() if _target not in self.disable_targets
             ]
-            FolderRule.DEFAULT_BUILD_TARGETS = self.default_build_targets
+            DEFAULT_BUILD_TARGETS.set(self.default_build_targets)
 
         if self.override_sdkconfig_files or self.override_sdkconfig_items:
             SESSION_ARGS.set(self)
+
+        # update PYTHONPATH
+        if self.extra_pythonpaths:
+            LOGGER.debug('Adding extra Python paths: %s', self.extra_pythonpaths)
+            for path in self.extra_pythonpaths:
+                abs_path = to_absolute_path(path)
+                if abs_path not in sys.path:
+                    sys.path.insert(0, abs_path)
 
         # load build system
         # here could be a string or a class of type App
@@ -763,7 +789,6 @@ class BuildArguments(FindBuildArguments):
         FieldMetadata(
             deprecates={'collect_size_info': {}},
             hidden=True,
-            validate_method=[ValidateMethod.EXPAND_VARS],
         ),
         description='Record size json filepath of the built apps to the specified file. '
         'Each line is a json string. Can expand placeholders @p. Support environment variables.',
@@ -775,7 +800,6 @@ class BuildArguments(FindBuildArguments):
         FieldMetadata(
             deprecates={'collect_app_info': {}},
             hidden=True,
-            validate_method=[ValidateMethod.EXPAND_VARS],
         ),
         description='Record serialized app model of the built apps to the specified file. '
         'Each line is a json string. Can expand placeholders @p. Support environment variables.',
@@ -787,7 +811,6 @@ class BuildArguments(FindBuildArguments):
         FieldMetadata(
             deprecates={'junitxml': {}},
             hidden=True,
-            validate_method=[ValidateMethod.EXPAND_VARS],
         ),
         description='Path to the junitxml file to record the build results. Can expand placeholder @p. '
         'Support environment variables.',

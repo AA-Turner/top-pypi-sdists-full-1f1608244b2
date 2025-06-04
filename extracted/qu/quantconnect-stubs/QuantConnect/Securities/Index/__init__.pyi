@@ -10,28 +10,6 @@ import QuantConnect.Securities.Index
 import System
 
 
-class IndexCache(QuantConnect.Securities.SecurityCache):
-    """INDEX specific caching support"""
-
-
-class IndexExchange(QuantConnect.Securities.SecurityExchange):
-    """INDEX exchange class - information and helper tools for Index exchange properties"""
-
-    @property
-    def trading_days_per_year(self) -> int:
-        """Number of trading days per year for this security, used for performance statistics."""
-        ...
-
-    def __init__(self, exchange_hours: QuantConnect.Securities.SecurityExchangeHours) -> None:
-        """
-        Initializes a new instance of the IndexExchange class using the specified
-        exchange hours to determine open/close times
-        
-        :param exchange_hours: Contains the weekly exchange schedule plus holidays
-        """
-        ...
-
-
 class Index(QuantConnect.Securities.Security):
     """INDEX Security Object Implementation for INDEX Assets"""
 
@@ -77,6 +55,28 @@ class Index(QuantConnect.Securities.Security):
         """
         Resets the security to its initial state by marking it as uninitialized and non-tradable
         and clearing the subscriptions.
+        """
+        ...
+
+
+class IndexCache(QuantConnect.Securities.SecurityCache):
+    """INDEX specific caching support"""
+
+
+class IndexExchange(QuantConnect.Securities.SecurityExchange):
+    """INDEX exchange class - information and helper tools for Index exchange properties"""
+
+    @property
+    def trading_days_per_year(self) -> int:
+        """Number of trading days per year for this security, used for performance statistics."""
+        ...
+
+    def __init__(self, exchange_hours: QuantConnect.Securities.SecurityExchangeHours) -> None:
+        """
+        Initializes a new instance of the IndexExchange class using the specified
+        exchange hours to determine open/close times
+        
+        :param exchange_hours: Contains the weekly exchange schedule plus holidays
         """
         ...
 

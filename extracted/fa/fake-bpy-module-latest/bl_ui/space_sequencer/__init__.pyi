@@ -4,6 +4,7 @@ import typing_extensions
 import numpy.typing as npt
 import bl_ui.properties_grease_pencil_common
 import bl_ui.space_toolsystem_common
+import bl_ui.utils
 import bpy.types
 import rna_prop_ui
 
@@ -1901,7 +1902,7 @@ class SEQUENCER_PT_overlay(bpy.types.Panel):
         """
 
 class SEQUENCER_PT_playhead_snapping(
-    bl_ui.space_toolsystem_common.PlayheadSnappingPanel, bpy.types.Panel
+    bl_ui.utils.PlayheadSnappingPanel, bpy.types.Panel
 ):
     bl_label: typing.Any
     bl_region_type: typing.Any

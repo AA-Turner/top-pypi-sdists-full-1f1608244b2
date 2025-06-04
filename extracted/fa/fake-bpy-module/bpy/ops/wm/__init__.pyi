@@ -3,7 +3,7 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 import bl_operators.wm
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -60,9 +60,9 @@ def alembic_export(
     use_instancing: bool | None = True,
     global_scale: float | None = 1.0,
     triangulate: bool | None = False,
-    quad_method: bpy._typing.rna_enums.ModifierTriangulateQuadMethodItems
+    quad_method: bpy.stub_internal.rna_enums.ModifierTriangulateQuadMethodItems
     | None = "SHORTEST_DIAGONAL",
-    ngon_method: bpy._typing.rna_enums.ModifierTriangulateNgonMethodItems
+    ngon_method: bpy.stub_internal.rna_enums.ModifierTriangulateNgonMethodItems
     | None = "BEAUTY",
     export_hair: bool | None = True,
     export_particles: bool | None = True,
@@ -177,9 +177,9 @@ def alembic_export(
         :param triangulate: Triangulate, Export polygons (quads and n-gons) as triangles
         :type triangulate: bool | None
         :param quad_method: Quad Method, Method for splitting the quads into triangles
-        :type quad_method: bpy._typing.rna_enums.ModifierTriangulateQuadMethodItems | None
+        :type quad_method: bpy.stub_internal.rna_enums.ModifierTriangulateQuadMethodItems | None
         :param ngon_method: N-gon Method, Method for splitting the n-gons into triangles
-        :type ngon_method: bpy._typing.rna_enums.ModifierTriangulateNgonMethodItems | None
+        :type ngon_method: bpy.stub_internal.rna_enums.ModifierTriangulateNgonMethodItems | None
         :param export_hair: Export Hair, Exports hair particle systems as animated curves
         :type export_hair: bool | None
         :param export_particles: Export Particles, Exports non-hair particle systems
@@ -1597,9 +1597,9 @@ def grease_pencil_export_pdf(
     use_fill: bool | None = True,
     selected_object_type: typing.Literal["ACTIVE", "SELECTED", "VISIBLE"]
     | None = "ACTIVE",
+    frame_mode: typing.Literal["ACTIVE", "SELECTED", "SCENE"] | None = "ACTIVE",
     stroke_sample: float | None = 0.0,
     use_uniform_width: bool | None = False,
-    frame_mode: typing.Literal["ACTIVE", "SELECTED", "SCENE"] | None = "ACTIVE",
 ):
     """Export Grease Pencil to PDF
 
@@ -1674,10 +1674,6 @@ def grease_pencil_export_pdf(
     VISIBLE
     Visible -- Include all visible objects.
         :type selected_object_type: typing.Literal['ACTIVE','SELECTED','VISIBLE'] | None
-        :param stroke_sample: Sampling, Precision of stroke sampling. Low values mean a more precise result, and zero disables sampling
-        :type stroke_sample: float | None
-        :param use_uniform_width: Uniform Width, Export strokes with uniform width
-        :type use_uniform_width: bool | None
         :param frame_mode: Frames, Which frames to include in the export
 
     ACTIVE
@@ -1689,6 +1685,10 @@ def grease_pencil_export_pdf(
     SCENE
     Scene -- Include all scene frames.
         :type frame_mode: typing.Literal['ACTIVE','SELECTED','SCENE'] | None
+        :param stroke_sample: Sampling, Precision of stroke sampling. Low values mean a more precise result, and zero disables sampling
+        :type stroke_sample: float | None
+        :param use_uniform_width: Uniform Width, Export strokes with uniform width
+        :type use_uniform_width: bool | None
     """
 
 def grease_pencil_export_svg(
@@ -1724,6 +1724,7 @@ def grease_pencil_export_svg(
     use_fill: bool | None = True,
     selected_object_type: typing.Literal["ACTIVE", "SELECTED", "VISIBLE"]
     | None = "ACTIVE",
+    frame_mode: typing.Literal["ACTIVE", "SELECTED", "SCENE"] | None = "ACTIVE",
     stroke_sample: float | None = 0.0,
     use_uniform_width: bool | None = False,
     use_clip_camera: bool | None = False,
@@ -1801,6 +1802,17 @@ def grease_pencil_export_svg(
     VISIBLE
     Visible -- Include all visible objects.
         :type selected_object_type: typing.Literal['ACTIVE','SELECTED','VISIBLE'] | None
+        :param frame_mode: Frames, Which frames to include in the export
+
+    ACTIVE
+    Active -- Include only active frame.
+
+    SELECTED
+    Selected -- Include selected frames.
+
+    SCENE
+    Scene -- Include all scene frames.
+        :type frame_mode: typing.Literal['ACTIVE','SELECTED','SCENE'] | None
         :param stroke_sample: Sampling, Precision of stroke sampling. Low values mean a more precise result, and zero disables sampling
         :type stroke_sample: float | None
         :param use_uniform_width: Uniform Width, Export strokes with uniform width
@@ -4572,9 +4584,10 @@ def set_stereo_3d(
     undo: bool | None = None,
     /,
     *,
-    display_mode: bpy._typing.rna_enums.Stereo3DDisplayItems | None = "ANAGLYPH",
-    anaglyph_type: bpy._typing.rna_enums.Stereo3DAnaglyphTypeItems | None = "RED_CYAN",
-    interlace_type: bpy._typing.rna_enums.Stereo3DInterlaceTypeItems
+    display_mode: bpy.stub_internal.rna_enums.Stereo3DDisplayItems | None = "ANAGLYPH",
+    anaglyph_type: bpy.stub_internal.rna_enums.Stereo3DAnaglyphTypeItems
+    | None = "RED_CYAN",
+    interlace_type: bpy.stub_internal.rna_enums.Stereo3DInterlaceTypeItems
     | None = "ROW_INTERLEAVED",
     use_interlace_swap: bool | None = False,
     use_sidebyside_crosseyed: bool | None = False,
@@ -4584,11 +4597,11 @@ def set_stereo_3d(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param display_mode: Display Mode
-    :type display_mode: bpy._typing.rna_enums.Stereo3DDisplayItems | None
+    :type display_mode: bpy.stub_internal.rna_enums.Stereo3DDisplayItems | None
     :param anaglyph_type: Anaglyph Type
-    :type anaglyph_type: bpy._typing.rna_enums.Stereo3DAnaglyphTypeItems | None
+    :type anaglyph_type: bpy.stub_internal.rna_enums.Stereo3DAnaglyphTypeItems | None
     :param interlace_type: Interlace Type
-    :type interlace_type: bpy._typing.rna_enums.Stereo3DInterlaceTypeItems | None
+    :type interlace_type: bpy.stub_internal.rna_enums.Stereo3DInterlaceTypeItems | None
     :param use_interlace_swap: Swap Left/Right, Swap left and right stereo channels
     :type use_interlace_swap: bool | None
     :param use_sidebyside_crosseyed: Cross-Eyed, Right eye should see left image and vice versa
@@ -5212,9 +5225,9 @@ def usd_export(
     export_points: bool | None = True,
     export_volumes: bool | None = True,
     triangulate_meshes: bool | None = False,
-    quad_method: bpy._typing.rna_enums.ModifierTriangulateQuadMethodItems
+    quad_method: bpy.stub_internal.rna_enums.ModifierTriangulateQuadMethodItems
     | None = "SHORTEST_DIAGONAL",
-    ngon_method: bpy._typing.rna_enums.ModifierTriangulateNgonMethodItems
+    ngon_method: bpy.stub_internal.rna_enums.ModifierTriangulateNgonMethodItems
     | None = "BEAUTY",
     usdz_downscale_size: typing.Literal[
         "KEEP", "256", "512", "1024", "2048", "4096", "CUSTOM"
@@ -5445,9 +5458,9 @@ def usd_export(
         :param triangulate_meshes: Triangulate Meshes, Triangulate meshes during export
         :type triangulate_meshes: bool | None
         :param quad_method: Quad Method, Method for splitting the quads into triangles
-        :type quad_method: bpy._typing.rna_enums.ModifierTriangulateQuadMethodItems | None
+        :type quad_method: bpy.stub_internal.rna_enums.ModifierTriangulateQuadMethodItems | None
         :param ngon_method: N-gon Method, Method for splitting the n-gons into triangles
-        :type ngon_method: bpy._typing.rna_enums.ModifierTriangulateNgonMethodItems | None
+        :type ngon_method: bpy.stub_internal.rna_enums.ModifierTriangulateNgonMethodItems | None
         :param usdz_downscale_size: USDZ Texture Downsampling, Choose a maximum size for all exported textures
 
     KEEP

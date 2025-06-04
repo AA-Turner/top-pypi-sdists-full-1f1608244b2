@@ -455,7 +455,7 @@ def push(workbooks, *, path: Optional[str] = None, owner: Optional[str] = None,
                     try:
                         workbook.push(context=context, folder_id=workbook_folder_id, item_map=item_map, label=label,
                                       include_inventory=include_inventory_for_this_workbook)
-                    except SPyException as e:
+                    except (SPyException, ApiException) as e:
                         status.raise_or_put(e, 'Result')
                         continue
 

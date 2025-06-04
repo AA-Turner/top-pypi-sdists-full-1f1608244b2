@@ -106,7 +106,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
             console.print(f"\nError Message: {return_login.retorno}", style="bold red")
             return return_login
 
-        await worker_sleep(6)
+        await worker_sleep(8)
         console.print(
             "Verificando se a janela Movimento de Apuração PIS / COFINS foi aberta com sucesso...\n"
         )
@@ -136,6 +136,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
         filial_cod = lancamento_pis_cofins_processar.get("empresa")
         periodo_dt = lancamento_pis_cofins_processar.get("periodo")
 
+        await worker_sleep(1)
         # Preenchendo os campos necessarios de período e selecionando todas as empresas
         console.print(f"\Informando o período... ", style="bold green")
         app = Application().connect(class_name="TFrmMovtoApuraPisCofins", timeout=60)
@@ -183,7 +184,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
             console.print(f"Clicando em seleciona todas...")
             try:
                 selecionar_todos_itens = (
-                    rf"{ASSETS_PATH}\lancamento_pis_cofins\btn_selecionar_todas.png"
+                    ASSETS_PATH + "\\lancamento_pis_cofins\\btn_selecionar_todas.png"
                 )
                 # Tenta localizar a imagem na tela
                 localizacao = pyautogui.locateOnScreen(
@@ -373,6 +374,8 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
 
                     pyautogui.click(734, 468)
 
+                    await worker_sleep(3)
+
                     console.print(f"Clicando em ok...")
                     try:
                         btn_pesquisar = pyautogui.locateOnScreen(
@@ -467,7 +470,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
                             )
                             break
 
-                    await worker_sleep(3)
+                    await worker_sleep(6)
                     console.print(f"Gravando...")
                     try:
                         app = Application().connect(
@@ -509,7 +512,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
                             )
                             break
 
-                    await worker_sleep(5)
+                    await worker_sleep(6)
                     print(f"Verificando se possui tela de Informação...")
 
                     try:
@@ -613,6 +616,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
                 pyautogui.press("up")
                 await worker_sleep(1)
 
+            await worker_sleep(3)
             console.print(f"Clicando Alterar Apuracao...")
             try:
                 btn_alterar_apuracao = pyautogui.locateOnScreen(
@@ -649,6 +653,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
                 tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
             )
 
+        await worker_sleep(3)
         console.print("Gerando Crédito...\n")
         try:
             app = Application().connect(
@@ -675,6 +680,7 @@ async def lancamento_pis_cofins(task: RpaProcessoEntradaDTO) -> RpaRetornoProces
                     tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
                 )
 
+            await worker_sleep(3)
             console.print(f"Clicando Gerar Registros Crédito...")
             try:
                 btn_gerar_registro_credito = pyautogui.locateOnScreen(

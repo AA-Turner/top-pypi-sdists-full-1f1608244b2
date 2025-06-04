@@ -1,6 +1,7 @@
 import asyncio
 import functools
 import re
+import time
 import urllib.parse
 import uuid
 from collections.abc import Mapping, Sequence
@@ -249,6 +250,7 @@ async def create_valid_run(
     headers: Mapping[str, str],
     barrier: asyncio.Barrier | None = None,
     run_id: UUID | None = None,
+    request_start_time: float | None = None,
 ) -> Run:
     request_id = headers.get("x-request-id")  # Will be null in the crons scheduler.
     (
@@ -293,6 +295,11 @@ async def create_valid_run(
         user_id = None
     if not configurable.get("langgraph_request_id"):
         configurable["langgraph_request_id"] = request_id
+    if request_start_time:
+        configurable["__request_start_time_ms__"] = request_start_time
+    after_seconds = payload.get("after_seconds", 0)
+    configurable["__after_seconds__"] = after_seconds
+    put_time_start = time.time()
     run_coro = Runs.put(
         conn,
         assistant_id,
@@ -317,7 +324,7 @@ async def create_valid_run(
         run_id=run_id,
         multitask_strategy=multitask_strategy,
         prevent_insert_if_inflight=prevent_insert_if_inflight,
-        after_seconds=payload.get("after_seconds", 0),
+        after_seconds=after_seconds,
         if_not_exists=payload.get("if_not_exists", "reject"),
     )
     run_ = await run_coro
@@ -344,8 +351,14 @@ async def create_valid_run(
             multitask_strategy=multitask_strategy,
             stream_mode=stream_mode,
             temporary=temporary,
-            after_seconds=payload.get("after_seconds", 0),
+            after_seconds=after_seconds,
             if_not_exists=payload.get("if_not_exists", "reject"),
+            run_create_ms=(
+                int(time.time() * 1_000) - request_start_time
+                if request_start_time
+                else None
+            ),
+            run_put_ms=int((time.time() - put_time_start) * 1_000),
         )
         # inserted, proceed
         if multitask_strategy in ("interrupt", "rollback") and inflight_runs:

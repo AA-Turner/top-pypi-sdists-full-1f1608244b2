@@ -2,6 +2,8 @@
 from .._impl import (
     storage_writer_api_ArrayPoints as ArrayPoints,
     storage_writer_api_ArrayPointsVisitor as ArrayPointsVisitor,
+    storage_writer_api_ArraysValues as ArraysValues,
+    storage_writer_api_ArraysValuesVisitor as ArraysValuesVisitor,
     storage_writer_api_ColumnBatch as ColumnBatch,
     storage_writer_api_ColumnValues as ColumnValues,
     storage_writer_api_ColumnValuesVisitor as ColumnValuesVisitor,

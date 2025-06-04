@@ -33,7 +33,7 @@ class X86Base(System.Object, metaclass=abc.ABCMeta):
     @staticmethod
     @overload
     def div_rem(lower: int, upper: int, divisor: int) -> System.ValueTuple[int, int]:
-        """DIV reg/m32"""
+        """unsigned _udiv64(unsigned __int64 dividend, unsigned divisor, unsigned* remainder)  DIV reg/m32"""
         ...
 
     @staticmethod
@@ -51,6 +51,91 @@ class X86Base(System.Object, metaclass=abc.ABCMeta):
     @staticmethod
     def pause() -> None:
         """void _mm_pause (void);  PAUSE"""
+        ...
+
+
+class X86Serialize(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
+    """Provides access to the x86 SERIALIZE hardware instruction via intrinsics."""
+
+    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 SERIALIZE hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def serialize() -> None:
+        """void _serialize (void);"""
+        ...
+
+
+class Bmi2(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
+    """Provides access to X86 BMI2 hardware instructions via intrinsics."""
+
+    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 BMI2 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        @overload
+        def multiply_no_flags(left: int, right: int, low: typing.Any) -> int:
+            """unsigned __int64 _mulx_u64 (unsigned __int64 a, unsigned __int64 b, unsigned __int64* hi)  MULX r64a, r64b, r/m64The above native signature does not directly correspond to the managed signature.This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        @overload
+        def multiply_no_flags(left: int, right: int) -> int:
+            """unsigned __int64 _mulx_u64 (unsigned __int64 a, unsigned __int64 b, unsigned __int64* hi)  MULX r64a, r64b, r/m64The above native signature does not directly correspond to the managed signature.This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        def parallel_bit_deposit(value: int, mask: int) -> int:
+            """unsigned __int64 _pdep_u64 (unsigned __int64 a, unsigned __int64 mask)  PDEP r64a, r64b, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        def parallel_bit_extract(value: int, mask: int) -> int:
+            """unsigned __int64 _pext_u64 (unsigned __int64 a, unsigned __int64 mask)  PEXT r64a, r64b, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        def zero_high_bits(value: int, index: int) -> int:
+            """unsigned __int64 _bzhi_u64 (unsigned __int64 a, unsigned int index)  BZHI r64a, r/m64, r64bThis intrinsic is only available on 64-bit processes"""
+            ...
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    @overload
+    def multiply_no_flags(left: int, right: int, low: typing.Any) -> int:
+        """unsigned int _mulx_u32 (unsigned int a, unsigned int b, unsigned int* hi)  MULX r32a, r32b, r/m32The above native signature does not directly correspond to the managed signature."""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_no_flags(left: int, right: int) -> int:
+        """unsigned int _mulx_u32 (unsigned int a, unsigned int b, unsigned int* hi)  MULX r32a, r32b, r/m32The above native signature does not directly correspond to the managed signature."""
+        ...
+
+    @staticmethod
+    def parallel_bit_deposit(value: int, mask: int) -> int:
+        """unsigned int _pdep_u32 (unsigned int a, unsigned int mask)  PDEP r32a, r32b, r/m32"""
+        ...
+
+    @staticmethod
+    def parallel_bit_extract(value: int, mask: int) -> int:
+        """unsigned int _pext_u32 (unsigned int a, unsigned int mask)  PEXT r32a, r32b, r/m32"""
+        ...
+
+    @staticmethod
+    def zero_high_bits(value: int, index: int) -> int:
+        """unsigned int _bzhi_u32 (unsigned int a, unsigned int index)  BZHI r32a, r/m32, r32b"""
         ...
 
 
@@ -303,7 +388,7 @@ class Sse(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
 
     @staticmethod
     def divide_scalar(left: System.Runtime.Intrinsics.Vector128[float], right: System.Runtime.Intrinsics.Vector128[float]) -> System.Runtime.Intrinsics.Vector128[float]:
-        """__m128 _mm_div_ss (__m128 a,  __m128 b)   DIVSS xmm1,       xmm2/m32  VDIVSS xmm1, xmm2, xmm3/m32"""
+        """__m128 _mm_div_ss (__m128 a,  __m128 b)   DIVSs xmm1,       xmm2/m32  VDIVSs xmm1, xmm2, xmm3/m32"""
         ...
 
     @staticmethod
@@ -464,7 +549,7 @@ class Sse(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
 
     @staticmethod
     def store(address: typing.Any, source: System.Runtime.Intrinsics.Vector128[float]) -> None:
-        """void _mm_storeu_ps (float* mem_addr, __m128 a)   MOVUPS m128,         xmm1  VMOVUPS m128,         xmm1  VMOVUPS m128 {k1}{z}, xmm1"""
+        """void _mm_storeu_ps (float* mem_addr, __m128 a)   MOVAPS m128,         xmm1  VMOVAPS m128,         xmm1  VMOVAPS m128 {k1}{z}, xmm1"""
         ...
 
     @staticmethod
@@ -1178,7 +1263,7 @@ class Sse2(System.Runtime.Intrinsics.X86.Sse, metaclass=abc.ABCMeta):
     @staticmethod
     @overload
     def store(address: typing.Any, source: System.Runtime.Intrinsics.Vector128[float]) -> None:
-        """void _mm_storeu_pd (double* mem_addr, __m128d a)   MOVAPD m128,         xmm1  VMOVAPD m128,         xmm1  VMOVAPD m128 {k1}{z}, xmm1"""
+        """void _mm_storeu_pd (double* mem_addr, __m128d a)   MOVUPD m128,         xmm1  VMOVUPD m128,         xmm1  VMOVUPD m128 {k1}{z}, xmm1"""
         ...
 
     @staticmethod
@@ -1409,6 +1494,46 @@ class Ssse3(System.Runtime.Intrinsics.X86.Sse3, metaclass=abc.ABCMeta):
     @staticmethod
     def sign(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
         """__m128i _mm_sign_epi8 (__m128i a, __m128i b)   PSIGNB xmm1,       xmm2/m128  VPSIGNB xmm1, xmm2, xmm3/m128"""
+        ...
+
+
+class Pclmulqdq(System.Runtime.Intrinsics.X86.Sse2, metaclass=abc.ABCMeta):
+    """Provides access to X86 CLMUL hardware instructions via intrinsics."""
+
+    class X64(System.Runtime.Intrinsics.X86.Sse2.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 CLMUL hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    class V256(System.Object, metaclass=abc.ABCMeta):
+        """This class has no documentation."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def carryless_multiply(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int], control: int) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_clmulepi64_epi128 (__m256i a, __m256i b, const int imm8)  VPCLMULQDQ ymm1, ymm2, ymm3/m256, imm8"""
+            ...
+
+    class V512(System.Object, metaclass=abc.ABCMeta):
+        """This class has no documentation."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def carryless_multiply(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
+            """__m512i _mm512_clmulepi64_epi128 (__m512i a, __m512i b, const int imm8)  VPCLMULQDQ zmm1, zmm2, zmm3/m512, imm8"""
+            ...
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def carryless_multiply(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], control: int) -> System.Runtime.Intrinsics.Vector128[int]:
+        """__m128i _mm_clmulepi64_si128 (__m128i a, __m128i b, const int imm8)   PCLMULQDQ xmm1,       xmm2/m128, imm8  VPCLMULQDQ xmm1, xmm2, xmm3/m128, imm8"""
         ...
 
 
@@ -2019,7 +2144,7 @@ class Avx(System.Runtime.Intrinsics.X86.Sse42, metaclass=abc.ABCMeta):
 
     @staticmethod
     def dot_product(left: System.Runtime.Intrinsics.Vector256[float], right: System.Runtime.Intrinsics.Vector256[float], control: int) -> System.Runtime.Intrinsics.Vector256[float]:
-        """__m256 _mm256_dp_ps (__m256 a, __m256 b, const int imm8)  VDPPS ymm1, ymm2, ymm3/m256, imm8"""
+        """__m256 _mm256_dp_ps (__m256 a, __m256 b, const int imm8)  VDPPS ymm, ymm, ymm/m256, imm8"""
         ...
 
     @staticmethod
@@ -3037,7 +3162,7 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
         @staticmethod
         @overload
         def convert_to_vector_128_int_32_with_saturation(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm128_cvtsepi64_epi32 (__m128i a)  VPMOVSQD xmm1/m64 {k1}{z}, xmm2"""
+            """__m128i _mm_cvtsepi64_epi32 (__m128i a)  VPMOVSQD xmm1/m64 {k1}{z}, xmm2"""
             ...
 
         @staticmethod
@@ -3102,7 +3227,7 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
         @staticmethod
         @overload
         def convert_to_vector_128_u_int_32(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm128_cvtepi64_epi32 (__m128i a)  VPMOVQD xmm1/m128 {k1}{z}, xmm2"""
+            """__m128i _mm_cvtepi64_epi32 (__m128i a)  VPMOVQD xmm1/m128 {k1}{z}, xmm2"""
             ...
 
         @staticmethod
@@ -3126,7 +3251,7 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
         @staticmethod
         @overload
         def convert_to_vector_128_u_int_32_with_saturation(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm128_cvtusepi64_epi32 (__m128i a)  VPMOVUSQD xmm1/m128 {k1}{z}, xmm2"""
+            """__m128i _mm_cvtusepi64_epi32 (__m128i a)  VPMOVUSQD xmm1/m128 {k1}{z}, xmm2"""
             ...
 
         @staticmethod
@@ -3463,25 +3588,25 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
 
         @staticmethod
         @overload
-        def convert_scalar_to_vector_128_double(upper: System.Runtime.Intrinsics.Vector128[float], value: int) -> System.Runtime.Intrinsics.Vector128[float]:
-            """__m128d _mm_cvtsi64_sd (__m128d a, __int64 b)  VCVTUSI2SD xmm1, xmm2, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        @overload
         def convert_scalar_to_vector_128_double(upper: System.Runtime.Intrinsics.Vector128[float], value: int, mode: System.Runtime.Intrinsics.X86.FloatRoundingMode) -> System.Runtime.Intrinsics.Vector128[float]:
             """__m128d _mm_cvt_roundsi64_sd (__m128d a, __int64 b, int rounding)  VCVTSI2SD xmm1, xmm2, r64 {er}This intrinsic is only available on 64-bit processes"""
             ...
 
         @staticmethod
         @overload
-        def convert_scalar_to_vector_128_single(upper: System.Runtime.Intrinsics.Vector128[float], value: int) -> System.Runtime.Intrinsics.Vector128[float]:
-            """__m128 _mm_cvt_roundi64_ss (__m128 a, __int64 b, int rounding)  VCVTSI2SS xmm1, xmm2, r64 {er}This intrinsic is only available on 64-bit processes"""
+        def convert_scalar_to_vector_128_double(upper: System.Runtime.Intrinsics.Vector128[float], value: int) -> System.Runtime.Intrinsics.Vector128[float]:
+            """__m128d _mm_cvtsi64_sd (__m128d a, __int64 b)  VCVTUSI2SD xmm1, xmm2, r/m64This intrinsic is only available on 64-bit processes"""
             ...
 
         @staticmethod
         @overload
         def convert_scalar_to_vector_128_single(upper: System.Runtime.Intrinsics.Vector128[float], value: int, mode: System.Runtime.Intrinsics.X86.FloatRoundingMode) -> System.Runtime.Intrinsics.Vector128[float]:
+            """__m128 _mm_cvt_roundi64_ss (__m128 a, __int64 b, int rounding)  VCVTSI2SS xmm1, xmm2, r64 {er}This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_scalar_to_vector_128_single(upper: System.Runtime.Intrinsics.Vector128[float], value: int) -> System.Runtime.Intrinsics.Vector128[float]:
             """__m128 _mm_cvtsi64_ss (__m128 a, __int64 b)  VCVTUSI2SS xmm1, xmm2, r/m64This intrinsic is only available on 64-bit processes"""
             ...
 
@@ -3535,7 +3660,7 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
 
     @staticmethod
     def add_scalar(left: System.Runtime.Intrinsics.Vector128[float], right: System.Runtime.Intrinsics.Vector128[float], mode: System.Runtime.Intrinsics.X86.FloatRoundingMode) -> System.Runtime.Intrinsics.Vector128[float]:
-        """__m128d _mm_add_round_sd (__m128d a, __m128d b, int rounding)  VADDSD xmm1, xmm2, xmm3 {er}"""
+        """__m128 _mm_add_round_ss (__m128 a, __m128 b, int rounding)  VADDSS xmm1, xmm2, xmm3 {er}"""
         ...
 
     @staticmethod
@@ -3930,14 +4055,14 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
 
     @staticmethod
     @overload
-    def convert_to_vector_512_single(value: System.Runtime.Intrinsics.Vector512[int], mode: System.Runtime.Intrinsics.X86.FloatRoundingMode) -> System.Runtime.Intrinsics.Vector512[float]:
-        """__m512 _mm512_cvt_roundepi32_ps (__m512i a, int rounding)  VCVTDQ2PS zmm1, zmm2 {er}"""
+    def convert_to_vector_512_single(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[float]:
+        """__m512 _mm512_cvtepi32_ps (__m512i a)  VCVTDQ2PS zmm1 {k1}{z}, zmm2/m512/m32bcst{er}"""
         ...
 
     @staticmethod
     @overload
-    def convert_to_vector_512_single(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[float]:
-        """__m512 _mm512_cvtepi32_ps (__m512i a)  VCVTDQ2PS zmm1 {k1}{z}, zmm2/m512/m32bcst{er}"""
+    def convert_to_vector_512_single(value: System.Runtime.Intrinsics.Vector512[int], mode: System.Runtime.Intrinsics.X86.FloatRoundingMode) -> System.Runtime.Intrinsics.Vector512[float]:
+        """__m512 _mm512_cvt_roundepi32_ps (__m512i a, int rounding)  VCVTDQ2PS zmm1, zmm2 {er}"""
         ...
 
     @staticmethod
@@ -3995,7 +4120,7 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
 
     @staticmethod
     def divide_scalar(left: System.Runtime.Intrinsics.Vector128[float], right: System.Runtime.Intrinsics.Vector128[float], mode: System.Runtime.Intrinsics.X86.FloatRoundingMode) -> System.Runtime.Intrinsics.Vector128[float]:
-        """__m128d _mm_div_round_sd (__m128d a, __m128d b, int rounding)  VDIVSS xmm1, xmm2, xmm3 {er}"""
+        """__m128 _mm_div_round_ss (__m128 a, __m128 b, int rounding)  VDIVSD xmm1, xmm2, xmm3 {er}"""
         ...
 
     @staticmethod
@@ -4453,7 +4578,7 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
 
     @staticmethod
     def shift_left_logical_variable(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_sllv_epi32 (__m512i a, __m512i count)  VPSLLVD ymm1 {k1}{z}, ymm2, ymm3/m512/m32bcst"""
+        """__m512i _mm512_sllv_epi32 (__m512i a, __m512i count)  VPSLLVD zmm1 {k1}{z}, zmm2, zmm3/m512/m32bcst"""
         ...
 
     @staticmethod
@@ -4629,6 +4754,551 @@ class Avx512F(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
     @staticmethod
     def xor(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
         """__m512i _mm512_xor_si512 (__m512i a, __m512i b)  VPXORD zmm1 {k1}{z}, zmm2, zmm3/m512/m32bcst"""
+        ...
+
+
+class Avx512BW(System.Runtime.Intrinsics.X86.Avx512F, metaclass=abc.ABCMeta):
+    """Provides access to X86 AVX512BW hardware instructions via intrinsics."""
+
+    class VL(System.Runtime.Intrinsics.X86.Avx512F.VL, metaclass=abc.ABCMeta):
+        """Provides access to the x86 AVX512BW+VL hardware instructions via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        @overload
+        def compare_greater_than(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cmpgt_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(6)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_greater_than(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_cmpgt_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(6)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_greater_than_or_equal(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cmpge_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(5)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_greater_than_or_equal(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_cmpge_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(5)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_less_than(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cmplt_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(1)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_less_than(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_cmplt_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(1)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_less_than_or_equal(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cmple_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(2)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_less_than_or_equal(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_cmple_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(2)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_not_equal(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cmpne_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(4)"""
+            ...
+
+        @staticmethod
+        @overload
+        def compare_not_equal(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_cmpne_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(4)"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_byte(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cvtepi16_epi8 (__m128i a)  VPMOVWB xmm1/m64 {k1}{z}, xmm2"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_byte(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm256_cvtepi16_epi8 (__m256i a)  VPMOVWB xmm1/m128 {k1}{z}, ymm2"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_byte_with_saturation(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cvtusepi16_epi8 (__m128i a)  VPMOVUWB xmm1/m64 {k1}{z}, xmm2"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_byte_with_saturation(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm256_cvtusepi16_epi8 (__m256i a)  VPMOVUWB xmm1/m128 {k1}{z}, ymm2"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_s_byte(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cvtepi16_epi8 (__m128i a)  VPMOVWB xmm1/m64 {k1}{z}, zmm2"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_s_byte(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm256_cvtepi16_epi8 (__m256i a)  VPMOVWB xmm1/m128 {k1}{z}, zmm2"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_s_byte_with_saturation(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_cvtsepi16_epi8 (__m128i a)  VPMOVSWB xmm1/m64 {k1}{z}, zmm2"""
+            ...
+
+        @staticmethod
+        @overload
+        def convert_to_vector_128_s_byte_with_saturation(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm256_cvtsepi16_epi8 (__m256i a)  VPMOVSWB xmm1/m128 {k1}{z}, zmm2"""
+            ...
+
+        @staticmethod
+        def permute_var_16x_16(left: System.Runtime.Intrinsics.Vector256[int], control: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_permutevar16x16_epi16 (__m256i a, __m256i b)  VPERMW ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+        @staticmethod
+        def permute_var_16x_16x_2(lower: System.Runtime.Intrinsics.Vector256[int], indices: System.Runtime.Intrinsics.Vector256[int], upper: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_permutex2var_epi16 (__m256i a, __m256i idx, __m256i b)  VPERMI2W ymm1 {k1}{z}, ymm2, ymm3/m256  VPERMT2W ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+        @staticmethod
+        def permute_var_8x_16(left: System.Runtime.Intrinsics.Vector128[int], control: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_permutevar8x16_epi16 (__m128i a, __m128i b)  VPERMW xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        def permute_var_8x_16x_2(lower: System.Runtime.Intrinsics.Vector128[int], indices: System.Runtime.Intrinsics.Vector128[int], upper: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_permutex2var_epi16 (__m128i a, __m128i idx, __m128i b)  VPERMI2W xmm1 {k1}{z}, xmm2, xmm3/m128  VPERMT2W xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        @overload
+        def shift_left_logical_variable(value: System.Runtime.Intrinsics.Vector128[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_sllv_epi16 (__m128i a, __m128i count)  VPSLLVW xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        @overload
+        def shift_left_logical_variable(value: System.Runtime.Intrinsics.Vector256[int], count: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_sllv_epi16 (__m256i a, __m256i count)  VPSLLVW ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+        @staticmethod
+        @overload
+        def shift_right_arithmetic_variable(value: System.Runtime.Intrinsics.Vector128[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_srav_epi16 (__m128i a, __m128i count)  VPSRAVW xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        @overload
+        def shift_right_arithmetic_variable(value: System.Runtime.Intrinsics.Vector256[int], count: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_srav_epi16 (__m256i a, __m256i count)  VPSRAVW ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+        @staticmethod
+        @overload
+        def shift_right_logical_variable(value: System.Runtime.Intrinsics.Vector128[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_srlv_epi16 (__m128i a, __m128i count)  VPSRLVW xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        @overload
+        def shift_right_logical_variable(value: System.Runtime.Intrinsics.Vector256[int], count: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_srlv_epi16 (__m256i a, __m256i count)  VPSRLVW ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+        @staticmethod
+        @overload
+        def sum_absolute_differences_in_block_32(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], control: int) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_dbsad_epu8 (__m128i a, __m128i b, int imm8)  VDBPSADBW xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        @overload
+        def sum_absolute_differences_in_block_32(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int], control: int) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_dbsad_epu8 (__m256i a, __m256i b, int imm8)  VDBPSADBW ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+    class X64(System.Runtime.Intrinsics.X86.Avx512F.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 AVX512BW hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def abs(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_abs_epi8 (__m512i a)  VPABSB zmm1 {k1}{z}, zmm2/m512"""
+        ...
+
+    @staticmethod
+    def add(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_add_epi8 (__m512i a, __m512i b)  VPADDB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def add_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_adds_epi8 (__m512i a, __m512i b)  VPADDSB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def align_right(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], mask: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_alignr_epi8 (__m512i a, __m512i b, const int count)  VPALIGNR zmm1 {k1}{z}, zmm2, zmm3/m512, imm8"""
+        ...
+
+    @staticmethod
+    def average(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_avg_epu8 (__m512i a, __m512i b)  VPAVGB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def blend_variable(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], mask: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_blendv_epu8 (__m512i a, __m512i b, __m512i mask)  VPBLENDMB zmm1 {k1}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def broadcast_scalar_to_vector_512(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_broadcastb_epi8 (__m128i a)  VPBROADCASTB zmm1 {k1}{z}, xmm2/m8"""
+        ...
+
+    @staticmethod
+    def compare_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cmpeq_epu8 (__m512i a, __m512i b)  VPCMPEQB k1 {k2}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def compare_greater_than(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cmpgt_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(6)"""
+        ...
+
+    @staticmethod
+    def compare_greater_than_or_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cmpge_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(5)"""
+        ...
+
+    @staticmethod
+    def compare_less_than(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cmplt_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(1)"""
+        ...
+
+    @staticmethod
+    def compare_less_than_or_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cmple_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(2)"""
+        ...
+
+    @staticmethod
+    def compare_not_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cmpne_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(4)"""
+        ...
+
+    @staticmethod
+    def convert_to_vector_256_byte(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+        """__m256i _mm512_cvtepi16_epi8 (__m512i a)  VPMOVWB ymm1/m256 {k1}{z}, zmm2"""
+        ...
+
+    @staticmethod
+    def convert_to_vector_256_byte_with_saturation(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+        """__m256i _mm512_cvtusepi16_epi8 (__m512i a)  VPMOVUWB ymm1/m256 {k1}{z}, zmm2"""
+        ...
+
+    @staticmethod
+    def convert_to_vector_256_s_byte(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+        """__m256i _mm512_cvtepi16_epi8 (__m512i a)  VPMOVWB ymm1/m256 {k1}{z}, zmm2"""
+        ...
+
+    @staticmethod
+    def convert_to_vector_256_s_byte_with_saturation(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+        """__m256i _mm512_cvtsepi16_epi8 (__m512i a)  VPMOVSWB ymm1/m256 {k1}{z}, zmm2"""
+        ...
+
+    @staticmethod
+    def convert_to_vector_512_int_16(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cvtepi8_epi16 (__m128i a)  VPMOVSXBW zmm1 {k1}{z}, ymm2/m256"""
+        ...
+
+    @staticmethod
+    def convert_to_vector_512_u_int_16(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_cvtepi8_epi16 (__m128i a)  VPMOVSXBW zmm1 {k1}{z}, ymm2/m256"""
+        ...
+
+    @staticmethod
+    def load_vector_512(address: typing.Any) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_loadu_epi8 (__m512i const * mem_addr)  VMOVDQU8 zmm1 {k1}{z}, m512"""
+        ...
+
+    @staticmethod
+    def max(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_max_epi8 (__m512i a, __m512i b)  VPMAXSB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def min(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_min_epi8 (__m512i a, __m512i b)  VPMINSB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def multiply_add_adjacent(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_madd_epi16 (__m512i a, __m512i b)  VPMADDWD zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def multiply_high(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_mulhi_epi16 (__m512i a, __m512i b)  VPMULHW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def multiply_high_round_scale(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_mulhrs_epi16 (__m512i a, __m512i b)  VPMULHRSW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def multiply_low(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_mullo_epi16 (__m512i a, __m512i b)  VPMULLW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def pack_signed_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_packs_epi16 (__m512i a, __m512i b)  VPACKSSWB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def pack_unsigned_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_packus_epi16 (__m512i a, __m512i b)  VPACKUSWB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def permute_var_32x_16(left: System.Runtime.Intrinsics.Vector512[int], control: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_permutevar32x16_epi16 (__m512i a, __m512i b)  VPERMW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def permute_var_32x_16x_2(lower: System.Runtime.Intrinsics.Vector512[int], indices: System.Runtime.Intrinsics.Vector512[int], upper: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_permutex2var_epi16 (__m512i a, __m512i idx, __m512i b)  VPERMI2W zmm1 {k1}{z}, zmm2, zmm3/m512  VPERMT2W zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    @overload
+    def shift_left_logical(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_sll_epi16 (__m512i a, __m128i count)  VPSLLW zmm1 {k1}{z}, zmm2, xmm3/m128"""
+        ...
+
+    @staticmethod
+    @overload
+    def shift_left_logical(value: System.Runtime.Intrinsics.Vector512[int], count: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_slli_epi16 (__m512i a, int imm8)  VPSLLW zmm1 {k1}{z}, zmm2, imm8"""
+        ...
+
+    @staticmethod
+    def shift_left_logical_128_bit_lane(value: System.Runtime.Intrinsics.Vector512[int], num_bytes: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_bslli_epi128 (__m512i a, const int imm8)  VPSLLDQ zmm1, zmm2/m512, imm8"""
+        ...
+
+    @staticmethod
+    def shift_left_logical_variable(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_sllv_epi16 (__m512i a, __m512i count)  VPSLLVW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    @overload
+    def shift_right_arithmetic(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """_mm512_sra_epi16 (__m512i a, __m128i count)  VPSRAW zmm1 {k1}{z}, zmm2, xmm3/m128"""
+        ...
+
+    @staticmethod
+    @overload
+    def shift_right_arithmetic(value: System.Runtime.Intrinsics.Vector512[int], count: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_srai_epi16 (__m512i a, int imm8)  VPSRAW zmm1 {k1}{z}, zmm2, imm8"""
+        ...
+
+    @staticmethod
+    def shift_right_arithmetic_variable(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_srav_epi16 (__m512i a, __m512i count)  VPSRAVW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    @overload
+    def shift_right_logical(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_srl_epi16 (__m512i a, __m128i count)  VPSRLW zmm1 {k1}{z}, zmm2, xmm3/m128"""
+        ...
+
+    @staticmethod
+    @overload
+    def shift_right_logical(value: System.Runtime.Intrinsics.Vector512[int], count: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_srli_epi16 (__m512i a, int imm8)  VPSRLW zmm1 {k1}{z}, zmm2, imm8"""
+        ...
+
+    @staticmethod
+    def shift_right_logical_128_bit_lane(value: System.Runtime.Intrinsics.Vector512[int], num_bytes: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_bsrli_epi128 (__m512i a, const int imm8)  VPSRLDQ zmm1, zmm2/m128, imm8"""
+        ...
+
+    @staticmethod
+    def shift_right_logical_variable(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_srlv_epi16 (__m512i a, __m512i count)  VPSRLVW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def shuffle(value: System.Runtime.Intrinsics.Vector512[int], mask: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_shuffle_epi8 (__m512i a, __m512i b)  VPSHUFB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def shuffle_high(value: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_shufflehi_epi16 (__m512i a, const int imm8)  VPSHUFHW zmm1 {k1}{z}, zmm2/m512, imm8"""
+        ...
+
+    @staticmethod
+    def shuffle_low(value: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_shufflelo_epi16 (__m512i a, const int imm8)  VPSHUFLW zmm1 {k1}{z}, zmm2/m512, imm8"""
+        ...
+
+    @staticmethod
+    def store(address: typing.Any, source: System.Runtime.Intrinsics.Vector512[int]) -> None:
+        """void _mm512_storeu_epi8 (__m512i * mem_addr, __m512i a)  VMOVDQU8 m512 {k1}{z}, zmm1"""
+        ...
+
+    @staticmethod
+    def subtract(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_sub_epi8 (__m512i a, __m512i b)  VPSUBB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def subtract_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_subs_epi8 (__m512i a, __m512i b)  VPSUBSB zmm1 {k1}{z}, zmm2, zmm3/m128"""
+        ...
+
+    @staticmethod
+    def sum_absolute_differences(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_sad_epu8 (__m512i a, __m512i b)  VPSADBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def sum_absolute_differences_in_block_32(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_dbsad_epu8 (__m512i a, __m512i b, int imm8)  VDBPSADBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def unpack_high(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_unpackhi_epi8 (__m512i a, __m512i b)  VPUNPCKHBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def unpack_low(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_unpacklo_epi8 (__m512i a, __m512i b)  VPUNPCKLBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+
+class Avx512Vbmi(System.Runtime.Intrinsics.X86.Avx512BW, metaclass=abc.ABCMeta):
+    """Provides access to X86 AVX512VBMI hardware instructions via intrinsics"""
+
+    class VL(System.Runtime.Intrinsics.X86.Avx512BW.VL, metaclass=abc.ABCMeta):
+        """Provides access to the x86 AVX512VBMI+VL hardware instructions via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        @overload
+        def multi_shift(control: System.Runtime.Intrinsics.Vector128[int], value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_multishift_epi64_epi8(__m128i a, __m128i b)  VPMULTISHIFTQB xmm1 {k1}{z}, xmm2, xmm3/m128/m64bcst"""
+            ...
+
+        @staticmethod
+        @overload
+        def multi_shift(control: System.Runtime.Intrinsics.Vector256[int], value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_multishift_epi64_epi8(__m256i a, __m256i b)  VPMULTISHIFTQB ymm1 {k1}{z}, ymm2, ymm3/m256/m64bcst"""
+            ...
+
+        @staticmethod
+        def permute_var_16x_8(left: System.Runtime.Intrinsics.Vector128[int], control: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_permutevar64x8_epi8 (__m128i a, __m128i b)  VPERMB xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        def permute_var_16x_8x_2(lower: System.Runtime.Intrinsics.Vector128[int], indices: System.Runtime.Intrinsics.Vector128[int], upper: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+            """__m128i _mm_permutex2var_epi8 (__m128i a, __m128i idx, __m128i b)  VPERMI2B xmm1 {k1}{z}, xmm2, xmm3/m128  VPERMT2B xmm1 {k1}{z}, xmm2, xmm3/m128"""
+            ...
+
+        @staticmethod
+        def permute_var_32x_8(left: System.Runtime.Intrinsics.Vector256[int], control: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_permutevar64x8_epi8 (__m256i a, __m256i b)  VPERMB ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+        @staticmethod
+        def permute_var_32x_8x_2(lower: System.Runtime.Intrinsics.Vector256[int], indices: System.Runtime.Intrinsics.Vector256[int], upper: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_permutex2var_epi8 (__m256i a, __m256i idx, __m256i b)  VPERMI2B ymm1 {k1}{z}, ymm2, ymm3/m256  VPERMT2B ymm1 {k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+    class X64(System.Runtime.Intrinsics.X86.Avx512BW.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 AVX512VBMI hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def multi_shift(control: System.Runtime.Intrinsics.Vector512[int], value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_multishift_epi64_epi8(__m512i a, __m512i b)  VPMULTISHIFTQB zmm1 {k1}{z}, zmm2, zmm3/m512/m64bcst"""
+        ...
+
+    @staticmethod
+    def permute_var_64x_8(left: System.Runtime.Intrinsics.Vector512[int], control: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_permutevar64x8_epi8 (__m512i a, __m512i b)  VPERMB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+    @staticmethod
+    def permute_var_64x_8x_2(lower: System.Runtime.Intrinsics.Vector512[int], indices: System.Runtime.Intrinsics.Vector512[int], upper: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+        """__m512i _mm512_permutex2var_epi8 (__m512i a, __m512i idx, __m512i b)  VPERMI2B zmm1 {k1}{z}, zmm2, zmm3/m512  VPERMT2B zmm1 {k1}{z}, zmm2, zmm3/m512"""
+        ...
+
+
+class Lzcnt(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
+    """Provides access to X86 LZCNT hardware instructions via intrinsics."""
+
+    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 LZCNT hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def leading_zero_count(value: int) -> int:
+            """unsigned __int64 _lzcnt_u64 (unsigned __int64 a)  LZCNT r64, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def leading_zero_count(value: int) -> int:
+        """unsigned int _lzcnt_u32 (unsigned int a)  LZCNT r32, r/m32"""
         ...
 
 
@@ -5117,499 +5787,26 @@ class Fma(System.Runtime.Intrinsics.X86.Avx, metaclass=abc.ABCMeta):
         ...
 
 
-class Avx512BW(System.Runtime.Intrinsics.X86.Avx512F, metaclass=abc.ABCMeta):
-    """Provides access to X86 AVX512BW hardware instructions via intrinsics."""
+class Popcnt(System.Runtime.Intrinsics.X86.Sse42, metaclass=abc.ABCMeta):
+    """Provides access to X86 POPCNT hardware instructions via intrinsics."""
 
-    class VL(System.Runtime.Intrinsics.X86.Avx512F.VL, metaclass=abc.ABCMeta):
-        """Provides access to the x86 AVX512BW+VL hardware instructions via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        @overload
-        def compare_greater_than(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cmpgt_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(6)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_greater_than(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_cmpgt_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(6)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_greater_than_or_equal(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cmpge_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(5)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_greater_than_or_equal(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_cmpge_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(5)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_less_than(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cmplt_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(1)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_less_than(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_cmplt_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(1)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_less_than_or_equal(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cmple_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(2)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_less_than_or_equal(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_cmple_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(2)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_not_equal(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cmpne_epu8 (__m128i a, __m128i b)  VPCMPUB k1 {k2}, xmm2, xmm3/m128, imm8(4)"""
-            ...
-
-        @staticmethod
-        @overload
-        def compare_not_equal(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_cmpne_epu8 (__m256i a, __m256i b)  VPCMPUB k1 {k2}, ymm2, ymm3/m256, imm8(4)"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_byte(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cvtepi16_epi8 (__m128i a)  VPMOVWB xmm1/m64 {k1}{z}, xmm2"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_byte(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm256_cvtepi16_epi8 (__m256i a)  VPMOVWB xmm1/m128 {k1}{z}, ymm2"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_byte_with_saturation(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cvtusepi16_epi8 (__m128i a)  VPMOVUWB xmm1/m64 {k1}{z}, xmm2"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_byte_with_saturation(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm256_cvtusepi16_epi8 (__m256i a)  VPMOVUWB xmm1/m128 {k1}{z}, ymm2"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_s_byte(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cvtepi16_epi8 (__m128i a)  VPMOVWB xmm1/m64 {k1}{z}, zmm2"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_s_byte(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm256_cvtepi16_epi8 (__m256i a)  VPMOVWB xmm1/m128 {k1}{z}, zmm2"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_s_byte_with_saturation(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_cvtsepi16_epi8 (__m128i a)  VPMOVSWB xmm1/m64 {k1}{z}, zmm2"""
-            ...
-
-        @staticmethod
-        @overload
-        def convert_to_vector_128_s_byte_with_saturation(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm256_cvtsepi16_epi8 (__m256i a)  VPMOVSWB xmm1/m128 {k1}{z}, zmm2"""
-            ...
-
-        @staticmethod
-        def permute_var_16x_16(left: System.Runtime.Intrinsics.Vector256[int], control: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_permutevar16x16_epi16 (__m256i a, __m256i b)  VPERMW ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-        @staticmethod
-        def permute_var_16x_16x_2(lower: System.Runtime.Intrinsics.Vector256[int], indices: System.Runtime.Intrinsics.Vector256[int], upper: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_permutex2var_epi16 (__m256i a, __m256i idx, __m256i b)  VPERMI2W ymm1 {k1}{z}, ymm2, ymm3/m256  VPERMT2W ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-        @staticmethod
-        def permute_var_8x_16(left: System.Runtime.Intrinsics.Vector128[int], control: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_permutevar8x16_epi16 (__m128i a, __m128i b)  VPERMW xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        def permute_var_8x_16x_2(lower: System.Runtime.Intrinsics.Vector128[int], indices: System.Runtime.Intrinsics.Vector128[int], upper: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_permutex2var_epi16 (__m128i a, __m128i idx, __m128i b)  VPERMI2W xmm1 {k1}{z}, xmm2, xmm3/m128  VPERMT2W xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        @overload
-        def shift_left_logical_variable(value: System.Runtime.Intrinsics.Vector128[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_sllv_epi16 (__m128i a, __m128i count)  VPSLLVW xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        @overload
-        def shift_left_logical_variable(value: System.Runtime.Intrinsics.Vector256[int], count: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_sllv_epi16 (__m256i a, __m256i count)  VPSLLVW ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-        @staticmethod
-        @overload
-        def shift_right_arithmetic_variable(value: System.Runtime.Intrinsics.Vector128[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_srav_epi16 (__m128i a, __m128i count)  VPSRAVW xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        @overload
-        def shift_right_arithmetic_variable(value: System.Runtime.Intrinsics.Vector256[int], count: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_srav_epi16 (__m256i a, __m256i count)  VPSRAVW ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-        @staticmethod
-        @overload
-        def shift_right_logical_variable(value: System.Runtime.Intrinsics.Vector128[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_srlv_epi16 (__m128i a, __m128i count)  VPSRLVW xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        @overload
-        def shift_right_logical_variable(value: System.Runtime.Intrinsics.Vector256[int], count: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_srlv_epi16 (__m256i a, __m256i count)  VPSRLVW ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-        @staticmethod
-        @overload
-        def sum_absolute_differences_in_block_32(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], control: int) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_dbsad_epu8 (__m128i a, __m128i b, int imm8)  VDBPSADBW xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        @overload
-        def sum_absolute_differences_in_block_32(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int], control: int) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_dbsad_epu8 (__m256i a, __m256i b, int imm8)  VDBPSADBW ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-    class X64(System.Runtime.Intrinsics.X86.Avx512F.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 AVX512BW hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+    class X64(System.Runtime.Intrinsics.X86.Sse42.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 POPCNT hardware instructions, that are only available to 64-bit processes, via intrinsics."""
 
         IS_SUPPORTED: bool
         """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def pop_count(value: int) -> int:
+            """__int64 _mm_popcnt_u64 (unsigned __int64 a)  POPCNT r64, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
 
     IS_SUPPORTED: bool
     """Gets a value that indicates whether the APIs in this class are supported."""
 
     @staticmethod
-    def abs(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_abs_epi8 (__m512i a)  VPABSB zmm1 {k1}{z}, zmm2/m512"""
-        ...
-
-    @staticmethod
-    def add(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_add_epi8 (__m512i a, __m512i b)  VPADDB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def add_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_adds_epi8 (__m512i a, __m512i b)  VPADDSB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def align_right(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], mask: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_alignr_epi8 (__m512i a, __m512i b, const int count)  VPALIGNR zmm1 {k1}{z}, zmm2, zmm3/m512, imm8"""
-        ...
-
-    @staticmethod
-    def average(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_avg_epu8 (__m512i a, __m512i b)  VPAVGB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def blend_variable(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], mask: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_blendv_epu8 (__m512i a, __m512i b, __m512i mask)  VPBLENDMB zmm1 {k1}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def broadcast_scalar_to_vector_512(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_broadcastb_epi8 (__m128i a)  VPBROADCASTB zmm1 {k1}{z}, xmm2/m8"""
-        ...
-
-    @staticmethod
-    def compare_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cmpeq_epu8 (__m512i a, __m512i b)  VPCMPEQB k1 {k2}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def compare_greater_than(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cmpgt_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(6)"""
-        ...
-
-    @staticmethod
-    def compare_greater_than_or_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cmpge_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(5)"""
-        ...
-
-    @staticmethod
-    def compare_less_than(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cmplt_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(1)"""
-        ...
-
-    @staticmethod
-    def compare_less_than_or_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cmple_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(2)"""
-        ...
-
-    @staticmethod
-    def compare_not_equal(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cmpne_epu8 (__m512i a, __m512i b)  VPCMPUB k1 {k2}, zmm2, zmm3/m512, imm8(4)"""
-        ...
-
-    @staticmethod
-    def convert_to_vector_256_byte(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-        """__m256i _mm512_cvtepi16_epi8 (__m512i a)  VPMOVWB ymm1/m256 {k1}{z}, zmm2"""
-        ...
-
-    @staticmethod
-    def convert_to_vector_256_byte_with_saturation(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-        """__m256i _mm512_cvtusepi16_epi8 (__m512i a)  VPMOVUWB ymm1/m256 {k1}{z}, zmm2"""
-        ...
-
-    @staticmethod
-    def convert_to_vector_256_s_byte(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-        """__m256i _mm512_cvtepi16_epi8 (__m512i a)  VPMOVWB ymm1/m256 {k1}{z}, zmm2"""
-        ...
-
-    @staticmethod
-    def convert_to_vector_256_s_byte_with_saturation(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-        """__m256i _mm512_cvtsepi16_epi8 (__m512i a)  VPMOVSWB ymm1/m256 {k1}{z}, zmm2"""
-        ...
-
-    @staticmethod
-    def convert_to_vector_512_int_16(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cvtepi8_epi16 (__m128i a)  VPMOVSXBW zmm1 {k1}{z}, ymm2/m256"""
-        ...
-
-    @staticmethod
-    def convert_to_vector_512_u_int_16(value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_cvtepi8_epi16 (__m128i a)  VPMOVSXBW zmm1 {k1}{z}, ymm2/m256"""
-        ...
-
-    @staticmethod
-    def load_vector_512(address: typing.Any) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_loadu_epi8 (__m512i const * mem_addr)  VMOVDQU8 zmm1 {k1}{z}, m512"""
-        ...
-
-    @staticmethod
-    def max(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_max_epi8 (__m512i a, __m512i b)  VPMAXSB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def min(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_min_epi8 (__m512i a, __m512i b)  VPMINSB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def multiply_add_adjacent(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_madd_epi16 (__m512i a, __m512i b)  VPMADDWD zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def multiply_high(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_mulhi_epi16 (__m512i a, __m512i b)  VPMULHW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def multiply_high_round_scale(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_mulhrs_epi16 (__m512i a, __m512i b)  VPMULHRSW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def multiply_low(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_mullo_epi16 (__m512i a, __m512i b)  VPMULLW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def pack_signed_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_packs_epi16 (__m512i a, __m512i b)  VPACKSSWB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def pack_unsigned_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_packus_epi16 (__m512i a, __m512i b)  VPACKUSWB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def permute_var_32x_16(left: System.Runtime.Intrinsics.Vector512[int], control: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_permutevar32x16_epi16 (__m512i a, __m512i b)  VPERMW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def permute_var_32x_16x_2(lower: System.Runtime.Intrinsics.Vector512[int], indices: System.Runtime.Intrinsics.Vector512[int], upper: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_permutex2var_epi16 (__m512i a, __m512i idx, __m512i b)  VPERMI2W zmm1 {k1}{z}, zmm2, zmm3/m512  VPERMT2W zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    @overload
-    def shift_left_logical(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_sll_epi16 (__m512i a, __m128i count)  VPSLLW zmm1 {k1}{z}, zmm2, xmm3/m128"""
-        ...
-
-    @staticmethod
-    @overload
-    def shift_left_logical(value: System.Runtime.Intrinsics.Vector512[int], count: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_slli_epi16 (__m512i a, int imm8)  VPSLLW zmm1 {k1}{z}, zmm2, imm8"""
-        ...
-
-    @staticmethod
-    def shift_left_logical_128_bit_lane(value: System.Runtime.Intrinsics.Vector512[int], num_bytes: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_bslli_epi128 (__m512i a, const int imm8)  VPSLLDQ zmm1, zmm2/m512, imm8"""
-        ...
-
-    @staticmethod
-    def shift_left_logical_variable(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_sllv_epi16 (__m512i a, __m512i count)  VPSLLVW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    @overload
-    def shift_right_arithmetic(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """_mm512_sra_epi16 (__m512i a, __m128i count)  VPSRAW zmm1 {k1}{z}, zmm2, xmm3/m128"""
-        ...
-
-    @staticmethod
-    @overload
-    def shift_right_arithmetic(value: System.Runtime.Intrinsics.Vector512[int], count: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_srai_epi16 (__m512i a, int imm8)  VPSRAW zmm1 {k1}{z}, zmm2, imm8"""
-        ...
-
-    @staticmethod
-    def shift_right_arithmetic_variable(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_srav_epi16 (__m512i a, __m512i count)  VPSRAVW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    @overload
-    def shift_right_logical(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_srl_epi16 (__m512i a, __m128i count)  VPSRLW zmm1 {k1}{z}, zmm2, xmm3/m128"""
-        ...
-
-    @staticmethod
-    @overload
-    def shift_right_logical(value: System.Runtime.Intrinsics.Vector512[int], count: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_srli_epi16 (__m512i a, int imm8)  VPSRLW zmm1 {k1}{z}, zmm2, imm8"""
-        ...
-
-    @staticmethod
-    def shift_right_logical_128_bit_lane(value: System.Runtime.Intrinsics.Vector512[int], num_bytes: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_bsrli_epi128 (__m512i a, const int imm8)  VPSRLDQ zmm1, zmm2/m128, imm8"""
-        ...
-
-    @staticmethod
-    def shift_right_logical_variable(value: System.Runtime.Intrinsics.Vector512[int], count: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_srlv_epi16 (__m512i a, __m512i count)  VPSRLVW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def shuffle(value: System.Runtime.Intrinsics.Vector512[int], mask: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_shuffle_epi8 (__m512i a, __m512i b)  VPSHUFB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def shuffle_high(value: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_shufflehi_epi16 (__m512i a, const int imm8)  VPSHUFHW zmm1 {k1}{z}, zmm2/m512, imm8"""
-        ...
-
-    @staticmethod
-    def shuffle_low(value: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_shufflelo_epi16 (__m512i a, const int imm8)  VPSHUFLW zmm1 {k1}{z}, zmm2/m512, imm8"""
-        ...
-
-    @staticmethod
-    def store(address: typing.Any, source: System.Runtime.Intrinsics.Vector512[int]) -> None:
-        """void _mm512_storeu_epi8 (__m512i * mem_addr, __m512i a)  VMOVDQU8 m512 {k1}{z}, zmm1"""
-        ...
-
-    @staticmethod
-    def subtract(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_sub_epi8 (__m512i a, __m512i b)  VPSUBB zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def subtract_saturate(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_subs_epi8 (__m512i a, __m512i b)  VPSUBSB zmm1 {k1}{z}, zmm2, zmm3/m128"""
-        ...
-
-    @staticmethod
-    def sum_absolute_differences(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_sad_epu8 (__m512i a, __m512i b)  VPSADBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def sum_absolute_differences_in_block_32(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_dbsad_epu8 (__m512i a, __m512i b, int imm8)  VDBPSADBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def unpack_high(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_unpackhi_epi8 (__m512i a, __m512i b)  VPUNPCKHBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-    @staticmethod
-    def unpack_low(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_unpacklo_epi8 (__m512i a, __m512i b)  VPUNPCKLBW zmm1 {k1}{z}, zmm2, zmm3/m512"""
-        ...
-
-
-class Pclmulqdq(System.Runtime.Intrinsics.X86.Sse2, metaclass=abc.ABCMeta):
-    """Provides access to X86 CLMUL hardware instructions via intrinsics."""
-
-    class V256(System.Object, metaclass=abc.ABCMeta):
-        """This class has no documentation."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def carryless_multiply(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int], control: int) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_clmulepi64_epi128 (__m256i a, __m256i b, const int imm8)  VPCLMULQDQ ymm1, ymm2, ymm3/m256, imm8"""
-            ...
-
-    class V512(System.Object, metaclass=abc.ABCMeta):
-        """This class has no documentation."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def carryless_multiply(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int], control: int) -> System.Runtime.Intrinsics.Vector512[int]:
-            """__m512i _mm512_clmulepi64_epi128 (__m512i a, __m512i b, const int imm8)  VPCLMULQDQ zmm1, zmm2, zmm3/m512, imm8"""
-            ...
-
-    class X64(System.Runtime.Intrinsics.X86.Sse2.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 CLMUL hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def carryless_multiply(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], control: int) -> System.Runtime.Intrinsics.Vector128[int]:
-        """__m128i _mm_clmulepi64_si128 (__m128i a, __m128i b, const int imm8)   PCLMULQDQ xmm1,       xmm2/m128, imm8  VPCLMULQDQ xmm1, xmm2, xmm3/m128, imm8"""
+    def pop_count(value: int) -> int:
+        """int _mm_popcnt_u32 (unsigned int a)  POPCNT r32, r/m32"""
         ...
 
 
@@ -5663,47 +5860,6 @@ class Avx512CD(System.Runtime.Intrinsics.X86.Avx512F, metaclass=abc.ABCMeta):
     @staticmethod
     def leading_zero_count(value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
         """__m512i _mm512_lzcnt_epi32 (__m512i a)  VPLZCNTD zmm1 {k1}{z}, zmm2/m512/m32bcst"""
-        ...
-
-
-class X86Serialize(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
-    """Provides access to the x86 SERIALIZE hardware instruction via intrinsics."""
-
-    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 SERIALIZE hardware instructions, which are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def serialize() -> None:
-        """void _serialize (void);"""
-        ...
-
-
-class Popcnt(System.Runtime.Intrinsics.X86.Sse42, metaclass=abc.ABCMeta):
-    """Provides access to X86 POPCNT hardware instructions via intrinsics."""
-
-    class X64(System.Runtime.Intrinsics.X86.Sse42.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 POPCNT hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def pop_count(value: int) -> int:
-            """__int64 _mm_popcnt_u64 (unsigned __int64 a)  POPCNT r64, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def pop_count(value: int) -> int:
-        """int _mm_popcnt_u32 (unsigned int a)  POPCNT r32, r/m32"""
         ...
 
 
@@ -7017,8 +7173,165 @@ class Avx10v1(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
         ...
 
 
+class Bmi1(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
+    """Provides access to X86 BMI1 hardware instructions via intrinsics."""
+
+    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 BMI1 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def and_not(left: int, right: int) -> int:
+            """unsigned __int64 _andn_u64 (unsigned __int64 a, unsigned __int64 b)  ANDN r64a, r64b, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        @overload
+        def bit_field_extract(value: int, start: int, length: int) -> int:
+            """unsigned __int64 _bextr_u64 (unsigned __int64 a, unsigned int start, unsigned int len)  BEXTR r64a, r/m64, r64bThis intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        @overload
+        def bit_field_extract(value: int, control: int) -> int:
+            """unsigned __int64 _bextr2_u64 (unsigned __int64 a, unsigned __int64 control)  BEXTR r64a, r/m64, r64bThis intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        def extract_lowest_set_bit(value: int) -> int:
+            """unsigned __int64 _blsi_u64 (unsigned __int64 a)  BLSI r64, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        def get_mask_up_to_lowest_set_bit(value: int) -> int:
+            """unsigned __int64 _blsmsk_u64 (unsigned __int64 a)  BLSMSK r64, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        def reset_lowest_set_bit(value: int) -> int:
+            """unsigned __int64 _blsr_u64 (unsigned __int64 a)  BLSR r64, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+        @staticmethod
+        def trailing_zero_count(value: int) -> int:
+            """__int64 _mm_tzcnt_64 (unsigned __int64 a)  TZCNT r64, r/m64This intrinsic is only available on 64-bit processes"""
+            ...
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def and_not(left: int, right: int) -> int:
+        """unsigned int _andn_u32 (unsigned int a, unsigned int b)  ANDN r32a, r32b, r/m32"""
+        ...
+
+    @staticmethod
+    @overload
+    def bit_field_extract(value: int, start: int, length: int) -> int:
+        """unsigned int _bextr_u32 (unsigned int a, unsigned int start, unsigned int len)  BEXTR r32a, r/m32, r32b"""
+        ...
+
+    @staticmethod
+    @overload
+    def bit_field_extract(value: int, control: int) -> int:
+        """unsigned int _bextr2_u32 (unsigned int a, unsigned int control)  BEXTR r32a, r/m32, r32b"""
+        ...
+
+    @staticmethod
+    def extract_lowest_set_bit(value: int) -> int:
+        """unsigned int _blsi_u32 (unsigned int a)  BLSI r32, r/m32"""
+        ...
+
+    @staticmethod
+    def get_mask_up_to_lowest_set_bit(value: int) -> int:
+        """unsigned int _blsmsk_u32 (unsigned int a)  BLSMSK r32, r/m32"""
+        ...
+
+    @staticmethod
+    def reset_lowest_set_bit(value: int) -> int:
+        """unsigned int _blsr_u32 (unsigned int a)  BLSR r32, r/m32"""
+        ...
+
+    @staticmethod
+    def trailing_zero_count(value: int) -> int:
+        """int _mm_tzcnt_32 (unsigned int a)  TZCNT r32, r/m32"""
+        ...
+
+
+class Gfni(System.Runtime.Intrinsics.X86.Sse41, metaclass=abc.ABCMeta):
+    """Provides access to X86 GFNI hardware instructions via intrinsics."""
+
+    class X64(System.Runtime.Intrinsics.X86.Sse41.X64, metaclass=abc.ABCMeta):
+        """Provides access to the X86 GFNI hardware instructions that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    class V256(System.Object, metaclass=abc.ABCMeta):
+        """This class has no documentation."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def galois_field_affine_transform(x: System.Runtime.Intrinsics.Vector256[int], a: System.Runtime.Intrinsics.Vector256[int], b: int) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_gf2p8affine_epi64_epi8 (__m256i x, __m256i A, int b)   GF2P8AFFINEQB ymm1, ymm2/m256, imm8  VGF2P8AFFINEQB ymm1, ymm2, ymm3/m256, imm8  VGF2P8AFFINEQB ymm1{k1}{z}, ymm2, ymm3/m256/m64bcst, imm8"""
+            ...
+
+        @staticmethod
+        def galois_field_affine_transform_inverse(x: System.Runtime.Intrinsics.Vector256[int], a: System.Runtime.Intrinsics.Vector256[int], b: int) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_gf2p8affineinv_epi64_epi8 (__m256i x, __m256i A, int b)   GF2P8AFFINEINVQB ymm1, ymm2/m256, imm8  VGF2P8AFFINEINVQB ymm1, ymm2, ymm3/m256, imm8  VGF2P8AFFINEINVQB ymm1{k1}{z}, ymm2, ymm3/m256/m64bcst, imm8"""
+            ...
+
+        @staticmethod
+        def galois_field_multiply(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+            """__m256i _mm256_gf2p8mul_epi8 (__m256i a, __m256i b)   GF2P8MULB ymm1, ymm2/m256  VGF2P8MULB ymm1, ymm2, ymm3/m256  VGF2P8MULB ymm1{k1}{z}, ymm2, ymm3/m256"""
+            ...
+
+    class V512(System.Object, metaclass=abc.ABCMeta):
+        """This class has no documentation."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def galois_field_affine_transform(x: System.Runtime.Intrinsics.Vector512[int], a: System.Runtime.Intrinsics.Vector512[int], b: int) -> System.Runtime.Intrinsics.Vector512[int]:
+            """__m512i _mm512_gf2p8affine_epi64_epi8 (__m512i x, __m512i A, int b)   GF2P8AFFINEQB zmm1, zmm2/m512, imm8  VGF2P8AFFINEQB zmm1, zmm2, zmm3/m512, imm8  VGF2P8AFFINEQB zmm1{k1}{z}, zmm2, zmm3/m512/m64bcst, imm8"""
+            ...
+
+        @staticmethod
+        def galois_field_affine_transform_inverse(x: System.Runtime.Intrinsics.Vector512[int], a: System.Runtime.Intrinsics.Vector512[int], b: int) -> System.Runtime.Intrinsics.Vector512[int]:
+            """__m512i _mm512_gf2p8affineinv_epi64_epi8 (__m512i x, __m512i A, int b)   GF2P8AFFINEINVQB zmm1, zmm2/m512, imm8  VGF2P8AFFINEINVQB zmm1, zmm2, zmm3/m512, imm8  VGF2P8AFFINEINVQB zmm1{k1}{z}, zmm2, zmm3/m512/m64bcst, imm8"""
+            ...
+
+        @staticmethod
+        def galois_field_multiply(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
+            """__m512i _mm512_gf2p8mul_epi8 (__m512i a, __m512i b)   GF2P8MULB zmm1, zmm2/m512  VGF2P8MULB zmm1, zmm2, zmm3/m512  VGF2P8MULB zmm1{k1}{z}, zmm2, zmm3/m512"""
+            ...
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def galois_field_affine_transform(x: System.Runtime.Intrinsics.Vector128[int], a: System.Runtime.Intrinsics.Vector128[int], b: int) -> System.Runtime.Intrinsics.Vector128[int]:
+        """__m128i _mm_gf2p8affine_epi64_epi8 (__m128i x, __m128i A, int b)   GF2P8AFFINEQB xmm1, xmm2/m128, imm8  VGF2P8AFFINEQB xmm1, xmm2, xmm3/m128, imm8  VGF2P8AFFINEQB xmm1{k1}{z}, xmm2, xmm3/m128/m64bcst, imm8"""
+        ...
+
+    @staticmethod
+    def galois_field_affine_transform_inverse(x: System.Runtime.Intrinsics.Vector128[int], a: System.Runtime.Intrinsics.Vector128[int], b: int) -> System.Runtime.Intrinsics.Vector128[int]:
+        """__m128i _mm_gf2p8affineinv_epi64_epi8 (__m128i x, __m128i A, int b)   GF2P8AFFINEINVQB xmm1, xmm2/m128, imm8  VGF2P8AFFINEINVQB xmm1, xmm2, xmm3/m128, imm8  VGF2P8AFFINEINVQB xmm1{k1}{z}, xmm2, xmm3/m128/m64bcst, imm8"""
+        ...
+
+    @staticmethod
+    def galois_field_multiply(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """__m128i _mm_gf2p8mul_epi8 (__m128i a, __m128i b)   GF2P8MULB xmm1, xmm2/m128  VGF2P8MULB xmm1, xmm2, xmm3/m128  VGF2P8MULB xmm1{k1}{z}, xmm2, xmm3/m128"""
+        ...
+
+
 class Avx10v2(System.Runtime.Intrinsics.X86.Avx10v1, metaclass=abc.ABCMeta):
-    """Provides access to X86 Avx10.2 hardware instructions via intrinsics."""
+    """Provides access to X86 AVX10.2 hardware instructions via intrinsics"""
 
     class X64(System.Runtime.Intrinsics.X86.Avx10v1.X64, metaclass=abc.ABCMeta):
         """Provides access to the x86 AVX10.2 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
@@ -7030,7 +7343,7 @@ class Avx10v2(System.Runtime.Intrinsics.X86.Avx10v1, metaclass=abc.ABCMeta):
         """Provides access to the x86 AVX10.2/512 hardware instructions via intrinsics."""
 
         class X64(System.Runtime.Intrinsics.X86.Avx10v1.V512.X64, metaclass=abc.ABCMeta):
-            """Provides access to the x86 AVX10.1/512 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+            """Provides access to the x86 AVX10.2/512 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
 
             IS_SUPPORTED: bool
             """Gets a value that indicates whether the APIs in this class are supported."""
@@ -7069,7 +7382,7 @@ class Avx10v2(System.Runtime.Intrinsics.X86.Avx10v1, metaclass=abc.ABCMeta):
 
         @staticmethod
         def convert_to_s_byte_with_truncated_saturation_and_zero_extend_to_int_32(value: System.Runtime.Intrinsics.Vector512[float]) -> System.Runtime.Intrinsics.Vector512[int]:
-            """VCVTTPS2IUBS zmm1{k1}{z}, zmm2/m512/m32bcst {sae}"""
+            """VCVTTPS2IBS zmm1{k1}{z}, zmm2/m512/m32bcst {sae}"""
             ...
 
         @staticmethod
@@ -7161,290 +7474,6 @@ class Avx10v2(System.Runtime.Intrinsics.X86.Avx10v1, metaclass=abc.ABCMeta):
         ...
 
 
-class Gfni(System.Runtime.Intrinsics.X86.Sse41, metaclass=abc.ABCMeta):
-    """Provides access to X86 GFNI hardware instructions via intrinsics."""
-
-    class X64(System.Runtime.Intrinsics.X86.Sse41.X64, metaclass=abc.ABCMeta):
-        """Provides access to the X86 GFNI hardware instructions that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    class V256(System.Object, metaclass=abc.ABCMeta):
-        """This class has no documentation."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def galois_field_affine_transform(x: System.Runtime.Intrinsics.Vector256[int], a: System.Runtime.Intrinsics.Vector256[int], b: int) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_gf2p8affine_epi64_epi8 (__m256i x, __m256i A, int b)   GF2P8AFFINEQB ymm1, ymm2/m256, imm8  VGF2P8AFFINEQB ymm1, ymm2, ymm3/m256, imm8  VGF2P8AFFINEQB ymm1{k1}{z}, ymm2, ymm3/m256/m64bcst, imm8"""
-            ...
-
-        @staticmethod
-        def galois_field_affine_transform_inverse(x: System.Runtime.Intrinsics.Vector256[int], a: System.Runtime.Intrinsics.Vector256[int], b: int) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_gf2p8affineinv_epi64_epi8 (__m256i x, __m256i A, int b)   GF2P8AFFINEINVQB ymm1, ymm2/m256, imm8  VGF2P8AFFINEINVQB ymm1, ymm2, ymm3/m256, imm8  VGF2P8AFFINEINVQB ymm1{k1}{z}, ymm2, ymm3/m256/m64bcst, imm8"""
-            ...
-
-        @staticmethod
-        def galois_field_multiply(left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_gf2p8mul_epi8 (__m256i a, __m256i b)   GF2P8MULB ymm1, ymm2/m256  VGF2P8MULB ymm1, ymm2, ymm3/m256  VGF2P8MULB ymm1{k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-    class V512(System.Object, metaclass=abc.ABCMeta):
-        """This class has no documentation."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def galois_field_affine_transform(x: System.Runtime.Intrinsics.Vector512[int], a: System.Runtime.Intrinsics.Vector512[int], b: int) -> System.Runtime.Intrinsics.Vector512[int]:
-            """__m512i _mm512_gf2p8affine_epi64_epi8 (__m512i x, __m512i A, int b)   GF2P8AFFINEQB zmm1, zmm2/m512, imm8  VGF2P8AFFINEQB zmm1, zmm2, zmm3/m512, imm8  VGF2P8AFFINEQB zmm1{k1}{z}, zmm2, zmm3/m512/m64bcst, imm8"""
-            ...
-
-        @staticmethod
-        def galois_field_affine_transform_inverse(x: System.Runtime.Intrinsics.Vector512[int], a: System.Runtime.Intrinsics.Vector512[int], b: int) -> System.Runtime.Intrinsics.Vector512[int]:
-            """__m512i _mm512_gf2p8affineinv_epi64_epi8 (__m512i x, __m512i A, int b)   GF2P8AFFINEINVQB zmm1, zmm2/m512, imm8  VGF2P8AFFINEINVQB zmm1, zmm2, zmm3/m512, imm8  VGF2P8AFFINEINVQB zmm1{k1}{z}, zmm2, zmm3/m512/m64bcst, imm8"""
-            ...
-
-        @staticmethod
-        def galois_field_multiply(left: System.Runtime.Intrinsics.Vector512[int], right: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-            """__m512i _mm512_gf2p8mul_epi8 (__m512i a, __m512i b)   GF2P8MULB zmm1, zmm2/m512  VGF2P8MULB zmm1, zmm2, zmm3/m512  VGF2P8MULB zmm1{k1}{z}, zmm2, zmm3/m512"""
-            ...
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def galois_field_affine_transform(x: System.Runtime.Intrinsics.Vector128[int], a: System.Runtime.Intrinsics.Vector128[int], b: int) -> System.Runtime.Intrinsics.Vector128[int]:
-        """__m128i _mm_gf2p8affine_epi64_epi8 (__m128i x, __m128i A, int b)   GF2P8AFFINEQB xmm1, xmm2/m128, imm8  VGF2P8AFFINEQB xmm1, xmm2, xmm3/m128, imm8  VGF2P8AFFINEQB xmm1{k1}{z}, xmm2, xmm3/m128/m64bcst, imm8"""
-        ...
-
-    @staticmethod
-    def galois_field_affine_transform_inverse(x: System.Runtime.Intrinsics.Vector128[int], a: System.Runtime.Intrinsics.Vector128[int], b: int) -> System.Runtime.Intrinsics.Vector128[int]:
-        """__m128i _mm_gf2p8affineinv_epi64_epi8 (__m128i x, __m128i A, int b)   GF2P8AFFINEINVQB xmm1, xmm2/m128, imm8  VGF2P8AFFINEINVQB xmm1, xmm2, xmm3/m128, imm8  VGF2P8AFFINEINVQB xmm1{k1}{z}, xmm2, xmm3/m128/m64bcst, imm8"""
-        ...
-
-    @staticmethod
-    def galois_field_multiply(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """__m128i _mm_gf2p8mul_epi8 (__m128i a, __m128i b)   GF2P8MULB xmm1, xmm2/m128  VGF2P8MULB xmm1, xmm2, xmm3/m128  VGF2P8MULB xmm1{k1}{z}, xmm2, xmm3/m128"""
-        ...
-
-
-class Bmi2(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
-    """Provides access to X86 BMI2 hardware instructions via intrinsics."""
-
-    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 BMI2 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        @overload
-        def multiply_no_flags(left: int, right: int, low: typing.Any) -> int:
-            """unsigned __int64 _mulx_u64 (unsigned __int64 a, unsigned __int64 b, unsigned __int64* hi)  MULX r64a, r64b, r/m64The above native signature does not directly correspond to the managed signature.This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        @overload
-        def multiply_no_flags(left: int, right: int) -> int:
-            """unsigned __int64 _mulx_u64 (unsigned __int64 a, unsigned __int64 b, unsigned __int64* hi)  MULX r64a, r64b, r/m64The above native signature does not directly correspond to the managed signature.This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        def parallel_bit_deposit(value: int, mask: int) -> int:
-            """unsigned __int64 _pdep_u64 (unsigned __int64 a, unsigned __int64 mask)  PDEP r64a, r64b, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        def parallel_bit_extract(value: int, mask: int) -> int:
-            """unsigned __int64 _pext_u64 (unsigned __int64 a, unsigned __int64 mask)  PEXT r64a, r64b, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        def zero_high_bits(value: int, index: int) -> int:
-            """unsigned __int64 _bzhi_u64 (unsigned __int64 a, unsigned int index)  BZHI r64a, r/m64, r64bThis intrinsic is only available on 64-bit processes"""
-            ...
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    @overload
-    def multiply_no_flags(left: int, right: int, low: typing.Any) -> int:
-        """unsigned int _mulx_u32 (unsigned int a, unsigned int b, unsigned int* hi)  MULX r32a, r32b, r/m32The above native signature does not directly correspond to the managed signature."""
-        ...
-
-    @staticmethod
-    @overload
-    def multiply_no_flags(left: int, right: int) -> int:
-        """unsigned int _mulx_u32 (unsigned int a, unsigned int b, unsigned int* hi)  MULX r32a, r32b, r/m32The above native signature does not directly correspond to the managed signature."""
-        ...
-
-    @staticmethod
-    def parallel_bit_deposit(value: int, mask: int) -> int:
-        """unsigned int _pdep_u32 (unsigned int a, unsigned int mask)  PDEP r32a, r32b, r/m32"""
-        ...
-
-    @staticmethod
-    def parallel_bit_extract(value: int, mask: int) -> int:
-        """unsigned int _pext_u32 (unsigned int a, unsigned int mask)  PEXT r32a, r32b, r/m32"""
-        ...
-
-    @staticmethod
-    def zero_high_bits(value: int, index: int) -> int:
-        """unsigned int _bzhi_u32 (unsigned int a, unsigned int index)  BZHI r32a, r/m32, r32b"""
-        ...
-
-
-class Lzcnt(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
-    """Provides access to X86 LZCNT hardware instructions via intrinsics."""
-
-    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 LZCNT hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def leading_zero_count(value: int) -> int:
-            """unsigned __int64 _lzcnt_u64 (unsigned __int64 a)  LZCNT r64, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def leading_zero_count(value: int) -> int:
-        """unsigned int _lzcnt_u32 (unsigned int a)  LZCNT r32, r/m32"""
-        ...
-
-
-class AvxVnni(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
-    """Provides access to the x86 AVXVNNI hardware instructions via intrinsics."""
-
-    class X64(System.Runtime.Intrinsics.X86.Avx2.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 AVXVNNI hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    @overload
-    def multiply_widening_and_add(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """__m128i _mm_dpbusd_epi32 (__m128i src, __m128i a, __m128i b)VPDPBUSD xmm, xmm, xmm/m128"""
-        ...
-
-    @staticmethod
-    @overload
-    def multiply_widening_and_add(addend: System.Runtime.Intrinsics.Vector256[int], left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-        """__m256i _mm256_dpbusd_epi32 (__m256i src, __m256i a, __m256i b)VPDPBUSD ymm, ymm, ymm/m256"""
-        ...
-
-    @staticmethod
-    @overload
-    def multiply_widening_and_add_saturate(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """__m128i _mm_dpbusds_epi32 (__m128i src, __m128i a, __m128i b)VPDPBUSDS xmm, xmm, xmm/m128"""
-        ...
-
-    @staticmethod
-    @overload
-    def multiply_widening_and_add_saturate(addend: System.Runtime.Intrinsics.Vector256[int], left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-        """__m256i _mm256_dpbusds_epi32 (__m256i src, __m256i a, __m256i b)VPDPBUSDS ymm, ymm, ymm/m256"""
-        ...
-
-
-class Bmi1(System.Runtime.Intrinsics.X86.X86Base, metaclass=abc.ABCMeta):
-    """Provides access to X86 BMI1 hardware instructions via intrinsics."""
-
-    class X64(System.Runtime.Intrinsics.X86.X86Base.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 BMI1 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def and_not(left: int, right: int) -> int:
-            """unsigned __int64 _andn_u64 (unsigned __int64 a, unsigned __int64 b)  ANDN r64a, r64b, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        @overload
-        def bit_field_extract(value: int, start: int, length: int) -> int:
-            """unsigned __int64 _bextr_u64 (unsigned __int64 a, unsigned int start, unsigned int len)  BEXTR r64a, r/m64, r64bThis intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        @overload
-        def bit_field_extract(value: int, control: int) -> int:
-            """unsigned __int64 _bextr2_u64 (unsigned __int64 a, unsigned __int64 control)  BEXTR r64a, r/m64, r64bThis intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        def extract_lowest_set_bit(value: int) -> int:
-            """unsigned __int64 _blsi_u64 (unsigned __int64 a)  BLSI r64, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        def get_mask_up_to_lowest_set_bit(value: int) -> int:
-            """unsigned __int64 _blsmsk_u64 (unsigned __int64 a)  BLSMSK r64, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        def reset_lowest_set_bit(value: int) -> int:
-            """unsigned __int64 _blsr_u64 (unsigned __int64 a)  BLSR r64, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-        @staticmethod
-        def trailing_zero_count(value: int) -> int:
-            """__int64 _mm_tzcnt_64 (unsigned __int64 a)  TZCNT r64, r/m64This intrinsic is only available on 64-bit processes"""
-            ...
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def and_not(left: int, right: int) -> int:
-        """unsigned int _andn_u32 (unsigned int a, unsigned int b)  ANDN r32a, r32b, r/m32"""
-        ...
-
-    @staticmethod
-    @overload
-    def bit_field_extract(value: int, start: int, length: int) -> int:
-        """unsigned int _bextr_u32 (unsigned int a, unsigned int start, unsigned int len)  BEXTR r32a, r/m32, r32b"""
-        ...
-
-    @staticmethod
-    @overload
-    def bit_field_extract(value: int, control: int) -> int:
-        """unsigned int _bextr2_u32 (unsigned int a, unsigned int control)  BEXTR r32a, r/m32, r32b"""
-        ...
-
-    @staticmethod
-    def extract_lowest_set_bit(value: int) -> int:
-        """unsigned int _blsi_u32 (unsigned int a)  BLSI r32, r/m32"""
-        ...
-
-    @staticmethod
-    def get_mask_up_to_lowest_set_bit(value: int) -> int:
-        """unsigned int _blsmsk_u32 (unsigned int a)  BLSMSK r32, r/m32"""
-        ...
-
-    @staticmethod
-    def reset_lowest_set_bit(value: int) -> int:
-        """unsigned int _blsr_u32 (unsigned int a)  BLSR r32, r/m32"""
-        ...
-
-    @staticmethod
-    def trailing_zero_count(value: int) -> int:
-        """int _mm_tzcnt_32 (unsigned int a)  TZCNT r32, r/m32"""
-        ...
-
-
 class Aes(System.Runtime.Intrinsics.X86.Sse2, metaclass=abc.ABCMeta):
     """Provides access to X86 AES hardware instructions via intrinsics."""
 
@@ -7488,49 +7517,11 @@ class Aes(System.Runtime.Intrinsics.X86.Sse2, metaclass=abc.ABCMeta):
         ...
 
 
-class Avx512Vbmi(System.Runtime.Intrinsics.X86.Avx512BW, metaclass=abc.ABCMeta):
-    """Provides access to X86 AVX512VBMI hardware instructions via intrinsics."""
+class AvxVnni(System.Runtime.Intrinsics.X86.Avx2, metaclass=abc.ABCMeta):
+    """Provides access to the x86 AVXVNNI hardware instructions via intrinsics."""
 
-    class VL(System.Runtime.Intrinsics.X86.Avx512BW.VL, metaclass=abc.ABCMeta):
-        """Provides access to the x86 AVX512VBMI+VL hardware instructions via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        @overload
-        def multi_shift(control: System.Runtime.Intrinsics.Vector128[int], value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_multishift_epi64_epi8(__m128i a, __m128i b)  VPMULTISHIFTQB xmm1 {k1}{z}, xmm2, xmm3/m128/m64bcst"""
-            ...
-
-        @staticmethod
-        @overload
-        def multi_shift(control: System.Runtime.Intrinsics.Vector256[int], value: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_multishift_epi64_epi8(__m256i a, __m256i b)  VPMULTISHIFTQB ymm1 {k1}{z}, ymm2, ymm3/m256/m64bcst"""
-            ...
-
-        @staticmethod
-        def permute_var_16x_8(left: System.Runtime.Intrinsics.Vector128[int], control: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_permutevar64x8_epi8 (__m128i a, __m128i b)  VPERMB xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        def permute_var_16x_8x_2(lower: System.Runtime.Intrinsics.Vector128[int], indices: System.Runtime.Intrinsics.Vector128[int], upper: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-            """__m128i _mm_permutex2var_epi8 (__m128i a, __m128i idx, __m128i b)  VPERMI2B xmm1 {k1}{z}, xmm2, xmm3/m128  VPERMT2B xmm1 {k1}{z}, xmm2, xmm3/m128"""
-            ...
-
-        @staticmethod
-        def permute_var_32x_8(left: System.Runtime.Intrinsics.Vector256[int], control: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_permutevar64x8_epi8 (__m256i a, __m256i b)  VPERMB ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-        @staticmethod
-        def permute_var_32x_8x_2(lower: System.Runtime.Intrinsics.Vector256[int], indices: System.Runtime.Intrinsics.Vector256[int], upper: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
-            """__m256i _mm256_permutex2var_epi8 (__m256i a, __m256i idx, __m256i b)  VPERMI2B ymm1 {k1}{z}, ymm2, ymm3/m256  VPERMT2B ymm1 {k1}{z}, ymm2, ymm3/m256"""
-            ...
-
-    class X64(System.Runtime.Intrinsics.X86.Avx512BW.X64, metaclass=abc.ABCMeta):
-        """Provides access to the x86 AVX512VBMI hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+    class X64(System.Runtime.Intrinsics.X86.Avx2.X64, metaclass=abc.ABCMeta):
+        """Provides access to the x86 AVXVNNI hardware instructions, that are only available to 64-bit processes, via intrinsics."""
 
         IS_SUPPORTED: bool
         """Gets a value that indicates whether the APIs in this class are supported."""
@@ -7539,18 +7530,27 @@ class Avx512Vbmi(System.Runtime.Intrinsics.X86.Avx512BW, metaclass=abc.ABCMeta):
     """Gets a value that indicates whether the APIs in this class are supported."""
 
     @staticmethod
-    def multi_shift(control: System.Runtime.Intrinsics.Vector512[int], value: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_multishift_epi64_epi8(__m512i a, __m512i b)  VPMULTISHIFTQB zmm1 {k1}{z}, zmm2, zmm3/m512/m64bcst"""
+    @overload
+    def multiply_widening_and_add(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """__m128i _mm_dpbusd_epi32 (__m128i src, __m128i a, __m128i b)VPDPBUSD xmm, xmm, xmm/m128"""
         ...
 
     @staticmethod
-    def permute_var_64x_8(left: System.Runtime.Intrinsics.Vector512[int], control: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_permutevar64x8_epi8 (__m512i a, __m512i b)  VPERMB zmm1 {k1}{z}, zmm2, zmm3/m512"""
+    @overload
+    def multiply_widening_and_add(addend: System.Runtime.Intrinsics.Vector256[int], left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+        """__m256i _mm256_dpbusd_epi32 (__m256i src, __m256i a, __m256i b)VPDPBUSD ymm, ymm, ymm/m256"""
         ...
 
     @staticmethod
-    def permute_var_64x_8x_2(lower: System.Runtime.Intrinsics.Vector512[int], indices: System.Runtime.Intrinsics.Vector512[int], upper: System.Runtime.Intrinsics.Vector512[int]) -> System.Runtime.Intrinsics.Vector512[int]:
-        """__m512i _mm512_permutex2var_epi8 (__m512i a, __m512i idx, __m512i b)  VPERMI2B zmm1 {k1}{z}, zmm2, zmm3/m512  VPERMT2B zmm1 {k1}{z}, zmm2, zmm3/m512"""
+    @overload
+    def multiply_widening_and_add_saturate(addend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """__m128i _mm_dpbusds_epi32 (__m128i src, __m128i a, __m128i b)VPDPBUSDS xmm, xmm, xmm/m128"""
+        ...
+
+    @staticmethod
+    @overload
+    def multiply_widening_and_add_saturate(addend: System.Runtime.Intrinsics.Vector256[int], left: System.Runtime.Intrinsics.Vector256[int], right: System.Runtime.Intrinsics.Vector256[int]) -> System.Runtime.Intrinsics.Vector256[int]:
+        """__m256i _mm256_dpbusds_epi32 (__m256i src, __m256i a, __m256i b)VPDPBUSDS ymm, ymm, ymm/m256"""
         ...
 
 

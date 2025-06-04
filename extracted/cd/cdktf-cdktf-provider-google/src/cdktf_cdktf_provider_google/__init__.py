@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/google provider version 6.37.0
+# CDKTF prebuilt bindings for hashicorp/google provider version 6.38.0
 
-This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.37.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.38.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform google provider version 1:
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.37.0)
+* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.38.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -581,6 +581,7 @@ __all__ = [
     "data_google_bigquery_datapolicy_data_policy_iam_policy",
     "data_google_bigquery_dataset",
     "data_google_bigquery_dataset_iam_policy",
+    "data_google_bigquery_datasets",
     "data_google_bigquery_default_service_account",
     "data_google_bigquery_table",
     "data_google_bigquery_table_iam_policy",
@@ -921,6 +922,7 @@ __all__ = [
     "dataplex_datascan_iam_binding",
     "dataplex_datascan_iam_member",
     "dataplex_datascan_iam_policy",
+    "dataplex_entry",
     "dataplex_entry_group",
     "dataplex_entry_group_iam_binding",
     "dataplex_entry_group_iam_member",
@@ -2002,6 +2004,7 @@ from . import data_google_bigquery_connection_iam_policy
 from . import data_google_bigquery_datapolicy_data_policy_iam_policy
 from . import data_google_bigquery_dataset
 from . import data_google_bigquery_dataset_iam_policy
+from . import data_google_bigquery_datasets
 from . import data_google_bigquery_default_service_account
 from . import data_google_bigquery_table
 from . import data_google_bigquery_table_iam_policy
@@ -2342,6 +2345,7 @@ from . import dataplex_datascan
 from . import dataplex_datascan_iam_binding
 from . import dataplex_datascan_iam_member
 from . import dataplex_datascan_iam_policy
+from . import dataplex_entry
 from . import dataplex_entry_group
 from . import dataplex_entry_group_iam_binding
 from . import dataplex_entry_group_iam_member

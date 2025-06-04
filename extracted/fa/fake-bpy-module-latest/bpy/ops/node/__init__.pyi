@@ -3,9 +3,9 @@ import collections.abc
 import typing_extensions
 import numpy.typing as npt
 import bl_operators.node
-import bpy._typing.rna_enums
 import bpy.ops.transform
 import bpy.ops.wm
+import bpy.stub_internal.rna_enums
 import bpy.types
 
 def activate_viewer(
@@ -145,7 +145,8 @@ def add_group_asset(
     undo: bool | None = None,
     /,
     *,
-    asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None = "LOCAL",
+    asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems
+    | None = "LOCAL",
     asset_library_identifier: str = "",
     relative_asset_identifier: str = "",
 ):
@@ -154,7 +155,7 @@ def add_group_asset(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param asset_library_type: Asset Library Type
-    :type asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None
+    :type asset_library_type: bpy.stub_internal.rna_enums.AssetLibraryTypeItems | None
     :param asset_library_identifier: Asset Library Identifier
     :type asset_library_identifier: str
     :param relative_asset_identifier: Relative Asset Identifier

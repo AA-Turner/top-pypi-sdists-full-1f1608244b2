@@ -1,6 +1,7 @@
 import json
 import re
-from typing import Any
+import inspect
+from typing import Any, Union, get_args, get_origin
 
 import json_repair
 import pydantic
@@ -26,12 +27,51 @@ class BaseType(pydantic.BaseModel):
         ```
     """
 
-    def format(self) -> list[dict[str, Any]]:
+    def format(self) -> Union[list[dict[str, Any]], str]:
         raise NotImplementedError
+
+    @classmethod
+    def description(cls) -> str:
+        """Description of the custom type"""
+        return ""
+
+    @classmethod
+    def extract_custom_type_from_annotation(cls, annotation):
+        """Extract all custom types from the annotation.
+
+        This is used to extract all custom types from the annotation of a field, while the annotation can
+        have arbitrary level of nesting. For example, we detect `Tool` is in `list[dict[str, Tool]]`.
+        """
+        # Direct match. Some typing constructs (like `typing.Any`, `TypeAlias`,
+        # or weird internals) may pass `isinstance(..., type)` but are not
+        # valid classes for `issubclass`. We defensively guard against this by
+        # using `inspect.isclass` and wrapping the call in a try/except block.
+        try:
+            if inspect.isclass(annotation) and issubclass(annotation, cls):
+                return [annotation]
+        except TypeError:
+            # `issubclass` can raise `TypeError` if the argument is not actually
+            # a class (even if `inspect.isclass` thought otherwise). In these
+            # cases we just ignore the annotation.
+            return []
+
+        origin = get_origin(annotation)
+        if origin is None:
+            return []
+
+        result = []
+        # Recurse into all type args
+        for arg in get_args(annotation):
+            result.extend(cls.extract_custom_type_from_annotation(arg))
+
+        return result
 
     @pydantic.model_serializer()
     def serialize_model(self):
-        return f"{CUSTOM_TYPE_START_IDENTIFIER}{self.format()}{CUSTOM_TYPE_END_IDENTIFIER}"
+        formatted = self.format()
+        if isinstance(formatted, list):
+            return f"{CUSTOM_TYPE_START_IDENTIFIER}{self.format()}{CUSTOM_TYPE_END_IDENTIFIER}"
+        return formatted
 
 
 def split_message_content_for_custom_types(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:

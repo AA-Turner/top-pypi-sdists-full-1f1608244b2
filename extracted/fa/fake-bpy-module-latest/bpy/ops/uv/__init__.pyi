@@ -2,8 +2,8 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.stub_internal.rna_enums
 import bpy.types
 import mathutils
 
@@ -905,14 +905,14 @@ def select_mode(
     undo: bool | None = None,
     /,
     *,
-    type: bpy._typing.rna_enums.MeshSelectModeUvItems | None = "VERTEX",
+    type: bpy.stub_internal.rna_enums.MeshSelectModeUvItems | None = "VERTEX",
 ):
     """Change UV selection mode
 
     :type execution_context: int | str | None
     :type undo: bool | None
     :param type: Type
-    :type type: bpy._typing.rna_enums.MeshSelectModeUvItems | None
+    :type type: bpy.stub_internal.rna_enums.MeshSelectModeUvItems | None
     """
 
 def select_more(execution_context: int | str | None = None, undo: bool | None = None):

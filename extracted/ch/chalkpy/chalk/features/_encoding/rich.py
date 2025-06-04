@@ -449,7 +449,15 @@ def _structure_rich(obj: Any, typ: Type):
     ):
         raise ValueError(f"Object {obj} of type {type(obj).__name__} cannot be converted into a {typ.__name__}")
 
-    return typ(obj)  # pyright: ignore[reportCallIssue]
+    # Perform this import lazily, to prevent a circular import.
+    from chalk.features.underscore import Underscore
+
+    if isinstance(obj, Underscore) and not issubclass(typ, Underscore):
+        raise ValueError(
+            f"Chalk expression '{repr(obj)}' cannot be provided where a concrete value of type '{typ.__name__}' is expected"
+        )
+
+    return typ(obj)  # pyright: ignore
 
 
 _rich_converter.register_structure_hook(int, _structure_rich)

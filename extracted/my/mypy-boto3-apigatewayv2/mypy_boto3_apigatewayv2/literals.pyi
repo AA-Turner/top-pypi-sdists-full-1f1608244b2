@@ -43,6 +43,7 @@ __all__ = (
     "IntegrationTypeType",
     "IpAddressTypeType",
     "JSONYAMLType",
+    "ListRoutingRulesPaginatorName",
     "LoggingLevelType",
     "OAS30Type",
     "PaginatorName",
@@ -50,6 +51,7 @@ __all__ = (
     "ProtocolTypeType",
     "RegionName",
     "ResourceServiceName",
+    "RoutingModeType",
     "SecurityPolicyType",
     "ServiceName",
     "VpcLinkStatusType",
@@ -78,10 +80,12 @@ GetStagesPaginatorName = Literal["get_stages"]
 IntegrationTypeType = Literal["AWS", "AWS_PROXY", "HTTP", "HTTP_PROXY", "MOCK"]
 IpAddressTypeType = Literal["dualstack", "ipv4"]
 JSONYAMLType = Literal["JSON", "YAML"]
+ListRoutingRulesPaginatorName = Literal["list_routing_rules"]
 LoggingLevelType = Literal["ERROR", "INFO", "OFF"]
 OAS30Type = Literal["OAS30"]
 PassthroughBehaviorType = Literal["NEVER", "WHEN_NO_MATCH", "WHEN_NO_TEMPLATES"]
 ProtocolTypeType = Literal["HTTP", "WEBSOCKET"]
+RoutingModeType = Literal["API_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_API_MAPPING"]
 SecurityPolicyType = Literal["TLS_1_0", "TLS_1_2"]
 VpcLinkStatusType = Literal["AVAILABLE", "DELETING", "FAILED", "INACTIVE", "PENDING"]
 VpcLinkVersionType = Literal["V2"]
@@ -383,7 +387,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -444,7 +447,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -452,6 +454,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -515,6 +518,7 @@ PaginatorName = Literal[
     "get_route_responses",
     "get_routes",
     "get_stages",
+    "list_routing_rules",
 ]
 RegionName = Literal[
     "af-south-1",

@@ -10,6 +10,14 @@ import System.Collections
 import System.Runtime.Serialization
 
 
+class OnSerializedAttribute(System.Attribute):
+    """This class has no documentation."""
+
+
+class OnSerializingAttribute(System.Attribute):
+    """This class has no documentation."""
+
+
 class IFormatterConverter(metaclass=abc.ABCMeta):
     """Obsoletions.LegacyFormatterMessage"""
 
@@ -67,71 +75,18 @@ class IFormatterConverter(metaclass=abc.ABCMeta):
         ...
 
 
-class StreamingContextStates(Enum):
+class ISafeSerializationData(metaclass=abc.ABCMeta):
     """Obsoletions.LegacyFormatterMessage"""
 
-    CROSS_PROCESS = ...
-
-    CROSS_MACHINE = ...
-
-    FILE = ...
-
-    PERSISTENCE = ...
-
-    REMOTING = ...
-
-    OTHER = ...
-
-    CLONE = ...
-
-    CROSS_APP_DOMAIN = ...
-
-    ALL = ...
+    def complete_deserialization(self, deserialized: typing.Any) -> None:
+        ...
 
 
-class StreamingContext:
+class DeserializationToken(System.IDisposable):
     """This class has no documentation."""
 
-    @property
-    def state(self) -> System.Runtime.Serialization.StreamingContextStates:
-        """Obsoletions.LegacyFormatterMessage"""
-        warnings.warn("Obsoletions.LegacyFormatterMessage", DeprecationWarning)
-
-    @property
-    def context(self) -> System.Object:
+    def dispose(self) -> None:
         ...
-
-    @overload
-    def __init__(self, state: System.Runtime.Serialization.StreamingContextStates, additional: typing.Any) -> None:
-        """Obsoletions.LegacyFormatterMessage"""
-        ...
-
-    @overload
-    def __init__(self, state: System.Runtime.Serialization.StreamingContextStates) -> None:
-        """Obsoletions.LegacyFormatterMessage"""
-        ...
-
-    def equals(self, obj: typing.Any) -> bool:
-        ...
-
-    def get_hash_code(self) -> int:
-        ...
-
-
-class OptionalFieldAttribute(System.Attribute):
-    """This class has no documentation."""
-
-    @property
-    def version_added(self) -> int:
-        ...
-
-    @version_added.setter
-    def version_added(self, value: int) -> None:
-        ...
-
-
-class OnSerializedAttribute(System.Attribute):
-    """This class has no documentation."""
 
 
 class SerializationEntry:
@@ -173,13 +128,6 @@ class SerializationInfoEnumerator(System.Object, System.Collections.IEnumerator)
         ...
 
     def reset(self) -> None:
-        ...
-
-
-class DeserializationToken(System.IDisposable):
-    """This class has no documentation."""
-
-    def dispose(self) -> None:
         ...
 
 
@@ -315,33 +263,63 @@ class SerializationInfo(System.Object):
         ...
 
 
-class IObjectReference(metaclass=abc.ABCMeta):
+class StreamingContextStates(Enum):
     """Obsoletions.LegacyFormatterMessage"""
 
-    def get_real_object(self, context: System.Runtime.Serialization.StreamingContext) -> System.Object:
+    CROSS_PROCESS = ...
+
+    CROSS_MACHINE = ...
+
+    FILE = ...
+
+    PERSISTENCE = ...
+
+    REMOTING = ...
+
+    OTHER = ...
+
+    CLONE = ...
+
+    CROSS_APP_DOMAIN = ...
+
+    ALL = ...
+
+
+class StreamingContext:
+    """This class has no documentation."""
+
+    @property
+    def state(self) -> System.Runtime.Serialization.StreamingContextStates:
+        """Obsoletions.LegacyFormatterMessage"""
+        warnings.warn("Obsoletions.LegacyFormatterMessage", DeprecationWarning)
+
+    @property
+    def context(self) -> System.Object:
+        ...
+
+    @overload
+    def __init__(self, state: System.Runtime.Serialization.StreamingContextStates, additional: typing.Any) -> None:
+        """Obsoletions.LegacyFormatterMessage"""
+        ...
+
+    @overload
+    def __init__(self, state: System.Runtime.Serialization.StreamingContextStates) -> None:
+        """Obsoletions.LegacyFormatterMessage"""
+        ...
+
+    def equals(self, obj: typing.Any) -> bool:
+        ...
+
+    def get_hash_code(self) -> int:
         ...
 
 
-class OnSerializingAttribute(System.Attribute):
+class ISerializable(metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
-
-class IDeserializationCallback(metaclass=abc.ABCMeta):
-    """This class has no documentation."""
-
-    def on_deserialization(self, sender: typing.Any) -> None:
-        ...
-
-
-class ISafeSerializationData(metaclass=abc.ABCMeta):
-    """Obsoletions.LegacyFormatterMessage"""
-
-    def complete_deserialization(self, deserialized: typing.Any) -> None:
-        ...
-
-
-class OnDeserializingAttribute(System.Attribute):
-    """This class has no documentation."""
+    def get_object_data(self, info: System.Runtime.Serialization.SerializationInfo, context: System.Runtime.Serialization.StreamingContext) -> None:
+        """Obsoletions.LegacyFormatterMessage"""
+        warnings.warn("Obsoletions.LegacyFormatterMessage", DeprecationWarning)
 
 
 class SafeSerializationEventArgs(System.EventArgs):
@@ -359,12 +337,34 @@ class OnDeserializedAttribute(System.Attribute):
     """This class has no documentation."""
 
 
-class ISerializable(metaclass=abc.ABCMeta):
+class OptionalFieldAttribute(System.Attribute):
     """This class has no documentation."""
 
-    def get_object_data(self, info: System.Runtime.Serialization.SerializationInfo, context: System.Runtime.Serialization.StreamingContext) -> None:
-        """Obsoletions.LegacyFormatterMessage"""
-        warnings.warn("Obsoletions.LegacyFormatterMessage", DeprecationWarning)
+    @property
+    def version_added(self) -> int:
+        ...
+
+    @version_added.setter
+    def version_added(self, value: int) -> None:
+        ...
+
+
+class IObjectReference(metaclass=abc.ABCMeta):
+    """Obsoletions.LegacyFormatterMessage"""
+
+    def get_real_object(self, context: System.Runtime.Serialization.StreamingContext) -> System.Object:
+        ...
+
+
+class IDeserializationCallback(metaclass=abc.ABCMeta):
+    """This class has no documentation."""
+
+    def on_deserialization(self, sender: typing.Any) -> None:
+        ...
+
+
+class OnDeserializingAttribute(System.Attribute):
+    """This class has no documentation."""
 
 
 class SerializationException(System.SystemException):

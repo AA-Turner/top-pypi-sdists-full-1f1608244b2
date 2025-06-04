@@ -13,6 +13,73 @@ import System.Runtime.Serialization
 IServiceProvider = typing.Any
 
 
+class ValidationResult(System.Object):
+    """
+    Container class for the results of a validation request.
+        
+            Use the static  to represent successful validation.
+    """
+
+    SUCCESS: System.ComponentModel.DataAnnotations.ValidationResult
+    """Gets a ValidationResult that indicates Success."""
+
+    @property
+    def member_names(self) -> typing.Iterable[str]:
+        """Gets the collection of member names affected by this result.  The collection may be empty but will never be null."""
+        ...
+
+    @property
+    def error_message(self) -> str:
+        """Gets the error message for this result.  It may be null."""
+        ...
+
+    @error_message.setter
+    def error_message(self, value: str) -> None:
+        ...
+
+    @overload
+    def __init__(self, error_message: str) -> None:
+        """
+        Constructor that accepts an error message.  This error message would override any error message
+            provided on the ValidationAttribute.
+        
+        :param error_message: The user-visible error message.  If null, ValidationAttribute.GetValidationResult     will use ValidationAttribute.FormatErrorMessage for its error message.
+        """
+        ...
+
+    @overload
+    def __init__(self, error_message: str, member_names: System.Collections.Generic.IEnumerable[str]) -> None:
+        """
+        Constructor that accepts an error message as well as a list of member names involved in the validation.
+            This error message would override any error message provided on the ValidationAttribute.
+        
+        :param error_message: The user-visible error message.  If null, ValidationAttribute.GetValidationResult     will use ValidationAttribute.FormatErrorMessage for its error message.
+        :param member_names: The list of member names affected by this result.     This list of member names is meant to be used by presentation layers to indicate which fields are in error.
+        """
+        ...
+
+    @overload
+    def __init__(self, validation_result: System.ComponentModel.DataAnnotations.ValidationResult) -> None:
+        """
+        Constructor that creates a copy of an existing ValidationResult.
+        
+        This method is protected.
+        
+        :param validation_result: The validation result.
+        """
+        ...
+
+    def to_string(self) -> str:
+        """
+        Override the string representation of this instance, returning
+            the ErrorMessage if not null, otherwise
+            the base object.ToString result.
+        
+        :returns: The ErrorMessage property value if specified,     otherwise, the base object.ToString result.
+        """
+        ...
+
+
 class ValidationContext(IServiceProvider):
     """Describes the context in which a validation is being performed."""
 
@@ -116,80 +183,6 @@ class ValidationContext(IServiceProvider):
         
         :param service_provider: A Func{T, TResult} that can return service instances given the     desired Type when GetService is called.     If it is null, GetService will always return null.
         """
-        ...
-
-
-class ValidationResult(System.Object):
-    """
-    Container class for the results of a validation request.
-        
-            Use the static  to represent successful validation.
-    """
-
-    SUCCESS: System.ComponentModel.DataAnnotations.ValidationResult
-    """Gets a ValidationResult that indicates Success."""
-
-    @property
-    def member_names(self) -> typing.Iterable[str]:
-        """Gets the collection of member names affected by this result.  The collection may be empty but will never be null."""
-        ...
-
-    @property
-    def error_message(self) -> str:
-        """Gets the error message for this result.  It may be null."""
-        ...
-
-    @error_message.setter
-    def error_message(self, value: str) -> None:
-        ...
-
-    @overload
-    def __init__(self, error_message: str) -> None:
-        """
-        Constructor that accepts an error message.  This error message would override any error message
-            provided on the ValidationAttribute.
-        
-        :param error_message: The user-visible error message.  If null, ValidationAttribute.GetValidationResult     will use ValidationAttribute.FormatErrorMessage for its error message.
-        """
-        ...
-
-    @overload
-    def __init__(self, error_message: str, member_names: System.Collections.Generic.IEnumerable[str]) -> None:
-        """
-        Constructor that accepts an error message as well as a list of member names involved in the validation.
-            This error message would override any error message provided on the ValidationAttribute.
-        
-        :param error_message: The user-visible error message.  If null, ValidationAttribute.GetValidationResult     will use ValidationAttribute.FormatErrorMessage for its error message.
-        :param member_names: The list of member names affected by this result.     This list of member names is meant to be used by presentation layers to indicate which fields are in error.
-        """
-        ...
-
-    @overload
-    def __init__(self, validation_result: System.ComponentModel.DataAnnotations.ValidationResult) -> None:
-        """
-        Constructor that creates a copy of an existing ValidationResult.
-        
-        This method is protected.
-        
-        :param validation_result: The validation result.
-        """
-        ...
-
-    def to_string(self) -> str:
-        """
-        Override the string representation of this instance, returning
-            the ErrorMessage if not null, otherwise
-            the base object.ToString result.
-        
-        :returns: The ErrorMessage property value if specified,     otherwise, the base object.ToString result.
-        """
-        ...
-
-
-class IValidatableObject(metaclass=abc.ABCMeta):
-    """This class has no documentation."""
-
-    def validate(self, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> System.Collections.Generic.IEnumerable[System.ComponentModel.DataAnnotations.ValidationResult]:
         ...
 
 
@@ -348,6 +341,165 @@ class ValidationAttribute(System.Attribute, metaclass=abc.ABCMeta):
         :param value: The value to validate
         :param validation_context: Additional context that may be used for validation.  It cannot be null.
         """
+        ...
+
+
+class RangeAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Used for specifying a range constraint"""
+
+    @property
+    def minimum(self) -> System.Object:
+        """Gets the minimum value for the range"""
+        ...
+
+    @property
+    def maximum(self) -> System.Object:
+        """Gets the maximum value for the range"""
+        ...
+
+    @property
+    def minimum_is_exclusive(self) -> bool:
+        """Specifies whether validation should fail for values that are equal to Minimum."""
+        ...
+
+    @minimum_is_exclusive.setter
+    def minimum_is_exclusive(self, value: bool) -> None:
+        ...
+
+    @property
+    def maximum_is_exclusive(self) -> bool:
+        """Specifies whether validation should fail for values that are equal to Maximum."""
+        ...
+
+    @maximum_is_exclusive.setter
+    def maximum_is_exclusive(self, value: bool) -> None:
+        ...
+
+    @property
+    def operand_type(self) -> typing.Type:
+        """
+        Gets the type of the Minimum and Maximum values (e.g. Int32, Double, or some custom
+            type)
+        """
+        ...
+
+    @property
+    def parse_limits_in_invariant_culture(self) -> bool:
+        """
+        Determines whether string values for Minimum and Maximum are parsed in the invariant
+        culture rather than the current culture in effect at the time of the validation.
+        """
+        ...
+
+    @parse_limits_in_invariant_culture.setter
+    def parse_limits_in_invariant_culture(self, value: bool) -> None:
+        ...
+
+    @property
+    def convert_value_in_invariant_culture(self) -> bool:
+        """
+        Determines whether any conversions necessary from the value being validated to OperandType as set
+        by the type parameter of the RangeAttribute(Type, string, string) constructor are carried
+        out in the invariant culture rather than the current culture in effect at the time of the validation.
+        """
+        ...
+
+    @convert_value_in_invariant_culture.setter
+    def convert_value_in_invariant_culture(self, value: bool) -> None:
+        ...
+
+    @overload
+    def __init__(self, minimum: int, maximum: int) -> None:
+        """
+        Constructor that takes integer minimum and maximum values
+        
+        :param minimum: The minimum value, inclusive
+        :param maximum: The maximum value, inclusive
+        """
+        ...
+
+    @overload
+    def __init__(self, minimum: float, maximum: float) -> None:
+        """
+        Constructor that takes double minimum and maximum values
+        
+        :param minimum: The minimum value, inclusive
+        :param maximum: The maximum value, inclusive
+        """
+        ...
+
+    @overload
+    def __init__(self, type: typing.Type, minimum: str, maximum: str) -> None:
+        """
+        Allows for specifying range for arbitrary types. The minimum and maximum strings
+            will be converted to the target type.
+        
+        :param type: The type of the range parameters. Must implement IComparable.
+        :param minimum: The minimum allowable value.
+        :param maximum: The maximum allowable value.
+        """
+        ...
+
+    def format_error_message(self, name: str) -> str:
+        """
+        Override of ValidationAttribute.FormatErrorMessage
+        
+        :param name: The user-visible name to include in the formatted message.
+        :returns: A localized string describing the minimum and maximum values.
+        """
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        """
+        Returns true if the value falls between min and max, inclusive.
+        
+        :param value: The value to test for validity.
+        :returns: true means the  is valid.
+        """
+        ...
+
+
+class MetadataTypeAttribute(System.Attribute):
+    """Specifies the metadata class to associate with a data model class."""
+
+    @property
+    def metadata_class_type(self) -> typing.Type:
+        """Gets the metadata class that is associated with a data-model partial class."""
+        ...
+
+    def __init__(self, metadata_class_type: typing.Type) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.DataAnnotations.MetadataTypeAttribute
+        class.
+        
+        :param metadata_class_type: The metadata class to reference.
+        """
+        ...
+
+
+class CompareAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """This class has no documentation."""
+
+    @property
+    def other_property(self) -> str:
+        ...
+
+    @property
+    def other_property_display_name(self) -> str:
+        ...
+
+    @property
+    def requires_validation_context(self) -> bool:
+        ...
+
+    def __init__(self, other_property: str) -> None:
+        ...
+
+    def format_error_message(self, name: str) -> str:
+        ...
+
+    def is_valid(self, value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> System.ComponentModel.DataAnnotations.ValidationResult:
+        """This method is protected."""
         ...
 
 
@@ -557,127 +709,49 @@ class DataTypeAttribute(System.ComponentModel.DataAnnotations.ValidationAttribut
         ...
 
 
-class CreditCardAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
+class FileExtensionsAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
     """This class has no documentation."""
 
+    @property
+    def extensions(self) -> str:
+        ...
+
+    @extensions.setter
+    def extensions(self, value: str) -> None:
+        ...
+
     def __init__(self) -> None:
+        ...
+
+    def format_error_message(self, name: str) -> str:
         ...
 
     def is_valid(self, value: typing.Any) -> bool:
         ...
 
 
-class MetadataTypeAttribute(System.Attribute):
-    """Specifies the metadata class to associate with a data model class."""
+class StringLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Validation attribute to assert a string property, field or parameter does not exceed a maximum length"""
 
     @property
-    def metadata_class_type(self) -> typing.Type:
-        """Gets the metadata class that is associated with a data-model partial class."""
+    def maximum_length(self) -> int:
+        """Gets the maximum acceptable length of the string"""
         ...
 
-    def __init__(self, metadata_class_type: typing.Type) -> None:
+    @property
+    def minimum_length(self) -> int:
+        """Gets or sets the minimum acceptable length of the string"""
+        ...
+
+    @minimum_length.setter
+    def minimum_length(self, value: int) -> None:
+        ...
+
+    def __init__(self, maximum_length: int) -> None:
         """
-        Initializes a new instance of the System.ComponentModel.DataAnnotations.MetadataTypeAttribute
-        class.
+        Constructor that accepts the maximum length of the string.
         
-        :param metadata_class_type: The metadata class to reference.
-        """
-        ...
-
-
-class RangeAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Used for specifying a range constraint"""
-
-    @property
-    def minimum(self) -> System.Object:
-        """Gets the minimum value for the range"""
-        ...
-
-    @property
-    def maximum(self) -> System.Object:
-        """Gets the maximum value for the range"""
-        ...
-
-    @property
-    def minimum_is_exclusive(self) -> bool:
-        """Specifies whether validation should fail for values that are equal to Minimum."""
-        ...
-
-    @minimum_is_exclusive.setter
-    def minimum_is_exclusive(self, value: bool) -> None:
-        ...
-
-    @property
-    def maximum_is_exclusive(self) -> bool:
-        """Specifies whether validation should fail for values that are equal to Maximum."""
-        ...
-
-    @maximum_is_exclusive.setter
-    def maximum_is_exclusive(self, value: bool) -> None:
-        ...
-
-    @property
-    def operand_type(self) -> typing.Type:
-        """
-        Gets the type of the Minimum and Maximum values (e.g. Int32, Double, or some custom
-            type)
-        """
-        ...
-
-    @property
-    def parse_limits_in_invariant_culture(self) -> bool:
-        """
-        Determines whether string values for Minimum and Maximum are parsed in the invariant
-        culture rather than the current culture in effect at the time of the validation.
-        """
-        ...
-
-    @parse_limits_in_invariant_culture.setter
-    def parse_limits_in_invariant_culture(self, value: bool) -> None:
-        ...
-
-    @property
-    def convert_value_in_invariant_culture(self) -> bool:
-        """
-        Determines whether any conversions necessary from the value being validated to OperandType as set
-        by the type parameter of the RangeAttribute(Type, string, string) constructor are carried
-        out in the invariant culture rather than the current culture in effect at the time of the validation.
-        """
-        ...
-
-    @convert_value_in_invariant_culture.setter
-    def convert_value_in_invariant_culture(self, value: bool) -> None:
-        ...
-
-    @overload
-    def __init__(self, minimum: int, maximum: int) -> None:
-        """
-        Constructor that takes integer minimum and maximum values
-        
-        :param minimum: The minimum value, inclusive
-        :param maximum: The maximum value, inclusive
-        """
-        ...
-
-    @overload
-    def __init__(self, minimum: float, maximum: float) -> None:
-        """
-        Constructor that takes double minimum and maximum values
-        
-        :param minimum: The minimum value, inclusive
-        :param maximum: The maximum value, inclusive
-        """
-        ...
-
-    @overload
-    def __init__(self, type: typing.Type, minimum: str, maximum: str) -> None:
-        """
-        Allows for specifying range for arbitrary types. The minimum and maximum strings
-            will be converted to the target type.
-        
-        :param type: The type of the range parameters. Must implement IComparable.
-        :param minimum: The minimum allowable value.
-        :param maximum: The maximum allowable value.
+        :param maximum_length: The maximum length, inclusive.  It may not be negative.
         """
         ...
 
@@ -685,26 +759,36 @@ class RangeAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
         """
         Override of ValidationAttribute.FormatErrorMessage
         
-        :param name: The user-visible name to include in the formatted message.
-        :returns: A localized string describing the minimum and maximum values.
+        :param name: The name to include in the formatted string
+        :returns: A localized string to describe the maximum acceptable length.
         """
         ...
 
     def is_valid(self, value: typing.Any) -> bool:
         """
-        Returns true if the value falls between min and max, inclusive.
+        Override of ValidationAttribute.IsValid(object)
         
-        :param value: The value to test for validity.
-        :returns: true means the  is valid.
+        :param value: The value to test.
+        :returns: true if the value is null or less than or equal to the set maximum length.
         """
         ...
 
 
-class ConcurrencyCheckAttribute(System.Attribute):
-    """
-    This attribute is used to mark the members of a Type that participate in
-        optimistic concurrency checks.
-    """
+class Base64StringAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Specifies that a data field value is a well-formed Base64 string."""
+
+    def __init__(self) -> None:
+        """Initializes a new instance of the Base64StringAttribute class."""
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        """
+        Determines whether a specified object is valid. (Overrides ValidationAttribute.IsValid(object))
+        
+        :param value: The object to validate.
+        :returns: true if  is null or is a valid Base64 string,     otherwise false.
+        """
+        ...
 
 
 class EditableAttribute(System.Attribute):
@@ -742,6 +826,502 @@ class EditableAttribute(System.Attribute):
         ...
 
 
+class RequiredAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Validation attribute to indicate that a property, field or parameter is required."""
+
+    @property
+    def allow_empty_strings(self) -> bool:
+        """Gets or sets a flag indicating whether the attribute should allow empty strings."""
+        ...
+
+    @allow_empty_strings.setter
+    def allow_empty_strings(self, value: bool) -> None:
+        ...
+
+    def __init__(self) -> None:
+        """Default constructor."""
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        """
+        Override of ValidationAttribute.IsValid(object)
+        
+        :param value: The value to test
+        :returns: Returns false if the  is null or an empty string.     If AllowEmptyStrings then true is returned for empty strings.
+        """
+        ...
+
+
+class AssociationAttribute(System.Attribute):
+    """
+    Used to mark an Entity member as an association
+    
+    AssociationAttribute has been deprecated and is not supported.
+    """
+
+    @property
+    def name(self) -> str:
+        """
+        Gets the name of the association. For bi-directional associations, the name must
+        be the same on both sides of the association
+        """
+        ...
+
+    @property
+    def this_key(self) -> str:
+        """
+        Gets a comma separated list of the property names of the key values
+        on this side of the association
+        """
+        ...
+
+    @property
+    def other_key(self) -> str:
+        """
+        Gets a comma separated list of the property names of the key values
+        on the other side of the association
+        """
+        ...
+
+    @property
+    def is_foreign_key(self) -> bool:
+        """
+        Gets or sets a value indicating whether this association member represents
+        the foreign key side of an association
+        """
+        ...
+
+    @is_foreign_key.setter
+    def is_foreign_key(self, value: bool) -> None:
+        ...
+
+    @property
+    def this_key_members(self) -> typing.Iterable[str]:
+        """Gets the collection of individual key members specified in the ThisKey string."""
+        ...
+
+    @property
+    def other_key_members(self) -> typing.Iterable[str]:
+        """Gets the collection of individual key members specified in the OtherKey string."""
+        ...
+
+    def __init__(self, name: str, this_key: str, other_key: str) -> None:
+        """
+        Full form of constructor
+        
+        :param name: The name of the association. For bi-directional associations, the name must be the same on both sides of the association
+        :param this_key: Comma separated list of the property names of the key values on this side of the association
+        :param other_key: Comma separated list of the property names of the key values on the other side of the association
+        """
+        ...
+
+
+class EmailAddressAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
+    """This class has no documentation."""
+
+    def __init__(self) -> None:
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        ...
+
+
+class ConcurrencyCheckAttribute(System.Attribute):
+    """
+    This attribute is used to mark the members of a Type that participate in
+        optimistic concurrency checks.
+    """
+
+
+class RegularExpressionAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Regular expression validation attribute"""
+
+    @property
+    def match_timeout_in_milliseconds(self) -> int:
+        """
+        Gets or sets the timeout to use when matching the regular expression pattern (in milliseconds)
+            (-1 means never timeout).
+        """
+        ...
+
+    @match_timeout_in_milliseconds.setter
+    def match_timeout_in_milliseconds(self, value: int) -> None:
+        ...
+
+    @property
+    def match_timeout(self) -> datetime.timedelta:
+        """Gets the timeout to use when matching the regular expression pattern"""
+        ...
+
+    @property
+    def pattern(self) -> str:
+        """Gets the regular expression pattern to use"""
+        ...
+
+    def __init__(self, pattern: str) -> None:
+        """
+        Constructor that accepts the regular expression pattern
+        
+        :param pattern: The regular expression to use.  It cannot be null.
+        """
+        ...
+
+    def format_error_message(self, name: str) -> str:
+        """
+        Override of ValidationAttribute.FormatErrorMessage
+        
+        :param name: The user-visible name to include in the formatted message.
+        :returns: The localized message to present to the user.
+        """
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        """
+        Override of ValidationAttribute.IsValid(object)
+        
+        :param value: The value to test for validity.
+        :returns: true if the given value matches the current regular expression pattern.
+        """
+        ...
+
+
+class CreditCardAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
+    """This class has no documentation."""
+
+    def __init__(self) -> None:
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        ...
+
+
+class MaxLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Specifies the maximum length of collection/string data allowed in a property."""
+
+    @property
+    def length(self) -> int:
+        """Gets the maximum allowable length of the collection/string data."""
+        ...
+
+    @overload
+    def __init__(self, length: int) -> None:
+        """
+        Initializes a new instance of the MaxLengthAttribute class.
+        
+        :param length: The maximum allowable length of collection/string data.     Value must be greater than zero.
+        """
+        ...
+
+    @overload
+    def __init__(self) -> None:
+        """
+        Initializes a new instance of the MaxLengthAttribute class.
+            The maximum allowable length supported by the database will be used.
+        """
+        ...
+
+    def format_error_message(self, name: str) -> str:
+        """
+        Applies formatting to a specified error message. (Overrides ValidationAttribute.FormatErrorMessage)
+        
+        :param name: The name to include in the formatted string.
+        :returns: A localized string to describe the maximum acceptable length.
+        """
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        """
+        Determines whether a specified object is valid. (Overrides ValidationAttribute.IsValid(object))
+        
+        :param value: The object to validate.
+        :returns: true if the value is null or less than or equal to the specified maximum length, otherwise false.
+        """
+        ...
+
+
+class Validator(System.Object):
+    """
+    Helper class to validate objects, properties and other values using their associated
+        ValidationAttribute
+        custom attributes.
+    """
+
+    @staticmethod
+    @overload
+    def try_validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult]) -> bool:
+        """
+        Tests whether the given object instance is valid.
+        
+        :param instance: The object instance to test.  It cannot be null.
+        :param validation_context: Describes the object to validate and provides services and context for the validators.
+        :param validation_results: Optional collection to receive ValidationResults for the failures.
+        :returns: true if the object is valid, false if any validation errors are encountered.
+        """
+        ...
+
+    @staticmethod
+    @overload
+    def try_validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult], validate_all_properties: bool) -> bool:
+        """
+        Tests whether the given object instance is valid.
+        
+        :param instance: The object instance to test.  It cannot be null.
+        :param validation_context: Describes the object to validate and provides services and context for the validators.
+        :param validation_results: Optional collection to receive ValidationResults for the failures.
+        :param validate_all_properties: If true, also evaluates all properties of the object (this process is not     recursive over properties of the properties).
+        :returns: true if the object is valid, false if any validation errors are encountered.
+        """
+        ...
+
+    @staticmethod
+    def try_validate_property(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult]) -> bool:
+        """
+        Tests whether the given property value is valid.
+        
+        :param value: The value to test.
+        :param validation_context: Describes the property member to validate and provides services and context for the     validators.
+        :param validation_results: Optional collection to receive ValidationResults for the failures.
+        :returns: true if the value is valid, false if any validation errors are encountered.
+        """
+        ...
+
+    @staticmethod
+    def try_validate_value(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult], validation_attributes: System.Collections.Generic.IEnumerable[System.ComponentModel.DataAnnotations.ValidationAttribute]) -> bool:
+        """
+        Tests whether the given value is valid against a specified list of ValidationAttributes.
+        
+        :param value: The value to test.
+        :param validation_context: Describes the object being validated and provides services and context for the     validators.
+        :param validation_results: Optional collection to receive ValidationResults for the failures.
+        :param validation_attributes: The list of ValidationAttributes to validate this      against.
+        :returns: true if the object is valid, false if any validation errors are encountered.
+        """
+        ...
+
+    @staticmethod
+    @overload
+    def validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> None:
+        """
+        Throws a ValidationException if the given  is not valid.
+        
+        :param instance: The object instance to test.  It cannot be null.
+        :param validation_context: Describes the object being validated and provides services and context for the     validators.  It cannot be null.
+        """
+        ...
+
+    @staticmethod
+    @overload
+    def validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validate_all_properties: bool) -> None:
+        """
+        Throws a ValidationException if the given object instance is not valid.
+        
+        :param instance: The object instance to test.  It cannot be null.
+        :param validation_context: Describes the object being validated and provides services and context for the     validators.  It cannot be null.
+        :param validate_all_properties: If true, also validates all the 's properties.
+        """
+        ...
+
+    @staticmethod
+    def validate_property(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> None:
+        """
+        Throws a ValidationException if the given property  is not valid.
+        
+        :param value: The value to test.
+        :param validation_context: Describes the object being validated and provides services and context for the     validators.  It cannot be null.
+        """
+        ...
+
+    @staticmethod
+    def validate_value(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_attributes: System.Collections.Generic.IEnumerable[System.ComponentModel.DataAnnotations.ValidationAttribute]) -> None:
+        """
+        Throw a ValidationException if the given value is not valid for the
+            ValidationAttributes.
+        
+        :param value: The value to test.
+        :param validation_context: Describes the object being tested.
+        :param validation_attributes: The list of ValidationAttributes to validate against this instance.
+        """
+        ...
+
+
+class FilterUIHintAttribute(System.Attribute):
+    """
+    An attribute used to specify the filtering behavior for a column.
+    
+    FilterUIHintAttribute has been deprecated and is not supported.
+    """
+
+    @property
+    def filter_ui_hint(self) -> str:
+        """
+        Gets the name of the control that is most appropriate for this associated
+        property or field
+        """
+        ...
+
+    @property
+    def presentation_layer(self) -> str:
+        """
+        Gets the name of the presentation layer that supports the control type
+        in FilterUIHint
+        """
+        ...
+
+    @property
+    def control_parameters(self) -> System.Collections.Generic.IDictionary[str, System.Object]:
+        """Gets the name-value pairs used as parameters to the control's constructor"""
+        ...
+
+    @overload
+    def __init__(self, filter_ui_hint: str) -> None:
+        """
+        Constructor that accepts the name of the control, without specifying
+        which presentation layer to use
+        
+        :param filter_ui_hint: The name of the UI control.
+        """
+        ...
+
+    @overload
+    def __init__(self, filter_ui_hint: str, presentation_layer: str) -> None:
+        """
+        Constructor that accepts both the name of the control as well as the
+        presentation layer
+        
+        :param filter_ui_hint: The name of the control to use
+        :param presentation_layer: The name of the presentation layer that supports this control
+        """
+        ...
+
+    @overload
+    def __init__(self, filter_ui_hint: str, presentation_layer: str, *control_parameters: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
+        """
+        Full constructor that accepts the name of the control, presentation layer,
+        and optional parameters to use when constructing the control
+        
+        :param filter_ui_hint: The name of the control
+        :param presentation_layer: The presentation layer
+        :param control_parameters: The list of parameters for the control
+        """
+        ...
+
+    def equals(self, obj: typing.Any) -> bool:
+        """
+        Determines whether this instance of FilterUIHintAttribute and a specified object,
+        which must also be a FilterUIHintAttribute object, have the same value.
+        
+        :param obj: An System.Object.
+        :returns: true if obj is a FilterUIHintAttribute and its value is the same as this instance; otherwise, false.
+        """
+        ...
+
+    def get_hash_code(self) -> int:
+        """
+        Returns the hash code for this FilterUIHintAttribute.
+        
+        :returns: A 32-bit signed integer hash code.
+        """
+        ...
+
+
+class AssociatedMetadataTypeTypeDescriptionProvider(System.ComponentModel.TypeDescriptionProvider):
+    """
+    Extends the metadata information for a class by adding attributes and property
+    information that is defined in an associated class.
+    """
+
+    @overload
+    def __init__(self, type: typing.Type) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.DataAnnotations.AssociatedMetadataTypeTypeDescriptionProvider
+        class by using the specified type.
+        
+        :param type: The type for which the metadata provider is created.
+        """
+        ...
+
+    @overload
+    def __init__(self, type: typing.Type, associated_metadata_type: typing.Type) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.DataAnnotations.AssociatedMetadataTypeTypeDescriptionProvider
+        class by using the specified metadata provider type and associated type.
+        
+        :param type: The type for which the metadata provider is created.
+        :param associated_metadata_type: The associated type that contains the metadata.
+        """
+        ...
+
+    def get_type_descriptor(self, object_type: typing.Type, instance: typing.Any) -> System.ComponentModel.ICustomTypeDescriptor:
+        """
+        Gets a type descriptor for the specified type and object.
+        
+        :param object_type: The type of object to retrieve the type descriptor for.
+        :param instance: An instance of the type.
+        :returns: The descriptor that provides metadata for the type.
+        """
+        ...
+
+
+class UIHintAttribute(System.Attribute):
+    """Attribute to provide a hint to the presentation layer about what control it should use"""
+
+    @property
+    def ui_hint(self) -> str:
+        """Gets the name of the control that is most appropriate for this associated property or field"""
+        ...
+
+    @property
+    def presentation_layer(self) -> str:
+        """Gets the name of the presentation layer that supports the control type in UIHint"""
+        ...
+
+    @property
+    def control_parameters(self) -> System.Collections.Generic.IDictionary[str, System.Object]:
+        """Gets the name-value pairs used as parameters to the control's constructor"""
+        ...
+
+    @overload
+    def __init__(self, ui_hint: str) -> None:
+        """
+        Constructor that accepts the name of the control, without specifying which presentation layer to use
+        
+        :param ui_hint: The name of the UI control.
+        """
+        ...
+
+    @overload
+    def __init__(self, ui_hint: str, presentation_layer: str) -> None:
+        """
+        Constructor that accepts both the name of the control as well as the presentation layer
+        
+        :param ui_hint: The name of the control to use
+        :param presentation_layer: The name of the presentation layer that supports this control
+        """
+        ...
+
+    @overload
+    def __init__(self, ui_hint: str, presentation_layer: str, *control_parameters: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
+        """
+        Full constructor that accepts the name of the control, presentation layer, and optional parameters
+            to use when constructing the control
+        
+        :param ui_hint: The name of the control
+        :param presentation_layer: The presentation layer
+        :param control_parameters: The list of parameters for the control
+        """
+        ...
+
+    def equals(self, obj: typing.Any) -> bool:
+        ...
+
+    def get_hash_code(self) -> int:
+        ...
+
+
+class TimestampAttribute(System.Attribute):
+    """This attribute is used to mark a Timestamp member of a Type."""
+
+
 class DeniedValuesAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
     """Specifies a list of values that should not be allowed in a property."""
 
@@ -768,7 +1348,33 @@ class DeniedValuesAttribute(System.ComponentModel.DataAnnotations.ValidationAttr
         ...
 
 
-class EmailAddressAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
+class AllowedValuesAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Specifies a list of values that should be allowed in a property."""
+
+    @property
+    def values(self) -> typing.List[System.Object]:
+        """Gets the list of values allowed by this attribute."""
+        ...
+
+    def __init__(self, *values: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
+        """
+        Initializes a new instance of the AllowedValuesAttribute class.
+        
+        :param values: A list of values that the validated value should be equal to.
+        """
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        """
+        Determines whether a specified object is valid. (Overrides ValidationAttribute.IsValid(object))
+        
+        :param value: The object to validate.
+        :returns: true if any of the Values are equal to ,     otherwise false.
+        """
+        ...
+
+
+class PhoneAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
     """This class has no documentation."""
 
     def __init__(self) -> None:
@@ -788,113 +1394,48 @@ class UrlAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
         ...
 
 
-class Base64StringAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Specifies that a data field value is a well-formed Base64 string."""
-
-    def __init__(self) -> None:
-        """Initializes a new instance of the Base64StringAttribute class."""
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
-        """
-        Determines whether a specified object is valid. (Overrides ValidationAttribute.IsValid(object))
-        
-        :param value: The object to validate.
-        :returns: true if  is null or is a valid Base64 string,     otherwise false.
-        """
-        ...
-
-
-class KeyAttribute(System.Attribute):
-    """Used to mark one or more entity properties that provide the entity's unique identity"""
-
-
-class CustomValidationAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """
-    Validation attribute that executes a user-supplied method at runtime, using one of these signatures:
-        
-            public static  Method(object value) { ... }
-        
-            public static  Method(object value,  context) {
-            ... }
-        
-            The value can be strongly typed as type conversion will be attempted.
-    """
-
-    @property
-    def validator_type(self) -> typing.Type:
-        """Gets the type that contains the validation method identified by Method."""
-        ...
-
-    @property
-    def type_id(self) -> System.Object:
-        """Gets a unique identifier for this attribute."""
-        ...
-
-    @property
-    def method(self) -> str:
-        """Gets the name of the method in ValidatorType to invoke to perform validation."""
-        ...
-
-    @property
-    def requires_validation_context(self) -> bool:
-        ...
-
-    def __init__(self, validator_type: typing.Type, method: str) -> None:
-        """
-        Instantiates a custom validation attribute that will invoke a method in the
-            specified type.
-        
-        :param validator_type: The type that will contain the method to invoke.  It cannot be null.  See     Method.
-        :param method: The name of the method to invoke in .
-        """
-        ...
-
-    def format_error_message(self, name: str) -> str:
-        """
-        Override of ValidationAttribute.FormatErrorMessage
-        
-        :param name: The name to include in the formatted string
-        :returns: A localized string to describe the problem.
-        """
-        ...
-
-    def is_valid(self, value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> System.ComponentModel.DataAnnotations.ValidationResult:
-        """
-        Override of validation method.  See ValidationAttribute.IsValid(object, ValidationContext).
-        
-        This method is protected.
-        
-        :param value: The value to validate.
-        :param validation_context: A ValidationContext instance that provides     context about the validation operation, such as the object and member being validated.
-        :returns: Whatever the Method in ValidatorType returns.
-        """
-        ...
-
-
-class CompareAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+class EnumDataTypeAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
     """This class has no documentation."""
 
     @property
-    def other_property(self) -> str:
+    def enum_type(self) -> typing.Type:
+        ...
+
+    def __init__(self, enum_type: typing.Type) -> None:
+        ...
+
+    def is_valid(self, value: typing.Any) -> bool:
+        ...
+
+
+class DisplayColumnAttribute(System.Attribute):
+    """
+    Sets the display column, the sort column, and the sort order for when a table is used as a parent table in FK
+        relationships.
+    """
+
+    @property
+    def display_column(self) -> str:
         ...
 
     @property
-    def other_property_display_name(self) -> str:
+    def sort_column(self) -> str:
         ...
 
     @property
-    def requires_validation_context(self) -> bool:
+    def sort_descending(self) -> bool:
         ...
 
-    def __init__(self, other_property: str) -> None:
+    @overload
+    def __init__(self, display_column: str) -> None:
         ...
 
-    def format_error_message(self, name: str) -> str:
+    @overload
+    def __init__(self, display_column: str, sort_column: str) -> None:
         ...
 
-    def is_valid(self, value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> System.ComponentModel.DataAnnotations.ValidationResult:
-        """This method is protected."""
+    @overload
+    def __init__(self, display_column: str, sort_column: str, sort_descending: bool) -> None:
         ...
 
 
@@ -1119,188 +1660,81 @@ class DisplayAttribute(System.Attribute):
         ...
 
 
-class Validator(System.Object):
-    """
-    Helper class to validate objects, properties and other values using their associated
-        ValidationAttribute
-        custom attributes.
-    """
-
-    @staticmethod
-    @overload
-    def try_validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult]) -> bool:
-        """
-        Tests whether the given object instance is valid.
-        
-        :param instance: The object instance to test.  It cannot be null.
-        :param validation_context: Describes the object to validate and provides services and context for the validators.
-        :param validation_results: Optional collection to receive ValidationResults for the failures.
-        :returns: true if the object is valid, false if any validation errors are encountered.
-        """
-        ...
-
-    @staticmethod
-    @overload
-    def try_validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult], validate_all_properties: bool) -> bool:
-        """
-        Tests whether the given object instance is valid.
-        
-        :param instance: The object instance to test.  It cannot be null.
-        :param validation_context: Describes the object to validate and provides services and context for the validators.
-        :param validation_results: Optional collection to receive ValidationResults for the failures.
-        :param validate_all_properties: If true, also evaluates all properties of the object (this process is not     recursive over properties of the properties).
-        :returns: true if the object is valid, false if any validation errors are encountered.
-        """
-        ...
-
-    @staticmethod
-    def try_validate_property(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult]) -> bool:
-        """
-        Tests whether the given property value is valid.
-        
-        :param value: The value to test.
-        :param validation_context: Describes the property member to validate and provides services and context for the     validators.
-        :param validation_results: Optional collection to receive ValidationResults for the failures.
-        :returns: true if the value is valid, false if any validation errors are encountered.
-        """
-        ...
-
-    @staticmethod
-    def try_validate_value(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_results: System.Collections.Generic.ICollection[System.ComponentModel.DataAnnotations.ValidationResult], validation_attributes: System.Collections.Generic.IEnumerable[System.ComponentModel.DataAnnotations.ValidationAttribute]) -> bool:
-        """
-        Tests whether the given value is valid against a specified list of ValidationAttributes.
-        
-        :param value: The value to test.
-        :param validation_context: Describes the object being validated and provides services and context for the     validators.
-        :param validation_results: Optional collection to receive ValidationResults for the failures.
-        :param validation_attributes: The list of ValidationAttributes to validate this      against.
-        :returns: true if the object is valid, false if any validation errors are encountered.
-        """
-        ...
-
-    @staticmethod
-    @overload
-    def validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> None:
-        """
-        Throws a ValidationException if the given  is not valid.
-        
-        :param instance: The object instance to test.  It cannot be null.
-        :param validation_context: Describes the object being validated and provides services and context for the     validators.  It cannot be null.
-        """
-        ...
-
-    @staticmethod
-    @overload
-    def validate_object(instance: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validate_all_properties: bool) -> None:
-        """
-        Throws a ValidationException if the given object instance is not valid.
-        
-        :param instance: The object instance to test.  It cannot be null.
-        :param validation_context: Describes the object being validated and provides services and context for the     validators.  It cannot be null.
-        :param validate_all_properties: If true, also validates all the 's properties.
-        """
-        ...
-
-    @staticmethod
-    def validate_property(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> None:
-        """
-        Throws a ValidationException if the given property  is not valid.
-        
-        :param value: The value to test.
-        :param validation_context: Describes the object being validated and provides services and context for the     validators.  It cannot be null.
-        """
-        ...
-
-    @staticmethod
-    def validate_value(value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext, validation_attributes: System.Collections.Generic.IEnumerable[System.ComponentModel.DataAnnotations.ValidationAttribute]) -> None:
-        """
-        Throw a ValidationException if the given value is not valid for the
-            ValidationAttributes.
-        
-        :param value: The value to test.
-        :param validation_context: Describes the object being tested.
-        :param validation_attributes: The list of ValidationAttributes to validate against this instance.
-        """
-        ...
+class KeyAttribute(System.Attribute):
+    """Used to mark one or more entity properties that provide the entity's unique identity"""
 
 
-class EnumDataTypeAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
+class ScaffoldColumnAttribute(System.Attribute):
     """This class has no documentation."""
 
     @property
-    def enum_type(self) -> typing.Type:
+    def scaffold(self) -> bool:
         ...
 
-    def __init__(self, enum_type: typing.Type) -> None:
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
+    def __init__(self, scaffold: bool) -> None:
         ...
 
 
-class MinLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Specifies the minimum length of collection/string data allowed in a property."""
+class CustomValidationAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """
+    Validation attribute that executes a user-supplied method at runtime, using one of these signatures:
+        
+            public static  Method(object value) { ... }
+        
+            public static  Method(object value,  context) {
+            ... }
+        
+            The value can be strongly typed as type conversion will be attempted.
+    """
 
     @property
-    def length(self) -> int:
-        """Gets the minimum allowable length of the collection/string data."""
+    def validator_type(self) -> typing.Type:
+        """Gets the type that contains the validation method identified by Method."""
         ...
 
-    def __init__(self, length: int) -> None:
+    @property
+    def type_id(self) -> System.Object:
+        """Gets a unique identifier for this attribute."""
+        ...
+
+    @property
+    def method(self) -> str:
+        """Gets the name of the method in ValidatorType to invoke to perform validation."""
+        ...
+
+    @property
+    def requires_validation_context(self) -> bool:
+        ...
+
+    def __init__(self, validator_type: typing.Type, method: str) -> None:
         """
-        Initializes a new instance of the MinLengthAttribute class.
+        Instantiates a custom validation attribute that will invoke a method in the
+            specified type.
         
-        :param length: The minimum allowable length of collection/string data.     Value must be greater than or equal to zero.
+        :param validator_type: The type that will contain the method to invoke.  It cannot be null.  See     Method.
+        :param method: The name of the method to invoke in .
         """
         ...
 
     def format_error_message(self, name: str) -> str:
         """
-        Applies formatting to a specified error message. (Overrides ValidationAttribute.FormatErrorMessage)
+        Override of ValidationAttribute.FormatErrorMessage
         
-        :param name: The name to include in the formatted string.
-        :returns: A localized string to describe the minimum acceptable length.
+        :param name: The name to include in the formatted string
+        :returns: A localized string to describe the problem.
         """
         ...
 
-    def is_valid(self, value: typing.Any) -> bool:
+    def is_valid(self, value: typing.Any, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> System.ComponentModel.DataAnnotations.ValidationResult:
         """
-        Determines whether a specified object is valid. (Overrides ValidationAttribute.IsValid(object))
+        Override of validation method.  See ValidationAttribute.IsValid(object, ValidationContext).
         
-        :param value: The object to validate.
-        :returns: true if the value is null or greater than or equal to the specified minimum length, otherwise     false.
+        This method is protected.
+        
+        :param value: The value to validate.
+        :param validation_context: A ValidationContext instance that provides     context about the validation operation, such as the object and member being validated.
+        :returns: Whatever the Method in ValidatorType returns.
         """
-        ...
-
-
-class DisplayColumnAttribute(System.Attribute):
-    """
-    Sets the display column, the sort column, and the sort order for when a table is used as a parent table in FK
-        relationships.
-    """
-
-    @property
-    def display_column(self) -> str:
-        ...
-
-    @property
-    def sort_column(self) -> str:
-        ...
-
-    @property
-    def sort_descending(self) -> bool:
-        ...
-
-    @overload
-    def __init__(self, display_column: str) -> None:
-        ...
-
-    @overload
-    def __init__(self, display_column: str, sort_column: str) -> None:
-        ...
-
-    @overload
-    def __init__(self, display_column: str, sort_column: str, sort_descending: bool) -> None:
         ...
 
 
@@ -1339,83 +1773,10 @@ class LengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute)
         ...
 
 
-class PhoneAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
+class IValidatableObject(metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
-    def __init__(self) -> None:
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
-        ...
-
-
-class AllowedValuesAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Specifies a list of values that should be allowed in a property."""
-
-    @property
-    def values(self) -> typing.List[System.Object]:
-        """Gets the list of values allowed by this attribute."""
-        ...
-
-    def __init__(self, *values: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
-        """
-        Initializes a new instance of the AllowedValuesAttribute class.
-        
-        :param values: A list of values that the validated value should be equal to.
-        """
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
-        """
-        Determines whether a specified object is valid. (Overrides ValidationAttribute.IsValid(object))
-        
-        :param value: The object to validate.
-        :returns: true if any of the Values are equal to ,     otherwise false.
-        """
-        ...
-
-
-class StringLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Validation attribute to assert a string property, field or parameter does not exceed a maximum length"""
-
-    @property
-    def maximum_length(self) -> int:
-        """Gets the maximum acceptable length of the string"""
-        ...
-
-    @property
-    def minimum_length(self) -> int:
-        """Gets or sets the minimum acceptable length of the string"""
-        ...
-
-    @minimum_length.setter
-    def minimum_length(self, value: int) -> None:
-        ...
-
-    def __init__(self, maximum_length: int) -> None:
-        """
-        Constructor that accepts the maximum length of the string.
-        
-        :param maximum_length: The maximum length, inclusive.  It may not be negative.
-        """
-        ...
-
-    def format_error_message(self, name: str) -> str:
-        """
-        Override of ValidationAttribute.FormatErrorMessage
-        
-        :param name: The name to include in the formatted string
-        :returns: A localized string to describe the maximum acceptable length.
-        """
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
-        """
-        Override of ValidationAttribute.IsValid(object)
-        
-        :param value: The value to test.
-        :returns: true if the value is null or less than or equal to the set maximum length.
-        """
+    def validate(self, validation_context: System.ComponentModel.DataAnnotations.ValidationContext) -> System.Collections.Generic.IEnumerable[System.ComponentModel.DataAnnotations.ValidationResult]:
         ...
 
 
@@ -1498,282 +1859,19 @@ class ValidationException(System.Exception):
         ...
 
 
-class FileExtensionsAttribute(System.ComponentModel.DataAnnotations.DataTypeAttribute):
-    """This class has no documentation."""
-
-    @property
-    def extensions(self) -> str:
-        ...
-
-    @extensions.setter
-    def extensions(self, value: str) -> None:
-        ...
-
-    def __init__(self) -> None:
-        ...
-
-    def format_error_message(self, name: str) -> str:
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
-        ...
-
-
-class AssociationAttribute(System.Attribute):
-    """
-    Used to mark an Entity member as an association
-    
-    AssociationAttribute has been deprecated and is not supported.
-    """
-
-    @property
-    def name(self) -> str:
-        """
-        Gets the name of the association. For bi-directional associations, the name must
-        be the same on both sides of the association
-        """
-        ...
-
-    @property
-    def this_key(self) -> str:
-        """
-        Gets a comma separated list of the property names of the key values
-        on this side of the association
-        """
-        ...
-
-    @property
-    def other_key(self) -> str:
-        """
-        Gets a comma separated list of the property names of the key values
-        on the other side of the association
-        """
-        ...
-
-    @property
-    def is_foreign_key(self) -> bool:
-        """
-        Gets or sets a value indicating whether this association member represents
-        the foreign key side of an association
-        """
-        ...
-
-    @is_foreign_key.setter
-    def is_foreign_key(self, value: bool) -> None:
-        ...
-
-    @property
-    def this_key_members(self) -> typing.Iterable[str]:
-        """Gets the collection of individual key members specified in the ThisKey string."""
-        ...
-
-    @property
-    def other_key_members(self) -> typing.Iterable[str]:
-        """Gets the collection of individual key members specified in the OtherKey string."""
-        ...
-
-    def __init__(self, name: str, this_key: str, other_key: str) -> None:
-        """
-        Full form of constructor
-        
-        :param name: The name of the association. For bi-directional associations, the name must be the same on both sides of the association
-        :param this_key: Comma separated list of the property names of the key values on this side of the association
-        :param other_key: Comma separated list of the property names of the key values on the other side of the association
-        """
-        ...
-
-
-class RequiredAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Validation attribute to indicate that a property, field or parameter is required."""
-
-    @property
-    def allow_empty_strings(self) -> bool:
-        """Gets or sets a flag indicating whether the attribute should allow empty strings."""
-        ...
-
-    @allow_empty_strings.setter
-    def allow_empty_strings(self, value: bool) -> None:
-        ...
-
-    def __init__(self) -> None:
-        """Default constructor."""
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
-        """
-        Override of ValidationAttribute.IsValid(object)
-        
-        :param value: The value to test
-        :returns: Returns false if the  is null or an empty string.     If AllowEmptyStrings then true is returned for empty strings.
-        """
-        ...
-
-
-class FilterUIHintAttribute(System.Attribute):
-    """
-    An attribute used to specify the filtering behavior for a column.
-    
-    FilterUIHintAttribute has been deprecated and is not supported.
-    """
-
-    @property
-    def filter_ui_hint(self) -> str:
-        """
-        Gets the name of the control that is most appropriate for this associated
-        property or field
-        """
-        ...
-
-    @property
-    def presentation_layer(self) -> str:
-        """
-        Gets the name of the presentation layer that supports the control type
-        in FilterUIHint
-        """
-        ...
-
-    @property
-    def control_parameters(self) -> System.Collections.Generic.IDictionary[str, System.Object]:
-        """Gets the name-value pairs used as parameters to the control's constructor"""
-        ...
-
-    @overload
-    def __init__(self, filter_ui_hint: str) -> None:
-        """
-        Constructor that accepts the name of the control, without specifying
-        which presentation layer to use
-        
-        :param filter_ui_hint: The name of the UI control.
-        """
-        ...
-
-    @overload
-    def __init__(self, filter_ui_hint: str, presentation_layer: str) -> None:
-        """
-        Constructor that accepts both the name of the control as well as the
-        presentation layer
-        
-        :param filter_ui_hint: The name of the control to use
-        :param presentation_layer: The name of the presentation layer that supports this control
-        """
-        ...
-
-    @overload
-    def __init__(self, filter_ui_hint: str, presentation_layer: str, *control_parameters: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
-        """
-        Full constructor that accepts the name of the control, presentation layer,
-        and optional parameters to use when constructing the control
-        
-        :param filter_ui_hint: The name of the control
-        :param presentation_layer: The presentation layer
-        :param control_parameters: The list of parameters for the control
-        """
-        ...
-
-    def equals(self, obj: typing.Any) -> bool:
-        """
-        Determines whether this instance of FilterUIHintAttribute and a specified object,
-        which must also be a FilterUIHintAttribute object, have the same value.
-        
-        :param obj: An System.Object.
-        :returns: true if obj is a FilterUIHintAttribute and its value is the same as this instance; otherwise, false.
-        """
-        ...
-
-    def get_hash_code(self) -> int:
-        """
-        Returns the hash code for this FilterUIHintAttribute.
-        
-        :returns: A 32-bit signed integer hash code.
-        """
-        ...
-
-
-class ScaffoldColumnAttribute(System.Attribute):
-    """This class has no documentation."""
-
-    @property
-    def scaffold(self) -> bool:
-        ...
-
-    def __init__(self, scaffold: bool) -> None:
-        ...
-
-
-class RegularExpressionAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Regular expression validation attribute"""
-
-    @property
-    def match_timeout_in_milliseconds(self) -> int:
-        """
-        Gets or sets the timeout to use when matching the regular expression pattern (in milliseconds)
-            (-1 means never timeout).
-        """
-        ...
-
-    @match_timeout_in_milliseconds.setter
-    def match_timeout_in_milliseconds(self, value: int) -> None:
-        ...
-
-    @property
-    def match_timeout(self) -> datetime.timedelta:
-        """Gets the timeout to use when matching the regular expression pattern"""
-        ...
-
-    @property
-    def pattern(self) -> str:
-        """Gets the regular expression pattern to use"""
-        ...
-
-    def __init__(self, pattern: str) -> None:
-        """
-        Constructor that accepts the regular expression pattern
-        
-        :param pattern: The regular expression to use.  It cannot be null.
-        """
-        ...
-
-    def format_error_message(self, name: str) -> str:
-        """
-        Override of ValidationAttribute.FormatErrorMessage
-        
-        :param name: The user-visible name to include in the formatted message.
-        :returns: The localized message to present to the user.
-        """
-        ...
-
-    def is_valid(self, value: typing.Any) -> bool:
-        """
-        Override of ValidationAttribute.IsValid(object)
-        
-        :param value: The value to test for validity.
-        :returns: true if the given value matches the current regular expression pattern.
-        """
-        ...
-
-
-class MaxLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
-    """Specifies the maximum length of collection/string data allowed in a property."""
+class MinLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribute):
+    """Specifies the minimum length of collection/string data allowed in a property."""
 
     @property
     def length(self) -> int:
-        """Gets the maximum allowable length of the collection/string data."""
+        """Gets the minimum allowable length of the collection/string data."""
         ...
 
-    @overload
     def __init__(self, length: int) -> None:
         """
-        Initializes a new instance of the MaxLengthAttribute class.
+        Initializes a new instance of the MinLengthAttribute class.
         
-        :param length: The maximum allowable length of collection/string data.     Value must be greater than zero.
-        """
-        ...
-
-    @overload
-    def __init__(self) -> None:
-        """
-        Initializes a new instance of the MaxLengthAttribute class.
-            The maximum allowable length supported by the database will be used.
+        :param length: The minimum allowable length of collection/string data.     Value must be greater than or equal to zero.
         """
         ...
 
@@ -1782,7 +1880,7 @@ class MaxLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribu
         Applies formatting to a specified error message. (Overrides ValidationAttribute.FormatErrorMessage)
         
         :param name: The name to include in the formatted string.
-        :returns: A localized string to describe the maximum acceptable length.
+        :returns: A localized string to describe the minimum acceptable length.
         """
         ...
 
@@ -1791,105 +1889,7 @@ class MaxLengthAttribute(System.ComponentModel.DataAnnotations.ValidationAttribu
         Determines whether a specified object is valid. (Overrides ValidationAttribute.IsValid(object))
         
         :param value: The object to validate.
-        :returns: true if the value is null or less than or equal to the specified maximum length, otherwise false.
-        """
-        ...
-
-
-class TimestampAttribute(System.Attribute):
-    """This attribute is used to mark a Timestamp member of a Type."""
-
-
-class UIHintAttribute(System.Attribute):
-    """Attribute to provide a hint to the presentation layer about what control it should use"""
-
-    @property
-    def ui_hint(self) -> str:
-        """Gets the name of the control that is most appropriate for this associated property or field"""
-        ...
-
-    @property
-    def presentation_layer(self) -> str:
-        """Gets the name of the presentation layer that supports the control type in UIHint"""
-        ...
-
-    @property
-    def control_parameters(self) -> System.Collections.Generic.IDictionary[str, System.Object]:
-        """Gets the name-value pairs used as parameters to the control's constructor"""
-        ...
-
-    @overload
-    def __init__(self, ui_hint: str) -> None:
-        """
-        Constructor that accepts the name of the control, without specifying which presentation layer to use
-        
-        :param ui_hint: The name of the UI control.
-        """
-        ...
-
-    @overload
-    def __init__(self, ui_hint: str, presentation_layer: str) -> None:
-        """
-        Constructor that accepts both the name of the control as well as the presentation layer
-        
-        :param ui_hint: The name of the control to use
-        :param presentation_layer: The name of the presentation layer that supports this control
-        """
-        ...
-
-    @overload
-    def __init__(self, ui_hint: str, presentation_layer: str, *control_parameters: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
-        """
-        Full constructor that accepts the name of the control, presentation layer, and optional parameters
-            to use when constructing the control
-        
-        :param ui_hint: The name of the control
-        :param presentation_layer: The presentation layer
-        :param control_parameters: The list of parameters for the control
-        """
-        ...
-
-    def equals(self, obj: typing.Any) -> bool:
-        ...
-
-    def get_hash_code(self) -> int:
-        ...
-
-
-class AssociatedMetadataTypeTypeDescriptionProvider(System.ComponentModel.TypeDescriptionProvider):
-    """
-    Extends the metadata information for a class by adding attributes and property
-    information that is defined in an associated class.
-    """
-
-    @overload
-    def __init__(self, type: typing.Type) -> None:
-        """
-        Initializes a new instance of the System.ComponentModel.DataAnnotations.AssociatedMetadataTypeTypeDescriptionProvider
-        class by using the specified type.
-        
-        :param type: The type for which the metadata provider is created.
-        """
-        ...
-
-    @overload
-    def __init__(self, type: typing.Type, associated_metadata_type: typing.Type) -> None:
-        """
-        Initializes a new instance of the System.ComponentModel.DataAnnotations.AssociatedMetadataTypeTypeDescriptionProvider
-        class by using the specified metadata provider type and associated type.
-        
-        :param type: The type for which the metadata provider is created.
-        :param associated_metadata_type: The associated type that contains the metadata.
-        """
-        ...
-
-    def get_type_descriptor(self, object_type: typing.Type, instance: typing.Any) -> System.ComponentModel.ICustomTypeDescriptor:
-        """
-        Gets a type descriptor for the specified type and object.
-        
-        :param object_type: The type of object to retrieve the type descriptor for.
-        :param instance: An instance of the type.
-        :returns: The descriptor that provides metadata for the type.
+        :returns: true if the value is null or greater than or equal to the specified minimum length, otherwise     false.
         """
         ...
 

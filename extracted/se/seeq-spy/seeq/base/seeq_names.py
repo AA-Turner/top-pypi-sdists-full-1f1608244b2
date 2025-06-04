@@ -54,6 +54,14 @@ class SeeqNames:
         vantage_label_category_namespace = '__Vantage'
     
     class MlService:
+        class PrincipalComponentAnalysis:
+            class Connection:
+                name = 'Seeq ML Principal Component Analysis'
+                url = 'pca'
+                udf_package = 'seeqPCA'
+                udf_name = 'principalComponentAnalysis'
+            
+        
         class Clustering:
             class Connection:
                 name = 'Seeq ML Clustering'
@@ -1094,6 +1102,7 @@ class SeeqNames:
         screenshot_warning = 'Screenshot Warning'
         summary_type = 'Summary Type'
         summary_value = 'Summary Value'
+        fill_to_fit = 'Fill to Fit'
         hide_uncertainty = 'Hide Uncertainty'
         current_filename = 'Current Filename'
         last_result_hash = 'Last Result Hash'

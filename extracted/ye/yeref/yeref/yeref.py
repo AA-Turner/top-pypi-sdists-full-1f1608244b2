@@ -15511,7 +15511,7 @@ async def get_vars_web_main(chat_id, username, full_name, lc, is_premium, utm_we
         return is_paid, till_paid, lz
 
 
-async def upd_user_data_main(data, web_app_init_data, BASE_P, BOT_TOKEN_E18B, req_url=''):
+async def upd_user_data_main(data, web_app_init_data, BASE_P, BOT_TOKEN_E18B, req_url='', utm=''):
     chat_id = int(web_app_init_data.get('user', {}).get('id'))
     username = web_app_init_data.get('user', {}).get('username', None)
     first_name = web_app_init_data.get('user', {}).get('first_name', '')
@@ -15570,10 +15570,12 @@ async def upd_user_data_main(data, web_app_init_data, BASE_P, BOT_TOKEN_E18B, re
         USER_VARS['USER_ISPREMIUM'] = is_premium
         lz = USER_VARS.get('USER_LZ', 'en')
 
-        if USER_VARS['USER_DT'] == '':
+        print(f"before {USER_VARS=}")
+        if not USER_VARS.get('USER_DT') and not USER_VARS.get('USER_UTM') and utm:
+            USER_VARS['USER_UTM'] = utm
+        if not USER_VARS.get('USER_DT'):
             USER_VARS['USER_DT'] = datetime.now(timezone.utc).strftime("%d-%m-%Y_%H-%M-%S")
-        # if utm != '':
-        #     USER_VARS['USER_UTM'] = utm
+        print(f"after {USER_VARS=}")
         # endregion
 
         # region tx
@@ -15814,6 +15816,117 @@ async def upd_user_data(ENT_TID, data, web_app_init_data, PROJECT_USERNAME, BASE
 # endregion
 
 
+# region unit ecomonics
+async def return_view_metrics(bot, PROJECT_USERNAME, EXTRA_D, BASE_P):
+    try:
+        schema_name = "USER"
+        if PROJECT_USERNAME == 'FereyBotBot':
+            schema_name = "BOT"
+        elif PROJECT_USERNAME == 'FereyChannelBot':
+            schema_name = "CHANNEL"
+        elif PROJECT_USERNAME == 'FereyGroupBot':
+            schema_name = "GROUPP"
+
+        sql = f"SELECT {schema_name}_TID FROM \"{schema_name}\""
+        data_ents = await db_select_pg(sql, (), BASE_P)
+
+        metrics_by_month = defaultdict(lambda: {
+            "dau": 0,
+            "mau": 0,
+            "wallets": 0,
+            "tx": 0,
+            "tvl": 0,
+            "/start": 0,
+            "/startapp": 0
+        })
+        seen_mau = set()
+        seen_dau = set()
+        wallets_set = set()
+        users_set = set()
+
+        def process_user_rows(rows):
+            for USER_TID, USER_VARS, USER_LSTS in rows:
+                USER_VARS = json.loads(USER_VARS or "{}")
+                USER_LSTS = json.loads(USER_LSTS or "{}")
+                USER_WALLET = USER_VARS.get('USER_WALLET', '')
+                USER_UTM = USER_VARS.get('USER_UTM', '')
+                USER_DT = USER_VARS.get('USER_DT', '')
+                USER_DAU = USER_LSTS.get("USER_DAU", [])
+                USER_MAU = USER_LSTS.get("USER_MAU", [])
+                USER_TXS = USER_LSTS.get("USER_TXS", [])
+
+                if USER_WALLET: wallets_set.add(USER_WALLET)
+                users_set.add(USER_TID)
+
+                for day_str in USER_DAU:
+                    dt_day = datetime.strptime(day_str, "%Y-%m-%d")
+                    month_key = dt_day.strftime("%Y-%m")
+                    if (USER_TID, month_key) not in seen_dau:
+                        seen_dau.add((USER_TID, month_key))
+                        metrics_by_month[month_key]["dau"] += 1
+
+                for mo_str in USER_MAU:
+                    dt_m = datetime.strptime(mo_str + "-01", "%Y-%m-%d")
+                    month_key = dt_m.strftime("%Y-%m")
+                    if (USER_TID, month_key) not in seen_mau:
+                        seen_mau.add((USER_TID, month_key))
+                        metrics_by_month[month_key]["mau"] += 1
+                        if USER_WALLET:
+                            metrics_by_month[month_key]["wallets"] += 1
+
+                for tx in USER_TXS:
+                    dt_start = tx.get("DT_START", "")
+                    amount = int(tx.get("AMOUNT", "0"))
+                    dt_tx = datetime.strptime(dt_start, "%d-%m-%Y_%H-%M-%S")
+                    month_key = dt_tx.strftime("%Y-%m")
+                    metrics_by_month[month_key]["tx"] += 1
+                    metrics_by_month[month_key]["tvl"] += amount
+
+                if USER_DT:
+                    dt_obj = datetime.strptime(USER_DT, "%d-%m-%Y_%H-%M-%S")
+                    month_key = dt_obj.strftime("%Y-%m")
+                    key = "/startapp" if USER_UTM == "/startapp" else "/start"
+                    metrics_by_month[month_key][key] += 1
+
+        for item in data_ents:
+            ENT_TID = item[0]
+            sql = f'SELECT USER_TID, USER_VARS, USER_LSTS FROM {schema_name}_{ENT_TID}.USER'
+            data_users = await db_select_pg(sql, (), BASE_P)
+            process_user_rows(data_users)
+
+        sql = f"SELECT USER_TID, USER_VARS, USER_LSTS FROM \"USER\""
+        data_users = await db_select_pg(sql, (), BASE_P)
+        process_user_rows(data_users)
+
+        all_months = sorted(metrics_by_month.keys())
+        f_name = os.path.join(EXTRA_D, "1_metrics.csv")
+        with open(f_name, mode="w", encoding="utf-8", newline="") as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(["MO", "DAU", "MAU", "Wallets", "Transactions", "TVL", "/start", "/startapp"])
+            for ym in all_months:
+                row = [
+                    ym,
+                    metrics_by_month[ym]["dau"],
+                    metrics_by_month[ym]["mau"],
+                    metrics_by_month[ym]["wallets"],
+                    metrics_by_month[ym]["tx"],
+                    "",
+                    metrics_by_month[ym]["/start"],
+                    metrics_by_month[ym]["/startapp"],
+                ]
+                writer.writerow(row)
+            f.write("\n")
+            f.write(f"Unique wallet count: {len(wallets_set)}\n")
+            f.write(f"Unique users count: {len(users_set)}\n")
+
+        thumb = types.FSInputFile(os.path.join(EXTRA_D, 'parse.jpg'))
+        await bot.send_document(chat_id=my_tid, document=types.FSInputFile(f_name), thumbnail=thumb)
+    except Exception as e:
+        logger.info(log_ % str(e))
+        await asyncio.sleep(round(random.uniform(0, 1), 2))
+# endregion
+
+
 # region pst
 async def ch_games(USER_GAMES, game, condition, balls=-1):
     try:
@@ -15982,7 +16095,7 @@ async def post_save(bot, data_user, data_web, MEDIA_D, BASE_P, KEYS_JSON, PROJEC
             print(f"--------------------------------------------------------")
             print(f"after {POST_MEDIA=}")
 
-        if PROJECT_USERNAME == 'FereyPostBot' and POST_TYPE in ['voice', 'audio'] and 'filev_id' not in POST_MEDIA[0]:
+        if PROJECT_USERNAME == 'FereyPostBot' and POST_TYPE in ['voice', 'audio'] and len(POST_MEDIA) == 1 and 'filev_id' not in POST_MEDIA[0]:
             asyncio.create_task(convert_to_vinyl(bot, chat_id, ENT_TID, POST_TID, MEDIA_D, EXTRA_D, POST_MEDIA, BASE_P))
 
         # region pay

@@ -13,7 +13,7 @@ class CanSetStateDeviceResponse:
     An object containing any setup issues that will prevent setting a state to a given device.
     """
 
-    axis_errors: List[CanSetStateAxisResponse]
+    axis_responses: List[CanSetStateAxisResponse]
     """
     A list of axis responses, potentially with messages for errors
     which would block setting the state of the device's axes.
@@ -28,7 +28,7 @@ class CanSetStateDeviceResponse:
     def zero_values() -> 'CanSetStateDeviceResponse':
         return CanSetStateDeviceResponse(
             error=None,
-            axis_errors=[],
+            axis_responses=[],
         )
 
     @staticmethod
@@ -45,14 +45,14 @@ class CanSetStateDeviceResponse:
     def to_dict(self) -> Dict[str, Any]:
         return {
             'error': str(self.error) if self.error is not None else None,
-            'axisErrors': [item.to_dict() for item in self.axis_errors] if self.axis_errors is not None else [],
+            'axisResponses': [item.to_dict() for item in self.axis_responses] if self.axis_responses is not None else [],
         }
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'CanSetStateDeviceResponse':
         return CanSetStateDeviceResponse(
             error=data.get('error'),  # type: ignore
-            axis_errors=[CanSetStateAxisResponse.from_dict(item) for item in data.get('axisErrors')],  # type: ignore
+            axis_responses=[CanSetStateAxisResponse.from_dict(item) for item in data.get('axisResponses')],  # type: ignore
         )
 
     def validate(self) -> None:
@@ -61,15 +61,15 @@ class CanSetStateDeviceResponse:
             if not isinstance(self.error, str):
                 raise ValueError(f'Property "Error" of "CanSetStateDeviceResponse" is not a string.')
 
-        if self.axis_errors is not None:
-            if not isinstance(self.axis_errors, Iterable):
-                raise ValueError('Property "AxisErrors" of "CanSetStateDeviceResponse" is not iterable.')
+        if self.axis_responses is not None:
+            if not isinstance(self.axis_responses, Iterable):
+                raise ValueError('Property "AxisResponses" of "CanSetStateDeviceResponse" is not iterable.')
 
-            for i, axis_errors_item in enumerate(self.axis_errors):
-                if axis_errors_item is None:
-                    raise ValueError(f'Item {i} in property "AxisErrors" of "CanSetStateDeviceResponse" is None.')
+            for i, axis_responses_item in enumerate(self.axis_responses):
+                if axis_responses_item is None:
+                    raise ValueError(f'Item {i} in property "AxisResponses" of "CanSetStateDeviceResponse" is None.')
 
-                if not isinstance(axis_errors_item, CanSetStateAxisResponse):
-                    raise ValueError(f'Item {i} in property "AxisErrors" of "CanSetStateDeviceResponse" is not an instance of "CanSetStateAxisResponse".')
+                if not isinstance(axis_responses_item, CanSetStateAxisResponse):
+                    raise ValueError(f'Item {i} in property "AxisResponses" of "CanSetStateDeviceResponse" is not an instance of "CanSetStateAxisResponse".')
 
-                axis_errors_item.validate()
+                axis_responses_item.validate()

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: openstacksdk
-Version: 4.5.0
+Version: 4.6.0
 Summary: An SDK for building applications to work with OpenStack
 Home-page: https://docs.openstack.org/openstacksdk/
 Author: OpenStack
@@ -12,11 +12,11 @@ Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: POSIX :: Linux
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
-Requires-Python: >=3.9
+Classifier: Programming Language :: Python :: 3.13
+Requires-Python: >=3.10
 License-File: LICENSE
 Requires-Dist: cryptography>=2.7
 Requires-Dist: decorator>=4.4.1

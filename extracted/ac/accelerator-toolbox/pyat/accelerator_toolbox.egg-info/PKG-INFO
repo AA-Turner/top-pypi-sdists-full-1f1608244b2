@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: accelerator-toolbox
-Version: 0.6.1
+Version: 0.7.1
 Summary: Accelerator Toolbox
 Author-email: The AT collaboration <atcollab-general@lists.sourceforge.net>
 Project-URL: Home, https://github.com/atcollab/at
@@ -16,6 +16,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: MacOS
@@ -37,12 +38,13 @@ Requires-Dist: pytest>=2.9; extra == "dev"
 Requires-Dist: pytest-cov; extra == "dev"
 Requires-Dist: flake8; extra == "dev"
 Provides-Extra: doc
-Requires-Dist: Sphinx~=7.2; extra == "doc"
+Requires-Dist: Sphinx~=8.1; extra == "doc"
 Requires-Dist: myst-parser; extra == "doc"
 Requires-Dist: myst-nb; extra == "doc"
-Requires-Dist: pydata-sphinx-theme~=0.14; extra == "doc"
+Requires-Dist: pydata-sphinx-theme; extra == "doc"
 Requires-Dist: sphinx_design; extra == "doc"
 Requires-Dist: sphinx-copybutton; extra == "doc"
+Dynamic: license-file
 
 pyAT
 ====

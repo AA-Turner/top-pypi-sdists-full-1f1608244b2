@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 
 def bake_animation(
     execution_context: int | str | None = None, undo: bool | None = None
@@ -468,7 +468,7 @@ def unpack(
     undo: bool | None = None,
     /,
     *,
-    method: bpy._typing.rna_enums.UnpackMethodItems | None = "USE_LOCAL",
+    method: bpy.stub_internal.rna_enums.UnpackMethodItems | None = "USE_LOCAL",
     id: str = "",
 ):
     """Unpack the sound to the samples filename
@@ -476,7 +476,7 @@ def unpack(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param method: Method, How to unpack
-    :type method: bpy._typing.rna_enums.UnpackMethodItems | None
+    :type method: bpy.stub_internal.rna_enums.UnpackMethodItems | None
     :param id: Sound Name, Sound data-block name to unpack
     :type id: str
     """

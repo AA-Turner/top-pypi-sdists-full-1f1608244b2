@@ -268,7 +268,7 @@ class PrimitiveFeatureConverter(Generic[_TPrim]):
                 return cast(_TPrim, value)
             return cast(_TPrim, structure_json_to_primitive(value, self._primitive_type))
         except (ValueError, TypeError) as e:
-            raise TypeError(f"Could not convert '{value}' to `{self._primitive_type}`") from e
+            raise TypeError(f"Could not convert '{value}' to `{self._primitive_type}`: {e}") from e
 
     @property
     def pyarrow_dtype(self) -> pa.DataType:
@@ -1177,6 +1177,10 @@ class FeatureConverter(PrimitiveFeatureConverter[_TPrim], Generic[_TPrim, _TRich
         self._primitive_type = pyarrow_to_primitive(pyarrow_dtype, name)
         self._pyarrow_dtype = pyarrow_dtype
         self._is_nullable = is_nullable
+
+        # This field is also set in the super() call, but must be initialized here
+        # because it is also used for error handling inside of `from_rich_to_primitive`.
+        self._name = name
         if rich_default != ...:
             # The missing value strategy doesn't really matter because rich_default is not missing
             primitive_default = self.from_rich_to_primitive(rich_default, missing_value_strategy="allow")
@@ -1290,7 +1294,7 @@ class FeatureConverter(PrimitiveFeatureConverter[_TPrim], Generic[_TPrim, _TRich
                 x = unstructure_rich_to_primitive(val)
             except (TypeError, ValueError) as e:
                 raise TypeError(
-                    f"Could not convert '{val}' to `{self.primitive_type}` for feature '{self._name}'"
+                    f"Could not convert '{val}' to `{self.primitive_type}` for feature '{self._name}': {e}"
                 ) from e
             if x is None and not self._is_nullable:
                 raise ValueError(f"Feature '{self._name}' is null, but it cannot be nullable")
@@ -1298,7 +1302,7 @@ class FeatureConverter(PrimitiveFeatureConverter[_TPrim], Generic[_TPrim, _TRich
                 return cast(_TPrim, structure_primitive_to_rich(x, self.primitive_type))
             except (TypeError, ValueError) as e:
                 raise TypeError(
-                    f"Could not convert '{val}' to `{self.primitive_type}` for feature '{self._name}"
+                    f"Could not convert '{val}' to `{self.primitive_type}` for feature '{self._name}': {e}"
                 ) from e
         return self._encoder(val)
 
@@ -1320,13 +1324,15 @@ class FeatureConverter(PrimitiveFeatureConverter[_TPrim], Generic[_TPrim, _TRich
                 val = structure_primitive_to_rich(cast(_TPrim, val), cast(Type[_TRich], self.primitive_type))
             except (TypeError, ValueError) as e:
                 raise TypeError(
-                    f"Could not convert '{val}' to `{self.primitive_type}` for feature '{self._name}'"
+                    f"Could not convert '{val}' to `{self.primitive_type}` for feature '{self._name}': {e}"
                 ) from e
         if self._decoder is None:
             try:
                 return structure_primitive_to_rich(cast(_TPrim, val), self._rich_type)
             except (TypeError, ValueError) as e:
-                raise TypeError(f"Could not convert '{val}' to `{self._rich_type}` for feature '{self._name}'") from e
+                raise TypeError(
+                    f"Could not convert '{val}' to `{self._rich_type}` for feature '{self._name}': {e}"
+                ) from e
         # is_pyarrow_json_type is only needed to handle python 3.8
         if is_pyarrow_json_type(self.pyarrow_dtype) or isinstance(
             val, unwrap_optional_and_annotated_if_needed(self._rich_type)

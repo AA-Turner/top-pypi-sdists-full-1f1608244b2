@@ -2,7 +2,7 @@ import typing
 import collections.abc
 import typing_extensions
 import numpy.typing as npt
-import bpy._typing.rna_enums
+import bpy.stub_internal.rna_enums
 import mathutils
 
 def bbone_resize(
@@ -51,7 +51,7 @@ def bend(
     value: collections.abc.Iterable[float] | None = 0.0,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -77,7 +77,7 @@ def bend(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -189,9 +189,11 @@ def edge_slide(
     use_clamp: bool | None = True,
     mirror: bool | None = False,
     snap: bool | None = False,
-    snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None = {"INCREMENT"},
+    snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None = {
+        "INCREMENT"
+    },
     use_snap_project: bool | None = False,
-    snap_target: bpy._typing.rna_enums.SnapSourceItems | None = "CLOSEST",
+    snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None = "CLOSEST",
     use_snap_self: bool | None = True,
     use_snap_edit: bool | None = True,
     use_snap_nonedit: bool | None = True,
@@ -224,11 +226,11 @@ def edge_slide(
     :param snap: Use Snapping Options
     :type snap: bool | None
     :param snap_elements: Snap to Elements
-    :type snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None
+    :type snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None
     :param use_snap_project: Project Individual Elements
     :type use_snap_project: bool | None
     :param snap_target: Snap Base, Point on source that will snap to target
-    :type snap_target: bpy._typing.rna_enums.SnapSourceItems | None
+    :type snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None
     :param use_snap_self: Target: Include Active
     :type use_snap_self: bool | None
     :param use_snap_edit: Target: Include Edit
@@ -304,7 +306,7 @@ def push_pull(
     value: float | None = 0.0,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -329,7 +331,7 @@ def push_pull(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -365,15 +367,17 @@ def resize(
     constraint_axis: collections.abc.Iterable[bool] | None = (False, False, False),
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
     use_proportional_projected: bool | None = False,
     snap: bool | None = False,
-    snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None = {"INCREMENT"},
+    snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None = {
+        "INCREMENT"
+    },
     use_snap_project: bool | None = False,
-    snap_target: bpy._typing.rna_enums.SnapSourceItems | None = "CLOSEST",
+    snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None = "CLOSEST",
     use_snap_self: bool | None = True,
     use_snap_edit: bool | None = True,
     use_snap_nonedit: bool | None = True,
@@ -416,7 +420,7 @@ def resize(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -426,11 +430,11 @@ def resize(
     :param snap: Use Snapping Options
     :type snap: bool | None
     :param snap_elements: Snap to Elements
-    :type snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None
+    :type snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None
     :param use_snap_project: Project Individual Elements
     :type use_snap_project: bool | None
     :param snap_target: Snap Base, Point on source that will snap to target
-    :type snap_target: bpy._typing.rna_enums.SnapSourceItems | None
+    :type snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None
     :param use_snap_self: Target: Include Active
     :type use_snap_self: bool | None
     :param use_snap_edit: Target: Include Edit
@@ -463,7 +467,7 @@ def rotate(
     /,
     *,
     value: float | None = 0.0,
-    orient_axis: bpy._typing.rna_enums.AxisXyzItems | None = "Z",
+    orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "Z",
     orient_type: str | None = "GLOBAL",
     orient_matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix
@@ -472,15 +476,17 @@ def rotate(
     constraint_axis: collections.abc.Iterable[bool] | None = (False, False, False),
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
     use_proportional_projected: bool | None = False,
     snap: bool | None = False,
-    snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None = {"INCREMENT"},
+    snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None = {
+        "INCREMENT"
+    },
     use_snap_project: bool | None = False,
-    snap_target: bpy._typing.rna_enums.SnapSourceItems | None = "CLOSEST",
+    snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None = "CLOSEST",
     use_snap_self: bool | None = True,
     use_snap_edit: bool | None = True,
     use_snap_nonedit: bool | None = True,
@@ -506,7 +512,7 @@ def rotate(
     :param value: Angle
     :type value: float | None
     :param orient_axis: Axis
-    :type orient_axis: bpy._typing.rna_enums.AxisXyzItems | None
+    :type orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None
     :param orient_type: Orientation, Transformation orientation
     :type orient_type: str | None
     :param orient_matrix: Matrix
@@ -520,7 +526,7 @@ def rotate(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -530,11 +536,11 @@ def rotate(
     :param snap: Use Snapping Options
     :type snap: bool | None
     :param snap_elements: Snap to Elements
-    :type snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None
+    :type snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None
     :param use_snap_project: Project Individual Elements
     :type use_snap_project: bool | None
     :param snap_target: Snap Base, Point on source that will snap to target
-    :type snap_target: bpy._typing.rna_enums.SnapSourceItems | None
+    :type snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None
     :param use_snap_self: Target: Include Active
     :type use_snap_self: bool | None
     :param use_snap_edit: Target: Include Edit
@@ -561,7 +567,7 @@ def rotate_normal(
     /,
     *,
     value: float | None = 0.0,
-    orient_axis: bpy._typing.rna_enums.AxisXyzItems | None = "Z",
+    orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "Z",
     orient_type: str | None = "GLOBAL",
     orient_matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix
@@ -579,7 +585,7 @@ def rotate_normal(
     :param value: Angle
     :type value: float | None
     :param orient_axis: Axis
-    :type orient_axis: bpy._typing.rna_enums.AxisXyzItems | None
+    :type orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None
     :param orient_type: Orientation, Transformation orientation
     :type orient_type: str | None
     :param orient_matrix: Matrix
@@ -647,8 +653,8 @@ def shear(
     /,
     *,
     value: float | None = 0.0,
-    orient_axis: bpy._typing.rna_enums.AxisXyzItems | None = "Z",
-    orient_axis_ortho: bpy._typing.rna_enums.AxisXyzItems | None = "X",
+    orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "Z",
+    orient_axis_ortho: bpy.stub_internal.rna_enums.AxisXyzItems | None = "X",
     orient_type: str | None = "GLOBAL",
     orient_matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix
@@ -656,7 +662,7 @@ def shear(
     orient_matrix_type: str | None = "GLOBAL",
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -673,9 +679,9 @@ def shear(
     :param value: Offset
     :type value: float | None
     :param orient_axis: Axis
-    :type orient_axis: bpy._typing.rna_enums.AxisXyzItems | None
+    :type orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None
     :param orient_axis_ortho: Axis Ortho
-    :type orient_axis_ortho: bpy._typing.rna_enums.AxisXyzItems | None
+    :type orient_axis_ortho: bpy.stub_internal.rna_enums.AxisXyzItems | None
     :param orient_type: Orientation, Transformation orientation
     :type orient_type: str | None
     :param orient_matrix: Matrix
@@ -687,7 +693,7 @@ def shear(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -713,7 +719,7 @@ def shrink_fatten(
     use_even_offset: bool | None = False,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -735,7 +741,7 @@ def shrink_fatten(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -764,15 +770,17 @@ def skin_resize(
     constraint_axis: collections.abc.Iterable[bool] | None = (False, False, False),
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
     use_proportional_projected: bool | None = False,
     snap: bool | None = False,
-    snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None = {"INCREMENT"},
+    snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None = {
+        "INCREMENT"
+    },
     use_snap_project: bool | None = False,
-    snap_target: bpy._typing.rna_enums.SnapSourceItems | None = "CLOSEST",
+    snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None = "CLOSEST",
     use_snap_self: bool | None = True,
     use_snap_edit: bool | None = True,
     use_snap_nonedit: bool | None = True,
@@ -804,7 +812,7 @@ def skin_resize(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -814,11 +822,11 @@ def skin_resize(
     :param snap: Use Snapping Options
     :type snap: bool | None
     :param snap_elements: Snap to Elements
-    :type snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None
+    :type snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None
     :param use_snap_project: Project Individual Elements
     :type use_snap_project: bool | None
     :param snap_target: Snap Base, Point on source that will snap to target
-    :type snap_target: bpy._typing.rna_enums.SnapSourceItems | None
+    :type snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None
     :param use_snap_self: Target: Include Active
     :type use_snap_self: bool | None
     :param use_snap_edit: Target: Include Edit
@@ -843,7 +851,7 @@ def tilt(
     value: float | None = 0.0,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -863,7 +871,7 @@ def tilt(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -886,7 +894,7 @@ def tosphere(
     value: float | None = 0.0,
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -912,7 +920,7 @@ def tosphere(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -939,7 +947,7 @@ def trackball(
     value: collections.abc.Iterable[float] | None = (0.0, 0.0),
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
@@ -965,7 +973,7 @@ def trackball(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -989,32 +997,35 @@ def transform(
     undo: bool | None = None,
     /,
     *,
-    mode: bpy._typing.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
+    mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None = "TRANSLATION",
     value: collections.abc.Sequence[float] | mathutils.Vector | None = (
         0.0,
         0.0,
         0.0,
         0.0,
     ),
-    orient_axis: bpy._typing.rna_enums.AxisXyzItems | None = "Z",
-    orient_type: bpy._typing.rna_enums.TransformOrientationItems | None = "GLOBAL",
+    orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None = "Z",
+    orient_type: bpy.stub_internal.rna_enums.TransformOrientationItems
+    | None = "GLOBAL",
     orient_matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix
     | None = ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
-    orient_matrix_type: bpy._typing.rna_enums.TransformOrientationItems
+    orient_matrix_type: bpy.stub_internal.rna_enums.TransformOrientationItems
     | None = "GLOBAL",
     constraint_axis: collections.abc.Iterable[bool] | None = (False, False, False),
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
     use_proportional_projected: bool | None = False,
     snap: bool | None = False,
-    snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None = {"INCREMENT"},
+    snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None = {
+        "INCREMENT"
+    },
     use_snap_project: bool | None = False,
-    snap_target: bpy._typing.rna_enums.SnapSourceItems | None = "CLOSEST",
+    snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None = "CLOSEST",
     use_snap_self: bool | None = True,
     use_snap_edit: bool | None = True,
     use_snap_nonedit: bool | None = True,
@@ -1048,17 +1059,17 @@ def transform(
     :type execution_context: int | str | None
     :type undo: bool | None
     :param mode: Mode
-    :type mode: bpy._typing.rna_enums.TransformModeTypeItems | None
+    :type mode: bpy.stub_internal.rna_enums.TransformModeTypeItems | None
     :param value: Values
     :type value: collections.abc.Sequence[float] | mathutils.Vector | None
     :param orient_axis: Axis
-    :type orient_axis: bpy._typing.rna_enums.AxisXyzItems | None
+    :type orient_axis: bpy.stub_internal.rna_enums.AxisXyzItems | None
     :param orient_type: Orientation, Transformation orientation
-    :type orient_type: bpy._typing.rna_enums.TransformOrientationItems | None
+    :type orient_type: bpy.stub_internal.rna_enums.TransformOrientationItems | None
     :param orient_matrix: Matrix
     :type orient_matrix: collections.abc.Sequence[collections.abc.Sequence[float]] | mathutils.Matrix | None
     :param orient_matrix_type: Matrix Orientation
-    :type orient_matrix_type: bpy._typing.rna_enums.TransformOrientationItems | None
+    :type orient_matrix_type: bpy.stub_internal.rna_enums.TransformOrientationItems | None
     :param constraint_axis: Constraint Axis
     :type constraint_axis: collections.abc.Iterable[bool] | None
     :param mirror: Mirror Editing
@@ -1066,7 +1077,7 @@ def transform(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -1076,11 +1087,11 @@ def transform(
     :param snap: Use Snapping Options
     :type snap: bool | None
     :param snap_elements: Snap to Elements
-    :type snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None
+    :type snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None
     :param use_snap_project: Project Individual Elements
     :type use_snap_project: bool | None
     :param snap_target: Snap Base, Point on source that will snap to target
-    :type snap_target: bpy._typing.rna_enums.SnapSourceItems | None
+    :type snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None
     :param use_snap_self: Target: Include Active
     :type use_snap_self: bool | None
     :param use_snap_edit: Target: Include Edit
@@ -1119,24 +1130,27 @@ def translate(
     /,
     *,
     value: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0, 0.0),
-    orient_type: bpy._typing.rna_enums.TransformOrientationItems | None = "GLOBAL",
+    orient_type: bpy.stub_internal.rna_enums.TransformOrientationItems
+    | None = "GLOBAL",
     orient_matrix: collections.abc.Sequence[collections.abc.Sequence[float]]
     | mathutils.Matrix
     | None = ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
-    orient_matrix_type: bpy._typing.rna_enums.TransformOrientationItems
+    orient_matrix_type: bpy.stub_internal.rna_enums.TransformOrientationItems
     | None = "GLOBAL",
     constraint_axis: collections.abc.Iterable[bool] | None = (False, False, False),
     mirror: bool | None = False,
     use_proportional_edit: bool | None = False,
-    proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems
+    proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems
     | None = "SMOOTH",
     proportional_size: float | None = 1.0,
     use_proportional_connected: bool | None = False,
     use_proportional_projected: bool | None = False,
     snap: bool | None = False,
-    snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None = {"INCREMENT"},
+    snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None = {
+        "INCREMENT"
+    },
     use_snap_project: bool | None = False,
-    snap_target: bpy._typing.rna_enums.SnapSourceItems | None = "CLOSEST",
+    snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None = "CLOSEST",
     use_snap_self: bool | None = True,
     use_snap_edit: bool | None = True,
     use_snap_nonedit: bool | None = True,
@@ -1170,11 +1184,11 @@ def translate(
     :param value: Move
     :type value: collections.abc.Sequence[float] | mathutils.Vector | None
     :param orient_type: Orientation, Transformation orientation
-    :type orient_type: bpy._typing.rna_enums.TransformOrientationItems | None
+    :type orient_type: bpy.stub_internal.rna_enums.TransformOrientationItems | None
     :param orient_matrix: Matrix
     :type orient_matrix: collections.abc.Sequence[collections.abc.Sequence[float]] | mathutils.Matrix | None
     :param orient_matrix_type: Matrix Orientation
-    :type orient_matrix_type: bpy._typing.rna_enums.TransformOrientationItems | None
+    :type orient_matrix_type: bpy.stub_internal.rna_enums.TransformOrientationItems | None
     :param constraint_axis: Constraint Axis
     :type constraint_axis: collections.abc.Iterable[bool] | None
     :param mirror: Mirror Editing
@@ -1182,7 +1196,7 @@ def translate(
     :param use_proportional_edit: Proportional Editing
     :type use_proportional_edit: bool | None
     :param proportional_edit_falloff: Proportional Falloff, Falloff type for proportional editing mode
-    :type proportional_edit_falloff: bpy._typing.rna_enums.ProportionalFalloffItems | None
+    :type proportional_edit_falloff: bpy.stub_internal.rna_enums.ProportionalFalloffItems | None
     :param proportional_size: Proportional Size
     :type proportional_size: float | None
     :param use_proportional_connected: Connected
@@ -1192,11 +1206,11 @@ def translate(
     :param snap: Use Snapping Options
     :type snap: bool | None
     :param snap_elements: Snap to Elements
-    :type snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None
+    :type snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None
     :param use_snap_project: Project Individual Elements
     :type use_snap_project: bool | None
     :param snap_target: Snap Base, Point on source that will snap to target
-    :type snap_target: bpy._typing.rna_enums.SnapSourceItems | None
+    :type snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None
     :param use_snap_self: Target: Include Active
     :type use_snap_self: bool | None
     :param use_snap_edit: Target: Include Edit
@@ -1268,9 +1282,11 @@ def vert_slide(
     use_clamp: bool | None = True,
     mirror: bool | None = False,
     snap: bool | None = False,
-    snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None = {"INCREMENT"},
+    snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None = {
+        "INCREMENT"
+    },
     use_snap_project: bool | None = False,
-    snap_target: bpy._typing.rna_enums.SnapSourceItems | None = "CLOSEST",
+    snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None = "CLOSEST",
     use_snap_self: bool | None = True,
     use_snap_edit: bool | None = True,
     use_snap_nonedit: bool | None = True,
@@ -1301,11 +1317,11 @@ def vert_slide(
     :param snap: Use Snapping Options
     :type snap: bool | None
     :param snap_elements: Snap to Elements
-    :type snap_elements: set[bpy._typing.rna_enums.SnapElementItems] | None
+    :type snap_elements: set[bpy.stub_internal.rna_enums.SnapElementItems] | None
     :param use_snap_project: Project Individual Elements
     :type use_snap_project: bool | None
     :param snap_target: Snap Base, Point on source that will snap to target
-    :type snap_target: bpy._typing.rna_enums.SnapSourceItems | None
+    :type snap_target: bpy.stub_internal.rna_enums.SnapSourceItems | None
     :param use_snap_self: Target: Include Active
     :type use_snap_self: bool | None
     :param use_snap_edit: Target: Include Edit

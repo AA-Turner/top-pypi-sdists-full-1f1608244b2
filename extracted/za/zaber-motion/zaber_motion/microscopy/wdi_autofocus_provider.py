@@ -198,7 +198,7 @@ class WdiAutofocusProvider:
         Generic write operation.
 
         Args:
-            register_id: Register address to read from.
+            register_id: Register address to write to.
             size: Data size to write. Valid values are (0,1,2,4). Determines the data type (Nil, Byte, Word, DWord).
             data: Array of values to write to the register. Empty array is allowed.
             offset: Offset within the register (defaults to 0).
@@ -226,7 +226,7 @@ class WdiAutofocusProvider:
         Generic write operation.
 
         Args:
-            register_id: Register address to read from.
+            register_id: Register address to write to.
             size: Data size to write. Valid values are (0,1,2,4). Determines the data type (Nil, Byte, Word, DWord).
             data: Array of values to write to the register. Empty array is allowed.
             offset: Offset within the register (defaults to 0).

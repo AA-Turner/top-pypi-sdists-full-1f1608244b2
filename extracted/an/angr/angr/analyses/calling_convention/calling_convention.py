@@ -9,7 +9,7 @@ import capstone
 
 from pyvex.stmt import Put
 from pyvex.expr import RdTmp
-import ailment
+import angr.ailment as ailment
 
 from angr.code_location import ExternalCodeLocation
 
@@ -988,7 +988,11 @@ class CallingConventionAnalysis(Analysis):
             for ret_block in self._function.ret_sites:
                 fpretval_updated, retval_updated = False, False
                 fp_reg_size = 0
-                irsb = self.project.factory.block(ret_block.addr, size=ret_block.size).vex
+                try:
+                    irsb = self.project.factory.block(ret_block.addr, size=ret_block.size).vex
+                except SimTranslationError:
+                    # failed to lift the block
+                    continue
                 for stmt in irsb.statements:
                     if isinstance(stmt, Put) and isinstance(stmt.data, RdTmp):
                         reg_size = irsb.tyenv.sizeof(stmt.data.tmp) // self.project.arch.byte_width  # type: ignore

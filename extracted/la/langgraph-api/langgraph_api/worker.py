@@ -1,4 +1,5 @@
 import asyncio
+import time
 from collections.abc import AsyncGenerator
 from contextlib import AsyncExitStack, asynccontextmanager
 from datetime import UTC, datetime
@@ -74,8 +75,21 @@ async def worker(
     exception: Exception | None = None
     status: str | None = None
     webhook = run["kwargs"].get("webhook", None)
-    run_started_at = datetime.now(UTC)
+    request_created_at: int | None = run["kwargs"]["config"]["configurable"].get(
+        "__request_start_time_ms__"
+    )
+    after_seconds = run["kwargs"]["config"]["configurable"].get("__after_seconds__", 0)
     run_ended_at: str | None = None
+    run_started_at = datetime.now(UTC)
+    # Note that "created_at" is inclusive of the `after_seconds`
+    run_creation_ms = (
+        int(
+            ((run["created_at"].timestamp() - after_seconds) * 1_000)
+            - request_created_at
+        )
+        if request_created_at is not None
+        else None
+    )
 
     async with (
         connect() as conn,
@@ -95,11 +109,13 @@ async def worker(
                 "request_id": _get_request_id(run),
             }
         )
-
+        run_stream_started_at = datetime.now(UTC)
         await logger.ainfo(
             "Starting background run",
             run_started_at=run_started_at.isoformat(),
+            run_creation_ms=run_creation_ms,
             run_queue_ms=ms(run_started_at, run["created_at"]),
+            run_stream_start_ms=ms(run_stream_started_at, run_started_at),
         )
 
         def on_checkpoint(checkpoint_arg: CheckpointPayload):
@@ -115,7 +131,15 @@ async def worker(
 
         try:
             if attempt > BG_JOB_MAX_RETRIES:
-                await logger.aerror("Run exceeded max attempts", run_id=run["run_id"])
+                await logger.aerror(
+                    "Run exceeded max attempts",
+                    run_id=run["run_id"],
+                    run_completed_in_ms=(
+                        int((time.time() * 1_000) - request_created_at)
+                        if request_created_at is not None
+                        else None
+                    ),
+                )
 
                 error_message = (
                     f"Run {run['run_id']} exceeded max attempts ({BG_JOB_MAX_RETRIES}).\n\n"
@@ -149,7 +173,8 @@ async def worker(
                 consume(stream, run_id, resumable),
                 BG_JOB_TIMEOUT_SECS,
             )
-            run_ended_at = datetime.now(UTC).isoformat()
+            run_ended_at_dt = datetime.now(UTC)
+            run_ended_at = run_ended_at_dt.isoformat()
             await logger.ainfo(
                 "Background run succeeded",
                 run_id=str(run_id),
@@ -157,7 +182,12 @@ async def worker(
                 run_created_at=run_created_at,
                 run_started_at=run_started_at.isoformat(),
                 run_ended_at=run_ended_at,
-                run_exec_ms=ms(datetime.now(UTC), run_started_at),
+                run_exec_ms=ms(run_ended_at_dt, run_started_at),
+                run_completed_in_ms=(
+                    int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
+                    if request_created_at is not None
+                    else None
+                ),
             )
             status = "success"
             await Runs.set_status(conn, run_id, "success")
@@ -173,12 +203,18 @@ async def worker(
                 run_started_at=run_started_at.isoformat(),
                 run_ended_at=run_ended_at,
                 run_exec_ms=ms(datetime.now(UTC), run_started_at),
+                run_completed_in_ms=(
+                    int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
+                    if request_created_at is not None
+                    else None
+                ),
             )
             await Runs.set_status(conn, run_id, "timeout")
         except UserRollback as e:
             exception = e
             status = "rollback"
-            run_ended_at = datetime.now(UTC).isoformat()
+            run_ended_at_dt = datetime.now(UTC)
+            run_ended_at = run_ended_at_dt.isoformat()
             try:
                 await Runs.delete(conn, run_id, thread_id=run["thread_id"])
                 await logger.ainfo(
@@ -188,7 +224,12 @@ async def worker(
                     run_created_at=run_created_at,
                     run_started_at=run_started_at.isoformat(),
                     run_ended_at=run_ended_at,
-                    run_exec_ms=ms(datetime.now(UTC), run_started_at),
+                    run_exec_ms=ms(run_ended_at_dt, run_started_at),
+                    run_completed_in_ms=(
+                        int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
+                        if request_created_at is not None
+                        else None
+                    ),
                 )
 
             except InFailedSqlTransaction as e:
@@ -217,7 +258,8 @@ async def worker(
         except UserInterrupt as e:
             exception = e
             status = "interrupted"
-            run_ended_at = datetime.now(UTC).isoformat()
+            run_ended_at_dt = datetime.now(UTC)
+            run_ended_at = run_ended_at_dt.isoformat()
             await logger.ainfo(
                 "Background run interrupted",
                 run_id=str(run_id),
@@ -225,13 +267,19 @@ async def worker(
                 run_created_at=run_created_at,
                 run_started_at=run_started_at.isoformat(),
                 run_ended_at=run_ended_at,
-                run_exec_ms=ms(datetime.now(UTC), run_started_at),
+                run_exec_ms=ms(run_ended_at_dt, run_started_at),
+                run_completed_in_ms=(
+                    int((run_ended_at_dt.timestamp() * 1_000) - request_created_at)
+                    if request_created_at is not None
+                    else None
+                ),
             )
             await Runs.set_status(conn, run_id, "interrupted")
         except RETRIABLE_EXCEPTIONS as e:
             exception = e
             status = "retry"
-            run_ended_at = datetime.now(UTC).isoformat()
+            run_ended_at_dt = datetime.now(UTC)
+            run_ended_at = run_ended_at_dt.isoformat()
             await logger.awarning(
                 f"Background run failed, will retry. Exception: {e}",
                 exc_info=True,
@@ -240,14 +288,15 @@ async def worker(
                 run_created_at=run_created_at,
                 run_started_at=run_started_at.isoformat(),
                 run_ended_at=run_ended_at,
-                run_exec_ms=ms(datetime.now(UTC), run_started_at),
+                run_exec_ms=ms(run_ended_at_dt, run_started_at),
             )
             await Runs.set_status(conn, run_id, "pending")
             raise
         except Exception as exc:
             exception = exc
             status = "error"
-            run_ended_at = datetime.now(UTC).isoformat()
+            run_ended_at_dt = datetime.now(UTC)
+            run_ended_at = run_ended_at_dt.isoformat()
             await logger.aexception(
                 f"Background run failed. Exception: {exc}",
                 exc_info=not isinstance(exc, RemoteException),
@@ -256,7 +305,7 @@ async def worker(
                 run_created_at=run_created_at,
                 run_started_at=run_started_at.isoformat(),
                 run_ended_at=run_ended_at,
-                run_exec_ms=ms(datetime.now(UTC), run_started_at),
+                run_exec_ms=ms(run_ended_at_dt, run_started_at),
             )
             await Runs.set_status(conn, run_id, "error")
         set_auth_ctx(None, None)

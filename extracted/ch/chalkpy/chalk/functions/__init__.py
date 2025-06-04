@@ -1252,6 +1252,7 @@ def sagemaker_predict(
     aws_access_key_id_override: str | None = None,
     aws_secret_access_key_override: str | None = None,
     aws_session_token_override: str | None = None,
+    aws_role_arn_override: str | None = None,
     aws_region_override: str | None = None,
     aws_profile_name_override: str | None = None,
 ):
@@ -1278,6 +1279,8 @@ def sagemaker_predict(
         An optional argument which specifies the AWS secret access key to use for the prediction.
     aws_session_token_override
         An optional argument which specifies the AWS session token to use for the prediction.
+    aws_role_arn_override
+        An optional argument which specifies a AWS role ARN that will be assumed to generate credentials for the prediction.
     aws_region_override
         An optional argument which specifies the AWS region to use for the prediction.
     aws_profile_name_override
@@ -1301,15 +1304,16 @@ def sagemaker_predict(
     return UnderscoreFunction(
         "sagemaker_predict",
         body,
-        endpoint,
-        content_type,
-        target_model,
-        target_variant,
-        aws_access_key_id_override,
-        aws_secret_access_key_override,
-        aws_session_token_override,
-        aws_region_override,
-        aws_profile_name_override,
+        endpoint=endpoint,
+        content_type=content_type,
+        target_model=target_model,
+        target_variant=target_variant,
+        aws_access_key_id_override=aws_access_key_id_override,
+        aws_secret_access_key_override=aws_secret_access_key_override,
+        aws_session_token_override=aws_session_token_override,
+        aws_role_arn_override=aws_role_arn_override,
+        aws_region_override=aws_region_override,
+        aws_profile_name_override=aws_profile_name_override,
     )
 
 

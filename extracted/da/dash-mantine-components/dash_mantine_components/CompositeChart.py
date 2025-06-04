@@ -341,6 +341,10 @@ Keyword arguments:
 - unstyled (boolean; optional):
     Remove all Mantine styling from the component.
 
+- valueFormatter (boolean | number | string | dict | list; optional):
+    A function to format values on Y axis and inside the tooltip. See
+    https://www.dash-mantine-components.com/functions-as-props.
+
 - variant (string; optional):
     variant.
 
@@ -522,6 +526,7 @@ Keyword arguments:
         withRightYAxis: typing.Optional[bool] = None,
         rightYAxisProps: typing.Optional[typing.Any] = None,
         rightYAxisLabel: typing.Optional[typing.Any] = None,
+        valueFormatter: typing.Optional[typing.Any] = None,
         classNames: typing.Optional[dict] = None,
         styles: typing.Optional[typing.Any] = None,
         unstyled: typing.Optional[bool] = None,
@@ -531,9 +536,9 @@ Keyword arguments:
         loading_state: typing.Optional["LoadingState"] = None,
         **kwargs
     ):
-        self._prop_names = ['children', 'id', 'activeDotProps', 'areaProps', 'aria-*', 'barProps', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'clickSeriesName', 'composedChartProps', 'connectNulls', 'curveType', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'dotProps', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridAxis', 'gridColor', 'gridProps', 'h', 'hiddenFrom', 'highlightHover', 'hoverData', 'hoverSeriesName', 'inset', 'left', 'legendProps', 'lh', 'lightHidden', 'lineProps', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxBarWidth', 'mb', 'me', 'mih', 'minBarSize', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'referenceLines', 'right', 'rightYAxisLabel', 'rightYAxisProps', 'series', 'strokeDasharray', 'strokeWidth', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tickLine', 'tooltipAnimationDuration', 'tooltipProps', 'top', 'tt', 'unit', 'unstyled', 'variant', 'visibleFrom', 'w', 'withBarValueLabel', 'withDots', 'withLegend', 'withPointLabels', 'withRightYAxis', 'withTooltip', 'withXAxis', 'withYAxis', 'xAxisLabel', 'xAxisProps', 'yAxisLabel', 'yAxisProps']
+        self._prop_names = ['children', 'id', 'activeDotProps', 'areaProps', 'aria-*', 'barProps', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'clickSeriesName', 'composedChartProps', 'connectNulls', 'curveType', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'dotProps', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridAxis', 'gridColor', 'gridProps', 'h', 'hiddenFrom', 'highlightHover', 'hoverData', 'hoverSeriesName', 'inset', 'left', 'legendProps', 'lh', 'lightHidden', 'lineProps', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxBarWidth', 'mb', 'me', 'mih', 'minBarSize', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'referenceLines', 'right', 'rightYAxisLabel', 'rightYAxisProps', 'series', 'strokeDasharray', 'strokeWidth', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tickLine', 'tooltipAnimationDuration', 'tooltipProps', 'top', 'tt', 'unit', 'unstyled', 'valueFormatter', 'variant', 'visibleFrom', 'w', 'withBarValueLabel', 'withDots', 'withLegend', 'withPointLabels', 'withRightYAxis', 'withTooltip', 'withXAxis', 'withYAxis', 'xAxisLabel', 'xAxisProps', 'yAxisLabel', 'yAxisProps']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['children', 'id', 'activeDotProps', 'areaProps', 'aria-*', 'barProps', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'clickSeriesName', 'composedChartProps', 'connectNulls', 'curveType', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'dotProps', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridAxis', 'gridColor', 'gridProps', 'h', 'hiddenFrom', 'highlightHover', 'hoverData', 'hoverSeriesName', 'inset', 'left', 'legendProps', 'lh', 'lightHidden', 'lineProps', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxBarWidth', 'mb', 'me', 'mih', 'minBarSize', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'referenceLines', 'right', 'rightYAxisLabel', 'rightYAxisProps', 'series', 'strokeDasharray', 'strokeWidth', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tickLine', 'tooltipAnimationDuration', 'tooltipProps', 'top', 'tt', 'unit', 'unstyled', 'variant', 'visibleFrom', 'w', 'withBarValueLabel', 'withDots', 'withLegend', 'withPointLabels', 'withRightYAxis', 'withTooltip', 'withXAxis', 'withYAxis', 'xAxisLabel', 'xAxisProps', 'yAxisLabel', 'yAxisProps']
+        self.available_properties = ['children', 'id', 'activeDotProps', 'areaProps', 'aria-*', 'barProps', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'bottom', 'c', 'className', 'classNames', 'clickData', 'clickSeriesName', 'composedChartProps', 'connectNulls', 'curveType', 'darkHidden', 'data', 'data-*', 'dataKey', 'display', 'dotProps', 'ff', 'flex', 'fs', 'fw', 'fz', 'gridAxis', 'gridColor', 'gridProps', 'h', 'hiddenFrom', 'highlightHover', 'hoverData', 'hoverSeriesName', 'inset', 'left', 'legendProps', 'lh', 'lightHidden', 'lineProps', 'loading_state', 'lts', 'm', 'mah', 'maw', 'maxBarWidth', 'mb', 'me', 'mih', 'minBarSize', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'referenceLines', 'right', 'rightYAxisLabel', 'rightYAxisProps', 'series', 'strokeDasharray', 'strokeWidth', 'style', 'styles', 'ta', 'tabIndex', 'td', 'textColor', 'tickLine', 'tooltipAnimationDuration', 'tooltipProps', 'top', 'tt', 'unit', 'unstyled', 'valueFormatter', 'variant', 'visibleFrom', 'w', 'withBarValueLabel', 'withDots', 'withLegend', 'withPointLabels', 'withRightYAxis', 'withTooltip', 'withXAxis', 'withYAxis', 'xAxisLabel', 'xAxisProps', 'yAxisLabel', 'yAxisProps']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
