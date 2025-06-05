@@ -13,6 +13,7 @@ import sysconfig
 from contextlib import contextmanager
 from contextvars import ContextVar
 from typing import TYPE_CHECKING, Optional
+from contrast.agent.framework import UNKNOWN_FRAMEWORK, Framework
 from contrast.utils.configuration_utils import get_platform
 
 import contrast
@@ -127,7 +128,7 @@ class module(Namespace):
     configured_server_name: str | None = None
 
     # NOTE: these fields can be set prior to initialization
-    framework: str | None = None
+    framework: Framework = UNKNOWN_FRAMEWORK
     app_name: str | None = None
 
 
@@ -203,8 +204,7 @@ def _log_environment(settings: Settings):
         configured_application_name=module.configured_app_name,
         detected_application_name=module.app_name,
         detected_framework=module.framework,
-        installed_framework=settings.framework,
-        installed_webserver=settings.server,
+        discovered_webserver=settings.server,
         cwd=AGENT_CURR_WORKING_DIR,
         executable=sys.executable,
         platform=get_platform(),
@@ -263,7 +263,7 @@ def initialize_settings():
 
     Returns True on settings being initialized and False if any failure.
     """
-    module.settings = Settings(framework_name=module.framework)
+    module.settings = Settings()
 
     return True
 
@@ -329,15 +329,19 @@ def set_observe_enabled(config: Mapping):
 
 
 @fail_loudly("Failed to register detected framework")
-def set_detected_framework(name: str):
+def set_detected_framework(distribution_name: str):
     """
-    Registers the name of the detected framework
+    Registers the detected framework by its distribution name.
 
     It is safe to call this method prior to initialization of agent state. In
     order to be effective, this method should be called prior to middleware
     initialization.
     """
-    module.framework = name
+    module.framework = Framework(distribution_name)
+
+
+def detected_framework() -> Framework:
+    return module.framework
 
 
 @fail_loudly("Failed to register application name")
@@ -466,7 +470,8 @@ def initialize():
         module.reporting_client.start()
 
         if not module.reporting_client.initialize_application(
-            module.settings.config, framework=module.settings.framework.name_lower
+            module.settings.config,
+            server_type=module.settings.server_type,
         ):
             disable_agent(reason="Unable to initialize application in Contrast UI")
             module.settings.log_effective_config()

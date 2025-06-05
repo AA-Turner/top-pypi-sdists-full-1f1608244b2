@@ -35,17 +35,16 @@ classifiers = [
 # limiting dependencies if they want/need to.
 dependencies = [
   "boto3 >= 1.36.8",
+  # Click 8.2 dropped python 3.8/3.9 support
   "click >= 8.1.7",
   "pyyaml >= 6.0",
   # Job Attachments
-  "typing_extensions >= 4.7,< 4.14; python_version == '3.7'",
-  "typing_extensions >= 4.8; python_version > '3.7'",
-  # Pinning due to 3.4 not being available upstream
+  "typing_extensions >= 4.8",
   "xxhash >= 3.4,< 3.6",
-  # Pinning due to new 4.18 dependencies breaking pyinstaller implementation
-  "jsonschema == 4.17.*",
+  "jsonschema >= 4.17,< 5.0",
   "pywin32 >= 307,< 311; sys_platform == 'win32'",
   "QtPy == 2.4.*",
+  "psutil >= 7.0.0"
 ]
 
 [project.urls]
@@ -81,7 +80,7 @@ path = "hatch_custom_hook.py"
 destinations = ["src/deadline/client", "src/deadline/job_attachments"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/*", "hatch_version_hook.py", "THIRD_PARTY_LICENSES"]
+include = ["src/*", "hatch_custom_hook.py", "THIRD_PARTY_LICENSES"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/deadline"]
@@ -145,6 +144,7 @@ markers = [
   "no_setup: mark that test shouldn't use default setups",
   "integ: tests that run against AWS resources",
   "docker: marks tests to be run only in a Docker environment",
+  "cross_account: tests that run against other aws accounts",
 ]
 # looponfailroots is deprecated, this removes the deprecation from the test output
 filterwarnings = ["ignore::DeprecationWarning"]

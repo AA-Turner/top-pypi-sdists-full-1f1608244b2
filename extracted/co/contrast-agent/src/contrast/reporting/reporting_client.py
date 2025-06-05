@@ -73,7 +73,7 @@ class ReportingClient(threading.Thread):
         self.cookies = CookieJar(policy=DefaultCookiePolicy(allowed_domains=[]))
         server_name_b64 = b64url_stripped(agent_state.get_server_name())
         server_path_b64 = b64url_stripped(self.settings.get_server_path())
-        server_type_b64 = b64url_stripped(self.settings.get_server_type())
+        server_type_b64 = b64url_stripped(self.settings.server_type)
         auth_header = f"{self.settings.api_user_name}:{self.settings.api_service_key}"
         self.always_headers = {
             # the Authorization header must not have its padding stripped
@@ -99,7 +99,7 @@ class ReportingClient(threading.Thread):
             self.request_audit.prepare_dirs()
 
     @fail_quietly(return_value=False)
-    def initialize_application(self, config: AgentConfig, framework="") -> bool:
+    def initialize_application(self, config: AgentConfig, server_type="") -> bool:
         """
         Initialize the application with the given configuration.
 

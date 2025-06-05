@@ -71,10 +71,12 @@ def patch_qtm_parameters(mocker, module):
         # sequence is not wrapped because the QTM instructions are not yet in the qblox-instruments
         # assembler binaries.
         mocker.patch.object(sequencer.sequence, "set")
-        mocker.patch.object(io_channel.out_mode, "set", wraps=io_channel.out_mode.set)
-        mocker.patch.object(io_channel.in_trigger_en, "set", wraps=io_channel.in_trigger_en.set)
+        mocker.patch.object(io_channel.mode, "set", wraps=io_channel.mode.set)
         mocker.patch.object(
-            io_channel.in_threshold_primary, "set", wraps=io_channel.in_threshold_primary.set
+            io_channel.forward_trigger_en, "set", wraps=io_channel.forward_trigger_en.set
+        )
+        mocker.patch.object(
+            io_channel.analog_threshold, "set", wraps=io_channel.analog_threshold.set
         )
         mocker.patch.object(
             io_channel.binned_acq_time_ref, "set", wraps=io_channel.binned_acq_time_ref.set
@@ -1132,7 +1134,7 @@ def test_timetag_acquisition_qtm_append(
     qtm_instrument.io_channel4.binned_acq_time_ref.set.assert_called_with(str(TimeRef.START))
 
 
-def test_set_in_threshold_primary(
+def test_set_analog_threshold(
     mock_setup_basic_nv,
     make_cluster_component,
 ):
@@ -1143,7 +1145,7 @@ def test_set_in_threshold_primary(
     quantum_device = mock_setup_basic_nv["quantum_device"]
     hardware_cfg = EXAMPLE_QBLOX_HARDWARE_CONFIG_NV_CENTER.copy()
     hardware_cfg["hardware_options"]["digitization_thresholds"]["qe1:optical_readout-qe1.ge0"][
-        "in_threshold_primary"
+        "analog_threshold"
     ] = 0.3
     quantum_device.hardware_config(hardware_cfg)
 
@@ -1169,7 +1171,7 @@ def test_set_in_threshold_primary(
     cluster.prepare(prog)
     cluster.start()
 
-    qtm_instrument.io_channel4.in_threshold_primary.set.assert_called_with(0.3)
+    qtm_instrument.io_channel4.analog_threshold.set.assert_called_with(0.3)
 
 
 def test_retrieve_trace_acquisition_qtm(
@@ -1333,6 +1335,61 @@ def test_retrieve_timetag_trace_acquisition_qtm(
     xr.testing.assert_identical(qtm.retrieve_acquisition(), expected_dataset)
 
 
+def test_retrieve_empty_timetag_trace_acquisition_qtm():
+    acq_channel_metadata = AcquisitionChannelMetadata(acq_channel=0, acq_indices=[0])
+    acq_metadata = AcquisitionMetadata(
+        "TimetagTrace", BinMode.APPEND, np.ndarray, {0: acq_channel_metadata}, 1
+    )
+    acq_manager = qblox._QTMAcquisitionManager(
+        parent=Mock(),
+        acquisition_metadata={"0": acq_metadata},
+        acquisition_duration={"0": 10},
+        seq_name_to_idx_map={"seq0": 0},
+    )
+
+    dummy_data = {
+        "0": {
+            "index": 0,
+            "acquisition": {
+                "bins": {
+                    "count": [
+                        np.nan,
+                    ],
+                    "timedelta": [
+                        np.nan,
+                    ],
+                    "threshold": [0.0],
+                    "avg_cnt": [0],
+                },
+                "scope": [
+                    ["OPEN", 322053621179604992],
+                    ["CLOSE", 322053621200494592],
+                ],
+            },
+        }
+    }
+
+    expected_dataarray = xr.DataArray(
+        [[[]]],
+        dims=["repetition", "acq_index_0", "trace_index_0"],
+        coords={"acq_index_0": [0], "trace_index_0": []},
+        attrs={"acq_protocol": "TimetagTrace"},
+    )
+
+    xr.testing.assert_identical(
+        acq_manager._get_timetag_trace_data(
+            acq_indices=[0],
+            hardware_retrieved_acquisitions=dummy_data,
+            acquisition_metadata=acq_metadata,
+            acq_duration=10,
+            qblox_acq_index=0,
+            acq_channel=0,
+            sequencer_name="seq0",
+        ),
+        expected_dataarray,
+    )
+
+
 def test_multiple_retrieve_timetag_trace_acquisition_qtm(
     mock_setup_basic_nv,
     make_cluster_component,
@@ -1432,6 +1489,65 @@ def test_multiple_retrieve_timetag_trace_acquisition_qtm(
     cluster.start()
 
     xr.testing.assert_identical(qtm.retrieve_acquisition(), expected_dataset)
+
+
+def test_multiple_retrieve_empty_timetag_trace_acquisition_qtm():
+    acq_channel_metadata = AcquisitionChannelMetadata(acq_channel=0, acq_indices=[0])
+    acq_metadata = AcquisitionMetadata(
+        "TimetagTrace", BinMode.APPEND, np.ndarray, {0: acq_channel_metadata}, 2
+    )
+    acq_manager = qblox._QTMAcquisitionManager(
+        parent=Mock(),
+        acquisition_metadata={"0": acq_metadata},
+        acquisition_duration={"0": 10},
+        seq_name_to_idx_map={"seq0": 0},
+    )
+
+    dummy_data = {
+        "0": {
+            "index": 0,
+            "acquisition": {
+                "bins": {
+                    "count": [
+                        4.0,
+                        3.0,
+                    ],
+                    "timedelta": [
+                        1898975.0,
+                        1898980.0,
+                    ],
+                    "threshold": [1.0, 1.0],
+                    "avg_cnt": [4, 3],
+                },
+                "scope": [
+                    ["OPEN", 322053621179604992],
+                    ["CLOSE", 322053621200494592],
+                    ["OPEN", 322053621179604992],
+                    ["CLOSE", 322053621200494592],
+                ],
+            },
+        }
+    }
+
+    expected_dataarray = xr.DataArray(
+        [[[]], [[]]],
+        dims=["repetition", "acq_index_0", "trace_index_0"],
+        coords={"acq_index_0": [0], "trace_index_0": []},
+        attrs={"acq_protocol": "TimetagTrace"},
+    )
+
+    xr.testing.assert_identical(
+        acq_manager._get_timetag_trace_data(
+            acq_indices=[0],
+            hardware_retrieved_acquisitions=dummy_data,
+            acquisition_metadata=acq_metadata,
+            acq_duration=10,
+            qblox_acq_index=0,
+            acq_channel=0,
+            sequencer_name="seq0",
+        ),
+        expected_dataarray,
+    )
 
 
 def test_start_baseband(
@@ -1782,10 +1898,11 @@ def test_get_configuration_manager(
 
 
 @pytest.mark.parametrize(
-    ("module_type, channel_name, channel_map_parameters"),
+    ("module_type, sequencer_idx, channel_name, channel_map_parameters"),
     [
         (
             "QCM",
+            0,
             "complex_output_0",
             {
                 "connect_out0": "I",
@@ -1796,6 +1913,7 @@ def test_get_configuration_manager(
         ),
         (
             "QCM",
+            0,
             "complex_output_1",
             {
                 "connect_out0": "off",
@@ -1806,6 +1924,7 @@ def test_get_configuration_manager(
         ),
         (
             "QCM",
+            0,
             "real_output_0",
             {
                 "connect_out0": "I",
@@ -1816,6 +1935,7 @@ def test_get_configuration_manager(
         ),
         (
             "QCM",
+            0,
             "real_output_1",
             {
                 "connect_out0": "off",
@@ -1826,6 +1946,7 @@ def test_get_configuration_manager(
         ),
         (
             "QCM",
+            0,
             "real_output_2",
             {
                 "connect_out0": "off",
@@ -1836,6 +1957,7 @@ def test_get_configuration_manager(
         ),
         (
             "QCM",
+            0,
             "real_output_3",
             {
                 "connect_out0": "off",
@@ -1846,6 +1968,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM",
+            0,
             "complex_output_0",
             {
                 "connect_out0": "I",
@@ -1856,6 +1979,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM",
+            0,
             "complex_input_0",
             {
                 "connect_out0": "off",
@@ -1866,6 +1990,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM",
+            0,
             "real_output_0",
             {
                 "connect_out0": "I",
@@ -1876,6 +2001,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM",
+            0,
             "real_output_1",
             {
                 "connect_out0": "off",
@@ -1886,6 +2012,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM",
+            0,
             "real_input_0",
             {
                 "connect_out0": "off",
@@ -1896,6 +2023,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM",
+            0,
             "real_input_1",
             {
                 "connect_out0": "off",
@@ -1906,6 +2034,7 @@ def test_get_configuration_manager(
         ),
         (
             "QCM_RF",
+            0,
             "complex_output_0",
             {
                 "connect_out0": "IQ",
@@ -1914,6 +2043,7 @@ def test_get_configuration_manager(
         ),
         (
             "QCM_RF",
+            0,
             "complex_output_1",
             {
                 "connect_out0": "off",
@@ -1922,6 +2052,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM_RF",
+            0,
             "complex_output_0",
             {
                 "connect_out0": "IQ",
@@ -1930,6 +2061,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRM_RF",
+            0,
             "complex_input_0",
             {
                 "connect_out0": "off",
@@ -1938,6 +2070,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRC",
+            3,
             "complex_output_5",
             {
                 "connect_out0": "off",
@@ -1951,6 +2084,7 @@ def test_get_configuration_manager(
         ),
         (
             "QRC",
+            0,
             "complex_input_1",
             {
                 "connect_out0": "off",
@@ -1967,12 +2101,14 @@ def test_get_configuration_manager(
 def test_channel_map(
     make_cluster_component,
     module_type,
+    sequencer_idx,
     channel_name,
     channel_map_parameters,
 ):
     # Indices according to `make_cluster_component` instrument setup
     module_idx = {"QCM": 1, "QCM_RF": 2, "QRM": 3, "QRM_RF": 4, "QRC": 14}
     test_module_name = f"cluster0_module{module_idx[module_type]}"
+    test_sequencer_name = f"sequencer{sequencer_idx}"
 
     hardware_config = {
         "config_type": "quantify_scheduler.backends.qblox_backend.QbloxHardwareCompilationConfig",
@@ -1993,7 +2129,7 @@ def test_channel_map(
         hardware_config["hardware_options"] = {
             "modulation_frequencies": {"q5:mw-q5.01": {"interm_freq": 3e5}}
         }
-        freq_01 = 5e9
+        freq_01 = 6e8 if module_type == "QRC" else 5e9
     else:
         freq_01 = 4.33e8
 
@@ -2025,19 +2161,20 @@ def test_channel_map(
     module = all_modules[test_module_name]
 
     all_sequencers = {sequencer.name: sequencer for sequencer in module.sequencers}
-    sequencer = all_sequencers[f"{test_module_name}_sequencer0"]
+    sequencer = all_sequencers[f"{test_module_name}_{test_sequencer_name}"]
 
     for key, value in channel_map_parameters.items():
         assert sequencer.parameters[key].get() == value
 
 
 @pytest.mark.parametrize(
-    ("module_type, channel_name, channel_name_measure, channel_map_parameters"),
+    ("module_type, channel_name, channel_name_measure, sequencer_id, channel_map_parameters"),
     [
         (
             "QRM",
             "complex_output_0",
             ["complex_input_0"],
+            0,
             {
                 "connect_out0": "I",
                 "connect_out1": "Q",
@@ -2049,6 +2186,7 @@ def test_channel_map(
             "QRM",
             "complex_output_0",
             ["real_input_0", "real_input_1"],
+            0,
             {
                 "connect_out0": "I",
                 "connect_out1": "Q",
@@ -2060,6 +2198,7 @@ def test_channel_map(
             "QRM",
             "real_output_0",
             ["real_input_0"],
+            0,
             {
                 "connect_out0": "I",
                 "connect_out1": "off",
@@ -2071,6 +2210,7 @@ def test_channel_map(
             "QRM",
             "real_output_0",
             ["real_input_1"],
+            0,
             {
                 "connect_out0": "I",
                 "connect_out1": "off",
@@ -2082,6 +2222,7 @@ def test_channel_map(
             "QRM",
             "real_output_1",
             ["real_input_0"],
+            0,
             {
                 "connect_out0": "off",
                 "connect_out1": "I",
@@ -2093,6 +2234,7 @@ def test_channel_map(
             "QRM",
             "real_output_1",
             ["real_input_1"],
+            0,
             {
                 "connect_out0": "off",
                 "connect_out1": "I",
@@ -2104,6 +2246,7 @@ def test_channel_map(
             "QRM",
             "real_output_0",
             ["real_input_0", "real_input_1"],
+            0,
             {
                 "connect_out0": "I",
                 "connect_out1": "off",
@@ -2115,6 +2258,7 @@ def test_channel_map(
             "QRM",
             "real_output_1",
             ["real_input_0", "real_input_1"],
+            0,
             {
                 "connect_out0": "off",
                 "connect_out1": "I",
@@ -2126,6 +2270,7 @@ def test_channel_map(
             "QRM_RF",
             "complex_output_0",
             ["complex_input_0"],
+            0,
             {
                 "connect_out0": "IQ",
                 "connect_acq": "in0",
@@ -2135,6 +2280,7 @@ def test_channel_map(
             "QRC",
             "complex_output_1",
             ["complex_input_1"],
+            1,
             {
                 "connect_out1": "IQ",
                 "connect_acq": "in1",
@@ -2147,6 +2293,7 @@ def test_channel_map_measure(
     module_type,
     channel_name,
     channel_name_measure,
+    sequencer_id,
     channel_map_parameters,
 ):
     # Indices according to `make_cluster_component` instrument setup
@@ -2217,7 +2364,7 @@ def test_channel_map_measure(
     module = all_modules[test_module_name]
 
     all_sequencers = {sequencer.name: sequencer for sequencer in module.sequencers}
-    sequencer = all_sequencers[f"{test_module_name}_sequencer0"]
+    sequencer = all_sequencers[f"{test_module_name}_sequencer{sequencer_id}"]
 
     for key, value in channel_map_parameters.items():
         assert sequencer.parameters[key].get() == value
@@ -2289,10 +2436,11 @@ def test_channel_map_off_with_marker_pulse(make_cluster_component, slot_idx, mod
 
 
 @pytest.mark.parametrize(
-    ("module_type, channel_name, lo_parameters"),
+    ("module_type, freq_01, channel_name, lo_parameters"),
     [
         (
             "QCM_RF",
+            5e9,
             "complex_output_0",
             {
                 "out0_lo_en": False,
@@ -2303,6 +2451,7 @@ def test_channel_map_off_with_marker_pulse(make_cluster_component, slot_idx, mod
         ),
         (
             "QCM_RF",
+            5e9,
             "complex_output_1",
             {
                 "out0_lo_en": False,
@@ -2313,6 +2462,7 @@ def test_channel_map_off_with_marker_pulse(make_cluster_component, slot_idx, mod
         ),
         (
             "QRM_RF",
+            5e9,
             "complex_output_0",
             {
                 "out0_in0_lo_en": False,
@@ -2321,50 +2471,54 @@ def test_channel_map_off_with_marker_pulse(make_cluster_component, slot_idx, mod
         ),
         (
             "QRC",
-            "complex_output_0",
-            {
-                "out0_in0_freq": 5e9 - 3e5,
-                "out1_in1_freq": 0,
-                "out2_freq": 0,
-                "out3_freq": 0,
-                "out4_freq": 0,
-                "out5_freq": 0,
-            },
-        ),
-        (
-            "QRC",
-            "complex_output_1",
-            {
-                "out0_in0_freq": 0,
-                "out1_in1_freq": 5e9 - 3e5,
-                "out2_freq": 0,
-                "out3_freq": 0,
-                "out4_freq": 0,
-                "out5_freq": 0,
-            },
-        ),
-        (
-            "QRC",
+            6e8,
             "complex_output_2",
             {
-                "out0_in0_freq": 0,
-                "out1_in1_freq": 0,
-                "out2_freq": 5e9 - 3e5,
-                "out3_freq": 0,
-                "out4_freq": 0,
-                "out5_freq": 0,
+                "in0_freq": 1e9,
+                "in1_freq": 1e9,
+                "out2_freq": 6e8 - 3e5,
+                "out3_freq": 1e9,
+                "out4_freq": 1e9,
+                "out5_freq": 1e9,
             },
         ),
         (
             "QRC",
+            6e8,
+            "complex_output_3",
+            {
+                "in0_freq": 1e9,
+                "in1_freq": 1e9,
+                "out2_freq": 1e9,
+                "out3_freq": 6e8 - 3e5,
+                "out4_freq": 1e9,
+                "out5_freq": 1e9,
+            },
+        ),
+        (
+            "QRC",
+            6e8,
+            "complex_output_4",
+            {
+                "in0_freq": 1e9,
+                "in1_freq": 1e9,
+                "out2_freq": 1e9,
+                "out3_freq": 1e9,
+                "out4_freq": 6e8 - 3e5,
+                "out5_freq": 1e9,
+            },
+        ),
+        (
+            "QRC",
+            6e8,
             "complex_output_5",
             {
-                "out0_in0_freq": 0,
-                "out1_in1_freq": 0,
-                "out2_freq": 0,
-                "out3_freq": 0,
-                "out4_freq": 0,
-                "out5_freq": 5e9 - 3e5,
+                "in0_freq": 1e9,
+                "in1_freq": 1e9,
+                "out2_freq": 1e9,
+                "out3_freq": 1e9,
+                "out4_freq": 1e9,
+                "out5_freq": 6e8 - 3e5,
             },
         ),
     ],
@@ -2372,6 +2526,7 @@ def test_channel_map_off_with_marker_pulse(make_cluster_component, slot_idx, mod
 def test_lo_freq(
     make_cluster_component,
     module_type,
+    freq_01,
     channel_name,
     lo_parameters,
 ):
@@ -2394,7 +2549,6 @@ def test_lo_freq(
         },
     }
 
-    freq_01 = 5e9
     interm_freq = 3e5
     hardware_config["hardware_options"] = {
         "modulation_frequencies": {"q5:mw-q5.01": {"interm_freq": interm_freq, "lo_freq": None}},

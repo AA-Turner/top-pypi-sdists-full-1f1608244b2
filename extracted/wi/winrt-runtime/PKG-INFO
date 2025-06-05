@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: winrt-runtime
-Version: 3.1.0
+Version: 3.2.0
 Summary: Python projection of Windows Runtime (WinRT) APIs
 License-Expression: MIT
 Project-URL: Documentation, https://pywinrt.readthedocs.io

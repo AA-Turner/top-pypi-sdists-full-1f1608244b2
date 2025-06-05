@@ -81,23 +81,6 @@ class JSONRenderer:
 LEVELS = logging.getLevelNamesMapping()
 
 
-class TapForMetadata:
-    def __call__(
-        self, logger: logging.Logger, method_name: str, event_dict: EventDict
-    ) -> str:
-        """
-        Tap WARN and above logs for metadata. Exclude user loggers.
-        """
-        if (
-            event_dict["logger"].startswith("langgraph")
-            and LEVELS[event_dict["level"].upper()] > LEVELS["INFO"]
-        ):
-            from langgraph_api.metadata import append_log
-
-            append_log(event_dict.copy())
-        return event_dict
-
-
 # shared config, for both logging and structlog
 
 shared_processors = [
@@ -136,7 +119,6 @@ class Formatter(structlog.stdlib.ProcessorFormatter):
         super().__init__(
             processors=[
                 structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-                TapForMetadata(),
                 renderer,
             ],
             foreign_pre_chain=shared_processors,

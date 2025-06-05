@@ -1,10 +1,11 @@
-# SPDX-FileCopyrightText: 2022-2024 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2022-2025 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
 """Core module of component manager"""
 
 import functools
 import os
 import re
+import secrets
 import shutil
 import tarfile
 import tempfile
@@ -20,14 +21,16 @@ from requests_toolbelt import MultipartEncoderMonitor
 from ruamel.yaml import YAML, CommentedMap
 
 from idf_component_manager.utils import ComponentSource, VersionSolverResolution
-from idf_component_tools import ComponentManagerSettings
+from idf_component_tools import ComponentManagerSettings, debug
 from idf_component_tools.archive_tools import pack_archive, unpack_archive
 from idf_component_tools.build_system_tools import build_name, is_component
 from idf_component_tools.config import root_managed_components_dir
 from idf_component_tools.constants import MANIFEST_FILENAME
+from idf_component_tools.debugger import KCONFIG_CONTEXT
 from idf_component_tools.errors import (
     FatalError,
     InternalError,
+    ModifiedComponent,
     NothingToDoError,
     VersionAlreadyExistsError,
     VersionNotFoundError,
@@ -37,12 +40,10 @@ from idf_component_tools.file_tools import (
 )
 from idf_component_tools.git_client import GitClient, clean_tag_version
 from idf_component_tools.hash_tools.errors import (
-    HashDoesNotExistError,
-    HashNotEqualError,
-    HashNotSHA256Error,
+    ValidatingHashError,
 )
-from idf_component_tools.hash_tools.validate_managed_component import (
-    validate_managed_component_hash,
+from idf_component_tools.hash_tools.validate import (
+    validate_hashfile_eq_hashdir,
 )
 from idf_component_tools.manager import (
     ManifestManager,
@@ -78,7 +79,7 @@ from .core_utils import (
     ProgressBar,
     _create_manifest_if_missing,
     archive_filename,
-    copy_examples_folders,
+    check_examples_folder,
     dist_name,
     get_validated_manifest,
     parse_example,
@@ -87,6 +88,17 @@ from .core_utils import (
 from .dependencies import download_project_dependencies
 from .local_component_list import parse_component_list
 from .sync import sync_components
+
+try:
+    import truststore
+
+    truststore.inject_into_ssl()
+    debug('Use truststore as a source of trusted certificates')
+except ImportError:
+    debug(
+        'Failed to import truststore, '
+        "the 'certifi' package will be used as a source of trusted certificates"
+    )
 
 CHECK_INTERVAL = 3
 MAX_PROGRESS = 100  # Expected progress is in percent
@@ -121,6 +133,7 @@ class ComponentManager:
         lock_path: t.Optional[str] = None,
         manifest_path: t.Optional[str] = None,
         interface_version: int = 0,
+        sdkconfig_json_file: t.Optional[str] = None,
     ) -> None:
         # Working directory
         self.path = Path(path).resolve()
@@ -152,6 +165,9 @@ class ComponentManager:
         self.default_dist_path = self.path / 'dist'
 
         self.interface_version = interface_version
+
+        if sdkconfig_json_file:
+            KCONFIG_CONTEXT.get().update_from_file(sdkconfig_json_file)
 
     def _get_manifest_dir(self, component: str = 'main', path: t.Optional[str] = None) -> str:
         if component != 'main' and path is not None:
@@ -236,7 +252,7 @@ class ComponentManager:
             )
 
         response = requests.get(example_url['url'], stream=True)  # noqa: S113
-        with tarfile.open(fileobj=response.raw, mode='r|gz') as tar:
+        with tarfile.open(fileobj=response.raw, mode='r|gz') as tar:  # type: ignore
             tar.extractall(project_path)  # noqa: S202
         notice(
             'Example "{}" successfully downloaded to {}'.format(
@@ -343,7 +359,7 @@ class ComponentManager:
         repository: t.Optional[str] = None,
         commit_sha: t.Optional[str] = None,
         repository_path: t.Optional[str] = None,
-    ) -> t.Tuple[str, Manifest]:
+    ) -> t.Tuple[str, t.Optional[str], Manifest]:
         dest_path = self.path / dest_dir if dest_dir else self.default_dist_path
 
         if version == 'git':
@@ -386,24 +402,43 @@ class ComponentManager:
             exclude=exclude_set,
         )
 
-        if manifest.examples:
-            copy_examples_folders(
-                manifest.examples,
-                Path(self.path),
-                dest_temp_dir,
-                use_gitignore=manifest.use_gitignore,
-                include=manifest.include_set,
-                exclude=manifest.exclude_set,
-            )
-
         manifest_manager.dump(str(dest_temp_dir))
 
         get_validated_manifest(manifest_manager, str(dest_temp_dir))
 
         archive_filepath = os.path.join(dest_path, archive_filename(name, manifest.version))
-        notice(f'Saving archive to "{archive_filepath}"')
+        notice(f'Saving component archive to "{archive_filepath}"')
         pack_archive(str(dest_temp_dir), archive_filepath)
-        return archive_filepath, manifest
+
+        if not manifest.examples:
+            return archive_filepath, None, manifest
+
+        check_examples_folder(manifest.examples, Path(self.path))
+
+        # Create a destination directory for examples defined in the manifest
+        examples_dest_dir = dest_path / f'{name}_{manifest.version}_examples'
+        examples_dest_dir.mkdir(parents=True, exist_ok=True)
+
+        for example in manifest.examples:
+            example_path = (self.path / Path(list(example.values())[0])).resolve()
+            # Do not consider examples from the `examples` directory
+            if Path(os.path.relpath(example_path, self.path)).parts[0] == 'examples':
+                continue
+
+            # Create a random directory to avoid conflicts with other examples
+            copy_filtered_directory(
+                example_path.as_posix(),
+                (examples_dest_dir / secrets.token_hex(4) / example_path.name).as_posix(),
+                use_gitignore=manifest.use_gitignore,
+                include=manifest.include_set,
+                exclude=exclude_set,
+            )
+
+        examples_archive_filepath = f'{examples_dest_dir}.tgz'
+        pack_archive(examples_dest_dir.as_posix(), examples_archive_filepath)
+        notice(f'Saving examples archive to "{examples_archive_filepath}"')
+
+        return archive_filepath, examples_archive_filepath, manifest
 
     @general_error_handler
     def delete_version(
@@ -442,13 +477,6 @@ class ComponentManager:
         api_client = get_api_client(namespace=namespace, profile_name=profile_name)
         component_name = '/'.join([api_client.default_namespace, name])
 
-        versions = api_client.versions(component_name=component_name).versions
-
-        if version not in versions:
-            raise VersionNotFoundError(
-                f'Version {version} of the component "{component_name}" is not on the registry'
-            )
-
         api_client.yank_version(
             component_name=component_name,
             component_version=version,
@@ -467,18 +495,20 @@ class ComponentManager:
         if not managed_components_dir.is_dir():
             return
 
-        undeleted_components = []
+        undeleted_components: t.List[ModifiedComponent] = []
         for component_dir in managed_components_dir.glob('*/'):
-            if not (managed_components_dir / component_dir).is_dir():
+            component_full_path = managed_components_dir / component_dir
+
+            if not (component_full_path).is_dir():
                 continue
 
             try:
-                validate_managed_component_hash(str(managed_components_dir / component_dir))
-                shutil.rmtree(str(managed_components_dir / component_dir))
-            except (HashNotEqualError, HashNotSHA256Error):
-                undeleted_components.append(component_dir.name)
-            except HashDoesNotExistError:
-                pass
+                if not ComponentManagerSettings().OVERWRITE_MANAGED_COMPONENTS:
+                    validate_hashfile_eq_hashdir(component_full_path)
+
+                shutil.rmtree(str(component_full_path))
+            except ValidatingHashError as e:
+                undeleted_components.append(ModifiedComponent(component_dir.name, str(e)))
 
         if undeleted_components:
             raise_component_modified_error(str(managed_components_dir), undeleted_components)
@@ -508,6 +538,8 @@ class ComponentManager:
         """
         api_client = get_api_client(namespace=namespace, profile_name=profile_name)
 
+        examples_archive = []
+
         if archive:
             if version:
                 raise FatalError(
@@ -529,7 +561,7 @@ class ComponentManager:
             finally:
                 shutil.rmtree(tempdir)
         else:
-            archive, manifest = self.pack_component(
+            archive, examples_archive, manifest = self.pack_component(
                 name=name,
                 version=version,
                 dest_dir=dest_dir,
@@ -576,10 +608,15 @@ class ComponentManager:
                 memo['progress'] = monitor.bytes_read
 
             if dry_run:
-                job_id = api_client.validate_version(file_path=archive, callback=callback)
+                job_id = api_client.validate_version(
+                    file_path=archive, callback=callback, example_file_path=examples_archive
+                )
             else:
                 job_id = api_client.upload_version(
-                    component_name=component_name, file_path=archive, callback=callback
+                    component_name=component_name,
+                    file_path=archive,
+                    example_file_path=examples_archive,
+                    callback=callback,
                 )
 
             progress_bar.close()
@@ -661,6 +698,7 @@ class ComponentManager:
         managed_components_list_file,
         component_list_file,
         local_components_list_file=None,
+        sdkconfig_json_file=None,
     ):
         """Process all manifests and download all dependencies"""
         # root core components
@@ -715,7 +753,10 @@ class ComponentManager:
 
             project_requirements = ProjectRequirements(manifests)
             downloaded_components = download_project_dependencies(
-                project_requirements, self.lock_path, self.managed_components_path
+                project_requirements,
+                self.lock_path,
+                self.managed_components_path,
+                sdkconfig_json_file,
             )
 
         # Exclude requirements paths

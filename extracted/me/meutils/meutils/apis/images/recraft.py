@@ -17,6 +17,7 @@ from meutils.config_utils.lark_utils import get_next_token_for_polling, aget_spr
 from meutils.decorators.retry import retrying
 
 BASE_URL = "https://api.recraft.ai"
+BASE_URL = "https://recraft.chatfire.cc/apis"
 
 FEISHU_URL = "https://xchatllm.feishu.cn/sheets/GYCHsvI4qhnDPNtI4VPcdw2knEd?sheet=Lrhtf2"
 
@@ -35,7 +36,8 @@ send_message = partial(
 async def get_access_token(token: str):
     headers = {"cookie": token}
 
-    async with httpx.AsyncClient(base_url="https://www.recraft.ai", headers=headers, timeout=60) as client:
+    # https://www.recraft.ai
+    async with httpx.AsyncClient(base_url="https://recraft.chatfire.cc", headers=headers, timeout=60) as client:
         response = await client.get("/api/auth/session")
         response.raise_for_status()
         logger.debug(response.json())
@@ -132,7 +134,9 @@ async def generate(request: RecraftImageRequest, token: Optional[str] = None):
         for image in response.json()["images"]:
             response = await client.get(f"""/image/{image["image_id"]}""", params=params)
             # url = await to_url(response.content)
-            url = await to_url_fal(response.content, content_type="image/png")
+            # url = await to_url_fal(response.content, content_type="image/png")
+            url = await to_url(response.content, content_type="image/png")
+
             images.append(url)
 
         if not images:
@@ -201,7 +205,7 @@ if __name__ == '__main__':
         # prompt='一条猫',
         **data
     )
-    token = None
+    # token = None
     # with timer():
     #     arun(generate(request, token=token))
 

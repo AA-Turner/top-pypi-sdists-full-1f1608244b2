@@ -4,3 +4,8 @@ from .._impl import (
     datasource_TimestampType as TimestampType,
 )
 
+__all__ = [
+    'DatasetFileId',
+    'TimestampType',
+]
+

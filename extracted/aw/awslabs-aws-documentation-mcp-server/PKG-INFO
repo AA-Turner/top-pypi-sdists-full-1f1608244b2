@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: awslabs.aws-documentation-mcp-server
-Version: 1.0.0
+Version: 1.0.1
 Summary: An AWS Labs Model Context Protocol (MCP) server for AWS Documentation
 Project-URL: Homepage, https://awslabs.github.io/mcp/
 Project-URL: Documentation, https://awslabs.github.io/mcp/servers/aws-documentation-mcp-server/
@@ -68,7 +68,7 @@ Here are some ways you can work with MCP across AWS, and we'll be adding support
 }
 ```
 
-or docker after a succesful `docker build -t awslabs/aws-documentation-mcp-server .`:
+or docker after a successful `docker build -t awslabs/aws-documentation-mcp-server .`:
 
 ```json
   {

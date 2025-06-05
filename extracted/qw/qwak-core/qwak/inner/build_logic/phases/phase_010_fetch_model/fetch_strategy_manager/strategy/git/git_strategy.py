@@ -163,9 +163,9 @@ def make_ssh_key_file(git_ssh_key: str) -> str:
 
 
 def add_ssh_file_to_env(ssh_key_file_path: str) -> None:
-    os.environ["GIT_SSH_COMMAND"] = (
-        f"ssh -i {ssh_key_file_path} -o StrictHostKeyChecking=no"
-    )
+    os.environ[
+        "GIT_SSH_COMMAND"
+    ] = f"ssh -i {ssh_key_file_path} -o StrictHostKeyChecking=no"
     os.environ["GIT_SSH"] = f"ssh -i {ssh_key_file_path} -o StrictHostKeyChecking=no"
 
 

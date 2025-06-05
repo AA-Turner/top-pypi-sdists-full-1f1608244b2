@@ -9,6 +9,7 @@ import hashlib
 import os
 import tarfile
 import threading
+
 import boto3
 
 from .._utils.docs_ignore import docs_ignore
@@ -42,21 +43,6 @@ class ObjectStorage:
             aws_secret_access_key=aws_secret_access_key,
             aws_session_token=aws_session_token,
         )
-
-    def open_client(self):
-        try:
-            self._client_ctx = self.s3_client
-            self.s3_client = self._client_ctx.__enter__()
-        except Exception as e:
-            raise Exception(f"Error opening S3 client: {e}")
-
-    def close_client(self):
-        try:
-            self._client_ctx.__exit__(None, None, None)
-            self.s3 = None
-            self._client_ctx = None
-        except Exception as e:
-            raise Exception(f"Error closing S3 client: {e}")
 
     def upload(self, path, organization_id, archive_base_path=None) -> str:
         """Uploads a file to the object storage service.
@@ -184,4 +170,3 @@ class ObjectStorage:
 
         read_file.close()
         thread.join()
-

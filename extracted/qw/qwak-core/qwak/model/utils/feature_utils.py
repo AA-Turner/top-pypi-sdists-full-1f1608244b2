@@ -30,19 +30,15 @@ def validate_and_sanitize_features_name(
     ecosystem_utils = EcosystemUtils()
     current_env_name = ecosystem_utils.get_current_environment_name()
     return [
-        (
-            cast(
-                FeatureStoreInput,
-                dataclasses.replace(
-                    feature,
-                    name=validate_and_sanitize_feature_name(
-                        feature.name, current_env_name
-                    ),
-                ),
-            )
-            if isinstance(feature, FeatureStoreInput)
-            else feature
+        cast(
+            FeatureStoreInput,
+            dataclasses.replace(
+                feature,
+                name=validate_and_sanitize_feature_name(feature.name, current_env_name),
+            ),
         )
+        if isinstance(feature, FeatureStoreInput)
+        else feature
         for feature in features
     ]
 

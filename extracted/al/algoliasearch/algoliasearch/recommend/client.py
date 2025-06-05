@@ -27,25 +27,15 @@ from algoliasearch.http.transporter import Transporter
 from algoliasearch.http.transporter_sync import TransporterSync
 from algoliasearch.http.verb import Verb
 from algoliasearch.recommend.config import RecommendConfig
-from algoliasearch.recommend.models.deleted_at_response import DeletedAtResponse
-from algoliasearch.recommend.models.get_recommend_task_response import (
-    GetRecommendTaskResponse,
-)
-from algoliasearch.recommend.models.get_recommendations_params import (
+from algoliasearch.recommend.models import (
+    DeletedAtResponse,
     GetRecommendationsParams,
-)
-from algoliasearch.recommend.models.get_recommendations_response import (
     GetRecommendationsResponse,
-)
-from algoliasearch.recommend.models.recommend_models import RecommendModels
-from algoliasearch.recommend.models.recommend_rule import RecommendRule
-from algoliasearch.recommend.models.recommend_updated_at_response import (
+    GetRecommendTaskResponse,
+    RecommendModels,
+    RecommendRule,
     RecommendUpdatedAtResponse,
-)
-from algoliasearch.recommend.models.search_recommend_rules_params import (
     SearchRecommendRulesParams,
-)
-from algoliasearch.recommend.models.search_recommend_rules_response import (
     SearchRecommendRulesResponse,
 )
 
@@ -83,9 +73,9 @@ class RecommendClient:
             config = RecommendConfig(
                 transporter.config.app_id, transporter.config.api_key
             )
-
-        if config is None:
+        elif config is None:
             config = RecommendConfig(app_id, api_key)
+
         self._config = config
         self._request_options = RequestOptions(config)
 
@@ -1068,9 +1058,9 @@ class RecommendClientSync:
             config = RecommendConfig(
                 transporter.config.app_id, transporter.config.api_key
             )
-
-        if config is None:
+        elif config is None:
             config = RecommendConfig(app_id, api_key)
+
         self._config = config
         self._request_options = RequestOptions(config)
 

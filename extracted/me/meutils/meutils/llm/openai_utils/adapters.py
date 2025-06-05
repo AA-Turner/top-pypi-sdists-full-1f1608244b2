@@ -14,17 +14,22 @@ from meutils.schemas.openai_types import CompletionRequest
 from meutils.schemas.image_types import ImageRequest
 from meutils.llm.openai_utils import chat_completion, chat_completion_chunk, create_chat_completion_chunk
 
+async def stream_to_nostream(
+        request: CompletionRequest,
+):
+    pass
 
 async def chat_for_image(
         generate: Callable,
         request: CompletionRequest,
 ):
-    if request.last_user_content.startswith(  # 跳过nextchat
+    if not request.stream or request.last_user_content.startswith(  # 跳过nextchat
             (
                     "hi",
                     "使用四到五个字直接返回这句话的简要主题",
                     "简要总结一下对话内容，用作后续的上下文提示 prompt，控制在 200 字以内"
             )):
+        chat_completion.choices[0].message.content = "请设置`stream=True`"
         return chat_completion
 
     prompt = request.last_user_content
@@ -51,3 +56,14 @@ async def chat_for_image(
 
     chunks = create_chat_completion_chunk(gen(), redirect_model=request.model)
     return chunks
+
+
+if __name__ == '__main__':
+    request = CompletionRequest(
+        model="deepseek-r1-Distill-Qwen-1.5B",
+        messages=[
+            {"role": "user", "content": "``hi"}
+        ],
+        stream=False,
+    )
+    arun(chat_for_image(None, request))

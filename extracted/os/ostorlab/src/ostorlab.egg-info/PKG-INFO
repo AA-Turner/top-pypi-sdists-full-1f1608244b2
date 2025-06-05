@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ostorlab
-Version: 1.6.4
+Version: 1.6.5
 Summary: OXO Scanner Orchestrator for the Modern Age.
 Home-page: https://github.com/Ostorlab/ostorlab
 Author: Ostorlab
@@ -41,6 +41,7 @@ Requires-Dist: redis; extra == "agent"
 Requires-Dist: google-cloud-logging; extra == "agent"
 Requires-Dist: opentelemetry-distro; extra == "agent"
 Requires-Dist: opentelemetry-exporter-jaeger; extra == "agent"
+Requires-Dist: deprecated; extra == "agent"
 Requires-Dist: opentelemetry-exporter-gcp-trace; extra == "agent"
 Provides-Extra: google-cloud-logging
 Requires-Dist: google-cloud-logging; extra == "google-cloud-logging"

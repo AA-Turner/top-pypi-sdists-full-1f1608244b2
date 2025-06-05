@@ -22,75 +22,92 @@ class cli:
         self.venv_manager = self.venv_mangt(self)
 
         self.parser = argparse.ArgumentParser(
-            add_help=False
+            add_help=False,
+            description=f"{self.visuals.bold}{self.visuals.DK_ORANGE} BCFOX Library \n You can use the arguments in any order you want.\n\n Most flags are independent, you can use it alone or combine them in a single command interacting with each other when applicable.{self.visuals.RESET}",
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter
+            # formatter_class=argparse.RawTextHelpFormatter  # Formats the 'help' text manually
         )
 
         self._setup_arguments()
 
     def _setup_arguments(self):
         """Configure all CLI arguments"""
-        venv_group = self.parser.add_argument_group('virtual environment options')
+        venv_group = self.parser.add_argument_group(f'{self.visuals.ORANGE}{self.visuals.bold} Virtual Environment Options{self.visuals.RESET}')
         venv_group.add_argument(
             '-v', '--venv',
             action='store_true',
-            help="Creates a new virtual environment with all dependencies installed"
+            help="Creates a new virtual environment with all dependencies installed\n"
         )
 
         venv_group.add_argument(
             '-vc', '--venv-clean',
             action='store_true',
-            help="Creates a virtual environment without dependencies"
+            help="Creates a virtual environment without dependencies\n"
         )
 
         venv_group.add_argument(
             '-rv', '--recreate-venv',
             action='store_true',
-            help="Recreates venv (without dependencies)"
+            help="Recreates venv (without dependencies)\n"
         )
 
         venv_group.add_argument(
             '-dv', '--delete-venv',
             action='store_true',
-            help="Deletes venv"
+            help="Deletes venv\n"
         )
-        exe_group = self.parser.add_argument_group('.exe options')
+
+
+        exe_group = self.parser.add_argument_group(f'{self.visuals.ORANGE}{self.visuals.bold} Exe options{self.visuals.RESET}')
         exe_group.add_argument(
             '-e', '--exe',
             action='store_true',
-            help="Creates a .exe of the file"
+            help="Creates a .exe of the file\n"
         )
 
         exe_group.add_argument(
             '-nc', '--no-console',
             action='store_true',
-            help="The exe no open the console when started"
+            help="The exe don't open the console when started\n"
+        )
+
+        exe_group.add_argument(
+            '-z', '--zip',
+            action='store_true',
+            help="Make a zip of the 'dist' and rename it to the name of the file\n"
         )
 
         exe_group.add_argument(
             '-ic', '--icon',
             type=str,
             nargs='+',
-            help="Change the exe icon (put .ico path)"
+            help="Change the exe icon (put .ico path)\n"
         )
 
         exe_group.add_argument(
             '-ad', '--add-data',
             type=str,
             nargs='+',
-            help="Add data(s) to .exe (similar of pyinstaller)"
+            help="Add data(s) to .exe (similar of pyinstaller)\n"
         )
 
-        file_group = self.parser.add_argument_group('file options')
+        file_group = self.parser.add_argument_group(f'{self.visuals.ORANGE}{self.visuals.bold} File Options{self.visuals.RESET}')
         file_group.add_argument(
             '-fi', '--find-imports',
             action='store_true',
-            help="Finds all imports necessary for the lib to work"
+            help="Finds all imports necessary for the lib to work\n"
+        )
+
+        file_group.add_argument(
+            '-vi', '--verify-imports',
+            action='store_true',
+            help="Shows imports that were not installed automatically\n"
         )
 
         file_group.add_argument(
             '-i', '--install-imports',
             action='store_true',
-            help="Installs all imports necessary for the lib to work"
+            help="Installs all imports necessary for the lib to work\n"
         )
 
         self.parser.add_argument(
@@ -104,7 +121,7 @@ class cli:
             '-h', '--help',
             action='help',
             default=argparse.SUPPRESS,
-            help="If you need more help contact guilherme tmj"
+            help="If you need more help contact guilherme"
         )
 
     def main(self):
@@ -125,7 +142,7 @@ class cli:
             if not os.path.exists(os.path.join(self.current_dir, self.args.icon[0])):
                 raise ValueError(f"The path '{self.args.icon[0]}' not exists")
 
-
+        # Venv
         if self.args.venv:
             self.venv_manager.main()
         elif self.args.venv_clean:
@@ -135,13 +152,30 @@ class cli:
         elif self.args.delete_venv:
             self.venv_manager.delete_venv()
 
+        # Imports
         if self.args.find_imports:
             self.find_imports.main()
         elif self.args.install_imports:
             self.venv_manager.install_imports()
 
+        # EXEC
         elif self.args.exe:
             self.exec_gen.main()
+
+        if self.args.zip:
+            self.exec_gen.zip_file()
+
+        # LOG - Verify imports
+        if self.args.verify_imports:
+            if self.args.find_imports \
+            or self.args.install_imports \
+            or self.args.venv \
+            or self.args.recreate_venv \
+            or self.args.exe:
+                self.find_imports.verify_imports()
+            else:
+                print(f"{self.visuals.bold}{self.visuals.RD} > Error: You need to use one function that installs imports before verifying them.{self.visuals.RESET}")
+                print("\033[J", end='', flush=True)
 
         self.clean_terminal()
 
@@ -161,6 +195,7 @@ class cli:
 
             self.DK_ORANGE = "\033[38;5;130m"
             self.ORANGE = "\033[38;5;214m"
+            self.YL = "\033[38;5;226m"
             self.RD = "\033[38;5;196m"
             self.GR = "\033[38;5;34m"
             self.RESET = "\033[0m"
@@ -192,6 +227,53 @@ class cli:
             time.sleep(delay)
             return f"    \033[1m{self.rgb_text(text, r, g, b)}\033[0m"
 
+        class animation:
+            def __init__(self, self_cli):
+                self.cli = self_cli
+                self.text = None
+                self.braille_spinner = [
+                    '\u280B',
+                    '\u2809',
+                    '\u2839',
+                    '\u2838',
+                    '\u283C',
+                    '\u2834',
+                    '\u2826',
+                    '\u2827',
+                    '\u2807',
+                    '\u280F'
+                ]
+
+                self.retro_computer_style = [
+                '\u23BA',  # ⎺
+                '\u23BB',  # ⎻
+                '\u23BC',  # ⎼
+                '\u23BD',  # ⎽
+                ]
+
+                self.footer_thread = None
+                self.process_finished = False
+
+            def print_footer(self):
+                s = 0
+                n = 0
+                while not self.process_finished:
+                    if s % 10 == 0: n += 1
+                    if n == len(self.retro_computer_style): n = 0
+
+                    sys.stdout.write(f"\r \033[F\r\033[K\033[E {self.cli.visuals.animate_rgb_text(f"  {self.cli.visuals.bold} {self.retro_computer_style[n]} {self.text} {self.retro_computer_style[n]} {self.cli.visuals.RESET}")} \033[0J\n\033[F")
+                    sys.stdout.flush()
+                    s += 1
+
+            def start(self, text):
+                self.text = text
+                self.footer_thread = threading.Thread(target=self.print_footer)
+                self.footer_thread.start()
+
+            def finish(self):
+                self.process_finished = True
+                self.footer_thread.join()
+
     class exec_gen_:
         def __init__(self, self_cli):
             self.cli = self_cli
@@ -200,6 +282,7 @@ class cli:
             self.error = 0
             self.descerror = ""
             self.visuals = self.cli.visuals
+            self.ultimate_error = None
 
         def preparations(self):
             self.current_dir = os.getcwd()
@@ -291,28 +374,63 @@ class cli:
             rows = os.get_terminal_size().lines
             print(f"\033[F\033[K\033[f\033[K\033[f\033[K{self.visuals.bold}{self.visuals.GR}\033[{rows};1H > Executável gerado com sucesso!\n{self.visuals.RESET} \033[0J")
 
-        def rename_dist(self):
-            name_dir = self.current_dir.split("\\")
-            print(name_dir)
+        def zip_file(self):
 
-            name_dir = [part for part in name_dir if part]
+            animation = self.visuals.animation(self.cli)
+            animation.start(text='Creating zip file')
+            zip_log = False
 
-            target_name = name_dir[-1]
+            try:
+                name_dir = self.current_dir.split("\\")
+                print(name_dir)
 
-            dist_path = os.path.join(self.current_dir, "dist")
-            new_path = os.path.join(self.current_dir, target_name)
+                name_dir = [part for part in name_dir if part]
 
-            if os.path.exists(dist_path):
-                os.rename(dist_path, new_path)
-                print(f"Renamed 'dist' to '{target_name}'")
-            else:
-                print("Error: 'dist' directory not found!")
+                target_name = name_dir[-1]
+
+                dist_path = os.path.join(self.current_dir, "dist")
+                new_path = os.path.join(self.current_dir, target_name)
+
+                if os.path.exists(dist_path):
+                    os.rename(dist_path, new_path)
+                    print(f"Renamed 'dist' to '{target_name}'")
+                else:
+                    print("Error: 'dist' directory not found!")
+
+                zip_path = shutil.make_archive(new_path, 'zip', new_path)
+
+                # Espera o sistema liberar o zip
+                wait = 0
+                while True:
+                    try:
+                        with open(zip_path, 'rb'):
+                            break
+                    except (PermissionError, OSError):
+                        time.sleep(0.1)
+                        wait += 1
+                        if wait >= 600:
+                            raise TimeoutError("Timeout while waiting for zip file to be accessible.")
+
+                shutil.rmtree(new_path)
+                zip_log = True
+
+            except Exception as e:
+                self.ultimate_error = e
+
+            finally:
+                animation.finish()
+
+                if zip_log:
+                    print(f"{self.visuals.bold}{self.visuals.GR} > Zip file created successfully {self.visuals.RESET}\n")
+                else:
+                    print(f"{self.visuals.bold}{self.visuals.RD} > Error creating zip file:\n")
+                    print(f"{self.ultimate_error}{self.visuals.RESET}")
+                    sys.exit(1)
 
         def main(self):
             script = self.cli.exec_gen
             script.preparations()
             script.run_pyinstaller()
-            # script.rename_dist()
 
     class find_import:
         def __init__(self, self_cli):
@@ -323,6 +441,7 @@ class cli:
             self.descerror = ""
 
             self.imports = None
+            self.error_libs = []
 
         def hsl_to_rgb(self, h, s, l):
             h = h % 360
@@ -357,6 +476,12 @@ class cli:
                 print(f"\033[{num_lines}A\033[0J {DK_ORANGE}---> \033[1m{self.rgb_text(text, r, g, b)}\033[0m (CTRL + C)", end="\r")
                 hue = (hue + 1) % 360
                 time.sleep(delay)
+
+        def verify_imports(self):
+            if self.error_libs:
+                print(f"{self.visuals.bold}{self.visuals.YL} WARNING: \n The libraries below can't be installed. This is not necessarily an error, just an alert.{self.visuals.RESET}")
+                for lib in self.error_libs:
+                    print(f" {self.visuals.bold}{self.visuals.YL}   - {lib} {self.visuals.RESET}")
 
         def main(self, return_=False):
             self.target_file = self.cli.file  #FIX
@@ -415,6 +540,14 @@ class cli:
                     if isinstance(import_name, list):
                         self.imports.extend(import_name)
                     else: self.imports.append(import_name)
+
+            IMPORT_PATTERN = re.compile(r'^(?:from|import)\s+([A-Za-z0-9_\.]+)', re.MULTILINE)
+
+            # Encontra outras libs por regex
+            for match in IMPORT_PATTERN.finditer(file_content):
+                módulo = match.group(1).split('.')[0]  # pega o pacote raiz
+                if módulo not in self.imports:
+                    self.imports.append(módulo)
 
             self.imports = list(set(self.imports))
             import pyperclip
@@ -605,31 +738,38 @@ class cli:
                 log_animation.start()
 
                 process_finished = False
-                try:
-                    for lib in librarys:
-                            result = subprocess.run(
-                                [pip_path, 'install', lib],
-                                check=True,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE,
-                                text=True
-                            )
+                for lib in librarys:
+                    result = subprocess.run(
+                        [pip_path, 'install', lib],
+                        # check=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        text=True
+                    )
 
-                            if result.stdout:
-                                print(f"\033[0J{result.stdout.strip()}\033[0J")
+                    if result.returncode != 0:
+                        if isinstance(lib, list):
+                            self.cli.find_imports.error_libs.extend(lib)
+                        else: self.cli.find_imports.error_libs.append(lib)
+                        continue
 
-                except subprocess.CalledProcessError as e:
-                    print(f"{self.visuals.bold}{self.visuals.RD} Failed to install {lib}: {e.stderr.strip()}{self.visuals.RESET}", end="\r")
-                    return False
-                finally:
-                    process_finished = True
-                    log_animation.join()
-                print(f" {self.visuals.bold}{self.visuals.GR} > All packges installed with sucessfully {self.visuals.RESET}\n\n")
+
+                    elif result.stdout:
+                        print(f"\033[0J{result.stdout.strip()}\033[0J")
+
+                process_finished = True
+                log_animation.join()
+                print(f" {self.visuals.bold}{self.visuals.GR} > All packages installed successfully {self.visuals.RESET}\n\n")
 
             except Exception as e:
                 process_finished = True
                 self.descerror = e
                 self.error = 1
+                print(e)
+                print(e)
+                print(e)
+                print(e)
+                print(e)
                 sys.exit()
 
         def recreate_venv(self):

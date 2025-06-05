@@ -1,13 +1,11 @@
 import angreal
 import os
 import subprocess
-import sys
 import tempfile
 from pathlib import Path
+from angreal.integrations.venv import VirtualEnv
 
-venv_path = os.path.join(angreal.get_root(),'..','.venv')
-
-cwd = os.path.join(angreal.get_root(),'..')
+project_root = Path(angreal.get_root()).parent
 
 test = angreal.command_group(name="test", about="commands for testing the"
                              " application and library")
@@ -36,15 +34,41 @@ def all_tests():
 @angreal.command(name="python", about="run pytest unit tests")
 def python_tests():
     """
-    Run the Python unit tests
+    Run the Python unit tests in isolated environment
     """
-    result = subprocess.run(
-        [sys.executable, "-m", "pip", "install", "."], cwd=cwd
-    )
-    if result.returncode != 0:
-        exit(result.returncode)
+    with VirtualEnv("angreal-pytest-venv", now=True) as venv:
+        # Ensure pip is available (platform-specific paths)
+        import sys
+        if sys.platform == "win32":
+            python_exe = venv.path / "Scripts" / "python.exe"
+            pip_exe = venv.path / "Scripts" / "pip.exe"
+        else:
+            python_exe = venv.path / "bin" / "python"
+            pip_exe = venv.path / "bin" / "pip3"
 
-    subprocess.run([sys.executable, "-m", "pytest", "-svv"], cwd=cwd)
+        # Install pip and dependencies
+        subprocess.run(
+            [str(python_exe), "-m", "ensurepip"],
+            check=True, capture_output=True
+        )
+        subprocess.run(
+            [str(pip_exe), "install", "maturin", "pytest"],
+            check=True, capture_output=True
+        )
+
+        # Build and install angreal in development mode
+        subprocess.run(
+            [str(pip_exe), "install", "-e", str(project_root)],
+            check=True
+        )
+
+        # Run pytest
+        result = subprocess.run(
+            [str(venv.python_executable), "-m", "pytest", "-svv"],
+            cwd=str(project_root)
+        )
+        if result.returncode != 0:
+            exit(result.returncode)
 
 @test()
 @angreal.command(name="rust", about="run cargo unit and integration tests")
@@ -87,21 +111,23 @@ def integration_rust_tests():
     """
     Run the Rust integration tests
     """
-    subprocess.run(
-        [
-            "cargo test --test integration -v -- --nocapture --test-threads=1",
-        ], cwd=cwd, shell=True
+    result = subprocess.run(
+        "cargo test --test integration -v -- --nocapture --test-threads=1",
+        cwd=str(project_root), shell=True
     )
+    if result.returncode != 0:
+        exit(result.returncode)
 
 def unit_rust_tests():
     """
     Run the Rust unit tests
     """
-    subprocess.run(
-        [
-            "cargo test --lib -v -- --nocapture --test-threads=1",
-        ], cwd=cwd, shell=True
+    result = subprocess.run(
+        "cargo test --lib -v -- --nocapture --test-threads=1",
+        cwd=str(project_root), shell=True
     )
+    if result.returncode != 0:
+        exit(result.returncode)
 
 
 @test()
@@ -148,7 +174,7 @@ def test_bash_completion():
     # Use the angreal command directly
     result = subprocess.run(
         ["angreal", "_completion", "bash"],
-        cwd=cwd,
+        cwd=str(project_root),
         capture_output=True,
         text=True,
         env=env
@@ -182,7 +208,7 @@ def test_zsh_completion():
     # Use the angreal command directly
     result = subprocess.run(
         ["angreal", "_completion", "zsh"],
-        cwd=cwd,
+        cwd=str(project_root),
         capture_output=True,
         text=True,
         env=env
@@ -215,7 +241,7 @@ def test_completion_generation():
 
     result = subprocess.run(
         ["angreal", "_complete", "init"],
-        cwd=cwd,
+        cwd=str(project_root),
         capture_output=True,
         text=True,
         env=env
@@ -232,7 +258,7 @@ def test_completion_generation():
     # Test completion for project tasks (when in angreal project)
     result = subprocess.run(
         ["angreal", "_complete"],
-        cwd=cwd,
+        cwd=str(project_root),
         capture_output=True,
         text=True,
         env=env
@@ -277,7 +303,7 @@ def test_template_discovery():
 
             result = subprocess.run(
                 ["angreal", "_complete", "init"],
-                cwd=cwd,
+                cwd=str(project_root),
                 capture_output=True,
                 text=True,
                 env=env

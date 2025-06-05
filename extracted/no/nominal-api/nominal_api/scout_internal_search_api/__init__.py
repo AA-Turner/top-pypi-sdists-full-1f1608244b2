@@ -11,3 +11,15 @@ from .._impl import (
     scout_internal_search_api_TimestampField as TimestampField,
 )
 
+__all__ = [
+    'BooleanField',
+    'DateTimeField',
+    'LongField',
+    'Operator',
+    'SearchQuery',
+    'SearchQueryVisitor',
+    'StringArrayField',
+    'StringField',
+    'TimestampField',
+]
+

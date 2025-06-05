@@ -15,7 +15,7 @@ from contrast import AGENT_CURR_WORKING_DIR
 
 from contrast.agent import scope
 from contrast.utils.decorators import fail_quietly
-from contrast.agent.framework import Framework, Server
+from contrast.agent.framework import _ServerTypeFramework, Server
 from contrast.agent.reaction_processor import ReactionProcessor
 from contrast.configuration.config_option import (
     CONTRAST_UI_SRC,
@@ -153,7 +153,7 @@ def _apply_application_settings(
 
 class Settings(Singleton):
     @scope.contrast_scope()
-    def init(self, framework_name=None):
+    def init(self, framework_name: Optional[str] = None):
         """
         Agent settings for the entire lifetime of the agent.
 
@@ -175,7 +175,6 @@ class Settings(Singleton):
         self.heartbeat = None
         self.server_settings_thread = None
         self.application_settings_thread = None
-        self.framework = Framework(framework_name)
         self.server = Server()
         self.sys_module_count = 0
 
@@ -233,6 +232,11 @@ class Settings(Singleton):
 
         # Initialize config
         self.config = AgentConfig()
+
+        self.server_type = (
+            self.config["server.type"]
+            or _ServerTypeFramework(framework_name).name_lower
+        )
 
         self.agent_runtime_window = now_ms()
 
@@ -438,17 +442,6 @@ class Settings(Singleton):
             )
 
         return self.server_path
-
-    def get_server_type(self):
-        """
-        Web Framework of the Application either defined in common config or via discovery.
-        """
-        if self.server_type is None:
-            self.server_type = (
-                self.config.get("server.type") or self.framework.name_lower
-            )
-
-        return self.server_type
 
     def is_assess_rule_disabled(self, rule_id):
         """

@@ -23,3 +23,27 @@ from .._impl import (
     scout_versioning_api_TagRid as TagRid,
 )
 
+__all__ = [
+    'Branch',
+    'BranchAndCommit',
+    'BranchName',
+    'BranchRid',
+    'Commit',
+    'CommitHistory',
+    'CommitId',
+    'CommitRequest',
+    'CompactCommitsRequest',
+    'CompactionStrategy',
+    'CompactionStrategyVisitor',
+    'CreateBranchRequest',
+    'CreateTagRequest',
+    'GetLeastCommonAncestorRequest',
+    'InitResourceVersioningRequest',
+    'ResourceAndBranchName',
+    'ResourceAndCommitId',
+    'SaveWorkingStateRequest',
+    'Tag',
+    'TagName',
+    'TagRid',
+]
+

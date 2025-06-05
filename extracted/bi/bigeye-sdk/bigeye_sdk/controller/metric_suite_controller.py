@@ -40,7 +40,7 @@ from bigeye_sdk.generated.com.bigeye.models.generated import (
     MetricDefinition,
     FieldType,
     NamedSchedule,
-    User, PredefinedMetricName,
+    PredefinedMetricName,
 )
 from bigeye_sdk.log import get_logger
 from bigeye_sdk.model.big_config import (
@@ -259,7 +259,6 @@ class MetricSuiteController:
                         if t.name.lower() == m.metric_type.template_name.lower()
                     ][0]
                     self.templates_from_bigeye[template.name.lower()] = template.id
-
 
                 m.metric_type.template_id = self.templates_from_bigeye[m.metric_type.template_name.lower()]
             except IndexError:
@@ -789,6 +788,7 @@ class MetricSuiteController:
                 source_id=source_id,
                 definitions=definitions,
                 auto_apply_on_indexing=bigconfig.auto_apply_on_indexing,
+                namespace=bigconfig.namespace
             )
             for source_id, definitions in cmds.items()
         }
@@ -807,6 +807,7 @@ class MetricSuiteController:
                     source_id=source_id,
                     row_creation_cohorts=rcts,
                     auto_apply_on_indexing=bigconfig.auto_apply_on_indexing,
+                    namespace=bigconfig.namespace
                 )
             )
 
@@ -818,6 +819,7 @@ class MetricSuiteController:
             purge_all_sources: bool = False,
             output_path: str = Path.cwd(),
             apply: bool = False,
+            namespace: Optional[str] = None
     ):
         """
         Executes a purge of metrics deployed by MetricSuite on named sources or for all sources.
@@ -826,16 +828,18 @@ class MetricSuiteController:
             purge_all_sources: if true will purge all sources.
             output_path: path to dump the reports.  If no path is given the current working directory will be used.
             apply: If true then Big Config will be applied to the workspace.  If false then a plan will be generated.
+            namespace: The namespace of the bigconfig deployment
         """
         try:
             self.client.purge_metric_suites(
                 source_names=purge_source_names,
                 purge_all_sources=purge_all_sources,
                 apply=apply,
+                namespace=namespace
             )
             process_stage = ProcessStage.APPLY if apply else ProcessStage.PLAN
             return process_reports(
-                output_path=output_path, strict_mode=False, process_stage=process_stage
+                output_path=output_path, strict_mode=False, process_stage=process_stage, namespace=namespace
             )
         except NoSourcesFoundException as e:
             sys.exit(e.message)
@@ -845,10 +849,10 @@ class MetricSuiteController:
             input_path: List[str] = (Path.cwd()),
             output_path: str = Path.cwd(),
             apply: bool = False,
-            no_queue: bool = False,
             recursive: bool = False,
             strict_mode: bool = False,
             auto_approve: bool = False,
+            namespace: Optional[str] = None
     ):
         """
         Executes an Apply or Plan for a Big Config.
@@ -856,10 +860,10 @@ class MetricSuiteController:
             input_path: path of source files.  If no path is given the current working directory will be used.
             output_path: path to dump the reports.  If no path is given the current working directory will be used.
             apply: If true, then Big Config will be applied to the workspace.  If false then a plan will be generated.
-            no_queue: If true, the bigconfig will be run without queuing
             recursive: If true, search for files recursively
             strict_mode: If true errors from the API raise an exception.
             auto_approve: If true, user will not be prompted to approve deployment
+            namespace: The namespace of the bigconfig deployment
         Returns: None
 
         """
@@ -867,7 +871,7 @@ class MetricSuiteController:
             input_paths=input_path, recursive=recursive
         )
 
-        bigconfig: BigConfig = combine_bigconfigs(files)
+        bigconfig: BigConfig = combine_bigconfigs(bigconfigs=files, namespace=namespace)
 
         if get_validation_error_cnt():
             """Processing validation errors if any exist and throw exception."""
@@ -913,7 +917,7 @@ class MetricSuiteController:
                 output_path=output_path,
                 strict_mode=strict_mode,
                 apply=False,
-                no_queue=no_queue,
+                namespace=bigconfig.namespace
             )
             approved = typer.confirm(
                 typer.style(
@@ -926,7 +930,7 @@ class MetricSuiteController:
                     output_path=output_path,
                     strict_mode=strict_mode,
                     apply=apply,
-                    no_queue=no_queue,
+                    namespace=bigconfig.namespace
                 )
         else:
             return self._process_metric_suites(
@@ -934,7 +938,7 @@ class MetricSuiteController:
                 output_path=output_path,
                 strict_mode=strict_mode,
                 apply=apply,
-                no_queue=no_queue,
+                namespace=bigconfig.namespace
             )
 
     def _process_metric_suites(
@@ -943,7 +947,7 @@ class MetricSuiteController:
             output_path: str = Path.cwd(),
             strict_mode: bool = False,
             apply: bool = False,
-            no_queue: bool = False,
+            namespace: Optional[str] = None
     ):
         """Send metric suites to correct endpoints and process reports."""
         run_metric_on_save = False
@@ -982,10 +986,11 @@ class MetricSuiteController:
             strict_mode=strict_mode,
             process_stage=process_stage,
             run_metric_on_save=run_metric_on_save,
+            namespace=namespace
         )
 
 
-def combine_bigconfigs(bigconfigs: List[BigConfig]) -> BigConfig:
+def combine_bigconfigs(bigconfigs: List[BigConfig], namespace: Optional[str] = None) -> BigConfig:
     to_return: BigConfig = BigConfig(
         type="BIGCONFIG_FILE",
         tag_definitions=[],
@@ -994,21 +999,42 @@ def combine_bigconfigs(bigconfigs: List[BigConfig]) -> BigConfig:
         tag_deployments=[],
         table_deployments=[],
     )
-    auto_apply: bool = bigconfigs[-1].auto_apply_on_indexing
+    from statistics import mode
+    auto_apply_to_check: bool = mode([bc.auto_apply_on_indexing for bc in bigconfigs])
+    namespace_to_check: Optional[str] = mode([bc.namespace for bc in bigconfigs])
+    namespaces_match = True
+
+    if namespace:
+        for bc in bigconfigs:
+            if bc.namespace != namespace and bc.namespace is not None:
+                namespaces_match = False
+        if not namespaces_match:
+            raise BigConfigValidationException(
+                f"The namespace from the CLI does not match the namespace defined in the file(s). "
+                f"Remove the argument from the command line or the namespace parameter from the file(s)."
+            )
+
+        if not namespace_to_check:
+            namespace_to_check = namespace
+
     for bc in bigconfigs:
-        if auto_apply != bc.auto_apply_on_indexing:
-            "registering validation errors when auto_apply doesn't match across bigconfigs"
-            errlns = [
-                f"auto_apply_on_indexing: {auto_apply}\n",
-                f"auto_apply_on_indexing: {bc.auto_apply_on_indexing}\n",
-            ]
+        if auto_apply_to_check != bc.auto_apply_on_indexing:
             BigConfig.register_validation_error(
-                error_lines=errlns,
+                error_lines=[f"auto_apply_on_indexing: {bc.auto_apply_on_indexing}".lower()],
                 error_message=MISMATCHED_ATTRIBUTE_ACROSS_MULTIPLE_FILES.format(
                     attribute="auto_apply_on_indexing"
                 ),
             )
-        to_return.auto_apply_on_indexing = auto_apply
+
+        if namespace_to_check != bc.namespace:
+            if bc.namespace is not None or namespace is None:
+                BigConfig.register_validation_error(
+                    error_lines=[f"namespace: {bc.namespace}"],
+                    error_message=MISMATCHED_ATTRIBUTE_ACROSS_MULTIPLE_FILES.format(
+                        attribute="namespace"
+                    ),
+                )
+        to_return.auto_apply_on_indexing = auto_apply_to_check
         to_return.tag_definitions.extend(bc.tag_definitions)
         if bc.row_creation_times:
             rct = bc.row_creation_times
@@ -1020,6 +1046,8 @@ def combine_bigconfigs(bigconfigs: List[BigConfig]) -> BigConfig:
         to_return.tag_deployments.extend(bc.tag_deployments)
         to_return.table_deployments.extend(bc.table_deployments)
 
+    if namespace_to_check:
+        to_return.namespace = namespace_to_check
     to_return.build_tag_ix(to_return.tag_definitions)
     to_return.build_saved_metric_ix(to_return.saved_metric_definitions)
 

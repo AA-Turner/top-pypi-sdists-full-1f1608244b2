@@ -12,8 +12,11 @@ from django_components.util.misc import gen_id
 
 class ProvideNode(BaseNode):
     """
-    The "provider" part of the [provide / inject feature](../../concepts/advanced/provide_inject).
+    The [`{% provide %}`](../template_tags#provide) tag is part of the "provider" part of
+    the [provide / inject feature](../../concepts/advanced/provide_inject).
+
     Pass kwargs to this tag to define the provider's data.
+
     Any components defined within the `{% provide %}..{% endprovide %}` tags will be able to access this data
     with [`Component.inject()`](../api#django_components.Component.inject).
 
@@ -30,7 +33,7 @@ class ProvideNode(BaseNode):
 
     Provide the "user_data" in parent component:
 
-    ```python
+    ```djc_py
     @register("parent")
     class Parent(Component):
         template = \"\"\"
@@ -41,16 +44,16 @@ class ProvideNode(BaseNode):
           </div>
         \"\"\"
 
-        def get_context_data(self, user: User):
+        def get_template_data(self, args, kwargs, slots, context):
             return {
-                "user": user,
+                "user": kwargs["user"],
             }
     ```
 
     Since the "child" component is used within the `{% provide %} / {% endprovide %}` tags,
     we can request the "user_data" using `Component.inject("user_data")`:
 
-    ```python
+    ```djc_py
     @register("child")
     class Child(Component):
         template = \"\"\"
@@ -59,14 +62,14 @@ class ProvideNode(BaseNode):
           </div>
         \"\"\"
 
-        def get_context_data(self):
+        def get_template_data(self, args, kwargs, slots, context):
             user = self.inject("user_data").user
             return {
                 "user": user,
             }
     ```
 
-    Notice that the keys defined on the `{% provide %}` tag are then accessed as attributes
+    Notice that the keys defined on the [`{% provide %}`](../template_tags#provide) tag are then accessed as attributes
     when accessing them with [`Component.inject()`](../api#django_components.Component.inject).
 
     ✅ Do this
@@ -138,7 +141,7 @@ def set_provided_context_var(
 ) -> str:
     """
     'Provide' given data under given key. In other words, this data can be retrieved
-    using `self.inject(key)` inside of `get_context_data()` method of components that
+    using `self.inject(key)` inside of `get_template_data()` method of components that
     are nested inside the `{% provide %}` tag.
     """
     # NOTE: We raise TemplateSyntaxError since this func should be called only from
@@ -155,8 +158,8 @@ def set_provided_context_var(
     # We turn the kwargs into a NamedTuple so that the object that's "provided"
     # is immutable. This ensures that the data returned from `inject` will always
     # have all the keys that were passed to the `provide` tag.
-    tpl_cls = namedtuple("DepInject", provided_kwargs.keys())  # type: ignore[misc]
-    payload = tpl_cls(**provided_kwargs)
+    tuple_cls = namedtuple("DepInject", provided_kwargs.keys())  # type: ignore[misc]
+    payload = tuple_cls(**provided_kwargs)
 
     # Instead of storing the provided data on the Context object, we store it
     # in a separate dictionary, and we set only the key to the data on the Context.

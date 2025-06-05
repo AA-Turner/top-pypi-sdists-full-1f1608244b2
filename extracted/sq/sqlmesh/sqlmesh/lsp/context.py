@@ -5,7 +5,8 @@ import typing as t
 
 from sqlmesh.core.model.definition import SqlModel
 from sqlmesh.core.linter.definition import AnnotatedRuleViolation
-from sqlmesh.lsp.custom import RenderModelEntry
+from sqlmesh.lsp.custom import RenderModelEntry, ModelForRendering
+from sqlmesh.lsp.custom import AllModelsResponse, RenderModelEntry
 from sqlmesh.lsp.uri import URI
 
 
@@ -148,3 +149,42 @@ class LSPContext:
         # Store in cache
         self._lint_cache[path] = diagnostics
         return diagnostics
+
+    def list_of_models_for_rendering(self) -> t.List[ModelForRendering]:
+        """Get a list of models for rendering.
+
+        Returns:
+            List of ModelForRendering objects.
+        """
+        return [
+            ModelForRendering(
+                name=model.name,
+                fqn=model.fqn,
+                description=model.description,
+                uri=URI.from_path(model._path).value,
+            )
+            for model in self.context.models.values()
+            if isinstance(model, SqlModel) and model._path is not None
+        ] + [
+            ModelForRendering(
+                name=audit.name,
+                fqn=audit.fqn,
+                description=audit.description,
+                uri=URI.from_path(audit._path).value,
+            )
+            for audit in self.context.standalone_audits.values()
+            if audit._path is not None
+        ]
+
+    def get_autocomplete(self, uri: t.Optional[URI]) -> AllModelsResponse:
+        """Get autocomplete suggestions for a file.
+
+        Args:
+            uri: The URI of the file to get autocomplete suggestions for.
+
+        Returns:
+            AllModelsResponse containing models and keywords.
+        """
+        from sqlmesh.lsp.completions import get_sql_completions
+
+        return get_sql_completions(self, uri)

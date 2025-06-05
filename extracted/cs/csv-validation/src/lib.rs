@@ -26,6 +26,35 @@ enum Validation {
     None
 }
 
+impl PartialEq for Validation {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            // Compare RegularExpression enum values deeply
+            (
+                Validation::RegularExpression { expression: exp1, alias: alias1 },
+                Validation::RegularExpression { expression: exp2, alias: alias2 },
+            ) => exp1 == exp2 && alias1 == alias2,
+
+            // Compare Min and Max enums with `f64` values, using custom comparison
+            (Validation::Min(v1), Validation::Min(v2)) | (Validation::Max(v1), Validation::Max(v2)) => {
+                (v1 - v2).abs() < f64::EPSILON // Tolerates small differences in floats
+            },
+
+            // Compare Values variants by comparing the vectors
+            (Validation::Values(values1), Validation::Values(values2)) => {
+                values1 == values2
+            },
+
+            // Compare None variants (no associated data)
+            (Validation::None, Validation::None) => true,
+
+            // If enums don't match, they are not equal
+            _ => false,
+        }
+    }
+}
+
+
 #[derive(Clone)]
 struct ColumnValidations {
     column_name: String,
@@ -88,7 +117,7 @@ fn apply_validation(value: &str, validation: &Validation, regex_map: &HashMap<St
 }
 
 fn get_regex_string_for_values(values: &Vec<String>) -> String {
-    values.join("|")
+    format!("^$|^(?:{})$", values.join("|"))
 }
 
 /// Infers the file compression type and returns the corresponding buffered reader
@@ -207,13 +236,31 @@ fn get_validations(definition_string: &str) -> PyResult<Vec<ColumnValidations>> 
         column_validations.push(new_validations);
     }
 
+    // If the global flag empty_not_ok is present, we automatically add an extra validation in each column to check that
+    // there are not empty values on that column
+    let empty_not_ok =
+        config[0]["empty_not_ok"].as_bool().map_or(false, |value| value);
+    if empty_not_ok {
+        let non_empty_validation = RegularExpression {
+            expression: String::from("^.+$"),
+            alias: String::from("non_empty")
+        };
+        for column_validations in column_validations.iter_mut() {
+            column_validations.validations.push(non_empty_validation.clone());
+        }
+    }
+
     Ok(column_validations)
 }
 
 fn get_regex_for_format(format: &str) -> PyResult<String> {
     match format {
-        "integer" => Ok(String::from("^-?\\d+$")),
-        "positive_integer" => Ok(String::from("^\\d+$")),
+        "integer" => Ok(String::from("^$|^-?\\d+$")),
+        "positive integer" => Ok(String::from("^$|^\\d+$")),
+        "decimal" => Ok(String::from("^$|^-?\\d+(\\.\\d+)?$")),
+        "positive decimal" => Ok(String::from("^$|^\\d+(\\.\\d+)?$")),
+        "decimal scientific" => Ok(String::from("^$|^-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?$")),
+        "non_empty" => Ok(String::from("^.+$")),
         _ => Err(PyRuntimeError::new_err(format!("Unknown format: {format}")))
     }
 }
@@ -231,8 +278,8 @@ fn validate_column_names(reader: &mut Reader<Box<dyn Read>>, validations: &Vec<C
         if expected_column_names.len() != headers.len() {
             let expected_columns_set: HashSet<String> = expected_column_names.iter().cloned().collect();
             let headers_set: HashSet<String> = headers.iter().cloned().collect();
-            debug!("File headers not in expected columns: {:?}", headers_set.difference(&expected_columns_set));
-            debug!("Columns in expected columns not in file headers: {:?}", expected_columns_set.difference(&headers_set));
+            debug!("These column names in the CSV file were not expected: {:?}", headers_set.difference(&expected_columns_set));
+            debug!("These expected column names were missing in the CSV file: {:?}", expected_columns_set.difference(&headers_set));
         }
         else {
             for (expected_column, header) in zip(expected_column_names, headers) {
@@ -301,13 +348,14 @@ impl CSVValidator {
             info!("Columns names and order are correct");
         }
         else {
-            error!("Expected columns != Real columns");
+            error!("Expected columns != CSV file columns. Cannot continue with the validations");
             return Ok(false);
         }
 
         // Second validation: If column names match, check if also the values match the validations
         let mut validation_summaries_map = build_validation_summaries_map(&self.validations);
         let mut is_valid_file = true;
+        let mut validated_rows = 0;
         for result in rdr.records() {
             let record = result.unwrap();
             for next_column in zip(record.iter(), self.validations.iter()) {
@@ -318,9 +366,10 @@ impl CSVValidator {
                     if !valid {
                         let validation_summary_list = validation_summaries_map.get_mut(_column_name).unwrap();
                         let validation_summary = validation_summary_list
-                                .iter_mut()
-                                .find(|val_sum|
-                                    std::mem::discriminant(&val_sum.validation) == std::mem::discriminant(validation)).unwrap();
+                            .iter_mut()
+                            .find(|val_sum| val_sum.validation == *validation)
+                            .unwrap();
+
                         validation_summary.wrong_rows += 1;
                         if validation_summary.wrong_values_sample.len() < MAX_SAMPLE_SIZE as usize {
                             validation_summary.wrong_values_sample.push(value.to_string());
@@ -329,6 +378,7 @@ impl CSVValidator {
                     is_valid_file = is_valid_file && valid;
                 }
             }
+            validated_rows = validated_rows + 1;
         }
 
         // Fill the ColumnValidationSummary for each column
@@ -346,17 +396,18 @@ impl CSVValidator {
         // TODO: Decide how to return the results of the validations
         let _validation_result_json = serde_json::to_string(&column_validation_summaries).unwrap();
 
-        debug!("VALIDATIONS SUMMARY");
-        debug!("==================================================================================");
+        info!("VALIDATIONS SUMMARY");
+        info!("==================================================================================");
+        info!("Rows: {} | Columns: {}", validated_rows, column_validation_summaries.len());
         for column_validation_summary in column_validation_summaries {
-            debug!("Column: '{}'", column_validation_summary.column_name);
+            info!("Column: '{}'", column_validation_summary.column_name);
             for validation_summary in column_validation_summary.validation_summaries {
                 let wrong_values_sample = if validation_summary.wrong_values_sample.len() > 0 {
                         format!(" | Wrong Values Sample: {:?}", validation_summary.wrong_values_sample)
                 } else {
                     String::from("" )
                 };
-                debug!("\tValidation {:?} => Wrong Rows: {}{}", validation_summary.validation,
+                info!("\tValidation {:?} => Wrong Rows: {}{}", validation_summary.validation,
                     validation_summary.wrong_rows, wrong_values_sample);
             }
         }
@@ -371,49 +422,22 @@ impl CSVValidator {
     }
 }
 
-// Keep the existing functions for backward compatibility
-#[pyfunction]
-fn validate_with_file(path: &str, definition_path: &str) -> PyResult<bool> {
-    info!("Validating file {} against definition file {}", path, definition_path);
-    let validator = CSVValidator::from_file(definition_path)?;
-    validator.validate(path)
-}
-
-#[pyfunction]
-fn validate(path: &str, definition_string: String) -> PyResult<bool> {
-    debug!("Validating file {} against definition:\n {}", path, definition_string);
-    let validator = CSVValidator::from_string(&definition_string)?;
-    validator.validate(path)
-}
-
 /// A Python module implemented in Rust.
 #[pymodule]
 fn csv_validation(m: &Bound<'_, PyModule>) -> PyResult<()> {
     pyo3_log::init();
     m.add_class::<CSVValidator>()?;
-    m.add_function(wrap_pyfunction!(validate, m)?)?;
-    m.add_function(wrap_pyfunction!(validate_with_file, m)?)?;
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use simple_logger::SimpleLogger;
-    use crate::{validate, validate_with_file, CSVValidator};
+    use crate::CSVValidator;
 
     #[test]
     fn init_logger() {
         SimpleLogger::new().init().unwrap();
-    }
-
-    #[test]
-    fn test_validate_csv_with_file() {
-        assert!(validate_with_file("test/test_file.csv", "test/test_validations.yml").unwrap());
-    }
-
-    #[test]
-    fn test_validate_csv_gz_with_file() {
-        assert!(validate_with_file("test/test_file.csv.gz", "test/test_validations.yml").unwrap());
     }
 
     #[test]
@@ -422,39 +446,11 @@ mod tests {
             columns:
               - name: First Column
               - name: Second Column
-              - name: Wrong Column
-              - name: Expected Column Not In File
+              - name: Different Column name in file
+              - name: Missing Column Not In File
         ");
-        assert!(!validate("test/test_file.csv", definition).unwrap());
-    }
-
-    #[test]
-    fn test_format_validation() {
-        let definition = String::from("
-            columns:
-              - name: First Column
-              - name: Second Column
-              - name: Third Column
-                format: integer
-        ");
-        assert!(validate("test/test_file.csv", definition).unwrap());
-    }
-
-    #[test]
-    fn test_validate_csv() {
-        let definition = String::from("
-            columns:
-              - name: First Column
-                regex: ^.+$
-              - name: Second Column
-                values: [one_value, or_another]
-              - name: Third Column
-                regex: ^-?[0-9]+$
-                min: -23
-                max: 2000
-        ");
-
-        assert!(validate("test/test_file.csv", definition).unwrap());
+        let validator = CSVValidator::from_string(&definition).unwrap();
+        assert!(!validator.validate("test/test_file.csv").unwrap());
     }
 
     #[test]
@@ -495,7 +491,7 @@ mod tests {
               - name: Name
                 regex: ^[A-Za-z\\s]{2,50}$
               - name: Age
-                format: positive_integer
+                format: positive integer
                 min: 0
                 max: 120
               - name: Status
@@ -504,6 +500,35 @@ mod tests {
         let validator = CSVValidator::from_string(&definition).unwrap();
         // This should fail as test_file.csv doesn't match these validations
         assert!(!validator.validate("test/test_file.csv").unwrap());
+    }
+
+    #[test]
+    fn test_empty_ok_by_default() {
+        let definition_empty_ok = String::from("
+            columns:
+              - name: First Column
+                format: positive integer
+              - name: Second Column
+                values: ['A', 'B', 'C']
+        ");
+        let validator = CSVValidator::from_string(&definition_empty_ok).unwrap();
+        // This is OK as we didn't mention anything about empty values
+        assert!(validator.validate("test/empty_values.csv").unwrap());
+    }
+
+    #[test]
+    fn test_empty_not_ok() {
+        let definition_empty_ok = String::from("
+            empty_not_ok: true
+            columns:
+              - name: First Column
+                format: positive integer
+              - name: Second Column
+                values: ['A', 'B', 'C']
+        ");
+        let validator = CSVValidator::from_string(&definition_empty_ok).unwrap();
+        // Validation is not OK as the file contains empty values
+        assert!(!validator.validate("test/empty_values.csv").unwrap());
     }
 
     #[test]
@@ -536,5 +561,118 @@ mod tests {
     fn test_csv_validator_empty_definition() {
         let definition = String::from("");
         assert!(CSVValidator::from_string(&definition).is_err());
+    }
+
+    #[test]
+    fn test_format_integer() {
+        let test_cases = vec![
+            ("42", true),
+            ("-42", true),
+            ("0", true),
+            ("", true),      // Empty values are allowed by default
+            ("3.14", false),
+            ("abc", false),
+            ("123abc", false),
+        ];
+
+        test_format_validation("integer", test_cases);
+    }
+
+    #[test]
+    fn test_format_positive_integer() {
+        let test_cases = vec![
+            ("42", true),
+            ("0", true),
+            ("", true),      // Empty values are allowed by default
+            ("-42", false),
+            ("3.14", false),
+            ("abc", false),
+            ("123abc", false),
+        ];
+
+        test_format_validation("positive integer", test_cases);
+    }
+
+    #[test]
+    fn test_format_decimal() {
+        let test_cases = vec![
+            ("42", true),
+            ("42.0", true),
+            ("42.42", true),
+            ("-42.42", true),
+            ("0.0", true),
+            ("", true),      // Empty values are allowed by default
+            ("abc", false),
+            ("12.34.56", false),
+            ("12e4", false),
+        ];
+
+        test_format_validation("decimal", test_cases);
+    }
+
+    #[test]
+    fn test_format_positive_decimal() {
+        let test_cases = vec![
+            ("42", true),
+            ("42.0", true),
+            ("42.42", true),
+            ("0.0", true),
+            ("", true),      // Empty values are allowed by default
+            ("-42.42", false),
+            ("abc", false),
+            ("12.34.56", false),
+            ("12e4", false),
+        ];
+
+        test_format_validation("positive decimal", test_cases);
+    }
+
+    #[test]
+    fn test_format_decimal_scientific() {
+        let test_cases = vec![
+            ("42", true),
+            ("42.0", true),
+            ("42.42", true),
+            ("-42.42", true),
+            ("1.234e5", true),
+            ("1.234e+5", true),
+            ("1.234e-5", true),
+            ("1.234E5", true),
+            ("", true),      // Empty values are allowed by default
+            ("abc", false),
+            ("12.34.56", false),
+            ("1.234e", false),
+            ("e5", false),
+            ("1.234e+", false),
+        ];
+
+        test_format_validation("decimal scientific", test_cases);
+    }
+    
+    // Helper function to test format validations
+    fn test_format_validation(format: &str, test_cases: Vec<(&str, bool)>) {
+        let definition = format!("
+            columns:
+              - name: Test
+                format: {}
+        ", format);
+
+        let validator = CSVValidator::from_string(&definition).unwrap();
+
+        for (value, expected) in test_cases {
+            let test_csv = format!("Test\n{}", value);
+            let temp_file = format!("test/temp_format_test_{}.csv", format.replace(" ", "_"));
+            std::fs::write(&temp_file, test_csv).unwrap();
+            
+            let result = validator.validate(&temp_file).unwrap();
+            assert_eq!(
+                result, 
+                expected, 
+                "Format '{}' validation failed for value '{}': expected {}, got {}", 
+                format, value, expected, result
+            );
+
+            std::fs::remove_file(&temp_file).unwrap();
+        }
     }
 }

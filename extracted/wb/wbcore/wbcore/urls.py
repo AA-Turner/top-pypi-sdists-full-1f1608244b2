@@ -1,8 +1,8 @@
 from django.urls import include, path
 from dynamic_preferences.api.viewsets import GlobalPreferencesViewSet
-from dynamic_preferences.users.viewsets import UserPreferencesViewSet
 
 from wbcore.cache.views import clear_cache
+from wbcore.contrib.dynamic_preferences.viewsets import UserPreferencesViewSet
 from wbcore.shares.views import ShareAPIView
 
 from .configs.views import ConfigAPIView

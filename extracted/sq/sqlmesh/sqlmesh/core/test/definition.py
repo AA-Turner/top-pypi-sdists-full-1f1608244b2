@@ -10,10 +10,7 @@ from itertools import chain
 from pathlib import Path
 from unittest.mock import patch
 
-import numpy as np
-import pandas as pd
 from io import StringIO
-from pandas.api.types import is_object_dtype
 from sqlglot import Dialect, exp
 from sqlglot.optimizer.annotate_types import annotate_types
 from sqlglot.optimizer.normalize_identifiers import normalize_identifiers
@@ -29,6 +26,8 @@ from sqlmesh.utils.errors import ConfigError, TestError
 from sqlmesh.utils.yaml import load as yaml_load
 
 if t.TYPE_CHECKING:
+    import pandas as pd
+
     from sqlglot.dialects.dialect import DialectType
 
     Row = t.Dict[str, t.Any]
@@ -207,6 +206,10 @@ class ModelTest(unittest.TestCase):
         partial: t.Optional[bool] = False,
     ) -> None:
         """Compare two DataFrames"""
+        import numpy as np
+        import pandas as pd
+        from pandas.api.types import is_object_dtype
+
         if partial:
             intersection = actual[actual.columns.intersection(expected.columns)]
             if len(intersection.columns) > 0:
@@ -385,6 +388,8 @@ class ModelTest(unittest.TestCase):
             partial: bool = False,
             dialect: DialectType = None,
         ) -> t.Dict:
+            import pandas as pd
+
             if not isinstance(values, dict):
                 values = {"rows": values}
 
@@ -557,6 +562,8 @@ class ModelTest(unittest.TestCase):
         columns: t.Optional[t.Collection] = None,
         partial: t.Optional[bool] = False,
     ) -> pd.DataFrame:
+        import pandas as pd
+
         query = values.get("query")
         if query:
             if not partial:
@@ -725,6 +732,8 @@ class PythonModelTest(ModelTest):
 
     def _execute_model(self) -> pd.DataFrame:
         """Executes the python model and returns a DataFrame."""
+        import pandas as pd
+
         with self._concurrent_render_context():
             variables = self.body.get("vars", {}).copy()
             time_kwargs = {key: variables.pop(key) for key in TIME_KWARG_KEYS if key in variables}
@@ -766,6 +775,8 @@ def generate_test(
         name: The name of the test. This is inferred from the model name by default.
         include_ctes: When true, CTE fixtures will also be generated.
     """
+    import numpy as np
+
     test_name = name or f"test_{model.view_name}"
     path = path or f"{test_name}.yaml"
 
@@ -893,6 +904,9 @@ def _raise_if_unexpected_columns(
 
 def _row_difference(left: pd.DataFrame, right: pd.DataFrame) -> pd.DataFrame:
     """Returns all rows in `left` that don't appear in `right`."""
+    import numpy as np
+    import pandas as pd
+
     rows_missing_from_right = []
 
     # `None` replaces `np.nan` because `np.nan != np.nan` and this would affect the mapping lookup
@@ -917,6 +931,8 @@ def _raise_error(msg: str, path: Path | None = None) -> None:
 
 def _normalize_df_value(value: t.Any) -> t.Any:
     """Normalize data in a pandas dataframe so ruamel and sqlglot can deal with it."""
+    import numpy as np
+
     if isinstance(value, (list, np.ndarray)):
         return [_normalize_df_value(v) for v in value]
     if isinstance(value, dict):

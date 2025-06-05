@@ -3,17 +3,13 @@
 import importlib.util as importutil
 import os
 import warnings
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 import requests
 
 if TYPE_CHECKING:
-    try: 
-        import numpy as np
-        from tokenizers import Tokenizer
-    except ImportError:
-        np = Any # type: ignore
-        Tokenizer = Any # type: ignore
+    import numpy as np
+    from tokenizers import Tokenizer
 
 from .base import BaseEmbeddings
 

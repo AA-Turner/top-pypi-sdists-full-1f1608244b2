@@ -1333,6 +1333,7 @@ class ActionDefinitionTypeDef(TypedDict):
 class DescribeLoggingConfigurationResponseTypeDef(TypedDict):
     FirewallArn: str
     LoggingConfiguration: LoggingConfigurationOutputTypeDef
+    EnableMonitoringDashboard: bool
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -1340,6 +1341,7 @@ class UpdateLoggingConfigurationResponseTypeDef(TypedDict):
     FirewallArn: str
     FirewallName: str
     LoggingConfiguration: LoggingConfigurationOutputTypeDef
+    EnableMonitoringDashboard: bool
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -1460,6 +1462,7 @@ class UpdateLoggingConfigurationRequestTypeDef(TypedDict):
     FirewallArn: NotRequired[str]
     FirewallName: NotRequired[str]
     LoggingConfiguration: NotRequired[LoggingConfigurationUnionTypeDef]
+    EnableMonitoringDashboard: NotRequired[bool]
 
 
 class TLSInspectionConfigurationOutputTypeDef(TypedDict):

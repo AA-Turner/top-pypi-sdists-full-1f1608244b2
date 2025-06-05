@@ -307,34 +307,27 @@ class TestViewSet(ParentViewset):
                     kwargs["pk"] = obj.pk
             vs = self.mvs.as_view({"options": "options"})
             response = vs(request, **kwargs)
-            if ep.get_endpoint() or ep.get_list_endpoint():
-                assert response.status_code == status.HTTP_200_OK, (
-                    str(response.status_code) + f" == 200 ({response.data})"
-                )
-                assert response.data, str(response.data) + " should not be empty"
-                if "buttons" in response.data.keys():
-                    if "custom_instance" in response.data.get("buttons").keys():
-                        assert (
-                            list(response.data["buttons"]["custom_instance"])
-                            or len(list(response.data["buttons"]["custom_instance"])) == 0
-                        )
-                assert response.data.get("fields"), str(response.data.get("fields")) + " should not be None"
-                assert response.data.get("identifier"), str(response.data.get("identifier")) + " should not be None"
-                # assert response.data.get("pagination")
-                # assert response.data.get("pk")
-                # assert response.data.get("type")
-                # assert response.data.get("filterset_fields")
-                # assert response.data.get("search_fields")
-                # assert response.data.get("ordering_fields")
-                # assert response.data.get("buttons"), str(response.data.get("buttons")) + " should not be None"  # TODO: Refactor - buttons can be none
-                assert response.data.get("display"), str(response.data.get("display")) + " should not be None"
-                assert response.data.get("titles"), str(response.data.get("titles")) + " should not be None"
-                assert response.data.get("endpoints"), str(response.data.get("endpoints")) + " should not be None"
-                # assert response.data.get("preview")
-            else:
-                assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED, (
-                    str(response.status_code) + f" == 405 ({response.data})"
-                )
+            assert response.status_code == status.HTTP_200_OK, str(response.status_code) + f" == 200 ({response.data})"
+            assert response.data, str(response.data) + " should not be empty"
+            if "buttons" in response.data.keys():
+                if "custom_instance" in response.data.get("buttons").keys():
+                    assert (
+                        list(response.data["buttons"]["custom_instance"])
+                        or len(list(response.data["buttons"]["custom_instance"])) == 0
+                    )
+            assert response.data.get("fields"), str(response.data.get("fields")) + " should not be None"
+            assert response.data.get("identifier"), str(response.data.get("identifier")) + " should not be None"
+            # assert response.data.get("pagination")
+            # assert response.data.get("pk")
+            # assert response.data.get("type")
+            # assert response.data.get("filterset_fields")
+            # assert response.data.get("search_fields")
+            # assert response.data.get("ordering_fields")
+            # assert response.data.get("buttons"), str(response.data.get("buttons")) + " should not be None"  # TODO: Refactor - buttons can be none
+            assert response.data.get("display"), str(response.data.get("display")) + " should not be None"
+            assert response.data.get("titles"), str(response.data.get("titles")) + " should not be None"
+            assert response.data.get("endpoints"), str(response.data.get("endpoints")) + " should not be None"
+            # assert response.data.get("preview")
             print(f"- {self.__class__.__name__}:test_option_request", colored("PASSED", "green"))  # noqa: T201
 
     # ----- LIST ROUTE TEST ----- #
@@ -346,16 +339,8 @@ class TestViewSet(ParentViewset):
             _, request, kwargs, _ = self._get_mixins_data("GET")
             vs = self.mvs.as_view({"get": "list"})
             response = vs(request, **kwargs)
-            ep = self._get_endpoint_config(request, kwargs)
-            if ep.get_endpoint() or ep.get_list_endpoint():
-                assert response.status_code == status.HTTP_200_OK, (
-                    str(response.status_code) + f" == 200 ({response.data})"
-                )
-                assert response.data, str(response.data) + " should not be empty"
-            else:
-                assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED, (
-                    str(response.status_code) + f" == 405 ({response.data})"
-                )
+            assert response.status_code == status.HTTP_200_OK, str(response.status_code) + f" == 200 ({response.data})"
+            assert response.data, str(response.data) + " should not be empty"
             print(f"- {self.__class__.__name__}:test_get_request", colored("PASSED", "green"))  # noqa: T201
 
     # Test viewset "get": "list" -> aggregation
@@ -367,24 +352,16 @@ class TestViewSet(ParentViewset):
 
             vs = self.mvs.as_view({"get": "list"})
             response = vs(request, **kwargs)
-            ep = self._get_endpoint_config(request, kwargs)
-            if ep.get_endpoint() or ep.get_list_endpoint():
-                assert response.status_code == status.HTTP_200_OK, (
-                    str(response.status_code) + f" == 200 ({response.data})"
+            assert response.status_code == status.HTTP_200_OK, str(response.status_code) + f" == 200 ({response.data})"
+            assert response.data, str(response.data) + " should not be empty"
+            if not response.data.get("aggregates"):
+                print(  # noqa: T201
+                    f"- {self.__class__.__name__}:test_aggregation:" + self.mvs.__name__,
+                    colored("WARNING - aggregates not found in " + self.mvs.__name__, "yellow"),
                 )
-                assert response.data, str(response.data) + " should not be empty"
-                if not response.data.get("aggregates"):
-                    print(  # noqa: T201
-                        f"- {self.__class__.__name__}:test_aggregation:" + self.mvs.__name__,
-                        colored("WARNING - aggregates not found in " + self.mvs.__name__, "yellow"),
-                    )
-                else:
-                    if name_field:
-                        assert response.data.get("aggregates").get(name_field), name_field + "not found in aggregates"
             else:
-                assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED, (
-                    str(response.status_code) + f" == 405 ({response.data})"
-                )
+                if name_field:
+                    assert response.data.get("aggregates").get(name_field), name_field + "not found in aggregates"
             print(f"- {self.__class__.__name__}:test_aggregation", colored("PASSED", "green"))  # noqa: T201
 
     # Test viewset "get": "list" with client and endpoint
@@ -398,16 +375,9 @@ class TestViewSet(ParentViewset):
             if ep.get_endpoint():
                 response = client.get(ep.get_endpoint())
             else:
-                response = client.get(ep.get_list_endpoint())
-            if ep.get_endpoint() or ep.get_list_endpoint():
-                assert response.status_code == status.HTTP_200_OK, (
-                    str(response.status_code) + f" == 200 ({response.data})"
-                )
-                assert response.data, str(response.data) + " should not be empty"
-            else:
-                assert response.status_code == status.HTTP_404_NOT_FOUND, (
-                    str(response.status_code) + f" == 404 ({response.data})"
-                )
+                response = client.get(ep._get_list_endpoint())
+            assert response.status_code == status.HTTP_200_OK, str(response.status_code) + f" == 200 ({response.data})"
+            assert response.data, str(response.data) + " should not be empty"
             print(f"- {self.__class__.__name__}:test_get_endpoint", colored("PASSED", "green"))  # noqa: T201
 
     # Test viewset "post": "create"
@@ -513,17 +483,12 @@ class TestViewSet(ParentViewset):
             obj, request, kwargs, _ = self._get_mixins_data("GET")
             vs = self.mvs.as_view({"get": "retrieve"})
             ep = self._get_endpoint_config(request, kwargs, obj)
-            ep_list = ep.get_list_endpoint()
             response = vs(request, **kwargs)
-            if ep_list:
+            if ep._get_instance_endpoint():
                 assert response.status_code == status.HTTP_200_OK, (
                     str(response.status_code) + f" == 200 ({response.data})"
                 )
                 assert response.data.get("instance"), str(response.data.get("instance")) + " should not be empty"
-            else:
-                assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED, (
-                    str(response.status_code) + f" == 405 ({response.data})"
-                )
             print(f"- {self.__class__.__name__}:test_retrieve_request", colored("PASSED", "green"))  # noqa: T201
 
     # Test "delete": "destroy"
@@ -649,16 +614,8 @@ class TestPandasView(TestViewSet):
             _, request, kwargs, _ = self._get_mixins_data("GET")
             vs = self.mvs.as_view({"get": "list"})
             response = vs(request, **kwargs)
-            ep = self._get_endpoint_config(request, kwargs)
-            if ep.get_endpoint() or ep.get_list_endpoint():
-                assert response.status_code == status.HTTP_200_OK, (
-                    str(response.status_code) + f" == 200 ({response.data})"
-                )
-                assert response.data, str(response.data) + " should not be empty"
-            else:
-                assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED, (
-                    str(response.status_code) + f" == 405 ({response.data})"
-                )
+            assert response.status_code == status.HTTP_200_OK, str(response.status_code) + f" == 200 ({response.data})"
+            assert response.data, str(response.data) + " should not be empty"
             print(f"- {self.__class__.__name__}:test_get_request", colored("PASSED", "green"))  # noqa: T201
 
     def execute_test(self):
@@ -681,27 +638,20 @@ class TestChartViewSet(TestViewSet):
 
             vs = self.mvs.as_view({"options": "options"})
             response = vs(request, **kwargs)
-            if ep.get_endpoint() or ep.get_list_endpoint():
-                assert response.status_code == status.HTTP_200_OK, (
-                    str(response.status_code) + f" == 200 ({response.data})"
-                )
-                assert response.data, str(response.data) + " should not be empty"
-                if "buttons" in response.data.keys():
-                    if "custom_instance" in response.data.get("buttons").keys():
-                        assert (
-                            list(response.data["buttons"]["custom_instance"])
-                            or len(list(response.data["buttons"]["custom_instance"])) == 0
-                        )
-                assert response.data.get("identifier"), str(response.data.get("identifier")) + " should not be None"
-                assert response.data.get("type") == "chart", "type of view should be chart"
-                assert response.data.get("buttons"), str(response.data.get("buttons")) + " should not be None"
-                assert response.data.get("display"), str(response.data.get("display")) + " should not be None"
-                assert response.data.get("titles"), str(response.data.get("titles")) + " should not be None"
-                assert response.data.get("endpoints"), str(response.data.get("endpoints")) + " should not be None"
-            else:
-                assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED, (
-                    str(response.status_code) + f" == 405 ({response.data})"
-                )
+            assert response.status_code == status.HTTP_200_OK, str(response.status_code) + f" == 200 ({response.data})"
+            assert response.data, str(response.data) + " should not be empty"
+            if "buttons" in response.data.keys():
+                if "custom_instance" in response.data.get("buttons").keys():
+                    assert (
+                        list(response.data["buttons"]["custom_instance"])
+                        or len(list(response.data["buttons"]["custom_instance"])) == 0
+                    )
+            assert response.data.get("identifier"), str(response.data.get("identifier")) + " should not be None"
+            assert response.data.get("type") == "chart", "type of view should be chart"
+            assert response.data.get("buttons"), str(response.data.get("buttons")) + " should not be None"
+            assert response.data.get("display"), str(response.data.get("display")) + " should not be None"
+            assert response.data.get("titles"), str(response.data.get("titles")) + " should not be None"
+            assert response.data.get("endpoints"), str(response.data.get("endpoints")) + " should not be None"
             print(f"- {self.__class__.__name__}:test_option_request", colored("PASSED", "green"))  # noqa: T201
 
     def execute_test(self):

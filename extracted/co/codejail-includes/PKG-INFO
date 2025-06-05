@@ -1,8 +1,8 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: codejail-includes
-Version: 1.0.0
+Version: 2.0.0
 Summary: codejail-includes
-Home-page: https://github.com/edx/codejail-includes
+Home-page: https://github.com/openedx/codejail-includes
 Author: edX
 Author-email: oscm@edx.org
 License: AGPL 3.0
@@ -12,17 +12,35 @@ Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
 Classifier: Natural Language :: English
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
-Requires-Python: >=3.8
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.11
 License-File: LICENSE
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-python
+Dynamic: summary
 
 codejail-includes
-=============================
+=================
 
 |pypi-badge| |license-badge|
 
-CodeJail manages execution of untrusted code in secure sandboxes. It is designed primarily for Python execution,
-but can be used for other languages as well.
+
+A set of utility modules available in secure sandboxes for course authors to
+use.
+
+``codejail-includes`` is the result of extracting utility modules installed
+into the codejail sandbox environment directly from edx-platform into it's
+own separate package.
+
+More in-depth context can be found in `[BOM-2579] Dissolve Sub-Projects in edx-platform <https://openedx.atlassian.net/browse/BOM-2579>`_
 
 Documentation
 -------------
@@ -41,7 +59,7 @@ One Time Setup
   cd codejail-includes
 
   # Set up a virtualenv using virtualenvwrapper with the same name as the repo and activate it
-  mkvirtualenv -p python3.8 codejail-includes
+  mkvirtualenv -p python3.11 codejail-includes
 
 
 Every time you develop something in this repo
@@ -91,9 +109,7 @@ How To Contribute
 -----------------
 
 Contributions are very welcome.
-Please read `How To Contribute <https://github.com/edx/edx-platform/blob/master/CONTRIBUTING.rst>`_ for details.
-Even though they were written with ``edx-platform`` in mind, the guidelines
-should be followed for all Open edX projects.
+Please read `How To Contribute <https://github.com/openedx/.github/blob/master/CONTRIBUTING.md>`_ for details.
 
 The pull request description template should be automatically applied if you are creating a pull request from GitHub. Otherwise you
 can find it at `PULL_REQUEST_TEMPLATE.md <.github/PULL_REQUEST_TEMPLATE.md>`_.
@@ -104,7 +120,7 @@ can find it at `ISSUE_TEMPLATE.md <.github/ISSUE_TEMPLATE.md>`_.
 Reporting Security Issues
 -------------------------
 
-Please do not report security issues in public. Please email security@edx.org.
+Please do not report security issues in public. Please email security@openedx.org.
 
 Getting Help
 ------------
@@ -150,6 +166,14 @@ Unreleased
 
 *
 
+[2.0.0] - 2025-05-17
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Changed
+_______
+
+* Dropped support for Python 3.8 and added support for Python 3.12.
+
 [1.0.0] - 2022-05-17
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -158,4 +182,3 @@ _____
 
 * First release on PyPI.
 * codejail includes moved from edx-platform to individual pypi package.
-

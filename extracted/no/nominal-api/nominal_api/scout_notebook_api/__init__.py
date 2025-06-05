@@ -21,3 +21,25 @@ from .._impl import (
     scout_notebook_api_UpdateRefNameRequest as UpdateRefNameRequest,
 )
 
+__all__ = [
+    'ChartWithOverlays',
+    'CreateNotebookRequest',
+    'GetAllLabelsAndPropertiesResponse',
+    'Lock',
+    'Notebook',
+    'NotebookDataScope',
+    'NotebookDataScopeVisitor',
+    'NotebookMetadata',
+    'NotebookMetadataWithRid',
+    'NotebookType',
+    'SearchNotebooksQuery',
+    'SearchNotebooksQueryVisitor',
+    'SearchNotebooksRequest',
+    'SearchNotebooksResponse',
+    'SortBy',
+    'SortByField',
+    'UpdateNotebookMetadataRequest',
+    'UpdateNotebookRequest',
+    'UpdateRefNameRequest',
+]
+

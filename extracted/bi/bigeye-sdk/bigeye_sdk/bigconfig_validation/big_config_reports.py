@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 import textwrap
 from abc import ABC, abstractmethod
-from typing import List, Dict, TypeVar, Any, Union
+from typing import List, Dict, TypeVar, Any, Union, Optional
 
 import yaml
 from betterproto import Casing
@@ -22,6 +22,7 @@ from bigeye_sdk.serializable import File
 # TODO: Add error stats to API Execution Messages.
 FAILED_API_EXECUTION_MSG = textwrap.dedent(
     """
+    {namespace_heading}
 
     -=- REPORT -=-
     {source_reports}
@@ -35,6 +36,7 @@ FAILED_API_EXECUTION_MSG = textwrap.dedent(
 
 SUCCESSFUL_API_EXECUTION_MSG = textwrap.dedent(
     """
+    {namespace_heading}
 
     -=- REPORT -=-                                                                                        
     {source_reports}
@@ -75,6 +77,12 @@ It is recommended to disable this setting when deploying metrics via bigconfig.
 Someone from Bigeye can disable it via the UI or it can disabled by an Admin via the API using the key metric.save.run_immediately
 See https://docs.bigeye.com/reference/updateconfigs"""
 
+NAMESPACE_HEADING = """
+    
+-=- NAMESPACE -=-
+{namespace}
+"""
+
 BIGCONFIG_REPORT = TypeVar('BIGCONFIG_REPORT', bound='BigConfigReport')
 REPORTS: List[BIGCONFIG_REPORT] = []
 
@@ -94,17 +102,25 @@ def all_reports() -> List[BIGCONFIG_REPORT]:
 
 
 def process_reports(
-        output_path: str, strict_mode: bool, process_stage: ProcessStage, run_metric_on_save: bool = False
+        output_path: str,
+        strict_mode: bool,
+        process_stage: ProcessStage,
+        run_metric_on_save: bool = False,
+        namespace: Optional[str] = None
 ):
     report_files = []
     errors_reported = False
 
     source_reports = []
     final_report = "{message}\n{additional_info}"
+    ns = ""
     rd = ""
 
     if run_metric_on_save:
         rd = RECOMMEND_DISABLE
+
+    if namespace:
+        ns = NAMESPACE_HEADING.format(namespace=namespace)
 
     for report in REPORTS:
         if process_stage == report.process_stage:
@@ -118,12 +134,14 @@ def process_reports(
     if errors_reported and strict_mode:
         raise BigConfigValidationException(
             FAILED_API_EXECUTION_MSG.format(
+                namespace_heading=ns,
                 source_reports="\n".join(source_reports),
                 report_file_list="\n".join(report_files)
             )
         )
     elif errors_reported:
         message = FAILED_API_EXECUTION_MSG.format(
+            namespace_heading=ns,
             source_reports="\n".join(source_reports),
             report_file_list="\n".join(report_files)
         )
@@ -131,6 +149,7 @@ def process_reports(
         info = f"Strict mode is OFF. There are errors reported.\n\n{rd}"
     else:
         message = SUCCESSFUL_API_EXECUTION_MSG.format(
+            namespace_heading=ns,
             source_reports="\n".join(source_reports),
             report_file_list="\n".join(report_files)
         )

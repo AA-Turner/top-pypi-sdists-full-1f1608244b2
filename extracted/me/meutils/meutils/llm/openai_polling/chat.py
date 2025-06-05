@@ -82,9 +82,6 @@ class Completions(object):
             data.pop("frequency_penalty", None)
             data.pop("extra_body", None)
 
-            if '2.5' in request.model and not request.reasoning_effort:  # 默认关闭思考
-                data['reasoning_effort'] = "none"
-
             if "thinking" in request.model:
                 data['model'] = data['model'].removesuffix("-thinking")  # 开启思考
                 data['reasoning_effort'] = 'low'

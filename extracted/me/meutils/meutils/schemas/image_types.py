@@ -93,7 +93,7 @@ class ImageRequest(BaseModel):  # openai
 
     aspect_ratio: Optional[str] = None
 
-    user: Optional[str] = None
+    user: Optional[str] = None # to_url_fal
 
     def __init__(self, /, **data: Any):
         super().__init__(**data)

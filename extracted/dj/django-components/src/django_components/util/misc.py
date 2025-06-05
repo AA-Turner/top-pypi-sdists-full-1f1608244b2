@@ -1,10 +1,12 @@
 import re
 import sys
+from dataclasses import asdict, is_dataclass
 from hashlib import md5
 from importlib import import_module
 from itertools import chain
 from types import ModuleType
-from typing import TYPE_CHECKING, Any, Callable, Iterable, List, Optional, Tuple, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union, cast
+from urllib import parse
 
 from django_components.constants import UID_LENGTH
 from django_components.util.nanoid import generate
@@ -13,6 +15,7 @@ if TYPE_CHECKING:
     from django_components.component import Component
 
 T = TypeVar("T")
+U = TypeVar("U")
 
 
 # Based on nanoid implementation from
@@ -89,8 +92,13 @@ def get_module_info(
     return module, module_name, module_file_path
 
 
-def default(val: Optional[T], default: T) -> T:
-    return val if val is not None else default
+def default(val: Optional[T], default: Union[U, Callable[[], U], Type[T]], factory: bool = False) -> Union[T, U]:
+    if val is not None:
+        return val
+    if factory:
+        default_func = cast(Callable[[], U], default)
+        return default_func()
+    return cast(U, default)
 
 
 def get_index(lst: List, key: Callable[[Any], bool]) -> Optional[int]:
@@ -130,3 +138,91 @@ def is_glob(filepath: str) -> bool:
 
 def flatten(lst: Iterable[Iterable[T]]) -> List[T]:
     return list(chain.from_iterable(lst))
+
+
+def to_dict(data: Any) -> dict:
+    """
+    Convert object to a dict.
+
+    Handles `dict`, `NamedTuple`, and `dataclass`.
+    """
+    if isinstance(data, dict):
+        return data
+    elif hasattr(data, "_asdict"):  # Case: NamedTuple
+        return data._asdict()
+    elif is_dataclass(data):  # Case: dataclass
+        return asdict(data)  # type: ignore[arg-type]
+
+    return dict(data)
+
+
+def format_url(url: str, query: Optional[Dict] = None, fragment: Optional[str] = None) -> str:
+    """
+    Given a URL, add to it query parameters and a fragment, returning an updated URL.
+
+    ```py
+    url = format_url(url="https://example.com", query={"foo": "bar"}, fragment="baz")
+    # https://example.com?foo=bar#baz
+    ```
+
+    `query` and `fragment` are optional, and not applied if `None`.
+    """
+    parts = parse.urlsplit(url)
+    fragment_enc = parse.quote(fragment or parts.fragment, safe="")
+    base_qs = dict(parse.parse_qsl(parts.query))
+    merged = {**base_qs, **(query or {})}
+    encoded_qs = parse.urlencode(merged, safe="")
+
+    return parse.urlunsplit(parts._replace(query=encoded_qs, fragment=fragment_enc))
+
+
+def format_as_ascii_table(data: List[Dict[str, Any]], headers: List[str], include_headers: bool = True) -> str:
+    """
+    Format a list of dictionaries as an ASCII table.
+
+    Example:
+
+    ```python
+    data = [
+        {"name": "ProjectPage", "full_name": "project.pages.project.ProjectPage", "path": "./project/pages/project"},
+        {"name": "ProjectDashboard", "full_name": "project.components.dashboard.ProjectDashboard", "path": "./project/components/dashboard"},
+        {"name": "ProjectDashboardAction", "full_name": "project.components.dashboard_action.ProjectDashboardAction", "path": "./project/components/dashboard_action"},
+    ]
+    headers = ["name", "full_name", "path"]
+    print(format_as_ascii_table(data, headers))
+    ```
+
+    Which prints:
+
+    ```txt
+    name                      full_name                                                     path
+    ==================================================================================================
+    ProjectPage               project.pages.project.ProjectPage                             ./project/pages/project
+    ProjectDashboard          project.components.dashboard.ProjectDashboard                 ./project/components/dashboard
+    ProjectDashboardAction    project.components.dashboard_action.ProjectDashboardAction    ./project/components/dashboard_action
+    ```
+    """  # noqa: E501
+    # Calculate the width of each column
+    column_widths = {header: len(header) for header in headers}
+    for row in data:
+        for header in headers:
+            row_value = str(row.get(header, ""))
+            column_widths[header] = max(column_widths[header], len(row_value))
+
+    # Create the header row
+    header_row = "  ".join(f"{header:<{column_widths[header]}}" for header in headers)
+    separator = "=" * len(header_row)
+
+    # Create the data rows
+    data_rows = []
+    for row in data:
+        row_values = [str(row.get(header, "")) for header in headers]
+        data_row = "  ".join(f"{value:<{column_widths[header]}}" for value, header in zip(row_values, headers))
+        data_rows.append(data_row)
+
+    # Combine all parts into the final table
+    if include_headers:
+        table = "\n".join([header_row, separator] + data_rows)
+    else:
+        table = "\n".join(data_rows)
+    return table

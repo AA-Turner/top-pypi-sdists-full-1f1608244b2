@@ -5500,6 +5500,10 @@ class AWSManagedPolicies(enum.Enum):
     '''
     :stability: experimental
     '''
+    AMAZON_SAGE_MAKER_QUICK_SIGHT_VPC_POLICY = "AMAZON_SAGE_MAKER_QUICK_SIGHT_VPC_POLICY"
+    '''
+    :stability: experimental
+    '''
 
 
 class LambdaArmFunction(

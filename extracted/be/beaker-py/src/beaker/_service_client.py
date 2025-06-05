@@ -555,6 +555,7 @@ class ServiceClient:
             RequestException,
             BeakerServerError,
         ),
+        expected_errors: tuple[Type[Exception], ...] = (BeakerStreamConnectionClosedError,),
     ):
         """
         Use to make a service client method more robust by allowing retries.
@@ -567,6 +568,10 @@ class ServiceClient:
                 while True:
                     try:
                         return func(*args, **kwargs)
+                    except expected_errors as err:
+                        if on_failure is not None:
+                            on_failure()
+                        self._log_and_wait(1, err, log_level=logging.DEBUG)
                     except recoverable_errors as err:
                         if retries < self.beaker.MAX_RETRIES:
                             if on_failure is not None:

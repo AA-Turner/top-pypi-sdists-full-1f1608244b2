@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Annotated, Dict, List, Optional, Union
 
+from daytona_sdk.common.image import Image
 from daytona_sdk.common.sandbox import SandboxTargetRegion
 from daytona_sdk.common.volume import VolumeMount
-from daytona_sdk.common.image import Image
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -136,6 +136,9 @@ class CreateSandboxParams(BaseModel):
         auto_stop_interval (Optional[int]): Interval in minutes after which Sandbox will
             automatically stop if no Sandbox event occurs during that time. Default is 15 minutes.
             0 means no auto-stop.
+        auto_archive_interval (Optional[int]): Interval in minutes after which a continuously stopped Sandbox will
+            automatically archive. Default is 7 days.
+            0 means the maximum interval will be used.
 
     Example:
         ```python
@@ -143,7 +146,8 @@ class CreateSandboxParams(BaseModel):
             language="python",
             env_vars={"DEBUG": "true"},
             resources=SandboxResources(cpu=2, memory=4),
-            auto_stop_interval=20
+            auto_stop_interval=20,
+            auto_archive_interval=60
         )
         sandbox = daytona.create(params, 50)
         ```
@@ -167,6 +171,7 @@ class CreateSandboxParams(BaseModel):
         ),
     ]
     auto_stop_interval: Optional[int] = None
+    auto_archive_interval: Optional[int] = None
     volumes: Optional[List[VolumeMount]] = None
 
     @model_validator(mode="before")

@@ -124,9 +124,10 @@ class ParsedAnnotation:
         import typing
 
         import chalk
-        from chalk.features import FeatureSetBase
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
 
-        feature_classes = {feature_set.__name__: feature_set for feature_set in FeatureSetBase.registry.values()}
+        registry = CURRENT_FEATURE_REGISTRY.get()
+        feature_classes = {feature_set.__name__: feature_set for feature_set in registry.get_feature_sets().values()}
 
         if not getattr(self._features_cls, "__chalk_is_loaded_from_notebook__", False):
             return feature_classes

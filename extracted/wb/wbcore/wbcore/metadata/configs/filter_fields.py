@@ -26,11 +26,7 @@ class FilterFieldsViewConfig(WBCoreViewConfig):
                     filters.update(getattr(filterset_class_meta, "df_fields", {}))
                 for name, field in filters.items():
                     field.parent = filterset
-                    if (
-                        not field.hidden
-                        and name not in hidden_fields
-                        and (res := field.get_representation(self.request, name, self.view))
-                    ):
+                    if name not in hidden_fields and (res := field.get_representation(self.request, name, self.view)):
                         representation, lookup_expr = res
                         if field.key in filter_fields:
                             filter_fields[field.key]["lookup_expr"].append(lookup_expr)

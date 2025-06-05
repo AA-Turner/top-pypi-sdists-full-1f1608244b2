@@ -39,6 +39,7 @@ from solders.rpc.responses import (
     GetSignaturesForAddressResp,
     GetSignatureStatusesResp,
     GetSlotLeaderResp,
+    GetSlotLeadersResp,
     GetSlotResp,
     GetSupplyResp,
     GetTokenAccountBalanceResp,
@@ -760,6 +761,19 @@ class Client(_ClientCore):  # pylint: disable=too-many-public-methods
         body = self._get_slot_leader_body(commitment)
         return self._provider.make_request(body, GetSlotLeaderResp)
 
+    def get_slot_leaders(self, start: int, limit: int) -> GetSlotLeadersResp:
+        """Returns the list of slot leaders for the provided start slot and limit.
+
+        Args:
+            start: The start slot to get the slot leaders from.
+            limit: The number of slot leaders to return.
+
+        Returns:
+            A list of slot leaders.
+        """
+        body = self._get_slot_leaders_body(start, limit)
+        return self._provider.make_request(body, GetSlotLeadersResp)
+
     def get_supply(self, commitment: Optional[Commitment] = None) -> GetSupplyResp:
         """Returns information about the current supply.
 
@@ -998,7 +1012,7 @@ class Client(_ClientCore):  # pylint: disable=too-many-public-methods
             ...     from_pubkey=sender.pubkey(), to_pubkey=receiver.pubkey(), lamports=1000))]
             >>> msg = Message(ixns, sender.pubkey())
             >>> client = Client("http://localhost:8899")
-            >>> client.send_transaction(Transaction([sender], msg, client.get_latest_blockhash()).value.blockhash) # doctest: +SKIP
+            >>> client.send_transaction(Transaction([sender], msg, client.get_latest_blockhash().value.blockhash)) # doctest: +SKIP
         """  # noqa: E501
         tx_opts = types.TxOpts(preflight_commitment=self._commitment) if opts is None else opts
         return self.send_raw_transaction(bytes(txn), opts=tx_opts)

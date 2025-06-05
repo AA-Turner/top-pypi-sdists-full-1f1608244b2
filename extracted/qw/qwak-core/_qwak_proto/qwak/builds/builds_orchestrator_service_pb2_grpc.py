@@ -64,6 +64,11 @@ class BuildsOrchestratorServiceStub(object):
                 request_serializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.ListBuildArtifactsRequest.SerializeToString,
                 response_deserializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.ListBuildArtifactsResponse.FromString,
                 )
+        self.DetachBuildsFromModelVersions = channel.unary_unary(
+                '/qwak.builds.orchestrator.BuildsOrchestratorService/DetachBuildsFromModelVersions',
+                request_serializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.DetachBuildsFromModelVersionsRequest.SerializeToString,
+                response_deserializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.DetachBuildsFromModelVersionsResponse.FromString,
+                )
 
 
 class BuildsOrchestratorServiceServicer(object):
@@ -139,6 +144,12 @@ class BuildsOrchestratorServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DetachBuildsFromModelVersions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_BuildsOrchestratorServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -191,6 +202,11 @@ def add_BuildsOrchestratorServiceServicer_to_server(servicer, server):
                     servicer.ListBuildArtifacts,
                     request_deserializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.ListBuildArtifactsRequest.FromString,
                     response_serializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.ListBuildArtifactsResponse.SerializeToString,
+            ),
+            'DetachBuildsFromModelVersions': grpc.unary_unary_rpc_method_handler(
+                    servicer.DetachBuildsFromModelVersions,
+                    request_deserializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.DetachBuildsFromModelVersionsRequest.FromString,
+                    response_serializer=qwak_dot_builds_dot_builds__orchestrator__service__pb2.DetachBuildsFromModelVersionsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -369,5 +385,22 @@ class BuildsOrchestratorService(object):
         return grpc.experimental.unary_unary(request, target, '/qwak.builds.orchestrator.BuildsOrchestratorService/ListBuildArtifacts',
             qwak_dot_builds_dot_builds__orchestrator__service__pb2.ListBuildArtifactsRequest.SerializeToString,
             qwak_dot_builds_dot_builds__orchestrator__service__pb2.ListBuildArtifactsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DetachBuildsFromModelVersions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/qwak.builds.orchestrator.BuildsOrchestratorService/DetachBuildsFromModelVersions',
+            qwak_dot_builds_dot_builds__orchestrator__service__pb2.DetachBuildsFromModelVersionsRequest.SerializeToString,
+            qwak_dot_builds_dot_builds__orchestrator__service__pb2.DetachBuildsFromModelVersionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

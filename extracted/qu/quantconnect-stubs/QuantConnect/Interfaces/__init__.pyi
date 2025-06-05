@@ -435,6 +435,16 @@ class IAlgorithmSettings(metaclass=abc.ABCMeta):
     def databases_refresh_period(self, value: datetime.timedelta) -> None:
         ...
 
+    @property
+    @abc.abstractmethod
+    def ignore_unknown_asset_holdings(self) -> bool:
+        """Determines whether to terminate the algorithm when an asset is not supported by Lean or the brokerage"""
+        ...
+
+    @ignore_unknown_asset_holdings.setter
+    def ignore_unknown_asset_holdings(self, value: bool) -> None:
+        ...
+
 
 class ISecurityInitializerProvider(metaclass=abc.ABCMeta):
     """Reduced interface which provides an instance which implements ISecurityInitializer"""

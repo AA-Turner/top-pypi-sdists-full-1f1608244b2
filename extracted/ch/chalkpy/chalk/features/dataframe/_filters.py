@@ -445,9 +445,9 @@ def filter_data_frame(
     underlying: Union[pl.DataFrame, pl.LazyFrame],
     namespace: Optional[str],
 ) -> Union[pl.DataFrame, pl.LazyFrame]:
+
     # Use the Chalk projection / selection syntax, where we support our Filter objects and
     # selection by column name
-    from chalk.features.feature_set import FeatureSetBase
 
     projections: list[str] = []
     filters: List[Filter] = []
@@ -467,7 +467,11 @@ def filter_data_frame(
         if key_error_or_none is not None:
             raise key_error_or_none
     # now = datetime.datetime.now(tz=datetime.timezone.utc)
-    timestamp_feature = None if namespace is None else FeatureSetBase.registry[namespace].__chalk_ts__
+    from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
+
+    timestamp_feature = (
+        None if namespace is None else CURRENT_FEATURE_REGISTRY.get().get_feature_sets()[namespace].__chalk_ts__
+    )
     pl_expr = convert_filters_to_pl_expr(filters, underlying.schema, timestamp_feature, now)
     df = underlying
     if pl_expr is not None:

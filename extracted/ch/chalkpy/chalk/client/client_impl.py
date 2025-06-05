@@ -126,7 +126,6 @@ from chalk.client.models import (
     StreamResolverTestRequest,
     StreamResolverTestResponse,
     TriggerResolverRunRequest,
-    UpdateGraphEntityResponse,
     UploadedParquetShardedOfflineQueryInput,
     UploadFeaturesRequest,
     UploadFeaturesResponse,
@@ -3770,25 +3769,6 @@ https://docs.chalk.ai/cli/apply
             environment_override=environment_id,
             branch=branch,
         )
-
-    def send_updated_entity(
-        self, environment: Optional[EnvironmentId], pickled_entity: bytes
-    ) -> UpdateGraphEntityResponse:
-        resp = self._request(
-            method="POST",
-            uri="/v1/update_graph_entity",
-            response=UpdateGraphEntityResponse,
-            json=None,
-            data=pickled_entity,
-            environment_override=environment,
-            preview_deployment_id=None,
-            branch=None,
-        )
-        if resp.errors:
-            raise ChalkBaseException(errors=resp.errors)
-        return resp
-
-    _send_updated_entity = send_updated_entity  # backcompat
 
     def await_operation_completion(
         self,

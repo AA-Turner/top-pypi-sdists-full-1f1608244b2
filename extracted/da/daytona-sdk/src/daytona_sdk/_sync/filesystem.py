@@ -85,9 +85,7 @@ class FileSystem:
             sandbox.fs.delete_file("workspace/data/old_file.txt")
             ```
         """
-        self.toolbox_api.delete_file(
-            self.instance.id, path=prefix_relative_path(self._get_root_dir(), path)
-        )
+        self.toolbox_api.delete_file(self.instance.id, path=prefix_relative_path(self._get_root_dir(), path))
 
     @overload
     def download_file(self, remote_path: str, timeout: int = 30 * 60) -> bytes:
@@ -239,9 +237,7 @@ class FileSystem:
                 print("Path is a directory")
             ```
         """
-        return self.toolbox_api.get_file_info(
-            self.instance.id, path=prefix_relative_path(self._get_root_dir(), path)
-        )
+        return self.toolbox_api.get_file_info(self.instance.id, path=prefix_relative_path(self._get_root_dir(), path))
 
     @intercept_errors(message_prefix="Failed to list files: ")
     def list_files(self, path: str) -> List[FileInfo]:
@@ -270,9 +266,7 @@ class FileSystem:
             print("Subdirectories:", ", ".join(d.name for d in dirs))
             ```
         """
-        return self.toolbox_api.list_files(
-            self.instance.id, path=prefix_relative_path(self._get_root_dir(), path)
-        )
+        return self.toolbox_api.list_files(self.instance.id, path=prefix_relative_path(self._get_root_dir(), path))
 
     @intercept_errors(message_prefix="Failed to move files: ")
     def move_files(self, source: str, destination: str) -> None:

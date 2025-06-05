@@ -10,3 +10,14 @@ from .._impl import (
     timeseries_channelmetadata_api_UpdateChannelMetadataRequest as UpdateChannelMetadataRequest,
 )
 
+__all__ = [
+    'BatchGetChannelMetadataRequest',
+    'BatchGetChannelMetadataResponse',
+    'BatchUpdateChannelMetadataRequest',
+    'BatchUpdateChannelMetadataResponse',
+    'ChannelIdentifier',
+    'ChannelMetadata',
+    'GetChannelMetadataRequest',
+    'UpdateChannelMetadataRequest',
+]
+

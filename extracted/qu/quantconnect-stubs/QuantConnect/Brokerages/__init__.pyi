@@ -2811,6 +2811,9 @@ class BrokerageName(Enum):
     CHARLES_SCHWAB = 31
     """Transaction and submit/execution rules will use Charles Schwab models"""
 
+    TASTYTRADE = 32
+    """Transaction and submit/execution rules will use Tastytrade models"""
+
 
 class BrokerageModel(System.Object):
     """Provides factory method for creating an IBrokerageModel from the BrokerageName enum"""
@@ -2879,6 +2882,38 @@ class WolverineBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
         
         :param security: Security
         :returns: Wolverine fee model.
+        """
+        ...
+
+
+class TastytradeBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel):
+    """Represents a brokerage model specific to Tastytrade."""
+
+    def __init__(self, account_type: QuantConnect.AccountType = ...) -> None:
+        """
+        Constructor for Tastytrade brokerage model
+        
+        :param account_type: Cash or Margin
+        """
+        ...
+
+    def can_submit_order(self, security: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order, message: typing.Optional[QuantConnect.Brokerages.BrokerageMessageEvent]) -> typing.Tuple[bool, QuantConnect.Brokerages.BrokerageMessageEvent]:
+        """
+        Returns true if the brokerage could accept this order. This takes into account order type, security type.
+        
+        :param security: The security of the order
+        :param order: The order to be processed
+        :param message: If this function returns false, a brokerage message detailing why the order may not be submitted
+        :returns: True if the brokerage could process the order, false otherwise.
+        """
+        ...
+
+    def get_fee_model(self, security: QuantConnect.Securities.Security) -> QuantConnect.Orders.Fees.IFeeModel:
+        """
+        Provides Tastytrade fee model
+        
+        :param security: Security
+        :returns: TradeStation fee model.
         """
         ...
 
@@ -3749,6 +3784,19 @@ class CharlesSchwabBrokerageModel(QuantConnect.Brokerages.DefaultBrokerageModel)
 
 class BrokerageExtensions(System.Object):
     """Provides extension methods for handling brokerage operations."""
+
+    @staticmethod
+    def get_order_position(order_direction: QuantConnect.Orders.OrderDirection, holdings_quantity: float) -> QuantConnect.Orders.OrderPosition:
+        """
+        Gets the position that might result given the specified order direction and the current holdings quantity.
+        This is useful for brokerages that require more specific direction information than provided by the OrderDirection enum
+        (e.g. Tradier differentiates Buy/Sell and BuyToOpen/BuyToCover/SellShort/SellToClose)
+        
+        :param order_direction: The order direction
+        :param holdings_quantity: The current holdings quantity
+        :returns: The order position.
+        """
+        ...
 
     @staticmethod
     def order_crosses_zero(holding_quantity: float, order_quantity: float) -> bool:

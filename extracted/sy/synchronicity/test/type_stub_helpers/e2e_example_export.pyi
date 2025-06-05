@@ -12,19 +12,19 @@ class BlockingFoo:
         ...
 
     class __getarg_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(self) -> str:
+        def __call__(self, /) -> str:
             ...
 
-        async def aio(self) -> str:
+        async def aio(self, /) -> str:
             ...
 
     getarg: __getarg_spec[typing_extensions.Self]
 
     class __gen_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(self) -> typing.Generator[int, None, None]:
+        def __call__(self, /) -> typing.Generator[int, None, None]:
             ...
 
-        def aio(self) -> typing.AsyncGenerator[int, None]:
+        def aio(self, /) -> typing.AsyncGenerator[int, None]:
             ...
 
     gen: __gen_spec[typing_extensions.Self]
@@ -41,10 +41,10 @@ class BlockingFoo:
 _T_Blocking = typing.TypeVar("_T_Blocking", bound="BlockingFoo")
 
 class __listify_spec(typing_extensions.Protocol):
-    def __call__(self, t: _T_Blocking) -> typing.List[_T_Blocking]:
+    def __call__(self, /, t: _T_Blocking) -> typing.List[_T_Blocking]:
         ...
 
-    async def aio(self, t: _T_Blocking) -> typing.List[_T_Blocking]:
+    async def aio(self, /, t: _T_Blocking) -> typing.List[_T_Blocking]:
         ...
 
 listify: __listify_spec
@@ -60,20 +60,20 @@ def overloaded(arg: int) -> int:
 
 
 class __returns_foo_spec(typing_extensions.Protocol):
-    def __call__(self) -> BlockingFoo:
+    def __call__(self, /) -> BlockingFoo:
         ...
 
-    async def aio(self) -> BlockingFoo:
+    async def aio(self, /) -> BlockingFoo:
         ...
 
 returns_foo: __returns_foo_spec
 
 
 class __wrapped_make_context_spec(typing_extensions.Protocol):
-    def __call__(self, a: float) -> synchronicity.combined_types.AsyncAndBlockingContextManager[str]:
+    def __call__(self, /, a: float) -> synchronicity.combined_types.AsyncAndBlockingContextManager[str]:
         ...
 
-    def aio(self, a: float) -> typing.AsyncContextManager[str]:
+    def aio(self, /, a: float) -> typing.AsyncContextManager[str]:
         ...
 
 wrapped_make_context: __wrapped_make_context_spec
@@ -92,10 +92,10 @@ class CallableWrapper(typing.Generic[P, R]):
         ...
 
     class __func_spec(typing_extensions.Protocol[P_INNER, R_INNER, SUPERSELF]):
-        def __call__(self, *args: P_INNER.args, **kwargs: P_INNER.kwargs) -> R_INNER:
+        def __call__(self, /, *args: P_INNER.args, **kwargs: P_INNER.kwargs) -> R_INNER:
             ...
 
-        async def aio(self, *args: P_INNER.args, **kwargs: P_INNER.kwargs) -> R_INNER:
+        async def aio(self, /, *args: P_INNER.args, **kwargs: P_INNER.kwargs) -> R_INNER:
             ...
 
     func: __func_spec[P, R, typing_extensions.Self]

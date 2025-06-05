@@ -27,3 +27,31 @@ from .._impl import (
     scout_layout_api_WorkbookLayoutVisitor as WorkbookLayoutVisitor,
 )
 
+__all__ = [
+    'ChartPanel',
+    'ChartPanelVisitor',
+    'ChartPanelV1',
+    'EmptyPanel',
+    'EmptyPanelVisitor',
+    'EmptyPanelV1',
+    'Panel',
+    'PanelVisitor',
+    'PanelId',
+    'SingleTab',
+    'SingleTabVisitor',
+    'SingleTabV1',
+    'SplitPanel',
+    'SplitPanelVisitor',
+    'SplitPanelOrientation',
+    'SplitPanelV1',
+    'TabbedPanel',
+    'TabbedPanelVisitor',
+    'TabbedPanelV1',
+    'VizPanel',
+    'VizPanelVisitor',
+    'VizPanelV1',
+    'WorkbookLayout',
+    'WorkbookLayoutVisitor',
+    'WorkbookLayoutV1',
+]
+

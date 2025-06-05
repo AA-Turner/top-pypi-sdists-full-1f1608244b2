@@ -24,6 +24,9 @@ from typing import (
     Optional,
     Set,
 )
+from urllib.parse import (
+    quote,
+)
 
 class api_ArchivedStatus(ConjureEnumType):
 
@@ -298,7 +301,8 @@ api_IngestStatusV2Visitor.__module__ = "nominal_api.api"
 
 class api_McapChannelLocator(ConjureUnionType):
     """Locator for a channel in an mcap file. Channel name is not guaranteed to be unique, so channel ID should
-be used for mcap files with duplicate channel names."""
+be used for mcap files with duplicate channel names.
+    """
     _topic: Optional[str] = None
     _id: Optional[int] = None
 
@@ -434,8 +438,7 @@ api_Range.__module__ = "nominal_api.api"
 
 
 class api_SerializableError(ConjureBeanType):
-    """
-    A SerializableError is a representation of a ServiceException that exists to send error
+    """A SerializableError is a representation of a ServiceException that exists to send error
 results to clients as part of a response object when directly throwing an exception is undesirable.
     """
 
@@ -485,8 +488,7 @@ api_SerializableError.__module__ = "nominal_api.api"
 
 
 class api_SeriesDataType(ConjureEnumType):
-    """
-    The data types that are available for querying.
+    """The data types that are available for querying.
     """
 
     DOUBLE = 'DOUBLE'
@@ -560,8 +562,7 @@ api_TimeUnit.__module__ = "nominal_api.api"
 
 
 class api_Timestamp(ConjureBeanType):
-    """
-    Picosecond precision timestamp type, represented by an epoch time in seconds, a nanosecond offset, and
+    """Picosecond precision timestamp type, represented by an epoch time in seconds, a nanosecond offset, and
 optional picosecond offset.
 The nanosecond offset is from the start of the epoch second, so must be less than 1 billion.
 The optional picosecond offset is only used for picosecond-precision data sources and is from the start of
@@ -679,14 +680,13 @@ attachments_api_Attachment.__module__ = "nominal_api.attachments_api"
 
 
 class attachments_api_AttachmentService(Service):
-    """
-    The attachment service provides functionality for creating, updating, and archiving attachments uploaded to S3.
+    """The attachment service provides functionality for creating, updating, and archiving attachments uploaded to S3.
     """
 
     def create(self, auth_header: str, request: "attachments_api_CreateAttachmentRequest") -> "attachments_api_Attachment":
+        """Create a new attachment. Assumes the file is already uploaded to S3 through the upload service.
         """
-        Create a new attachment. Assumes the file is already uploaded to S3 through the upload service.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -697,10 +697,10 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/attachments/v1/attachments'
         _path = _path.format(**_path_params)
@@ -716,9 +716,9 @@ class attachments_api_AttachmentService(Service):
         return _decoder.decode(_response.json(), attachments_api_Attachment, self._return_none_for_unknown_union_types)
 
     def get(self, auth_header: str, rid: str) -> "attachments_api_Attachment":
+        """Get an attachment by its RID.
         """
-        Get an attachment by its RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -728,8 +728,8 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -748,9 +748,9 @@ class attachments_api_AttachmentService(Service):
         return _decoder.decode(_response.json(), attachments_api_Attachment, self._return_none_for_unknown_union_types)
 
     def get_batch(self, auth_header: str, request: "attachments_api_GetAttachmentsRequest") -> "attachments_api_GetAttachmentsResponse":
+        """Get a set of attachments by their RIDs.
         """
-        Get a set of attachments by their RIDs.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -761,10 +761,10 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/attachments/v1/attachments/batch'
         _path = _path.format(**_path_params)
@@ -780,9 +780,9 @@ class attachments_api_AttachmentService(Service):
         return _decoder.decode(_response.json(), attachments_api_GetAttachmentsResponse, self._return_none_for_unknown_union_types)
 
     def get_content(self, auth_header: str, rid: str) -> Any:
+        """Get the binary content of an attachment.
         """
-        Get the binary content of an attachment.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/octet-stream',
@@ -792,8 +792,8 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -814,9 +814,9 @@ class attachments_api_AttachmentService(Service):
         return _raw
 
     def get_uri(self, auth_header: str, rid: str) -> "attachments_api_AttachmentUri":
+        """Get a pre-signed URI to download an attachment. The link expires in 1 minute.
         """
-        Get a pre-signed URI to download an attachment. The link expires in 1 minute.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -826,8 +826,8 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -846,9 +846,9 @@ class attachments_api_AttachmentService(Service):
         return _decoder.decode(_response.json(), attachments_api_AttachmentUri, self._return_none_for_unknown_union_types)
 
     def update(self, auth_header: str, request: "attachments_api_UpdateAttachmentRequest", rid: str) -> "attachments_api_Attachment":
+        """Update an attachment. Only the fields that are set in the request will be updated.
         """
-        Update an attachment. Only the fields that are set in the request will be updated.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -859,11 +859,11 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/attachments/v1/attachments/{rid}'
         _path = _path.format(**_path_params)
@@ -879,9 +879,9 @@ class attachments_api_AttachmentService(Service):
         return _decoder.decode(_response.json(), attachments_api_Attachment, self._return_none_for_unknown_union_types)
 
     def archive(self, auth_header: str, rid: str) -> None:
+        """Archive an attachment.
         """
-        Archive an attachment.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -891,8 +891,8 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -910,9 +910,9 @@ class attachments_api_AttachmentService(Service):
         return
 
     def unarchive(self, auth_header: str, rid: str) -> None:
+        """Unarchive an attachment.
         """
-        Unarchive an attachment.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -922,8 +922,8 @@ class attachments_api_AttachmentService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -947,8 +947,7 @@ attachments_api_AttachmentService.__module__ = "nominal_api.attachments_api"
 
 
 class attachments_api_AttachmentUri(ConjureBeanType):
-    """
-    Pre-signed URI that will download the attachment directly from S3.
+    """Pre-signed URI that will download the attachment directly from S3.
 Expires if the download has not started in 1 minute.
     """
 
@@ -1018,8 +1017,7 @@ class attachments_api_CreateAttachmentRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the attachment. If not provided, the attachment will be created in
+        """The workspace in which to create the attachment. If not provided, the attachment will be created in
 the default workspace for the user's organization, if the default workspace for the
 organization is configured.
         """
@@ -1300,15 +1298,14 @@ authentication_api_AppearanceSetting.__module__ = "nominal_api.authentication_ap
 
 
 class authentication_api_AuthenticationServiceV2(Service):
-    """
-    This service provides operations for managing user and org profiles/settings.
+    """This service provides operations for managing user and org profiles/settings.
 Its name is a bit of a misnomer.
     """
 
     def get_my_profile(self, auth_header: str) -> "authentication_api_UserV2":
+        """Gets the profile of the authenticated user.
         """
-        Gets the profile of the authenticated user.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1318,7 +1315,7 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -1337,9 +1334,9 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), authentication_api_UserV2, self._return_none_for_unknown_union_types)
 
     def update_my_profile(self, auth_header: str, update_my_profile_request: "authentication_api_UpdateMyProfileRequest") -> "authentication_api_UserV2":
+        """Updates the profile of the authenticated user.
         """
-        Updates the profile of the authenticated user.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1350,10 +1347,10 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(update_my_profile_request)
+        _json: Any = _conjure_encoder.default(update_my_profile_request)
 
         _path = '/authentication/v2/my/profile'
         _path = _path.format(**_path_params)
@@ -1369,9 +1366,9 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), authentication_api_UserV2, self._return_none_for_unknown_union_types)
 
     def get_my_settings(self, auth_header: str) -> "authentication_api_UserSettings":
+        """Gets the settings of the authenticated user.
         """
-        Gets the settings of the authenticated user.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1381,7 +1378,7 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -1400,9 +1397,9 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), authentication_api_UserSettings, self._return_none_for_unknown_union_types)
 
     def update_my_settings(self, auth_header: str, user_settings: "authentication_api_UserSettings") -> "authentication_api_UserSettings":
+        """Updates the settings of the authenticated user.
         """
-        Updates the settings of the authenticated user.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1413,10 +1410,10 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(user_settings)
+        _json: Any = _conjure_encoder.default(user_settings)
 
         _path = '/authentication/v2/my/settings'
         _path = _path.format(**_path_params)
@@ -1432,9 +1429,9 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), authentication_api_UserSettings, self._return_none_for_unknown_union_types)
 
     def get_my_org_settings(self, auth_header: str) -> "authentication_api_OrgSettings":
+        """Gets the settings of the org of the authenticated user.
         """
-        Gets the settings of the org of the authenticated user.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1444,7 +1441,7 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -1463,9 +1460,9 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), authentication_api_OrgSettings, self._return_none_for_unknown_union_types)
 
     def update_my_org_settings(self, auth_header: str, org_settings: "authentication_api_OrgSettings") -> "authentication_api_OrgSettings":
+        """Updates the settings of the org of the authenticated user.
         """
-        Updates the settings of the org of the authenticated user.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1476,10 +1473,10 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(org_settings)
+        _json: Any = _conjure_encoder.default(org_settings)
 
         _path = '/authentication/v2/org/settings'
         _path = _path.format(**_path_params)
@@ -1495,9 +1492,9 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), authentication_api_OrgSettings, self._return_none_for_unknown_union_types)
 
     def search_users_v2(self, auth_header: str, request: "authentication_api_SearchUsersRequest") -> "authentication_api_SearchUsersResponseV2":
+        """Searches for users by email and displayName.
         """
-        Searches for users by email and displayName.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1508,10 +1505,10 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authentication/v2/users'
         _path = _path.format(**_path_params)
@@ -1527,10 +1524,10 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), authentication_api_SearchUsersResponseV2, self._return_none_for_unknown_union_types)
 
     def get_users(self, auth_header: str, user_rids: List[str] = None) -> List["authentication_api_UserV2"]:
-        """
-        Get users by RID.
+        """Get users by RID.
         """
         user_rids = user_rids if user_rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1541,10 +1538,10 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(user_rids)
+        _json: Any = _conjure_encoder.default(user_rids)
 
         _path = '/authentication/v2/users/batch'
         _path = _path.format(**_path_params)
@@ -1560,9 +1557,9 @@ Its name is a bit of a misnomer.
         return _decoder.decode(_response.json(), List[authentication_api_UserV2], self._return_none_for_unknown_union_types)
 
     def get_user(self, auth_header: str, user_rid: str) -> "authentication_api_UserV2":
+        """Gets a user by RID.
         """
-        Gets a user by RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -1572,8 +1569,8 @@ Its name is a bit of a misnomer.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'userRid': user_rid,
+        _path_params: Dict[str, str] = {
+            'userRid': quote(str(_conjure_encoder.default(user_rid)), safe=''),
         }
 
         _json: Any = None
@@ -1711,15 +1708,13 @@ class authentication_api_SearchUsersQuery(ConjureUnionType):
 
     @builtins.property
     def exact_match(self) -> Optional[str]:
-        """
-        Performs case insensitive exact match on email
+        """Performs case insensitive exact match on email
         """
         return self._exact_match
 
     @builtins.property
     def search_text(self) -> Optional[str]:
-        """
-        Searches email and display name
+        """Searches email and display name
         """
         return self._search_text
 
@@ -1790,8 +1785,7 @@ class authentication_api_SearchUsersRequest(ConjureBeanType):
 
     @builtins.property
     def sort_by(self) -> Optional["authentication_api_SortBy"]:
-        """
-        UPDATED_AT descending by default
+        """UPDATED_AT descending by default
         """
         return self._sort_by
 
@@ -1801,8 +1795,7 @@ class authentication_api_SearchUsersRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1_000.
+        """Defaults to 100. Will throw if larger than 1_000.
         """
         return self._page_size
 
@@ -2013,8 +2006,7 @@ class authentication_api_UserV2(ConjureBeanType):
 
     @builtins.property
     def avatar_url(self) -> str:
-        """
-        Avatar URL or a default avatar if the user does not have one.
+        """Avatar URL or a default avatar if the user does not have one.
         """
         return self._avatar_url
 
@@ -2101,16 +2093,15 @@ authorization_AuthorizationRequest.__module__ = "nominal_api.authorization"
 
 
 class authorization_AuthorizationService(Service):
-    """
-    Authorization service manages the permissions for a user
+    """Authorization service manages the permissions for a user
 to access resources.
     """
 
     def authorize(self, auth_header: str, request: "authorization_AuthorizationRequest") -> List[str]:
-        """
-        Given a set of resources, returns the set of resources that the
+        """Given a set of resources, returns the set of resources that the
 user is authorized to access.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2121,10 +2112,10 @@ user is authorized to access.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/authorize'
         _path = _path.format(**_path_params)
@@ -2140,11 +2131,11 @@ user is authorized to access.
         return _decoder.decode(_response.json(), List[str], self._return_none_for_unknown_union_types)
 
     def batch_get_workspace_for_resource(self, auth_header: str, request: List[str] = None) -> Dict[str, str]:
-        """
-        Given a set of resources, returns the workspace that each resource belongs to. If a user
+        """Given a set of resources, returns the workspace that each resource belongs to. If a user
 is not authorized on the resource, will omit the resource from the response.
         """
         request = request if request is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2155,10 +2146,10 @@ is not authorized on the resource, will omit the resource from the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/batch-get-workspace-for-resource'
         _path = _path.format(**_path_params)
@@ -2174,13 +2165,13 @@ is not authorized on the resource, will omit the resource from the response.
         return _decoder.decode(_response.json(), Dict[str, api_rids_WorkspaceRid], self._return_none_for_unknown_union_types)
 
     def register_in_workspace(self, auth_header: str, request: "authorization_RegisterInWorkspaceRequest") -> None:
-        """
-        Marks a set of resources as belonging to a workspace. Either all resources are
+        """Marks a set of resources as belonging to a workspace. Either all resources are
 registered or none are.
 If the user is not in the workspace, this will throw.
 If a resource already belongs to a different workspace, this will throw.
 If a resource already belongs to this workspace, this is a no-op.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2191,10 +2182,10 @@ If a resource already belongs to this workspace, this is a no-op.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/register-in-workspace'
         _path = _path.format(**_path_params)
@@ -2209,10 +2200,10 @@ If a resource already belongs to this workspace, this is a no-op.
         return
 
     def check_admin(self, auth_header: str) -> None:
-        """
-        Given an authenticated session, this endpoint returns a HTTP 204 if the
+        """Given an authenticated session, this endpoint returns a HTTP 204 if the
 authenticated user is an admin and HTTP 403 otherwise.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2222,7 +2213,7 @@ authenticated user is an admin and HTTP 403 otherwise.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -2240,9 +2231,9 @@ authenticated user is an admin and HTTP 403 otherwise.
         return
 
     def is_email_allowed(self, request: "authorization_IsEmailAllowedRequest") -> "authorization_IsEmailAllowedResponse":
+        """Checks if the email is allowed to register.
         """
-        Checks if the email is allowed to register.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2252,10 +2243,10 @@ authenticated user is an admin and HTTP 403 otherwise.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/is-email-allowed'
         _path = _path.format(**_path_params)
@@ -2271,13 +2262,13 @@ authenticated user is an admin and HTTP 403 otherwise.
         return _decoder.decode(_response.json(), authorization_IsEmailAllowedResponse, self._return_none_for_unknown_union_types)
 
     def get_access_token(self, request: "authorization_GetAccessTokenRequest") -> "authorization_GetAccessTokenResponse":
-        """
-        Provide an OIDC ID and access token to get a Nominal access token,
+        """Provide an OIDC ID and access token to get a Nominal access token,
 suitable for making API requests. Its expiry will match that of the
 input access token, capped at 24h.
 Throws NotAuthorized if either token is invalid or if the OIDC provider
 is not known.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2287,10 +2278,10 @@ is not known.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/access-token'
         _path = _path.format(**_path_params)
@@ -2306,10 +2297,10 @@ is not known.
         return _decoder.decode(_response.json(), authorization_GetAccessTokenResponse, self._return_none_for_unknown_union_types)
 
     def create_api_key(self, auth_header: str, request: "authorization_CreateApiKeyRequest") -> "authorization_CreateApiKeyResponse":
-        """
-        Provide a long-lived API key for making API requests.
+        """Provide a long-lived API key for making API requests.
 The API key is irretrievable after initial creation.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2320,10 +2311,10 @@ The API key is irretrievable after initial creation.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/api-key'
         _path = _path.format(**_path_params)
@@ -2339,9 +2330,9 @@ The API key is irretrievable after initial creation.
         return _decoder.decode(_response.json(), authorization_CreateApiKeyResponse, self._return_none_for_unknown_union_types)
 
     def list_api_keys_in_org(self, auth_header: str, request: "authorization_ListApiKeyRequest") -> "authorization_ListApiKeyResponse":
+        """List all API keys in the organization.
         """
-        List all API keys in the organization.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2352,10 +2343,10 @@ The API key is irretrievable after initial creation.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/api-keys/org'
         _path = _path.format(**_path_params)
@@ -2371,9 +2362,9 @@ The API key is irretrievable after initial creation.
         return _decoder.decode(_response.json(), authorization_ListApiKeyResponse, self._return_none_for_unknown_union_types)
 
     def list_user_api_keys(self, auth_header: str, request: "authorization_ListApiKeyRequest") -> "authorization_ListApiKeyResponse":
+        """List all API keys for the user.
         """
-        List all API keys for the user.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2384,10 +2375,10 @@ The API key is irretrievable after initial creation.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/authorization/v1/api-keys/user'
         _path = _path.format(**_path_params)
@@ -2403,9 +2394,9 @@ The API key is irretrievable after initial creation.
         return _decoder.decode(_response.json(), authorization_ListApiKeyResponse, self._return_none_for_unknown_union_types)
 
     def revoke_api_key(self, auth_header: str, rid: str) -> None:
+        """Delete an API key.
         """
-        Delete an API key.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2415,8 +2406,8 @@ The API key is irretrievable after initial creation.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -2533,15 +2524,13 @@ class authorization_CreateApiKeyRequest(ConjureBeanType):
 
     @builtins.property
     def api_key_name(self) -> str:
-        """
-        The name of the API key to create.
+        """The name of the API key to create.
         """
         return self._api_key_name
 
     @builtins.property
     def expires_after_days(self) -> Optional[int]:
-        """
-        The number of days after which the API key will expire.
+        """The number of days after which the API key will expire.
 If omitted, the API key will not expire.
         """
         return self._expires_after_days
@@ -2625,8 +2614,7 @@ class authorization_GetAccessTokenRequest(ConjureBeanType):
 
     @builtins.property
     def access_token(self) -> str:
-        """
-        The access token's audience must be for the Nominal API.
+        """The access token's audience must be for the Nominal API.
         """
         return self._access_token
 
@@ -2678,15 +2666,14 @@ authorization_GetAccessTokenResponse.__module__ = "nominal_api.authorization"
 
 
 class authorization_InternalApiKeyService(Service):
-    """
-    This internal-only service manages long lived api keys.e
+    """This internal-only service manages long lived api keys.e
     """
 
     def get_access_token_from_api_key_value(self, request: "authorization_GetAccessTokenFromApiKeyRequest") -> "authorization_GetAccessTokenResponse":
-        """
-        Get a Nominal-issued access token from a long-lived API key. Callers should verify that
+        """Get a Nominal-issued access token from a long-lived API key. Callers should verify that
 their api key is formatted properly (i.e. prefixed with "nominal_api_key") before calling this endpoint.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -2696,10 +2683,10 @@ their api key is formatted properly (i.e. prefixed with "nominal_api_key") befor
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/api-key-internal/v1/access-token'
         _path = _path.format(**_path_params)
@@ -2787,22 +2774,19 @@ class authorization_ListApiKeyRequest(ConjureBeanType):
 
     @builtins.property
     def include_deleted(self) -> Optional[bool]:
-        """
-        If true, include deleted API keys in the response. Defaults to false.
+        """If true, include deleted API keys in the response. Defaults to false.
         """
         return self._include_deleted
 
     @builtins.property
     def include_expired(self) -> Optional[bool]:
-        """
-        If true, include expired API keys in the response. Defaults to false.
+        """If true, include expired API keys in the response. Defaults to false.
         """
         return self._include_expired
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        The maximum number of API keys to return. Defaults to 100.
+        """The maximum number of API keys to return. Defaults to 100.
         """
         return self._page_size
 
@@ -2909,78 +2893,67 @@ class comments_api_Comment(ConjureBeanType):
 
     @builtins.property
     def rid(self) -> str:
-        """
-        Unique resource identifier for the comment
+        """Unique resource identifier for the comment
         """
         return self._rid
 
     @builtins.property
     def parent(self) -> "comments_api_CommentParent":
-        """
-        The parent of the comment. It can be a resource or another comment.
+        """The parent of the comment. It can be a resource or another comment.
         """
         return self._parent
 
     @builtins.property
     def author_rid(self) -> str:
-        """
-        The user who authored the comment
+        """The user who authored the comment
         """
         return self._author_rid
 
     @builtins.property
     def created_at(self) -> str:
-        """
-        The time the comment was created
+        """The time the comment was created
         """
         return self._created_at
 
     @builtins.property
     def edited_at(self) -> Optional[str]:
-        """
-        The time the comment was edited. Empty if the comment has not been edited.
+        """The time the comment was edited. Empty if the comment has not been edited.
         """
         return self._edited_at
 
     @builtins.property
     def deleted_at(self) -> Optional[str]:
-        """
-        The time the comment was deleted. Empty if the comment has not been deleted.
+        """The time the comment was deleted. Empty if the comment has not been deleted.
         """
         return self._deleted_at
 
     @builtins.property
     def content(self) -> str:
-        """
-        The markdown content of the comment.
+        """The markdown content of the comment.
         """
         return self._content
 
     @builtins.property
     def pinned_by(self) -> Optional[str]:
-        """
-        The user who pinned the comment. Empty if the comment is not pinned.
+        """The user who pinned the comment. Empty if the comment is not pinned.
         """
         return self._pinned_by
 
     @builtins.property
     def pinned_at(self) -> Optional[str]:
-        """
-        The time the comment was pinned. Empty if the comment is not pinned.
+        """The time the comment was pinned. Empty if the comment is not pinned.
         """
         return self._pinned_at
 
     @builtins.property
     def reactions(self) -> List["comments_api_Reaction"]:
-        """
-        The reactions on the comment
+        """The reactions on the comment
         """
         return self._reactions
 
     @builtins.property
     def attachments(self) -> List[str]:
-        """
-        The comment's attachments
+        """The comment's attachments
         """
         return self._attachments
 
@@ -2991,7 +2964,8 @@ comments_api_Comment.__module__ = "nominal_api.comments_api"
 
 
 class comments_api_CommentParent(ConjureUnionType):
-    """The parent of a comment. It can be a resource or another comment in the case of a reply."""
+    """The parent of a comment. It can be a resource or another comment in the case of a reply.
+    """
     _resource: Optional["comments_api_CommentParentResource"] = None
     _comment: Optional["comments_api_CommentParentComment"] = None
 
@@ -3083,8 +3057,7 @@ class comments_api_CommentParentComment(ConjureBeanType):
 
     @builtins.property
     def comment_rid(self) -> str:
-        """
-        The resource identifier for the comment that the comment is replying to
+        """The resource identifier for the comment that the comment is replying to
         """
         return self._comment_rid
 
@@ -3111,15 +3084,13 @@ class comments_api_CommentParentResource(ConjureBeanType):
 
     @builtins.property
     def resource_type(self) -> "comments_api_ResourceType":
-        """
-        The type of resource that the comment is associated with
+        """The type of resource that the comment is associated with
         """
         return self._resource_type
 
     @builtins.property
     def resource_rid(self) -> str:
-        """
-        The resource identifier for the resource that the comment is associated with. For example, a run or a workbook.
+        """The resource identifier for the resource that the comment is associated with. For example, a run or a workbook.
         """
         return self._resource_rid
 
@@ -3130,15 +3101,14 @@ comments_api_CommentParentResource.__module__ = "nominal_api.comments_api"
 
 
 class comments_api_CommentsService(Service):
-    """
-    Comments service manages conversations about resources.
+    """Comments service manages conversations about resources.
     """
 
     def get_conversation(self, auth_header: str, resource_rid: str, resource_type: "comments_api_ResourceType") -> "comments_api_Conversation":
-        """
-        A conversation is a fully resolved comment tree. It includes all comments for the given resource
+        """A conversation is a fully resolved comment tree. It includes all comments for the given resource
 and all the nested comments/replies to those comments.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3148,9 +3118,9 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceType': resource_type,
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceType': quote(str(_conjure_encoder.default(resource_type)), safe=''),
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
         _json: Any = None
@@ -3169,9 +3139,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Conversation, self._return_none_for_unknown_union_types)
 
     def get_conversation_count(self, auth_header: str, resource_rid: str, resource_type: "comments_api_ResourceType", include_deleted: Optional[bool] = None) -> int:
+        """Returns the number of comments in a conversation.
         """
-        Returns the number of comments in a conversation.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3179,12 +3149,12 @@ and all the nested comments/replies to those comments.
         }
 
         _params: Dict[str, Any] = {
-            'includeDeleted': include_deleted,
+            'includeDeleted': _conjure_encoder.default(include_deleted),
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceType': resource_type,
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceType': quote(str(_conjure_encoder.default(resource_type)), safe=''),
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
         _json: Any = None
@@ -3203,9 +3173,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), int, self._return_none_for_unknown_union_types)
 
     def get_comment(self, auth_header: str, comment_rid: str) -> "comments_api_Comment":
+        """Get a comment identified by its RID
         """
-        Get a comment identified by its RID
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3215,8 +3185,8 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'commentRid': comment_rid,
+        _path_params: Dict[str, str] = {
+            'commentRid': quote(str(_conjure_encoder.default(comment_rid)), safe=''),
         }
 
         _json: Any = None
@@ -3235,9 +3205,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Comment, self._return_none_for_unknown_union_types)
 
     def create_comment(self, auth_header: str, request: "comments_api_CreateCommentRequest") -> "comments_api_Comment":
+        """Create a comment on a resource
         """
-        Create a comment on a resource
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3248,10 +3218,10 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/comments/v1/comments'
         _path = _path.format(**_path_params)
@@ -3267,9 +3237,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Comment, self._return_none_for_unknown_union_types)
 
     def edit_comment(self, auth_header: str, comment_rid: str, request: "comments_api_EditCommentRequest") -> "comments_api_Comment":
+        """Edit an existing comment
         """
-        Edit an existing comment
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3280,11 +3250,11 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'commentRid': comment_rid,
+        _path_params: Dict[str, str] = {
+            'commentRid': quote(str(_conjure_encoder.default(comment_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/comments/v1/comments/{commentRid}'
         _path = _path.format(**_path_params)
@@ -3300,9 +3270,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Comment, self._return_none_for_unknown_union_types)
 
     def delete_comment(self, auth_header: str, comment_rid: str) -> "comments_api_Comment":
+        """Delete an existing comment
         """
-        Delete an existing comment
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3312,8 +3282,8 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'commentRid': comment_rid,
+        _path_params: Dict[str, str] = {
+            'commentRid': quote(str(_conjure_encoder.default(comment_rid)), safe=''),
         }
 
         _json: Any = None
@@ -3332,9 +3302,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Comment, self._return_none_for_unknown_union_types)
 
     def pin_comment(self, auth_header: str, comment_rid: str) -> "comments_api_Comment":
+        """Pin a comment to the top of the conversation
         """
-        Pin a comment to the top of the conversation
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3344,8 +3314,8 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'commentRid': comment_rid,
+        _path_params: Dict[str, str] = {
+            'commentRid': quote(str(_conjure_encoder.default(comment_rid)), safe=''),
         }
 
         _json: Any = None
@@ -3364,9 +3334,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Comment, self._return_none_for_unknown_union_types)
 
     def unpin_comment(self, auth_header: str, comment_rid: str) -> "comments_api_Comment":
+        """Unpin a comment from the top of the conversation
         """
-        Unpin a comment from the top of the conversation
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3376,8 +3346,8 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'commentRid': comment_rid,
+        _path_params: Dict[str, str] = {
+            'commentRid': quote(str(_conjure_encoder.default(comment_rid)), safe=''),
         }
 
         _json: Any = None
@@ -3396,9 +3366,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Comment, self._return_none_for_unknown_union_types)
 
     def add_reaction(self, auth_header: str, comment_rid: str, type: "comments_api_ReactionType") -> "comments_api_Comment":
+        """Create a reaction on a comment
         """
-        Create a reaction on a comment
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3408,9 +3378,9 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'commentRid': comment_rid,
-            'type': type,
+        _path_params: Dict[str, str] = {
+            'commentRid': quote(str(_conjure_encoder.default(comment_rid)), safe=''),
+            'type': quote(str(_conjure_encoder.default(type)), safe=''),
         }
 
         _json: Any = None
@@ -3429,9 +3399,9 @@ and all the nested comments/replies to those comments.
         return _decoder.decode(_response.json(), comments_api_Comment, self._return_none_for_unknown_union_types)
 
     def remove_reaction(self, auth_header: str, comment_rid: str, type: "comments_api_ReactionType") -> "comments_api_Comment":
+        """Create a reaction on a comment
         """
-        Create a reaction on a comment
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -3441,9 +3411,9 @@ and all the nested comments/replies to those comments.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'commentRid': comment_rid,
-            'type': type,
+        _path_params: Dict[str, str] = {
+            'commentRid': quote(str(_conjure_encoder.default(comment_rid)), safe=''),
+            'type': quote(str(_conjure_encoder.default(type)), safe=''),
         }
 
         _json: Any = None
@@ -3486,22 +3456,19 @@ class comments_api_Conversation(ConjureBeanType):
 
     @builtins.property
     def resource_rid(self) -> str:
-        """
-        RID for the resource that the conversation is associated with.
+        """RID for the resource that the conversation is associated with.
         """
         return self._resource_rid
 
     @builtins.property
     def resource_type(self) -> "comments_api_ResourceType":
-        """
-        The type of the resource that the conversation is associated with.
+        """The type of the resource that the conversation is associated with.
         """
         return self._resource_type
 
     @builtins.property
     def comments(self) -> List["comments_api_ConversationNode"]:
-        """
-        The comments on the conversation ordered by creation time.
+        """The comments on the conversation ordered by creation time.
 Empty if the comment has no replies.
         """
         return self._comments
@@ -3529,15 +3496,13 @@ class comments_api_ConversationNode(ConjureBeanType):
 
     @builtins.property
     def comment(self) -> "comments_api_Comment":
-        """
-        The comment
+        """The comment
         """
         return self._comment
 
     @builtins.property
     def replies(self) -> List["comments_api_ConversationNode"]:
-        """
-        The comments on (aka replies to) the comment ordered by creation time. Empty if the comment has no replies.
+        """The comments on (aka replies to) the comment ordered by creation time. Empty if the comment has no replies.
         """
         return self._replies
 
@@ -3570,15 +3535,13 @@ class comments_api_CreateCommentRequest(ConjureBeanType):
 
     @builtins.property
     def content(self) -> str:
-        """
-        The content of the comment. Markdown supported.
+        """The content of the comment. Markdown supported.
         """
         return self._content
 
     @builtins.property
     def attachments(self) -> List[str]:
-        """
-        Attachments to the comment.
+        """Attachments to the comment.
         """
         return self._attachments
 
@@ -3605,15 +3568,13 @@ class comments_api_EditCommentRequest(ConjureBeanType):
 
     @builtins.property
     def content(self) -> str:
-        """
-        The content of the comment. Markdown supported.
+        """The content of the comment. Markdown supported.
         """
         return self._content
 
     @builtins.property
     def attachments(self) -> List[str]:
-        """
-        Attachments to the comment.
+        """Attachments to the comment.
         """
         return self._attachments
 
@@ -3644,29 +3605,25 @@ class comments_api_Reaction(ConjureBeanType):
 
     @builtins.property
     def rid(self) -> str:
-        """
-        Unique resource identifier for the reaction
+        """Unique resource identifier for the reaction
         """
         return self._rid
 
     @builtins.property
     def user_rid(self) -> str:
-        """
-        The user who authored the reaction
+        """The user who authored the reaction
         """
         return self._user_rid
 
     @builtins.property
     def created_at(self) -> str:
-        """
-        The time the reaction was created
+        """The time the reaction was created
         """
         return self._created_at
 
     @builtins.property
     def type(self) -> "comments_api_ReactionType":
-        """
-        The type of reaction
+        """The type of reaction
         """
         return self._type
 
@@ -3779,8 +3736,7 @@ class datasource_api_BatchGetChannelPrefixTreeRequest(ConjureBeanType):
 
     @builtins.property
     def data_scope_filters(self) -> Optional["datasource_api_DataScopeFilters"]:
-        """
-        When dataScopeFilters are specified, the set of data sources must match the set of data sources in
+        """When dataScopeFilters are specified, the set of data sources must match the set of data sources in
 DataScopeFilters#tags
         """
         return self._data_scope_filters
@@ -3792,8 +3748,7 @@ datasource_api_BatchGetChannelPrefixTreeRequest.__module__ = "nominal_api.dataso
 
 
 class datasource_api_BatchGetChannelPrefixTreeResponse(ConjureBeanType):
-    """
-    If the tree for a data source has not been indexed, it will be omitted from the map.
+    """If the tree for a data source has not been indexed, it will be omitted from the map.
     """
 
     @builtins.classmethod
@@ -4039,8 +3994,7 @@ class datasource_api_ChannelPrefixTreeNode(ConjureBeanType):
 
     @builtins.property
     def part(self) -> str:
-        """
-        Should be combined with the ancestor parts and the delimiter to form the full prefix.
+        """Should be combined with the ancestor parts and the delimiter to form the full prefix.
         """
         return self._part
 
@@ -4081,8 +4035,7 @@ class datasource_api_ChannelWithAvailableTags(ConjureBeanType):
 
     @builtins.property
     def available_tags(self) -> Dict[str, List[str]]:
-        """
-        A set of tag keys and their values given the initial set of filters. The initial tag filters
+        """A set of tag keys and their values given the initial set of filters. The initial tag filters
 will be included in the map with their corresponding values.
         """
         return self._available_tags
@@ -4147,23 +4100,20 @@ class datasource_api_DataScopeFilters(ConjureBeanType):
 
     @builtins.property
     def tags(self) -> Dict[str, Dict[str, str]]:
-        """
-        For each data source specified as a key, search will only return channels containing a superset of the 
+        """For each data source specified as a key, search will only return channels containing a superset of the 
 tags specified for that given datasource.
         """
         return self._tags
 
     @builtins.property
     def min_data_updated_time(self) -> "scout_run_api_UtcTimestamp":
-        """
-        Will only return channels that have had new data after the specified time.
+        """Will only return channels that have had new data after the specified time.
         """
         return self._min_data_updated_time
 
     @builtins.property
     def max_data_start_time(self) -> "scout_run_api_UtcTimestamp":
-        """
-        Will only return channels that have data before the specified time.
+        """Will only return channels that have data before the specified time.
         """
         return self._max_data_start_time
 
@@ -4190,8 +4140,7 @@ class datasource_api_DataSourcePrefixNode(ConjureBeanType):
 
     @builtins.property
     def part(self) -> str:
-        """
-        Should be combined with the ancestor parts and the delimiter to form the full prefix.
+        """Should be combined with the ancestor parts and the delimiter to form the full prefix.
         """
         return self._part
 
@@ -4307,8 +4256,7 @@ class datasource_api_GetDataScopeBoundsResponse(ConjureBeanType):
 
     @builtins.property
     def end_time(self) -> Optional["api_Timestamp"]:
-        """
-        If missing, the end bound is not known definitively. This can happen if the
+        """If missing, the end bound is not known definitively. This can happen if the
 data scope corresponds to an external database or its data was not updated in the last month.
         """
         return self._end_time
@@ -4336,15 +4284,13 @@ class datasource_api_GetTagValuesForDataSourceRequest(ConjureBeanType):
 
     @builtins.property
     def tag_keys(self) -> Optional[List[str]]:
-        """
-        If empty, returns all available tag keys.
+        """If empty, returns all available tag keys.
         """
         return self._tag_keys
 
     @builtins.property
     def range(self) -> Optional["api_Range"]:
-        """
-        For Nominal data sources, a time range can be provided to filter tag values to those present within the 
+        """For Nominal data sources, a time range can be provided to filter tag values to those present within the 
 months spanned by the range. If left empty, this defaults to the last month. For external data sources, 
 the range must not be specified, as all tag values are returned.
         """
@@ -4420,8 +4366,7 @@ class datasource_api_SearchChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def exact_match(self) -> List[str]:
-        """
-        Will return only channels that contain all strings specified as exact matches (case insensitive).
+        """Will return only channels that contain all strings specified as exact matches (case insensitive).
         """
         return self._exact_match
 
@@ -4439,8 +4384,7 @@ class datasource_api_SearchChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 1000. Will throw if larger than 1000.
+        """Defaults to 1000. Will throw if larger than 1000.
         """
         return self._page_size
 
@@ -4512,8 +4456,7 @@ class datasource_api_SearchFilteredChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def exact_match(self) -> List[str]:
-        """
-        Will return only channels that contain all strings specified as exact matches (case insensitive).
+        """Will return only channels that contain all strings specified as exact matches (case insensitive).
         """
         return self._exact_match
 
@@ -4527,15 +4470,13 @@ class datasource_api_SearchFilteredChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def result_size(self) -> Optional[int]:
-        """
-        Defaults to 200. Will throw if larger than 200.
+        """Defaults to 200. Will throw if larger than 200.
         """
         return self._result_size
 
     @builtins.property
     def tags(self) -> Dict[str, Dict[str, str]]:
-        """
-        For each data source specified as a key, search will only return channels containing a superset of the 
+        """For each data source specified as a key, search will only return channels containing a superset of the 
 tags specified for that given datasource. If a data source is present in the dataSources field but not
 in this map, or if a data source points to an empty map of tags, it will be searched without tag filters.
         """
@@ -4543,15 +4484,13 @@ in this map, or if a data source points to an empty map of tags, it will be sear
 
     @builtins.property
     def min_data_updated_time(self) -> Optional["scout_run_api_UtcTimestamp"]:
-        """
-        If specified, search will only return channels that have had new data after the specified time.
+        """If specified, search will only return channels that have had new data after the specified time.
         """
         return self._min_data_updated_time
 
     @builtins.property
     def max_data_start_time(self) -> Optional["scout_run_api_UtcTimestamp"]:
-        """
-        If specified, search will only return channels that have data before the specified time.
+        """If specified, search will only return channels that have data before the specified time.
         """
         return self._max_data_start_time
 
@@ -4603,8 +4542,7 @@ class datasource_api_SearchHierarchicalChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def parent(self) -> List[str]:
-        """
-        The parent (represented as a list of parts) to search under. If empty, will return all top-level channels.
+        """The parent (represented as a list of parts) to search under. If empty, will return all top-level channels.
         """
         return self._parent
 
@@ -4614,8 +4552,7 @@ class datasource_api_SearchHierarchicalChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def data_scope_filters(self) -> Optional["datasource_api_DataScopeFilters"]:
-        """
-        When dataScopeFilters are specified, the set of data sources must match the set of data sources in
+        """When dataScopeFilters are specified, the set of data sources must match the set of data sources in
 DataScopeFilters#tags
         """
         return self._data_scope_filters
@@ -4727,11 +4664,11 @@ datasource_api_SeriesArchetypeRidOrLogicalSeriesRidVisitor.__module__ = "nominal
 
 
 class datasource_logset_LogSetService(Service):
-    """
-    Log sets are a type of datasource which can be used to store log data.
+    """Log sets are a type of datasource which can be used to store log data.
     """
 
     def create(self, auth_header: str, request: "datasource_logset_api_CreateLogSetRequest") -> "datasource_logset_api_LogSetMetadata":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -4742,10 +4679,10 @@ class datasource_logset_LogSetService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/log-set/v1/log-sets'
         _path = _path.format(**_path_params)
@@ -4761,6 +4698,7 @@ class datasource_logset_LogSetService(Service):
         return _decoder.decode(_response.json(), datasource_logset_api_LogSetMetadata, self._return_none_for_unknown_union_types)
 
     def attach_logs_and_finalize(self, auth_header: str, log_set_rid: str, request: "datasource_logset_api_AttachLogsAndFinalizeRequest") -> "datasource_logset_api_LogSetMetadata":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -4771,11 +4709,11 @@ class datasource_logset_LogSetService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'logSetRid': log_set_rid,
+        _path_params: Dict[str, str] = {
+            'logSetRid': quote(str(_conjure_encoder.default(log_set_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/log-set/v1/log-set/{logSetRid}/attach-and-finalize'
         _path = _path.format(**_path_params)
@@ -4791,6 +4729,7 @@ class datasource_logset_LogSetService(Service):
         return _decoder.decode(_response.json(), datasource_logset_api_LogSetMetadata, self._return_none_for_unknown_union_types)
 
     def get_log_set_metadata(self, auth_header: str, log_set_rid: str) -> "datasource_logset_api_LogSetMetadata":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -4800,8 +4739,8 @@ class datasource_logset_LogSetService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'logSetRid': log_set_rid,
+        _path_params: Dict[str, str] = {
+            'logSetRid': quote(str(_conjure_encoder.default(log_set_rid)), safe=''),
         }
 
         _json: Any = None
@@ -4821,6 +4760,7 @@ class datasource_logset_LogSetService(Service):
 
     def batch_get_log_set_metadata(self, auth_header: str, request: List[str] = None) -> List["datasource_logset_api_LogSetMetadata"]:
         request = request if request is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -4831,10 +4771,10 @@ class datasource_logset_LogSetService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/log-set/v1/log-set/multiple'
         _path = _path.format(**_path_params)
@@ -4850,6 +4790,7 @@ class datasource_logset_LogSetService(Service):
         return _decoder.decode(_response.json(), List[datasource_logset_api_LogSetMetadata], self._return_none_for_unknown_union_types)
 
     def search_log_sets(self, auth_header: str, request: "datasource_logset_api_SearchLogSetsRequest") -> "datasource_logset_api_SearchLogSetsResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -4860,10 +4801,10 @@ class datasource_logset_LogSetService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/log-set/v1/log-sets/get'
         _path = _path.format(**_path_params)
@@ -4879,6 +4820,7 @@ class datasource_logset_LogSetService(Service):
         return _decoder.decode(_response.json(), datasource_logset_api_SearchLogSetsResponse, self._return_none_for_unknown_union_types)
 
     def search_logs(self, auth_header: str, log_set_rid: str, request: "datasource_logset_api_SearchLogsRequest") -> "datasource_logset_api_SearchLogsResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -4889,11 +4831,11 @@ class datasource_logset_LogSetService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'logSetRid': log_set_rid,
+        _path_params: Dict[str, str] = {
+            'logSetRid': quote(str(_conjure_encoder.default(log_set_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/log-set/v1/log-set/{logSetRid}/logs'
         _path = _path.format(**_path_params)
@@ -4938,8 +4880,7 @@ datasource_logset_api_AttachLogsAndFinalizeRequest.__module__ = "nominal_api.dat
 
 
 class datasource_logset_api_BasicLogBody(ConjureBeanType):
-    """
-    A largely unopinionated but very flexible format.
+    """A largely unopinionated but very flexible format.
     """
 
     @builtins.classmethod
@@ -5008,8 +4949,7 @@ class datasource_logset_api_CreateLogSetRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the logset. If not provided, the logset will be created in the default workspace for
+        """The workspace in which to create the logset. If not provided, the logset will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -5300,15 +5240,13 @@ class datasource_logset_api_SearchLogSetsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        The maximum allowed page size is 1000. Defaults to the maximum if not supplied.
+        """The maximum allowed page size is 1000. Defaults to the maximum if not supplied.
         """
         return self._page_size
 
     @builtins.property
     def workspaces(self) -> List[str]:
-        """
-        If supplied, will return only the log sets within the supplied workspaces. If empty
+        """If supplied, will return only the log sets within the supplied workspaces. If empty
 will return all connections for workspaces that the user is permitted to see.
         """
         return self._workspaces
@@ -5369,8 +5307,7 @@ class datasource_logset_api_SearchLogsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        The maximum allowed page size is 10000. Defaults to the maximum if not supplied.
+        """The maximum allowed page size is 10000. Defaults to the maximum if not supplied.
         """
         return self._page_size
 
@@ -5666,15 +5603,13 @@ class event_CreateEvent(ConjureBeanType):
 
     @builtins.property
     def asset_rids(self) -> List[str]:
-        """
-        Must contain at least one asset rid.
+        """Must contain at least one asset rid.
         """
         return self._asset_rids
 
     @builtins.property
     def origins(self) -> List["event_EventOrigin"]:
-        """
-        If empty, will default to set<EventOrigin.api>.
+        """If empty, will default to set<EventOrigin.api>.
         """
         return self._origins
 
@@ -5692,8 +5627,7 @@ class event_CreateEvent(ConjureBeanType):
 
     @builtins.property
     def description(self) -> Optional[str]:
-        """
-        If not provided, will default to an empty string.
+        """If not provided, will default to an empty string.
         """
         return self._description
 
@@ -5740,8 +5674,7 @@ class event_DataReviewEventOrigin(ConjureBeanType):
 
     @builtins.property
     def check_metadata(self) -> "event_CheckOriginMetadata":
-        """
-        Metadata about the check that created this event.
+        """Metadata about the check that created this event.
         """
         return self._check_metadata
 
@@ -5800,15 +5733,13 @@ class event_Event(ConjureBeanType):
 
     @builtins.property
     def asset_rids(self) -> List[str]:
-        """
-        A set of asset rids associated with the event.
+        """A set of asset rids associated with the event.
         """
         return self._asset_rids
 
     @builtins.property
     def origins(self) -> List["event_EventOrigin"]:
-        """
-        A set of origins associated with the event.
+        """A set of origins associated with the event.
         """
         return self._origins
 
@@ -5846,8 +5777,7 @@ class event_Event(ConjureBeanType):
 
     @builtins.property
     def created_by(self) -> Optional[str]:
-        """
-        The user who created the event.
+        """The user who created the event.
 This field may be missing for legacy events.
         """
         return self._created_by
@@ -5863,8 +5793,7 @@ event_Event.__module__ = "nominal_api.event"
 
 
 class event_EventDisposition(ConjureBeanType):
-    """
-    Describes the review status for an event.
+    """Describes the review status for an event.
 This is used to track the disposition status of an event.
     """
 
@@ -5922,7 +5851,8 @@ event_EventDispositionStatus.__module__ = "nominal_api.event"
 
 
 class event_EventOrigin(ConjureUnionType):
-    """Describes where an event came from."""
+    """Describes where an event came from.
+    """
     _workbook: Optional["event_WorkbookEventOrigin"] = None
     _template: Optional["event_TemplateEventOrigin"] = None
     _api: Optional["event_ApiEventOrigin"] = None
@@ -5985,29 +5915,25 @@ class event_EventOrigin(ConjureUnionType):
 
     @builtins.property
     def workbook(self) -> Optional["event_WorkbookEventOrigin"]:
-        """
-        This event was created in this workbook
+        """This event was created in this workbook
         """
         return self._workbook
 
     @builtins.property
     def template(self) -> Optional["event_TemplateEventOrigin"]:
-        """
-        This event was created in this template
+        """This event was created in this template
         """
         return self._template
 
     @builtins.property
     def api(self) -> Optional["event_ApiEventOrigin"]:
-        """
-        This event was created programmatically via the API
+        """This event was created programmatically via the API
         """
         return self._api
 
     @builtins.property
     def data_review(self) -> Optional["event_DataReviewEventOrigin"]:
-        """
-        This event was created automatically from a checklist execution.
+        """This event was created automatically from a checklist execution.
         """
         return self._data_review
 
@@ -6054,15 +5980,14 @@ event_EventOriginVisitor.__module__ = "nominal_api.event"
 
 
 class event_EventService(Service):
-    """
-    An Event is an annotated moment or time range.
+    """An Event is an annotated moment or time range.
 The Event Service is responsible for creating and retrieving events for a particular data source.
     """
 
     def create_event(self, auth_header: str, request: "event_CreateEvent") -> "event_Event":
+        """Creates an event.
         """
-        Creates an event.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6073,10 +5998,10 @@ The Event Service is responsible for creating and retrieving events for a partic
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/events'
         _path = _path.format(**_path_params)
@@ -6092,9 +6017,9 @@ The Event Service is responsible for creating and retrieving events for a partic
         return _decoder.decode(_response.json(), event_Event, self._return_none_for_unknown_union_types)
 
     def get_events(self, auth_header: str, request: "event_GetEvents") -> List["event_Event"]:
+        """Gets a set of events by UUIDs
         """
-        Gets a set of events by UUIDs
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6105,10 +6030,10 @@ The Event Service is responsible for creating and retrieving events for a partic
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/get-events'
         _path = _path.format(**_path_params)
@@ -6124,10 +6049,10 @@ The Event Service is responsible for creating and retrieving events for a partic
         return _decoder.decode(_response.json(), List[event_Event], self._return_none_for_unknown_union_types)
 
     def batch_get_events(self, auth_header: str, request: List[str] = None) -> List["event_Event"]:
-        """
-        Gets a set of events by RID.
+        """Gets a set of events by RID.
         """
         request = request if request is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6138,10 +6063,10 @@ The Event Service is responsible for creating and retrieving events for a partic
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/events/batch-get'
         _path = _path.format(**_path_params)
@@ -6157,9 +6082,9 @@ The Event Service is responsible for creating and retrieving events for a partic
         return _decoder.decode(_response.json(), List[event_Event], self._return_none_for_unknown_union_types)
 
     def update_event(self, auth_header: str, request: "event_UpdateEvent") -> "event_Event":
+        """Updates the fields of an event. Empty fields are left unchanged.
         """
-        Updates the fields of an event. Empty fields are left unchanged.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6170,10 +6095,10 @@ The Event Service is responsible for creating and retrieving events for a partic
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/update-event'
         _path = _path.format(**_path_params)
@@ -6189,10 +6114,10 @@ The Event Service is responsible for creating and retrieving events for a partic
         return _decoder.decode(_response.json(), event_Event, self._return_none_for_unknown_union_types)
 
     def batch_update_event(self, auth_header: str, request: "event_BatchUpdateEventRequest") -> "event_BatchUpdateEventResponse":
-        """
-        Updates the fields of an event specified by each request in the batch.
+        """Updates the fields of an event specified by each request in the batch.
 Empty fields in the UpdateEventRequest are left unchanged.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6203,10 +6128,10 @@ Empty fields in the UpdateEventRequest are left unchanged.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/events/batch-update'
         _path = _path.format(**_path_params)
@@ -6222,9 +6147,9 @@ Empty fields in the UpdateEventRequest are left unchanged.
         return _decoder.decode(_response.json(), event_BatchUpdateEventResponse, self._return_none_for_unknown_union_types)
 
     def batch_update_disposition(self, auth_header: str, request: "event_BatchUpdateDispositionRequest") -> "event_BatchUpdateDispositionResponse":
+        """Updates the disposition of an event.
         """
-        Updates the disposition of an event.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6235,10 +6160,10 @@ Empty fields in the UpdateEventRequest are left unchanged.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/update-disposition'
         _path = _path.format(**_path_params)
@@ -6254,9 +6179,9 @@ Empty fields in the UpdateEventRequest are left unchanged.
         return _decoder.decode(_response.json(), event_BatchUpdateDispositionResponse, self._return_none_for_unknown_union_types)
 
     def archive_event(self, auth_header: str, request: "event_ArchiveEvent") -> None:
+        """Archives an event
         """
-        Archives an event
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6267,10 +6192,10 @@ Empty fields in the UpdateEventRequest are left unchanged.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/archive-event'
         _path = _path.format(**_path_params)
@@ -6285,10 +6210,10 @@ Empty fields in the UpdateEventRequest are left unchanged.
         return
 
     def batch_archive_event(self, auth_header: str, request: List[str] = None) -> None:
-        """
-        Archives a set of events
+        """Archives a set of events
         """
         request = request if request is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6299,10 +6224,10 @@ Empty fields in the UpdateEventRequest are left unchanged.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/batch-archive-events'
         _path = _path.format(**_path_params)
@@ -6317,9 +6242,9 @@ Empty fields in the UpdateEventRequest are left unchanged.
         return
 
     def search_events(self, auth_header: str, request: "event_SearchEventsRequest") -> "event_SearchEventsResponse":
+        """Searches for events that match the given filters.
         """
-        Searches for events that match the given filters.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6330,10 +6255,10 @@ Empty fields in the UpdateEventRequest are left unchanged.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/search-events'
         _path = _path.format(**_path_params)
@@ -6349,9 +6274,9 @@ Empty fields in the UpdateEventRequest are left unchanged.
         return _decoder.decode(_response.json(), event_SearchEventsResponse, self._return_none_for_unknown_union_types)
 
     def get_events_histogram(self, auth_header: str, request: "event_EventsHistogramRequest") -> "event_EventsHistogramResponse":
+        """Gets a histogram of events that match the given filters.
         """
-        Gets a histogram of events that match the given filters.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -6362,10 +6287,10 @@ Empty fields in the UpdateEventRequest are left unchanged.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/event/v1/histogram'
         _path = _path.format(**_path_params)
@@ -6476,31 +6401,27 @@ class event_EventsHistogramRequest(ConjureBeanType):
 
     @builtins.property
     def filter_query(self) -> Optional["event_HistogramFilterQuery"]:
-        """
-        The query to filter the events to be included in the histogram.
+        """The query to filter the events to be included in the histogram.
         """
         return self._filter_query
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Filters search on check alerts based on the archived statuses provided. 
+        """Filters search on check alerts based on the archived statuses provided. 
 Default is NOT_ARCHIVED only if none are provided.
         """
         return self._archived_statuses
 
     @builtins.property
     def num_bins(self) -> Optional[int]:
-        """
-        Defaults to 100. Throws if larger than 1_000.
+        """Defaults to 100. Throws if larger than 1_000.
 The resulting histogram may have fewer bins than requested if the requested time window is too small.
         """
         return self._num_bins
 
     @builtins.property
     def event_limit(self) -> Optional[int]:
-        """
-        Limits the number of events to be included in the histogram.
+        """Limits the number of events to be included in the histogram.
 Defaults to 1_000. Throws if larger than 10_000.
         """
         return self._event_limit
@@ -7019,8 +6940,7 @@ class event_SearchEventsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> int:
-        """
-        Will reject page sizes greater than 10k.
+        """Will reject page sizes greater than 10k.
         """
         return self._page_size
 
@@ -7034,8 +6954,7 @@ class event_SearchEventsRequest(ConjureBeanType):
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Default search status is NOT_ARCHIVED if none are provided. Allows for including archived events in search.
+        """Default search status is NOT_ARCHIVED if none are provided. Allows for including archived events in search.
         """
         return self._archived_statuses
 
@@ -7317,15 +7236,13 @@ class event_SearchQuery(ConjureUnionType):
 
     @builtins.property
     def after(self) -> Optional["api_Timestamp"]:
-        """
-        Filters to end times after this time, exclusive.
+        """Filters to end times after this time, exclusive.
         """
         return self._after
 
     @builtins.property
     def before(self) -> Optional["api_Timestamp"]:
-        """
-        Filters to start times before this time, exclusive.
+        """Filters to start times before this time, exclusive.
         """
         return self._before
 
@@ -7634,8 +7551,7 @@ class event_UpdateDispositionRequest(ConjureBeanType):
 
     @builtins.property
     def disposition(self) -> Optional["event_EventDisposition"]:
-        """
-        The new disposition for the event.
+        """The new disposition for the event.
 If empty, will remove the disposition from the event.
         """
         return self._disposition
@@ -7683,16 +7599,14 @@ class event_UpdateEvent(ConjureBeanType):
 
     @builtins.property
     def rid(self) -> Optional[str]:
-        """
-        The unique identifier for the event.
+        """The unique identifier for the event.
 This field is required if the uuid field is not provided.
         """
         return self._rid
 
     @builtins.property
     def asset_rids(self) -> Optional[List[str]]:
-        """
-        If provided, will replace the existing asset rids.
+        """If provided, will replace the existing asset rids.
 If provided, must contain at least one asset rid.
         """
         return self._asset_rids
@@ -7766,8 +7680,7 @@ class event_UpdateEventRequest(ConjureBeanType):
 
     @builtins.property
     def asset_rids(self) -> Optional[List[str]]:
-        """
-        If provided, will replace the existing asset rids.
+        """If provided, will replace the existing asset rids.
 If provided, must contain at least one asset rid.
         """
         return self._asset_rids
@@ -7951,7 +7864,8 @@ ingest_api_AsyncHandle.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_Authentication(ConjureUnionType):
-    """Authentication methods for Docker registries."""
+    """Authentication methods for Docker registries.
+    """
     _user_and_password: Optional["ingest_api_UserAndPasswordAuthentication"] = None
     _public: Optional["ingest_api_PublicAuthentication"] = None
 
@@ -8043,8 +7957,7 @@ class ingest_api_ChannelConfig(ConjureBeanType):
 
     @builtins.property
     def prefix_tree_delimiter(self) -> Optional[str]:
-        """
-        If set, will construct a prefix tree for channels of the dataset using the given delimiter.
+        """If set, will construct a prefix tree for channels of the dataset using the given delimiter.
         """
         return self._prefix_tree_delimiter
 
@@ -8078,8 +7991,7 @@ ingest_api_CompleteMultipartUploadResponse.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_ContainerizedExtractor(ConjureBeanType):
-    """
-    Represents a containerized extractor that processes input files using a container.
+    """Represents a containerized extractor that processes input files using a container.
     """
 
     @builtins.classmethod
@@ -8115,78 +8027,67 @@ class ingest_api_ContainerizedExtractor(ConjureBeanType):
 
     @builtins.property
     def rid(self) -> str:
-        """
-        Unique resource identifier for the extractor.
+        """Unique resource identifier for the extractor.
         """
         return self._rid
 
     @builtins.property
     def name(self) -> str:
-        """
-        The name of the extractor as defined by the user.
+        """The name of the extractor as defined by the user.
         """
         return self._name
 
     @builtins.property
     def description(self) -> Optional[str]:
-        """
-        Optional description of the extractor.
+        """Optional description of the extractor.
         """
         return self._description
 
     @builtins.property
     def image(self) -> "ingest_api_DockerImageSource":
-        """
-        Container image used to run the extractor.
+        """Container image used to run the extractor.
         """
         return self._image
 
     @builtins.property
     def inputs(self) -> List["ingest_api_FileExtractionInput"]:
-        """
-        The input files that this extractor requires, mapped to environment variables that store the path to the file.
+        """The input files that this extractor requires, mapped to environment variables that store the path to the file.
         """
         return self._inputs
 
     @builtins.property
     def properties(self) -> Dict[str, str]:
-        """
-        Additional properties associated with this extractor.
+        """Additional properties associated with this extractor.
         """
         return self._properties
 
     @builtins.property
     def labels(self) -> List[str]:
-        """
-        Set of labels applied to this extractor.
+        """Set of labels applied to this extractor.
         """
         return self._labels
 
     @builtins.property
     def created_at(self) -> str:
-        """
-        Timestamp when this extractor was created.
+        """Timestamp when this extractor was created.
         """
         return self._created_at
 
     @builtins.property
     def is_archived(self) -> bool:
-        """
-        Whether this extractor is archived.
+        """Whether this extractor is archived.
         """
         return self._is_archived
 
     @builtins.property
     def timestamp_metadata(self) -> "ingest_api_TimestampMetadata":
-        """
-        Metadata about the intermediate parquet this extractor will produce
+        """Metadata about the intermediate parquet this extractor will produce
         """
         return self._timestamp_metadata
 
     @builtins.property
     def output_file_format(self) -> "ingest_api_FileOutputFormat":
-        """
-        The format of the output file. Currently only "parquet", "csv", "parquet.tar" are supported
+        """The format of the output file. Currently only "parquet", "csv", "parquet.tar" are supported
         """
         return self._output_file_format
 
@@ -8197,14 +8098,13 @@ ingest_api_ContainerizedExtractor.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_ContainerizedExtractorService(Service):
-    """
-    The Containerized Extractor service provides functionality for creating, updating, and archiving containerized extractors.
+    """The Containerized Extractor service provides functionality for creating, updating, and archiving containerized extractors.
     """
 
     def register_containerized_extractor(self, auth_header: str, request: "ingest_api_RegisterContainerizedExtractorRequest") -> "ingest_api_RegisterContainerizedExtractorResponse":
+        """Registers a containerized extractor for a given set of containerized files.
         """
-        Registers a containerized extractor for a given set of containerized files.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -8215,10 +8115,10 @@ class ingest_api_ContainerizedExtractorService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/extractors/v1/container'
         _path = _path.format(**_path_params)
@@ -8234,9 +8134,9 @@ class ingest_api_ContainerizedExtractorService(Service):
         return _decoder.decode(_response.json(), ingest_api_RegisterContainerizedExtractorResponse, self._return_none_for_unknown_union_types)
 
     def get_containerized_extractor(self, auth_header: str, extractor_rid: str) -> "ingest_api_ContainerizedExtractor":
+        """Get a containerized extractor by its RID.
         """
-        Get a containerized extractor by its RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -8246,8 +8146,8 @@ class ingest_api_ContainerizedExtractorService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'extractorRid': extractor_rid,
+        _path_params: Dict[str, str] = {
+            'extractorRid': quote(str(_conjure_encoder.default(extractor_rid)), safe=''),
         }
 
         _json: Any = None
@@ -8266,9 +8166,9 @@ class ingest_api_ContainerizedExtractorService(Service):
         return _decoder.decode(_response.json(), ingest_api_ContainerizedExtractor, self._return_none_for_unknown_union_types)
 
     def search_containerized_extractors(self, auth_header: str, request: "ingest_api_SearchContainerizedExtractorsRequest") -> List["ingest_api_ContainerizedExtractor"]:
+        """Search for containerized extractors based on query parameters.
         """
-        Search for containerized extractors based on query parameters.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -8279,10 +8179,10 @@ class ingest_api_ContainerizedExtractorService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/extractors/v1/container/search'
         _path = _path.format(**_path_params)
@@ -8298,9 +8198,9 @@ class ingest_api_ContainerizedExtractorService(Service):
         return _decoder.decode(_response.json(), List[ingest_api_ContainerizedExtractor], self._return_none_for_unknown_union_types)
 
     def update_containerized_extractor(self, auth_header: str, extractor_rid: str, request: "ingest_api_UpdateContainerizedExtractorRequest") -> "ingest_api_ContainerizedExtractor":
+        """Update a containerized extractor. Only the fields that are set in the request will be updated.
         """
-        Update a containerized extractor. Only the fields that are set in the request will be updated.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -8311,11 +8211,11 @@ class ingest_api_ContainerizedExtractorService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'extractorRid': extractor_rid,
+        _path_params: Dict[str, str] = {
+            'extractorRid': quote(str(_conjure_encoder.default(extractor_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/extractors/v1/container/{extractorRid}'
         _path = _path.format(**_path_params)
@@ -8331,9 +8231,9 @@ class ingest_api_ContainerizedExtractorService(Service):
         return _decoder.decode(_response.json(), ingest_api_ContainerizedExtractor, self._return_none_for_unknown_union_types)
 
     def archive_containerized_extractor(self, auth_header: str, extractor_rid: str) -> None:
+        """Archive a containerized extractor.
         """
-        Archive a containerized extractor.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -8343,8 +8243,8 @@ class ingest_api_ContainerizedExtractorService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'extractorRid': extractor_rid,
+        _path_params: Dict[str, str] = {
+            'extractorRid': quote(str(_conjure_encoder.default(extractor_rid)), safe=''),
         }
 
         _json: Any = None
@@ -8362,9 +8262,9 @@ class ingest_api_ContainerizedExtractorService(Service):
         return
 
     def unarchive_containerized_extractor(self, auth_header: str, extractor_rid: str) -> None:
+        """Unarchive a containerized extractor.
         """
-        Unarchive a containerized extractor.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -8374,8 +8274,8 @@ class ingest_api_ContainerizedExtractorService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'extractorRid': extractor_rid,
+        _path_params: Dict[str, str] = {
+            'extractorRid': quote(str(_conjure_encoder.default(extractor_rid)), safe=''),
         }
 
         _json: Any = None
@@ -8440,8 +8340,7 @@ ingest_api_ContainerizedOpts.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_CsvOpts(ConjureBeanType):
-    """
-    Options for ingesting csv files.  Supported file formats include .csv, .csv.gz
+    """Options for ingesting csv files.  Supported file formats include .csv, .csv.gz
     """
 
     @builtins.classmethod
@@ -8489,8 +8388,7 @@ class ingest_api_CsvOpts(ConjureBeanType):
 
     @builtins.property
     def tag_columns(self) -> Optional[Dict[str, str]]:
-        """
-        A map of tag names to column names to derive the tag values from.
+        """A map of tag names to column names to derive the tag values from.
         """
         return self._tag_columns
 
@@ -8523,22 +8421,19 @@ class ingest_api_CustomTimestamp(ConjureBeanType):
 
     @builtins.property
     def format(self) -> str:
-        """
-        The format string should be in the format of the `DateTimeFormatter` class in Java.
+        """The format string should be in the format of the `DateTimeFormatter` class in Java.
         """
         return self._format
 
     @builtins.property
     def default_year(self) -> Optional[int]:
-        """
-        Default year is accepted as an optional field for cases like IRIG time format and will be overridden by year in time format.
+        """Default year is accepted as an optional field for cases like IRIG time format and will be overridden by year in time format.
         """
         return self._default_year
 
     @builtins.property
     def default_day_of_year(self) -> Optional[int]:
-        """
-        Default day of year is accepted as an optional field for cases like IRIG time format and will be overridden by day of year in time format.
+        """Default day of year is accepted as an optional field for cases like IRIG time format and will be overridden by day of year in time format.
         """
         return self._default_day_of_year
 
@@ -8848,8 +8743,7 @@ class ingest_api_DeprecatedTriggerIngest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
+        """The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -8861,8 +8755,7 @@ ingest_api_DeprecatedTriggerIngest.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_DockerImageSource(ConjureBeanType):
-    """
-    Docker container image source definition.
+    """Docker container image source definition.
     """
 
     @builtins.classmethod
@@ -8886,15 +8779,13 @@ class ingest_api_DockerImageSource(ConjureBeanType):
 
     @builtins.property
     def registry(self) -> str:
-        """
-        The container registry where the image is hosted.
+        """The container registry where the image is hosted.
         """
         return self._registry
 
     @builtins.property
     def repository(self) -> str:
-        """
-        The repository name of the image.
+        """The repository name of the image.
         """
         return self._repository
 
@@ -8904,8 +8795,7 @@ class ingest_api_DockerImageSource(ConjureBeanType):
 
     @builtins.property
     def authentication(self) -> "ingest_api_Authentication":
-        """
-        Optional authentication for accessing private container registries.
+        """Optional authentication for accessing private container registries.
         """
         return self._authentication
 
@@ -8982,15 +8872,13 @@ class ingest_api_ExistingVideoIngestDestination(ConjureBeanType):
 
     @builtins.property
     def video_rid(self) -> str:
-        """
-        RID of the video to ingest the newly created video file to.
+        """RID of the video to ingest the newly created video file to.
         """
         return self._video_rid
 
     @builtins.property
     def video_file_details(self) -> Optional["ingest_api_VideoFileIngestDetails"]:
-        """
-        Metadata to associate with any created video file
+        """Metadata to associate with any created video file
         """
         return self._video_file_details
 
@@ -9001,8 +8889,7 @@ ingest_api_ExistingVideoIngestDestination.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_FileExtractionInput(ConjureBeanType):
-    """
-    Defines an input file to be provided to the extractor.
+    """Defines an input file to be provided to the extractor.
     """
 
     @builtins.classmethod
@@ -9026,36 +8913,31 @@ class ingest_api_FileExtractionInput(ConjureBeanType):
 
     @builtins.property
     def environment_variable(self) -> str:
-        """
-        The environment variable that stores the path to the input file.
+        """The environment variable that stores the path to the input file.
         """
         return self._environment_variable
 
     @builtins.property
     def name(self) -> str:
-        """
-        Name of the input file which users will be prompted with
+        """Name of the input file which users will be prompted with
         """
         return self._name
 
     @builtins.property
     def description(self) -> Optional[str]:
-        """
-        Description of the input file which users will be prompted with
+        """Description of the input file which users will be prompted with
         """
         return self._description
 
     @builtins.property
     def file_filters(self) -> List["ingest_api_FileFilter"]:
-        """
-        Optionally filter files for file selection
+        """Optionally filter files for file selection
         """
         return self._file_filters
 
     @builtins.property
     def required(self) -> Optional[bool]:
-        """
-        Whether the input file is required for the extractor to run.
+        """Whether the input file is required for the extractor to run.
         """
         return self._required
 
@@ -9520,8 +9402,7 @@ class ingest_api_IngestMcapRequest(ConjureBeanType):
 
     @builtins.property
     def sources(self) -> List["ingest_api_IngestSource"]:
-        """
-        List of files in S3 to be ingested. These should be ordered by time, as data will be ingested and
+        """List of files in S3 to be ingested. These should be ordered by time, as data will be ingested and
 concatenated across all the files.
 Note: only a single files are currently supported, this field is mostly for forward compatibility.
         """
@@ -9533,8 +9414,7 @@ Note: only a single files are currently supported, this field is mostly for forw
 
     @builtins.property
     def channels(self) -> Optional["ingest_api_McapChannels"]:
-        """
-        Config to define which channels in the mcap should be ingested. The default is to ingest only
+        """Config to define which channels in the mcap should be ingested. The default is to ingest only
 channels with config, otherwise the mcap may not be supported.
         """
         return self._channels
@@ -9557,8 +9437,7 @@ channels with config, otherwise the mcap may not be supported.
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the dataset or video. If not provided, the dataset or video
+        """The workspace in which to create the dataset or video. If not provided, the dataset or video
 will be created in the default workspace for the user's organization, if the default
 workspace for the organization is configured.
         """
@@ -9571,8 +9450,7 @@ ingest_api_IngestMcapRequest.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_IngestMcapResponse(ConjureBeanType):
-    """
-    Returns references to the data ingested from an MCAP file.
+    """Returns references to the data ingested from an MCAP file.
     """
 
     @builtins.classmethod
@@ -9623,8 +9501,7 @@ class ingest_api_IngestMetadata(ConjureBeanType):
 
     @builtins.property
     def timestamp_metadata(self) -> Optional["ingest_api_TimestampMetadata"]:
-        """
-        The timestamp metadata will be recovered from the dataset files if possible.
+        """The timestamp metadata will be recovered from the dataset files if possible.
 Older datasets may have unrecoverable timestamp metadata.
 If unrecoverable, reingestion will throw MissingMetadataForReingest if not provided in request.
         """
@@ -9632,24 +9509,21 @@ If unrecoverable, reingestion will throw MissingMetadataForReingest if not provi
 
     @builtins.property
     def channel_prefix(self) -> Optional[str]:
-        """
-        Channel prefix to use when reingesting the dataset.
+        """Channel prefix to use when reingesting the dataset.
 Defaults to empty string. Not recoverable from prior ingests and must be provided in request if needed.
         """
         return self._channel_prefix
 
     @builtins.property
     def tag_columns(self) -> Optional[Dict[str, str]]:
-        """
-        A map of tag names to column names to derive the tag values from.
+        """A map of tag names to column names to derive the tag values from.
 Not recoverable from prior ingests and must be provided in request if needed.
         """
         return self._tag_columns
 
     @builtins.property
     def additional_file_tags(self) -> Optional[Dict[str, str]]:
-        """
-        Additional tags to apply to all dataset files within the the given dataset.
+        """Additional tags to apply to all dataset files within the the given dataset.
 Not recoverable from prior ingests and must be provided in request if needed.
         """
         return self._additional_file_tags
@@ -9863,29 +9737,25 @@ class ingest_api_IngestProgressV2(ConjureBeanType):
 
     @builtins.property
     def start_time(self) -> str:
-        """
-        Timestamp at start of ingest
+        """Timestamp at start of ingest
         """
         return self._start_time
 
     @builtins.property
     def end_time(self) -> Optional[str]:
-        """
-        Timestamp at end of ingest, empty if still in progress
+        """Timestamp at end of ingest, empty if still in progress
         """
         return self._end_time
 
     @builtins.property
     def ingest_status(self) -> "api_IngestStatusV2":
-        """
-        Status of ingest, contains error if failed
+        """Status of ingest, contains error if failed
         """
         return self._ingest_status
 
     @builtins.property
     def incalculable(self) -> Optional[bool]:
-        """
-        Whether ingest duration can be reliably calculated
+        """Whether ingest duration can be reliably calculated
         """
         return self._incalculable
 
@@ -10003,8 +9873,7 @@ class ingest_api_IngestRunRequest(ConjureBeanType):
 
     @builtins.property
     def rid(self) -> Optional[str]:
-        """
-        If a run with the same rid already exists, the run will be updated.
+        """If a run with the same rid already exists, the run will be updated.
         """
         return self._rid
 
@@ -10034,8 +9903,7 @@ class ingest_api_IngestRunRequest(ConjureBeanType):
 
     @builtins.property
     def run_prefix(self) -> Optional[str]:
-        """
-        for example, SIM, HTL, FLT
+        """for example, SIM, HTL, FLT
         """
         return self._run_prefix
 
@@ -10045,8 +9913,7 @@ class ingest_api_IngestRunRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
+        """The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -10081,16 +9948,15 @@ ingest_api_IngestRunResponse.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_IngestService(Service):
-    """
-    The Ingest Service handles the data ingestion into Nominal/Clickhouse.
+    """The Ingest Service handles the data ingestion into Nominal/Clickhouse.
     """
 
     def ingest(self, auth_header: str, trigger_ingest: "ingest_api_IngestRequest") -> "ingest_api_IngestResponse":
-        """
-        Triggers an ingest job, allowing either creating a new dataset or uploading to an
+        """Triggers an ingest job, allowing either creating a new dataset or uploading to an
 existing one. This endpoint is meant to supersede all other ingestion endpoints as their functionality
 gets migrated to this one.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10101,10 +9967,10 @@ gets migrated to this one.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(trigger_ingest)
+        _json: Any = _conjure_encoder.default(trigger_ingest)
 
         _path = '/ingest/v1/ingest'
         _path = _path.format(**_path_params)
@@ -10120,6 +9986,7 @@ gets migrated to this one.
         return _decoder.decode(_response.json(), ingest_api_IngestResponse, self._return_none_for_unknown_union_types)
 
     def deprecated_trigger_ingest(self, auth_header: str, trigger_ingest: "ingest_api_DeprecatedTriggerIngest") -> "ingest_api_TriggeredIngest":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10130,10 +9997,10 @@ gets migrated to this one.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(trigger_ingest)
+        _json: Any = _conjure_encoder.default(trigger_ingest)
 
         _path = '/ingest/v1/trigger-ingest'
         _path = _path.format(**_path_params)
@@ -10149,10 +10016,10 @@ gets migrated to this one.
         return _decoder.decode(_response.json(), ingest_api_TriggeredIngest, self._return_none_for_unknown_union_types)
 
     def trigger_ingest(self, auth_header: str, trigger_ingest: "ingest_api_TriggerIngest") -> "ingest_api_TriggeredIngest":
-        """
-        Triggers an ingest job for the given data source.
+        """Triggers an ingest job for the given data source.
 The ingest job will be processed asynchronously.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10163,10 +10030,10 @@ The ingest job will be processed asynchronously.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(trigger_ingest)
+        _json: Any = _conjure_encoder.default(trigger_ingest)
 
         _path = '/ingest/v1/trigger-ingest-v2'
         _path = _path.format(**_path_params)
@@ -10182,10 +10049,10 @@ The ingest job will be processed asynchronously.
         return _decoder.decode(_response.json(), ingest_api_TriggeredIngest, self._return_none_for_unknown_union_types)
 
     def trigger_file_ingest(self, auth_header: str, trigger_ingest: "ingest_api_TriggerFileIngest") -> "ingest_api_TriggeredIngest":
-        """
-        Triggers an ingest job of a new file, allowing either creating a new dataset or uploading to an
+        """Triggers an ingest job of a new file, allowing either creating a new dataset or uploading to an
 existing one.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10196,10 +10063,10 @@ existing one.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(trigger_ingest)
+        _json: Any = _conjure_encoder.default(trigger_ingest)
 
         _path = '/ingest/v1/trigger-file-ingest'
         _path = _path.format(**_path_params)
@@ -10215,9 +10082,9 @@ existing one.
         return _decoder.decode(_response.json(), ingest_api_TriggeredIngest, self._return_none_for_unknown_union_types)
 
     def ingest_run(self, auth_header: str, request: "ingest_api_IngestRunRequest") -> "ingest_api_IngestRunResponse":
+        """Creates a run and ingests data sources to be added to the run.
         """
-        Creates a run and ingests data sources to be added to the run.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10228,10 +10095,10 @@ existing one.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/ingest/v1/ingest-run'
         _path = _path.format(**_path_params)
@@ -10247,9 +10114,9 @@ existing one.
         return _decoder.decode(_response.json(), ingest_api_IngestRunResponse, self._return_none_for_unknown_union_types)
 
     def ingest_video(self, auth_header: str, ingest_video: "ingest_api_IngestVideoRequest") -> "ingest_api_IngestVideoResponse":
+        """Ingests video data from a S3 Nominal upload bucket.
         """
-        Ingests video data from a S3 Nominal upload bucket.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10260,10 +10127,10 @@ existing one.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(ingest_video)
+        _json: Any = _conjure_encoder.default(ingest_video)
 
         _path = '/ingest/v1/ingest-video'
         _path = _path.format(**_path_params)
@@ -10279,9 +10146,9 @@ existing one.
         return _decoder.decode(_response.json(), ingest_api_IngestVideoResponse, self._return_none_for_unknown_union_types)
 
     def ingest_mcap(self, auth_header: str, ingest_video: "ingest_api_IngestMcapRequest") -> "ingest_api_IngestMcapResponse":
+        """Ingests data from mcap files in the S3 Nominal upload bucket.
         """
-        Ingests data from mcap files in the S3 Nominal upload bucket.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10292,10 +10159,10 @@ existing one.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(ingest_video)
+        _json: Any = _conjure_encoder.default(ingest_video)
 
         _path = '/ingest/v1/ingest-mcap'
         _path = _path.format(**_path_params)
@@ -10311,11 +10178,11 @@ existing one.
         return _decoder.decode(_response.json(), ingest_api_IngestMcapResponse, self._return_none_for_unknown_union_types)
 
     def reingest_from_datasets(self, auth_header: str, request: "ingest_api_ReingestDatasetsRequest") -> "ingest_api_ReingestDatasetsResponse":
-        """
-        Re-ingests data from provided source datasets into either an existing target dataset, or a new one.
+        """Re-ingests data from provided source datasets into either an existing target dataset, or a new one.
 Only supported for CSV and Parquet dataset files.
 Will only reingest dataset files and will drop streaming data from datasets.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -10326,10 +10193,10 @@ Will only reingest dataset files and will drop streaming data from datasets.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/ingest/v1/reingest-dataset-files'
         _path = _path.format(**_path_params)
@@ -10550,8 +10417,7 @@ class ingest_api_IngestVideoRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the video. If not provided, the video will be created in the default workspace for
+        """The workspace in which to create the video. If not provided, the video will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -10616,24 +10482,21 @@ class ingest_api_InitiateMultipartUploadRequest(ConjureBeanType):
 
     @builtins.property
     def filename(self) -> str:
-        """
-        The desired name of the file in object storage. The final name will be
+        """The desired name of the file in object storage. The final name will be
 prefixed with a timestamp to ensure uniqueness.
         """
         return self._filename
 
     @builtins.property
     def filetype(self) -> str:
-        """
-        The MIME type of the file, eg "text/csv" for CSVs or "application/octet-stream"
+        """The MIME type of the file, eg "text/csv" for CSVs or "application/octet-stream"
 for binary files.
         """
         return self._filetype
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to upload the file. If not provided, the file will be uploaded to
+        """The workspace in which to upload the file. If not provided, the file will be uploaded to
 the default workspace for the user's organization, if that is configured and the user
 has access to it.
         """
@@ -10723,8 +10586,7 @@ class ingest_api_JournalJsonOpts(ConjureBeanType):
 
     @builtins.property
     def channel(self) -> Optional[str]:
-        """
-        If provided, ingests logs to the given channel.
+        """If provided, ingests logs to the given channel.
 By default, log data will be ingested to a channel named 'logs'.
         """
         return self._channel
@@ -11067,8 +10929,7 @@ class ingest_api_McapIngestionOutput(ConjureBeanType):
 
     @builtins.property
     def video_file_rid(self) -> Optional[str]:
-        """
-        If the destination points to a video, this will be populated with the video file
+        """If the destination points to a video, this will be populated with the video file
 populated during ingestion.
         """
         return self._video_file_rid
@@ -11198,7 +11059,8 @@ ingest_api_McapSourceVisitor.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_McapTimestampType(ConjureUnionType):
-    """LogTime is default timestamp for MCAP messages and should be used in most cases."""
+    """LogTime is default timestamp for MCAP messages and should be used in most cases.
+    """
     _log_time: Optional["ingest_api_LogTime"] = None
 
     @builtins.classmethod
@@ -11255,8 +11117,7 @@ ingest_api_McapTimestampTypeVisitor.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_McapVideoChannelConfig(ConjureBeanType):
-    """
-    Ingest a channel as video. This requires:
+    """Ingest a channel as video. This requires:
 * Using the `foxglove.CompressedVideo` schema
 * Protobuf representation of the message data
 * Messages are in sequential order in the mcap file
@@ -11380,8 +11241,7 @@ class ingest_api_NewDatasetIngestDestination(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
+        """The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -11417,44 +11277,38 @@ class ingest_api_NewVideoIngestDestination(ConjureBeanType):
 
     @builtins.property
     def title(self) -> Optional[str]:
-        """
-        Title of the Video that will get created.
+        """Title of the Video that will get created.
 If not provided, a name is deduced from the ingested file.
         """
         return self._title
 
     @builtins.property
     def description(self) -> Optional[str]:
-        """
-        Description that is applied to the newly created video
+        """Description that is applied to the newly created video
         """
         return self._description
 
     @builtins.property
     def properties(self) -> Dict[str, str]:
-        """
-        Key-Value properties that are applied to the newly created video
+        """Key-Value properties that are applied to the newly created video
         """
         return self._properties
 
     @builtins.property
     def labels(self) -> List[str]:
-        """
-        Labels that are applied to the newly created video
+        """Labels that are applied to the newly created video
         """
         return self._labels
 
     @builtins.property
     def video_file_details(self) -> Optional["ingest_api_VideoFileIngestDetails"]:
-        """
-        Metadata to associate with any created video file
+        """Metadata to associate with any created video file
         """
         return self._video_file_details
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the video. If not provided, the video will be created in the default workspace for
+        """The workspace in which to create the video. If not provided, the video will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -11486,8 +11340,7 @@ class ingest_api_NoTimestampManifest(ConjureBeanType):
 
     @builtins.property
     def scale_parameter(self) -> Optional["ingest_api_ScaleParameter"]:
-        """
-        A field that specifies that the frame rate of the video does not match the frame rate of the camera | i.e. a slowed down or sped up video. Can specify either the camera frame rate or the absolute end time.
+        """A field that specifies that the frame rate of the video does not match the frame rate of the camera | i.e. a slowed down or sped up video. Can specify either the camera frame rate or the absolute end time.
         """
         return self._scale_parameter
 
@@ -11498,8 +11351,7 @@ ingest_api_NoTimestampManifest.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_ParquetOpts(ConjureBeanType):
-    """
-    Options for ingesting parquet files.
+    """Options for ingesting parquet files.
 Supported file formats include .parquet, .parquet.gz 
 and archives such as .tar, .tar.gz, and .zip (must set the isArchive flag).
     """
@@ -11551,8 +11403,7 @@ and archives such as .tar, .tar.gz, and .zip (must set the isArchive flag).
 
     @builtins.property
     def tag_columns(self) -> Optional[Dict[str, str]]:
-        """
-        A map of tag names to column names to derive the tag values from.
+        """A map of tag names to column names to derive the tag values from.
         """
         return self._tag_columns
 
@@ -11562,8 +11413,7 @@ and archives such as .tar, .tar.gz, and .zip (must set the isArchive flag).
 
     @builtins.property
     def is_archive(self) -> Optional[bool]:
-        """
-        If true, the file is an archive. Supported archive formats include
+        """If true, the file is an archive. Supported archive formats include
 .tar, .tar.gz, and .zip. Only files ending in .parquet
 within the archive will be ingested. If field not provided, defaults to false.
         """
@@ -11698,8 +11548,7 @@ class ingest_api_RegisterContainerizedExtractorRequest(ConjureBeanType):
 
     @builtins.property
     def inputs(self) -> List["ingest_api_FileExtractionInput"]:
-        """
-        payload must match input defined in containerized extraction
+        """payload must match input defined in containerized extraction
         """
         return self._inputs
 
@@ -11713,22 +11562,19 @@ class ingest_api_RegisterContainerizedExtractorRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> str:
-        """
-        The workspace in which to create the extractor
+        """The workspace in which to create the extractor
         """
         return self._workspace
 
     @builtins.property
     def timestamp_metadata(self) -> "ingest_api_TimestampMetadata":
-        """
-        Metadata about the intermediate parquet this extractor will produce
+        """Metadata about the intermediate parquet this extractor will produce
         """
         return self._timestamp_metadata
 
     @builtins.property
     def output_file_format(self) -> Optional["ingest_api_FileOutputFormat"]:
-        """
-        The format of the output file. Currently only "parquet", "csv", "parquet.tar" are supported
+        """The format of the output file. Currently only "parquet", "csv", "parquet.tar" are supported
         """
         return self._output_file_format
 
@@ -11780,8 +11626,7 @@ class ingest_api_ReingestDatasetsRequest(ConjureBeanType):
 
     @builtins.property
     def source_datasets(self) -> List[str]:
-        """
-        The datasets to reingest data from. Can only include tagless, non-streaming datasets (V1).
+        """The datasets to reingest data from. Can only include tagless, non-streaming datasets (V1).
 The datasets must be of the same granularity and must only include CSV or Parquet files.
 Will attempt to reingest from datasets in list order.
         """
@@ -11789,15 +11634,13 @@ Will attempt to reingest from datasets in list order.
 
     @builtins.property
     def target_dataset(self) -> "ingest_api_DatasetIngestTarget":
-        """
-        The dataset to ingest data into. Can either be a new dataset or an existing dataset RID.
+        """The dataset to ingest data into. Can either be a new dataset or an existing dataset RID.
         """
         return self._target_dataset
 
     @builtins.property
     def ingest_metadata(self) -> Dict[str, "ingest_api_IngestMetadata"]:
-        """
-        Mapping of dataset to ingest metadata.
+        """Mapping of dataset to ingest metadata.
 Ingest metadata only needs to be provided in request if it cannot be recovered from prior ingests.
 See documentation on each field to determine what metadata can be auto-recovered.
         """
@@ -11810,8 +11653,7 @@ ingest_api_ReingestDatasetsRequest.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_ReingestDatasetsResponse(ConjureBeanType):
-    """
-    The response to a reingest request.
+    """The response to a reingest request.
 Maps the source dataset RID and file ID to the destination dataset RID and file ID.
     """
 
@@ -11837,8 +11679,7 @@ ingest_api_ReingestDatasetsResponse.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_ReingestFilesMapping(ConjureBeanType):
-    """
-    Maps the source dataset file ID to the destination dataset and file ID.
+    """Maps the source dataset file ID to the destination dataset and file ID.
     """
 
     @builtins.classmethod
@@ -11883,8 +11724,7 @@ class ingest_api_RelativeTimestamp(ConjureBeanType):
 
     @builtins.property
     def offset(self) -> Optional[str]:
-        """
-        Starting timestamp to use when indexing the file. This field is required when uploading a new file to an existing dataset.
+        """Starting timestamp to use when indexing the file. This field is required when uploading a new file to an existing dataset.
         """
         return self._offset
 
@@ -11973,15 +11813,13 @@ class ingest_api_ScaleParameter(ConjureUnionType):
 
     @builtins.property
     def ending_timestamp(self) -> Optional["ingest_api_UtcTimestamp"]:
-        """
-        the timestamp corresponding to absolute starting timestamp plus absolute duration of the video.
+        """the timestamp corresponding to absolute starting timestamp plus absolute duration of the video.
         """
         return self._ending_timestamp
 
     @builtins.property
     def scale_factor(self) -> Optional[float]:
-        """
-        the scale factor can be used to calculate whether media duration differs from a video's | real duration, and if so, the true frame rate of the camera. The video time will thus be scaled | by the ratio of the real duration to media duration, or media frame rate to true frame rate.
+        """the scale factor can be used to calculate whether media duration differs from a video's | real duration, and if so, the true frame rate of the camera. The video time will thus be scaled | by the ratio of the real duration to media duration, or media frame rate to true frame rate.
         """
         return self._scale_factor
 
@@ -12349,8 +12187,7 @@ ingest_api_TimeOffsetSpecVisitor.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_TimestampManifest(ConjureBeanType):
-    """
-    The timestamp manifest files will contain a list of absolute timestamps, in nanoseconds, that correspond to
+    """The timestamp manifest files will contain a list of absolute timestamps, in nanoseconds, that correspond to
 each frame in a video. Each file should be of type JSON and store a single list, the length of which equals
 the number of frames in its corresponding video.
     """
@@ -12501,8 +12338,7 @@ class ingest_api_TriggerFileIngest(ConjureBeanType):
 
     @builtins.property
     def source(self) -> "ingest_api_IngestSource":
-        """
-        Source data for the ingest. Supported file types include:
+        """Source data for the ingest. Supported file types include:
   * CSV (*.csv)
   * Compressed CSV (*.csv.gz)
   * Parquet (*.parquet)
@@ -12581,15 +12417,13 @@ class ingest_api_TriggerIngest(ConjureBeanType):
 
     @builtins.property
     def channel_config(self) -> Optional["ingest_api_ChannelConfig"]:
-        """
-        If absent, will default to a channel config that constructs a prefix tree with `.` as the delimiter.
+        """If absent, will default to a channel config that constructs a prefix tree with `.` as the delimiter.
         """
         return self._channel_config
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
+        """The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -12719,8 +12553,7 @@ ingest_api_UpdateContainerizedExtractorRequest.__module__ = "nominal_api.ingest_
 
 
 class ingest_api_UserAndPasswordAuthentication(ConjureBeanType):
-    """
-    Username and password authentication.
+    """Username and password authentication.
     """
 
     @builtins.classmethod
@@ -12738,15 +12571,13 @@ class ingest_api_UserAndPasswordAuthentication(ConjureBeanType):
 
     @builtins.property
     def username(self) -> str:
-        """
-        Username for registry authentication.
+        """Username for registry authentication.
         """
         return self._username
 
     @builtins.property
     def password_secret_rid(self) -> str:
-        """
-        The RID of the secret containing the password for registry authentication.
+        """The RID of the secret containing the password for registry authentication.
         """
         return self._password_secret_rid
 
@@ -12804,23 +12635,20 @@ class ingest_api_VideoFileIngestDetails(ConjureBeanType):
 
     @builtins.property
     def file_description(self) -> Optional[str]:
-        """
-        Description that is applied to the newly created video file.
+        """Description that is applied to the newly created video file.
 If not provided, defaults to the description used to create the video.
         """
         return self._file_description
 
     @builtins.property
     def file_properties(self) -> Optional[Dict[str, str]]:
-        """
-        Key-Value properties that are applied to the newly created video file.
+        """Key-Value properties that are applied to the newly created video file.
         """
         return self._file_properties
 
     @builtins.property
     def file_labels(self) -> Optional[List[str]]:
-        """
-        Labels that are applied to the newly created video file.
+        """Labels that are applied to the newly created video file.
         """
         return self._file_labels
 
@@ -13036,8 +12864,7 @@ ingest_workflow_api_Empty.__module__ = "nominal_api.ingest_workflow_api"
 
 
 class ingest_workflow_api_EnsureExtractorJobCreatedRequest(ConjureBeanType):
-    """
-    Ensure that the extractor job exists in the control plane. Runs in the namespace given by workspaceRid.
+    """Ensure that the extractor job exists in the control plane. Runs in the namespace given by workspaceRid.
     """
 
     @builtins.classmethod
@@ -13095,8 +12922,7 @@ class ingest_workflow_api_EnsureExtractorJobCreatedRequest(ConjureBeanType):
 
     @builtins.property
     def image_pull_secret_name(self) -> Optional[str]:
-        """
-        Name of the Kubernetes secret to use for pulling the image, if authentication is required.
+        """Name of the Kubernetes secret to use for pulling the image, if authentication is required.
         """
         return self._image_pull_secret_name
 
@@ -13123,8 +12949,7 @@ ingest_workflow_api_EnsureExtractorJobCreatedResponse.__module__ = "nominal_api.
 
 
 class ingest_workflow_api_EnsureImagePullSecretCreatedRequest(ConjureBeanType):
-    """
-    Ensures a Kubernetes secret of type kubernetes.io/dockerconfigjson exists
+    """Ensures a Kubernetes secret of type kubernetes.io/dockerconfigjson exists
 for the given registry credentials.
     """
 
@@ -13197,8 +13022,7 @@ ingest_workflow_api_EnsureImagePullSecretCreatedResponse.__module__ = "nominal_a
 
 
 class ingest_workflow_api_EnsureWorkspaceConfigMapCreatedRequest(ConjureBeanType):
-    """
-    For a given workspace rid, ensures there is a log4j2 config map defined in the namespace.
+    """For a given workspace rid, ensures there is a log4j2 config map defined in the namespace.
     """
 
     @builtins.classmethod
@@ -13223,8 +13047,7 @@ ingest_workflow_api_EnsureWorkspaceConfigMapCreatedRequest.__module__ = "nominal
 
 
 class ingest_workflow_api_EnsureWorkspaceNamespaceCreatedRequest(ConjureBeanType):
-    """
-    For a given workspace rid, ensures that there is a corresponding K8s namespace created.
+    """For a given workspace rid, ensures that there is a corresponding K8s namespace created.
     """
 
     @builtins.classmethod
@@ -13249,8 +13072,7 @@ ingest_workflow_api_EnsureWorkspaceNamespaceCreatedRequest.__module__ = "nominal
 
 
 class ingest_workflow_api_EnsureWorkspaceServiceAccountCreatedRequest(ConjureBeanType):
-    """
-    For a given workspace rid, ensures that there is a service account in the proper K8s Namespace.
+    """For a given workspace rid, ensures that there is a service account in the proper K8s Namespace.
     """
 
     @builtins.classmethod
@@ -13297,8 +13119,7 @@ ingest_workflow_api_ExtractorJobState.__module__ = "nominal_api.ingest_workflow_
 
 
 class ingest_workflow_api_FetchExtractorJobLogsRequest(ConjureBeanType):
-    """
-    Request to fetch logs for all containers in a completed extractor job's pod.
+    """Request to fetch logs for all containers in a completed extractor job's pod.
     """
 
     @builtins.classmethod
@@ -13468,23 +13289,20 @@ class ingest_workflow_api_IngestDataflashResponse(ConjureBeanType):
 
     @builtins.property
     def parquet_object_locators(self) -> List["ingest_workflow_api_ObjectLocator"]:
-        """
-        Azure or S3-style blob locators of parquet files. Currently
+        """Azure or S3-style blob locators of parquet files. Currently
 only a single file is supported, the list type is used for future compatibility.
         """
         return self._parquet_object_locators
 
     @builtins.property
     def timestamp_series_name(self) -> str:
-        """
-        The name of the column in the generated parquet file that contains the timestamp.
+        """The name of the column in the generated parquet file that contains the timestamp.
         """
         return self._timestamp_series_name
 
     @builtins.property
     def time_unit(self) -> "ingest_workflow_api_TimeUnitSeconds":
-        """
-        The unit of time for the timestamp column. Can only be seconds.
+        """The unit of time for the timestamp column. Can only be seconds.
         """
         return self._time_unit
 
@@ -13544,8 +13362,7 @@ class ingest_workflow_api_IngestMcapProtobufResponse(ConjureBeanType):
 
     @builtins.property
     def parquet_object_locators(self) -> List["ingest_workflow_api_ObjectLocator"]:
-        """
-        Azure or S3-style blob locators of parquet files. Currently
+        """Azure or S3-style blob locators of parquet files. Currently
 only a single file is supported, the list type is used for future compatibility.
         """
         return self._parquet_object_locators
@@ -13684,8 +13501,7 @@ ingest_workflow_api_MultipartUploadDetails.__module__ = "nominal_api.ingest_work
 
 
 class ingest_workflow_api_ObjectLocator(ConjureBeanType):
-    """
-    Locator for files in an object store. 
+    """Locator for files in an object store. 
 Clients are expected to have auth and origin/region configured independently.
     """
 
@@ -13780,22 +13596,19 @@ class ingest_workflow_api_ValidatedFileInput(ConjureBeanType):
 
     @builtins.property
     def handle(self) -> "scout_catalog_S3Handle":
-        """
-        Path to the input file in S3.
+        """Path to the input file in S3.
         """
         return self._handle
 
     @builtins.property
     def file_name(self) -> str:
-        """
-        Name of the file that will be placed on disk.
+        """Name of the file that will be placed on disk.
         """
         return self._file_name
 
     @builtins.property
     def env_var(self) -> str:
-        """
-        Environment variable that will store the path to the file.
+        """Environment variable that will store the path to the file.
         """
         return self._env_var
 
@@ -13806,8 +13619,7 @@ ingest_workflow_api_ValidatedFileInput.__module__ = "nominal_api.ingest_workflow
 
 
 class persistent_compute_api_AppendResult(ConjureBeanType):
-    """
-    An append result won't cover the full `StreamingComputeNodeRequest#windowWidth` but rather just a smaller 
+    """An append result won't cover the full `StreamingComputeNodeRequest#windowWidth` but rather just a smaller 
 window. The end of the window that the append covers is guaranteed to be later than previously sent results.
 The start, however, can and most likely will overlap with previous results. That allows us to support 
 out-of-order points. The client will have to merge this new `AppendResult` with previous results.
@@ -13833,15 +13645,13 @@ append result for [117s, 122s].
 
     @builtins.property
     def start(self) -> "api_Timestamp":
-        """
-        The start of the time range that the append result covers
+        """The start of the time range that the append result covers
         """
         return self._start
 
     @builtins.property
     def end(self) -> "api_Timestamp":
-        """
-        The end of the time range that the append result covers
+        """The end of the time range that the append result covers
         """
         return self._end
 
@@ -13918,8 +13728,7 @@ class persistent_compute_api_ClientMessage(ConjureUnionType):
 
     @builtins.property
     def subscribe(self) -> Optional[Dict[str, "persistent_compute_api_StreamingComputeNodeSubscription"]]:
-        """
-        Subscribes to all of the given `StreamingComputeNodeSubscription`s. For identifying the subscriptions and
+        """Subscribes to all of the given `StreamingComputeNodeSubscription`s. For identifying the subscriptions and
 their results a `SubscriptionId` has to be passed, which should be a unique identifier.
 A `ServerMessage::subscriptionCreation` will be sent back for each subscription which shows whether the 
 subscription was successfully created. If it was, updated results for the subscription will be  sent 
@@ -13987,7 +13796,8 @@ Append results will have the same subtype as the previous full result for the sa
 If the subtype were to change (e.g., we start doing bucketing because data frequency increased) we will send 
 a new full result with that new type. The results will also have the same units as the previous `FullResult`.
 Notably, we currently don't support appends for bucketed results as merging buckets is not trivial, especially 
-when accounting for out-of-order points."""
+when accounting for out-of-order points.
+    """
     _range: Optional[List["scout_compute_api_Range"]] = None
     _enum_point: Optional[Optional["scout_compute_api_EnumPoint"]] = None
     _numeric_point: Optional[Optional["scout_compute_api_NumericPoint"]] = None
@@ -14116,59 +13926,51 @@ when accounting for out-of-order points."""
 
     @builtins.property
     def range(self) -> Optional[List["scout_compute_api_Range"]]:
-        """
-        Merging can be done via dropping any old ranges (possibly truncating the last one) and adding these new 
+        """Merging can be done via dropping any old ranges (possibly truncating the last one) and adding these new 
 ranges, possibly merging them if they overlap or are adjacent.
         """
         return self._range
 
     @builtins.property
     def enum_point(self) -> Optional[Optional["scout_compute_api_EnumPoint"]]:
-        """
-        Merging can be done by keeping track of the applicable point present within the current window
+        """Merging can be done by keeping track of the applicable point present within the current window
         """
         return self._enum_point
 
     @builtins.property
     def numeric_point(self) -> Optional[Optional["scout_compute_api_NumericPoint"]]:
-        """
-        Merging can be done by keeping track of the applicable point present within the current window
+        """Merging can be done by keeping track of the applicable point present within the current window
         """
         return self._numeric_point
 
     @builtins.property
     def log_point(self) -> Optional[Optional["scout_compute_api_LogPoint"]]:
-        """
-        Merging can be done by keeping track of the applicable point present within the current window
+        """Merging can be done by keeping track of the applicable point present within the current window
         """
         return self._log_point
 
     @builtins.property
     def range_value(self) -> Optional[Optional["scout_compute_api_Range"]]:
-        """
-        Merging can be done by keeping track of the applicable range present within the current window, possibly
+        """Merging can be done by keeping track of the applicable range present within the current window, possibly
 merging ranges if they are overlap or are adjacent
         """
         return self._range_value
 
     @builtins.property
     def numeric(self) -> Optional["scout_compute_api_NumericPlot"]:
-        """
-        Merging be be done by dropping any old points and adding the new ones, accounting for overlaps
+        """Merging be be done by dropping any old points and adding the new ones, accounting for overlaps
         """
         return self._numeric
 
     @builtins.property
     def enum(self) -> Optional["scout_compute_api_EnumPlot"]:
-        """
-        Merging be be done by dropping any old points and adding the new ones, accounting for overlaps
+        """Merging be be done by dropping any old points and adding the new ones, accounting for overlaps
         """
         return self._enum
 
     @builtins.property
     def bucketed_numeric(self) -> Optional["scout_compute_api_BucketedNumericPlot"]:
-        """
-        Merging can be done by dropping any old buckets and adding the new ones. Overlapping buckets are
+        """Merging can be done by dropping any old buckets and adding the new ones. Overlapping buckets are
 guaranteed to align (same bucket end timestamp) and the older version of the bucket can be replaced
 with the newer ones.
         """
@@ -14176,8 +13978,7 @@ with the newer ones.
 
     @builtins.property
     def bucketed_enum(self) -> Optional["scout_compute_api_BucketedEnumPlot"]:
-        """
-        Merging can be done by dropping any old buckets and adding the new ones. Overlapping buckets are
+        """Merging can be done by dropping any old buckets and adding the new ones. Overlapping buckets are
 guaranteed to align (same bucket end timestamp) and the older version of the bucket can be replaced
 with the newer ones.
         """
@@ -14185,8 +13986,7 @@ with the newer ones.
 
     @builtins.property
     def grouped(self) -> Optional["persistent_compute_api_GroupedComputeNodeAppendResponses"]:
-        """
-        Appends can be done by doing an append individually for each contained `ComputeNodeAppendResponse`.
+        """Appends can be done by doing an append individually for each contained `ComputeNodeAppendResponse`.
         """
         return self._grouped
 
@@ -14321,8 +14121,7 @@ persistent_compute_api_GroupedComputeNodeAppendResponse.__module__ = "nominal_ap
 
 
 class persistent_compute_api_GroupedComputeNodeAppendResponses(ConjureBeanType):
-    """
-    Contains a `GroupedComputeNodeAppendResponse` for each applicable grouping along with metadata describing the 
+    """Contains a `GroupedComputeNodeAppendResponse` for each applicable grouping along with metadata describing the 
 grouping. All the contained `GroupedComputeNodeAppendResponse`s are guaranteed to be of the same type.
     """
 
@@ -14479,9 +14278,39 @@ persistent_compute_api_InvalidComputationType.__qualname__ = "InvalidComputation
 persistent_compute_api_InvalidComputationType.__module__ = "nominal_api.persistent_compute_api"
 
 
-class persistent_compute_api_Ping(ConjureBeanType):
+class persistent_compute_api_PartialFullGroupedResult(ConjureBeanType):
+    """We send grouped results split by grouping so that message size doesn't get too large and prevent pings from being sent.
     """
-    A ping can be sent by both client and server to keep the connection open and check that it is still working.
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'grouping': ConjureFieldDefinition('grouping', scout_compute_api_Grouping),
+            'response': ConjureFieldDefinition('response', scout_compute_api_ComputeNodeResponse)
+        }
+
+    __slots__: List[str] = ['_grouping', '_response']
+
+    def __init__(self, grouping: "scout_compute_api_Grouping", response: "scout_compute_api_ComputeNodeResponse") -> None:
+        self._grouping = grouping
+        self._response = response
+
+    @builtins.property
+    def grouping(self) -> "scout_compute_api_Grouping":
+        return self._grouping
+
+    @builtins.property
+    def response(self) -> "scout_compute_api_ComputeNodeResponse":
+        return self._response
+
+
+persistent_compute_api_PartialFullGroupedResult.__name__ = "PartialFullGroupedResult"
+persistent_compute_api_PartialFullGroupedResult.__qualname__ = "PartialFullGroupedResult"
+persistent_compute_api_PartialFullGroupedResult.__module__ = "nominal_api.persistent_compute_api"
+
+
+class persistent_compute_api_Ping(ConjureBeanType):
+    """A ping can be sent by both client and server to keep the connection open and check that it is still working.
 The receiving end should send back a pong immediately.
 We also include the times that pings and pongs are sent so that we can track latency and/or discover clock
 drift between server and client.
@@ -14636,8 +14465,7 @@ persistent_compute_api_ServerMessageVisitor.__module__ = "nominal_api.persistent
 
 
 class persistent_compute_api_ShutdownNotice(ConjureBeanType):
-    """
-    Indicates that the websocket will shut down in the near future. Until it is, SubscriptionUpdates will 
+    """Indicates that the websocket will shut down in the near future. Until it is, SubscriptionUpdates will 
 still be sent to the client. Clients that want to avoid downtime or latency spikes should initiate a new 
 websocket and recreate all their subscriptions there but still keep this websocket open until the new 
 websockets starts sending SubscriptionUpdates. 
@@ -14661,8 +14489,7 @@ persistent_compute_api_ShutdownNotice.__module__ = "nominal_api.persistent_compu
 
 
 class persistent_compute_api_StreamingComputeNodeRequest(ConjureBeanType):
-    """
-    A templatized version of `ComputeNodeRequest` where the end of the range will track the current time and
+    """A templatized version of `ComputeNodeRequest` where the end of the range will track the current time and
 the start of the range tracks `windowWidth` time ago.
     """
 
@@ -14806,8 +14633,7 @@ persistent_compute_api_SubscriptionCreationVisitor.__module__ = "nominal_api.per
 
 
 class persistent_compute_api_SubscriptionCreationError(ConjureBeanType):
-    """
-    This will be sent if there is an error while creating a subscription. This means that the subscription was
+    """This will be sent if there is an error while creating a subscription. This means that the subscription was
 never created and the client will have to re-try creating it if warranted.
 This can also be sent after a subscription was first successfully started and sent result. In that case it
 means that the subscription encountered an unrecoverable error at runtime and will be stopped.
@@ -14826,8 +14652,7 @@ means that the subscription encountered an unrecoverable error at runtime and wi
 
     @builtins.property
     def serializable_error(self) -> "api_SerializableError":
-        """
-        A serialized version of the error. Should match the errors defined below.
+        """A serialized version of the error. Should match the errors defined below.
         """
         return self._serializable_error
 
@@ -14867,8 +14692,7 @@ persistent_compute_api_SubscriptionCreationMessage.__module__ = "nominal_api.per
 
 
 class persistent_compute_api_SubscriptionCreationSuccess(ConjureBeanType):
-    """
-    Will be returned once a subscriptions has been successfully created.
+    """Will be returned once a subscriptions has been successfully created.
     """
 
     @builtins.classmethod
@@ -14909,15 +14733,13 @@ class persistent_compute_api_SubscriptionOptions(ConjureBeanType):
 
     @builtins.property
     def min_delay(self) -> int:
-        """
-        The minimum delay between `SubscriptionUpdate`s sent for this subscription.
+        """The minimum delay between `SubscriptionUpdate`s sent for this subscription.
         """
         return self._min_delay
 
     @builtins.property
     def allow_appends(self) -> Optional[bool]:
-        """
-        Can be set to `false` by the client to indicate that it doesn't support appends for this subscription
+        """Can be set to `false` by the client to indicate that it doesn't support appends for this subscription
 and always wants to receive full results. Defaults to `false` if not set.
 The expectation is that clients should implement support for appends for any of the results covered in
 `ComputeNodeAppendResponse` and set this to `true` as quickly as possible. However, in order to support 
@@ -14935,6 +14757,7 @@ persistent_compute_api_SubscriptionOptions.__module__ = "nominal_api.persistent_
 
 class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
     _full: Optional["persistent_compute_api_FullResult"] = None
+    _partial_full_grouped: Optional["persistent_compute_api_PartialFullGroupedResult"] = None
     _append: Optional["persistent_compute_api_AppendResult"] = None
     _error: Optional["persistent_compute_api_SubscriptionUpdateError"] = None
 
@@ -14942,6 +14765,7 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'full': ConjureFieldDefinition('full', persistent_compute_api_FullResult),
+            'partial_full_grouped': ConjureFieldDefinition('partialFullGrouped', persistent_compute_api_PartialFullGroupedResult),
             'append': ConjureFieldDefinition('append', persistent_compute_api_AppendResult),
             'error': ConjureFieldDefinition('error', persistent_compute_api_SubscriptionUpdateError)
         }
@@ -14949,17 +14773,21 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
     def __init__(
             self,
             full: Optional["persistent_compute_api_FullResult"] = None,
+            partial_full_grouped: Optional["persistent_compute_api_PartialFullGroupedResult"] = None,
             append: Optional["persistent_compute_api_AppendResult"] = None,
             error: Optional["persistent_compute_api_SubscriptionUpdateError"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (full is not None) + (append is not None) + (error is not None) != 1:
+            if (full is not None) + (partial_full_grouped is not None) + (append is not None) + (error is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if full is not None:
                 self._full = full
                 self._type = 'full'
+            if partial_full_grouped is not None:
+                self._partial_full_grouped = partial_full_grouped
+                self._type = 'partialFullGrouped'
             if append is not None:
                 self._append = append
                 self._type = 'append'
@@ -14972,6 +14800,11 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._full = full
             self._type = 'full'
+        elif type_of_union == 'partialFullGrouped':
+            if partial_full_grouped is None:
+                raise ValueError('a union value must not be None')
+            self._partial_full_grouped = partial_full_grouped
+            self._type = 'partialFullGrouped'
         elif type_of_union == 'append':
             if append is None:
                 raise ValueError('a union value must not be None')
@@ -14988,6 +14821,10 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
         return self._full
 
     @builtins.property
+    def partial_full_grouped(self) -> Optional["persistent_compute_api_PartialFullGroupedResult"]:
+        return self._partial_full_grouped
+
+    @builtins.property
     def append(self) -> Optional["persistent_compute_api_AppendResult"]:
         return self._append
 
@@ -15000,6 +14837,8 @@ class persistent_compute_api_SubscriptionUpdate(ConjureUnionType):
             raise ValueError('{} is not an instance of persistent_compute_api_SubscriptionUpdateVisitor'.format(visitor.__class__.__name__))
         if self._type == 'full' and self.full is not None:
             return visitor._full(self.full)
+        if self._type == 'partialFullGrouped' and self.partial_full_grouped is not None:
+            return visitor._partial_full_grouped(self.partial_full_grouped)
         if self._type == 'append' and self.append is not None:
             return visitor._append(self.append)
         if self._type == 'error' and self.error is not None:
@@ -15018,6 +14857,10 @@ class persistent_compute_api_SubscriptionUpdateVisitor:
         pass
 
     @abstractmethod
+    def _partial_full_grouped(self, partial_full_grouped: "persistent_compute_api_PartialFullGroupedResult") -> Any:
+        pass
+
+    @abstractmethod
     def _append(self, append: "persistent_compute_api_AppendResult") -> Any:
         pass
 
@@ -15032,8 +14875,7 @@ persistent_compute_api_SubscriptionUpdateVisitor.__module__ = "nominal_api.persi
 
 
 class persistent_compute_api_SubscriptionUpdateError(ConjureBeanType):
-    """
-    This will be sent if there is an error while updating a subscription. Note: This won't automatically cancel 
+    """This will be sent if there is an error while updating a subscription. Note: This won't automatically cancel 
 the subscription. The client will have to call `ClientMessage::unsubscribe` to do that if warranted.
     """
 
@@ -15050,8 +14892,7 @@ the subscription. The client will have to call `ClientMessage::unsubscribe` to d
 
     @builtins.property
     def serializable_error(self) -> "api_SerializableError":
-        """
-        A serialized version of the error. Should match the errors defined below.
+        """A serialized version of the error. Should match the errors defined below.
         """
         return self._serializable_error
 
@@ -15091,17 +14932,16 @@ persistent_compute_api_SubscriptionUpdateMessage.__module__ = "nominal_api.persi
 
 
 class scout_InternalVersioningService(Service):
-    """
-    These endpoints are not intended to be used directly by clients, since
+    """These endpoints are not intended to be used directly by clients, since
 they require saving resource-specific state associated with new commits.
     """
 
     def init_resource_versioning(self, auth_header: str, request: "scout_versioning_api_InitResourceVersioningRequest", resource_rid: str) -> "scout_versioning_api_BranchAndCommit":
-        """
-        Creates a root commit (no parents) and a "main" branch 
+        """Creates a root commit (no parents) and a "main" branch 
 pointing to that commit, for the given resource.
 Throws if the resource already has a commit graph.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15112,11 +14952,11 @@ Throws if the resource already has a commit graph.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/internal/scout/v1/versioning/{resourceRid}'
         _path = _path.format(**_path_params)
@@ -15132,11 +14972,11 @@ Throws if the resource already has a commit graph.
         return _decoder.decode(_response.json(), scout_versioning_api_BranchAndCommit, self._return_none_for_unknown_union_types)
 
     def save_working_state(self, auth_header: str, branch_name: str, request: "scout_versioning_api_SaveWorkingStateRequest", resource_rid: str) -> "scout_versioning_api_BranchAndCommit":
-        """
-        Creates a non-permanent commit on the given branch,
+        """Creates a non-permanent commit on the given branch,
 Throws if the branch doesn't exist.
 Throws if latestCommit is passed and is not the latest commit.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15147,12 +14987,12 @@ Throws if latestCommit is passed and is not the latest commit.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'branchName': branch_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'branchName': quote(str(_conjure_encoder.default(branch_name)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/internal/scout/v1/versioning/{resourceRid}/branch/{branchName}/working-state'
         _path = _path.format(**_path_params)
@@ -15168,11 +15008,11 @@ Throws if latestCommit is passed and is not the latest commit.
         return _decoder.decode(_response.json(), scout_versioning_api_BranchAndCommit, self._return_none_for_unknown_union_types)
 
     def commit(self, auth_header: str, branch_name: str, request: "scout_versioning_api_CommitRequest", resource_rid: str) -> "scout_versioning_api_BranchAndCommit":
-        """
-        Creates a new permanent commit on the given branch.
+        """Creates a new permanent commit on the given branch.
 Throws if the branch doesn't exist.
 Throws if latestCommit is passed and is not the latest commit.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15183,12 +15023,12 @@ Throws if latestCommit is passed and is not the latest commit.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'branchName': branch_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'branchName': quote(str(_conjure_encoder.default(branch_name)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/internal/scout/v1/versioning/{resourceRid}/branch/{branchName}/commit'
         _path = _path.format(**_path_params)
@@ -15204,13 +15044,13 @@ Throws if latestCommit is passed and is not the latest commit.
         return _decoder.decode(_response.json(), scout_versioning_api_BranchAndCommit, self._return_none_for_unknown_union_types)
 
     def compact_commits(self, auth_header: str, request: "scout_versioning_api_CompactCommitsRequest", resource_rid: str) -> List[str]:
-        """
-        Compacts the commit graph for the resource by deleting
+        """Compacts the commit graph for the resource by deleting
 working state commits that match the provided strategy.
 Persists commits that are pointed to by branches.
 Returns the set of commits that were compacted.
 Throws if the resource doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15221,11 +15061,11 @@ Throws if the resource doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/internal/scout/v1/versioning/{resourceRid}/compact-commits'
         _path = _path.format(**_path_params)
@@ -15247,15 +15087,14 @@ scout_InternalVersioningService.__module__ = "nominal_api.scout"
 
 
 class scout_NotebookService(Service):
-    """
-    NotebookService manages workbooks (formerly known as notebooks).
+    """NotebookService manages workbooks (formerly known as notebooks).
     """
 
     def create(self, auth_header: str, request: "scout_notebook_api_CreateNotebookRequest") -> "scout_notebook_api_Notebook":
-        """
-        Creates a new workbook. The workbook will be associated with the provided run. If the run does not exist, 
+        """Creates a new workbook. The workbook will be associated with the provided run. If the run does not exist, 
 a RunNotFound error will be thrown.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15266,10 +15105,10 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/notebook'
         _path = _path.format(**_path_params)
@@ -15285,9 +15124,9 @@ a RunNotFound error will be thrown.
         return _decoder.decode(_response.json(), scout_notebook_api_Notebook, self._return_none_for_unknown_union_types)
 
     def update(self, auth_header: str, request: "scout_notebook_api_UpdateNotebookRequest", rid: str) -> "scout_notebook_api_Notebook":
+        """Updates the contents of a workbook.
         """
-        Updates the contents of a workbook.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15298,11 +15137,11 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/notebook/{rid}'
         _path = _path.format(**_path_params)
@@ -15318,6 +15157,7 @@ a RunNotFound error will be thrown.
         return _decoder.decode(_response.json(), scout_notebook_api_Notebook, self._return_none_for_unknown_union_types)
 
     def get(self, auth_header: str, rid: str) -> "scout_notebook_api_Notebook":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15327,8 +15167,8 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15348,6 +15188,7 @@ a RunNotFound error will be thrown.
 
     def batch_get(self, auth_header: str, rids: List[str] = None) -> List["scout_notebook_api_Notebook"]:
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15358,10 +15199,10 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v2/notebook/batch-get'
         _path = _path.format(**_path_params)
@@ -15378,6 +15219,7 @@ a RunNotFound error will be thrown.
 
     def batch_get_metadata(self, auth_header: str, rids: List[str] = None) -> List["scout_notebook_api_NotebookMetadataWithRid"]:
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15388,10 +15230,10 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v2/notebook/batch-get-metadata'
         _path = _path.format(**_path_params)
@@ -15407,9 +15249,9 @@ a RunNotFound error will be thrown.
         return _decoder.decode(_response.json(), List[scout_notebook_api_NotebookMetadataWithRid], self._return_none_for_unknown_union_types)
 
     def update_metadata(self, auth_header: str, request: "scout_notebook_api_UpdateNotebookMetadataRequest", rid: str) -> "scout_notebook_api_NotebookMetadata":
+        """Updates metadata about a workbook, but not its contents.
         """
-        Updates metadata about a workbook, but not its contents.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15420,11 +15262,11 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/notebook/{rid}/update-metadata'
         _path = _path.format(**_path_params)
@@ -15440,9 +15282,9 @@ a RunNotFound error will be thrown.
         return _decoder.decode(_response.json(), scout_notebook_api_NotebookMetadata, self._return_none_for_unknown_union_types)
 
     def get_used_ref_names(self, auth_header: str, rid: str) -> List[str]:
+        """Returns the set of all ref names used by the workbook.
         """
-        Returns the set of all ref names used by the workbook.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15452,8 +15294,8 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15472,9 +15314,9 @@ a RunNotFound error will be thrown.
         return _decoder.decode(_response.json(), List[scout_api_DataSourceRefName], self._return_none_for_unknown_union_types)
 
     def update_ref_names(self, auth_header: str, request: "scout_notebook_api_UpdateRefNameRequest", rid: str) -> "scout_notebook_api_Notebook":
+        """Updates the data source ref names for all variables used in the workbook.
         """
-        Updates the data source ref names for all variables used in the workbook.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15485,11 +15327,11 @@ a RunNotFound error will be thrown.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/notebook/{rid}/update-ref-names'
         _path = _path.format(**_path_params)
@@ -15505,11 +15347,11 @@ a RunNotFound error will be thrown.
         return _decoder.decode(_response.json(), scout_notebook_api_Notebook, self._return_none_for_unknown_union_types)
 
     def get_all_labels_and_properties(self, auth_header: str, workspaces: List[str] = None) -> "scout_notebook_api_GetAllLabelsAndPropertiesResponse":
-        """
-        Returns all properties (key value pairs) and labels that have been previously used on workbook. These can
+        """Returns all properties (key value pairs) and labels that have been previously used on workbook. These can
 be used to organize workbooks.
         """
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15517,10 +15359,10 @@ be used to organize workbooks.
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -15539,6 +15381,7 @@ be used to organize workbooks.
         return _decoder.decode(_response.json(), scout_notebook_api_GetAllLabelsAndPropertiesResponse, self._return_none_for_unknown_union_types)
 
     def search(self, auth_header: str, request: "scout_notebook_api_SearchNotebooksRequest") -> "scout_notebook_api_SearchNotebooksResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15549,10 +15392,10 @@ be used to organize workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/notebook/search'
         _path = _path.format(**_path_params)
@@ -15568,9 +15411,9 @@ be used to organize workbooks.
         return _decoder.decode(_response.json(), scout_notebook_api_SearchNotebooksResponse, self._return_none_for_unknown_union_types)
 
     def lock(self, auth_header: str, rid: str) -> None:
+        """Makes a workbook uneditable.
         """
-        Makes a workbook uneditable.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15580,8 +15423,8 @@ be used to organize workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15599,9 +15442,9 @@ be used to organize workbooks.
         return
 
     def unlock(self, auth_header: str, rid: str) -> None:
+        """Unlocks a workbook for editing.
         """
-        Unlocks a workbook for editing.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15611,8 +15454,8 @@ be used to organize workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15630,10 +15473,10 @@ be used to organize workbooks.
         return
 
     def archive(self, auth_header: str, rid: str) -> None:
-        """
-        Archives a workbook, which excludes it from search and hides it from being publicly visible, but does not
+        """Archives a workbook, which excludes it from search and hides it from being publicly visible, but does not
 permanently delete it. Archived workbooks can be unarchived.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15643,8 +15486,8 @@ permanently delete it. Archived workbooks can be unarchived.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15662,9 +15505,9 @@ permanently delete it. Archived workbooks can be unarchived.
         return
 
     def unarchive(self, auth_header: str, rid: str) -> None:
+        """Makes a previously archived workbook searchable.
         """
-        Makes a previously archived workbook searchable.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15674,8 +15517,8 @@ permanently delete it. Archived workbooks can be unarchived.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15693,9 +15536,9 @@ permanently delete it. Archived workbooks can be unarchived.
         return
 
     def delete(self, auth_header: str, rid: str) -> None:
+        """The workbook will be deleted and is not recoverable. For soft deletion, use archive.
         """
-        The workbook will be deleted and is not recoverable. For soft deletion, use archive.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15705,8 +15548,8 @@ permanently delete it. Archived workbooks can be unarchived.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15730,18 +15573,17 @@ scout_NotebookService.__module__ = "nominal_api.scout"
 
 
 class scout_RunService(Service):
-    """
-    Runs are collections of channels and metadata from one or more data sources, synchronized over a 
+    """Runs are collections of channels and metadata from one or more data sources, synchronized over a 
 range of real time, which represents a test event or simulation. These API endpoints let you
 manage runs in the Nominal app.
     """
 
     def create_run(self, auth_header: str, details: "scout_run_api_CreateRunRequest") -> "scout_run_api_Run":
-        """
-        Create a new run in Nominal.
+        """Create a new run in Nominal.
 
 Throws if start is equal to or after end.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15752,10 +15594,10 @@ Throws if start is equal to or after end.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/scout/v1/run'
         _path = _path.format(**_path_params)
@@ -15771,11 +15613,11 @@ Throws if start is equal to or after end.
         return _decoder.decode(_response.json(), scout_run_api_Run, self._return_none_for_unknown_union_types)
 
     def update_run(self, auth_header: str, details: "scout_run_api_UpdateRunRequest", rid: str) -> "scout_run_api_Run":
-        """
-        Updates an existing run based on its RID.
+        """Updates an existing run based on its RID.
 
 Throws if start is equal to or after end.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15786,11 +15628,11 @@ Throws if start is equal to or after end.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/scout/v1/run/{rid}'
         _path = _path.format(**_path_params)
@@ -15806,11 +15648,11 @@ Throws if start is equal to or after end.
         return _decoder.decode(_response.json(), scout_run_api_Run, self._return_none_for_unknown_union_types)
 
     def add_data_sources_to_run(self, auth_header: str, request: Dict[str, "scout_run_api_CreateRunDataSource"], run_rid: str) -> "scout_run_api_Run":
-        """
-        Adds datasources to the run in question.
+        """Adds datasources to the run in question.
 
 Throws if any of the ref names conflict with existing data sources or each other.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15821,11 +15663,11 @@ Throws if any of the ref names conflict with existing data sources or each other
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'runRid': run_rid,
+        _path_params: Dict[str, str] = {
+            'runRid': quote(str(_conjure_encoder.default(run_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/run/{runRid}/data-sources'
         _path = _path.format(**_path_params)
@@ -15841,10 +15683,10 @@ Throws if any of the ref names conflict with existing data sources or each other
         return _decoder.decode(_response.json(), scout_run_api_Run, self._return_none_for_unknown_union_types)
 
     def create_or_update_run(self, auth_header: str, details: "scout_run_api_CreateOrUpdateRunRequest") -> "scout_run_api_Run":
-        """
-        Updates a run if it exists, otherwise it's created from scratch.
+        """Updates a run if it exists, otherwise it's created from scratch.
 Will throw if the workspace of an existing run is different from the workspace of the request.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15855,10 +15697,10 @@ Will throw if the workspace of an existing run is different from the workspace o
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/scout/v1/run/create-or-update'
         _path = _path.format(**_path_params)
@@ -15874,9 +15716,9 @@ Will throw if the workspace of an existing run is different from the workspace o
         return _decoder.decode(_response.json(), scout_run_api_Run, self._return_none_for_unknown_union_types)
 
     def get_run(self, auth_header: str, rid: str) -> "scout_run_api_Run":
+        """Fetches details about the run in question based on its RID.
         """
-        Fetches details about the run in question based on its RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15886,8 +15728,8 @@ Will throw if the workspace of an existing run is different from the workspace o
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15906,10 +15748,10 @@ Will throw if the workspace of an existing run is different from the workspace o
         return _decoder.decode(_response.json(), scout_run_api_Run, self._return_none_for_unknown_union_types)
 
     def get_run_with_data_review_metrics(self, auth_header: str, rid: str) -> "scout_run_api_RunWithDataReviewMetrics":
-        """
-        Fetches details about the run in question based on its RID, 
+        """Fetches details about the run in question based on its RID, 
 including metrics for check and violation review status.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15919,8 +15761,8 @@ including metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15939,9 +15781,9 @@ including metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_RunWithDataReviewMetrics, self._return_none_for_unknown_union_types)
 
     def get_run_with_data_review_summary(self, auth_header: str, rid: str) -> "scout_run_api_RunWithDataReviewSummary":
+        """Fetches details about the run in question based on its RID, including a summary of the data review status.
         """
-        Fetches details about the run in question based on its RID, including a summary of the data review status.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15951,8 +15793,8 @@ including metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -15971,9 +15813,9 @@ including metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_RunWithDataReviewSummary, self._return_none_for_unknown_union_types)
 
     def get_run_by_id(self, auth_header: str, get_run_by_id_request: "scout_run_api_GetRunByIdRequest") -> "scout_run_api_Run":
+        """Fetches a run based on the run number, rather than RID.
         """
-        Fetches a run based on the run number, rather than RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -15984,10 +15826,10 @@ including metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(get_run_by_id_request)
+        _json: Any = _conjure_encoder.default(get_run_by_id_request)
 
         _path = '/scout/v1/run/by-id'
         _path = _path.format(**_path_params)
@@ -16003,10 +15845,10 @@ including metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_Run, self._return_none_for_unknown_union_types)
 
     def get_runs(self, auth_header: str, rids: List[str] = None) -> Dict[str, "scout_run_api_Run"]:
-        """
-        Fetches a list of run details based on a list of RIDs.
+        """Fetches a list of run details based on a list of RIDs.
         """
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16017,10 +15859,10 @@ including metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v1/run/multiple'
         _path = _path.format(**_path_params)
@@ -16036,9 +15878,9 @@ including metrics for check and violation review status.
         return _decoder.decode(_response.json(), Dict[scout_run_api_RunRid, scout_run_api_Run], self._return_none_for_unknown_union_types)
 
     def get_runs_by_asset(self, auth_header: str, request: "scout_run_api_GetRunsByAssetRequest") -> "scout_run_api_GetRunsByAssetResponse":
+        """Fetches the runs with the given asset.
         """
-        Fetches the runs with the given asset.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16049,10 +15891,10 @@ including metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/run/by-asset'
         _path = _path.format(**_path_params)
@@ -16069,6 +15911,7 @@ including metrics for check and violation review status.
 
     def get_all_runs_properties_and_labels(self, auth_header: str, workspaces: List[str] = None) -> "scout_run_api_AllRunsPropertiesAndLabelsResponse":
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16076,10 +15919,10 @@ including metrics for check and violation review status.
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -16098,9 +15941,9 @@ including metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_AllRunsPropertiesAndLabelsResponse, self._return_none_for_unknown_union_types)
 
     def search_runs(self, auth_header: str, request: "scout_run_api_SearchRunsRequest") -> "scout_run_api_SearchRunsResponse":
+        """Searches for runs that match the given filters.
         """
-        Searches for runs that match the given filters.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16111,10 +15954,10 @@ including metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/search-runs'
         _path = _path.format(**_path_params)
@@ -16130,10 +15973,10 @@ including metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_SearchRunsResponse, self._return_none_for_unknown_union_types)
 
     def search_runs_with_data_review_metrics(self, auth_header: str, request: "scout_run_api_SearchRunsRequest") -> "scout_run_api_SearchRunsWithDataReviewMetricsResponse":
-        """
-        Searches for runs that match the given filters and 
+        """Searches for runs that match the given filters and 
 includes metrics for check and violation review status.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16144,10 +15987,10 @@ includes metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/search-runs-with-data-review-metrics'
         _path = _path.format(**_path_params)
@@ -16163,9 +16006,9 @@ includes metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_SearchRunsWithDataReviewMetricsResponse, self._return_none_for_unknown_union_types)
 
     def search_runs_with_data_review_summary(self, auth_header: str, request: "scout_run_api_SearchRunsRequest") -> "scout_run_api_SearchRunsWithDataReviewSummaryResponse":
+        """Searches for runs that match the given filters and includes a summary of the data review status.
         """
-        Searches for runs that match the given filters and includes a summary of the data review status.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16176,10 +16019,10 @@ includes metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/search-runs-with-data-review-summary'
         _path = _path.format(**_path_params)
@@ -16195,9 +16038,9 @@ includes metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_SearchRunsWithDataReviewSummaryResponse, self._return_none_for_unknown_union_types)
 
     def archive_run(self, auth_header: str, rid: str) -> bool:
+        """Soft-deletes a run. Runs still exist in the database but are no longer visible.
         """
-        Soft-deletes a run. Runs still exist in the database but are no longer visible.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16207,8 +16050,8 @@ includes metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -16227,6 +16070,7 @@ includes metrics for check and violation review status.
         return _decoder.decode(_response.json(), bool, self._return_none_for_unknown_union_types)
 
     def unarchive_run(self, auth_header: str, rid: str) -> bool:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16236,8 +16080,8 @@ includes metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -16256,10 +16100,10 @@ includes metrics for check and violation review status.
         return _decoder.decode(_response.json(), bool, self._return_none_for_unknown_union_types)
 
     def get_data_source_ref_name_and_type_list(self, auth_header: str, workspaces: List[str] = None) -> List["scout_run_api_RefNameAndType"]:
-        """
-        Returns the list of ref names that are in use across specified and authorized workspaces.
+        """Returns the list of ref names that are in use across specified and authorized workspaces.
         """
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16267,10 +16111,10 @@ includes metrics for check and violation review status.
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -16289,6 +16133,7 @@ includes metrics for check and violation review status.
         return _decoder.decode(_response.json(), List[scout_run_api_RefNameAndType], self._return_none_for_unknown_union_types)
 
     def search_channels(self, auth_header: str, request: "scout_run_api_SearchRunChannelsRequest", rid: str) -> "scout_run_api_SearchRunChannelsResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16299,11 +16144,11 @@ includes metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/run/{rid}/search-channels'
         _path = _path.format(**_path_params)
@@ -16319,9 +16164,9 @@ includes metrics for check and violation review status.
         return _decoder.decode(_response.json(), scout_run_api_SearchRunChannelsResponse, self._return_none_for_unknown_union_types)
 
     def update_run_attachment(self, auth_header: str, request: "scout_run_api_UpdateAttachmentsRequest", rid: str) -> None:
+        """Updates the attachments associated with a run.
         """
-        Updates the attachments associated with a run.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16332,11 +16177,11 @@ includes metrics for check and violation review status.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/run/{rid}/attachments'
         _path = _path.format(**_path_params)
@@ -16357,15 +16202,14 @@ scout_RunService.__module__ = "nominal_api.scout"
 
 
 class scout_TemplateService(Service):
-    """
-    TemplateService manages templates, which are workbooks that
+    """TemplateService manages templates, which are workbooks that
 can be re-used across runs. Templates are versioned.
     """
 
     def create(self, auth_header: str, request: "scout_template_api_CreateTemplateRequest") -> "scout_template_api_Template":
+        """Creates a new template.
         """
-        Creates a new template.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16376,10 +16220,10 @@ can be re-used across runs. Templates are versioned.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/template'
         _path = _path.format(**_path_params)
@@ -16395,11 +16239,11 @@ can be re-used across runs. Templates are versioned.
         return _decoder.decode(_response.json(), scout_template_api_Template, self._return_none_for_unknown_union_types)
 
     def get(self, auth_header: str, template_rid: str, branch: Optional[str] = None, commit: Optional[str] = None) -> "scout_template_api_Template":
-        """
-        Must only pass one of (branch, commit). If neither are passed,
+        """Must only pass one of (branch, commit). If neither are passed,
 the latest commit on the "main" branch is returned.
 Throws if the template, branch, or commit doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16407,12 +16251,12 @@ Throws if the template, branch, or commit doesn't exist.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
-            'commit': commit,
+            'branch': _conjure_encoder.default(branch),
+            'commit': _conjure_encoder.default(commit),
         }
 
-        _path_params: Dict[str, Any] = {
-            'templateRid': template_rid,
+        _path_params: Dict[str, str] = {
+            'templateRid': quote(str(_conjure_encoder.default(template_rid)), safe=''),
         }
 
         _json: Any = None
@@ -16432,6 +16276,7 @@ Throws if the template, branch, or commit doesn't exist.
 
     def batch_get_metadata(self, auth_header: str, rids: List[str] = None) -> List["scout_template_api_TemplateSummary"]:
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16442,10 +16287,10 @@ Throws if the template, branch, or commit doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v1/template/batch-get-metadata'
         _path = _path.format(**_path_params)
@@ -16461,12 +16306,12 @@ Throws if the template, branch, or commit doesn't exist.
         return _decoder.decode(_response.json(), List[scout_template_api_TemplateSummary], self._return_none_for_unknown_union_types)
 
     def save_working_state(self, auth_header: str, request: "scout_template_api_SaveTemplateRequest", template_rid: str, branch: Optional[str] = None) -> "scout_template_api_Template":
-        """
-        Creates a commit that may be compacted, e.g cleaned up and not exist anymore.
+        """Creates a commit that may be compacted, e.g cleaned up and not exist anymore.
 Throws if the template or branch doesn't exist.
 Throws if the latest commit doesn't match the provided id.
 Throws if you save to an archived template.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16475,14 +16320,14 @@ Throws if you save to an archived template.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
+            'branch': _conjure_encoder.default(branch),
         }
 
-        _path_params: Dict[str, Any] = {
-            'templateRid': template_rid,
+        _path_params: Dict[str, str] = {
+            'templateRid': quote(str(_conjure_encoder.default(template_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/template/{templateRid}/save-working-state'
         _path = _path.format(**_path_params)
@@ -16498,9 +16343,9 @@ Throws if you save to an archived template.
         return _decoder.decode(_response.json(), scout_template_api_Template, self._return_none_for_unknown_union_types)
 
     def get_used_ref_names(self, auth_header: str, template_rid: str, branch: Optional[str] = None, commit: Optional[str] = None) -> List[str]:
+        """Returns the set of all ref names used by the template.
         """
-        Returns the set of all ref names used by the template.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16508,12 +16353,12 @@ Throws if you save to an archived template.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
-            'commit': commit,
+            'branch': _conjure_encoder.default(branch),
+            'commit': _conjure_encoder.default(commit),
         }
 
-        _path_params: Dict[str, Any] = {
-            'templateRid': template_rid,
+        _path_params: Dict[str, str] = {
+            'templateRid': quote(str(_conjure_encoder.default(template_rid)), safe=''),
         }
 
         _json: Any = None
@@ -16532,9 +16377,9 @@ Throws if you save to an archived template.
         return _decoder.decode(_response.json(), List[scout_api_DataSourceRefName], self._return_none_for_unknown_union_types)
 
     def update_ref_names(self, auth_header: str, request: "scout_template_api_UpdateRefNameRequest", template_rid: str, branch: Optional[str] = None) -> "scout_template_api_Template":
+        """Updates the data source ref names for all variables used in the template.
         """
-        Updates the data source ref names for all variables used in the template.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16543,14 +16388,14 @@ Throws if you save to an archived template.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
+            'branch': _conjure_encoder.default(branch),
         }
 
-        _path_params: Dict[str, Any] = {
-            'templateRid': template_rid,
+        _path_params: Dict[str, str] = {
+            'templateRid': quote(str(_conjure_encoder.default(template_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/template/{templateRid}/update-ref-names'
         _path = _path.format(**_path_params)
@@ -16566,12 +16411,12 @@ Throws if you save to an archived template.
         return _decoder.decode(_response.json(), scout_template_api_Template, self._return_none_for_unknown_union_types)
 
     def commit(self, auth_header: str, request: "scout_template_api_CommitTemplateRequest", template_rid: str, branch: Optional[str] = None) -> "scout_template_api_Template":
-        """
-        Creates a commit with a commit message. 
+        """Creates a commit with a commit message. 
 Throws if the template or branch doesn't exist.
 Throws if the latest commit doesn't match the provided id.
 Throws if you commit to an archived template.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16580,14 +16425,14 @@ Throws if you commit to an archived template.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
+            'branch': _conjure_encoder.default(branch),
         }
 
-        _path_params: Dict[str, Any] = {
-            'templateRid': template_rid,
+        _path_params: Dict[str, str] = {
+            'templateRid': quote(str(_conjure_encoder.default(template_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/template/{templateRid}/commit'
         _path = _path.format(**_path_params)
@@ -16603,9 +16448,9 @@ Throws if you commit to an archived template.
         return _decoder.decode(_response.json(), scout_template_api_Template, self._return_none_for_unknown_union_types)
 
     def update_metadata(self, auth_header: str, request: "scout_template_api_UpdateMetadataRequest", template_rid: str) -> "scout_template_api_TemplateMetadata":
+        """Throws if the template doesn't exist.
         """
-        Throws if the template doesn't exist.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16616,11 +16461,11 @@ Throws if you commit to an archived template.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'templateRid': template_rid,
+        _path_params: Dict[str, str] = {
+            'templateRid': quote(str(_conjure_encoder.default(template_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/template/{templateRid}/metadata'
         _path = _path.format(**_path_params)
@@ -16636,6 +16481,7 @@ Throws if you commit to an archived template.
         return _decoder.decode(_response.json(), scout_template_api_TemplateMetadata, self._return_none_for_unknown_union_types)
 
     def search_templates(self, auth_header: str, request: "scout_template_api_SearchTemplatesRequest") -> "scout_template_api_SearchTemplatesResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16646,10 +16492,10 @@ Throws if you commit to an archived template.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/template/search'
         _path = _path.format(**_path_params)
@@ -16666,6 +16512,7 @@ Throws if you commit to an archived template.
 
     def get_all_labels_and_properties(self, auth_header: str, workspaces: List[str] = None) -> "scout_template_api_GetAllLabelsAndPropertiesResponse":
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16673,10 +16520,10 @@ Throws if you commit to an archived template.
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -16695,12 +16542,12 @@ Throws if you commit to an archived template.
         return _decoder.decode(_response.json(), scout_template_api_GetAllLabelsAndPropertiesResponse, self._return_none_for_unknown_union_types)
 
     def merge_to_main(self, auth_header: str, request: "scout_template_api_MergeToMainRequest", template_rid: str) -> "scout_template_api_Template":
-        """
-        Merges the given branch to the "main" branch.
+        """Merges the given branch to the "main" branch.
 Throws if the template or branch doesn't exist.
 Throws if the latest commit doesn't match the provided id.
 Throws if you merge on an archived template.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16711,11 +16558,11 @@ Throws if you merge on an archived template.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'templateRid': template_rid,
+        _path_params: Dict[str, str] = {
+            'templateRid': quote(str(_conjure_encoder.default(template_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/template/{templateRid}/merge-to-main'
         _path = _path.format(**_path_params)
@@ -16737,15 +16584,14 @@ scout_TemplateService.__module__ = "nominal_api.scout"
 
 
 class scout_UnitsService(Service):
-    """
-    The Units Service serves as a comprehensive catalog of the units of measurement supported by scout. Units, by 
+    """The Units Service serves as a comprehensive catalog of the units of measurement supported by scout. Units, by 
 default, follow the UCUM convention for representation.
     """
 
     def get_all_units(self, auth_header: str) -> "scout_units_api_GetUnitsResponse":
+        """Returns all known units, grouped by the physical property they measure.
         """
-        Returns all known units, grouped by the physical property they measure.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16755,7 +16601,7 @@ default, follow the UCUM convention for representation.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -16774,9 +16620,9 @@ default, follow the UCUM convention for representation.
         return _decoder.decode(_response.json(), scout_units_api_GetUnitsResponse, self._return_none_for_unknown_union_types)
 
     def get_unit(self, auth_header: str, unit: str) -> Optional["scout_units_api_Unit"]:
+        """Returns information for a unit symbol if available. Returns as empty if the provided symbol cannot be parsed.
         """
-        Returns information for a unit symbol if available. Returns as empty if the provided symbol cannot be parsed.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16787,10 +16633,10 @@ default, follow the UCUM convention for representation.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(unit)
+        _json: Any = _conjure_encoder.default(unit)
 
         _path = '/units/v1/units/get-unit'
         _path = _path.format(**_path_params)
@@ -16806,11 +16652,11 @@ default, follow the UCUM convention for representation.
         return None if _response.status_code == 204 else _decoder.decode(_response.json(), OptionalTypeWrapper[scout_units_api_Unit], self._return_none_for_unknown_union_types)
 
     def get_batch_units(self, auth_header: str, units: List[str] = None) -> Dict[str, "scout_units_api_Unit"]:
-        """
-        Returns information for the unit symbols if available. If the provided symbol cannot be parsed, it will be 
+        """Returns information for the unit symbols if available. If the provided symbol cannot be parsed, it will be 
 omitted from the map.
         """
         units = units if units is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16821,10 +16667,10 @@ omitted from the map.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(units)
+        _json: Any = _conjure_encoder.default(units)
 
         _path = '/units/v1/units/get-batch-units'
         _path = _path.format(**_path_params)
@@ -16840,10 +16686,10 @@ omitted from the map.
         return _decoder.decode(_response.json(), Dict[scout_units_api_UnitSymbol, scout_units_api_Unit], self._return_none_for_unknown_union_types)
 
     def get_commensurable_units(self, auth_header: str, unit: str) -> List["scout_units_api_Unit"]:
-        """
-        Returns the set of cataloged units that can be converted to and from the given unit.
+        """Returns the set of cataloged units that can be converted to and from the given unit.
 No commensurable units does not imply the unit is invalid. Use /get-unit to check for validity.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16854,10 +16700,10 @@ No commensurable units does not imply the unit is invalid. Use /get-unit to chec
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(unit)
+        _json: Any = _conjure_encoder.default(unit)
 
         _path = '/units/v1/units/commensurable-units'
         _path = _path.format(**_path_params)
@@ -16879,21 +16725,20 @@ scout_UnitsService.__module__ = "nominal_api.scout"
 
 
 class scout_VersioningService(Service):
-    """
-    This is the external-facing portion of VersioningService which
+    """This is the external-facing portion of VersioningService which
 gives clients access to functionality that doesn't create new
 commits. The creation of new commits should be done via the
 resource-specific services.
     """
 
     def create_branch(self, auth_header: str, request: "scout_versioning_api_CreateBranchRequest", resource_rid: str) -> "scout_versioning_api_Branch":
-        """
-        Creates a mutable pointer to the provided commit.
+        """Creates a mutable pointer to the provided commit.
 "Saves"/"commits" can be performed on this pointer.
 Throws if the name is already used as a commit
 pointer for this resource.
 Throws if the provided commit doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16904,11 +16749,11 @@ Throws if the provided commit doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/versioning/{resourceRid}/branch'
         _path = _path.format(**_path_params)
@@ -16924,12 +16769,12 @@ Throws if the provided commit doesn't exist.
         return _decoder.decode(_response.json(), scout_versioning_api_Branch, self._return_none_for_unknown_union_types)
 
     def create_tag(self, auth_header: str, request: "scout_versioning_api_CreateTagRequest", resource_rid: str) -> "scout_versioning_api_Tag":
-        """
-        Creates an immutable pointer to the provided commit.
+        """Creates an immutable pointer to the provided commit.
 Throws if the name is already used as a commit
 pointer for this resource.
 Throws if the provided commit doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16940,11 +16785,11 @@ Throws if the provided commit doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/versioning/{resourceRid}/tag'
         _path = _path.format(**_path_params)
@@ -16960,9 +16805,9 @@ Throws if the provided commit doesn't exist.
         return _decoder.decode(_response.json(), scout_versioning_api_Tag, self._return_none_for_unknown_union_types)
 
     def get_commit(self, auth_header: str, commit_id: str, resource_rid: str) -> "scout_versioning_api_Commit":
+        """Throws if the commit doesn't exist.
         """
-        Throws if the commit doesn't exist.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -16972,9 +16817,9 @@ Throws if the provided commit doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'commitId': commit_id,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'commitId': quote(str(_conjure_encoder.default(commit_id)), safe=''),
         }
 
         _json: Any = None
@@ -16993,10 +16838,10 @@ Throws if the provided commit doesn't exist.
         return _decoder.decode(_response.json(), scout_versioning_api_Commit, self._return_none_for_unknown_union_types)
 
     def batch_get_commits(self, auth_header: str, resource_and_commit_ids: List["scout_versioning_api_ResourceAndCommitId"] = None) -> List["scout_versioning_api_Commit"]:
-        """
-        Filters out resources that are not authorized.
+        """Filters out resources that are not authorized.
         """
         resource_and_commit_ids = resource_and_commit_ids if resource_and_commit_ids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17007,10 +16852,10 @@ Throws if the provided commit doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(resource_and_commit_ids)
+        _json: Any = _conjure_encoder.default(resource_and_commit_ids)
 
         _path = '/scout/v1/versioning/commit/batch-get'
         _path = _path.format(**_path_params)
@@ -17026,10 +16871,10 @@ Throws if the provided commit doesn't exist.
         return _decoder.decode(_response.json(), List[scout_versioning_api_Commit], self._return_none_for_unknown_union_types)
 
     def get_commit_by_branch(self, auth_header: str, branch_name: str, resource_rid: str) -> "scout_versioning_api_Commit":
-        """
-        Returns the commit pointed to by the branch.
+        """Returns the commit pointed to by the branch.
 Throws if the branch doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17039,9 +16884,9 @@ Throws if the branch doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'branchName': branch_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'branchName': quote(str(_conjure_encoder.default(branch_name)), safe=''),
         }
 
         _json: Any = None
@@ -17060,10 +16905,10 @@ Throws if the branch doesn't exist.
         return _decoder.decode(_response.json(), scout_versioning_api_Commit, self._return_none_for_unknown_union_types)
 
     def get_commit_by_tag(self, auth_header: str, resource_rid: str, tag_name: str) -> "scout_versioning_api_Commit":
-        """
-        Returns the commit pointed to by the tag.
+        """Returns the commit pointed to by the tag.
 Throws if the tag doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17073,9 +16918,9 @@ Throws if the tag doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'tagName': tag_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'tagName': quote(str(_conjure_encoder.default(tag_name)), safe=''),
         }
 
         _json: Any = None
@@ -17094,10 +16939,10 @@ Throws if the tag doesn't exist.
         return _decoder.decode(_response.json(), scout_versioning_api_Commit, self._return_none_for_unknown_union_types)
 
     def get_least_common_ancestor(self, auth_header: str, request: "scout_versioning_api_GetLeastCommonAncestorRequest", resource_rid: str) -> str:
-        """
-        Returns the least common ancestor of the two commits.
+        """Returns the least common ancestor of the two commits.
 Throws if either commit doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17108,11 +16953,11 @@ Throws if either commit doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/versioning/{resourceRid}/commit/least-common-ancestor'
         _path = _path.format(**_path_params)
@@ -17128,11 +16973,11 @@ Throws if either commit doesn't exist.
         return _decoder.decode(_response.json(), scout_versioning_api_CommitId, self._return_none_for_unknown_union_types)
 
     def get_commit_history(self, auth_header: str, commit_id: str, resource_rid: str, next_page_token: Optional[str] = None, page_size: Optional[int] = None) -> "scout_versioning_api_CommitHistory":
-        """
-        Returns the commit history sorted by creation time descending.
+        """Returns the commit history sorted by creation time descending.
 Excludes working state commits.
 Throws if the commit doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17140,13 +16985,13 @@ Throws if the commit doesn't exist.
         }
 
         _params: Dict[str, Any] = {
-            'pageSize': page_size,
-            'nextPageToken': next_page_token,
+            'pageSize': _conjure_encoder.default(page_size),
+            'nextPageToken': _conjure_encoder.default(next_page_token),
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'commitId': commit_id,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'commitId': quote(str(_conjure_encoder.default(commit_id)), safe=''),
         }
 
         _json: Any = None
@@ -17165,12 +17010,12 @@ Throws if the commit doesn't exist.
         return _decoder.decode(_response.json(), scout_versioning_api_CommitHistory, self._return_none_for_unknown_union_types)
 
     def persist_commits(self, auth_header: str, request: List["scout_versioning_api_ResourceAndCommitId"] = None) -> None:
-        """
-        Persists the commits so that they are not compacted.
+        """Persists the commits so that they are not compacted.
 This operation is atomic - either all commits are persisted
 or none are (in the case of an error).
         """
         request = request if request is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17181,10 +17026,10 @@ or none are (in the case of an error).
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/versioning/commit/persist'
         _path = _path.format(**_path_params)
@@ -17199,9 +17044,9 @@ or none are (in the case of an error).
         return
 
     def get_branch(self, auth_header: str, branch_name: str, resource_rid: str) -> "scout_versioning_api_Branch":
+        """Throws if the branch doesn't exist.
         """
-        Throws if the branch doesn't exist.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17211,9 +17056,9 @@ or none are (in the case of an error).
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'branchName': branch_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'branchName': quote(str(_conjure_encoder.default(branch_name)), safe=''),
         }
 
         _json: Any = None
@@ -17232,10 +17077,10 @@ or none are (in the case of an error).
         return _decoder.decode(_response.json(), scout_versioning_api_Branch, self._return_none_for_unknown_union_types)
 
     def get_branches(self, auth_header: str, resource_rid: str) -> List["scout_versioning_api_Branch"]:
-        """
-        Returns all branches for the resource in order of
+        """Returns all branches for the resource in order of
 most recently updated.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17245,8 +17090,8 @@ most recently updated.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
         _json: Any = None
@@ -17265,10 +17110,10 @@ most recently updated.
         return _decoder.decode(_response.json(), List[scout_versioning_api_Branch], self._return_none_for_unknown_union_types)
 
     def batch_get_branches(self, auth_header: str, resource_and_branches: List["scout_versioning_api_ResourceAndBranchName"] = None) -> List["scout_versioning_api_Branch"]:
-        """
-        Omits branches that are not authorized.
+        """Omits branches that are not authorized.
         """
         resource_and_branches = resource_and_branches if resource_and_branches is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17279,10 +17124,10 @@ most recently updated.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(resource_and_branches)
+        _json: Any = _conjure_encoder.default(resource_and_branches)
 
         _path = '/scout/v1/versioning/branch/batch-get'
         _path = _path.format(**_path_params)
@@ -17298,9 +17143,9 @@ most recently updated.
         return _decoder.decode(_response.json(), List[scout_versioning_api_Branch], self._return_none_for_unknown_union_types)
 
     def get_tag(self, auth_header: str, resource_rid: str, tag_name: str) -> "scout_versioning_api_Tag":
+        """Throws if the tag doesn't exist.
         """
-        Throws if the tag doesn't exist.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17310,9 +17155,9 @@ most recently updated.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'tagName': tag_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'tagName': quote(str(_conjure_encoder.default(tag_name)), safe=''),
         }
 
         _json: Any = None
@@ -17331,10 +17176,10 @@ most recently updated.
         return _decoder.decode(_response.json(), scout_versioning_api_Tag, self._return_none_for_unknown_union_types)
 
     def batch_get_tags(self, auth_header: str, resource_and_commits: List["scout_versioning_api_ResourceAndCommitId"] = None) -> List["scout_versioning_api_Tag"]:
-        """
-        Omits tags that are not authorized.
+        """Omits tags that are not authorized.
         """
         resource_and_commits = resource_and_commits if resource_and_commits is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17345,10 +17190,10 @@ most recently updated.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(resource_and_commits)
+        _json: Any = _conjure_encoder.default(resource_and_commits)
 
         _path = '/scout/v1/versioning/tag/batch-get'
         _path = _path.format(**_path_params)
@@ -17364,10 +17209,10 @@ most recently updated.
         return _decoder.decode(_response.json(), List[scout_versioning_api_Tag], self._return_none_for_unknown_union_types)
 
     def get_tags_by_resource(self, auth_header: str, resource_rid: str) -> List["scout_versioning_api_Tag"]:
-        """
-        Returns all tags for the resource in order of
+        """Returns all tags for the resource in order of
 most recently created.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17377,8 +17222,8 @@ most recently created.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
         }
 
         _json: Any = None
@@ -17397,11 +17242,11 @@ most recently created.
         return _decoder.decode(_response.json(), List[scout_versioning_api_Tag], self._return_none_for_unknown_union_types)
 
     def delete_branch(self, auth_header: str, branch_name: str, resource_rid: str) -> None:
-        """
-        Deletes the branch pointer.
+        """Deletes the branch pointer.
 Throws if the branch doesn't exist.
 Throws if you attempt to delete the "main" branch.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17411,9 +17256,9 @@ Throws if you attempt to delete the "main" branch.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'branchName': branch_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'branchName': quote(str(_conjure_encoder.default(branch_name)), safe=''),
         }
 
         _json: Any = None
@@ -17431,13 +17276,13 @@ Throws if you attempt to delete the "main" branch.
         return
 
     def delete_branches(self, auth_header: str, resource_and_branches: List["scout_versioning_api_ResourceAndBranchName"] = None) -> None:
-        """
-        Deletes the branch pointers.
+        """Deletes the branch pointers.
 Throws if any resource or branch is non-existent
 or unauthorized.
 Throws if any attempt is made to delete "main".
         """
         resource_and_branches = resource_and_branches if resource_and_branches is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17448,10 +17293,10 @@ Throws if any attempt is made to delete "main".
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(resource_and_branches)
+        _json: Any = _conjure_encoder.default(resource_and_branches)
 
         _path = '/scout/v1/versioning/branch/batch-delete'
         _path = _path.format(**_path_params)
@@ -17466,10 +17311,10 @@ Throws if any attempt is made to delete "main".
         return
 
     def delete_tag(self, auth_header: str, resource_rid: str, tag_name: str) -> None:
-        """
-        Deletes the tag pointer.
+        """Deletes the tag pointer.
 Throws if the tag doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -17479,9 +17324,9 @@ Throws if the tag doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'resourceRid': resource_rid,
-            'tagName': tag_name,
+        _path_params: Dict[str, str] = {
+            'resourceRid': quote(str(_conjure_encoder.default(resource_rid)), safe=''),
+            'tagName': quote(str(_conjure_encoder.default(tag_name)), safe=''),
         }
 
         _json: Any = None
@@ -17751,8 +17596,7 @@ class scout_asset_api_AddDataScopesToAssetRequest(ConjureBeanType):
 
     @builtins.property
     def data_scopes(self) -> List["scout_asset_api_CreateAssetDataScope"]:
-        """
-        The data scopes to add to the asset.
+        """The data scopes to add to the asset.
 
 Throws if any existing data scopes have data scope names that conflict with the data scope names
 in the request.
@@ -17822,24 +17666,21 @@ class scout_asset_api_Asset(ConjureBeanType):
 
     @builtins.property
     def labels(self) -> List[str]:
-        """
-        Labels associated with the asset. These labels do not have a time dimension.
+        """Labels associated with the asset. These labels do not have a time dimension.
 To associate labels with a range of time, create a time range on the asset with labels.
         """
         return self._labels
 
     @builtins.property
     def links(self) -> List["scout_run_api_Link"]:
-        """
-        Links associated with the asset. These links do not have a time dimension.
+        """Links associated with the asset. These links do not have a time dimension.
 To associate links with a range of time, create a time range on the asset with links.
         """
         return self._links
 
     @builtins.property
     def data_scopes(self) -> List["scout_asset_api_AssetDataScope"]:
-        """
-        The data scopes associated with the asset.
+        """The data scopes associated with the asset.
         """
         return self._data_scopes
 
@@ -17865,8 +17706,7 @@ To associate links with a range of time, create a time range on the asset with l
 
     @builtins.property
     def is_staged(self) -> bool:
-        """
-        Auto created assets are considered staged by default.
+        """Auto created assets are considered staged by default.
         """
         return self._is_staged
 
@@ -17903,8 +17743,7 @@ class scout_asset_api_AssetDataScope(ConjureBeanType):
 
     @builtins.property
     def data_scope_name(self) -> str:
-        """
-        The name of the data scope. The name is guaranteed to be be unique within the context of an asset.
+        """The name of the data scope. The name is guaranteed to be be unique within the context of an asset.
         """
         return self._data_scope_name
 
@@ -17922,8 +17761,7 @@ class scout_asset_api_AssetDataScope(ConjureBeanType):
 
     @builtins.property
     def series_tags(self) -> Dict[str, str]:
-        """
-        Filters the data source to series matching these tag values. The filtered set of series should be
+        """Filters the data source to series matching these tag values. The filtered set of series should be
 the ones that belong to the asset.
         """
         return self._series_tags
@@ -17961,8 +17799,7 @@ class scout_asset_api_AssetSortOptions(ConjureBeanType):
 
     @builtins.property
     def sort_key(self) -> Optional["scout_asset_api_SortKey"]:
-        """
-        Field to sort by. Includes both field and property-based sorting.
+        """Field to sort by. Includes both field and property-based sorting.
 Must be supplied if field is not provided separately.
         """
         return self._sort_key
@@ -17994,8 +17831,7 @@ class scout_asset_api_AssetTypeDataScopeConfig(ConjureBeanType):
 
     @builtins.property
     def tags(self) -> "scout_asset_api_TagConfig":
-        """
-        Tag names that should be supplied to downscope data for an asset of the asset type. These are not 
+        """Tag names that should be supplied to downscope data for an asset of the asset type. These are not 
 enforced.
         """
         return self._tags
@@ -18074,8 +17910,7 @@ class scout_asset_api_CreateAssetDataScope(ConjureBeanType):
 
     @builtins.property
     def data_scope_name(self) -> str:
-        """
-        The name of the data scope. The name is guaranteed to be be unique within the context of an asset.
+        """The name of the data scope. The name is guaranteed to be be unique within the context of an asset.
         """
         return self._data_scope_name
 
@@ -18089,8 +17924,7 @@ class scout_asset_api_CreateAssetDataScope(ConjureBeanType):
 
     @builtins.property
     def series_tags(self) -> Dict[str, str]:
-        """
-        Filters the data source to series matching these tag values. The filtered set of series should be
+        """Filters the data source to series matching these tag values. The filtered set of series should be
 the ones that belong to the asset.
         """
         return self._series_tags
@@ -18152,8 +17986,7 @@ class scout_asset_api_CreateAssetRequest(ConjureBeanType):
 
     @builtins.property
     def data_scopes(self) -> List["scout_asset_api_CreateAssetDataScope"]:
-        """
-        The data scopes associated with the asset.
+        """The data scopes associated with the asset.
         """
         return self._data_scopes
 
@@ -18167,8 +18000,7 @@ class scout_asset_api_CreateAssetRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the asset. If not provided, the asset will be created in
+        """The workspace in which to create the asset. If not provided, the asset will be created in
 the default workspace for the user's organization, if the default workspace for the
 organization is configured.
 All data scopes, attachments, and the optional asset type must be in the same workspace.
@@ -18222,8 +18054,7 @@ class scout_asset_api_CreateTypeRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the asset type. If not provided, the asset type will be created in
+        """The workspace in which to create the asset type. If not provided, the asset type will be created in
 the default workspace for the user's organization, if the default workspace for the
 organization is configured.
         """
@@ -18231,8 +18062,7 @@ organization is configured.
 
     @builtins.property
     def datasource_configs(self) -> Optional[Dict[str, "scout_asset_api_AssetTypeDataScopeConfig"]]:
-        """
-        The configuration outlines what a data scope should provide when added to an asset of this type. It is 
+        """The configuration outlines what a data scope should provide when added to an asset of this type. It is 
 referenced at data scope creation time, but does not actively modify existing data scopes.
         """
         return self._datasource_configs
@@ -18273,8 +18103,7 @@ scout_asset_api_PropertyConfig.__module__ = "nominal_api.scout_asset_api"
 
 
 class scout_asset_api_RemoveType(ConjureBeanType):
-    """
-    The request to remove the type from the asset.
+    """The request to remove the type from the asset.
     """
 
     @builtins.classmethod
@@ -18316,8 +18145,7 @@ class scout_asset_api_SearchAssetChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def data_scope_name_filter(self) -> Optional[List[str]]:
-        """
-        If not empty, will filter to channels from the selected data scope names.
+        """If not empty, will filter to channels from the selected data scope names.
         """
         return self._data_scope_name_filter
 
@@ -18327,8 +18155,7 @@ class scout_asset_api_SearchAssetChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 1000. Will throw if larger than 10000. Default pageSize is 100.
+        """Defaults to 1000. Will throw if larger than 10000. Default pageSize is 100.
         """
         return self._page_size
 
@@ -18597,8 +18424,7 @@ class scout_asset_api_SearchAssetsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
+        """Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
         """
         return self._page_size
 
@@ -18612,8 +18438,7 @@ class scout_asset_api_SearchAssetsRequest(ConjureBeanType):
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Default search status is NOT_ARCHIVED if none are provided. Allows for including archived assets in search.
+        """Default search status is NOT_ARCHIVED if none are provided. Allows for including archived assets in search.
         """
         return self._archived_statuses
 
@@ -18840,8 +18665,7 @@ class scout_asset_api_SearchTypesRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
+        """Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
         """
         return self._page_size
 
@@ -18855,8 +18679,7 @@ class scout_asset_api_SearchTypesRequest(ConjureBeanType):
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Default search status is NOT_ARCHIVED if none are provided. Allows for including archived assets in search.
+        """Default search status is NOT_ARCHIVED if none are provided. Allows for including archived assets in search.
         """
         return self._archived_statuses
 
@@ -19114,15 +18937,13 @@ class scout_asset_api_Type(ConjureBeanType):
 
     @builtins.property
     def icon_name(self) -> Optional[str]:
-        """
-        The name of the icon to display for the type. This name maps to a Lucide icon in the frontend.
+        """The name of the icon to display for the type. This name maps to a Lucide icon in the frontend.
         """
         return self._icon_name
 
     @builtins.property
     def datasource_configs(self) -> Dict[str, "scout_asset_api_AssetTypeDataScopeConfig"]:
-        """
-        The configuration outlines what a data scope should provide when added to an asset of this type. It is 
+        """The configuration outlines what a data scope should provide when added to an asset of this type. It is 
 referenced at data scope creation time, but does not actively modify existing data scopes.
         """
         return self._datasource_configs
@@ -19234,8 +19055,7 @@ class scout_asset_api_UpdateAssetRequest(ConjureBeanType):
 
     @builtins.property
     def data_scopes(self) -> Optional[List["scout_asset_api_CreateAssetDataScope"]]:
-        """
-        The data scopes for the asset. This will replace all existing data scopes with the scopes specified.
+        """The data scopes for the asset. This will replace all existing data scopes with the scopes specified.
         """
         return self._data_scopes
 
@@ -19284,7 +19104,8 @@ scout_asset_api_UpdateAttachmentsRequest.__module__ = "nominal_api.scout_asset_a
 
 class scout_asset_api_UpdateOrRemoveAssetType(ConjureUnionType):
     """The request to update the type of the asset. The request will replace the existing type with the type
-specified in the request if a typeRID is provided. Otherwise, the type will be removed from the asset."""
+specified in the request if a typeRID is provided. Otherwise, the type will be removed from the asset.
+    """
     _type_rid: Optional[str] = None
     _remove_type: Optional["scout_asset_api_RemoveType"] = None
 
@@ -19362,8 +19183,7 @@ scout_asset_api_UpdateOrRemoveAssetTypeVisitor.__module__ = "nominal_api.scout_a
 
 
 class scout_asset_api_UpdateTypeRequest(ConjureBeanType):
-    """
-    The request to update a type. The request will replace all existing properties with the properties
+    """The request to update a type. The request will replace all existing properties with the properties
 specified in the request.
     """
 
@@ -19404,8 +19224,7 @@ specified in the request.
 
     @builtins.property
     def datasource_configs(self) -> Optional[Dict[str, "scout_asset_api_AssetTypeDataScopeConfig"]]:
-        """
-        The configuration outlines what a data scope should provide when added to an asset of this type. It is 
+        """The configuration outlines what a data scope should provide when added to an asset of this type. It is 
 referenced at data scope creation time, but does not actively modify existing data scopes.
         """
         return self._datasource_configs
@@ -19417,13 +19236,13 @@ scout_asset_api_UpdateTypeRequest.__module__ = "nominal_api.scout_asset_api"
 
 
 class scout_assets_AssetService(Service):
-    """
-    An asset is a physical entity within an organization, such as a vehicle or ground station. Assets are comprised
+    """An asset is a physical entity within an organization, such as a vehicle or ground station. Assets are comprised
 of some metadata about the data, as well as a set of data scopes that define the data belonging to the asset. API
 endpoints allow for CRUD operations on asset objects.
     """
 
     def create_asset(self, auth_header: str, details: "scout_asset_api_CreateAssetRequest") -> "scout_asset_api_Asset":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19434,10 +19253,10 @@ endpoints allow for CRUD operations on asset objects.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/scout/v1/asset'
         _path = _path.format(**_path_params)
@@ -19453,6 +19272,7 @@ endpoints allow for CRUD operations on asset objects.
         return _decoder.decode(_response.json(), scout_asset_api_Asset, self._return_none_for_unknown_union_types)
 
     def update_asset(self, auth_header: str, details: "scout_asset_api_UpdateAssetRequest", rid: str) -> "scout_asset_api_Asset":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19463,11 +19283,11 @@ endpoints allow for CRUD operations on asset objects.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/scout/v1/asset/{rid}'
         _path = _path.format(**_path_params)
@@ -19483,11 +19303,11 @@ endpoints allow for CRUD operations on asset objects.
         return _decoder.decode(_response.json(), scout_asset_api_Asset, self._return_none_for_unknown_union_types)
 
     def add_data_scopes_to_asset(self, asset_rid: str, auth_header: str, request: "scout_asset_api_AddDataScopesToAssetRequest") -> "scout_asset_api_Asset":
-        """
-        Adds data scopes to an asset.
+        """Adds data scopes to an asset.
 
 Throws if the asset already has data scopes with data scope names matching those in the request.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19498,11 +19318,11 @@ Throws if the asset already has data scopes with data scope names matching those
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'assetRid': asset_rid,
+        _path_params: Dict[str, str] = {
+            'assetRid': quote(str(_conjure_encoder.default(asset_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/asset/{assetRid}/data-sources'
         _path = _path.format(**_path_params)
@@ -19519,6 +19339,7 @@ Throws if the asset already has data scopes with data scope names matching those
 
     def get_assets(self, auth_header: str, rids: List[str] = None) -> Dict[str, "scout_asset_api_Asset"]:
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19529,10 +19350,10 @@ Throws if the asset already has data scopes with data scope names matching those
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v1/asset/multiple'
         _path = _path.format(**_path_params)
@@ -19548,6 +19369,7 @@ Throws if the asset already has data scopes with data scope names matching those
         return _decoder.decode(_response.json(), Dict[scout_rids_api_AssetRid, scout_asset_api_Asset], self._return_none_for_unknown_union_types)
 
     def archive(self, auth_header: str, rid: str, include_linked_workbooks: Optional[bool] = None) -> None:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19555,11 +19377,11 @@ Throws if the asset already has data scopes with data scope names matching those
         }
 
         _params: Dict[str, Any] = {
-            'includeLinkedWorkbooks': include_linked_workbooks,
+            'includeLinkedWorkbooks': _conjure_encoder.default(include_linked_workbooks),
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -19577,6 +19399,7 @@ Throws if the asset already has data scopes with data scope names matching those
         return
 
     def unarchive(self, auth_header: str, rid: str, include_linked_workbooks: Optional[bool] = None) -> None:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19584,11 +19407,11 @@ Throws if the asset already has data scopes with data scope names matching those
         }
 
         _params: Dict[str, Any] = {
-            'includeLinkedWorkbooks': include_linked_workbooks,
+            'includeLinkedWorkbooks': _conjure_encoder.default(include_linked_workbooks),
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -19606,6 +19429,7 @@ Throws if the asset already has data scopes with data scope names matching those
         return
 
     def search_assets(self, auth_header: str, search_assets_request: "scout_asset_api_SearchAssetsRequest") -> "scout_asset_api_SearchAssetsResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19616,10 +19440,10 @@ Throws if the asset already has data scopes with data scope names matching those
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(search_assets_request)
+        _json: Any = _conjure_encoder.default(search_assets_request)
 
         _path = '/scout/v1/search-assets'
         _path = _path.format(**_path_params)
@@ -19635,6 +19459,7 @@ Throws if the asset already has data scopes with data scope names matching those
         return _decoder.decode(_response.json(), scout_asset_api_SearchAssetsResponse, self._return_none_for_unknown_union_types)
 
     def search_types(self, auth_header: str, search_types_request: "scout_asset_api_SearchTypesRequest") -> "scout_asset_api_SearchTypesResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19645,10 +19470,10 @@ Throws if the asset already has data scopes with data scope names matching those
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(search_types_request)
+        _json: Any = _conjure_encoder.default(search_types_request)
 
         _path = '/scout/v1/search-types'
         _path = _path.format(**_path_params)
@@ -19664,9 +19489,9 @@ Throws if the asset already has data scopes with data scope names matching those
         return _decoder.decode(_response.json(), scout_asset_api_SearchTypesResponse, self._return_none_for_unknown_union_types)
 
     def update_asset_attachments(self, auth_header: str, request: "scout_asset_api_UpdateAttachmentsRequest", rid: str) -> None:
+        """Update the attachments associated with an asset.
         """
-        Update the attachments associated with an asset.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19677,11 +19502,11 @@ Throws if the asset already has data scopes with data scope names matching those
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/asset/{rid}/attachments'
         _path = _path.format(**_path_params)
@@ -19696,10 +19521,10 @@ Throws if the asset already has data scopes with data scope names matching those
         return
 
     def update_asset_ref_names(self, auth_header: str, request: "scout_asset_api_UpdateAssetRefNamesRequest", rid: str) -> None:
-        """
-        Update the ref names for the data scopes on the asset. This update will also be applied on all associated 
+        """Update the ref names for the data scopes on the asset. This update will also be applied on all associated 
 workbooks.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19710,11 +19535,11 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/asset/{rid}/ref-names'
         _path = _path.format(**_path_params)
@@ -19729,9 +19554,9 @@ workbooks.
         return
 
     def create_type(self, auth_header: str, request: "scout_asset_api_CreateTypeRequest") -> "scout_asset_api_Type":
+        """Creates a new type.
         """
-        Creates a new type.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19742,10 +19567,10 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/type'
         _path = _path.format(**_path_params)
@@ -19761,9 +19586,9 @@ workbooks.
         return _decoder.decode(_response.json(), scout_asset_api_Type, self._return_none_for_unknown_union_types)
 
     def update_type(self, auth_header: str, request: "scout_asset_api_UpdateTypeRequest", type_rid: str) -> "scout_asset_api_Type":
+        """Updates a type. Will throw unless all assets that reference the type pass the updated type check.
         """
-        Updates a type. Will throw unless all assets that reference the type pass the updated type check.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19774,11 +19599,11 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'typeRid': type_rid,
+        _path_params: Dict[str, str] = {
+            'typeRid': quote(str(_conjure_encoder.default(type_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/type/{typeRid}'
         _path = _path.format(**_path_params)
@@ -19795,6 +19620,7 @@ workbooks.
 
     def get_types(self, auth_header: str, rids: List[str] = None) -> Dict[str, "scout_asset_api_Type"]:
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19805,10 +19631,10 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v1/type/multiple'
         _path = _path.format(**_path_params)
@@ -19824,6 +19650,7 @@ workbooks.
         return _decoder.decode(_response.json(), Dict[scout_rids_api_TypeRid, scout_asset_api_Type], self._return_none_for_unknown_union_types)
 
     def get_types_for_datasource(self, auth_header: str, datasource_rid: str) -> List["scout_asset_api_Type"]:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19834,10 +19661,10 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(datasource_rid)
+        _json: Any = _conjure_encoder.default(datasource_rid)
 
         _path = '/scout/v1/type/datasource'
         _path = _path.format(**_path_params)
@@ -19853,9 +19680,9 @@ workbooks.
         return _decoder.decode(_response.json(), List[scout_asset_api_Type], self._return_none_for_unknown_union_types)
 
     def delete_type(self, auth_header: str, rid: str) -> None:
+        """Deletes a type. The type must not be referenced by any assets.
         """
-        Deletes a type. The type must not be referenced by any assets.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19865,8 +19692,8 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -19884,6 +19711,7 @@ workbooks.
         return
 
     def archive_type(self, auth_header: str, rid: str) -> None:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19893,8 +19721,8 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -19912,6 +19740,7 @@ workbooks.
         return
 
     def unarchive_type(self, auth_header: str, rid: str) -> None:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -19921,8 +19750,8 @@ workbooks.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -20143,13 +19972,13 @@ scout_catalog_Bounds.__module__ = "nominal_api.scout_catalog"
 
 
 class scout_catalog_CatalogService(Service):
-    """
-    The Catalog Service provides the ability to query for information about Datasets that are stored in
+    """The Catalog Service provides the ability to query for information about Datasets that are stored in
 the Nominal platform. A Dataset is the Nominal representation of data that has been uploaded to Nominal via
 a file, primarily CSV.
     """
 
     def get_enriched_dataset(self, auth_header: str, dataset_uuid: str) -> "scout_catalog_EnrichedDataset":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20159,8 +19988,8 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetUuid': dataset_uuid,
+        _path_params: Dict[str, str] = {
+            'datasetUuid': quote(str(_conjure_encoder.default(dataset_uuid)), safe=''),
         }
 
         _json: Any = None
@@ -20179,6 +20008,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_EnrichedDataset, self._return_none_for_unknown_union_types)
 
     def get_enriched_datasets(self, auth_header: str, get_datasets_request: "scout_catalog_GetDatasetsRequest") -> List["scout_catalog_EnrichedDataset"]:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20189,10 +20019,10 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(get_datasets_request)
+        _json: Any = _conjure_encoder.default(get_datasets_request)
 
         _path = '/catalog/v1/datasets/multiple'
         _path = _path.format(**_path_params)
@@ -20208,6 +20038,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), List[scout_catalog_EnrichedDataset], self._return_none_for_unknown_union_types)
 
     def get_dataset(self, auth_header: str, dataset_uuid: str) -> "scout_catalog_Dataset":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20217,8 +20048,8 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetUuid': dataset_uuid,
+        _path_params: Dict[str, str] = {
+            'datasetUuid': quote(str(_conjure_encoder.default(dataset_uuid)), safe=''),
         }
 
         _json: Any = None
@@ -20237,6 +20068,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_Dataset, self._return_none_for_unknown_union_types)
 
     def get_datasets(self, auth_header: str, get_datasets_request: "scout_catalog_GetDatasetsRequest") -> List["scout_catalog_Dataset"]:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20247,10 +20079,10 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(get_datasets_request)
+        _json: Any = _conjure_encoder.default(get_datasets_request)
 
         _path = '/catalog/v1/datasets-simple/multiple'
         _path = _path.format(**_path_params)
@@ -20266,6 +20098,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), List[scout_catalog_Dataset], self._return_none_for_unknown_union_types)
 
     def get_dataset_file(self, auth_header: str, dataset_rid: str, file_id: str) -> "scout_catalog_DatasetFile":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20275,9 +20108,9 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
-            'fileId': file_id,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
+            'fileId': quote(str(_conjure_encoder.default(file_id)), safe=''),
         }
 
         _json: Any = None
@@ -20296,6 +20129,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_DatasetFile, self._return_none_for_unknown_union_types)
 
     def search_datasets_by_text(self, auth_header: str, request: "scout_catalog_SearchDatasetsByTextRequest") -> "scout_catalog_SearchDatasetsByTextResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20306,10 +20140,10 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/search-datasets'
         _path = _path.format(**_path_params)
@@ -20325,6 +20159,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_SearchDatasetsByTextResponse, self._return_none_for_unknown_union_types)
 
     def search_datasets(self, auth_header: str, request: "scout_catalog_SearchDatasetsRequest") -> "scout_catalog_SearchDatasetsResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20335,10 +20170,10 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/search-datasets-v2'
         _path = _path.format(**_path_params)
@@ -20354,6 +20189,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_SearchDatasetsResponse, self._return_none_for_unknown_union_types)
 
     def update_dataset_ingest_status_v2(self, auth_header: str, details: "scout_catalog_UpdateIngestStatusV2") -> "api_IngestStatusV2":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20364,10 +20200,10 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/catalog/v1/datasets/ingest-status-v2'
         _path = _path.format(**_path_params)
@@ -20383,6 +20219,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), api_IngestStatusV2, self._return_none_for_unknown_union_types)
 
     def get_ingest_progress_v2(self, auth_header: str, dataset_rid: str) -> "scout_catalog_IngestProgressV2":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20392,8 +20229,8 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
         }
 
         _json: Any = None
@@ -20412,6 +20249,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_IngestProgressV2, self._return_none_for_unknown_union_types)
 
     def get_handle_for_dataset(self, auth_header: str, dataset: str) -> Optional["scout_catalog_Handle"]:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20421,8 +20259,8 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataset': dataset,
+        _path_params: Dict[str, str] = {
+            'dataset': quote(str(_conjure_encoder.default(dataset)), safe=''),
         }
 
         _json: Any = None
@@ -20441,6 +20279,7 @@ a file, primarily CSV.
         return None if _response.status_code == 204 else _decoder.decode(_response.json(), OptionalTypeWrapper[scout_catalog_Handle], self._return_none_for_unknown_union_types)
 
     def create_dataset(self, auth_header: str, details: "scout_catalog_CreateDataset") -> "scout_catalog_EnrichedDataset":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20451,10 +20290,10 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/catalog/v1/datasets'
         _path = _path.format(**_path_params)
@@ -20470,9 +20309,9 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_EnrichedDataset, self._return_none_for_unknown_union_types)
 
     def create_or_update_dataset(self, auth_header: str, details: "scout_catalog_CreateDataset") -> "scout_catalog_EnrichedDataset":
+        """Creates a dataset if the s3 path does not exist, otherwise updates the dataset
         """
-        Creates a dataset if the s3 path does not exist, otherwise updates the dataset
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20483,10 +20322,10 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(details)
+        _json: Any = _conjure_encoder.default(details)
 
         _path = '/catalog/v1/datasets/create-or-update'
         _path = _path.format(**_path_params)
@@ -20502,9 +20341,9 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_EnrichedDataset, self._return_none_for_unknown_union_types)
 
     def add_file_to_dataset(self, auth_header: str, dataset_rid: str, request: "scout_catalog_AddFileToDataset") -> "scout_catalog_DatasetFile":
+        """Adds a single file to an existing dataset.
         """
-        Adds a single file to an existing dataset.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20515,11 +20354,11 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/datasets/{datasetRid}/add-file'
         _path = _path.format(**_path_params)
@@ -20535,6 +20374,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_DatasetFile, self._return_none_for_unknown_union_types)
 
     def list_dataset_files(self, auth_header: str, dataset_rid: str, next_page_token: Optional[str] = None) -> "scout_catalog_DatasetFilesPage":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20542,11 +20382,11 @@ a file, primarily CSV.
         }
 
         _params: Dict[str, Any] = {
-            'nextPageToken': next_page_token,
+            'nextPageToken': _conjure_encoder.default(next_page_token),
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
         }
 
         _json: Any = None
@@ -20565,6 +20405,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_DatasetFilesPage, self._return_none_for_unknown_union_types)
 
     def get_dataset_file_uri(self, auth_header: str, dataset_rid: str, file_id: str) -> "scout_catalog_DatasetFileUri":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20574,9 +20415,9 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
-            'fileId': file_id,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
+            'fileId': quote(str(_conjure_encoder.default(file_id)), safe=''),
         }
 
         _json: Any = None
@@ -20595,6 +20436,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_DatasetFileUri, self._return_none_for_unknown_union_types)
 
     def get_origin_file_uris(self, auth_header: str, dataset_rid: str, file_id: str) -> List["scout_catalog_OriginFileUri"]:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20604,9 +20446,9 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
-            'fileId': file_id,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
+            'fileId': quote(str(_conjure_encoder.default(file_id)), safe=''),
         }
 
         _json: Any = None
@@ -20625,6 +20467,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), List[scout_catalog_OriginFileUri], self._return_none_for_unknown_union_types)
 
     def mark_file_ingest_successful(self, auth_header: str, dataset_rid: str, file_id: str, request: "scout_catalog_MarkFileIngestSuccessful") -> "scout_catalog_DatasetFile":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20635,12 +20478,12 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
-            'fileId': file_id,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
+            'fileId': quote(str(_conjure_encoder.default(file_id)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/datasets/{datasetRid}/file/{fileId}/success'
         _path = _path.format(**_path_params)
@@ -20656,6 +20499,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_DatasetFile, self._return_none_for_unknown_union_types)
 
     def mark_file_ingest_error(self, auth_header: str, dataset_rid: str, file_id: str, request: "scout_catalog_MarkFileIngestError") -> "scout_catalog_DatasetFile":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20666,12 +20510,12 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
-            'fileId': file_id,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
+            'fileId': quote(str(_conjure_encoder.default(file_id)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/datasets/{datasetRid}/file/{fileId}/error'
         _path = _path.format(**_path_params)
@@ -20687,6 +20531,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_DatasetFile, self._return_none_for_unknown_union_types)
 
     def update_dataset_metadata(self, auth_header: str, dataset_rid: str, request: "scout_catalog_UpdateDatasetMetadata") -> "scout_catalog_EnrichedDataset":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20697,11 +20542,11 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/datasets/{datasetRid}'
         _path = _path.format(**_path_params)
@@ -20717,6 +20562,7 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_EnrichedDataset, self._return_none_for_unknown_union_types)
 
     def update_bounds(self, auth_header: str, request: "scout_catalog_UpdateBoundsRequest", rid: str) -> "scout_catalog_EnrichedDataset":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20727,11 +20573,11 @@ a file, primarily CSV.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/datasets/{rid}/bounds'
         _path = _path.format(**_path_params)
@@ -20747,11 +20593,11 @@ a file, primarily CSV.
         return _decoder.decode(_response.json(), scout_catalog_EnrichedDataset, self._return_none_for_unknown_union_types)
 
     def update_global_dataset_bounds(self, auth_header: str, request: "scout_catalog_UpdateBoundsRequest", rid: str) -> "scout_catalog_Dataset":
-        """
-        Update the bounds for a dataset without updating bounds of files within the dataset. If the
+        """Update the bounds for a dataset without updating bounds of files within the dataset. If the
 current bounds of the dataset are not set, then the bounds of the request will be used. Otherwise,
 the bounds will be min(current start, request start), max(current end, request end).
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20762,11 +20608,11 @@ the bounds will be min(current start, request start), max(current end, request e
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/catalog/v1/datasets/{rid}/bounds-from-streaming'
         _path = _path.format(**_path_params)
@@ -20782,10 +20628,10 @@ the bounds will be min(current start, request start), max(current end, request e
         return _decoder.decode(_response.json(), scout_catalog_Dataset, self._return_none_for_unknown_union_types)
 
     def archive_dataset(self, auth_header: str, dataset_rid: str) -> None:
-        """
-        Archives a dataset, which will hide it from search results unless the includeArchived flag is set to true. The
+        """Archives a dataset, which will hide it from search results unless the includeArchived flag is set to true. The
 dataset can still be directly accessed by its UUID/rid.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20795,8 +20641,8 @@ dataset can still be directly accessed by its UUID/rid.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
         }
 
         _json: Any = None
@@ -20814,9 +20660,9 @@ dataset can still be directly accessed by its UUID/rid.
         return
 
     def unarchive_dataset(self, auth_header: str, dataset_rid: str) -> None:
+        """Undoes the archiving of a dataset.
         """
-        Undoes the archiving of a dataset.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20826,8 +20672,8 @@ dataset can still be directly accessed by its UUID/rid.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'datasetRid': dataset_rid,
+        _path_params: Dict[str, str] = {
+            'datasetRid': quote(str(_conjure_encoder.default(dataset_rid)), safe=''),
         }
 
         _json: Any = None
@@ -20846,6 +20692,7 @@ dataset can still be directly accessed by its UUID/rid.
 
     def get_all_properties_and_labels(self, auth_header: str, workspaces: List[str] = None) -> "scout_catalog_AllPropertiesAndLabelsResponse":
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -20853,10 +20700,10 @@ dataset can still be directly accessed by its UUID/rid.
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -20930,8 +20777,7 @@ class scout_catalog_ChannelConfig(ConjureBeanType):
 
     @builtins.property
     def prefix_tree_delimiter(self) -> Optional[str]:
-        """
-        If set, will construct a prefix tree for channels of the dataset using the given delimiter.
+        """If set, will construct a prefix tree for channels of the dataset using the given delimiter.
         """
         return self._prefix_tree_delimiter
 
@@ -21055,22 +20901,19 @@ class scout_catalog_CreateDataset(ConjureBeanType):
 
     @builtins.property
     def granularity(self) -> Optional["api_Granularity"]:
-        """
-        Granularity of dataset timestamps. Defaults to nanoseconds.
+        """Granularity of dataset timestamps. Defaults to nanoseconds.
         """
         return self._granularity
 
     @builtins.property
     def is_v2_dataset(self) -> Optional[bool]:
-        """
-        If true, the dataset should be ingested to the v2 tables and is compatible with streaming.
+        """If true, the dataset should be ingested to the v2 tables and is compatible with streaming.
         """
         return self._is_v2_dataset
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
+        """The workspace in which to create the dataset. If not provided, the dataset will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -21100,22 +20943,19 @@ class scout_catalog_CustomTimestamp(ConjureBeanType):
 
     @builtins.property
     def format(self) -> str:
-        """
-        The format string should be in the format of the `DateTimeFormatter` class in Java.
+        """The format string should be in the format of the `DateTimeFormatter` class in Java.
         """
         return self._format
 
     @builtins.property
     def default_year(self) -> Optional[int]:
-        """
-        Year is accepted as an optional field for cases like IRIG time format, and will be assumed as current year if not provided.
+        """Year is accepted as an optional field for cases like IRIG time format, and will be assumed as current year if not provided.
         """
         return self._default_year
 
     @builtins.property
     def default_day_of_year(self) -> Optional[int]:
-        """
-        Default day of year is accepted as an optional field for cases like IRIG time format and will be overridden by day of year in time format.
+        """Default day of year is accepted as an optional field for cases like IRIG time format and will be overridden by day of year in time format.
         """
         return self._default_day_of_year
 
@@ -21261,15 +21101,13 @@ class scout_catalog_DatasetFile(ConjureBeanType):
 
     @builtins.property
     def uploaded_at(self) -> str:
-        """
-        Timestamp that the file was received and stored, but not processed or made available to consumers.
+        """Timestamp that the file was received and stored, but not processed or made available to consumers.
         """
         return self._uploaded_at
 
     @builtins.property
     def ingested_at(self) -> Optional[str]:
-        """
-        Timestamp that the file is ingested at and made available for processing. If the file has failed to be
+        """Timestamp that the file is ingested at and made available for processing. If the file has failed to be
 ingested for any reason or is still being processed, then this value will be empty.
         """
         return self._ingested_at
@@ -21293,8 +21131,7 @@ scout_catalog_DatasetFile.__module__ = "nominal_api.scout_catalog"
 
 
 class scout_catalog_DatasetFileUri(ConjureBeanType):
-    """
-    Pre-signed URI that can be used to download the original file directly. Expires if the download has
+    """Pre-signed URI that can be used to download the original file directly. Expires if the download has
 not been initiated within 1 minute.
     """
 
@@ -21404,43 +21241,37 @@ class scout_catalog_DatasetOriginMetadata(ConjureBeanType):
 
     @builtins.property
     def path(self) -> Optional[str]:
-        """
-        Deprecated in favor of FileOriginMetadata
+        """Deprecated in favor of FileOriginMetadata
         """
         return self._path
 
     @builtins.property
     def x_series_is_absolute(self) -> Optional[bool]:
-        """
-        Deprecated in favor of FileOriginMetadata
+        """Deprecated in favor of FileOriginMetadata
         """
         return self._x_series_is_absolute
 
     @builtins.property
     def schema_directive_path(self) -> Optional[str]:
-        """
-        Deprecated in favor of FileOriginMetadata
+        """Deprecated in favor of FileOriginMetadata
         """
         return self._schema_directive_path
 
     @builtins.property
     def x_series_column_name(self) -> Optional[str]:
-        """
-        Deprecated in favor of FileOriginMetadata
+        """Deprecated in favor of FileOriginMetadata
         """
         return self._x_series_column_name
 
     @builtins.property
     def x_series_time_unit(self) -> Optional["api_TimeUnit"]:
-        """
-        Deprecated in favor of FileOriginMetadata
+        """Deprecated in favor of FileOriginMetadata
         """
         return self._x_series_time_unit
 
     @builtins.property
     def timestamp_metadata(self) -> Optional["scout_catalog_TimestampMetadata"]:
-        """
-        Deprecated in favor of FileOriginMetadata
+        """Deprecated in favor of FileOriginMetadata
         """
         return self._timestamp_metadata
 
@@ -21777,29 +21608,25 @@ class scout_catalog_IngestProgressV2(ConjureBeanType):
 
     @builtins.property
     def start_time(self) -> str:
-        """
-        Timestamp at start of ingest
+        """Timestamp at start of ingest
         """
         return self._start_time
 
     @builtins.property
     def end_time(self) -> Optional[str]:
-        """
-        Timestamp at end of ingest, empty if still in progress
+        """Timestamp at end of ingest, empty if still in progress
         """
         return self._end_time
 
     @builtins.property
     def ingest_status(self) -> "api_IngestStatusV2":
-        """
-        Status of ingest, contains error if failed
+        """Status of ingest, contains error if failed
         """
         return self._ingest_status
 
     @builtins.property
     def incalculable(self) -> Optional[bool]:
-        """
-        Whether ingest duration can be reliably calculated
+        """Whether ingest duration can be reliably calculated
         """
         return self._incalculable
 
@@ -21918,8 +21745,7 @@ class scout_catalog_MarkFileIngestSuccessful(ConjureBeanType):
 
     @builtins.property
     def ingested_at(self) -> "api_Timestamp":
-        """
-        The ingestion timestamp is produced by CSV splitter and stored directly in the clickhouse table.
+        """The ingestion timestamp is produced by CSV splitter and stored directly in the clickhouse table.
 It's produced externally and passed here to handle retries and failures, and must be nanosecond precision.
 Two files cannot have the same ingested at timestamp.
         """
@@ -21932,8 +21758,7 @@ scout_catalog_MarkFileIngestSuccessful.__module__ = "nominal_api.scout_catalog"
 
 
 class scout_catalog_OriginFileUri(ConjureBeanType):
-    """
-    Pre-signed URI that can be used to download an origin file directly. Expires if the download has
+    """Pre-signed URI that can be used to download an origin file directly. Expires if the download has
 not been initiated within 1 minute.
     """
 
@@ -22104,16 +21929,14 @@ class scout_catalog_SearchDatasetsByTextRequest(ConjureBeanType):
 
     @builtins.property
     def page_request(self) -> Optional["datasource_pagination_api_PageRequest"]:
-        """
-        The PageRequest.pageToken must be an integer offset. If a PageRequest.pageSize is not provided, the 
+        """The PageRequest.pageToken must be an integer offset. If a PageRequest.pageSize is not provided, the 
 default page size (100) will be used.
         """
         return self._page_request
 
     @builtins.property
     def include_archived(self) -> Optional[bool]:
-        """
-        Defaults to false if not specified.
+        """Defaults to false if not specified.
         """
         return self._include_archived
 
@@ -22296,8 +22119,7 @@ class scout_catalog_SearchDatasetsQuery(ConjureUnionType):
 
     @builtins.property
     def exact_match(self) -> Optional[str]:
-        """
-        Performs case insensitive exact match search on the name.
+        """Performs case insensitive exact match search on the name.
         """
         return self._exact_match
 
@@ -22446,8 +22268,7 @@ class scout_catalog_SearchDatasetsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1000.
+        """Defaults to 100. Will throw if larger than 1000.
         """
         return self._page_size
 
@@ -22689,8 +22510,7 @@ class scout_catalog_UnitConfig(ConjureBeanType):
 
     @builtins.property
     def unit_metadata_key(self) -> str:
-        """
-        If set, will extract the series unit from the column metadata of the ingested file.
+        """If set, will extract the series unit from the column metadata of the ingested file.
         """
         return self._unit_metadata_key
 
@@ -22823,8 +22643,7 @@ scout_catalog_UpdateIngestStatusV2.__module__ = "nominal_api.scout_catalog"
 
 
 class scout_catalog_WeakTimestampType(ConjureEnumType):
-    """
-    If a CSV dataset is still being split, the timestamp type is not known.
+    """If a CSV dataset is still being split, the timestamp type is not known.
     """
 
     ABSOLUTE = 'ABSOLUTE'
@@ -22878,8 +22697,7 @@ class scout_channelvariables_api_ChannelVariable(ConjureBeanType):
 
     @builtins.property
     def compute_spec_v2(self) -> Optional["scout_channelvariables_api_ComputeNodeWithContext"]:
-        """
-        optional for backcompatibility. If empty, fall back to computeSpec.
+        """optional for backcompatibility. If empty, fall back to computeSpec.
         """
         return self._compute_spec_v2
 
@@ -23130,8 +22948,7 @@ class scout_chartdefinition_api_AxisDisplayOptions(ConjureBeanType):
 
     @builtins.property
     def scale_type(self) -> Optional["scout_chartdefinition_api_AxisScaleType"]:
-        """
-        The scale type of the axis. If not specified, the default is LINEAR.
+        """The scale type of the axis. If not specified, the default is LINEAR.
         """
         return self._scale_type
 
@@ -23303,8 +23120,7 @@ class scout_chartdefinition_api_AxisThresholdVisualization(ConjureBeanType):
 
     @builtins.property
     def visibility(self) -> bool:
-        """
-        Determines it's current visibility in the time series chart.
+        """Determines it's current visibility in the time series chart.
         """
         return self._visibility
 
@@ -23319,8 +23135,7 @@ scout_chartdefinition_api_AxisThresholdVisualization.__module__ = "nominal_api.s
 
 
 class scout_chartdefinition_api_BitFlag(ConjureBeanType):
-    """
-    The settings for a bit flag mapping. Each position should be unique. Position 0 represents the least significant bit 
+    """The settings for a bit flag mapping. Each position should be unique. Position 0 represents the least significant bit 
 and position 31 represents the most significant bit.
     """
 
@@ -23375,8 +23190,7 @@ scout_chartdefinition_api_BitFlagMapCellConfig.__module__ = "nominal_api.scout_c
 
 
 class scout_chartdefinition_api_BitFlagMapRawVisualisation(ConjureBeanType):
-    """
-    The settings for a raw bit flag map visualisation.
+    """The settings for a raw bit flag map visualisation.
     """
 
     @builtins.classmethod
@@ -23396,15 +23210,13 @@ class scout_chartdefinition_api_BitFlagMapRawVisualisation(ConjureBeanType):
 
     @builtins.property
     def high_color(self) -> Optional[str]:
-        """
-        The color when any bit is high
+        """The color when any bit is high
         """
         return self._high_color
 
     @builtins.property
     def low_color(self) -> Optional[str]:
-        """
-        The color when all bits are low
+        """The color when all bits are low
         """
         return self._low_color
 
@@ -23756,15 +23568,13 @@ class scout_chartdefinition_api_ColorStyle(ConjureUnionType):
 
     @builtins.property
     def mapped(self) -> Optional[Dict[str, str]]:
-        """
-        Defines specific colors for specific values
+        """Defines specific colors for specific values
         """
         return self._mapped
 
     @builtins.property
     def single(self) -> Optional[str]:
-        """
-        A single color to apply to the whole plot
+        """A single color to apply to the whole plot
         """
         return self._single
 
@@ -23845,8 +23655,7 @@ scout_chartdefinition_api_EnumCellConfig.__module__ = "nominal_api.scout_chartde
 
 
 class scout_chartdefinition_api_EnumRawVisualisation(ConjureBeanType):
-    """
-    The settings for a raw enum visualisation.
+    """The settings for a raw enum visualisation.
     """
 
     @builtins.classmethod
@@ -23991,8 +23800,7 @@ scout_chartdefinition_api_Event.__module__ = "nominal_api.scout_chartdefinition_
 
 
 class scout_chartdefinition_api_Figure(ConjureBeanType):
-    """
-    The root figure definition for a plotly instance
+    """The root figure definition for a plotly instance
     """
 
     @builtins.classmethod
@@ -24020,8 +23828,7 @@ class scout_chartdefinition_api_Figure(ConjureBeanType):
 
     @builtins.property
     def plotly_config(self) -> str:
-        """
-        The json config definition according to plotly's schema
+        """The json config definition according to plotly's schema
 https://plotly.com/python/figure-structure/#the-toplevel-config-attribute
         """
         return self._plotly_config
@@ -24183,8 +23990,7 @@ scout_chartdefinition_api_FrequencyPlot.__module__ = "nominal_api.scout_chartdef
 
 
 class scout_chartdefinition_api_GeoAdditionalTileset(ConjureEnumType):
-    """
-    A standard tileset to overlay on the base map.
+    """A standard tileset to overlay on the base map.
     """
 
     VFR = 'VFR'
@@ -24239,8 +24045,7 @@ scout_chartdefinition_api_GeoAdditionalVariable.__module__ = "nominal_api.scout_
 
 
 class scout_chartdefinition_api_GeoBaseTileset(ConjureEnumType):
-    """
-    The base map style. Default STREET if unspecified.
+    """The base map style. Default STREET if unspecified.
     """
 
     STREET = 'STREET'
@@ -24260,7 +24065,8 @@ scout_chartdefinition_api_GeoBaseTileset.__module__ = "nominal_api.scout_chartde
 
 
 class scout_chartdefinition_api_GeoCustomFeature(ConjureUnionType):
-    """Additional static objects on the map, such as a point representing a tower"""
+    """Additional static objects on the map, such as a point representing a tower
+    """
     _point: Optional["scout_chartdefinition_api_GeoPoint"] = None
 
     @builtins.classmethod
@@ -24371,8 +24177,7 @@ class scout_chartdefinition_api_GeoPlotFromLatLong(ConjureBeanType):
 
     @builtins.property
     def secondary_variables(self) -> Optional[List["scout_chartdefinition_api_GeoAdditionalVariable"]]:
-        """
-        optional for backcompatibility
+        """optional for backcompatibility
         """
         return self._secondary_variables
 
@@ -24450,8 +24255,7 @@ class scout_chartdefinition_api_GeoPlotVisualizationOptions(ConjureBeanType):
 
     @builtins.property
     def secondary_color_visualization(self) -> Optional["scout_chartdefinition_api_GeoPlotSecondaryVisibilityConfig"]:
-        """
-        If visible, overwrites any existing visualization options on the geo plot.
+        """If visible, overwrites any existing visualization options on the geo plot.
         """
         return self._secondary_color_visualization
 
@@ -24462,8 +24266,7 @@ scout_chartdefinition_api_GeoPlotVisualizationOptions.__module__ = "nominal_api.
 
 
 class scout_chartdefinition_api_GeoPoint(ConjureBeanType):
-    """
-    A static coordinate on the map
+    """A static coordinate on the map
     """
 
     @builtins.classmethod
@@ -24512,7 +24315,8 @@ scout_chartdefinition_api_GeoPoint.__module__ = "nominal_api.scout_chartdefiniti
 
 
 class scout_chartdefinition_api_GeoSecondaryPlotVisualizationOption(ConjureUnionType):
-    """Specifies how values of a secondary channel should be visualized."""
+    """Specifies how values of a secondary channel should be visualized.
+    """
     _as_colors: Optional["scout_chartdefinition_api_ValueToColorMap"] = None
 
     @builtins.classmethod
@@ -24839,8 +24643,7 @@ scout_chartdefinition_api_HistogramPlot.__module__ = "nominal_api.scout_chartdef
 
 
 class scout_chartdefinition_api_HistogramSortOrder(ConjureEnumType):
-    """
-    The order in which the histogram should be sorted.
+    """The order in which the histogram should be sorted.
 Default is VALUE_ASCENDING.
     """
 
@@ -24879,8 +24682,7 @@ class scout_chartdefinition_api_Layout(ConjureBeanType):
 
     @builtins.property
     def plotly_layout(self) -> str:
-        """
-        The json layout definition according to plotly's schema
+        """The json layout definition according to plotly's schema
 https://plotly.com/python/figure-structure/#the-toplevel-layout-attribute
         """
         return self._plotly_layout
@@ -25007,8 +24809,7 @@ scout_chartdefinition_api_LineThreshold.__module__ = "nominal_api.scout_chartdef
 
 
 class scout_chartdefinition_api_LineThresholdGroup(ConjureBeanType):
-    """
-    Line thresholds are used to mark values or demarcate regions along a single axis.
+    """Line thresholds are used to mark values or demarcate regions along a single axis.
     """
 
     @builtins.classmethod
@@ -25036,8 +24837,7 @@ class scout_chartdefinition_api_LineThresholdGroup(ConjureBeanType):
 
     @builtins.property
     def default_fill(self) -> Optional["scout_chartdefinition_api_DefaultFill"]:
-        """
-        To supplement a set of line thresholds, the default fill configures how the remaining space (either
+        """To supplement a set of line thresholds, the default fill configures how the remaining space (either
 above or below) should be colored. Transparent if empty.
         """
         return self._default_fill
@@ -25049,8 +24849,7 @@ scout_chartdefinition_api_LineThresholdGroup.__module__ = "nominal_api.scout_cha
 
 
 class scout_chartdefinition_api_LogChannel(ConjureBeanType):
-    """
-    A field to save additional column names on log panels with support for multiple variables
+    """A field to save additional column names on log panels with support for multiple variables
     """
 
     @builtins.classmethod
@@ -25178,8 +24977,7 @@ scout_chartdefinition_api_LogPanelDefinitionV1.__module__ = "nominal_api.scout_c
 
 
 class scout_chartdefinition_api_NumberFormat(ConjureBeanType):
-    """
-    Number format for numeric cells, eg 1e4 | 10000 | 10,000.
+    """Number format for numeric cells, eg 1e4 | 10000 | 10,000.
     """
 
     @builtins.classmethod
@@ -25230,8 +25028,7 @@ scout_chartdefinition_api_NumberFormatDisplayOption.__module__ = "nominal_api.sc
 
 
 class scout_chartdefinition_api_NumericBarGaugeVisualisation(ConjureBeanType):
-    """
-    The settings for a bar gauge visualisation.
+    """The settings for a bar gauge visualisation.
     """
 
     @builtins.classmethod
@@ -25262,8 +25059,7 @@ scout_chartdefinition_api_NumericBarGaugeVisualisation.__module__ = "nominal_api
 
 
 class scout_chartdefinition_api_NumericBarVisualisationV2(ConjureBeanType):
-    """
-    A numeric visualisation that will fill the cell from left to right with a colored background
+    """A numeric visualisation that will fill the cell from left to right with a colored background
 representing where the value falls inside a set range. 
 The lowest and highest values in the thresholds determine the start and end of the range. 
 Middle threshold values will still affect the cell's coloration.
@@ -25282,8 +25078,7 @@ Middle threshold values will still affect the cell's coloration.
 
     @builtins.property
     def thresholds(self) -> Optional[List["scout_chartdefinition_api_Threshold"]]:
-        """
-        Modifies the visualisation based on the highest threshold value that
+        """Modifies the visualisation based on the highest threshold value that
 the computed value equals or surpasses. The lowest and highest value will determine
 the 0% and 100% values of the bar.
         """
@@ -25341,8 +25136,7 @@ scout_chartdefinition_api_NumericRawVisualisation.__module__ = "nominal_api.scou
 
 
 class scout_chartdefinition_api_NumericRawVisualisationV2(ConjureBeanType):
-    """
-    A raw numeric visualisation with optional coloring based on numeric thresholds.
+    """A raw numeric visualisation with optional coloring based on numeric thresholds.
     """
 
     @builtins.classmethod
@@ -25358,8 +25152,7 @@ class scout_chartdefinition_api_NumericRawVisualisationV2(ConjureBeanType):
 
     @builtins.property
     def thresholds(self) -> Optional[List["scout_chartdefinition_api_Threshold"]]:
-        """
-        Modifies the visualisation based on the highest threshold value that
+        """Modifies the visualisation based on the highest threshold value that
 the computed value surpasses.
         """
         return self._thresholds
@@ -25766,15 +25559,13 @@ class scout_chartdefinition_api_PlotlyPanelDefinitionV1(ConjureBeanType):
 
     @builtins.property
     def preset(self) -> Optional["scout_chartdefinition_api_PlotlyPreset"]:
-        """
-        A preset that will render a nominal-defined plotly figure with minimum necessary inputs
+        """A preset that will render a nominal-defined plotly figure with minimum necessary inputs
         """
         return self._preset
 
     @builtins.property
     def figure(self) -> "scout_chartdefinition_api_Figure":
-        """
-        The plotly instance definition, with extra fields for nominal-specific inputs
+        """The plotly instance definition, with extra fields for nominal-specific inputs
         """
         return self._figure
 
@@ -25842,8 +25633,7 @@ scout_chartdefinition_api_RangeCellConfig.__module__ = "nominal_api.scout_chartd
 
 
 class scout_chartdefinition_api_RangeRawVisualisation(ConjureBeanType):
-    """
-    The settings for a raw range visualisation.
+    """The settings for a raw range visualisation.
     """
 
     @builtins.classmethod
@@ -25869,8 +25659,7 @@ class scout_chartdefinition_api_RangeRawVisualisation(ConjureBeanType):
 
     @builtins.property
     def range_label(self) -> Optional[str]:
-        """
-        The string to display when the condition defined by the variable's function spec is met.
+        """The string to display when the condition defined by the variable's function spec is met.
         """
         return self._range_label
 
@@ -25880,8 +25669,7 @@ class scout_chartdefinition_api_RangeRawVisualisation(ConjureBeanType):
 
     @builtins.property
     def no_range_label(self) -> Optional[str]:
-        """
-        The string to display when the condition defined by the variable's function spec is not met.
+        """The string to display when the condition defined by the variable's function spec is not met.
         """
         return self._no_range_label
 
@@ -26009,8 +25797,7 @@ class scout_chartdefinition_api_Scatter3dTraceComputeConfig(ConjureBeanType):
 
     @builtins.property
     def decimation_strategy(self) -> Optional["scout_chartdefinition_api_Scatter3dDecimationStrategy"]:
-        """
-        Bucket computed data points by their proximity in space or in time
+        """Bucket computed data points by their proximity in space or in time
         """
         return self._decimation_strategy
 
@@ -26039,22 +25826,19 @@ class scout_chartdefinition_api_Threshold(ConjureBeanType):
 
     @builtins.property
     def value(self) -> float:
-        """
-        The minimum value a number must be to .
+        """The minimum value a number must be to .
         """
         return self._value
 
     @builtins.property
     def color(self) -> str:
-        """
-        The color to apply to the cell when the threshold is active.
+        """The color to apply to the cell when the threshold is active.
         """
         return self._color
 
     @builtins.property
     def label(self) -> Optional[str]:
-        """
-        A name for this threshold to display while editing.
+        """A name for this threshold to display while editing.
         """
         return self._label
 
@@ -26085,8 +25869,7 @@ scout_chartdefinition_api_ThresholdLineStyle.__module__ = "nominal_api.scout_cha
 
 
 class scout_chartdefinition_api_ThresholdShadingConfig(ConjureEnumType):
-    """
-    Specifies how areas of a plot should be shaded in relation to the defined threshold lines. Will eventually
+    """Specifies how areas of a plot should be shaded in relation to the defined threshold lines. Will eventually
 include other shading configurations, like a buffer zone.
     """
 
@@ -26240,37 +26023,32 @@ class scout_chartdefinition_api_TimeSeriesEnumPlot(ConjureBeanType):
 
     @builtins.property
     def color(self) -> "scout_chartdefinition_api_ColorStyle":
-        """
-        How to color the value ranges
+        """How to color the value ranges
         """
         return self._color
 
     @builtins.property
     def position(self) -> "scout_chartdefinition_api_Position":
-        """
-        Where to place the plot within the row
+        """Where to place the plot within the row
         """
         return self._position
 
     @builtins.property
     def persist_value_overlays(self) -> "scout_chartdefinition_api_PersistValueOverlay":
-        """
-        Render certain values' full-row/full-panel color overlays
+        """Render certain values' full-row/full-panel color overlays
 even when not interacting with the plot
         """
         return self._persist_value_overlays
 
     @builtins.property
     def overlay_scope(self) -> "scout_chartdefinition_api_OverlayScope":
-        """
-        How far to extend the overlay
+        """How far to extend the overlay
         """
         return self._overlay_scope
 
     @builtins.property
     def display_inline(self) -> bool:
-        """
-        Whether to display the value ranges on the same line or stagger them
+        """Whether to display the value ranges on the same line or stagger them
 such that each value gets a line to itself
         """
         return self._display_inline
@@ -26583,16 +26361,14 @@ class scout_chartdefinition_api_Trace(ConjureBeanType):
 
     @builtins.property
     def plotly_trace(self) -> str:
-        """
-        The json trace definition according to plotly's schema
+        """The json trace definition according to plotly's schema
 https://plotly.com/python/figure-structure/#the-toplevel-data-attribute
         """
         return self._plotly_trace
 
     @builtins.property
     def compute(self) -> Optional["scout_chartdefinition_api_TraceCompute"]:
-        """
-        Information needed to substitute computed data arrays into the trace
+        """Information needed to substitute computed data arrays into the trace
         """
         return self._compute
 
@@ -26619,8 +26395,7 @@ class scout_chartdefinition_api_TraceCompute(ConjureBeanType):
 
     @builtins.property
     def trace_channel_variables(self) -> Dict[str, str]:
-        """
-        A map of plotly trace variables to the channel variables that should load into them
+        """A map of plotly trace variables to the channel variables that should load into them
         """
         return self._trace_channel_variables
 
@@ -27093,8 +26868,7 @@ class scout_chartdefinition_api_ValueTableDefinitionV1(ConjureBeanType):
 
     @builtins.property
     def channels(self) -> List["scout_chartdefinition_api_ValueTableChannel"]:
-        """
-        Each channel to be displayed. Based on the data type, the visualisation
+        """Each channel to be displayed. Based on the data type, the visualisation
 options and settings will be different.
         """
         return self._channels
@@ -27124,15 +26898,13 @@ class scout_chartdefinition_api_ValueTableDefinitionV2(ConjureBeanType):
 
     @builtins.property
     def title(self) -> Optional[str]:
-        """
-        The display title of the panel.
+        """The display title of the panel.
         """
         return self._title
 
     @builtins.property
     def show_units(self) -> Optional[bool]:
-        """
-        If true, display units in the cells when available.
+        """If true, display units in the cells when available.
         """
         return self._show_units
 
@@ -27165,8 +26937,7 @@ class scout_chartdefinition_api_ValueTableGridRowColumnConfig(ConjureBeanType):
 
     @builtins.property
     def position(self) -> int:
-        """
-        The index of the row or column to apply this configuration to.
+        """The index of the row or column to apply this configuration to.
         """
         return self._position
 
@@ -27276,8 +27047,7 @@ scout_chartdefinition_api_ValueTableLayoutVisitor.__module__ = "nominal_api.scou
 
 
 class scout_chartdefinition_api_ValueTableLayoutGrid(ConjureBeanType):
-    """
-    A 2D grid layout for the value table where cells are laid out in specific
+    """A 2D grid layout for the value table where cells are laid out in specific
 rows and columns. Supports hierarchical cell visualisation configurations, favoring when present:
 the cell's own definition, then the column's, then the row's, then the panel's.
     """
@@ -27311,43 +27081,37 @@ the cell's own definition, then the column's, then the row's, then the panel's.
 
     @builtins.property
     def show_row_headers(self) -> Optional[bool]:
-        """
-        If true, display row headers.
+        """If true, display row headers.
         """
         return self._show_row_headers
 
     @builtins.property
     def show_column_headers(self) -> Optional[bool]:
-        """
-        If true, display column headers.
+        """If true, display column headers.
         """
         return self._show_column_headers
 
     @builtins.property
     def show_cell_labels(self) -> Optional[bool]:
-        """
-        If true, display channel names in the cells.
+        """If true, display channel names in the cells.
         """
         return self._show_cell_labels
 
     @builtins.property
     def grid_default_cell_configs(self) -> "scout_chartdefinition_api_ValueTableMultiCellConfig":
-        """
-        Panel-level defaults for cell visualisations
+        """Panel-level defaults for cell visualisations
         """
         return self._grid_default_cell_configs
 
     @builtins.property
     def column_configs(self) -> List["scout_chartdefinition_api_ValueTableGridRowColumnConfig"]:
-        """
-        Column-level configurations.
+        """Column-level configurations.
         """
         return self._column_configs
 
     @builtins.property
     def row_configs(self) -> List["scout_chartdefinition_api_ValueTableGridRowColumnConfig"]:
-        """
-        Row-level configurations.
+        """Row-level configurations.
         """
         return self._row_configs
 
@@ -27361,8 +27125,7 @@ the cell's own definition, then the column's, then the row's, then the panel's.
 
     @builtins.property
     def cells(self) -> List["scout_chartdefinition_api_ValueTableGridValueTableCell"]:
-        """
-        An array of cells to display in the table.
+        """An array of cells to display in the table.
         """
         return self._cells
 
@@ -27373,8 +27136,7 @@ scout_chartdefinition_api_ValueTableLayoutGrid.__module__ = "nominal_api.scout_c
 
 
 class scout_chartdefinition_api_ValueTableMultiCellConfig(ConjureBeanType):
-    """
-    Configurations for each type of cell in a grouping of heterogenous cells, such as
+    """Configurations for each type of cell in a grouping of heterogenous cells, such as
 for a row, for a column, or for the entire grid.
     """
 
@@ -27412,7 +27174,8 @@ scout_chartdefinition_api_ValueTableMultiCellConfig.__module__ = "nominal_api.sc
 
 
 class scout_chartdefinition_api_ValueToColorMap(ConjureUnionType):
-    """Specifies an assignment of colors across several values."""
+    """Specifies an assignment of colors across several values.
+    """
     _numeric: Optional[Dict[str, float]] = None
 
     @builtins.classmethod
@@ -28057,8 +27820,7 @@ class scout_checklistexecution_api_CheckLiveStatusResponse(ConjureBeanType):
 
     @builtins.property
     def check_parameter_index(self) -> Optional[int]:
-        """
-        Checks can define a single range computation which can evaluate over multiple implementations of a context.
+        """Checks can define a single range computation which can evaluate over multiple implementations of a context.
 The check implementation index will correspond to the implementation index of the check condition.
         """
         return self._check_parameter_index
@@ -28132,22 +27894,19 @@ class scout_checklistexecution_api_CheckStatus(ConjureUnionType):
 
     @builtins.property
     def pass_(self) -> Optional["scout_checklistexecution_api_Pass"]:
-        """
-        The check was evaluated and is currently in state PASS.
+        """The check was evaluated and is currently in state PASS.
         """
         return self._pass_
 
     @builtins.property
     def fail(self) -> Optional["scout_checklistexecution_api_Fail"]:
-        """
-        The check was evaluated and is currently in state FAIL.
+        """The check was evaluated and is currently in state FAIL.
         """
         return self._fail
 
     @builtins.property
     def invalid(self) -> Optional["scout_checklistexecution_api_Invalid"]:
-        """
-        The check was evaluated and is currently in state INVALID.
+        """The check was evaluated and is currently in state INVALID.
 This signifies that the check could not be evaluated due to an internal error or
 if an overly expensive computation was attempted.
         """
@@ -28155,8 +27914,7 @@ if an overly expensive computation was attempted.
 
     @builtins.property
     def skipped(self) -> Optional["scout_checklistexecution_api_Skipped"]:
-        """
-        The check was skipped and was not evaluated.
+        """The check was skipped and was not evaluated.
 This typically occurs when the check performs operations that are not supported in the streaming context,
 or if the required channels could not be resolved.
         """
@@ -28205,14 +27963,13 @@ scout_checklistexecution_api_CheckStatusVisitor.__module__ = "nominal_api.scout_
 
 
 class scout_checklistexecution_api_ChecklistExecutionService(Service):
-    """
-    The Checklist Execution Service checks the status of checklist executions.
+    """The Checklist Execution Service checks the status of checklist executions.
     """
 
     def checklist_live_status(self, auth_header: str, request: "scout_checklistexecution_api_BatchChecklistLiveStatusRequest") -> "scout_checklistexecution_api_BatchChecklistLiveStatusResponse":
+        """For each request, get the latest status for each check in a streaming checklist against the given asset.
         """
-        For each request, get the latest status for each check in a streaming checklist against the given asset.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28223,10 +27980,10 @@ class scout_checklistexecution_api_ChecklistExecutionService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/checklist-execution/checklist-live-status'
         _path = _path.format(**_path_params)
@@ -28242,10 +27999,10 @@ class scout_checklistexecution_api_ChecklistExecutionService(Service):
         return _decoder.decode(_response.json(), scout_checklistexecution_api_BatchChecklistLiveStatusResponse, self._return_none_for_unknown_union_types)
 
     def execute_streaming_checklist(self, auth_header: str, request: "scout_checklistexecution_api_ExecuteChecklistForAssetsRequest") -> None:
-        """
-        Triggers a checklist to run continuously against assets.
+        """Triggers a checklist to run continuously against assets.
 If the checklist is already running for the given asset, replace the existing configuration with the one specified by the request.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28256,10 +28013,10 @@ If the checklist is already running for the given asset, replace the existing co
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/checklist-execution/execute-streaming-checklist'
         _path = _path.format(**_path_params)
@@ -28274,9 +28031,9 @@ If the checklist is already running for the given asset, replace the existing co
         return
 
     def list_streaming_checklist(self, auth_header: str, request: "scout_checklistexecution_api_ListStreamingChecklistRequest") -> "scout_checklistexecution_api_ListStreamingChecklistResponse":
+        """Lists all running streaming checklists.
         """
-        Lists all running streaming checklists.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28287,10 +28044,10 @@ If the checklist is already running for the given asset, replace the existing co
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/checklist-execution/list-streaming-checklists'
         _path = _path.format(**_path_params)
@@ -28306,9 +28063,9 @@ If the checklist is already running for the given asset, replace the existing co
         return _decoder.decode(_response.json(), scout_checklistexecution_api_ListStreamingChecklistResponse, self._return_none_for_unknown_union_types)
 
     def list_streaming_checklist_for_asset(self, auth_header: str, request: "scout_checklistexecution_api_ListStreamingChecklistForAssetRequest") -> "scout_checklistexecution_api_ListStreamingChecklistForAssetResponse":
+        """Retrieves all streaming checklists for a given asset.
         """
-        Retrieves all streaming checklists for a given asset.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28319,10 +28076,10 @@ If the checklist is already running for the given asset, replace the existing co
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/checklist-execution/list-streaming-checklists-for-asset'
         _path = _path.format(**_path_params)
@@ -28338,9 +28095,9 @@ If the checklist is already running for the given asset, replace the existing co
         return _decoder.decode(_response.json(), scout_checklistexecution_api_ListStreamingChecklistForAssetResponse, self._return_none_for_unknown_union_types)
 
     def get_streaming_checklist(self, auth_header: str, checklist_rid: str) -> "scout_checklistexecution_api_StreamingChecklistInfo":
+        """Retrieves the set of assets and their execution configurations for a streaming checklist specified by the checklistRid.
         """
-        Retrieves the set of assets and their execution configurations for a streaming checklist specified by the checklistRid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28350,8 +28107,8 @@ If the checklist is already running for the given asset, replace the existing co
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'checklistRid': checklist_rid,
+        _path_params: Dict[str, str] = {
+            'checklistRid': quote(str(_conjure_encoder.default(checklist_rid)), safe=''),
         }
 
         _json: Any = None
@@ -28370,10 +28127,10 @@ If the checklist is already running for the given asset, replace the existing co
         return _decoder.decode(_response.json(), scout_checklistexecution_api_StreamingChecklistInfo, self._return_none_for_unknown_union_types)
 
     def batch_get_streaming_checklist(self, auth_header: str, request: "scout_checklistexecution_api_BatchGetStreamingChecklistRequest") -> "scout_checklistexecution_api_BatchGetStreamingChecklistResponse":
-        """
-        Retrieves the set of assets and their execution configurations for all streaming checklists specified by the request.
+        """Retrieves the set of assets and their execution configurations for all streaming checklists specified by the request.
 If a streaming checklist is not found, it will not be included in the response.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28384,10 +28141,10 @@ If a streaming checklist is not found, it will not be included in the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/checklist-execution/get-streaming-checklists'
         _path = _path.format(**_path_params)
@@ -28403,9 +28160,9 @@ If a streaming checklist is not found, it will not be included in the response.
         return _decoder.decode(_response.json(), scout_checklistexecution_api_BatchGetStreamingChecklistResponse, self._return_none_for_unknown_union_types)
 
     def stop_streaming_checklist(self, auth_header: str, checklist_rid: str) -> None:
+        """Stops the execution of a streaming checklist on all assets.
         """
-        Stops the execution of a streaming checklist on all assets.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28415,8 +28172,8 @@ If a streaming checklist is not found, it will not be included in the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'checklistRid': checklist_rid,
+        _path_params: Dict[str, str] = {
+            'checklistRid': quote(str(_conjure_encoder.default(checklist_rid)), safe=''),
         }
 
         _json: Any = None
@@ -28434,9 +28191,9 @@ If a streaming checklist is not found, it will not be included in the response.
         return
 
     def stop_streaming_checklist_for_assets(self, auth_header: str, request: "scout_checklistexecution_api_StopStreamingChecklistForAssetsRequest") -> None:
+        """Stops the execution of a streaming checklist for a given set of assets.
         """
-        Stops the execution of a streaming checklist for a given set of assets.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28447,10 +28204,10 @@ If a streaming checklist is not found, it will not be included in the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/checklist-execution/stop-streaming-checklist-for-assets'
         _path = _path.format(**_path_params)
@@ -28465,9 +28222,9 @@ If a streaming checklist is not found, it will not be included in the response.
         return
 
     def reload_streaming_checklist(self, auth_header: str, checklist_rid: str) -> None:
+        """Reloads the state of the streaming checklist for the given checklistRid.
         """
-        Reloads the state of the streaming checklist for the given checklistRid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28477,8 +28234,8 @@ If a streaming checklist is not found, it will not be included in the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'checklistRid': checklist_rid,
+        _path_params: Dict[str, str] = {
+            'checklistRid': quote(str(_conjure_encoder.default(checklist_rid)), safe=''),
         }
 
         _json: Any = None
@@ -28496,9 +28253,9 @@ If a streaming checklist is not found, it will not be included in the response.
         return
 
     def validate_checklist_resolution(self, auth_header: str, request: "scout_checklistexecution_api_BatchValidateChecklistResolutionRequest") -> "scout_checklistexecution_api_BatchValidateChecklistResolutionResponse":
+        """Validates that the channels referenced by the checklist can be resolved against the data sources.
         """
-        Validates that the channels referenced by the checklist can be resolved against the data sources.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -28509,10 +28266,10 @@ If a streaming checklist is not found, it will not be included in the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/checklist-execution/validate-checklist-resolution'
         _path = _path.format(**_path_params)
@@ -28585,22 +28342,19 @@ class scout_checklistexecution_api_ChecklistLiveStatus(ConjureUnionType):
 
     @builtins.property
     def running(self) -> Optional["scout_checklistexecution_api_StreamingChecklistRunning"]:
-        """
-        The streaming checklist is currently executing against the asset.
+        """The streaming checklist is currently executing against the asset.
         """
         return self._running
 
     @builtins.property
     def initializing(self) -> Optional["scout_checklistexecution_api_StreamingChecklistInitializing"]:
-        """
-        The streaming checklist is currently initializing against the asset.
+        """The streaming checklist is currently initializing against the asset.
         """
         return self._initializing
 
     @builtins.property
     def failed(self) -> Optional["scout_checklistexecution_api_StreamingChecklistFailed"]:
-        """
-        The streaming checklist failed unexpectedly. Please contact support.
+        """The streaming checklist failed unexpectedly. Please contact support.
         """
         return self._failed
 
@@ -28705,8 +28459,7 @@ scout_checklistexecution_api_ChecklistLiveStatusResponse.__module__ = "nominal_a
 
 
 class scout_checklistexecution_api_Computing(ConjureBeanType):
-    """
-    The result is currently being computed.
+    """The result is currently being computed.
     """
 
     @builtins.classmethod
@@ -28754,22 +28507,19 @@ class scout_checklistexecution_api_ExecuteChecklistForAssetsRequest(ConjureBeanT
 
     @builtins.property
     def notification_configurations(self) -> List["scout_integrations_api_NotificationConfiguration"]:
-        """
-        Checklist violations will be sent to the specified integrations. At least one integration must be specified.
+        """Checklist violations will be sent to the specified integrations. At least one integration must be specified.
         """
         return self._notification_configurations
 
     @builtins.property
     def evaluation_delay(self) -> "scout_run_api_Duration":
-        """
-        Delays the evaluation of the streaming checklist. This is useful for when data is delayed.
+        """Delays the evaluation of the streaming checklist. This is useful for when data is delayed.
         """
         return self._evaluation_delay
 
     @builtins.property
     def recovery_delay(self) -> "scout_run_api_Duration":
-        """
-        Specifies the minimum amount of time that must pass before a check can recover from a failure.
+        """Specifies the minimum amount of time that must pass before a check can recover from a failure.
 Minimum value is 15 seconds.
         """
         return self._recovery_delay
@@ -28797,8 +28547,7 @@ scout_checklistexecution_api_Fail.__module__ = "nominal_api.scout_checklistexecu
 
 
 class scout_checklistexecution_api_Failure(ConjureBeanType):
-    """
-    The time range where a check was failing.
+    """The time range where a check was failing.
     """
 
     @builtins.classmethod
@@ -28933,30 +28682,26 @@ class scout_checklistexecution_api_LastFailure(ConjureUnionType):
 
     @builtins.property
     def not_computed(self) -> Optional["scout_checklistexecution_api_NotComputed"]:
-        """
-        The last failure time has not been computed, and is not currently being computed.
+        """The last failure time has not been computed, and is not currently being computed.
         """
         return self._not_computed
 
     @builtins.property
     def computing(self) -> Optional["scout_checklistexecution_api_Computing"]:
-        """
-        The last failure time is currently being computed. This may require evaluating the history
+        """The last failure time is currently being computed. This may require evaluating the history
 of data for the check, so could be slow depending on the data frequency and lookback period.
         """
         return self._computing
 
     @builtins.property
     def no_previous_failure(self) -> Optional["scout_checklistexecution_api_NoPreviousFailure"]:
-        """
-        No previous failure was found for the check.
+        """No previous failure was found for the check.
         """
         return self._no_previous_failure
 
     @builtins.property
     def failure(self) -> Optional["scout_checklistexecution_api_Failure"]:
-        """
-        The most recent failure for the check.
+        """The most recent failure for the check.
         """
         return self._failure
 
@@ -29025,8 +28770,7 @@ class scout_checklistexecution_api_ListStreamingChecklistForAssetRequest(Conjure
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
+        """Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
         """
         return self._page_size
 
@@ -29088,8 +28832,7 @@ class scout_checklistexecution_api_ListStreamingChecklistRequest(ConjureBeanType
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
+        """Page sizes greater than 10_000 will be rejected. Default pageSize is 100.
         """
         return self._page_size
 
@@ -29137,8 +28880,7 @@ scout_checklistexecution_api_ListStreamingChecklistResponse.__module__ = "nomina
 
 
 class scout_checklistexecution_api_NoPreviousFailure(ConjureBeanType):
-    """
-    No previous failure was computed for the check.
+    """No previous failure was computed for the check.
     """
 
     @builtins.classmethod
@@ -29156,8 +28898,7 @@ scout_checklistexecution_api_NoPreviousFailure.__module__ = "nominal_api.scout_c
 
 
 class scout_checklistexecution_api_NotComputed(ConjureBeanType):
-    """
-    The result has not been computed, and is not currently being computed.
+    """The result has not been computed, and is not currently being computed.
     """
 
     @builtins.classmethod
@@ -29191,8 +28932,7 @@ scout_checklistexecution_api_Pass.__module__ = "nominal_api.scout_checklistexecu
 
 
 class scout_checklistexecution_api_ResolvedCheckStatus(ConjureBeanType):
-    """
-    Provides the resolution status for the required channels for a check and the set of invalid streaming compute nodes present within the check's compute graph.
+    """Provides the resolution status for the required channels for a check and the set of invalid streaming compute nodes present within the check's compute graph.
 Uniqueness between checkRid and checkParameterIndex pairs is guaranteed.
     """
 
@@ -29219,8 +28959,7 @@ Uniqueness between checkRid and checkParameterIndex pairs is guaranteed.
 
     @builtins.property
     def check_parameter_index(self) -> Optional[int]:
-        """
-        Checks can define a single range computation which can evaluate over multiple implementations of a context.
+        """Checks can define a single range computation which can evaluate over multiple implementations of a context.
 The check implementation index will correspond to the implementation index of the check condition.
         """
         return self._check_parameter_index
@@ -29362,8 +29101,7 @@ class scout_checklistexecution_api_StreamingChecklistRunning(ConjureBeanType):
 
     @builtins.property
     def commit_id(self) -> str:
-        """
-        The commitId of the checklist that is currently executing.
+        """The commitId of the checklist that is currently executing.
         """
         return self._commit_id
 
@@ -29378,8 +29116,7 @@ scout_checklistexecution_api_StreamingChecklistRunning.__module__ = "nominal_api
 
 
 class scout_checklistexecution_api_ValidateChecklistResolutionRequest(ConjureBeanType):
-    """
-    Validates that the channels referenced by the checklist can be resolved against the data sources.
+    """Validates that the channels referenced by the checklist can be resolved against the data sources.
 If commit is not provided, the latest commit on main will be used.
     """
 
@@ -29629,8 +29366,7 @@ class scout_checks_api_Check(ConjureBeanType):
 
     @builtins.property
     def condition(self) -> Optional["scout_checks_api_CheckCondition"]:
-        """
-        If omitted, this check represents a manual check.
+        """If omitted, this check represents a manual check.
         """
         return self._condition
 
@@ -29866,8 +29602,7 @@ class scout_checks_api_CheckJobSpec(ConjureBeanType):
 
     @builtins.property
     def check_implementation_index(self) -> Optional[int]:
-        """
-        Checks can define a single range computation which can evaluate over multiple implementations of a context.
+        """Checks can define a single range computation which can evaluate over multiple implementations of a context.
 The check implementation index will correspond to the implementation index of the check condition.
         """
         return self._check_implementation_index
@@ -30032,8 +29767,7 @@ scout_checks_api_ChecklistMetadata.__module__ = "nominal_api.scout_checks_api"
 
 
 class scout_checks_api_ChecklistRef(ConjureBeanType):
-    """
-    A reference to a checklist that may be pinned to a specific commit.
+    """A reference to a checklist that may be pinned to a specific commit.
 If commit is empty, this refers to "the latest commit on main".
     """
 
@@ -30310,15 +30044,14 @@ scout_checks_api_ChecklistSearchQueryVisitor.__module__ = "nominal_api.scout_che
 
 
 class scout_checks_api_ChecklistService(Service):
-    """
-    The Checklist Service is responsible for managing checklists and checks.
+    """The Checklist Service is responsible for managing checklists and checks.
 A checklist is a collection of checks and functions that can be executed against a set of data sources.
     """
 
     def create(self, auth_header: str, request: "scout_checks_api_CreateChecklistRequest") -> "scout_checks_api_VersionedChecklist":
+        """Creates a new checklist with the provided checks and functions.
         """
-        Creates a new checklist with the provided checks and functions.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30329,10 +30062,10 @@ A checklist is a collection of checks and functions that can be executed against
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists'
         _path = _path.format(**_path_params)
@@ -30348,12 +30081,12 @@ A checklist is a collection of checks and functions that can be executed against
         return _decoder.decode(_response.json(), scout_checks_api_VersionedChecklist, self._return_none_for_unknown_union_types)
 
     def commit(self, auth_header: str, checklist_rid: str, request: "scout_checks_api_CommitChecklistRequest", branch: Optional[str] = None) -> "scout_checks_api_VersionedChecklist":
-        """
-        Creates a permanent commit with a commit message. 
+        """Creates a permanent commit with a commit message. 
 Throws if the checklist or branch doesn't exist.
 Throws if the latest commit doesn't match the provided id.
 Throws if you commit to an archived checklist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30362,14 +30095,14 @@ Throws if you commit to an archived checklist.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
+            'branch': _conjure_encoder.default(branch),
         }
 
-        _path_params: Dict[str, Any] = {
-            'checklistRid': checklist_rid,
+        _path_params: Dict[str, str] = {
+            'checklistRid': quote(str(_conjure_encoder.default(checklist_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/{checklistRid}/commit'
         _path = _path.format(**_path_params)
@@ -30385,12 +30118,12 @@ Throws if you commit to an archived checklist.
         return _decoder.decode(_response.json(), scout_checks_api_VersionedChecklist, self._return_none_for_unknown_union_types)
 
     def save_working_state(self, auth_header: str, checklist_rid: str, request: "scout_checks_api_SaveChecklistRequest", branch: Optional[str] = None) -> "scout_checks_api_VersionedChecklist":
-        """
-        Creates a commit that may be compacted, e.g cleaned up and not exist anymore.
+        """Creates a commit that may be compacted, e.g cleaned up and not exist anymore.
 Throws if the checklist or branch doesn't exist.
 Throws if the latest commit doesn't match the provided id.
 Throws if you save to an archived checklist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30399,14 +30132,14 @@ Throws if you save to an archived checklist.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
+            'branch': _conjure_encoder.default(branch),
         }
 
-        _path_params: Dict[str, Any] = {
-            'checklistRid': checklist_rid,
+        _path_params: Dict[str, str] = {
+            'checklistRid': quote(str(_conjure_encoder.default(checklist_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/{checklistRid}/save-working-state'
         _path = _path.format(**_path_params)
@@ -30422,12 +30155,12 @@ Throws if you save to an archived checklist.
         return _decoder.decode(_response.json(), scout_checks_api_VersionedChecklist, self._return_none_for_unknown_union_types)
 
     def merge_to_main(self, auth_header: str, checklist_rid: str, request: "scout_checks_api_MergeToMainRequest") -> "scout_checks_api_VersionedChecklist":
-        """
-        Merges the given branch to the "main" branch.
+        """Merges the given branch to the "main" branch.
 Throws if the checklist or branch doesn't exist.
 Throws if the latest commit doesn't match the provided id.
 Throws if you merge with an archived checklist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30438,11 +30171,11 @@ Throws if you merge with an archived checklist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'checklistRid': checklist_rid,
+        _path_params: Dict[str, str] = {
+            'checklistRid': quote(str(_conjure_encoder.default(checklist_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/{checklistRid}/merge-to-main'
         _path = _path.format(**_path_params)
@@ -30458,10 +30191,10 @@ Throws if you merge with an archived checklist.
         return _decoder.decode(_response.json(), scout_checks_api_VersionedChecklist, self._return_none_for_unknown_union_types)
 
     def update_data_source_ref_names(self, auth_header: str, checklist_rid: str, ref_name_updates: Dict[str, str], branch: Optional[str] = None) -> "scout_checks_api_VersionedChecklist":
-        """
-        Updates the data source ref names for all checks within a checklist.
+        """Updates the data source ref names for all checks within a checklist.
 Throws if the checklist doesn't exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30470,14 +30203,14 @@ Throws if the checklist doesn't exist.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
+            'branch': _conjure_encoder.default(branch),
         }
 
-        _path_params: Dict[str, Any] = {
-            'checklistRid': checklist_rid,
+        _path_params: Dict[str, str] = {
+            'checklistRid': quote(str(_conjure_encoder.default(checklist_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(ref_name_updates)
+        _json: Any = _conjure_encoder.default(ref_name_updates)
 
         _path = '/scout/v1/checklists/{checklistRid}/update-ref-names'
         _path = _path.format(**_path_params)
@@ -30493,9 +30226,9 @@ Throws if the checklist doesn't exist.
         return _decoder.decode(_response.json(), scout_checks_api_VersionedChecklist, self._return_none_for_unknown_union_types)
 
     def update_metadata(self, auth_header: str, request: "scout_checks_api_UpdateChecklistMetadataRequest", rid: str) -> "scout_checks_api_ChecklistMetadata":
+        """Updates the metadata of a checklist.
         """
-        Updates the metadata of a checklist.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30506,11 +30239,11 @@ Throws if the checklist doesn't exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/{rid}/update-metadata'
         _path = _path.format(**_path_params)
@@ -30526,10 +30259,10 @@ Throws if the checklist doesn't exist.
         return _decoder.decode(_response.json(), scout_checks_api_ChecklistMetadata, self._return_none_for_unknown_union_types)
 
     def get(self, auth_header: str, rid: str, branch: Optional[str] = None, commit: Optional[str] = None) -> "scout_checks_api_VersionedChecklist":
-        """
-        Specify at most one of (branch, commit).
+        """Specify at most one of (branch, commit).
 If neither is specified, branch = "main" is the default.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30537,12 +30270,12 @@ If neither is specified, branch = "main" is the default.
         }
 
         _params: Dict[str, Any] = {
-            'branch': branch,
-            'commit': commit,
+            'branch': _conjure_encoder.default(branch),
+            'commit': _conjure_encoder.default(commit),
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -30561,10 +30294,10 @@ If neither is specified, branch = "main" is the default.
         return _decoder.decode(_response.json(), scout_checks_api_VersionedChecklist, self._return_none_for_unknown_union_types)
 
     def batch_get(self, auth_header: str, checklist_refs: List["scout_checks_api_PinnedChecklistRef"] = None) -> List["scout_checks_api_VersionedChecklist"]:
-        """
-        Returns the pinned commit for each provided checklist reference.
+        """Returns the pinned commit for each provided checklist reference.
         """
         checklist_refs = checklist_refs if checklist_refs is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30575,10 +30308,10 @@ If neither is specified, branch = "main" is the default.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(checklist_refs)
+        _json: Any = _conjure_encoder.default(checklist_refs)
 
         _path = '/scout/v1/checklists/batch-get'
         _path = _path.format(**_path_params)
@@ -30594,9 +30327,9 @@ If neither is specified, branch = "main" is the default.
         return _decoder.decode(_response.json(), List[scout_checks_api_VersionedChecklist], self._return_none_for_unknown_union_types)
 
     def batch_get_metadata(self, auth_header: str, request: "scout_checks_api_BatchGetChecklistMetadataRequest") -> "scout_checks_api_BatchGetChecklistMetadataResponse":
+        """Returns the metadata for each provided checklist.
         """
-        Returns the metadata for each provided checklist.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30607,10 +30340,10 @@ If neither is specified, branch = "main" is the default.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/batch-get-metadata'
         _path = _path.format(**_path_params)
@@ -30626,9 +30359,9 @@ If neither is specified, branch = "main" is the default.
         return _decoder.decode(_response.json(), scout_checks_api_BatchGetChecklistMetadataResponse, self._return_none_for_unknown_union_types)
 
     def search(self, auth_header: str, request: "scout_checks_api_SearchChecklistsRequest") -> "scout_checks_api_VersionedChecklistPage":
+        """Results will be the latest commit on main for each checklist.
         """
-        Results will be the latest commit on main for each checklist.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30639,10 +30372,10 @@ If neither is specified, branch = "main" is the default.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/search'
         _path = _path.format(**_path_params)
@@ -30658,9 +30391,9 @@ If neither is specified, branch = "main" is the default.
         return _decoder.decode(_response.json(), scout_checks_api_VersionedChecklistPage, self._return_none_for_unknown_union_types)
 
     def archive(self, auth_header: str, request: "scout_checks_api_ArchiveChecklistsRequest") -> None:
+        """Archives the provided checklists.
         """
-        Archives the provided checklists.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30671,10 +30404,10 @@ If neither is specified, branch = "main" is the default.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/archive'
         _path = _path.format(**_path_params)
@@ -30689,9 +30422,9 @@ If neither is specified, branch = "main" is the default.
         return
 
     def unarchive(self, auth_header: str, request: "scout_checks_api_UnarchiveChecklistsRequest") -> None:
+        """Unarchives the provided checklists.
         """
-        Unarchives the provided checklists.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30702,10 +30435,10 @@ If neither is specified, branch = "main" is the default.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/checklists/unarchive'
         _path = _path.format(**_path_params)
@@ -30720,9 +30453,9 @@ If neither is specified, branch = "main" is the default.
         return
 
     def get_check(self, auth_header: str, rid: str) -> "scout_checks_api_Check":
+        """Returns the check with the given rid.
         """
-        Returns the check with the given rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30732,8 +30465,8 @@ If neither is specified, branch = "main" is the default.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -30752,10 +30485,10 @@ If neither is specified, branch = "main" is the default.
         return _decoder.decode(_response.json(), scout_checks_api_Check, self._return_none_for_unknown_union_types)
 
     def batch_get_checks(self, auth_header: str, rids: List[str] = None) -> List["scout_checks_api_Check"]:
-        """
-        Returns the checks with the given rids.
+        """Returns the checks with the given rids.
         """
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30766,10 +30499,10 @@ If neither is specified, branch = "main" is the default.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v1/checklists/check/batch-get'
         _path = _path.format(**_path_params)
@@ -30785,10 +30518,10 @@ If neither is specified, branch = "main" is the default.
         return _decoder.decode(_response.json(), List[scout_checks_api_Check], self._return_none_for_unknown_union_types)
 
     def get_all_labels_and_properties(self, auth_header: str, workspaces: List[str] = None) -> "scout_checks_api_GetAllLabelsAndPropertiesResponse":
-        """
-        Returns all labels and properties.
+        """Returns all labels and properties.
         """
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -30796,10 +30529,10 @@ If neither is specified, branch = "main" is the default.
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -30889,23 +30622,20 @@ class scout_checks_api_CommitChecklistRequest(ConjureBeanType):
 
     @builtins.property
     def functions(self) -> Dict[str, "scout_checks_api_UpdateFunctionEntryRequest"]:
-        """
-        The keys of the map are references that can be used for checks to reference functions in the same request, before the function RIDs have been created.
+        """The keys of the map are references that can be used for checks to reference functions in the same request, before the function RIDs have been created.
         """
         return self._functions
 
     @builtins.property
     def checklist_variables(self) -> List["scout_checks_api_UnresolvedChecklistVariable"]:
-        """
-        Variables that can be used in checks and functions. Variables are resolved in order of declaration.
+        """Variables that can be used in checks and functions. Variables are resolved in order of declaration.
 If variable `a` depends on variable `b`, then `b` must be defined before `a` in the list.
         """
         return self._checklist_variables
 
     @builtins.property
     def latest_commit(self) -> Optional[str]:
-        """
-        If present, will validate that the latest commit matches this id,
+        """If present, will validate that the latest commit matches this id,
 and otherwise throw CommitConflict.
         """
         return self._latest_commit
@@ -31009,8 +30739,7 @@ class scout_checks_api_CreateCheckRequest(ConjureBeanType):
 
     @builtins.property
     def check_lineage_rid(self) -> Optional[str]:
-        """
-        Identifies the lineage of checks this check belongs to. If not specified, a new lineage will be created.
+        """Identifies the lineage of checks this check belongs to. If not specified, a new lineage will be created.
 This is named checkLineageRid for historical reasons but is actually a UUID.
         """
         return self._check_lineage_rid
@@ -31041,8 +30770,7 @@ This is named checkLineageRid for historical reasons but is actually a UUID.
 
     @builtins.property
     def condition(self) -> Optional["scout_checks_api_UnresolvedCheckCondition"]:
-        """
-        If omitted, this check represents a manual check.
+        """If omitted, this check represents a manual check.
         """
         return self._condition
 
@@ -31159,8 +30887,7 @@ class scout_checks_api_CreateChecklistRequest(ConjureBeanType):
 
     @builtins.property
     def functions(self) -> Dict[str, "scout_checks_api_CreateFunctionRequest"]:
-        """
-        The keys of the map are references that can be used for checks to reference functions in the same request, before the function RIDs have been created.
+        """The keys of the map are references that can be used for checks to reference functions in the same request, before the function RIDs have been created.
         """
         return self._functions
 
@@ -31178,23 +30905,20 @@ class scout_checks_api_CreateChecklistRequest(ConjureBeanType):
 
     @builtins.property
     def checklist_variables(self) -> List["scout_checks_api_UnresolvedChecklistVariable"]:
-        """
-        Variables that can be used in checks and functions. Variables are resolved in order of declaration.
+        """Variables that can be used in checks and functions. Variables are resolved in order of declaration.
 If variable `a` depends on variable `b`, then `b` must be defined before `a` in the list.
         """
         return self._checklist_variables
 
     @builtins.property
     def is_published(self) -> Optional[bool]:
-        """
-        Default value is true.
+        """Default value is true.
         """
         return self._is_published
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the checklist. If not provided, the checklist will be created in the default workspace for
+        """The workspace in which to create the checklist. If not provided, the checklist will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -31230,8 +30954,7 @@ class scout_checks_api_CreateFunctionRequest(ConjureBeanType):
 
     @builtins.property
     def function_lineage_rid(self) -> Optional[str]:
-        """
-        Identifies the lineage of functions this function belongs to. If not specified, a new lineage will be created.
+        """Identifies the lineage of functions this function belongs to. If not specified, a new lineage will be created.
         """
         return self._function_lineage_rid
 
@@ -31842,8 +31565,7 @@ class scout_checks_api_MergeToMainRequest(ConjureBeanType):
 
     @builtins.property
     def branch_name(self) -> str:
-        """
-        If "main", the request will throw.
+        """If "main", the request will throw.
         """
         return self._branch_name
 
@@ -31853,8 +31575,7 @@ class scout_checks_api_MergeToMainRequest(ConjureBeanType):
 
     @builtins.property
     def latest_commit_on_main(self) -> Optional[str]:
-        """
-        If present, will validate that the latest commit matches this id,
+        """If present, will validate that the latest commit matches this id,
 and otherwise throw CommitConflict.
         """
         return self._latest_commit_on_main
@@ -32004,8 +31725,7 @@ class scout_checks_api_NumRangesConditionV3(ConjureBeanType):
 
     @builtins.property
     def function_variables(self) -> Dict[str, "scout_checks_api_CheckContext"]:
-        """
-        The variables to be passed into functions referenced by the check condition. The function reference key
+        """The variables to be passed into functions referenced by the check condition. The function reference key
 should match the FunctionReference in the function node definition.
         """
         return self._function_variables
@@ -32037,8 +31757,7 @@ class scout_checks_api_ParameterizedNumRangesConditionV1(ConjureBeanType):
 
     @builtins.property
     def implementations(self) -> List["scout_checks_api_CheckContext"]:
-        """
-        Each permutation of check context in the list will be executed as a new a stand-alone check. Violations
+        """Each permutation of check context in the list will be executed as a new a stand-alone check. Violations
 produced will be associated with the context of the index.
         """
         return self._implementations
@@ -32050,8 +31769,7 @@ scout_checks_api_ParameterizedNumRangesConditionV1.__module__ = "nominal_api.sco
 
 
 class scout_checks_api_PinnedChecklistRef(ConjureBeanType):
-    """
-    A reference to a checklist that is pinned to a specific commit.
+    """A reference to a checklist that is pinned to a specific commit.
     """
 
     @builtins.classmethod
@@ -32106,23 +31824,20 @@ class scout_checks_api_SaveChecklistRequest(ConjureBeanType):
 
     @builtins.property
     def functions(self) -> Dict[str, "scout_checks_api_UpdateFunctionEntryRequest"]:
-        """
-        The keys of the map are references that can be used for checks to reference functions in the same request, before the function RIDs have been created.
+        """The keys of the map are references that can be used for checks to reference functions in the same request, before the function RIDs have been created.
         """
         return self._functions
 
     @builtins.property
     def checklist_variables(self) -> List["scout_checks_api_UnresolvedChecklistVariable"]:
-        """
-        Variables that can be used in checks and functions. Variables are resolved in order of declaration.
+        """Variables that can be used in checks and functions. Variables are resolved in order of declaration.
 If variable `a` depends on variable `b`, then `b` must be defined before `a` in the list.
         """
         return self._checklist_variables
 
     @builtins.property
     def latest_commit(self) -> Optional[str]:
-        """
-        If present, will validate that the latest commit matches this id,
+        """If present, will validate that the latest commit matches this id,
 and otherwise throw CommitConflict.
         """
         return self._latest_commit
@@ -32160,8 +31875,7 @@ class scout_checks_api_SearchChecklistsRequest(ConjureBeanType):
 
     @builtins.property
     def sort_by(self) -> Optional["scout_checks_api_SortOptions"]:
-        """
-        If not present, will sort by LAST_USED in descending order.
+        """If not present, will sort by LAST_USED in descending order.
         """
         return self._sort_by
 
@@ -32171,15 +31885,13 @@ class scout_checks_api_SearchChecklistsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1000.
+        """Defaults to 100. Will throw if larger than 1000.
         """
         return self._page_size
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Default search status is NOT_ARCHIVED if none are provided. Allows for including archived checklists in search.
+        """Default search status is NOT_ARCHIVED if none are provided. Allows for including archived checklists in search.
         """
         return self._archived_statuses
 
@@ -32602,16 +32314,14 @@ class scout_checks_api_UnresolvedNumRangesConditionV3(ConjureBeanType):
 
     @builtins.property
     def variables(self) -> Dict[str, "scout_checks_api_UnresolvedVariableLocator"]:
-        """
-        Default overrides for the variables used in the check condition. These variables can be overridden
+        """Default overrides for the variables used in the check condition. These variables can be overridden
 at checklist execution time.
         """
         return self._variables
 
     @builtins.property
     def function_variables(self) -> Dict[str, "scout_checks_api_UnresolvedVariables"]:
-        """
-        The variables to be passed into functions referenced by the check condition. The function reference key
+        """The variables to be passed into functions referenced by the check condition. The function reference key
 should match the FunctionReference in the function node definition. These variables can be overridden
 at checklist execution time.
         """
@@ -32644,8 +32354,7 @@ class scout_checks_api_UnresolvedParameterizedNumRangesConditionV1(ConjureBeanTy
 
     @builtins.property
     def implementations(self) -> List["scout_checks_api_UnresolvedVariables"]:
-        """
-        Each permutation of check context in the list will be executed as a new a stand-alone check. Violations
+        """Each permutation of check context in the list will be executed as a new a stand-alone check. Violations
 produced will be associated with the context of the index.
         """
         return self._implementations
@@ -32734,8 +32443,7 @@ class scout_checks_api_UnresolvedVariableLocator(ConjureUnionType):
 
     @builtins.property
     def checklist_variable(self) -> Optional[str]:
-        """
-        A pointer to a variable in the checklist.
+        """A pointer to a variable in the checklist.
         """
         return self._checklist_variable
 
@@ -33109,8 +32817,7 @@ class scout_checks_api_VariableLocator(ConjureUnionType):
 
     @builtins.property
     def checklist_variable(self) -> Optional[str]:
-        """
-        A pointer to a checklist level variable.
+        """A pointer to a checklist level variable.
         """
         return self._checklist_variable
 
@@ -33215,8 +32922,7 @@ class scout_checks_api_VersionedChecklist(ConjureBeanType):
 
     @builtins.property
     def functions(self) -> List["scout_checks_api_Function"]:
-        """
-        A list of functions that are available to be used by checks in this checklist.
+        """A list of functions that are available to be used by checks in this checklist.
         """
         return self._functions
 
@@ -33226,8 +32932,7 @@ class scout_checks_api_VersionedChecklist(ConjureBeanType):
 
     @builtins.property
     def checklist_variables(self) -> List["scout_checks_api_ChecklistVariable"]:
-        """
-        Variables that can be used in checks and functions. Variables are resolved in order of declaration.
+        """Variables that can be used in checks and functions. Variables are resolved in order of declaration.
 If variable `a` depends on variable `b`, then `b` must be defined before `a` in the list.
         """
         return self._checklist_variables
@@ -33581,8 +33286,7 @@ scout_comparisonnotebook_api_ComparisonScatterPlotDefinitionVisitor.__module__ =
 
 
 class scout_comparisonnotebook_api_ComparisonScatterPlotDefinitionV1(ConjureBeanType):
-    """
-    an n x n array of scatter plots
+    """an n x n array of scatter plots
     """
 
     @builtins.classmethod
@@ -33622,8 +33326,7 @@ class scout_comparisonnotebook_api_ComparisonScatterPlotDefinitionV1(ConjureBean
 
     @builtins.property
     def visualization_options(self) -> Optional["scout_comparisonnotebook_api_ComparisonScatterPlotVizOptions"]:
-        """
-        optional for backcompatibility.
+        """optional for backcompatibility.
         """
         return self._visualization_options
 
@@ -33654,15 +33357,13 @@ class scout_comparisonnotebook_api_ComparisonScatterPlotVariable(ConjureBeanType
 
     @builtins.property
     def x_axis_id(self) -> str:
-        """
-        the axisId when the variable is used as the x variable.
+        """the axisId when the variable is used as the x variable.
         """
         return self._x_axis_id
 
     @builtins.property
     def y_axis_id(self) -> str:
-        """
-        the axisId when the variable is used as the y variable.
+        """the axisId when the variable is used as the y variable.
         """
         return self._y_axis_id
 
@@ -33736,8 +33437,7 @@ class scout_comparisonnotebook_api_ComparisonTableColumn(ConjureBeanType):
 
     @builtins.property
     def aggregation_type(self) -> Optional["scout_comparisonnotebook_api_AggregationType"]:
-        """
-        optional for backcompatibility.
+        """optional for backcompatibility.
         """
         return self._aggregation_type
 
@@ -33965,8 +33665,7 @@ scout_comparisonnotebook_api_ComparisonTableVisualizationOptions.__module__ = "n
 
 
 class scout_comparisonnotebook_api_ComparisonTimeSeriesDisplayOption(ConjureEnumType):
-    """
-    The display option for the time series plot. A CAROUSEL display option means that each plot grouping 
+    """The display option for the time series plot. A CAROUSEL display option means that each plot grouping 
 is displayed one at a time, while a MULTIROW display option means that multiple plot groupings are displayed
 simultaneously on different rows.
     """
@@ -33988,8 +33687,7 @@ scout_comparisonnotebook_api_ComparisonTimeSeriesDisplayOption.__module__ = "nom
 
 
 class scout_comparisonnotebook_api_ComparisonTimeSeriesGroupBy(ConjureEnumType):
-    """
-    The group by option for the time series plot. A RANGE group by option means that all channels on the
+    """The group by option for the time series plot. A RANGE group by option means that all channels on the
 same time range are plotted together, while a VARIABLE group by option means that all time ranges 
 for the same channel are plotted together.
     """
@@ -34067,8 +33765,7 @@ scout_comparisonnotebook_api_ComparisonTimeSeriesPlotDefinitionVisitor.__module_
 
 
 class scout_comparisonnotebook_api_ComparisonTimeSeriesPlotDefinitionV1(ConjureBeanType):
-    """
-    a cross-range time series plot with 
+    """a cross-range time series plot with 
 configurable range and channel groupings
     """
 
@@ -34107,8 +33804,7 @@ configurable range and channel groupings
 
     @builtins.property
     def value_axes(self) -> List["scout_chartdefinition_api_ValueAxis"]:
-        """
-        a list of value ranges, where each variable is assigned to a y-axis
+        """a list of value ranges, where each variable is assigned to a y-axis
         """
         return self._value_axes
 
@@ -34143,8 +33839,7 @@ class scout_comparisonnotebook_api_ComparisonTimeSeriesPlotVariable(ConjureBeanT
 
     @builtins.property
     def y_axis_id(self) -> str:
-        """
-        the axisId when the variable is used as the y variable.
+        """the axisId when the variable is used as the y variable.
         """
         return self._y_axis_id
 
@@ -34179,8 +33874,7 @@ class scout_comparisonnotebook_api_ComparisonWorkbookContent(ConjureBeanType):
 
     @builtins.property
     def charts(self) -> Dict[str, "scout_comparisonnotebook_api_VizDefinition"]:
-        """
-        visualizations. Charts is a legacy term.
+        """visualizations. Charts is a legacy term.
         """
         return self._charts
 
@@ -34397,8 +34091,7 @@ scout_comparisonnotebook_api_RangeAggregationContext.__module__ = "nominal_api.s
 
 
 class scout_comparisonnotebook_api_RangeAggregationDefinition(ConjureBeanType):
-    """
-    Every range aggregation must be defined by a data scope and set of conditions. This type should be used by
+    """Every range aggregation must be defined by a data scope and set of conditions. This type should be used by
 every comparison workbook viz definition.
     """
 
@@ -34427,8 +34120,7 @@ every comparison workbook viz definition.
 
     @builtins.property
     def time_window(self) -> Optional["scout_comparisonnotebook_api_TimeWindow"]:
-        """
-        determines the window of data included in the visualization. Currently only applied on assets.
+        """determines the window of data included in the visualization. Currently only applied on assets.
         """
         return self._time_window
 
@@ -34439,8 +34131,7 @@ scout_comparisonnotebook_api_RangeAggregationDefinition.__module__ = "nominal_ap
 
 
 class scout_comparisonnotebook_api_ScatterPlotValueAxes(ConjureBeanType):
-    """
-    specifies the axes configurations for a given x and y axis.
+    """specifies the axes configurations for a given x and y axis.
     """
 
     @builtins.classmethod
@@ -34489,7 +34180,8 @@ scout_comparisonnotebook_api_StandardDeviation.__module__ = "nominal_api.scout_c
 class scout_comparisonnotebook_api_SupplementalComparisonWorkbookContext(ConjureUnionType):
     """This is used to allow variables to specify additional context that does not fit well into the general shape of
 a compute node. For example, a range aggregation variable represents a bulk computation across several inputs,
-whose context is specified here instead."""
+whose context is specified here instead.
+    """
     _none: Optional["api_Empty"] = None
     _range_aggregation: Optional["scout_comparisonnotebook_api_RangeAggregationContext"] = None
 
@@ -35110,8 +34802,7 @@ scout_comparisonrun_api_OffsetSeriesAnchor.__module__ = "nominal_api.scout_compa
 
 
 class scout_compute_api_AbsoluteThreshold(ConjureBeanType):
-    """
-    Threshold defined as a real number corresponding the unit of a series.
+    """Threshold defined as a real number corresponding the unit of a series.
     """
 
     @builtins.classmethod
@@ -35136,8 +34827,7 @@ scout_compute_api_AbsoluteThreshold.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_AfterPersistenceWindow(ConjureBeanType):
-    """
-    The first point in the output range will be the first point after the condition has been true
+    """The first point in the output range will be the first point after the condition has been true
 for the min duration and min points.
     """
 
@@ -35156,8 +34846,7 @@ scout_compute_api_AfterPersistenceWindow.__module__ = "nominal_api.scout_compute
 
 
 class scout_compute_api_AggregateEnumSeries(ConjureBeanType):
-    """
-    Aggregates values with duplicate timestamps in the input series values into a single value using the specified aggregation function.
+    """Aggregates values with duplicate timestamps in the input series values into a single value using the specified aggregation function.
     """
 
     @builtins.classmethod
@@ -35188,8 +34877,7 @@ scout_compute_api_AggregateEnumSeries.__module__ = "nominal_api.scout_compute_ap
 
 
 class scout_compute_api_AggregateNumericSeries(ConjureBeanType):
-    """
-    Aggregates values with duplicate timestamps in the input series values into a single value using the specified aggregation function.
+    """Aggregates values with duplicate timestamps in the input series values into a single value using the specified aggregation function.
     """
 
     @builtins.classmethod
@@ -35254,8 +34942,7 @@ scout_compute_api_ApproximateThresholdOperator.__module__ = "nominal_api.scout_c
 
 
 class scout_compute_api_ApproximateThresholdRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for which the threshold condition is satisfied.
+    """Produces a list of ranges for which the threshold condition is satisfied.
     """
 
     @builtins.classmethod
@@ -35330,8 +35017,7 @@ class scout_compute_api_ArithmeticSeries(ConjureBeanType):
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -35368,8 +35054,7 @@ class scout_compute_api_AssetChannel(ConjureBeanType):
 
     @builtins.property
     def data_scope_name(self) -> "scout_compute_api_StringConstant":
-        """
-        Used to disambiguate when multiple data scopes within this asset contain channels with the same name.
+        """Used to disambiguate when multiple data scopes within this asset contain channels with the same name.
         """
         return self._data_scope_name
 
@@ -35379,8 +35064,7 @@ class scout_compute_api_AssetChannel(ConjureBeanType):
 
     @builtins.property
     def additional_tags(self) -> Dict[str, "scout_compute_api_StringConstant"]:
-        """
-        Tags to filter the channel by, in addition to tag filters defined for a given Asset data scope. Throws on 
+        """Tags to filter the channel by, in addition to tag filters defined for a given Asset data scope. Throws on 
 collisions with tag keys already defined for the given Asset data scope. Only returns points that match 
 both sets of tag filters. For log series, include arg filters here in addition to tag filters.
         """
@@ -35388,8 +35072,7 @@ both sets of tag filters. For log series, include arg filters here in addition t
 
     @builtins.property
     def tags_to_group_by(self) -> List[str]:
-        """
-        Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
+        """Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
 with an entry for each grouping.
         """
         return self._tags_to_group_by
@@ -35401,8 +35084,7 @@ scout_compute_api_AssetChannel.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_Average(ConjureBeanType):
-    """
-    A average that gives the same weight to each observation inside the time window
+    """A average that gives the same weight to each observation inside the time window
     """
 
     @builtins.classmethod
@@ -35586,8 +35268,7 @@ scout_compute_api_BinaryArithmeticOperation.__module__ = "nominal_api.scout_comp
 
 
 class scout_compute_api_BinaryArithmeticSeries(ConjureBeanType):
-    """
-    Applies a point-wise transformation to a pair of series.
+    """Applies a point-wise transformation to a pair of series.
     """
 
     @builtins.classmethod
@@ -35621,8 +35302,7 @@ class scout_compute_api_BinaryArithmeticSeries(ConjureBeanType):
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -35775,8 +35455,7 @@ scout_compute_api_BitOperationFunctionVisitor.__module__ = "nominal_api.scout_co
 
 
 class scout_compute_api_BitOperationSeries(ConjureBeanType):
-    """
-    Casts input series values to long before applying the bitwise operation.
+    """Casts input series values to long before applying the bitwise operation.
     """
 
     @builtins.classmethod
@@ -35830,8 +35509,7 @@ scout_compute_api_BitOrFunction.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_BitTestFunction(ConjureBeanType):
-    """
-    Returns the bit at the specified index, where the right-most bit has index 0.
+    """Returns the bit at the specified index, where the right-most bit has index 0.
     """
 
     @builtins.classmethod
@@ -35943,8 +35621,7 @@ class scout_compute_api_BucketedEnumPlot(ConjureBeanType):
 
     @builtins.property
     def timestamps(self) -> List["api_Timestamp"]:
-        """
-        The end of the bucket, exclusive.
+        """The end of the bucket, exclusive.
         """
         return self._timestamps
 
@@ -36035,8 +35712,7 @@ class scout_compute_api_BucketedNumericPlot(ConjureBeanType):
 
     @builtins.property
     def timestamps(self) -> List["api_Timestamp"]:
-        """
-        The end of the bucket, exclusive.
+        """The end of the bucket, exclusive.
         """
         return self._timestamps
 
@@ -36163,8 +35839,7 @@ scout_compute_api_Cartesian3dVisitor.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_Cartesian3dBounds(ConjureBeanType):
-    """
-    Min/max bounds of an XYZ Cartesian plot, inclusive.
+    """Min/max bounds of an XYZ Cartesian plot, inclusive.
     """
 
     @builtins.classmethod
@@ -36379,8 +36054,7 @@ scout_compute_api_Cartesian3dUnitResult.__module__ = "nominal_api.scout_compute_
 
 
 class scout_compute_api_CartesianBounds(ConjureBeanType):
-    """
-    Min/max bounds of an XY Cartesian plot, inclusive.
+    """Min/max bounds of an XY Cartesian plot, inclusive.
     """
 
     @builtins.classmethod
@@ -37701,14 +37375,13 @@ scout_compute_api_ComputeNodeWithContext.__module__ = "nominal_api.scout_compute
 
 
 class scout_compute_api_ComputeService(Service):
-    """
-    The Compute Service provides the ability to compute the output of compute graphs.
+    """The Compute Service provides the ability to compute the output of compute graphs.
     """
 
     def compute(self, auth_header: str, request: "scout_compute_api_ComputeNodeRequest") -> "scout_compute_api_ComputeNodeResponse":
+        """Computes the output of the compute graph specified by a ComputeNodeRequest.
         """
-        Computes the output of the compute graph specified by a ComputeNodeRequest.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -37719,10 +37392,10 @@ class scout_compute_api_ComputeService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/compute/v2/compute'
         _path = _path.format(**_path_params)
@@ -37738,11 +37411,11 @@ class scout_compute_api_ComputeService(Service):
         return _decoder.decode(_response.json(), scout_compute_api_ComputeNodeResponse, self._return_none_for_unknown_union_types)
 
     def parameterized_compute(self, auth_header: str, request: "scout_compute_api_ParameterizedComputeNodeRequest") -> "scout_compute_api_ParameterizedComputeNodeResponse":
-        """
-        Computes the output of the compute graph specified by a ParameterizedComputeNodeRequest. A parameterized 
+        """Computes the output of the compute graph specified by a ParameterizedComputeNodeRequest. A parameterized 
 compute request supports multiple values for a single variable, supplied by the ParameterizedContext.
 Results are returned in the same order of the request.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -37753,10 +37426,10 @@ Results are returned in the same order of the request.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/compute/v2/compute/parameterized'
         _path = _path.format(**_path_params)
@@ -37772,13 +37445,13 @@ Results are returned in the same order of the request.
         return _decoder.decode(_response.json(), scout_compute_api_ParameterizedComputeNodeResponse, self._return_none_for_unknown_union_types)
 
     def compute_units(self, auth_header: str, request: "scout_compute_api_ComputeUnitsRequest") -> "scout_compute_api_ComputeUnitResult":
-        """
-        Returns the resulting unit for the output of a compute graph. If the resulting unit is equivalent to exactly
+        """Returns the resulting unit for the output of a compute graph. If the resulting unit is equivalent to exactly
 one existing unit in the system, it will be returned (for example, a series in Coulombs divided by a series
 in Volts will return an output of Farads). If the output does not have units (for example, a range output,)
 the unit result will return noUnitAvailable, and if the computation was not successful, corresponding errors
 are returned.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -37789,10 +37462,10 @@ are returned.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/compute/v2/compute/units'
         _path = _path.format(**_path_params)
@@ -37808,10 +37481,10 @@ are returned.
         return _decoder.decode(_response.json(), scout_compute_api_ComputeUnitResult, self._return_none_for_unknown_union_types)
 
     def batch_compute_with_units(self, auth_header: str, request: "scout_compute_api_BatchComputeWithUnitsRequest") -> "scout_compute_api_BatchComputeWithUnitsResponse":
-        """
-        Computes the output of compute graphs specified by BatchComputeNodeRequest. Results are returned in the same
+        """Computes the output of compute graphs specified by BatchComputeNodeRequest. Results are returned in the same
 order as the request.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -37822,10 +37495,10 @@ order as the request.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/compute/v2/compute/batch'
         _path = _path.format(**_path_params)
@@ -37841,11 +37514,11 @@ order as the request.
         return _decoder.decode(_response.json(), scout_compute_api_BatchComputeWithUnitsResponse, self._return_none_for_unknown_union_types)
 
     def batch_compute_units(self, auth_header: str, request: "scout_compute_api_BatchComputeUnitsRequest") -> "scout_compute_api_BatchComputeUnitResult":
-        """
-        Same as computeUnits, however this endpoint functions on a batch of requests for wire efficiency purposes. An
+        """Same as computeUnits, however this endpoint functions on a batch of requests for wire efficiency purposes. An
 extra note is that this method will serialize underlying conjure errors into the BatchComputeUnitResult type,
 meaning callers are required to check for errors explicitly (rather than relying on exceptions being thrown).
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -37856,10 +37529,10 @@ meaning callers are required to check for errors explicitly (rather than relying
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/compute/v2/compute/batch-units'
         _path = _path.format(**_path_params)
@@ -37875,13 +37548,13 @@ meaning callers are required to check for errors explicitly (rather than relying
         return _decoder.decode(_response.json(), scout_compute_api_BatchComputeUnitResult, self._return_none_for_unknown_union_types)
 
     def compute_with_units(self, auth_header: str, request: "scout_compute_api_ComputeNodeRequest") -> "scout_compute_api_ComputeWithUnitsResponse":
-        """
-        Computes the output of the compute graph specified by a ComputeNodeRequest, as well as providing the resulting 
+        """Computes the output of the compute graph specified by a ComputeNodeRequest, as well as providing the resulting 
 unit for the output of a compute graph. If the resulting unit is equivalent to exactly one existing unit in the 
 system, it will be returned (for example, a series in Coulombs divided by a series in Volts will return an 
 output of Farads). If the output does not have units (for example, a range output,) the unit result will return 
 noUnitAvailable, and if the computation was not successful, corresponding errors are returned.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -37892,10 +37565,10 @@ noUnitAvailable, and if the computation was not successful, corresponding errors
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/compute/v2/computeWithUnits'
         _path = _path.format(**_path_params)
@@ -38122,8 +37795,7 @@ class scout_compute_api_Context(ConjureBeanType):
 
     @builtins.property
     def function_variables(self) -> Dict[str, "scout_compute_api_FunctionVariables"]:
-        """
-        Map of function references to their variables. The function reference is defined in the FunctionNode definition.
+        """Map of function references to their variables. The function reference is defined in the FunctionNode definition.
 If a function references another function, the variables for the referenced function should be in the
 subFunctionVariables field of the FunctionVariables.
         """
@@ -38136,8 +37808,7 @@ scout_compute_api_Context.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_Count(ConjureBeanType):
-    """
-    The number of points inside the time window
+    """The number of points inside the time window
     """
 
     @builtins.classmethod
@@ -38155,8 +37826,7 @@ scout_compute_api_Count.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_CumulativeSumSeries(ConjureBeanType):
-    """
-    Calculates the running total of the series values.
+    """Calculates the running total of the series values.
     """
 
     @builtins.classmethod
@@ -38463,16 +38133,14 @@ class scout_compute_api_CurveFitResult(ConjureBeanType):
 
     @builtins.property
     def r2(self) -> float:
-        """
-        R^2 (coefficient of determination) for the fit curve, a normalized measure of how well the curve fits the data.
+        """R^2 (coefficient of determination) for the fit curve, a normalized measure of how well the curve fits the data.
 Usually ranges from 0 to 1, with higher indicating better fit (points closer to fit line).
         """
         return self._r2
 
     @builtins.property
     def curve_result_details(self) -> "scout_compute_api_CurveResultDetails":
-        """
-        Description of the fit curve.
+        """Description of the fit curve.
         """
         return self._curve_result_details
 
@@ -38630,16 +38298,14 @@ class scout_compute_api_DataSourceChannel(ConjureBeanType):
 
     @builtins.property
     def tags(self) -> Dict[str, "scout_compute_api_StringConstant"]:
-        """
-        Tags to filter the channel by. Only returns points from the channel with matching tag values for the 
+        """Tags to filter the channel by. Only returns points from the channel with matching tag values for the 
 provided tag keys. For log series, include arg filters here in addition to tag filters.
         """
         return self._tags
 
     @builtins.property
     def tags_to_group_by(self) -> List[str]:
-        """
-        Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
+        """Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
 with an entry for each grouping.
         """
         return self._tags_to_group_by
@@ -38742,8 +38408,7 @@ class scout_compute_api_DecimateWithBuckets(ConjureBeanType):
 
     @builtins.property
     def buckets(self) -> int:
-        """
-        Number of points to generate in the output series.
+        """Number of points to generate in the output series.
         """
         return self._buckets
 
@@ -38768,8 +38433,7 @@ class scout_compute_api_DecimateWithResolution(ConjureBeanType):
 
     @builtins.property
     def resolution(self) -> int:
-        """
-        Resolution of the output series specifying time interval between decimated points.
+        """Resolution of the output series specifying time interval between decimated points.
 Picoseconds for picosecond-granularity dataset, nanoseconds otherwise.
         """
         return self._resolution
@@ -38781,8 +38445,7 @@ scout_compute_api_DecimateWithResolution.__module__ = "nominal_api.scout_compute
 
 
 class scout_compute_api_DerivativeSeries(ConjureBeanType):
-    """
-    Calculates the rate of change between subsequent points.
+    """Calculates the rate of change between subsequent points.
     """
 
     @builtins.classmethod
@@ -38806,15 +38469,13 @@ class scout_compute_api_DerivativeSeries(ConjureBeanType):
 
     @builtins.property
     def time_unit(self) -> Optional["api_TimeUnit"]:
-        """
-        Time unit used to calculate the derivative. Defaults to seconds if not specified.
+        """Time unit used to calculate the derivative. Defaults to seconds if not specified.
         """
         return self._time_unit
 
     @builtins.property
     def negative_values_configuration(self) -> Optional["scout_compute_api_NegativeValueConfiguration"]:
-        """
-        Defines the strategy for handling negative output values. Defaults to allowNegativeValues if not specified.
+        """Defines the strategy for handling negative output values. Defaults to allowNegativeValues if not specified.
         """
         return self._negative_values_configuration
 
@@ -38999,8 +38660,7 @@ scout_compute_api_DurationConstantVisitor.__module__ = "nominal_api.scout_comput
 
 
 class scout_compute_api_DurationFilterRanges(ConjureBeanType):
-    """
-    Filters a list of ranges down to only those satisfying a threshold condition on the range's duration.
+    """Filters a list of ranges down to only those satisfying a threshold condition on the range's duration.
     """
 
     @builtins.classmethod
@@ -39073,8 +38733,7 @@ class scout_compute_api_EnumBucket(ConjureBeanType):
 
     @builtins.property
     def histogram(self) -> Dict[int, int]:
-        """
-        The map of values within the bucket to their frequency.
+        """The map of values within the bucket to their frequency.
         """
         return self._histogram
 
@@ -39084,8 +38743,7 @@ class scout_compute_api_EnumBucket(ConjureBeanType):
 
     @builtins.property
     def last_point(self) -> Optional["scout_compute_api_CompactEnumPoint"]:
-        """
-        Will be empty if the bucket only has a single point.
+        """Will be empty if the bucket only has a single point.
         """
         return self._last_point
 
@@ -39096,8 +38754,7 @@ scout_compute_api_EnumBucket.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_EnumCountDuplicateSeries(ConjureBeanType):
-    """
-    Counts the number of points along each timestamp in the input series.
+    """Counts the number of points along each timestamp in the input series.
     """
 
     @builtins.classmethod
@@ -39140,8 +38797,7 @@ scout_compute_api_EnumFilterOperator.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_EnumFilterRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for which the filter condition is satisfied.
+    """Produces a list of ranges for which the filter condition is satisfied.
     """
 
     @builtins.classmethod
@@ -39184,8 +38840,7 @@ scout_compute_api_EnumFilterRanges.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_EnumFilterTransformationSeries(ConjureBeanType):
-    """
-    Outputs the values of the enum plot value within the ranges specified by a ranges node
+    """Outputs the values of the enum plot value within the ranges specified by a ranges node
     """
 
     @builtins.classmethod
@@ -39216,8 +38871,7 @@ scout_compute_api_EnumFilterTransformationSeries.__module__ = "nominal_api.scout
 
 
 class scout_compute_api_EnumHistogramBucket(ConjureBeanType):
-    """
-    A bucket in an enum histogram representing all the counts
+    """A bucket in an enum histogram representing all the counts
 for a specific enumerated value, across all input series.
     """
 
@@ -39236,8 +38890,7 @@ for a specific enumerated value, across all input series.
 
     @builtins.property
     def value(self) -> str:
-        """
-        The value of the enum as a string
+        """The value of the enum as a string
         """
         return self._value
 
@@ -39362,8 +39015,7 @@ scout_compute_api_EnumPoint.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_EnumResampleSeries(ConjureBeanType):
-    """
-    Resamples the input series to a new resolution using interpolation.
+    """Resamples the input series to a new resolution using interpolation.
 Outputs data for timestamps corresponding to the defined frequency. Based on interpolation strategy,
 determines range of timestamps to output data for and interpolates values where necessary.
     """
@@ -39387,8 +39039,7 @@ determines range of timestamps to output data for and interpolates values where 
 
     @builtins.property
     def resample_configuration(self) -> "scout_compute_api_ResampleConfiguration":
-        """
-        The interval at which to resample the series and interpolation strategy
+        """The interval at which to resample the series and interpolation strategy
         """
         return self._resample_configuration
 
@@ -39644,8 +39295,7 @@ scout_compute_api_EnumSeriesVisitor.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_EnumSeriesEqualityRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for which provided enum series are all equal (or are not all equal).
+    """Produces a list of ranges for which provided enum series are all equal (or are not all equal).
     """
 
     @builtins.classmethod
@@ -39679,8 +39329,7 @@ class scout_compute_api_EnumSeriesEqualityRanges(ConjureBeanType):
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -39691,8 +39340,7 @@ scout_compute_api_EnumSeriesEqualityRanges.__module__ = "nominal_api.scout_compu
 
 
 class scout_compute_api_EnumSeriesFunction(ConjureBeanType):
-    """
-    A function reference that outputs an enum series.
+    """A function reference that outputs an enum series.
     """
 
     @builtins.classmethod
@@ -39710,15 +39358,13 @@ class scout_compute_api_EnumSeriesFunction(ConjureBeanType):
 
     @builtins.property
     def function_reference(self) -> str:
-        """
-        A reference to identify the function node for substituting variables used within the function.
+        """A reference to identify the function node for substituting variables used within the function.
         """
         return self._function_reference
 
     @builtins.property
     def function_identifier(self) -> "scout_compute_api_FunctionVariable":
-        """
-        The variable that needs to be substituted with the function RID.
+        """The variable that needs to be substituted with the function RID.
         """
         return self._function_identifier
 
@@ -39729,8 +39375,7 @@ scout_compute_api_EnumSeriesFunction.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_EnumTimeRangeFilterSeries(ConjureBeanType):
-    """
-    Filters the series to points within the specified time range.
+    """Filters the series to points within the specified time range.
     """
 
     @builtins.classmethod
@@ -39754,15 +39399,13 @@ class scout_compute_api_EnumTimeRangeFilterSeries(ConjureBeanType):
 
     @builtins.property
     def start_time(self) -> Optional["scout_compute_api_TimestampConstant"]:
-        """
-        Represents the start time (inclusive) of the time range.
+        """Represents the start time (inclusive) of the time range.
         """
         return self._start_time
 
     @builtins.property
     def end_time(self) -> Optional["scout_compute_api_TimestampConstant"]:
-        """
-        Represents the end time (inclusive) of the time range.
+        """Represents the end time (inclusive) of the time range.
         """
         return self._end_time
 
@@ -39822,8 +39465,7 @@ scout_compute_api_EnumUnionOperation.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_EnumUnionSeries(ConjureBeanType):
-    """
-    Combines multiple enum series together and outputs a single series. The strategy to merge input values
+    """Combines multiple enum series together and outputs a single series. The strategy to merge input values
 with the same timestamp together is specified in the operation field.
     """
 
@@ -39846,8 +39488,7 @@ with the same timestamp together is specified in the operation field.
 
     @builtins.property
     def operation(self) -> "scout_compute_api_EnumUnionOperation":
-        """
-        The strategy to merge points with duplicate timestamps.
+        """The strategy to merge points with duplicate timestamps.
         """
         return self._operation
 
@@ -39937,8 +39578,7 @@ scout_compute_api_ExponentialCurve.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_ExponentialResultDetails(ConjureBeanType):
-    """
-    y = a * e^(b * x)
+    """y = a * e^(b * x)
     """
 
     @builtins.classmethod
@@ -39969,8 +39609,7 @@ scout_compute_api_ExponentialResultDetails.__module__ = "nominal_api.scout_compu
 
 
 class scout_compute_api_Fft(ConjureBeanType):
-    """
-    Returns the single sided amplitude spectrum of the input series.
+    """Returns the single sided amplitude spectrum of the input series.
     """
 
     @builtins.classmethod
@@ -39995,8 +39634,7 @@ scout_compute_api_Fft.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_FirstPointMatchingCondition(ConjureBeanType):
-    """
-    The first point in the output range will be the first point where the condition evaluates to true.
+    """The first point in the output range will be the first point where the condition evaluates to true.
     """
 
     @builtins.classmethod
@@ -40037,8 +39675,7 @@ scout_compute_api_ForwardFillInterpolation.__module__ = "nominal_api.scout_compu
 
 
 class scout_compute_api_ForwardFillResampleInterpolationConfiguration(ConjureBeanType):
-    """
-    Forward fill interpolation for resampling. Rounds the earliest and latest timestamp up to the nearest interval
+    """Forward fill interpolation for resampling. Rounds the earliest and latest timestamp up to the nearest interval
 multiple and generates timestamps at the given interval between the new earliest and latest timestamps.
 For every timestamp in the resampled timestamps, takes the last known value before the timestamp as the value.
     """
@@ -40228,7 +39865,8 @@ scout_compute_api_FunctionVariables.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_GeoPoint(ConjureUnionType):
-    """Represents a geographic point. Flexible to handle multiple types of geographic coordinate systems."""
+    """Represents a geographic point. Flexible to handle multiple types of geographic coordinate systems.
+    """
     _lat_long: Optional["scout_compute_api_LatLongPoint"] = None
 
     @builtins.classmethod
@@ -40449,8 +40087,7 @@ scout_compute_api_GeoTemporalSummary.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_GeoTimeBucket(ConjureBeanType):
-    """
-    Summary of a time-based bucket of geo points.
+    """Summary of a time-based bucket of geo points.
     """
 
     @builtins.classmethod
@@ -40472,29 +40109,25 @@ class scout_compute_api_GeoTimeBucket(ConjureBeanType):
 
     @builtins.property
     def mean(self) -> "scout_compute_api_GeoPoint":
-        """
-        The mean value of the GeoPoints in the bucket.
+        """The mean value of the GeoPoints in the bucket.
         """
         return self._mean
 
     @builtins.property
     def count(self) -> int:
-        """
-        The number of GeoPoints in the bucket.
+        """The number of GeoPoints in the bucket.
         """
         return self._count
 
     @builtins.property
     def first_point(self) -> "scout_compute_api_GeoPointWithTimestamp":
-        """
-        The first GeoPoint in the bucket.
+        """The first GeoPoint in the bucket.
         """
         return self._first_point
 
     @builtins.property
     def last_point(self) -> Optional["scout_compute_api_GeoPointWithTimestamp"]:
-        """
-        The last GeoPoint in the bucket. Will be empty if the bucket only has a single point.
+        """The last GeoPoint in the bucket. Will be empty if the bucket only has a single point.
         """
         return self._last_point
 
@@ -40534,8 +40167,7 @@ scout_compute_api_GroupedComputeNodeResponse.__module__ = "nominal_api.scout_com
 
 
 class scout_compute_api_GroupedComputeNodeResponses(ConjureBeanType):
-    """
-    Contains a `ComputeNodeResponse` for each applicable grouping along with metadata describing the grouping.
+    """Contains a `ComputeNodeResponse` for each applicable grouping along with metadata describing the grouping.
 All the contained `ComputeNodeResponse`s are guaranteed to be of the same type.
     """
 
@@ -40590,8 +40222,7 @@ class scout_compute_api_Grouping(ConjureUnionType):
 
     @builtins.property
     def tags_with_values(self) -> Optional[Dict[str, str]]:
-        """
-        A grouping identified by a specific instantiation of tag keys and values.
+        """A grouping identified by a specific instantiation of tag keys and values.
         """
         return self._tags_with_values
 
@@ -40720,8 +40351,7 @@ scout_compute_api_HistogramVisitor.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_HistogramChannelCount(ConjureBeanType):
-    """
-    The count of the value in the bucket for the specific channel.
+    """The count of the value in the bucket for the specific channel.
     """
 
     @builtins.classmethod
@@ -40746,8 +40376,7 @@ scout_compute_api_HistogramChannelCount.__module__ = "nominal_api.scout_compute_
 
 
 class scout_compute_api_IncompatibleUnitOperation(ConjureBeanType):
-    """
-    Attempted an incompatible operation of units.
+    """Attempted an incompatible operation of units.
     """
 
     @builtins.classmethod
@@ -40855,8 +40484,7 @@ scout_compute_api_IntegerConstantVisitor.__module__ = "nominal_api.scout_compute
 
 
 class scout_compute_api_IntegralSeries(ConjureBeanType):
-    """
-    Calculates the running sum of the area underneath a series using the trapezoidal rule.
+    """Calculates the running sum of the area underneath a series using the trapezoidal rule.
     """
 
     @builtins.classmethod
@@ -40884,8 +40512,7 @@ class scout_compute_api_IntegralSeries(ConjureBeanType):
 
     @builtins.property
     def time_unit(self) -> Optional["api_TimeUnit"]:
-        """
-        Time unit used to calculate the integral. Defaults to seconds if not specified.
+        """Time unit used to calculate the integral. Defaults to seconds if not specified.
         """
         return self._time_unit
 
@@ -40952,8 +40579,7 @@ scout_compute_api_InterpolationConfigurationVisitor.__module__ = "nominal_api.sc
 
 
 class scout_compute_api_IntersectRanges(ConjureBeanType):
-    """
-    The FE should try to pass in inputs in the order in which they should be
+    """The FE should try to pass in inputs in the order in which they should be
 evaluated for optimization's sake. Alternatively, we can let the user select
 preconditions which they know to be cheaper to compute, which we will evaluate
 first.
@@ -40981,8 +40607,7 @@ scout_compute_api_IntersectRanges.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LatLongBounds(ConjureBeanType):
-    """
-    The bounds of a lat long geographic area. Represented by the southwest and northeast corners 
+    """The bounds of a lat long geographic area. Represented by the southwest and northeast corners 
 of a rectangle, inclusive.
     """
 
@@ -41014,8 +40639,7 @@ scout_compute_api_LatLongBounds.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LatLongGeo(ConjureBeanType):
-    """
-    A geo node derived from a lat and long series.
+    """A geo node derived from a lat and long series.
     """
 
     @builtins.classmethod
@@ -41081,8 +40705,7 @@ scout_compute_api_LatLongPoint.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LiteralRange(ConjureBeanType):
-    """
-    A literal range of values.
+    """A literal range of values.
     """
 
     @builtins.classmethod
@@ -41113,8 +40736,7 @@ scout_compute_api_LiteralRange.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LiteralRanges(ConjureBeanType):
-    """
-    A list of literal ranges.
+    """A list of literal ranges.
     """
 
     @builtins.classmethod
@@ -41139,8 +40761,7 @@ scout_compute_api_LiteralRanges.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LogExactMatchCaseInsensitiveFilter(ConjureBeanType):
-    """
-    Filters points such that the log message in each point contains an exact case-insensitive match of the
+    """Filters points such that the log message in each point contains an exact case-insensitive match of the
 provided token.
     """
 
@@ -41243,8 +40864,7 @@ scout_compute_api_LogFilterOperatorVisitor.__module__ = "nominal_api.scout_compu
 
 
 class scout_compute_api_LogFilterSeries(ConjureBeanType):
-    """
-    Outputs only values of the log plot that satisfy the filter.
+    """Outputs only values of the log plot that satisfy the filter.
     """
 
     @builtins.classmethod
@@ -41304,8 +40924,7 @@ scout_compute_api_LogPoint.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LogRegexFilterOperator(ConjureBeanType):
-    """
-    Filters points such that the log message in each point matches the given re2 regular expression.
+    """Filters points such that the log message in each point matches the given re2 regular expression.
 Regular expression syntax: https://github.com/google/re2/wiki/Syntax.
     """
 
@@ -41516,8 +41135,7 @@ scout_compute_api_LogUnionOperation.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LogUnionSeries(ConjureBeanType):
-    """
-    Combines multiple log series together and outputs a single series. The strategy to merge input values with the
+    """Combines multiple log series together and outputs a single series. The strategy to merge input values with the
 same timestamp together is specified in the operation field.
     """
 
@@ -41540,8 +41158,7 @@ same timestamp together is specified in the operation field.
 
     @builtins.property
     def operation(self) -> "scout_compute_api_LogUnionOperation":
-        """
-        The strategy to merge points with duplicate timestamps.
+        """The strategy to merge points with duplicate timestamps.
         """
         return self._operation
 
@@ -41603,8 +41220,7 @@ scout_compute_api_LogarithmicCurve.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_LogarithmicResultDetails(ConjureBeanType):
-    """
-    y = a * ln(x) + b
+    """y = a * ln(x) + b
     """
 
     @builtins.classmethod
@@ -41658,8 +41274,7 @@ scout_compute_api_LowPassConfiguration.__module__ = "nominal_api.scout_compute_a
 
 
 class scout_compute_api_MaxSeries(ConjureBeanType):
-    """
-    For every timestamp specified in the input series, outputs a value that is the maximum for that timestamp
+    """For every timestamp specified in the input series, outputs a value that is the maximum for that timestamp
 across all input series.
 Only outputs timestamps where all input series have an entry for that timestamp, or a value can be filled
 using the interpolation configuration.
@@ -41684,8 +41299,7 @@ using the interpolation configuration.
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -41696,8 +41310,7 @@ scout_compute_api_MaxSeries.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_Maximum(ConjureBeanType):
-    """
-    The maximum value of points inside the time window.
+    """The maximum value of points inside the time window.
     """
 
     @builtins.classmethod
@@ -41715,8 +41328,7 @@ scout_compute_api_Maximum.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_MeanSeries(ConjureBeanType):
-    """
-    For every timestamp specified in the input series, outputs a value that is the mean for that timestamp
+    """For every timestamp specified in the input series, outputs a value that is the mean for that timestamp
 across all input series.
 Only outputs timestamps where all input series have an entry for that timestamp, or a value can be filled
 using the interpolation configuration.
@@ -41741,8 +41353,7 @@ using the interpolation configuration.
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -41775,8 +41386,7 @@ scout_compute_api_MinMaxThresholdOperator.__module__ = "nominal_api.scout_comput
 
 
 class scout_compute_api_MinMaxThresholdRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for which the threshold condition is satisfied.
+    """Produces a list of ranges for which the threshold condition is satisfied.
     """
 
     @builtins.classmethod
@@ -41825,8 +41435,7 @@ scout_compute_api_MinMaxThresholdRanges.__module__ = "nominal_api.scout_compute_
 
 
 class scout_compute_api_MinSeries(ConjureBeanType):
-    """
-    For every timestamp specified in the input series, outputs a value that is the minimum for that timestamp
+    """For every timestamp specified in the input series, outputs a value that is the minimum for that timestamp
 across all input series.
 Only outputs timestamps where all input series have an entry for that timestamp, or a value can be filled
 using the interpolation configuration.
@@ -41851,8 +41460,7 @@ using the interpolation configuration.
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -41863,8 +41471,7 @@ scout_compute_api_MinSeries.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_Minimum(ConjureBeanType):
-    """
-    The minimum value of points inside the time window.
+    """The minimum value of points inside the time window.
     """
 
     @builtins.classmethod
@@ -41933,22 +41540,19 @@ class scout_compute_api_NegativeValueConfiguration(ConjureUnionType):
 
     @builtins.property
     def allow_negative_values(self) -> Optional["scout_compute_api_AllowNegativeValues"]:
-        """
-        Include negative output values
+        """Include negative output values
         """
         return self._allow_negative_values
 
     @builtins.property
     def set_negative_values_to_zero(self) -> Optional["scout_compute_api_SetNegativeValuesToZero"]:
-        """
-        Set negative output values to zero
+        """Set negative output values to zero
         """
         return self._set_negative_values_to_zero
 
     @builtins.property
     def exclude_negative_values(self) -> Optional["scout_compute_api_ExcludeNegativeValues"]:
-        """
-        Exclude points with negative output values
+        """Exclude points with negative output values
         """
         return self._exclude_negative_values
 
@@ -41989,8 +41593,7 @@ scout_compute_api_NegativeValueConfigurationVisitor.__module__ = "nominal_api.sc
 
 
 class scout_compute_api_NotRanges(ConjureBeanType):
-    """
-    The not ranges node will invert the ranges, filling the negative space in time.
+    """The not ranges node will invert the ranges, filling the negative space in time.
     """
 
     @builtins.classmethod
@@ -42039,8 +41642,7 @@ scout_compute_api_NumericAggregationFunction.__module__ = "nominal_api.scout_com
 
 
 class scout_compute_api_NumericApproximateFilterSeries(ConjureBeanType):
-    """
-    Outputs the values of the numeric plot value that are approximately equal to the threshold value.
+    """Outputs the values of the numeric plot value that are approximately equal to the threshold value.
     """
 
     @builtins.classmethod
@@ -42125,8 +41727,7 @@ class scout_compute_api_NumericBucket(ConjureBeanType):
 
     @builtins.property
     def variance(self) -> float:
-        """
-        The population variance of the bucket. If the bucket has only one value, this will be 0.
+        """The population variance of the bucket. If the bucket has only one value, this will be 0.
         """
         return self._variance
 
@@ -42136,8 +41737,7 @@ class scout_compute_api_NumericBucket(ConjureBeanType):
 
     @builtins.property
     def last_point(self) -> Optional["scout_compute_api_NumericPoint"]:
-        """
-        Will be empty if the bucket only has a single point.
+        """Will be empty if the bucket only has a single point.
         """
         return self._last_point
 
@@ -42148,8 +41748,7 @@ scout_compute_api_NumericBucket.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_NumericFilterTransformationSeries(ConjureBeanType):
-    """
-    Outputs the values of the numeric plot value within the ranges specified by a ranges node
+    """Outputs the values of the numeric plot value within the ranges specified by a ranges node
     """
 
     @builtins.classmethod
@@ -42180,8 +41779,7 @@ scout_compute_api_NumericFilterTransformationSeries.__module__ = "nominal_api.sc
 
 
 class scout_compute_api_NumericHistogramBucket(ConjureBeanType):
-    """
-    A bucket in a numeric histogram representing a range of values,
+    """A bucket in a numeric histogram representing a range of values,
 and the counts of values in that range across all input series.
     """
 
@@ -42204,15 +41802,13 @@ and the counts of values in that range across all input series.
 
     @builtins.property
     def lower_bound(self) -> float:
-        """
-        The lower bound of the bucket, inclusive
+        """The lower bound of the bucket, inclusive
         """
         return self._lower_bound
 
     @builtins.property
     def upper_bound(self) -> float:
-        """
-        The upper bound of the bucket, exclusive
+        """The upper bound of the bucket, exclusive
         """
         return self._upper_bound
 
@@ -42271,8 +41867,7 @@ class scout_compute_api_NumericHistogramBucketStrategy(ConjureUnionType):
 
     @builtins.property
     def bucket_count(self) -> Optional["scout_compute_api_IntegerConstant"]:
-        """
-        The number of buckets to use in the histogram. Width is automatically calculated from the range
+        """The number of buckets to use in the histogram. Width is automatically calculated from the range
 of the input series, with the lower and upper bounds of the histogram being multiples of the width.
         """
         return self._bucket_count
@@ -42328,8 +41923,7 @@ class scout_compute_api_NumericHistogramBucketWidthAndOffset(ConjureBeanType):
 
     @builtins.property
     def width(self) -> "scout_compute_api_DoubleConstant":
-        """
-        The width of each bucket. If offset is not specified, the left and right bounds of each bucket
+        """The width of each bucket. If offset is not specified, the left and right bounds of each bucket
 are multiples of the width. If offset is specified, the left and right bounds of each bucket are
 shifted right by the offset value.
         """
@@ -42337,8 +41931,7 @@ shifted right by the offset value.
 
     @builtins.property
     def offset(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        The rightward shift to apply to the left and right bounds of each bucket. If not specified, 
+        """The rightward shift to apply to the left and right bounds of each bucket. If not specified, 
 the offset will be 0. The offset must be non-negative.
         """
         return self._offset
@@ -42460,8 +42053,7 @@ scout_compute_api_NumericPoint.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_NumericResampleSeries(ConjureBeanType):
-    """
-    Resamples the input series to a new resolution using interpolation.
+    """Resamples the input series to a new resolution using interpolation.
 Outputs data for timestamps corresponding to the defined frequency. Based on interpolation strategy,
 determines range of timestamps to output data for and interpolates values where necessary.
     """
@@ -42485,8 +42077,7 @@ determines range of timestamps to output data for and interpolates values where 
 
     @builtins.property
     def resample_configuration(self) -> "scout_compute_api_ResampleConfiguration":
-        """
-        The interpolation strategy and interval at which to resample the series
+        """The interpolation strategy and interval at which to resample the series
         """
         return self._resample_configuration
 
@@ -43183,8 +42774,7 @@ scout_compute_api_NumericSeriesVisitor.__module__ = "nominal_api.scout_compute_a
 
 
 class scout_compute_api_NumericSeriesFunction(ConjureBeanType):
-    """
-    A function reference that outputs a numeric series.
+    """A function reference that outputs a numeric series.
     """
 
     @builtins.classmethod
@@ -43202,15 +42792,13 @@ class scout_compute_api_NumericSeriesFunction(ConjureBeanType):
 
     @builtins.property
     def function_reference(self) -> str:
-        """
-        A reference to identify the function node for substituting variables used within the function.
+        """A reference to identify the function node for substituting variables used within the function.
         """
         return self._function_reference
 
     @builtins.property
     def function_identifier(self) -> "scout_compute_api_FunctionVariable":
-        """
-        The variable that needs to be substituted with the function RID.
+        """The variable that needs to be substituted with the function RID.
         """
         return self._function_identifier
 
@@ -43221,8 +42809,7 @@ scout_compute_api_NumericSeriesFunction.__module__ = "nominal_api.scout_compute_
 
 
 class scout_compute_api_NumericThresholdFilterSeries(ConjureBeanType):
-    """
-    Outputs only the values of the numeric plot value that satisfy the threshold condition.
+    """Outputs only the values of the numeric plot value that satisfy the threshold condition.
     """
 
     @builtins.classmethod
@@ -43259,8 +42846,7 @@ scout_compute_api_NumericThresholdFilterSeries.__module__ = "nominal_api.scout_c
 
 
 class scout_compute_api_NumericTimeRangeFilterSeries(ConjureBeanType):
-    """
-    Filters the series to points within the specified time range.
+    """Filters the series to points within the specified time range.
     """
 
     @builtins.classmethod
@@ -43284,15 +42870,13 @@ class scout_compute_api_NumericTimeRangeFilterSeries(ConjureBeanType):
 
     @builtins.property
     def start_time(self) -> Optional["scout_compute_api_TimestampConstant"]:
-        """
-        Represents the start time (inclusive) of the time range.
+        """Represents the start time (inclusive) of the time range.
         """
         return self._start_time
 
     @builtins.property
     def end_time(self) -> Optional["scout_compute_api_TimestampConstant"]:
-        """
-        Represents the end time (inclusive) of the time range.
+        """Represents the end time (inclusive) of the time range.
         """
         return self._end_time
 
@@ -43358,8 +42942,7 @@ scout_compute_api_NumericUnionOperation.__module__ = "nominal_api.scout_compute_
 
 
 class scout_compute_api_NumericUnionSeries(ConjureBeanType):
-    """
-    Combines multiple numeric series together and outputs a single series. If the same timestamp is duplicated in
+    """Combines multiple numeric series together and outputs a single series. If the same timestamp is duplicated in
 multiple input series, the output series will contain a single point with this timestamp. The strategy to
 merge input values with the same timestamp together is specified in the operation field.
     """
@@ -43383,8 +42966,7 @@ merge input values with the same timestamp together is specified in the operatio
 
     @builtins.property
     def operation(self) -> "scout_compute_api_NumericUnionOperation":
-        """
-        The strategy to merge points with duplicate timestamps.
+        """The strategy to merge points with duplicate timestamps.
         """
         return self._operation
 
@@ -43395,8 +42977,7 @@ scout_compute_api_NumericUnionSeries.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_OffsetSeries(ConjureBeanType):
-    """
-    For every timestamp specified in the input series, offset it by a constant factor.
+    """For every timestamp specified in the input series, offset it by a constant factor.
     """
 
     @builtins.classmethod
@@ -43418,8 +42999,7 @@ class scout_compute_api_OffsetSeries(ConjureBeanType):
 
     @builtins.property
     def scalar(self) -> "scout_compute_api_DoubleConstant":
-        """
-        The constant to add to each point
+        """The constant to add to each point
         """
         return self._scalar
 
@@ -43430,8 +43010,7 @@ scout_compute_api_OffsetSeries.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_OnChangeRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for each point that has a different value to the previous point.
+    """Produces a list of ranges for each point that has a different value to the previous point.
 A range will have identical start and end times.
     """
 
@@ -43497,15 +43076,13 @@ class scout_compute_api_OutputRangeStart(ConjureUnionType):
 
     @builtins.property
     def first_point_matching_condition(self) -> Optional["scout_compute_api_FirstPointMatchingCondition"]:
-        """
-        The first point in the output range will be the first point where the condition evaluates to true.
+        """The first point in the output range will be the first point where the condition evaluates to true.
         """
         return self._first_point_matching_condition
 
     @builtins.property
     def after_persistence_window(self) -> Optional["scout_compute_api_AfterPersistenceWindow"]:
-        """
-        The output range will contain points where the condition has been true
+        """The output range will contain points where the condition has been true
 for at least the min duration and min points.
         """
         return self._after_persistence_window
@@ -43541,8 +43118,7 @@ scout_compute_api_OutputRangeStartVisitor.__module__ = "nominal_api.scout_comput
 
 
 class scout_compute_api_PageInfo(ConjureBeanType):
-    """
-    Specification of a page for a series. Returns raw undecimated points beginning nearest to the given page
+    """Specification of a page for a series. Returns raw undecimated points beginning nearest to the given page
 token, advancing pageSize points in the time direction specified by the sign of the page size.
     """
 
@@ -43712,8 +43288,7 @@ class scout_compute_api_PagedLogPlot(ConjureBeanType):
 
     @builtins.property
     def next_page_token(self) -> Optional["scout_compute_api_PageToken"]:
-        """
-        The token to retrieve the next page of logs in the direction originally requested (exclusive - not
+        """The token to retrieve the next page of logs in the direction originally requested (exclusive - not
 included in these results). May be empty if there are no further logs in the requested time range in the
 direction originally requested.
         """
@@ -43748,8 +43323,7 @@ class scout_compute_api_ParameterInput(ConjureBeanType):
 
     @builtins.property
     def function_variables(self) -> Dict[str, "scout_compute_api_FunctionVariables"]:
-        """
-        Map of function references to their variables. The function reference is defined in the FunctionNode definition.
+        """Map of function references to their variables. The function reference is defined in the FunctionNode definition.
 If a function references another function, the variables for the referenced function should be in the
 subFunctionVariables field of the FunctionVariables.
         """
@@ -43757,8 +43331,7 @@ subFunctionVariables field of the FunctionVariables.
 
     @builtins.property
     def time_range(self) -> Optional["scout_compute_api_Range"]:
-        """
-        Overrides the start and end time of the compute request. If either the start or end are not present, we
+        """Overrides the start and end time of the compute request. If either the start or end are not present, we
 default back to the start/end specified in the request.
         """
         return self._time_range
@@ -43808,8 +43381,7 @@ class scout_compute_api_ParameterizedComputeNodeRequest(ConjureBeanType):
 
     @builtins.property
     def parameterized_context(self) -> "scout_compute_api_ParameterizedContext":
-        """
-        Specifies how certain variables should be parameterized. If a variable name appears in both the context
+        """Specifies how certain variables should be parameterized. If a variable name appears in both the context
 and the parameterized context, it will be treated as parameterized.
         """
         return self._parameterized_context
@@ -43858,8 +43430,7 @@ class scout_compute_api_ParameterizedContext(ConjureBeanType):
 
     @builtins.property
     def parameter_inputs(self) -> List["scout_compute_api_ParameterInput"]:
-        """
-        Each parameter input provides a satisfying set of values for the parameterized compute node.
+        """Each parameter input provides a satisfying set of values for the parameterized compute node.
         """
         return self._parameter_inputs
 
@@ -43870,8 +43441,7 @@ scout_compute_api_ParameterizedContext.__module__ = "nominal_api.scout_compute_a
 
 
 class scout_compute_api_PeakRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for each point that is greater than its neighbors.
+    """Produces a list of ranges for each point that is greater than its neighbors.
 Peaks at edges are discarded, and continuous, multivalue, flat peaks will return all values.
     """
 
@@ -43898,22 +43468,19 @@ Peaks at edges are discarded, and continuous, multivalue, flat peaks will return
 
     @builtins.property
     def returns_peaks(self) -> Optional[bool]:
-        """
-        True if returning peaks, else troughs.
+        """True if returning peaks, else troughs.
         """
         return self._returns_peaks
 
     @builtins.property
     def return_type(self) -> Optional["scout_compute_api_PeakType"]:
-        """
-        Optional for backcompatibility.
+        """Optional for backcompatibility.
         """
         return self._return_type
 
     @builtins.property
     def minimum_prominence(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        The minimum topographic prominence for an extrema to be returned.
+        """The minimum topographic prominence for an extrema to be returned.
 Prominence is the minimum vertical distance needed to travel from an extrema to one of greater magnitude.
         """
         return self._minimum_prominence
@@ -43945,8 +43512,7 @@ scout_compute_api_PeakType.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_PercentageThreshold(ConjureBeanType):
-    """
-    Threshold defined as the percentage of a given value.
+    """Threshold defined as the percentage of a given value.
     """
 
     @builtins.classmethod
@@ -43971,8 +43537,7 @@ scout_compute_api_PercentageThreshold.__module__ = "nominal_api.scout_compute_ap
 
 
 class scout_compute_api_PersistenceWindowConfiguration(ConjureBeanType):
-    """
-    Configures how long a condition has to be true for to output a time range, and what to use as the
+    """Configures how long a condition has to be true for to output a time range, and what to use as the
 start of the output range. For a point to be included in the output time range, both the minPoints and
 minDuration conditions must be satisfied.
     """
@@ -43994,24 +43559,21 @@ minDuration conditions must be satisfied.
 
     @builtins.property
     def min_points(self) -> Optional["scout_compute_api_IntegerConstant"]:
-        """
-        The minimum number of points for which this condition be must satisfied to include the time range in the
+        """The minimum number of points for which this condition be must satisfied to include the time range in the
 output. Must be non-negative. If not present, will default to 1.
         """
         return self._min_points
 
     @builtins.property
     def min_duration(self) -> Optional["scout_compute_api_DurationConstant"]:
-        """
-        The minimum number of points for which this condition must be satisfied to include the time range in the
+        """The minimum number of points for which this condition must be satisfied to include the time range in the
 output. Must be non-negative. If not present, will default to 1 nanosecond.
         """
         return self._min_duration
 
     @builtins.property
     def output_range_start(self) -> "scout_compute_api_OutputRangeStart":
-        """
-        Which point to use as the start of the output range. Defaults to firstPointMatchingCondition if not specified.
+        """Which point to use as the start of the output range. Defaults to firstPointMatchingCondition if not specified.
         """
         return self._output_range_start
 
@@ -44079,15 +43641,13 @@ class scout_compute_api_PolynomialCurve(ConjureBeanType):
 
     @builtins.property
     def degree(self) -> "scout_compute_api_IntegerConstant":
-        """
-        The highest allowable degree of the fit polynomial.
+        """The highest allowable degree of the fit polynomial.
         """
         return self._degree
 
     @builtins.property
     def intercept(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        The y-value at the point x (or t) = 0. If omitted, the y-intercept will also be fit to the data.
+        """The y-value at the point x (or t) = 0. If omitted, the y-intercept will also be fit to the data.
         """
         return self._intercept
 
@@ -44098,8 +43658,7 @@ scout_compute_api_PolynomialCurve.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_PolynomialResultDetails(ConjureBeanType):
-    """
-    y = sum( a_i * x^i ) for i in 0...len(a)
+    """y = sum( a_i * x^i ) for i in 0...len(a)
     """
 
     @builtins.classmethod
@@ -44140,8 +43699,7 @@ scout_compute_api_PowerCurve.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_PowerResultDetails(ConjureBeanType):
-    """
-    y = a * x^b
+    """y = a * x^b
     """
 
     @builtins.classmethod
@@ -44172,8 +43730,7 @@ scout_compute_api_PowerResultDetails.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_ProductSeries(ConjureBeanType):
-    """
-    For every timestamp specified in the input series, outputs a value that is the product for that timestamp
+    """For every timestamp specified in the input series, outputs a value that is the product for that timestamp
 across all input series.
 Only outputs timestamps where all input series have an entry for that timestamp, or a value can be filled
 using the interpolation configuration.
@@ -44198,8 +43755,7 @@ using the interpolation configuration.
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -44210,8 +43766,7 @@ scout_compute_api_ProductSeries.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_Range(ConjureBeanType):
-    """
-    The end represents the first timestamp that does not belong to the range. If absent, there is no known
+    """The end represents the first timestamp that does not belong to the range. If absent, there is no known
 end to the range.
     """
 
@@ -44448,22 +44003,19 @@ class scout_compute_api_RangeMap(ConjureBeanType):
 
     @builtins.property
     def start(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        Inclusive start value. If not specified, the start is the prior range's end value, or negative infinity.
+        """Inclusive start value. If not specified, the start is the prior range's end value, or negative infinity.
         """
         return self._start
 
     @builtins.property
     def end(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        Exclusive end value. If not specified, the end value is the next range's start value, or positive infinity.
+        """Exclusive end value. If not specified, the end value is the next range's start value, or positive infinity.
         """
         return self._end
 
     @builtins.property
     def output(self) -> "scout_compute_api_StringConstant":
-        """
-        The value to map to if the input value is within the range.
+        """The value to map to if the input value is within the range.
         """
         return self._output
 
@@ -44729,8 +44281,7 @@ class scout_compute_api_RangeSeries(ConjureUnionType):
 
     @builtins.property
     def min_max_threshold(self) -> Optional["scout_compute_api_MinMaxThresholdRanges"]:
-        """
-        Computes ranges where the input time series matches a filter defined by lower and upper bounds, and an operator.
+        """Computes ranges where the input time series matches a filter defined by lower and upper bounds, and an operator.
         """
         return self._min_max_threshold
 
@@ -44772,8 +44323,7 @@ class scout_compute_api_RangeSeries(ConjureUnionType):
 
     @builtins.property
     def threshold(self) -> Optional["scout_compute_api_ThresholdingRanges"]:
-        """
-        Computes ranges where the input time series matches a filter defined by a single threshold and an operator.
+        """Computes ranges where the input time series matches a filter defined by a single threshold and an operator.
         """
         return self._threshold
 
@@ -44914,8 +44464,7 @@ scout_compute_api_RangeSeriesVisitor.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_RangeSummary(ConjureBeanType):
-    """
-    Summary of a set of ranges
+    """Summary of a set of ranges
     """
 
     @builtins.classmethod
@@ -44933,15 +44482,13 @@ class scout_compute_api_RangeSummary(ConjureBeanType):
 
     @builtins.property
     def range(self) -> "scout_compute_api_Range":
-        """
-        The range representing the minimum start and maximum end times of the ranges.
+        """The range representing the minimum start and maximum end times of the ranges.
         """
         return self._range
 
     @builtins.property
     def sub_range_count(self) -> int:
-        """
-        The number of ranges found within this time range.
+        """The number of ranges found within this time range.
         """
         return self._sub_range_count
 
@@ -45050,8 +44597,7 @@ scout_compute_api_RangeValueVisitor.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_RangesFunction(ConjureBeanType):
-    """
-    A function reference that outputs a ranges series.
+    """A function reference that outputs a ranges series.
     """
 
     @builtins.classmethod
@@ -45069,15 +44615,13 @@ class scout_compute_api_RangesFunction(ConjureBeanType):
 
     @builtins.property
     def function_reference(self) -> str:
-        """
-        A reference to identify the function node for substituting variables used within the function.
+        """A reference to identify the function node for substituting variables used within the function.
         """
         return self._function_reference
 
     @builtins.property
     def function_identifier(self) -> "scout_compute_api_FunctionVariable":
-        """
-        The variable that needs to be substituted with the function RID.
+        """The variable that needs to be substituted with the function RID.
         """
         return self._function_identifier
 
@@ -45088,8 +44632,7 @@ scout_compute_api_RangesFunction.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_RangesNumericAggregation(ConjureBeanType):
-    """
-    Aggregates the values of a numeric series at each range specified by the input ranges.
+    """Aggregates the values of a numeric series at each range specified by the input ranges.
     """
 
     @builtins.classmethod
@@ -45126,8 +44669,7 @@ scout_compute_api_RangesNumericAggregation.__module__ = "nominal_api.scout_compu
 
 
 class scout_compute_api_RangesSummary(ConjureBeanType):
-    """
-    A summary of the ranges returned from a SummarizeRanges request. Returned when the number of ranges
+    """A summary of the ranges returned from a SummarizeRanges request. Returned when the number of ranges
 found is above a threshold.
     """
 
@@ -45192,15 +44734,13 @@ class scout_compute_api_ResampleConfiguration(ConjureBeanType):
 
     @builtins.property
     def interval(self) -> "scout_compute_api_DurationConstant":
-        """
-        Interval between resampled points
+        """Interval between resampled points
         """
         return self._interval
 
     @builtins.property
     def interpolation(self) -> Optional["scout_compute_api_ResampleInterpolationConfiguration"]:
-        """
-        Interpolation strategy to use (defaults to forward fill).
+        """Interpolation strategy to use (defaults to forward fill).
         """
         return self._interpolation
 
@@ -45489,8 +45029,7 @@ class scout_compute_api_RunChannel(ConjureBeanType):
 
     @builtins.property
     def data_scope_name(self) -> "scout_compute_api_StringConstant":
-        """
-        Used to disambiguate when multiple data scopes within this run contain channels with the same name.
+        """Used to disambiguate when multiple data scopes within this run contain channels with the same name.
         """
         return self._data_scope_name
 
@@ -45500,8 +45039,7 @@ class scout_compute_api_RunChannel(ConjureBeanType):
 
     @builtins.property
     def additional_tags(self) -> Dict[str, "scout_compute_api_StringConstant"]:
-        """
-        Tags to filter the channel by, in addition to tag filters defined for a given Run data scope. Throws on 
+        """Tags to filter the channel by, in addition to tag filters defined for a given Run data scope. Throws on 
 collisions with tag keys already defined for the given Run data scope. Only returns points that match 
 both sets of tag filters. For log series, include arg filters here in addition to tag filters.
         """
@@ -45509,8 +45047,7 @@ both sets of tag filters. For log series, include arg filters here in addition t
 
     @builtins.property
     def tags_to_group_by(self) -> List[str]:
-        """
-        Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
+        """Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
 with an entry for each grouping.
         """
         return self._tags_to_group_by
@@ -45522,8 +45059,7 @@ scout_compute_api_RunChannel.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_ScaleSeries(ConjureBeanType):
-    """
-    For every timestamp specified in the input series, multiply it by a constant factor.
+    """For every timestamp specified in the input series, multiply it by a constant factor.
     """
 
     @builtins.classmethod
@@ -45547,15 +45083,13 @@ class scout_compute_api_ScaleSeries(ConjureBeanType):
 
     @builtins.property
     def scalar(self) -> "scout_compute_api_DoubleConstant":
-        """
-        The constant to multiply each point by
+        """The constant to multiply each point by
         """
         return self._scalar
 
     @builtins.property
     def scalar_unit(self) -> Optional[str]:
-        """
-        The units of the scalar to multiply by. If empty, the scalar is considered unit-less.
+        """The units of the scalar to multiply by. If empty, the scalar is considered unit-less.
         """
         return self._scalar_unit
 
@@ -45566,8 +45100,7 @@ scout_compute_api_ScaleSeries.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_Scatter(ConjureBeanType):
-    """
-    A scatter plot comprised of the values from one input series on the x-axis
+    """A scatter plot comprised of the values from one input series on the x-axis
 and values from another input series on the y-axis, for all points within a requested time range.
     """
 
@@ -45640,8 +45173,7 @@ scout_compute_api_Scatter3d.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_ScatterCurveFit(ConjureBeanType):
-    """
-    Fits a curve to the scatter between two series.
+    """Fits a curve to the scatter between two series.
     """
 
     @builtins.classmethod
@@ -45659,8 +45191,7 @@ class scout_compute_api_ScatterCurveFit(ConjureBeanType):
 
     @builtins.property
     def scatter(self) -> "scout_compute_api_Scatter":
-        """
-        The x and y series to fit to.
+        """The x and y series to fit to.
         """
         return self._scatter
 
@@ -45695,32 +45226,28 @@ class scout_compute_api_ScatterFitOptions(ConjureBeanType):
 
     @builtins.property
     def min_x(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        Inclusive lower bound on the x values to fit to. If omitted, does not set a bound
+        """Inclusive lower bound on the x values to fit to. If omitted, does not set a bound
 (equivalent to setting this to the minimum x value among all points in the time range).
         """
         return self._min_x
 
     @builtins.property
     def max_x(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        Inclusive upper bound on the x values to fit to. If omitted, does not set a bound
+        """Inclusive upper bound on the x values to fit to. If omitted, does not set a bound
 (equivalent to setting this to the maximum x value among all points in the time range).
         """
         return self._max_x
 
     @builtins.property
     def min_y(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        Inclusive lower bound on the y values to fit to. If omitted, does not set a bound
+        """Inclusive lower bound on the y values to fit to. If omitted, does not set a bound
 (equivalent to setting this to the minimum y value among all points in the time range).
         """
         return self._min_y
 
     @builtins.property
     def max_y(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        Inclusive upper bound on the y values to fit to. If omitted, does not set a bound
+        """Inclusive upper bound on the y values to fit to. If omitted, does not set a bound
 (equivalent to setting this to the maximum y value among all points in the time range).
         """
         return self._max_y
@@ -46026,8 +45553,7 @@ scout_compute_api_SeriesVisitor.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_SeriesCrossoverRanges(ConjureBeanType):
-    """
-    Produces a list of zero-duration ranges at the first point where two series cross over one another
+    """Produces a list of zero-duration ranges at the first point where two series cross over one another
     """
 
     @builtins.classmethod
@@ -46058,8 +45584,7 @@ scout_compute_api_SeriesCrossoverRanges.__module__ = "nominal_api.scout_compute_
 
 
 class scout_compute_api_SeriesEqualityRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for which provided series are all equal (or are not all equal).
+    """Produces a list of ranges for which provided series are all equal (or are not all equal).
     """
 
     @builtins.classmethod
@@ -46099,8 +45624,7 @@ class scout_compute_api_SeriesEqualityRanges(ConjureBeanType):
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -46116,14 +45640,16 @@ class scout_compute_api_SeriesSpec(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'rid': ConjureFieldDefinition('rid', api_LogicalSeriesRid),
-            'offset': ConjureFieldDefinition('offset', OptionalTypeWrapper[scout_run_api_Duration])
+            'offset': ConjureFieldDefinition('offset', OptionalTypeWrapper[scout_run_api_Duration]),
+            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[str])
         }
 
-    __slots__: List[str] = ['_rid', '_offset']
+    __slots__: List[str] = ['_rid', '_offset', '_tags_to_group_by']
 
-    def __init__(self, rid: str, offset: Optional["scout_run_api_Duration"] = None) -> None:
+    def __init__(self, rid: str, tags_to_group_by: List[str], offset: Optional["scout_run_api_Duration"] = None) -> None:
         self._rid = rid
         self._offset = offset
+        self._tags_to_group_by = tags_to_group_by
 
     @builtins.property
     def rid(self) -> str:
@@ -46131,10 +45657,13 @@ class scout_compute_api_SeriesSpec(ConjureBeanType):
 
     @builtins.property
     def offset(self) -> Optional["scout_run_api_Duration"]:
-        """
-        The offset of this series relative to the time scale in which the computation is performed.
+        """The offset of this series relative to the time scale in which the computation is performed.
         """
         return self._offset
+
+    @builtins.property
+    def tags_to_group_by(self) -> List[str]:
+        return self._tags_to_group_by
 
 
 scout_compute_api_SeriesSpec.__name__ = "SeriesSpec"
@@ -46278,8 +45807,7 @@ scout_compute_api_SignalFilterConfigurationVisitor.__module__ = "nominal_api.sco
 
 
 class scout_compute_api_SignalFilterSeries(ConjureBeanType):
-    """
-    Applies IIR-based signal filtering to input series. Includes low-pass, high-pass, band-pass, and band-stop
+    """Applies IIR-based signal filtering to input series. Includes low-pass, high-pass, band-pass, and band-stop
 filters. Currently supports variable-order bidirectional Butterworth filters, with fixed-size padding based
 on SciPy output.
     """
@@ -46307,22 +45835,19 @@ on SciPy output.
 
     @builtins.property
     def signal_filter_configuration(self) -> "scout_compute_api_SignalFilterConfiguration":
-        """
-        Filter type and cutoff frequencies.
+        """Filter type and cutoff frequencies.
         """
         return self._signal_filter_configuration
 
     @builtins.property
     def order(self) -> "scout_compute_api_IntegerConstant":
-        """
-        Order of filter. Must be a positive integer, and is effectively doubled for bidirectional filters.
+        """Order of filter. Must be a positive integer, and is effectively doubled for bidirectional filters.
         """
         return self._order
 
     @builtins.property
     def sampling_frequency(self) -> Optional["scout_compute_api_DoubleConstant"]:
-        """
-        The sampling frequency of the input series. Used to calculate normalized frequency for cutoff frequencies.
+        """The sampling frequency of the input series. Used to calculate normalized frequency for cutoff frequencies.
         """
         return self._sampling_frequency
 
@@ -46333,8 +45858,7 @@ scout_compute_api_SignalFilterSeries.__module__ = "nominal_api.scout_compute_api
 
 
 class scout_compute_api_SpatialDecimateStrategy(ConjureBeanType):
-    """
-    Decimate by spatial trees.
+    """Decimate by spatial trees.
 Creates buckets by bisecting on each dimension, creating quadrants for 2d scatter and octants for 3d scatter.
 Continues subdividing by prioritizing larger undivided buckets until reaching the max amount of buckets.
     """
@@ -46354,8 +45878,7 @@ scout_compute_api_SpatialDecimateStrategy.__module__ = "nominal_api.scout_comput
 
 
 class scout_compute_api_StabilityDetectionRanges(ConjureBeanType):
-    """
-    Outputs a set of ranges where the input series is stable. For each point, the min and max are calculated over 
+    """Outputs a set of ranges where the input series is stable. For each point, the min and max are calculated over 
 the specified lookback window, including the current point. A point is considered stable if its value does 
 not deviate from the calculated min and the max by more than the threshold and the total number of points
 within the window is at least the specified amount. The threshold can be either fixed values or percentages 
@@ -46412,8 +45935,7 @@ class scout_compute_api_StabilityWindowConfiguration(ConjureBeanType):
 
     @builtins.property
     def min_points(self) -> Optional["scout_compute_api_IntegerConstant"]:
-        """
-        The minimum number of points within the window to create a stable range. Must be non-negative. If not 
+        """The minimum number of points within the window to create a stable range. Must be non-negative. If not 
 present, will default to 2.
         """
         return self._min_points
@@ -46429,8 +45951,7 @@ scout_compute_api_StabilityWindowConfiguration.__module__ = "nominal_api.scout_c
 
 
 class scout_compute_api_StaleRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for which data does not exist for the specified duration or longer. Increases 
+    """Produces a list of ranges for which data does not exist for the specified duration or longer. Increases 
 window size by the specified staleness threshold on both ends to capture edge cases of data not currently 
 in view.
     """
@@ -46462,8 +45983,7 @@ in view.
 
     @builtins.property
     def start_timestamp(self) -> Optional["scout_compute_api_TimestampConstant"]:
-        """
-        The start timestamp of the range. If not specified, staleness will automatically use view range start.
+        """The start timestamp of the range. If not specified, staleness will automatically use view range start.
         """
         return self._start_timestamp
 
@@ -46478,8 +45998,7 @@ scout_compute_api_StaleRanges.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_StandardDeviation(ConjureBeanType):
-    """
-    The standard deviation of points inside the time window.
+    """The standard deviation of points inside the time window.
     """
 
     @builtins.classmethod
@@ -46651,8 +46170,7 @@ scout_compute_api_StringSetConstantVisitor.__module__ = "nominal_api.scout_compu
 
 
 class scout_compute_api_Sum(ConjureBeanType):
-    """
-    The sum of point values inside the time window.
+    """The sum of point values inside the time window.
     """
 
     @builtins.classmethod
@@ -46670,8 +46188,7 @@ scout_compute_api_Sum.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_SumSeries(ConjureBeanType):
-    """
-    For every timestamp specified in the input series, outputs a value that is the sum for that timestamp
+    """For every timestamp specified in the input series, outputs a value that is the sum for that timestamp
 across all input series.
 Only outputs timestamps where all input series have an entry for that timestamp, or a value can be filled
 using the interpolation configuration.
@@ -46696,8 +46213,7 @@ using the interpolation configuration.
 
     @builtins.property
     def interpolation_configuration(self) -> Optional["scout_compute_api_InterpolationConfiguration"]:
-        """
-        Defaults to forward fill interpolation with a 1s interpolation radius
+        """Defaults to forward fill interpolation with a 1s interpolation radius
         """
         return self._interpolation_configuration
 
@@ -46811,8 +46327,7 @@ class scout_compute_api_SummarizeCartesian(ConjureBeanType):
 
     @builtins.property
     def max_points(self) -> Optional[int]:
-        """
-        The maximum number of points to return in the response. If more points are found, a BucketedCartesianPlot
+        """The maximum number of points to return in the response. If more points are found, a BucketedCartesianPlot
 will be returned. Maximum is 10,000. Defaults to 2,000 if not specified.
         """
         return self._max_points
@@ -46852,8 +46367,7 @@ class scout_compute_api_SummarizeCartesian3d(ConjureBeanType):
 
     @builtins.property
     def max_points(self) -> Optional[int]:
-        """
-        The maximum number of points to return in the response.
+        """The maximum number of points to return in the response.
 If more points are found, a BucketedCartesian3dPlot will be returned.
 Maximum is 10,000. Defaults to 2,000 if not specified.
         """
@@ -46861,8 +46375,7 @@ Maximum is 10,000. Defaults to 2,000 if not specified.
 
     @builtins.property
     def summarization_strategy(self) -> Optional["scout_compute_api_ScatterSummarizationStrategy"]:
-        """
-        The strategy to use when summarizing the series. Only spatial decimation is supported.
+        """The strategy to use when summarizing the series. Only spatial decimation is supported.
         """
         return self._summarization_strategy
 
@@ -46922,8 +46435,7 @@ class scout_compute_api_SummarizeRanges(ConjureBeanType):
 
     @builtins.property
     def max_ranges(self) -> Optional[int]:
-        """
-        The maximum number of ranges to return in the response. If more ranges are found, a RangesSummary
+        """The maximum number of ranges to return in the response. If more ranges are found, a RangesSummary
 will be returned. Defaults to 2000 if not specified.
         """
         return self._max_ranges
@@ -46935,8 +46447,7 @@ scout_compute_api_SummarizeRanges.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_SummarizeSeries(ConjureBeanType):
-    """
-    Summarizes the output of a series node. The output can be a numeric, enum, log, or cartesian series.
+    """Summarizes the output of a series node. The output can be a numeric, enum, log, or cartesian series.
 Summarization strategy should be specified.
     """
 
@@ -46963,23 +46474,20 @@ Summarization strategy should be specified.
 
     @builtins.property
     def resolution(self) -> Optional[int]:
-        """
-        Resolution of the output series specifying time interval between decimated points.
+        """Resolution of the output series specifying time interval between decimated points.
 Picoseconds for picosecond-granularity dataset, nanoseconds otherwise.
         """
         return self._resolution
 
     @builtins.property
     def buckets(self) -> Optional[int]:
-        """
-        Number of points to generate in the output series.
+        """Number of points to generate in the output series.
         """
         return self._buckets
 
     @builtins.property
     def summarization_strategy(self) -> Optional["scout_compute_api_SummarizationStrategy"]:
-        """
-        The strategy to use when summarizing the series.
+        """The strategy to use when summarizing the series.
         """
         return self._summarization_strategy
 
@@ -47093,8 +46601,7 @@ scout_compute_api_ThresholdOperator.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_ThresholdingRanges(ConjureBeanType):
-    """
-    Produces a list of ranges for which the threshold condition is satisfied.
+    """Produces a list of ranges for which the threshold condition is satisfied.
     """
 
     @builtins.classmethod
@@ -47153,8 +46660,7 @@ class scout_compute_api_TimeBucketedGeoPlot(ConjureBeanType):
 
     @builtins.property
     def timestamps(self) -> List["api_Timestamp"]:
-        """
-        The end of the bucket, exclusive.
+        """The end of the bucket, exclusive.
         """
         return self._timestamps
 
@@ -47169,8 +46675,7 @@ scout_compute_api_TimeBucketedGeoPlot.__module__ = "nominal_api.scout_compute_ap
 
 
 class scout_compute_api_TimeDifferenceSeries(ConjureBeanType):
-    """
-    Outputs a new series where each value is the difference between the time of the current and previous points.
+    """Outputs a new series where each value is the difference between the time of the current and previous points.
     """
 
     @builtins.classmethod
@@ -47192,8 +46697,7 @@ class scout_compute_api_TimeDifferenceSeries(ConjureBeanType):
 
     @builtins.property
     def time_unit(self) -> Optional["api_TimeUnit"]:
-        """
-        The time unit used to define the output values. Defaults to seconds if not specified.
+        """The time unit used to define the output values. Defaults to seconds if not specified.
         """
         return self._time_unit
 
@@ -47204,8 +46708,7 @@ scout_compute_api_TimeDifferenceSeries.__module__ = "nominal_api.scout_compute_a
 
 
 class scout_compute_api_TimeSeriesCurveFit(ConjureBeanType):
-    """
-    Fits a curve to a series vs its timestamps.
+    """Fits a curve to a series vs its timestamps.
     """
 
     @builtins.classmethod
@@ -47223,8 +46726,7 @@ class scout_compute_api_TimeSeriesCurveFit(ConjureBeanType):
 
     @builtins.property
     def series(self) -> "scout_compute_api_NumericSeries":
-        """
-        The series to fit. Timestamps will be used as x values and data as y values. The leftmost (earliest)
+        """The series to fit. Timestamps will be used as x values and data as y values. The leftmost (earliest)
 timestamp will be used as the value of 0, and all other timestamps will be relative to that.
         """
         return self._series
@@ -47254,8 +46756,7 @@ class scout_compute_api_TimeSeriesFitOptions(ConjureBeanType):
 
     @builtins.property
     def time_unit(self) -> Optional["api_TimeUnit"]:
-        """
-        Time unit used for the timestamps to fit against. Defaults to seconds if not specified.
+        """Time unit used for the timestamps to fit against. Defaults to seconds if not specified.
         """
         return self._time_unit
 
@@ -47404,8 +46905,7 @@ scout_compute_api_UnaryArithmeticOperation.__module__ = "nominal_api.scout_compu
 
 
 class scout_compute_api_UnaryArithmeticSeries(ConjureBeanType):
-    """
-    Applies a point-wise transformation to a series. The transformation function is applied to every
+    """Applies a point-wise transformation to a series. The transformation function is applied to every
 individual data point.
     """
 
@@ -47558,8 +47058,7 @@ scout_compute_api_UnitComputationErrorVisitor.__module__ = "nominal_api.scout_co
 
 
 class scout_compute_api_UnitConversionSeries(ConjureBeanType):
-    """
-    Convert the given series to a different unit.
+    """Convert the given series to a different unit.
     """
 
     @builtins.classmethod
@@ -47672,8 +47171,7 @@ class scout_compute_api_UnitResult(ConjureUnionType):
 
     @builtins.property
     def no_unit_available(self) -> Optional[List["scout_compute_api_UnitComputationError"]]:
-        """
-        The resulting values have no units associated. If this is because of an error, it is listed here.
+        """The resulting values have no units associated. If this is because of an error, it is listed here.
         """
         return self._no_unit_available
 
@@ -47708,8 +47206,7 @@ scout_compute_api_UnitResultVisitor.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_UnitsMissing(ConjureBeanType):
-    """
-    At least one input is missing a unit.
+    """At least one input is missing a unit.
     """
 
     @builtins.classmethod
@@ -47734,8 +47231,7 @@ scout_compute_api_UnitsMissing.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_ValueDifferenceSeries(ConjureBeanType):
-    """
-    Outputs a new series where each value is the difference between the values of the current and previous point.
+    """Outputs a new series where each value is the difference between the values of the current and previous point.
     """
 
     @builtins.classmethod
@@ -47757,8 +47253,7 @@ class scout_compute_api_ValueDifferenceSeries(ConjureBeanType):
 
     @builtins.property
     def negative_values_configuration(self) -> Optional["scout_compute_api_NegativeValueConfiguration"]:
-        """
-        Defines the strategy for handling negative output values. Defaults to allowNegativeValues if not specified.
+        """Defines the strategy for handling negative output values. Defaults to allowNegativeValues if not specified.
         """
         return self._negative_values_configuration
 
@@ -47769,8 +47264,7 @@ scout_compute_api_ValueDifferenceSeries.__module__ = "nominal_api.scout_compute_
 
 
 class scout_compute_api_ValueMapSeries(ConjureBeanType):
-    """
-    Maps a continuous numeric series to a discrete enum series using the specified value ranges.
+    """Maps a continuous numeric series to a discrete enum series using the specified value ranges.
     """
 
     @builtins.classmethod
@@ -47790,15 +47284,13 @@ class scout_compute_api_ValueMapSeries(ConjureBeanType):
 
     @builtins.property
     def input(self) -> "scout_compute_api_NumericSeries":
-        """
-        The input series to map to an enumerated series
+        """The input series to map to an enumerated series
         """
         return self._input
 
     @builtins.property
     def mapping(self) -> List["scout_compute_api_RangeMap"]:
-        """
-        The output of the first capturing range will be used. Ranges are start inclusive, end exclusive, must not overlap,
+        """The output of the first capturing range will be used. Ranges are start inclusive, end exclusive, must not overlap,
 and increasing from lowest to highest. Ranges can be open ended to the edge of the next or prior range.
 The first range can be open ended to negative infinity, and the last range can be open ended to positive infinity.
         """
@@ -47806,8 +47298,7 @@ The first range can be open ended to negative infinity, and the last range can b
 
     @builtins.property
     def default(self) -> Optional["scout_compute_api_StringConstant"]:
-        """
-        The default value if not captured by any range. If not specified, points will be filtered.
+        """The default value if not captured by any range. If not specified, points will be filtered.
         """
         return self._default
 
@@ -48584,16 +48075,14 @@ class scout_compute_api_deprecated_EnumFilterRangesNode(ConjureBeanType):
 
     @builtins.property
     def min_points(self) -> Optional[int]:
-        """
-        The minimum number of points for which this condition is satisfied. Must be non-negative. If not present,
+        """The minimum number of points for which this condition is satisfied. Must be non-negative. If not present,
 will default to 1.
         """
         return self._min_points
 
     @builtins.property
     def min_duration(self) -> Optional["scout_run_api_Duration"]:
-        """
-        The minimum duration for which this condition is satisfied. Must be non-negative. If not present, will
+        """The minimum duration for which this condition is satisfied. Must be non-negative. If not present, will
 default to 1 nanosecond.
         """
         return self._min_duration
@@ -49932,16 +49421,14 @@ class scout_compute_api_deprecated_ThresholdingRangesNode(ConjureBeanType):
 
     @builtins.property
     def min_points(self) -> Optional[int]:
-        """
-        The minimum number of points for which this condition is satisfied. Must be non-negative. If not present,
+        """The minimum number of points for which this condition is satisfied. Must be non-negative. If not present,
 will default to 1.
         """
         return self._min_points
 
     @builtins.property
     def min_duration(self) -> Optional["scout_run_api_Duration"]:
-        """
-        The minimum duration for which this condition is satisfied. Must be non-negative. If not present, will
+        """The minimum duration for which this condition is satisfied. Must be non-negative. If not present, will
 default to 1 nanosecond.
         """
         return self._min_duration
@@ -50582,8 +50069,7 @@ scout_compute_resolved_api_Cartesian3dNodeVisitor.__module__ = "nominal_api.scou
 
 
 class scout_compute_resolved_api_CartesianBounds(ConjureBeanType):
-    """
-    Min/max bounds of an XY Cartesian plot, inclusive.
+    """Min/max bounds of an XY Cartesian plot, inclusive.
     """
 
     @builtins.classmethod
@@ -51187,8 +50673,7 @@ scout_compute_resolved_api_EnumFilterRangesNode.__module__ = "nominal_api.scout_
 
 
 class scout_compute_resolved_api_EnumFilterTransformationSeriesNode(ConjureBeanType):
-    """
-    Outputs the values of the enum plot value within the ranges specified by a ranges node
+    """Outputs the values of the enum plot value within the ranges specified by a ranges node
     """
 
     @builtins.classmethod
@@ -52650,8 +52135,7 @@ scout_compute_resolved_api_NotRangesNode.__module__ = "nominal_api.scout_compute
 
 
 class scout_compute_resolved_api_NumericFilterTransformationSeriesNode(ConjureBeanType):
-    """
-    Outputs the values of the numeric plot value within the ranges specified by a ranges node
+    """Outputs the values of the numeric plot value within the ranges specified by a ranges node
     """
 
     @builtins.classmethod
@@ -55183,8 +54667,7 @@ scout_compute_resolved_api_SignalFilterConfigurationVisitor.__module__ = "nomina
 
 
 class scout_compute_resolved_api_SignalFilterSeriesNode(ConjureBeanType):
-    """
-    Applies IIR-based signal filtering to input series. Includes low-pass, high-pass, band-pass, and band-stop
+    """Applies IIR-based signal filtering to input series. Includes low-pass, high-pass, band-pass, and band-stop
 filters. Currently supports variable-order bidirectional Butterworth filters, with fixed-size padding based
 on SciPy output.
     """
@@ -55212,22 +54695,19 @@ on SciPy output.
 
     @builtins.property
     def signal_filter_configuration(self) -> "scout_compute_resolved_api_SignalFilterConfiguration":
-        """
-        Configuration for the signal filter, including filter type, cutoff frequency, and order.
+        """Configuration for the signal filter, including filter type, cutoff frequency, and order.
         """
         return self._signal_filter_configuration
 
     @builtins.property
     def order(self) -> int:
-        """
-        Order of filter. Must be a positive integer, and is effectively doubled for bidirectional filters.
+        """Order of filter. Must be a positive integer, and is effectively doubled for bidirectional filters.
         """
         return self._order
 
     @builtins.property
     def sampling_frequency(self) -> Optional[float]:
-        """
-        The sampling frequency of the input series. Used to calculate normalized frequency for cutoff frequencies.
+        """The sampling frequency of the input series. Used to calculate normalized frequency for cutoff frequencies.
 Defaults to number of points divided by timespan of series.
         """
         return self._sampling_frequency
@@ -55549,8 +55029,7 @@ scout_compute_resolved_api_SummarizeRangesNode.__module__ = "nominal_api.scout_c
 
 
 class scout_compute_resolved_api_SummarizeSeriesNode(ConjureBeanType):
-    """
-    Summarizes the output of a series node. The output can be a numeric, enum, log, or cartesian series.
+    """Summarizes the output of a series node. The output can be a numeric, enum, log, or cartesian series.
 Summarization strategy should be specified.
     """
 
@@ -55573,8 +55052,7 @@ Summarization strategy should be specified.
 
     @builtins.property
     def summarization_strategy(self) -> "scout_compute_api_SummarizationStrategy":
-        """
-        The strategy to use when summarizing the series.
+        """The strategy to use when summarizing the series.
         """
         return self._summarization_strategy
 
@@ -55952,8 +55430,7 @@ scout_compute_resolved_api_Window.__module__ = "nominal_api.scout_compute_resolv
 
 
 class scout_dataexport_api_AllTimestampsForwardFillStrategy(ConjureBeanType):
-    """
-    All timestamps will be kept.
+    """All timestamps will be kept.
 The value of a channel at a timestamp will be its latest
 value, within the provided look back period.
     """
@@ -56014,14 +55491,13 @@ scout_dataexport_api_Csv.__module__ = "nominal_api.scout_dataexport_api"
 
 
 class scout_dataexport_api_DataExportService(Service):
-    """
-    Provides functionality for exporting data from Scout.
+    """Provides functionality for exporting data from Scout.
     """
 
     def export_channel_data(self, auth_header: str, request: "scout_dataexport_api_ExportDataRequest") -> Any:
+        """Required permissions matches those required to compute the channels via the compute API.
         """
-        Required permissions matches those required to compute the channels via the compute API.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/octet-stream',
@@ -56032,10 +55508,10 @@ class scout_dataexport_api_DataExportService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/export/v1/export'
         _path = _path.format(**_path_params)
@@ -56281,7 +55757,8 @@ scout_dataexport_api_Iso8601TimestampFormat.__module__ = "nominal_api.scout_data
 
 
 class scout_dataexport_api_MergeTimestampStrategy(ConjureUnionType):
-    """How to handle timestamps that are not aligned."""
+    """How to handle timestamps that are not aligned.
+    """
     _none: Optional["scout_dataexport_api_NoneStrategy"] = None
     _all_timestamps_forward_fill: Optional["scout_dataexport_api_AllTimestampsForwardFillStrategy"] = None
 
@@ -56359,8 +55836,7 @@ scout_dataexport_api_MergeTimestampStrategyVisitor.__module__ = "nominal_api.sco
 
 
 class scout_dataexport_api_NoneStrategy(ConjureBeanType):
-    """
-    Do nothing. The value of a channel will be empty at
+    """Do nothing. The value of a channel will be empty at
 timestamps not present in its original time series.
     """
 
@@ -56379,8 +55855,7 @@ scout_dataexport_api_NoneStrategy.__module__ = "nominal_api.scout_dataexport_api
 
 
 class scout_dataexport_api_RelativeTimestampFormat(ConjureBeanType):
-    """
-    Returns in relative time to the supplied timestamp.
+    """Returns in relative time to the supplied timestamp.
     """
 
     @builtins.classmethod
@@ -56412,7 +55887,8 @@ scout_dataexport_api_RelativeTimestampFormat.__module__ = "nominal_api.scout_dat
 
 class scout_dataexport_api_ResolutionOption(ConjureUnionType):
     """The minimum desired step between adjacent timestamps. If multiple values are available for a timestamp,
-the mean of the values will be used for numeric types and the mode of the values will be used for enum types."""
+the mean of the values will be used for numeric types and the mode of the values will be used for enum types.
+    """
     _nanoseconds: Optional[int] = None
     _buckets: Optional[int] = None
     _undecimated: Optional["scout_dataexport_api_UndecimatedResolution"] = None
@@ -56617,8 +56093,7 @@ scout_dataexport_api_TimestampFormatVisitor.__module__ = "nominal_api.scout_data
 
 
 class scout_dataexport_api_UndecimatedResolution(ConjureBeanType):
-    """
-    Full resolution.
+    """Full resolution.
     """
 
     @builtins.classmethod
@@ -56636,8 +56111,7 @@ scout_dataexport_api_UndecimatedResolution.__module__ = "nominal_api.scout_datae
 
 
 class scout_datareview_api_ArchiveDataReview(ConjureBeanType):
-    """
-    Archive the data review which created this check alert. Only performable via the archive data review endpoint;
+    """Archive the data review which created this check alert. Only performable via the archive data review endpoint;
 not supported by Perform Check Alert Action.
     """
 
@@ -56686,8 +56160,7 @@ class scout_datareview_api_AutomaticCheckEvaluation(ConjureBeanType):
 
     @builtins.property
     def check_implementation_index(self) -> Optional[int]:
-        """
-        Checks can define a single range computation which can evaluate over multiple implementations of a context.
+        """Checks can define a single range computation which can evaluate over multiple implementations of a context.
 The check implementation index will correspond to the implementation index of the check condition.
         """
         return self._check_implementation_index
@@ -57436,8 +56909,7 @@ class scout_datareview_api_BatchInitiateDataReviewRequest(ConjureBeanType):
 
     @builtins.property
     def notification_configurations(self) -> List["scout_integrations_api_NotificationConfiguration"]:
-        """
-        If provided, checklist violations will be sent to the specified integrations.
+        """If provided, checklist violations will be sent to the specified integrations.
         """
         return self._notification_configurations
 
@@ -57448,8 +56920,7 @@ scout_datareview_api_BatchInitiateDataReviewRequest.__module__ = "nominal_api.sc
 
 
 class scout_datareview_api_BatchInitiateDataReviewResponse(ConjureBeanType):
-    """
-    Responses are returned in the same order as the requests.
+    """Responses are returned in the same order as the requests.
     """
 
     @builtins.classmethod
@@ -58064,43 +57535,37 @@ class scout_datareview_api_CheckAlertsHistogramRequest(ConjureBeanType):
 
     @builtins.property
     def num_bins(self) -> Optional[int]:
-        """
-        Defaults to 100. Throws if larger than 1_000.
+        """Defaults to 100. Throws if larger than 1_000.
         """
         return self._num_bins
 
     @builtins.property
     def search_text(self) -> Optional[str]:
-        """
-        Matches on check name
+        """Matches on check name
         """
         return self._search_text
 
     @builtins.property
     def distribution_variable(self) -> "scout_datareview_api_HistogramDistributionVariable":
-        """
-        Represents the data points on the x-axis of a histogram.
+        """Represents the data points on the x-axis of a histogram.
         """
         return self._distribution_variable
 
     @builtins.property
     def sub_group_variable(self) -> Optional["scout_datareview_api_HistogramSubGroupVariable"]:
-        """
-        The variable that divides the data into distinct groups for comparison within the histogram.
+        """The variable that divides the data into distinct groups for comparison within the histogram.
         """
         return self._sub_group_variable
 
     @builtins.property
     def start_time_after(self) -> "api_Timestamp":
-        """
-        Filters to start times after this time, inclusive.
+        """Filters to start times after this time, inclusive.
         """
         return self._start_time_after
 
     @builtins.property
     def start_time_before(self) -> "api_Timestamp":
-        """
-        Filters to start times before this time, exclusive.
+        """Filters to start times before this time, exclusive.
         """
         return self._start_time_before
 
@@ -58146,16 +57611,14 @@ class scout_datareview_api_CheckAlertsHistogramRequest(ConjureBeanType):
 
     @builtins.property
     def show_archived(self) -> Optional[bool]:
-        """
-        To be deprecated. Use archivedStatuses instead. If not present, will not show archived data reviews 
+        """To be deprecated. Use archivedStatuses instead. If not present, will not show archived data reviews 
 in search results.
         """
         return self._show_archived
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Filters search on check alerts based on the archived statuses provided. 
+        """Filters search on check alerts based on the archived statuses provided. 
 Default is NOT_ARCHIVED only if none are provided.
         """
         return self._archived_statuses
@@ -58448,8 +57911,7 @@ scout_datareview_api_CloseActionVisitor.__module__ = "nominal_api.scout_datarevi
 
 
 class scout_datareview_api_CloseAllLinkedAlerts(ConjureBeanType):
-    """
-    Close all alerts associated with the same notebook with the same comment.
+    """Close all alerts associated with the same notebook with the same comment.
     """
 
     @builtins.classmethod
@@ -58467,8 +57929,7 @@ scout_datareview_api_CloseAllLinkedAlerts.__module__ = "nominal_api.scout_datare
 
 
 class scout_datareview_api_CloseAndDetachFromNotebook(ConjureBeanType):
-    """
-    Close the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
+    """Close the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
 alerts, those alerts will maintain the reference to the notebook and the notebook will remain unlocked.
     """
 
@@ -58487,8 +57948,7 @@ scout_datareview_api_CloseAndDetachFromNotebook.__module__ = "nominal_api.scout_
 
 
 class scout_datareview_api_CloseAndDuplicatePreviouslyLinkedNotebook(ConjureBeanType):
-    """
-    Close the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
+    """Close the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
 alerts, the notebook will be duplicated and the alert will be linked to the new notebook. The new notebook
 will be locked.
     """
@@ -58508,8 +57968,7 @@ scout_datareview_api_CloseAndDuplicatePreviouslyLinkedNotebook.__module__ = "nom
 
 
 class scout_datareview_api_CloseAndLinkToNotebook(ConjureBeanType):
-    """
-    Close the alert and link to notebook. Throws if the associated notebook has open alerts.
+    """Close the alert and link to notebook. Throws if the associated notebook has open alerts.
     """
 
     @builtins.classmethod
@@ -58632,8 +58091,7 @@ scout_datareview_api_CloseStrategyVisitor.__module__ = "nominal_api.scout_datare
 
 
 class scout_datareview_api_CloseWithFurtherAction(ConjureBeanType):
-    """
-    Close the alert with further action. If the alert is linked to the same notebook as other alerts, the other 
+    """Close the alert with further action. If the alert is linked to the same notebook as other alerts, the other 
 alerts will also be closed with further action. This will also lock the associated notebook.
     """
 
@@ -58656,8 +58114,7 @@ alerts will also be closed with further action. This will also lock the associat
 
     @builtins.property
     def strategy(self) -> Optional["scout_datareview_api_CloseStrategy"]:
-        """
-        Defines the strategy for reopening the alert and any alerts linked via an associated notebook. If not 
+        """Defines the strategy for reopening the alert and any alerts linked via an associated notebook. If not 
 provided, the alert will be closed naively and throw if it leaves a linked notebook in an invalid state.
         """
         return self._strategy
@@ -58669,8 +58126,7 @@ scout_datareview_api_CloseWithFurtherAction.__module__ = "nominal_api.scout_data
 
 
 class scout_datareview_api_CloseWithIgnoreAlert(ConjureBeanType):
-    """
-    Close the alert with ignore. If the alert is linked to the same notebook as other alerts, the other 
+    """Close the alert with ignore. If the alert is linked to the same notebook as other alerts, the other 
 alerts will also be closed with ignore. This will also lock the associated notebook.
     """
 
@@ -58693,8 +58149,7 @@ alerts will also be closed with ignore. This will also lock the associated noteb
 
     @builtins.property
     def strategy(self) -> Optional["scout_datareview_api_CloseStrategy"]:
-        """
-        Defines the strategy for closing the alert and any alerts linked via an associated notebook. If not 
+        """Defines the strategy for closing the alert and any alerts linked via an associated notebook. If not 
 provided, the default strategy is closeAllLinkedAlerts.
         """
         return self._strategy
@@ -58735,8 +58190,7 @@ scout_datareview_api_ClosedWithFurtherActionState.__module__ = "nominal_api.scou
 
 
 class scout_datareview_api_CreateDataReviewRequest(ConjureBeanType):
-    """
-    If commit not is provided, the latest commit on main will be used.
+    """If commit not is provided, the latest commit on main will be used.
     """
 
     @builtins.classmethod
@@ -58867,15 +58321,14 @@ scout_datareview_api_DataReviewPage.__module__ = "nominal_api.scout_datareview_a
 
 
 class scout_datareview_api_DataReviewService(Service):
-    """
-    The data review service manages the evaluation, disposition, and historical record of checks alerts.
+    """The data review service manages the evaluation, disposition, and historical record of checks alerts.
     """
 
     def batch_initiate(self, auth_header: str, request: "scout_datareview_api_BatchInitiateDataReviewRequest") -> "scout_datareview_api_BatchInitiateDataReviewResponse":
-        """
-        For each request, initiates data review for the requested run and checklist and executes 
+        """For each request, initiates data review for the requested run and checklist and executes 
 the automatic checks against the run.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -58886,10 +58339,10 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/batch-initiate'
         _path = _path.format(**_path_params)
@@ -58905,9 +58358,9 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), scout_datareview_api_BatchInitiateDataReviewResponse, self._return_none_for_unknown_union_types)
 
     def rerun_failed_automatic_checks(self, auth_header: str, request: "scout_datareview_api_RerunFailedAutomaticChecksRequest") -> None:
+        """Re-executes the most recent failed automatic checks for the data review.
         """
-        Re-executes the most recent failed automatic checks for the data review.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -58918,10 +58371,10 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/rerun-failed-automatic-checks'
         _path = _path.format(**_path_params)
@@ -58936,9 +58389,9 @@ the automatic checks against the run.
         return
 
     def find_data_reviews(self, auth_header: str, request: "scout_datareview_api_FindDataReviewsRequest") -> "scout_datareview_api_DataReviewPage":
+        """Returns the data reviews under the provided search parameters.
         """
-        Returns the data reviews under the provided search parameters.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -58949,10 +58402,10 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/search'
         _path = _path.format(**_path_params)
@@ -58968,9 +58421,9 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), scout_datareview_api_DataReviewPage, self._return_none_for_unknown_union_types)
 
     def get(self, auth_header: str, data_review_rid: str) -> "scout_datareview_api_DataReview":
+        """Throws if not found.
         """
-        Throws if not found.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -58980,8 +58433,8 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataReviewRid': data_review_rid,
+        _path_params: Dict[str, str] = {
+            'dataReviewRid': quote(str(_conjure_encoder.default(data_review_rid)), safe=''),
         }
 
         _json: Any = None
@@ -59000,9 +58453,9 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), scout_datareview_api_DataReview, self._return_none_for_unknown_union_types)
 
     def get_check_alert(self, auth_header: str, check_alert_rid: str) -> "scout_datareview_api_CheckAlert":
+        """Throws if not found.
         """
-        Throws if not found.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59012,8 +58465,8 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'checkAlertRid': check_alert_rid,
+        _path_params: Dict[str, str] = {
+            'checkAlertRid': quote(str(_conjure_encoder.default(check_alert_rid)), safe=''),
         }
 
         _json: Any = None
@@ -59032,9 +58485,9 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), scout_datareview_api_CheckAlert, self._return_none_for_unknown_union_types)
 
     def get_check_alerts_for_data_review(self, auth_header: str, data_review_rid: str) -> List["scout_datareview_api_CheckAlert"]:
+        """Gets all check alerts from the provided data review.
         """
-        Gets all check alerts from the provided data review.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59044,8 +58497,8 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataReviewRid': data_review_rid,
+        _path_params: Dict[str, str] = {
+            'dataReviewRid': quote(str(_conjure_encoder.default(data_review_rid)), safe=''),
         }
 
         _json: Any = None
@@ -59064,9 +58517,9 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), List[scout_datareview_api_CheckAlert], self._return_none_for_unknown_union_types)
 
     def get_check_alerts_histogram(self, auth_header: str, request: "scout_datareview_api_CheckAlertsHistogramRequest") -> "scout_datareview_api_CheckAlertsHistogramResponse":
+        """Returns a histogram of alerts that occur across the provided runs or assets. At least one run or asset must be specified.
         """
-        Returns a histogram of alerts that occur across the provided runs or assets. At least one run or asset must be specified.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59077,10 +58530,10 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/check-alerts/histogram'
         _path = _path.format(**_path_params)
@@ -59096,9 +58549,9 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), scout_datareview_api_CheckAlertsHistogramResponse, self._return_none_for_unknown_union_types)
 
     def search_check_alerts(self, auth_header: str, request: "scout_datareview_api_SearchCheckAlertsRequest") -> "scout_datareview_api_SearchCheckAlertsResponse":
+        """Returns the check alerts under the provided search parameters. At least one run or asset must be specified.
         """
-        Returns the check alerts under the provided search parameters. At least one run or asset must be specified.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59109,10 +58562,10 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/check-alerts'
         _path = _path.format(**_path_params)
@@ -59128,9 +58581,9 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), scout_datareview_api_SearchCheckAlertsResponse, self._return_none_for_unknown_union_types)
 
     def get_check_alert_action_log(self, auth_header: str, check_alert_rid: str) -> "scout_datareview_api_CheckAlertActionLog":
+        """Returns a record of the historical actions taken on the provided check alert.
         """
-        Returns a record of the historical actions taken on the provided check alert.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59140,8 +58593,8 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'checkAlertRid': check_alert_rid,
+        _path_params: Dict[str, str] = {
+            'checkAlertRid': quote(str(_conjure_encoder.default(check_alert_rid)), safe=''),
         }
 
         _json: Any = None
@@ -59160,10 +58613,10 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), scout_datareview_api_CheckAlertActionLog, self._return_none_for_unknown_union_types)
 
     def get_check_alert_counts_for_notebooks(self, auth_header: str, rids: List[str] = None) -> Dict[str, int]:
-        """
-        Returns the number of alerts attached to each provided notebook.
+        """Returns the number of alerts attached to each provided notebook.
         """
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59174,10 +58627,10 @@ the automatic checks against the run.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v2/data-review/get-check-alert-counts-for-notebooks'
         _path = _path.format(**_path_params)
@@ -59193,11 +58646,11 @@ the automatic checks against the run.
         return _decoder.decode(_response.json(), Dict[scout_rids_api_NotebookRid, int], self._return_none_for_unknown_union_types)
 
     def get_check_alert_status_for_notebooks(self, auth_header: str, rids: List[str] = None) -> Dict[str, Optional["scout_datareview_api_CheckAlertStatus"]]:
-        """
-        Returns the check alert status of any linked violations for the provided notebooks. If none exist, an empty
+        """Returns the check alert status of any linked violations for the provided notebooks. If none exist, an empty
 optional is returned.
         """
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59208,10 +58661,10 @@ optional is returned.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v2/data-review/get-check-alert-status-for-notebooks'
         _path = _path.format(**_path_params)
@@ -59227,9 +58680,9 @@ optional is returned.
         return _decoder.decode(_response.json(), Dict[scout_rids_api_NotebookRid, OptionalTypeWrapper[scout_datareview_api_CheckAlertStatus]], self._return_none_for_unknown_union_types)
 
     def perform_check_alert_action(self, auth_header: str, check_alert_rid: str, request: "scout_datareview_api_CheckAlertAction") -> "scout_datareview_api_CheckAlert":
+        """Applies a check alert action to the specified check alert RID.
         """
-        Applies a check alert action to the specified check alert RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59240,11 +58693,11 @@ optional is returned.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'checkAlertRid': check_alert_rid,
+        _path_params: Dict[str, str] = {
+            'checkAlertRid': quote(str(_conjure_encoder.default(check_alert_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/check-alerts/{checkAlertRid}'
         _path = _path.format(**_path_params)
@@ -59260,10 +58713,10 @@ optional is returned.
         return _decoder.decode(_response.json(), scout_datareview_api_CheckAlert, self._return_none_for_unknown_union_types)
 
     def batch_perform_check_alert_action(self, auth_header: str, request: "scout_datareview_api_BatchCheckAlertActionRequest") -> "scout_datareview_api_BatchCheckAlertActionResponse":
-        """
-        Applies a check alert action to the specified check alert RIDs. If any of the check actions fail,
+        """Applies a check alert action to the specified check alert RIDs. If any of the check actions fail,
 then none of the check actions will be applied.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59274,10 +58727,10 @@ then none of the check actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/check-alerts/batch-perform-action'
         _path = _path.format(**_path_params)
@@ -59293,10 +58746,10 @@ then none of the check actions will be applied.
         return _decoder.decode(_response.json(), scout_datareview_api_BatchCheckAlertActionResponse, self._return_none_for_unknown_union_types)
 
     def batch_perform_automatic_check_evaluation_review_action(self, auth_header: str, request: "scout_datareview_api_BatchAutomaticCheckEvaluationActionRequest") -> "scout_datareview_api_BatchAutomaticCheckEvaluationActionResponse":
-        """
-        Applies an action to the specified check evaluation RIDs. If any of the check actions fail,
+        """Applies an action to the specified check evaluation RIDs. If any of the check actions fail,
 then none of the actions will be applied.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59307,10 +58760,10 @@ then none of the actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/automatic-check-evaluation/batch-perform-action'
         _path = _path.format(**_path_params)
@@ -59326,6 +58779,7 @@ then none of the actions will be applied.
         return _decoder.decode(_response.json(), scout_datareview_api_BatchAutomaticCheckEvaluationActionResponse, self._return_none_for_unknown_union_types)
 
     def get_automatic_check_evaluation_action_log(self, auth_header: str, rid: str) -> "scout_datareview_api_AutomaticCheckEvaluationActionLog":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59335,8 +58789,8 @@ then none of the actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -59355,10 +58809,10 @@ then none of the actions will be applied.
         return _decoder.decode(_response.json(), scout_datareview_api_AutomaticCheckEvaluationActionLog, self._return_none_for_unknown_union_types)
 
     def batch_perform_manual_check_alert_action(self, auth_header: str, request: "scout_datareview_api_BatchManualCheckEvaluationActionRequest") -> None:
-        """
-        Applies an action to the specified check evaluation RIDs. If any of the check actions fail,
+        """Applies an action to the specified check evaluation RIDs. If any of the check actions fail,
 then none of the actions will be applied.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59369,10 +58823,10 @@ then none of the actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/data-review/manual-check-evaluation/batch-perform-action'
         _path = _path.format(**_path_params)
@@ -59387,9 +58841,9 @@ then none of the actions will be applied.
         return
 
     def get_manual_check_evaluation_action_log(self, auth_header: str, rid: str) -> "scout_datareview_api_ManualCheckEvaluationActionLog":
+        """Returns a record of the historical manual actions taken on the provided check evaluation.
         """
-        Returns a record of the historical manual actions taken on the provided check evaluation.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59399,8 +58853,8 @@ then none of the actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -59419,9 +58873,9 @@ then none of the actions will be applied.
         return _decoder.decode(_response.json(), scout_datareview_api_ManualCheckEvaluationActionLog, self._return_none_for_unknown_union_types)
 
     def archive_data_review(self, auth_header: str, data_review_rid: str) -> bool:
+        """Archives the data review with the given rid.
         """
-        Archives the data review with the given rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59431,8 +58885,8 @@ then none of the actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataReviewRid': data_review_rid,
+        _path_params: Dict[str, str] = {
+            'dataReviewRid': quote(str(_conjure_encoder.default(data_review_rid)), safe=''),
         }
 
         _json: Any = None
@@ -59451,10 +58905,10 @@ then none of the actions will be applied.
         return _decoder.decode(_response.json(), bool, self._return_none_for_unknown_union_types)
 
     def batch_archive_data_review(self, auth_header: str, rids: List[str] = None) -> None:
-        """
-        Batch archives the data reviews with the given rids.
+        """Batch archives the data reviews with the given rids.
         """
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59465,10 +58919,10 @@ then none of the actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/scout/v2/data-review/batch-archive'
         _path = _path.format(**_path_params)
@@ -59483,9 +58937,9 @@ then none of the actions will be applied.
         return
 
     def unarchive_data_review(self, auth_header: str, data_review_rid: str) -> None:
+        """Unarchives the data review with the given rid.
         """
-        Unarchives the data review with the given rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -59495,8 +58949,8 @@ then none of the actions will be applied.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataReviewRid': data_review_rid,
+        _path_params: Dict[str, str] = {
+            'dataReviewRid': quote(str(_conjure_encoder.default(data_review_rid)), safe=''),
         }
 
         _json: Any = None
@@ -59520,8 +58974,7 @@ scout_datareview_api_DataReviewService.__module__ = "nominal_api.scout_datarevie
 
 
 class scout_datareview_api_DuplicateAndLinkNotebook(ConjureBeanType):
-    """
-    Duplicate the notebook and link the alert to it.
+    """Duplicate the notebook and link the alert to it.
     """
 
     @builtins.classmethod
@@ -59626,8 +59079,7 @@ scout_datareview_api_FailedToExecuteState.__module__ = "nominal_api.scout_datare
 
 
 class scout_datareview_api_FindDataReviewsRequest(ConjureBeanType):
-    """
-    If both sets are empty, an empty page is returned.
+    """If both sets are empty, an empty page is returned.
 If one set is empty, that field is not considered for filtering (like a wildcard).
 If commitId is omitted from a ChecklistRef, it will match all commits.
     """
@@ -59673,23 +59125,20 @@ If commitId is omitted from a ChecklistRef, it will match all commits.
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 1000. Will throw if larger than 1000.
+        """Defaults to 1000. Will throw if larger than 1000.
         """
         return self._page_size
 
     @builtins.property
     def show_archived(self) -> Optional[bool]:
-        """
-        To be deprecated. Use archivedStatuses instead. Allows for inclusion of archived data reviews 
+        """To be deprecated. Use archivedStatuses instead. Allows for inclusion of archived data reviews 
 in search results alongside non-archived ones. Defaults to false if not specified.
         """
         return self._show_archived
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Filters search on data reviews based on the archived statuses provided. 
+        """Filters search on data reviews based on the archived statuses provided. 
 Default is NOT_ARCHIVED only if none are provided.
         """
         return self._archived_statuses
@@ -60052,8 +59501,7 @@ class scout_datareview_api_LinkNotebook(ConjureBeanType):
 
     @builtins.property
     def strategy(self) -> Optional["scout_datareview_api_LinkNotebookStrategy"]:
-        """
-        Defines the strategy for reconciling the alert with any linked alerts via the associated notebook. If not
+        """Defines the strategy for reconciling the alert with any linked alerts via the associated notebook. If not
 provided, the alert will be linked naively and throw if it leaves a linked notebook in an invalid state.
         """
         return self._strategy
@@ -60695,8 +60143,7 @@ class scout_datareview_api_Reopen(ConjureBeanType):
 
     @builtins.property
     def strategy(self) -> Optional["scout_datareview_api_ReopenStrategy"]:
-        """
-        Defines the strategy for reopening the alert and any alerts linked via an associated notebook. If not 
+        """Defines the strategy for reopening the alert and any alerts linked via an associated notebook. If not 
 provided, the default strategy is reopenAllLinkedAlerts.
         """
         return self._strategy
@@ -60708,8 +60155,7 @@ scout_datareview_api_Reopen.__module__ = "nominal_api.scout_datareview_api"
 
 
 class scout_datareview_api_ReopenAllLinkedAlerts(ConjureBeanType):
-    """
-    Reopen all alerts associated with the same notebook and unlock the notebook.
+    """Reopen all alerts associated with the same notebook and unlock the notebook.
     """
 
     @builtins.classmethod
@@ -60727,8 +60173,7 @@ scout_datareview_api_ReopenAllLinkedAlerts.__module__ = "nominal_api.scout_datar
 
 
 class scout_datareview_api_ReopenAndDetachFromNotebook(ConjureBeanType):
-    """
-    Reopen the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
+    """Reopen the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
 alerts, those alerts will maintain the reference to the notebook and the notebook will remain locked.
     """
 
@@ -60747,8 +60192,7 @@ scout_datareview_api_ReopenAndDetachFromNotebook.__module__ = "nominal_api.scout
 
 
 class scout_datareview_api_ReopenAndDuplicatePreviouslyLinkedNotebook(ConjureBeanType):
-    """
-    Reopen the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
+    """Reopen the alert and detach it from the notebook. If the alert is linked to the same notebook as other 
 alerts, the notebook will be duplicated and the alert will be linked to the new notebook. The new notebook
 will be unlocked.
     """
@@ -60768,8 +60212,7 @@ scout_datareview_api_ReopenAndDuplicatePreviouslyLinkedNotebook.__module__ = "no
 
 
 class scout_datareview_api_ReopenAndLinkToNotebook(ConjureBeanType):
-    """
-    Reopen the alert and link to notebook. Throws if the associated notebook has closed alerts.
+    """Reopen the alert and link to notebook. Throws if the associated notebook has closed alerts.
     """
 
     @builtins.classmethod
@@ -60967,36 +60410,31 @@ class scout_datareview_api_SearchCheckAlertsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1_000.
+        """Defaults to 100. Will throw if larger than 1_000.
         """
         return self._page_size
 
     @builtins.property
     def sort_by(self) -> Optional["scout_datareview_api_SearchCheckAlertsSortOptions"]:
-        """
-        If not present, will sort by start time in descending order.
+        """If not present, will sort by start time in descending order.
         """
         return self._sort_by
 
     @builtins.property
     def search_text(self) -> Optional[str]:
-        """
-        Matches on check name
+        """Matches on check name
         """
         return self._search_text
 
     @builtins.property
     def after(self) -> Optional["api_Timestamp"]:
-        """
-        Filters to start times after this time, inclusive.
+        """Filters to start times after this time, inclusive.
         """
         return self._after
 
     @builtins.property
     def before(self) -> Optional["api_Timestamp"]:
-        """
-        Filters to start times before this time, exclusive.
+        """Filters to start times before this time, exclusive.
         """
         return self._before
 
@@ -61042,16 +60480,14 @@ class scout_datareview_api_SearchCheckAlertsRequest(ConjureBeanType):
 
     @builtins.property
     def show_archived(self) -> Optional[bool]:
-        """
-        To be deprecated. Use archivedStatuses instead. If true, includes archived check alerts in the search 
+        """To be deprecated. Use archivedStatuses instead. If true, includes archived check alerts in the search 
 results. If not present or false, will not show archived data reviews in search results
         """
         return self._show_archived
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Filters search on check alerts based on the archived statuses provided.
+        """Filters search on check alerts based on the archived statuses provided.
 Default is NOT_ARCHIVED only if none are provided.
         """
         return self._archived_statuses
@@ -61165,8 +60601,7 @@ scout_datareview_api_Status.__module__ = "nominal_api.scout_datareview_api"
 
 
 class scout_datareview_api_TooManyAlertsState(ConjureBeanType):
-    """
-    The number of generated alerts is greater than the maximum. The check is likely misconfigured.
+    """The number of generated alerts is greater than the maximum. The check is likely misconfigured.
     """
 
     @builtins.classmethod
@@ -61184,8 +60619,7 @@ scout_datareview_api_TooManyAlertsState.__module__ = "nominal_api.scout_datarevi
 
 
 class scout_datareview_api_UnarchiveDataReview(ConjureBeanType):
-    """
-    Unarchive the data review which created this check alert. Only performable via the unarchive data review 
+    """Unarchive the data review which created this check alert. Only performable via the unarchive data review 
 endpoint; not supported by Perform Check Alert Action.
     """
 
@@ -61243,15 +60677,14 @@ scout_datareview_api_UpdateNotes.__module__ = "nominal_api.scout_datareview_api"
 
 
 class scout_datasource_DataSourceService(Service):
-    """
-    Data sources are data input to runs, including databases, CSV, video, and streaming data. They contain channels that represent the series data.
+    """Data sources are data input to runs, including databases, CSV, video, and streaming data. They contain channels that represent the series data.
 The DataSource Service is responsible for indexing and searching channels across data sources.
     """
 
     def search_channels(self, auth_header: str, query: "datasource_api_SearchChannelsRequest") -> "datasource_api_SearchChannelsResponse":
+        """Returns channels that match the search criteria. Results are sorted by similarity score.
         """
-        Returns channels that match the search criteria. Results are sorted by similarity score.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61262,10 +60695,10 @@ The DataSource Service is responsible for indexing and searching channels across
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(query)
+        _json: Any = _conjure_encoder.default(query)
 
         _path = '/data-source/v1/data-sources/search-channels'
         _path = _path.format(**_path_params)
@@ -61281,9 +60714,9 @@ The DataSource Service is responsible for indexing and searching channels across
         return _decoder.decode(_response.json(), datasource_api_SearchChannelsResponse, self._return_none_for_unknown_union_types)
 
     def search_filtered_channels(self, auth_header: str, query: "datasource_api_SearchFilteredChannelsRequest") -> "datasource_api_SearchFilteredChannelsResponse":
+        """Returns channels that match the search criteria. Results are sorted by similarity score.
         """
-        Returns channels that match the search criteria. Results are sorted by similarity score.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61294,10 +60727,10 @@ The DataSource Service is responsible for indexing and searching channels across
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(query)
+        _json: Any = _conjure_encoder.default(query)
 
         _path = '/data-source/v1/data-sources/search-filtered-channels'
         _path = _path.format(**_path_params)
@@ -61313,9 +60746,9 @@ The DataSource Service is responsible for indexing and searching channels across
         return _decoder.decode(_response.json(), datasource_api_SearchFilteredChannelsResponse, self._return_none_for_unknown_union_types)
 
     def search_hierarchical_channels(self, auth_header: str, query: "datasource_api_SearchHierarchicalChannelsRequest") -> "datasource_api_SearchHierarchicalChannelsResponse":
+        """Returns only channels that are direct children of the parent. Returns results sorted alphabetically.
         """
-        Returns only channels that are direct children of the parent. Returns results sorted alphabetically.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61326,10 +60759,10 @@ The DataSource Service is responsible for indexing and searching channels across
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(query)
+        _json: Any = _conjure_encoder.default(query)
 
         _path = '/data-source/v1/data-sources/search-hierarchical-channels'
         _path = _path.format(**_path_params)
@@ -61345,10 +60778,10 @@ The DataSource Service is responsible for indexing and searching channels across
         return _decoder.decode(_response.json(), datasource_api_SearchHierarchicalChannelsResponse, self._return_none_for_unknown_union_types)
 
     def index_channel_prefix_tree(self, auth_header: str, request: "datasource_api_IndexChannelPrefixTreeRequest") -> "datasource_api_ChannelPrefixTree":
-        """
-        Indexes the channel prefix tree for a specified data source. This operation constructs a prefix tree from the 
+        """Indexes the channel prefix tree for a specified data source. This operation constructs a prefix tree from the 
 channels available in the data source.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61359,10 +60792,10 @@ channels available in the data source.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/v1/data-sources/index-channel-prefix-tree'
         _path = _path.format(**_path_params)
@@ -61378,10 +60811,10 @@ channels available in the data source.
         return _decoder.decode(_response.json(), datasource_api_ChannelPrefixTree, self._return_none_for_unknown_union_types)
 
     def batch_get_channel_prefix_trees(self, auth_header: str, request: "datasource_api_BatchGetChannelPrefixTreeRequest") -> "datasource_api_BatchGetChannelPrefixTreeResponse":
-        """
-        Returns the channel prefix tree for each of the specified data sources. If the tree for a data source has not
+        """Returns the channel prefix tree for each of the specified data sources. If the tree for a data source has not
 been indexed, it will be omitted from the map.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61392,10 +60825,10 @@ been indexed, it will be omitted from the map.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/v1/data-sources/batch-get-channel-prefix-tree'
         _path = _path.format(**_path_params)
@@ -61411,10 +60844,10 @@ been indexed, it will be omitted from the map.
         return _decoder.decode(_response.json(), datasource_api_BatchGetChannelPrefixTreeResponse, self._return_none_for_unknown_union_types)
 
     def get_available_tags_for_channel(self, auth_header: str, request: "datasource_api_GetAvailableTagsForChannelRequest") -> "datasource_api_GetAvailableTagsForChannelResponse":
-        """
-        Returns the the set of all tag keys and their values that are available for the specified channel given an
+        """Returns the the set of all tag keys and their values that are available for the specified channel given an
 initial set of filters.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61425,10 +60858,10 @@ initial set of filters.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/v1/data-sources/get-available-tags'
         _path = _path.format(**_path_params)
@@ -61444,10 +60877,10 @@ initial set of filters.
         return _decoder.decode(_response.json(), datasource_api_GetAvailableTagsForChannelResponse, self._return_none_for_unknown_union_types)
 
     def get_data_scope_bounds(self, auth_header: str, request: "datasource_api_BatchGetDataScopeBoundsRequest") -> "datasource_api_BatchGetDataScopeBoundsResponse":
-        """
-        Returns the maximum data timestamps for the specified data scopes. Responses are returned
+        """Returns the maximum data timestamps for the specified data scopes. Responses are returned
 in the same order as requests.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61458,10 +60891,10 @@ in the same order as requests.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/v1/data-sources/get-data-scope-bounds'
         _path = _path.format(**_path_params)
@@ -61477,12 +60910,12 @@ in the same order as requests.
         return _decoder.decode(_response.json(), datasource_api_BatchGetDataScopeBoundsResponse, self._return_none_for_unknown_union_types)
 
     def get_tag_values_for_data_source(self, auth_header: str, data_source_rid: str, request: "datasource_api_GetTagValuesForDataSourceRequest") -> Dict[str, List[str]]:
-        """
-        Returns available tag values for a given data source for a set of tag keys. For Nominal data sources, a time 
+        """Returns available tag values for a given data source for a set of tag keys. For Nominal data sources, a time 
 range can be provided to filter tag values to those present within the months spanned by the range. If no
 time range is provided, this defaults to the last month. For external data sources, the range must not be 
 specified, as all tag values are returned.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61493,11 +60926,11 @@ specified, as all tag values are returned.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataSourceRid': data_source_rid,
+        _path_params: Dict[str, str] = {
+            'dataSourceRid': quote(str(_conjure_encoder.default(data_source_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/v1/data-sources/{dataSourceRid}/get-tags'
         _path = _path.format(**_path_params)
@@ -61519,18 +60952,17 @@ scout_datasource_DataSourceService.__module__ = "nominal_api.scout_datasource"
 
 
 class scout_datasource_connection_ConnectionBootstrapperService(Service):
-    """
-    Nominal periodically scrapes connected databases (Connections) in order to maintain a database of all
+    """Nominal periodically scrapes connected databases (Connections) in order to maintain a database of all
 series that can be read from that database. This service is responsible for executing the scrape, and can
 be used manually to trigger a rescrape for any reason (for example, when updating a schema).
     """
 
     def populate_series(self, auth_header: str, request: "scout_datasource_connection_api_PopulateSeriesRequest", rid: str) -> None:
-        """
-        Populates the connection with series, by querying within the requested time range. If start or end are both omitted,
+        """Populates the connection with series, by querying within the requested time range. If start or end are both omitted,
 will query the last 7 days by default. If one of start or end is omitted, will query a 7 day range from the provided
 start or end. Will throw if the requested range is larger than 30 days.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61541,11 +60973,11 @@ start or end. Will throw if the requested range is larger than 30 days.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/connection/v1/{rid}/populateSeries'
         _path = _path.format(**_path_params)
@@ -61566,15 +60998,14 @@ scout_datasource_connection_ConnectionBootstrapperService.__module__ = "nominal_
 
 
 class scout_datasource_connection_ConnectionService(Service):
-    """
-    A Connection contains the relevant metadata and information to be used as a data source for runs.
+    """A Connection contains the relevant metadata and information to be used as a data source for runs.
 The Connection Service is responsible for creating, updating, and retrieving database connections.
     """
 
     def create_connection(self, auth_header: str, create_connection: "scout_datasource_connection_api_CreateConnection") -> "scout_datasource_connection_api_Connection":
+        """Creates a new connection.
         """
-        Creates a new connection.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61585,10 +61016,10 @@ The Connection Service is responsible for creating, updating, and retrieving dat
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(create_connection)
+        _json: Any = _conjure_encoder.default(create_connection)
 
         _path = '/data-source/connection/v1/connections'
         _path = _path.format(**_path_params)
@@ -61604,9 +61035,9 @@ The Connection Service is responsible for creating, updating, and retrieving dat
         return _decoder.decode(_response.json(), scout_datasource_connection_api_Connection, self._return_none_for_unknown_union_types)
 
     def update_connection(self, auth_header: str, request: "scout_datasource_connection_api_UpdateConnectionRequest", rid: str) -> "scout_datasource_connection_api_Connection":
+        """Updates an existing connection.
         """
-        Updates an existing connection.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61617,11 +61048,11 @@ The Connection Service is responsible for creating, updating, and retrieving dat
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/connection/v1/connection/{rid}/details'
         _path = _path.format(**_path_params)
@@ -61637,9 +61068,9 @@ The Connection Service is responsible for creating, updating, and retrieving dat
         return _decoder.decode(_response.json(), scout_datasource_connection_api_Connection, self._return_none_for_unknown_union_types)
 
     def update_connection_status(self, auth_header: str, request: "scout_datasource_connection_api_ConnectionStatus", rid: str) -> None:
+        """Updates an existing connection status.
         """
-        Updates an existing connection status.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61650,11 +61081,11 @@ The Connection Service is responsible for creating, updating, and retrieving dat
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/data-source/connection/v1/connection/{rid}/status'
         _path = _path.format(**_path_params)
@@ -61669,12 +61100,12 @@ The Connection Service is responsible for creating, updating, and retrieving dat
         return
 
     def add_available_tags(self, auth_header: str, rid: str, tags: Dict[str, List[str]]) -> "scout_datasource_connection_api_Connection":
-        """
-        Adds available tag key/value pairs to the connection. If a tag name already exists, the values will be merged.
+        """Adds available tag key/value pairs to the connection. If a tag name already exists, the values will be merged.
 This is primarily an internal endpoint to update tags for external connections as they are periodically 
 scraped. This endpoint should only be called by clients for Visual crossing connections. Throws if called for
 Nominal connections which have their tags automatically indexed in the underlying Database.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61685,11 +61116,11 @@ Nominal connections which have their tags automatically indexed in the underlyin
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(tags)
+        _json: Any = _conjure_encoder.default(tags)
 
         _path = '/data-source/connection/v1/connection/{rid}/available-tags'
         _path = _path.format(**_path_params)
@@ -61705,9 +61136,9 @@ Nominal connections which have their tags automatically indexed in the underlyin
         return _decoder.decode(_response.json(), scout_datasource_connection_api_Connection, self._return_none_for_unknown_union_types)
 
     def get_connection(self, auth_header: str, rid: str) -> "scout_datasource_connection_api_Connection":
+        """Gets a connection by its RID.
         """
-        Gets a connection by its RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61717,8 +61148,8 @@ Nominal connections which have their tags automatically indexed in the underlyin
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -61737,10 +61168,10 @@ Nominal connections which have their tags automatically indexed in the underlyin
         return _decoder.decode(_response.json(), scout_datasource_connection_api_Connection, self._return_none_for_unknown_union_types)
 
     def get_connections(self, auth_header: str, rids: List[str] = None) -> List["scout_datasource_connection_api_Connection"]:
-        """
-        Gets a set of connections by their RIDs.
+        """Gets a set of connections by their RIDs.
         """
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61751,10 +61182,10 @@ Nominal connections which have their tags automatically indexed in the underlyin
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/data-source/connection/v1/connection/multiple'
         _path = _path.format(**_path_params)
@@ -61770,10 +61201,10 @@ Nominal connections which have their tags automatically indexed in the underlyin
         return _decoder.decode(_response.json(), List[scout_datasource_connection_api_Connection], self._return_none_for_unknown_union_types)
 
     def list_connections(self, auth_header: str, workspaces: List[str] = None, include_archived: Optional[bool] = None) -> List["scout_datasource_connection_api_Connection"]:
-        """
-        Lists all connections.
+        """Lists all connections.
         """
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61781,11 +61212,11 @@ Nominal connections which have their tags automatically indexed in the underlyin
         }
 
         _params: Dict[str, Any] = {
-            'includeArchived': include_archived,
-            'workspaces': workspaces,
+            'includeArchived': _conjure_encoder.default(include_archived),
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -61804,9 +61235,9 @@ Nominal connections which have their tags automatically indexed in the underlyin
         return _decoder.decode(_response.json(), List[scout_datasource_connection_api_Connection], self._return_none_for_unknown_union_types)
 
     def archive_connection(self, auth_header: str, rid: str) -> None:
+        """Archives a connection, which simply tags the connection for a client to filter.
         """
-        Archives a connection, which simply tags the connection for a client to filter.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61816,8 +61247,8 @@ Nominal connections which have their tags automatically indexed in the underlyin
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -61835,9 +61266,9 @@ Nominal connections which have their tags automatically indexed in the underlyin
         return
 
     def unarchive_connection(self, auth_header: str, rid: str) -> None:
+        """Undoes the archiving of a connection.
         """
-        Undoes the archiving of a connection.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -61847,8 +61278,8 @@ Nominal connections which have their tags automatically indexed in the underlyin
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -61890,22 +61321,19 @@ class scout_datasource_connection_api_BigQueryChannelNameComponent(ConjureBeanTy
 
     @builtins.property
     def include_project(self) -> bool:
-        """
-        Whether to include the project name in the channel name.
+        """Whether to include the project name in the channel name.
         """
         return self._include_project
 
     @builtins.property
     def include_dataset(self) -> bool:
-        """
-        Whether to include the dataset name in the channel name.
+        """Whether to include the dataset name in the channel name.
         """
         return self._include_dataset
 
     @builtins.property
     def include_table(self) -> bool:
-        """
-        Whether to include the table name in the channel name.
+        """Whether to include the table name in the channel name.
         """
         return self._include_table
 
@@ -61938,36 +61366,31 @@ class scout_datasource_connection_api_BigQueryConnectionDetails(ConjureBeanType)
 
     @builtins.property
     def region(self) -> str:
-        """
-        The region of the BigQuery Project (e.g. "us-east1")
+        """The region of the BigQuery Project (e.g. "us-east1")
         """
         return self._region
 
     @builtins.property
     def project(self) -> str:
-        """
-        The name of the BigQuery Project
+        """The name of the BigQuery Project
         """
         return self._project
 
     @builtins.property
     def dataset(self) -> str:
-        """
-        The name of the dataset within the project
+        """The name of the dataset within the project
         """
         return self._dataset
 
     @builtins.property
     def table(self) -> str:
-        """
-        The name of the table within the dataset
+        """The name of the table within the dataset
         """
         return self._table
 
     @builtins.property
     def service_account_key_secret_rid(self) -> str:
-        """
-        Secret Rid of service account key stored in Secrets Service.
+        """Secret Rid of service account key stored in Secrets Service.
         """
         return self._service_account_key_secret_rid
 
@@ -61998,22 +61421,19 @@ class scout_datasource_connection_api_BigQueryScrapingConfig(ConjureBeanType):
 
     @builtins.property
     def time_column(self) -> str:
-        """
-        The name of the column that holds the timestamp.
+        """The name of the column that holds the timestamp.
         """
         return self._time_column
 
     @builtins.property
     def tag_columns(self) -> List[str]:
-        """
-        The name of the columns that should be interpreted as tag columns
+        """The name of the columns that should be interpreted as tag columns
         """
         return self._tag_columns
 
     @builtins.property
     def channel_name_components(self) -> Optional["scout_datasource_connection_api_BigQueryChannelNameComponent"]:
-        """
-        channelNameComponents will be combined, together with separator, to form
+        """channelNameComponents will be combined, together with separator, to form
 a fully qualified channel name. By default, we don't add anything
 to the column name.
         """
@@ -62021,8 +61441,7 @@ to the column name.
 
     @builtins.property
     def separator(self) -> Optional[str]:
-        """
-        The separator that delimits the parts of the channel name. If
+        """The separator that delimits the parts of the channel name. If
 ommitted, the default is a ".".
         """
         return self._separator
@@ -62072,8 +61491,7 @@ class scout_datasource_connection_api_Connection(ConjureBeanType):
 
     @builtins.property
     def display_name(self) -> str:
-        """
-        The display name of the connection. For example: "Nominal production TimescaleDB"
+        """The display name of the connection. For example: "Nominal production TimescaleDB"
         """
         return self._display_name
 
@@ -62087,8 +61505,7 @@ class scout_datasource_connection_api_Connection(ConjureBeanType):
 
     @builtins.property
     def required_tag_names(self) -> List[str]:
-        """
-        Additional tag names that should be supplied to construct a fully qualified series. These are suggested,
+        """Additional tag names that should be supplied to construct a fully qualified series. These are suggested,
 rather than strictly required.
         """
         return self._required_tag_names
@@ -62100,14 +61517,12 @@ rather than strictly required.
     @builtins.property
     def scraping(self) -> Optional["scout_datasource_connection_api_ScrapingConfig"]:
         """
-        
         """
         return self._scraping
 
     @builtins.property
     def should_scrape(self) -> bool:
-        """
-        The connection will be scraped iff this flag is set and scrapingConfig is present.
+        """The connection will be scraped iff this flag is set and scrapingConfig is present.
         """
         return self._should_scrape
 
@@ -62334,36 +61749,31 @@ class scout_datasource_connection_api_ConnectionPlottingConfiguration(ConjureBea
 
     @builtins.property
     def max_undecimated_points_per_page(self) -> Optional[int]:
-        """
-        The maximum number of points to return per page for undecimated queries
+        """The maximum number of points to return per page for undecimated queries
         """
         return self._max_undecimated_points_per_page
 
     @builtins.property
     def max_unbounded_range(self) -> Optional[int]:
-        """
-        The maximum range (in nanoseconds) for unbounded queries
+        """The maximum range (in nanoseconds) for unbounded queries
         """
         return self._max_unbounded_range
 
     @builtins.property
     def max_undecimated_page_reads_per_second(self) -> Optional[float]:
-        """
-        The maximum number of page reads per second for undecimated queries
+        """The maximum number of page reads per second for undecimated queries
         """
         return self._max_undecimated_page_reads_per_second
 
     @builtins.property
     def max_permits_per_second(self) -> Optional[float]:
-        """
-        The maximum number of permits per second for queries
+        """The maximum number of permits per second for queries
         """
         return self._max_permits_per_second
 
     @builtins.property
     def max_connections(self) -> Optional[int]:
-        """
-        The maximum number of connections to the database
+        """The maximum number of connections to the database
         """
         return self._max_connections
 
@@ -62441,22 +61851,19 @@ class scout_datasource_connection_api_CreateConnection(ConjureBeanType):
 
     @builtins.property
     def metadata(self) -> Dict[str, str]:
-        """
-        Metadata information about the connection which is not relevant to the DB connection itself.
+        """Metadata information about the connection which is not relevant to the DB connection itself.
         """
         return self._metadata
 
     @builtins.property
     def required_tag_names(self) -> List[str]:
-        """
-        Additional tag name that are required to construct a fully qualified series.
+        """Additional tag name that are required to construct a fully qualified series.
         """
         return self._required_tag_names
 
     @builtins.property
     def available_tag_values(self) -> Optional[Dict[str, List[str]]]:
-        """
-        In most cases, this does not to be set by the user. Throws if populated for Nominal connections, which 
+        """In most cases, this does not to be set by the user. Throws if populated for Nominal connections, which 
 have their tags automatically indexed in the underlying database. Tags for external connections are 
 periodically scraped. Tags should only be updated  manually for Visual crossing connections.
         """
@@ -62476,8 +61883,7 @@ periodically scraped. Tags should only be updated  manually for Visual crossing 
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the connection. If not provided, the connection will be created in the default workspace for
+        """The workspace in which to create the connection. If not provided, the connection will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -62623,8 +62029,7 @@ class scout_datasource_connection_api_Influx1ConnectionDetails(ConjureBeanType):
 
     @builtins.property
     def headers(self) -> Dict[str, "scout_datasource_connection_api_HeaderValue"]:
-        """
-        A map of header name to value
+        """A map of header name to value
         """
         return self._headers
 
@@ -62669,8 +62074,7 @@ class scout_datasource_connection_api_Influx2ConnectionDetails(ConjureBeanType):
 
     @builtins.property
     def headers(self) -> Dict[str, "scout_datasource_connection_api_HeaderValue"]:
-        """
-        A map of header name to value
+        """A map of header name to value
         """
         return self._headers
 
@@ -62680,8 +62084,7 @@ class scout_datasource_connection_api_Influx2ConnectionDetails(ConjureBeanType):
 
     @builtins.property
     def token_secret_rid(self) -> str:
-        """
-        Secret Rid of token secret stored in Secrets Service.
+        """Secret Rid of token secret stored in Secrets Service.
         """
         return self._token_secret_rid
 
@@ -62766,8 +62169,7 @@ class scout_datasource_connection_api_InfluxChannelNameComponent(ConjureUnionTyp
 
     @builtins.property
     def tag_value(self) -> Optional[str]:
-        """
-        The value for the specified TagName will be used. If the tag is not present, it will be omitted.
+        """The value for the specified TagName will be used. If the tag is not present, it will be omitted.
         """
         return self._tag_value
 
@@ -62830,8 +62232,7 @@ class scout_datasource_connection_api_InfluxScrapingConfig(ConjureBeanType):
 
     @builtins.property
     def filter(self) -> List["scout_datasource_connection_api_InfluxScrapingFilter"]:
-        """
-        Filters are ANDed together
+        """Filters are ANDed together
         """
         return self._filter
 
@@ -62901,15 +62302,13 @@ class scout_datasource_connection_api_InfluxScrapingFilter(ConjureUnionType):
 
     @builtins.property
     def match_bucket(self) -> Optional[List[str]]:
-        """
-        Match any of the specified buckets
+        """Match any of the specified buckets
         """
         return self._match_bucket
 
     @builtins.property
     def match_measurement(self) -> Optional[List[str]]:
-        """
-        Match any of the specified measurements
+        """Match any of the specified measurements
         """
         return self._match_measurement
 
@@ -62950,8 +62349,7 @@ scout_datasource_connection_api_InfluxScrapingFilterVisitor.__module__ = "nomina
 
 
 class scout_datasource_connection_api_InfluxSeriesArchetypeConstructionConfig(ConjureBeanType):
-    """
-    For example, for config of the form {components: [measurement, field, tag: vehicle], separator: "."} will construct a
+    """For example, for config of the form {components: [measurement, field, tag: vehicle], separator: "."} will construct a
 channel that looks like vehicle_a.measurement.field. Tags will automatically be specified inside of the archetype.
     """
 
@@ -63050,8 +62448,7 @@ class scout_datasource_connection_api_NominalChannelNameComponent(ConjureUnionTy
 
     @builtins.property
     def value_of_tag_with_name(self) -> Optional[str]:
-        """
-        The value of the specified TagName will be used. If the tag is not present, it will be omitted.
+        """The value of the specified TagName will be used. If the tag is not present, it will be omitted.
         """
         return self._value_of_tag_with_name
 
@@ -63125,8 +62522,7 @@ class scout_datasource_connection_api_NominalScrapingConfig(ConjureBeanType):
 
     @builtins.property
     def channel_name_components(self) -> List["scout_datasource_connection_api_NominalChannelNameComponent"]:
-        """
-        channelNameComponents will be combined, together with separator, to form
+        """channelNameComponents will be combined, together with separator, to form
 a fully qualified channel name.
         """
         return self._channel_name_components
@@ -63162,8 +62558,7 @@ class scout_datasource_connection_api_PasswordCredentials(ConjureBeanType):
 
     @builtins.property
     def password_secret_rid(self) -> str:
-        """
-        Secret Rid of password secret stored in Secrets Service.
+        """Secret Rid of password secret stored in Secrets Service.
         """
         return self._password_secret_rid
 
@@ -63218,8 +62613,7 @@ class scout_datasource_connection_api_PivotedTimescaleChannelNameComponent(Conju
 
     @builtins.property
     def name(self) -> Optional["api_Empty"]:
-        """
-        The value of the name column.
+        """The value of the name column.
         """
         return self._name
 
@@ -63254,8 +62648,7 @@ scout_datasource_connection_api_PivotedTimescaleChannelNameComponentVisitor.__mo
 
 
 class scout_datasource_connection_api_PivotedTimescaleScrapingConfig(ConjureBeanType):
-    """
-    This config is used to scrape data from a Timescale database that has a pivoted schema.
+    """This config is used to scrape data from a Timescale database that has a pivoted schema.
 time | name           | value | device
  1   | temperature    | 1     | a
     """
@@ -63285,8 +62678,7 @@ time | name           | value | device
 
     @builtins.property
     def filter(self) -> List["scout_datasource_connection_api_TimescaleScrapingFilter"]:
-        """
-        In order for data to be picked up by the scraper, it must match all
+        """In order for data to be picked up by the scraper, it must match all
 filters in this list. To exclude chunks of data, it's possible to use 
 a not filter.
         """
@@ -63294,37 +62686,32 @@ a not filter.
 
     @builtins.property
     def time_column(self) -> str:
-        """
-        The name of the column that holds the timestamp.
+        """The name of the column that holds the timestamp.
         """
         return self._time_column
 
     @builtins.property
     def name_column(self) -> str:
-        """
-        The name of the column that holds the series name.
+        """The name of the column that holds the series name.
         """
         return self._name_column
 
     @builtins.property
     def value_column(self) -> str:
-        """
-        The name of the column that holds the series values.
+        """The name of the column that holds the series values.
         """
         return self._value_column
 
     @builtins.property
     def dimension_columns(self) -> List[str]:
-        """
-        The names of the columns that comprise a dimension. They should have a database index for efficient filtering. We do not discover
+        """The names of the columns that comprise a dimension. They should have a database index for efficient filtering. We do not discover
 dimensions based on hypertable schema because they are not necessarily configured properly.
         """
         return self._dimension_columns
 
     @builtins.property
     def channel_name_components(self) -> List["scout_datasource_connection_api_PivotedTimescaleChannelNameComponent"]:
-        """
-        channelNameComponents will be combined, together with separator, to form
+        """channelNameComponents will be combined, together with separator, to form
 a fully qualified channel name.
         """
         return self._channel_name_components
@@ -63584,15 +62971,13 @@ class scout_datasource_connection_api_TimescaleConnectionDetails(ConjureBeanType
 
     @builtins.property
     def username(self) -> str:
-        """
-        This is also the reference to the secret containing the password
+        """This is also the reference to the secret containing the password
         """
         return self._username
 
     @builtins.property
     def password_secret_rid(self) -> str:
-        """
-        Secret Rid of password secret stored in Secrets Service.
+        """Secret Rid of password secret stored in Secrets Service.
         """
         return self._password_secret_rid
 
@@ -63658,15 +63043,13 @@ class scout_datasource_connection_api_TimescaleScrapingFilter(ConjureUnionType):
 
     @builtins.property
     def match_table(self) -> Optional[List[str]]:
-        """
-        Match any of the specified tables in the database.
+        """Match any of the specified tables in the database.
         """
         return self._match_table
 
     @builtins.property
     def match_schema(self) -> Optional[List[str]]:
-        """
-        Match any of the specified schemas in the database.
+        """Match any of the specified schemas in the database.
         """
         return self._match_schema
 
@@ -63781,8 +63164,7 @@ class scout_datasource_connection_api_TimestreamChannelNameComponent(ConjureUnio
 
     @builtins.property
     def value_of_tag_with_name(self) -> Optional[str]:
-        """
-        The value of the specified TagName will be used. If the tag is not present, it will be omitted.
+        """The value of the specified TagName will be used. If the tag is not present, it will be omitted.
         """
         return self._value_of_tag_with_name
 
@@ -63851,36 +63233,31 @@ class scout_datasource_connection_api_TimestreamConnectionDetails(ConjureBeanTyp
 
     @builtins.property
     def nominal_role_arn(self) -> str:
-        """
-        The role ARN owned by Nominal that has permission to assume the externalRoleArn.
+        """The role ARN owned by Nominal that has permission to assume the externalRoleArn.
         """
         return self._nominal_role_arn
 
     @builtins.property
     def nominal_role_region(self) -> str:
-        """
-        AWS region that contains the Nominal role.
+        """AWS region that contains the Nominal role.
         """
         return self._nominal_role_region
 
     @builtins.property
     def external_region(self) -> str:
-        """
-        AWS region that contains the Timestream instance.
+        """AWS region that contains the Timestream instance.
         """
         return self._external_region
 
     @builtins.property
     def external_role_arn(self) -> str:
-        """
-        The role ARN used to make queries to Timestream. This role is owned by the AWS account that owns the Timestream instance.
+        """The role ARN used to make queries to Timestream. This role is owned by the AWS account that owns the Timestream instance.
         """
         return self._external_role_arn
 
     @builtins.property
     def database(self) -> str:
-        """
-        Database inside of the Timestream instance to connect to.
+        """Database inside of the Timestream instance to connect to.
         """
         return self._database
 
@@ -63911,16 +63288,14 @@ class scout_datasource_connection_api_TimestreamScrapingConfig(ConjureBeanType):
 
     @builtins.property
     def filter(self) -> List["scout_datasource_connection_api_TimestreamScrapingFilter"]:
-        """
-        In order for data to be picked up by the scraper, it must match all
+        """In order for data to be picked up by the scraper, it must match all
 filters in this list.
         """
         return self._filter
 
     @builtins.property
     def channel_name_components(self) -> List["scout_datasource_connection_api_TimestreamChannelNameComponent"]:
-        """
-        channelNameComponents will be combined, together with separator, to form
+        """channelNameComponents will be combined, together with separator, to form
 a fully qualified channel name.
         """
         return self._channel_name_components
@@ -63931,8 +63306,7 @@ a fully qualified channel name.
 
     @builtins.property
     def max_look_back_period_hours(self) -> Optional[int]:
-        """
-        The maximum time in hours to look back over series data to find unique measure and tag combinations.
+        """The maximum time in hours to look back over series data to find unique measure and tag combinations.
 If not specified, the default look back period will be used.
         """
         return self._max_look_back_period_hours
@@ -63973,8 +63347,7 @@ class scout_datasource_connection_api_TimestreamScrapingFilter(ConjureUnionType)
 
     @builtins.property
     def match_table(self) -> Optional[List[str]]:
-        """
-        Match any of the specified tables in the database.
+        """Match any of the specified tables in the database.
         """
         return self._match_table
 
@@ -64003,8 +63376,7 @@ scout_datasource_connection_api_TimestreamScrapingFilterVisitor.__module__ = "no
 
 
 class scout_datasource_connection_api_UpdateConnectionRequest(ConjureBeanType):
-    """
-    Fields that are empty will be treated as a no-op update.
+    """Fields that are empty will be treated as a no-op update.
     """
 
     @builtins.classmethod
@@ -64056,8 +63428,7 @@ class scout_datasource_connection_api_UpdateConnectionRequest(ConjureBeanType):
 
     @builtins.property
     def available_tag_values(self) -> Optional[Dict[str, List[str]]]:
-        """
-        In most cases, this does not to be set by the user. Throws if populated for Nominal connections, which 
+        """In most cases, this does not to be set by the user. Throws if populated for Nominal connections, which 
 have their tags automatically indexed in the underlying database. Tags for external connections are 
 periodically scraped. Tags should only be updated manually for Visual crossing connections.
         """
@@ -64082,8 +63453,7 @@ scout_datasource_connection_api_UpdateConnectionRequest.__module__ = "nominal_ap
 
 
 class scout_datasource_connection_api_VisualCrossingAvailableSeries(ConjureBeanType):
-    """
-    Deprecated and not used for anything anymore, see record VisualCrossingAvailableSeries instead.
+    """Deprecated and not used for anything anymore, see record VisualCrossingAvailableSeries instead.
     """
 
     @builtins.classmethod
@@ -64140,8 +63510,7 @@ class scout_datasource_connection_api_VisualCrossingConnectionDetails(ConjureBea
 
     @builtins.property
     def api_key_secret_rid(self) -> str:
-        """
-        Secret Rid of API key stored in Secrets Service.
+        """Secret Rid of API key stored in Secrets Service.
         """
         return self._api_key_secret_rid
 
@@ -64166,8 +63535,7 @@ class scout_datasource_connection_api_VisualCrossingScrapingConfig(ConjureBeanTy
 
     @builtins.property
     def available_series(self) -> List["scout_datasource_connection_api_VisualCrossingAvailableSeries"]:
-        """
-        list of available channels
+        """list of available channels
         """
         return self._available_series
 
@@ -64196,16 +63564,15 @@ scout_datasource_connection_api_VisualCrossingType.__module__ = "nominal_api.sco
 
 
 class scout_favorites_FavoritesService(Service):
-    """
-    Creating favorites allows users to pin specific resources (i.e. assets, workbooks, etc.) as favorites for 
+    """Creating favorites allows users to pin specific resources (i.e. assets, workbooks, etc.) as favorites for 
 quick access within search pages throughout the application for themselves.
     """
 
     def get_favorites_list(self, auth_header: str, workspace_rid: str, resource_types: List["scout_favorites_api_ResourceType"] = None) -> "scout_favorites_api_FavoritesListResponse":
-        """
-        Retrieves the favorites list for the current user in the specified workspace.
+        """Retrieves the favorites list for the current user in the specified workspace.
         """
         resource_types = resource_types if resource_types is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -64213,11 +63580,11 @@ quick access within search pages throughout the application for themselves.
         }
 
         _params: Dict[str, Any] = {
-            'resourceTypes': resource_types,
+            'resourceTypes': _conjure_encoder.default(resource_types),
         }
 
-        _path_params: Dict[str, Any] = {
-            'workspaceRid': workspace_rid,
+        _path_params: Dict[str, str] = {
+            'workspaceRid': quote(str(_conjure_encoder.default(workspace_rid)), safe=''),
         }
 
         _json: Any = None
@@ -64236,9 +63603,9 @@ quick access within search pages throughout the application for themselves.
         return _decoder.decode(_response.json(), scout_favorites_api_FavoritesListResponse, self._return_none_for_unknown_union_types)
 
     def set_favorites_list(self, auth_header: str, request: "scout_favorites_api_SetFavoritesListRequest", workspace_rid: str) -> "scout_favorites_api_FavoritesListResponse":
+        """Overwrites the favorites list for the current user in the specified workspace.
         """
-        Overwrites the favorites list for the current user in the specified workspace.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -64249,11 +63616,11 @@ quick access within search pages throughout the application for themselves.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'workspaceRid': workspace_rid,
+        _path_params: Dict[str, str] = {
+            'workspaceRid': quote(str(_conjure_encoder.default(workspace_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/favorites/workspace/{workspaceRid}'
         _path = _path.format(**_path_params)
@@ -64476,8 +63843,7 @@ class scout_favorites_api_SetFavoritesListRequest(ConjureBeanType):
 
     @builtins.property
     def resources(self) -> List["scout_favorites_api_FavoriteResource"]:
-        """
-        The resources to set as the user's favorites. Note that the provided list will overwrite 
+        """The resources to set as the user's favorites. Note that the provided list will overwrite 
 all the user's previous favorites.
         """
         return self._resources
@@ -64598,8 +63964,7 @@ class scout_integrations_api_CreateIntegrationRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the integration. If not provided, the integration will be created in the default workspace for
+        """The workspace in which to create the integration. If not provided, the integration will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -64686,8 +64051,7 @@ scout_integrations_api_GenerateSlackWebhookResponse.__module__ = "nominal_api.sc
 
 
 class scout_integrations_api_Integration(ConjureBeanType):
-    """
-    Configuration details used to connect to an external service.
+    """Configuration details used to connect to an external service.
     """
 
     @builtins.classmethod
@@ -64846,14 +64210,13 @@ scout_integrations_api_IntegrationDetailsVisitor.__module__ = "nominal_api.scout
 
 
 class scout_integrations_api_IntegrationsService(Service):
-    """
-    Service for managing integrations with external services.
+    """Service for managing integrations with external services.
     """
 
     def generate_slack_webhook_link(self, auth_header: str, is_gov_slack: Optional[bool] = None, workspace: Optional[str] = None) -> "scout_integrations_api_GenerateSlackWebhookResponse":
+        """Generates link to request permissions for Slack bot to join workspaces and use a webhook.
         """
-        Generates link to request permissions for Slack bot to join workspaces and use a webhook.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -64861,11 +64224,11 @@ class scout_integrations_api_IntegrationsService(Service):
         }
 
         _params: Dict[str, Any] = {
-            'workspace': workspace,
-            'isGovSlack': is_gov_slack,
+            'workspace': _conjure_encoder.default(workspace),
+            'isGovSlack': _conjure_encoder.default(is_gov_slack),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -64884,9 +64247,9 @@ class scout_integrations_api_IntegrationsService(Service):
         return _decoder.decode(_response.json(), scout_integrations_api_GenerateSlackWebhookResponse, self._return_none_for_unknown_union_types)
 
     def create_slack_webhook(self, auth_header: str, code: str, state: str) -> None:
+        """Creates a new Slack integration. Called internally after Slack authorization.
         """
-        Creates a new Slack integration. Called internally after Slack authorization.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -64894,11 +64257,11 @@ class scout_integrations_api_IntegrationsService(Service):
         }
 
         _params: Dict[str, Any] = {
-            'code': code,
-            'state': state,
+            'code': _conjure_encoder.default(code),
+            'state': _conjure_encoder.default(state),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -64916,9 +64279,9 @@ class scout_integrations_api_IntegrationsService(Service):
         return
 
     def create_integration(self, auth_header: str, create_integration_request: "scout_integrations_api_CreateIntegrationRequest") -> "scout_integrations_api_Integration":
+        """Creates a new integration.
         """
-        Creates a new integration.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -64929,10 +64292,10 @@ class scout_integrations_api_IntegrationsService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(create_integration_request)
+        _json: Any = _conjure_encoder.default(create_integration_request)
 
         _path = '/scout/v2/integrations'
         _path = _path.format(**_path_params)
@@ -64948,9 +64311,9 @@ class scout_integrations_api_IntegrationsService(Service):
         return _decoder.decode(_response.json(), scout_integrations_api_Integration, self._return_none_for_unknown_union_types)
 
     def delete_integration(self, auth_header: str, integration_rid: str) -> None:
+        """Deletes an integration by archiving.
         """
-        Deletes an integration by archiving.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -64960,8 +64323,8 @@ class scout_integrations_api_IntegrationsService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'integrationRid': integration_rid,
+        _path_params: Dict[str, str] = {
+            'integrationRid': quote(str(_conjure_encoder.default(integration_rid)), safe=''),
         }
 
         _json: Any = None
@@ -64979,9 +64342,9 @@ class scout_integrations_api_IntegrationsService(Service):
         return
 
     def update_integration_metadata(self, auth_header: str, integration_rid: str, request: "scout_integrations_api_UpdateIntegrationRequest") -> "scout_integrations_api_Integration":
+        """Updates the metadata of an integration.
         """
-        Updates the metadata of an integration.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -64992,11 +64355,11 @@ class scout_integrations_api_IntegrationsService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'integrationRid': integration_rid,
+        _path_params: Dict[str, str] = {
+            'integrationRid': quote(str(_conjure_encoder.default(integration_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/integrations/{integrationRid}'
         _path = _path.format(**_path_params)
@@ -65012,9 +64375,9 @@ class scout_integrations_api_IntegrationsService(Service):
         return _decoder.decode(_response.json(), scout_integrations_api_Integration, self._return_none_for_unknown_union_types)
 
     def get_integration(self, auth_header: str, integration_rid: str) -> "scout_integrations_api_Integration":
+        """Retrieves an integration with the specified integration RID.
         """
-        Retrieves an integration with the specified integration RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -65024,8 +64387,8 @@ class scout_integrations_api_IntegrationsService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'integrationRid': integration_rid,
+        _path_params: Dict[str, str] = {
+            'integrationRid': quote(str(_conjure_encoder.default(integration_rid)), safe=''),
         }
 
         _json: Any = None
@@ -65044,10 +64407,10 @@ class scout_integrations_api_IntegrationsService(Service):
         return _decoder.decode(_response.json(), scout_integrations_api_Integration, self._return_none_for_unknown_union_types)
 
     def list_integrations(self, auth_header: str, workspaces: List[str] = None) -> List["scout_integrations_api_Integration"]:
-        """
-        Lists all integrations. Archived integrations are not included.
+        """Lists all integrations. Archived integrations are not included.
         """
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -65055,10 +64418,10 @@ class scout_integrations_api_IntegrationsService(Service):
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -65077,9 +64440,9 @@ class scout_integrations_api_IntegrationsService(Service):
         return _decoder.decode(_response.json(), List[scout_integrations_api_Integration], self._return_none_for_unknown_union_types)
 
     def send_message(self, auth_header: str, request: "scout_integrations_api_SendMessageRequest") -> None:
+        """Sends a string message to the specified integration from a checklist execution.
         """
-        Sends a string message to the specified integration from a checklist execution.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -65090,10 +64453,10 @@ class scout_integrations_api_IntegrationsService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v2/integrations/send-message'
         _path = _path.format(**_path_params)
@@ -65114,8 +64477,7 @@ scout_integrations_api_IntegrationsService.__module__ = "nominal_api.scout_integ
 
 
 class scout_integrations_api_NotificationConfiguration(ConjureBeanType):
-    """
-    Configuration details to send notifications to a linked integration.
+    """Configuration details to send notifications to a linked integration.
     """
 
     @builtins.classmethod
@@ -65141,22 +64503,19 @@ class scout_integrations_api_NotificationConfiguration(ConjureBeanType):
 
     @builtins.property
     def notification_filters(self) -> Optional[List["scout_integrations_api_NotificationFilter"]]:
-        """
-        Specifies the type of notifications to filter. If not provided, all notifications are sent.
+        """Specifies the type of notifications to filter. If not provided, all notifications are sent.
         """
         return self._notification_filters
 
     @builtins.property
     def appended_workbook_rid(self) -> Optional[str]:
-        """
-        If provided, appends a link to the workbook specified by the RID to the notification.
+        """If provided, appends a link to the workbook specified by the RID to the notification.
         """
         return self._appended_workbook_rid
 
     @builtins.property
     def tags(self) -> List[str]:
-        """
-        20 tags max, 50 characters max each. Tags are used to filter messages in Opsgenie. For other integrations, tags are ignored.
+        """20 tags max, 50 characters max each. Tags are used to filter messages in Opsgenie. For other integrations, tags are ignored.
         """
         return self._tags
 
@@ -65167,8 +64526,7 @@ scout_integrations_api_NotificationConfiguration.__module__ = "nominal_api.scout
 
 
 class scout_integrations_api_NotificationFilter(ConjureEnumType):
-    """
-    Specifies a type of notification to filter.
+    """Specifies a type of notification to filter.
     """
 
     EXECUTION_ERROR = 'EXECUTION_ERROR'
@@ -65209,8 +64567,7 @@ scout_integrations_api_OpsgenieIntegration.__module__ = "nominal_api.scout_integ
 
 
 class scout_integrations_api_OpsgenieRegion(ConjureEnumType):
-    """
-    Opsgenie region for the account linked to the provided API key.
+    """Opsgenie region for the account linked to the provided API key.
     """
 
     US = 'US'
@@ -65254,8 +64611,7 @@ class scout_integrations_api_SendMessageRequest(ConjureBeanType):
 
     @builtins.property
     def title(self) -> Optional[str]:
-        """
-        Optional title for the message. 130 characters max.
+        """Optional title for the message. 130 characters max.
         """
         return self._title
 
@@ -65265,15 +64621,13 @@ class scout_integrations_api_SendMessageRequest(ConjureBeanType):
 
     @builtins.property
     def tags(self) -> List[str]:
-        """
-        20 tags max, 50 characters max each. Tags are used to filter messages in Opsgenie. For other integrations, tags are ignored.
+        """20 tags max, 50 characters max each. Tags are used to filter messages in Opsgenie. For other integrations, tags are ignored.
         """
         return self._tags
 
     @builtins.property
     def ops_genie_alias(self) -> Optional[str]:
-        """
-        Alias to use for the Opsgenie alert deduplication. 512 characters max.
+        """Alias to use for the Opsgenie alert deduplication. 512 characters max.
         """
         return self._ops_genie_alias
 
@@ -65711,15 +65065,13 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
 
     @builtins.property
     def exact_match(self) -> Optional[str]:
-        """
-        Performs case insensitive exact match search on the title.
+        """Performs case insensitive exact match search on the title.
         """
         return self._exact_match
 
     @builtins.property
     def string_array_exact_match(self) -> Optional["scout_internal_search_api_StringArrayField"]:
-        """
-        Requires the string values in the query to exactly match the set of string values in the resource.
+        """Requires the string values in the query to exactly match the set of string values in the resource.
 To do a partial match, use an "and" on StringField queries.
         """
         return self._string_array_exact_match
@@ -65948,14 +65300,13 @@ scout_internal_search_api_TimestampField.__module__ = "nominal_api.scout_interna
 
 
 class scout_jobs_api_InternalJobService(Service):
-    """
-    The Internal Job Service is responsible for running jobs for checklist executions.
+    """The Internal Job Service is responsible for running jobs for checklist executions.
     """
 
     def submit_jobs(self, auth_header: str, request: "scout_checks_api_SubmitJobsRequest") -> "scout_checks_api_SubmitJobsResponse":
+        """Runs the requested job specs.
         """
-        Runs the requested job specs.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -65966,10 +65317,10 @@ class scout_jobs_api_InternalJobService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/internal/jobs/v1/submitJobs'
         _path = _path.format(**_path_params)
@@ -65991,14 +65342,13 @@ scout_jobs_api_InternalJobService.__module__ = "nominal_api.scout_jobs_api"
 
 
 class scout_jobs_api_JobService(Service):
-    """
-    The Job Service is responsible for returning information about jobs for checklist executions.
+    """The Job Service is responsible for returning information about jobs for checklist executions.
     """
 
     def get_job_report(self, auth_header: str, job_rid: str) -> "scout_checks_api_JobReport":
+        """Fetches the job report for a job RID. Throws ResourcesNotFound if no job exists with this job RID.
         """
-        Fetches the job report for a job RID. Throws ResourcesNotFound if no job exists with this job RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -66008,8 +65358,8 @@ class scout_jobs_api_JobService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'jobRid': job_rid,
+        _path_params: Dict[str, str] = {
+            'jobRid': quote(str(_conjure_encoder.default(job_rid)), safe=''),
         }
 
         _json: Any = None
@@ -66028,10 +65378,10 @@ class scout_jobs_api_JobService(Service):
         return _decoder.decode(_response.json(), scout_checks_api_JobReport, self._return_none_for_unknown_union_types)
 
     def batch_get_job_reports(self, auth_header: str, request: "scout_checks_api_BatchGetJobReportsRequest") -> "scout_checks_api_BatchGetJobReportsResponse":
-        """
-        Fetches the job reports for a set of job RIDs. Omits any job reports the user is not permitted to see from
+        """Fetches the job reports for a set of job RIDs. Omits any job reports the user is not permitted to see from
 the response.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -66042,10 +65392,10 @@ the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/jobs/v1/batch-get-job-reports'
         _path = _path.format(**_path_params)
@@ -66848,15 +66198,13 @@ class scout_metadata_ListPropertiesAndLabelsRequest(ConjureBeanType):
 
     @builtins.property
     def resource_types(self) -> Optional[List["scout_metadata_ResourceType"]]:
-        """
-        If omitted, all resource types are included.
+        """If omitted, all resource types are included.
         """
         return self._resource_types
 
     @builtins.property
     def workspaces(self) -> Optional[List[str]]:
-        """
-        If omitted, results will come from all workspaces the user belongs to.
+        """If omitted, results will come from all workspaces the user belongs to.
         """
         return self._workspaces
 
@@ -66896,15 +66244,14 @@ scout_metadata_ListPropertiesAndLabelsResponse.__module__ = "nominal_api.scout_m
 
 
 class scout_metadata_ResourceMetadataService(Service):
-    """
-    The Resource Metadata Service provides common metadata about resources.
+    """The Resource Metadata Service provides common metadata about resources.
     """
 
     def list_properties_and_labels(self, auth_header: str, request: "scout_metadata_ListPropertiesAndLabelsRequest") -> "scout_metadata_ListPropertiesAndLabelsResponse":
-        """
-        Returns all existing properties (key value pairs) and labels, which can be used to organize resources
+        """Returns all existing properties (key value pairs) and labels, which can be used to organize resources
 such as runs and videos.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -66915,10 +66262,10 @@ such as runs and videos.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/scout/v1/metadata/list-properties-labels'
         _path = _path.format(**_path_params)
@@ -67045,8 +66392,7 @@ class scout_notebook_api_CreateNotebookRequest(ConjureBeanType):
 
     @builtins.property
     def notebook_type(self) -> Optional["scout_notebook_api_NotebookType"]:
-        """
-        Optional for backcompatibility. Default is a normal workbook.
+        """Optional for backcompatibility. Default is a normal workbook.
         """
         return self._notebook_type
 
@@ -67064,15 +66410,13 @@ class scout_notebook_api_CreateNotebookRequest(ConjureBeanType):
 
     @builtins.property
     def run_rid(self) -> Optional[str]:
-        """
-        deprecated. Use dataScope instead
+        """deprecated. Use dataScope instead
         """
         return self._run_rid
 
     @builtins.property
     def data_scope(self) -> Optional["scout_notebook_api_NotebookDataScope"]:
-        """
-        Optional for back-compatibility.
+        """Optional for back-compatibility.
         """
         return self._data_scope
 
@@ -67086,30 +66430,26 @@ class scout_notebook_api_CreateNotebookRequest(ConjureBeanType):
 
     @builtins.property
     def content_v2(self) -> Optional["scout_workbookcommon_api_UnifiedWorkbookContent"]:
-        """
-        Optional for backcompatibility
+        """Optional for backcompatibility
         """
         return self._content_v2
 
     @builtins.property
     def event_refs(self) -> List["scout_workbookcommon_api_EventReference"]:
-        """
-        Field to pin events to a workbook on creation.
+        """Field to pin events to a workbook on creation.
         """
         return self._event_refs
 
     @builtins.property
     def check_alert_refs(self) -> Optional[List["scout_workbookcommon_api_CheckAlertReference"]]:
-        """
-        Field to pin check alerts to a workbook on creation.
+        """Field to pin check alerts to a workbook on creation.
 Any specified CheckAlertReference will be added to the workbook along with it's corresponding EventReference.
         """
         return self._check_alert_refs
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the workbook. If not provided, the workbook will be created in the default workspace for
+        """The workspace in which to create the workbook. If not provided, the workbook will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -67387,8 +66727,7 @@ class scout_notebook_api_NotebookMetadata(ConjureBeanType):
 
     @builtins.property
     def run_rid(self) -> Optional[str]:
-        """
-        deprecated. Use dataScope instead
+        """deprecated. Use dataScope instead
         """
         return self._run_rid
 
@@ -67670,8 +67009,7 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
 
     @builtins.property
     def exact_match(self) -> Optional[str]:
-        """
-        Performs case insensitive exact match search on the title.
+        """Performs case insensitive exact match search on the title.
         """
         return self._exact_match
 
@@ -67693,8 +67031,7 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
 
     @builtins.property
     def exact_asset_rids(self) -> Optional[List[str]]:
-        """
-        Requires the set of assets in the query to exactly match the set of assets in the notebook.
+        """Requires the set of assets in the query to exactly match the set of assets in the notebook.
 To do a partial match, use an "and" on AssetRid queries.
         """
         return self._exact_asset_rids
@@ -67854,22 +67191,19 @@ class scout_notebook_api_SearchNotebooksRequest(ConjureBeanType):
 
     @builtins.property
     def show_drafts(self) -> bool:
-        """
-        Soon to be deprecated. Compose a draftState filter within SearchNotebooksQuery instead
+        """Soon to be deprecated. Compose a draftState filter within SearchNotebooksQuery instead
         """
         return self._show_drafts
 
     @builtins.property
     def show_archived(self) -> Optional[bool]:
-        """
-        Soon to be deprecated. Compose an archived filter within SearchNotebooksQuery instead
+        """Soon to be deprecated. Compose an archived filter within SearchNotebooksQuery instead
         """
         return self._show_archived
 
     @builtins.property
     def sort_by(self) -> Optional["scout_notebook_api_SortBy"]:
-        """
-        UPDATED_AT descending by default
+        """UPDATED_AT descending by default
         """
         return self._sort_by
 
@@ -67879,8 +67213,7 @@ class scout_notebook_api_SearchNotebooksRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1000.
+        """Defaults to 100. Will throw if larger than 1000.
         """
         return self._page_size
 
@@ -67997,8 +67330,7 @@ class scout_notebook_api_UpdateNotebookMetadataRequest(ConjureBeanType):
 
     @builtins.property
     def data_scope(self) -> Optional["scout_notebook_api_NotebookDataScope"]:
-        """
-        Optional for backcompatibility.
+        """Optional for backcompatibility.
         """
         return self._data_scope
 
@@ -68069,30 +67401,26 @@ class scout_notebook_api_UpdateNotebookRequest(ConjureBeanType):
 
     @builtins.property
     def content_v2(self) -> Optional["scout_workbookcommon_api_UnifiedWorkbookContent"]:
-        """
-        Optional for backcompatibility
+        """Optional for backcompatibility
         """
         return self._content_v2
 
     @builtins.property
     def latest_snapshot_rid(self) -> Optional[str]:
-        """
-        If provided, will only update the notebook if the latest snapshot matches the provided snapshot rid,
+        """If provided, will only update the notebook if the latest snapshot matches the provided snapshot rid,
 and throws SaveNotebookConflict otherwise.
         """
         return self._latest_snapshot_rid
 
     @builtins.property
     def event_refs(self) -> List["scout_workbookcommon_api_EventReference"]:
-        """
-        Replace existing pinned events on the workbook.
+        """Replace existing pinned events on the workbook.
         """
         return self._event_refs
 
     @builtins.property
     def check_alert_refs(self) -> Optional[List["scout_workbookcommon_api_CheckAlertReference"]]:
-        """
-        Field to pin check alerts to a workbook on creation.
+        """Field to pin check alerts to a workbook on creation.
 If not provided, will keep the set of check alerts on the workbook unchanged.
 Providing an empty set will remove all check alerts from the workbook.
 Any specified CheckAlertReference will be added to the workbook along with it's corresponding EventReference.
@@ -68475,8 +67803,7 @@ class scout_run_api_CreateOrUpdateRunRequest(ConjureBeanType):
 
     @builtins.property
     def run_rid(self) -> Optional[str]:
-        """
-        If a run with the same rid already exists, it will be updated.
+        """If a run with the same rid already exists, it will be updated.
 Otherwise, a new run will be created.
         """
         return self._run_rid
@@ -68492,8 +67819,7 @@ scout_run_api_CreateOrUpdateRunRequest.__module__ = "nominal_api.scout_run_api"
 
 
 class scout_run_api_CreateRunDataSource(ConjureBeanType):
-    """
-    For write requests, we want to allow for optional fields
+    """For write requests, we want to allow for optional fields
     """
 
     @builtins.classmethod
@@ -68515,16 +67841,14 @@ class scout_run_api_CreateRunDataSource(ConjureBeanType):
 
     @builtins.property
     def data_source(self) -> Optional["scout_run_api_DataSource"]:
-        """
-        One of dataSource and dataSourceRid must be present.
+        """One of dataSource and dataSourceRid must be present.
 dataSourceRid takes precedence.
         """
         return self._data_source
 
     @builtins.property
     def data_source_rid(self) -> Optional[str]:
-        """
-        One of dataSource and dataSourceRid must be present.
+        """One of dataSource and dataSourceRid must be present.
 dataSourceRid takes precedence.
         """
         return self._data_source_rid
@@ -68535,8 +67859,7 @@ dataSourceRid takes precedence.
 
     @builtins.property
     def series_tags(self) -> Dict[str, str]:
-        """
-        Used to resolve logical series for this data source.
+        """Used to resolve logical series for this data source.
         """
         return self._series_tags
 
@@ -68633,8 +67956,7 @@ class scout_run_api_CreateRunRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the run. If not provided, the run will be created in
+        """The workspace in which to create the run. If not provided, the run will be created in
 the default workspace for the user's organization, if the default workspace for the
 organization is configured.
 All data sources, attachments, and assets must be in the same workspace.
@@ -69014,8 +68336,7 @@ class scout_run_api_GetRunByIdRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to query for the run. If not provided, the run
+        """The workspace in which to query for the run. If not provided, the run
 will be queried in the default workspace for the user's organization,
 if the default workspace for the organization is configured and the user
 has access to it.
@@ -69116,8 +68437,7 @@ scout_run_api_Link.__module__ = "nominal_api.scout_run_api"
 
 
 class scout_run_api_RefNameAndType(ConjureBeanType):
-    """
-    Scoped to the org-level, intended to help the frontend
+    """Scoped to the org-level, intended to help the frontend
 prevent users from submitting invalid ref names, ex.
 using a `dataset` ref name for a `connection` data source
     """
@@ -69252,8 +68572,7 @@ class scout_run_api_Run(ConjureBeanType):
 
     @builtins.property
     def asset_data_scopes(self) -> List["scout_asset_api_AssetDataScope"]:
-        """
-        returns the data scopes for the assets associated with the run.
+        """returns the data scopes for the assets associated with the run.
         """
         return self._asset_data_scopes
 
@@ -69361,8 +68680,7 @@ scout_run_api_RunDataReviewSummary.__module__ = "nominal_api.scout_run_api"
 
 
 class scout_run_api_RunDataSource(ConjureBeanType):
-    """
-    For read requests, we want to require all fields
+    """For read requests, we want to require all fields
     """
 
     @builtins.classmethod
@@ -69390,16 +68708,14 @@ class scout_run_api_RunDataSource(ConjureBeanType):
 
     @builtins.property
     def offset(self) -> "scout_run_api_Duration":
-        """
-        This offset is used for small time-sync corrections. Notably, it is
+        """This offset is used for small time-sync corrections. Notably, it is
 not the offset to move a relative data source to the start of the run.
         """
         return self._offset
 
     @builtins.property
     def ref_name(self) -> str:
-        """
-        Included for convenience, duplicated from the key of the map
+        """Included for convenience, duplicated from the key of the map
         """
         return self._ref_name
 
@@ -69409,8 +68725,7 @@ not the offset to move a relative data source to the start of the run.
 
     @builtins.property
     def series_tags(self) -> Dict[str, str]:
-        """
-        Used to resolve logical series for this data source.
+        """Used to resolve logical series for this data source.
         """
         return self._series_tags
 
@@ -69692,8 +69007,7 @@ class scout_run_api_SearchQuery(ConjureUnionType):
 
     @builtins.property
     def exact_match(self) -> Optional[str]:
-        """
-        Performs case insensitive exact substring match search on the title.
+        """Performs case insensitive exact substring match search on the title.
         """
         return self._exact_match
 
@@ -69735,8 +69049,7 @@ class scout_run_api_SearchQuery(ConjureUnionType):
 
     @builtins.property
     def check_alert_states_filter(self) -> Optional["scout_run_api_CheckAlertStatesFilter"]:
-        """
-        Search for runs where its aggregated check alert satisfy a given operator and threshold.
+        """Search for runs where its aggregated check alert satisfy a given operator and threshold.
         """
         return self._check_alert_states_filter
 
@@ -69903,8 +69216,7 @@ class scout_run_api_SearchRunChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def ref_name_filter(self) -> Optional[List[str]]:
-        """
-        If not empty, will filter to channels from the selected DataSourceRefNames.
+        """If not empty, will filter to channels from the selected DataSourceRefNames.
         """
         return self._ref_name_filter
 
@@ -69918,8 +69230,7 @@ class scout_run_api_SearchRunChannelsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 1000. Will throw if larger than 1000.
+        """Defaults to 1000. Will throw if larger than 1000.
         """
         return self._page_size
 
@@ -69985,8 +69296,7 @@ class scout_run_api_SearchRunsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> int:
-        """
-        Will reject page sizes greater than 1000.
+        """Will reject page sizes greater than 1000.
         """
         return self._page_size
 
@@ -70000,8 +69310,7 @@ class scout_run_api_SearchRunsRequest(ConjureBeanType):
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Default search status is NOT_ARCHIVED if none are provided. Allows for including archived runs in search.
+        """Default search status is NOT_ARCHIVED if none are provided. Allows for including archived runs in search.
         """
         return self._archived_statuses
 
@@ -70167,8 +69476,7 @@ class scout_run_api_SortKey(ConjureUnionType):
 
     @builtins.property
     def property(self) -> Optional["scout_run_api_SortProperty"]:
-        """
-        Sort by a property value. Requires a property name, and will always sort null values last.
+        """Sort by a property value. Requires a property name, and will always sort null values last.
         """
         return self._property
 
@@ -70229,8 +69537,7 @@ class scout_run_api_SortOptions(ConjureBeanType):
 
     @builtins.property
     def sort_key(self) -> Optional["scout_run_api_SortKey"]:
-        """
-        Field to sort by. Includes both field and property-based sorting.
+        """Field to sort by. Includes both field and property-based sorting.
         """
         return self._sort_key
 
@@ -70386,8 +69693,7 @@ class scout_run_api_UpdateRunRequest(ConjureBeanType):
 
     @builtins.property
     def run_prefix(self) -> Optional[str]:
-        """
-        Pass in an empty string to remove the run prefix.
+        """Pass in an empty string to remove the run prefix.
         """
         return self._run_prefix
 
@@ -70443,8 +69749,7 @@ scout_run_api_UtcTimestamp.__module__ = "nominal_api.scout_run_api"
 
 
 class scout_run_api_WeakTimestampType(ConjureEnumType):
-    """
-    If a CSV data source is still being split, the timestamp type is not known.
+    """If a CSV data source is still being split, the timestamp type is not known.
     """
 
     ABSOLUTE = 'ABSOLUTE'
@@ -70504,8 +69809,7 @@ class scout_template_api_CommitTemplateRequest(ConjureBeanType):
 
     @builtins.property
     def latest_commit(self) -> Optional[str]:
-        """
-        If present, will validate that the latest commit matches this id,
+        """If present, will validate that the latest commit matches this id,
 and otherwise throw CommitConflict.
         """
         return self._latest_commit
@@ -70565,8 +69869,7 @@ class scout_template_api_CreateTemplateRequest(ConjureBeanType):
 
     @builtins.property
     def is_published(self) -> Optional[bool]:
-        """
-        Default is true
+        """Default is true
         """
         return self._is_published
 
@@ -70588,8 +69891,7 @@ class scout_template_api_CreateTemplateRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the template. If not provided, the template will be created in the default workspace for
+        """The workspace in which to create the template. If not provided, the template will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -70648,8 +69950,7 @@ class scout_template_api_MergeToMainRequest(ConjureBeanType):
 
     @builtins.property
     def branch_name(self) -> str:
-        """
-        If "main", the request will throw.
+        """If "main", the request will throw.
         """
         return self._branch_name
 
@@ -70659,8 +69960,7 @@ class scout_template_api_MergeToMainRequest(ConjureBeanType):
 
     @builtins.property
     def latest_commit_on_main(self) -> Optional[str]:
-        """
-        If present, will validate that the latest commit matches this id,
+        """If present, will validate that the latest commit matches this id,
 and otherwise throw CommitConflict.
         """
         return self._latest_commit_on_main
@@ -70704,8 +70004,7 @@ class scout_template_api_SaveTemplateRequest(ConjureBeanType):
 
     @builtins.property
     def latest_commit(self) -> Optional[str]:
-        """
-        If present, will validate that the latest commit matches this id,
+        """If present, will validate that the latest commit matches this id,
 and otherwise throw CommitConflict.
         """
         return self._latest_commit
@@ -70853,15 +70152,13 @@ class scout_template_api_SearchTemplatesQuery(ConjureUnionType):
 
     @builtins.property
     def exact_match(self) -> Optional[str]:
-        """
-        Performs case insensitive exact match search on the title.
+        """Performs case insensitive exact match search on the title.
         """
         return self._exact_match
 
     @builtins.property
     def search_text(self) -> Optional[str]:
-        """
-        Searches title and description only
+        """Searches title and description only
         """
         return self._search_text
 
@@ -70992,8 +70289,7 @@ class scout_template_api_SearchTemplatesRequest(ConjureBeanType):
 
     @builtins.property
     def sort_by(self) -> Optional["scout_template_api_SortBy"]:
-        """
-        EDITED_AT descending by default
+        """EDITED_AT descending by default
         """
         return self._sort_by
 
@@ -71003,8 +70299,7 @@ class scout_template_api_SearchTemplatesRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1_000.
+        """Defaults to 100. Will throw if larger than 1_000.
         """
         return self._page_size
 
@@ -71073,8 +70368,7 @@ scout_template_api_SortBy.__module__ = "nominal_api.scout_template_api"
 
 
 class scout_template_api_SortByField(ConjureEnumType):
-    """
-    UPDATED_AT is an alias for EDITED_AT.
+    """UPDATED_AT is an alias for EDITED_AT.
     """
 
     NAME = 'NAME'
@@ -71219,8 +70513,7 @@ class scout_template_api_TemplateMetadata(ConjureBeanType):
 
     @builtins.property
     def edited_at(self) -> str:
-        """
-        The time of the last permanent commit to the main branch.
+        """The time of the last permanent commit to the main branch.
         """
         return self._edited_at
 
@@ -71333,8 +70626,7 @@ class scout_template_api_UpdateRefNameRequest(ConjureBeanType):
 
     @builtins.property
     def latest_commit(self) -> Optional[str]:
-        """
-        If present, will validate that the latest commit matches this id,
+        """If present, will validate that the latest commit matches this id,
 and otherwise throw CommitConflict.
         """
         return self._latest_commit
@@ -71399,16 +70691,14 @@ class scout_units_api_Unit(ConjureBeanType):
 
     @builtins.property
     def property(self) -> Optional[str]:
-        """
-        Empty if no property is available. If two units measure different properties, it is not possible to 
+        """Empty if no property is available. If two units measure different properties, it is not possible to 
 convert between them.
         """
         return self._property
 
     @builtins.property
     def dimension(self) -> Optional["scout_units_api_UnitDimension"]:
-        """
-        The physical dimensions in terms of the base units of the system. It is only possible to convert units if 
+        """The physical dimensions in terms of the base units of the system. It is only possible to convert units if 
 they have the same dimension. Empty if the unit is a base unit.
         """
         return self._dimension
@@ -71424,8 +70714,7 @@ scout_units_api_Unit.__module__ = "nominal_api.scout_units_api"
 
 
 class scout_units_api_UnitDimension(ConjureBeanType):
-    """
-    The fundamental base dimensions and their exponents, whose product compose a unit.
+    """The fundamental base dimensions and their exponents, whose product compose a unit.
     """
 
     @builtins.classmethod
@@ -71586,8 +70875,7 @@ class scout_versioning_api_Commit(ConjureBeanType):
 
     @builtins.property
     def is_working_state(self) -> bool:
-        """
-        A working state commit is created via the `saveWorkingState` endpoint
+        """A working state commit is created via the `saveWorkingState` endpoint
 and is non-permanent. In the future, it may be compacted and not exist.
         """
         return self._is_working_state
@@ -71660,8 +70948,7 @@ class scout_versioning_api_CommitRequest(ConjureBeanType):
 
     @builtins.property
     def merge_parent_commit(self) -> Optional[str]:
-        """
-        If present, this existing commit will be the merge parent
+        """If present, this existing commit will be the merge parent
 of the new commit. It will be made permanent if not already,
 to prevent the merge parent from being compacted.
         """
@@ -71705,7 +70992,8 @@ scout_versioning_api_CompactCommitsRequest.__module__ = "nominal_api.scout_versi
 
 
 class scout_versioning_api_CompactionStrategy(ConjureUnionType):
-    """Needs to be expressible as a database query"""
+    """Needs to be expressible as a database query
+    """
     _older_than_days: Optional[int] = None
 
     @builtins.classmethod
@@ -72018,14 +71306,13 @@ scout_versioning_api_Tag.__module__ = "nominal_api.scout_versioning_api"
 
 
 class scout_video_VideoFileService(Service):
-    """
-    The video service manages individual video files and their metadata.
+    """The video service manages individual video files and their metadata.
     """
 
     def create(self, auth_header: str, request: "scout_video_api_CreateVideoFileRequest") -> "scout_video_api_VideoFile":
+        """Create and persist a video file entity with the given metadata
         """
-        Create and persist a video file entity with the given metadata
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72036,10 +71323,10 @@ class scout_video_VideoFileService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video-files/v1/video-files'
         _path = _path.format(**_path_params)
@@ -72055,9 +71342,9 @@ class scout_video_VideoFileService(Service):
         return _decoder.decode(_response.json(), scout_video_api_VideoFile, self._return_none_for_unknown_union_types)
 
     def get(self, auth_header: str, video_file_rid: str) -> "scout_video_api_VideoFile":
+        """Returns video file metadata associated with a video file RID.
         """
-        Returns video file metadata associated with a video file RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72067,8 +71354,8 @@ class scout_video_VideoFileService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72087,10 +71374,10 @@ class scout_video_VideoFileService(Service):
         return _decoder.decode(_response.json(), scout_video_api_VideoFile, self._return_none_for_unknown_union_types)
 
     def batch_get(self, auth_header: str, video_file_rids: List[str] = None) -> List["scout_video_api_VideoFile"]:
-        """
-        Returns all video files and their metadata associated with the given RIDs
+        """Returns all video files and their metadata associated with the given RIDs
         """
         video_file_rids = video_file_rids if video_file_rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72101,10 +71388,10 @@ class scout_video_VideoFileService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(video_file_rids)
+        _json: Any = _conjure_encoder.default(video_file_rids)
 
         _path = '/video-files/v1/video-files/batchGet'
         _path = _path.format(**_path_params)
@@ -72120,6 +71407,7 @@ class scout_video_VideoFileService(Service):
         return _decoder.decode(_response.json(), List[scout_video_api_VideoFile], self._return_none_for_unknown_union_types)
 
     def list_files_in_video(self, auth_header: str, video_rid: str) -> List["scout_video_api_VideoFile"]:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72130,10 +71418,10 @@ class scout_video_VideoFileService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(video_rid)
+        _json: Any = _conjure_encoder.default(video_rid)
 
         _path = '/video-files/v1/video-files/list-files-in-video'
         _path = _path.format(**_path_params)
@@ -72149,9 +71437,9 @@ class scout_video_VideoFileService(Service):
         return _decoder.decode(_response.json(), List[scout_video_api_VideoFile], self._return_none_for_unknown_union_types)
 
     def list_files_in_video_paginated(self, auth_header: str, video_rid: "scout_video_api_ListFilesInVideoRequest") -> "scout_video_api_ListFilesInVideoResponse":
+        """Returns a paginated list of all video files and their metadata associated with the given video RID.
         """
-        Returns a paginated list of all video files and their metadata associated with the given video RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72162,10 +71450,10 @@ class scout_video_VideoFileService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(video_rid)
+        _json: Any = _conjure_encoder.default(video_rid)
 
         _path = '/video-files/v1/video-files/list-files-in-video-paginated'
         _path = _path.format(**_path_params)
@@ -72181,9 +71469,9 @@ class scout_video_VideoFileService(Service):
         return _decoder.decode(_response.json(), scout_video_api_ListFilesInVideoResponse, self._return_none_for_unknown_union_types)
 
     def update(self, auth_header: str, request: "scout_video_api_UpdateVideoFileRequest", video_file_rid: str) -> "scout_video_api_VideoFile":
+        """Updates the metadata for a video file associated with the given RID.
         """
-        Updates the metadata for a video file associated with the given RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72194,11 +71482,11 @@ class scout_video_VideoFileService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video-files/v1/video-files/{videoFileRid}'
         _path = _path.format(**_path_params)
@@ -72214,10 +71502,10 @@ class scout_video_VideoFileService(Service):
         return _decoder.decode(_response.json(), scout_video_api_VideoFile, self._return_none_for_unknown_union_types)
 
     def archive(self, auth_header: str, video_file_rid: str) -> None:
-        """
-        Archives a video file, which excludes it from search and hides it from being visible
+        """Archives a video file, which excludes it from search and hides it from being visible
 in the UI, but does not permanently delete it. Archived video files can be unarchived.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72227,8 +71515,8 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72246,9 +71534,9 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         return
 
     def unarchive(self, auth_header: str, video_file_rid: str) -> None:
+        """Unarchive a previously archived video file, exposing it to the UI and search.
         """
-        Unarchive a previously archived video file, exposing it to the UI and search.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72258,8 +71546,8 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72277,9 +71565,9 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         return
 
     def get_ingest_status(self, auth_header: str, video_file_rid: str) -> "scout_video_api_GetIngestStatusResponse":
+        """Get the latest ingest status for a given video file by RID.
         """
-        Get the latest ingest status for a given video file by RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72289,8 +71577,8 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72309,10 +71597,10 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         return _decoder.decode(_response.json(), scout_video_api_GetIngestStatusResponse, self._return_none_for_unknown_union_types)
 
     def batch_get_ingest_status(self, auth_header: str, video_file_rids: List[str] = None) -> Dict[str, "scout_video_api_VideoFileIngestStatus"]:
-        """
-        Get the latest ingest status for a set of given video files by RID.
+        """Get the latest ingest status for a set of given video files by RID.
         """
         video_file_rids = video_file_rids if video_file_rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72323,10 +71611,10 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(video_file_rids)
+        _json: Any = _conjure_encoder.default(video_file_rids)
 
         _path = '/video-files/v1/videos/batch-get-ingest-status'
         _path = _path.format(**_path_params)
@@ -72342,9 +71630,9 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         return _decoder.decode(_response.json(), Dict[api_rids_VideoFileRid, scout_video_api_VideoFileIngestStatus], self._return_none_for_unknown_union_types)
 
     def update_ingest_status(self, auth_header: str, request: "scout_video_api_UpdateIngestStatusRequest", video_file_rid: str) -> None:
+        """Update the latest ingest status for a given video file by RID.
         """
-        Update the latest ingest status for a given video file by RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72355,11 +71643,11 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video-files/v1/videos/{videoFileRid}/ingest-status'
         _path = _path.format(**_path_params)
@@ -72374,10 +71662,10 @@ in the UI, but does not permanently delete it. Archived video files can be unarc
         return
 
     def get_segment_summaries(self, auth_header: str, video_file_rid: str) -> List["scout_video_api_SegmentSummary"]:
-        """
-        Returns the min and max absolute and media timestamps for each segment in a video file. 
+        """Returns the min and max absolute and media timestamps for each segment in a video file. 
 To be used during frame-timestamp mapping when playing back videos.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72387,8 +71675,8 @@ To be used during frame-timestamp mapping when playing back videos.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72407,10 +71695,10 @@ To be used during frame-timestamp mapping when playing back videos.
         return _decoder.decode(_response.json(), List[scout_video_api_SegmentSummary], self._return_none_for_unknown_union_types)
 
     def get_playlist(self, auth_header: str, video_file_rid: str) -> Any:
-        """
-        Generate an HLS playlist for a video file with the given RID to enable playback.
+        """Generate an HLS playlist for a video file with the given RID to enable playback.
 The HLS playlist will contain links to all of the video segments in the video in sequential order.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/octet-stream',
@@ -72420,8 +71708,8 @@ The HLS playlist will contain links to all of the video segments in the video in
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72448,12 +71736,12 @@ scout_video_VideoFileService.__module__ = "nominal_api.scout_video"
 
 
 class scout_video_VideoSegmentService(Service):
-    """
-    Upon ingestion, every video is split into smaller segments. The Video Segment Service manages operations on videos
+    """Upon ingestion, every video is split into smaller segments. The Video Segment Service manages operations on videos
 at the segment-level.
     """
 
     def create_segments(self, auth_header: str, request: "scout_video_api_CreateSegmentsRequest", video_rid: str) -> None:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72464,11 +71752,11 @@ at the segment-level.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}/create-segments'
         _path = _path.format(**_path_params)
@@ -72483,6 +71771,7 @@ at the segment-level.
         return
 
     def create_video_file_segments(self, auth_header: str, request: "scout_video_api_CreateSegmentsRequest", video_file_rid: str, video_rid: str) -> "scout_video_api_CreateSegmentsResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72493,12 +71782,12 @@ at the segment-level.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
-            'videoFileRid': video_file_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
+            'videoFileRid': quote(str(_conjure_encoder.default(video_file_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}/{videoFileRid}/create-segments'
         _path = _path.format(**_path_params)
@@ -72514,9 +71803,9 @@ at the segment-level.
         return _decoder.decode(_response.json(), scout_video_api_CreateSegmentsResponse, self._return_none_for_unknown_union_types)
 
     def get_segment_by_timestamp(self, auth_header: str, request: "scout_video_api_GetSegmentByTimestampRequest", video_rid: str) -> Optional["scout_video_api_Segment"]:
+        """Returns metadata for the segment within a video containing the requested absolute timestamp.
         """
-        Returns metadata for the segment within a video containing the requested absolute timestamp.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72527,11 +71816,11 @@ at the segment-level.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}/get-segment-by-timestamp'
         _path = _path.format(**_path_params)
@@ -72553,14 +71842,13 @@ scout_video_VideoSegmentService.__module__ = "nominal_api.scout_video"
 
 
 class scout_video_VideoService(Service):
-    """
-    The video service manages videos and video metadata.
+    """The video service manages videos and video metadata.
     """
 
     def get(self, auth_header: str, video_rid: str) -> "scout_video_api_Video":
+        """Returns video metadata associated with a video rid.
         """
-        Returns video metadata associated with a video rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72570,8 +71858,8 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72590,9 +71878,9 @@ class scout_video_VideoService(Service):
         return _decoder.decode(_response.json(), scout_video_api_Video, self._return_none_for_unknown_union_types)
 
     def batch_get(self, auth_header: str, request: "scout_video_api_GetVideosRequest") -> "scout_video_api_GetVideosResponse":
+        """Returns video metadata about each video given a set of video rids.
         """
-        Returns video metadata about each video given a set of video rids.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72603,10 +71891,10 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/batchGet'
         _path = _path.format(**_path_params)
@@ -72622,9 +71910,9 @@ class scout_video_VideoService(Service):
         return _decoder.decode(_response.json(), scout_video_api_GetVideosResponse, self._return_none_for_unknown_union_types)
 
     def search(self, auth_header: str, request: "scout_video_api_SearchVideosRequest") -> "scout_video_api_SearchVideosResponse":
+        """Returns metadata about videos that match a given query.
         """
-        Returns metadata about videos that match a given query.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72635,10 +71923,10 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/search'
         _path = _path.format(**_path_params)
@@ -72654,9 +71942,9 @@ class scout_video_VideoService(Service):
         return _decoder.decode(_response.json(), scout_video_api_SearchVideosResponse, self._return_none_for_unknown_union_types)
 
     def create(self, auth_header: str, request: "scout_video_api_CreateVideoRequest") -> "scout_video_api_Video":
+        """Creates and persists a video entity with the given metadata.
         """
-        Creates and persists a video entity with the given metadata.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72667,10 +71955,10 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos'
         _path = _path.format(**_path_params)
@@ -72686,9 +71974,9 @@ class scout_video_VideoService(Service):
         return _decoder.decode(_response.json(), scout_video_api_Video, self._return_none_for_unknown_union_types)
 
     def update_metadata(self, auth_header: str, request: "scout_video_api_UpdateVideoMetadataRequest", video_rid: str) -> "scout_video_api_Video":
+        """Updates the metadata for a video associated with the given video rid.
         """
-        Updates the metadata for a video associated with the given video rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72699,11 +71987,11 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}'
         _path = _path.format(**_path_params)
@@ -72719,6 +72007,7 @@ class scout_video_VideoService(Service):
         return _decoder.decode(_response.json(), scout_video_api_Video, self._return_none_for_unknown_union_types)
 
     def update_ingest_status(self, auth_header: str, request: "scout_video_api_UpdateIngestStatus", video_rid: str) -> None:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72729,11 +72018,11 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}/ingest-status'
         _path = _path.format(**_path_params)
@@ -72748,6 +72037,7 @@ class scout_video_VideoService(Service):
         return
 
     def get_ingest_status(self, auth_header: str, video_rid: str) -> "scout_video_api_DetailedIngestStatus":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72757,8 +72047,8 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72778,6 +72068,7 @@ class scout_video_VideoService(Service):
 
     def batch_get_ingest_status(self, auth_header: str, video_rids: List[str] = None) -> Dict[str, "scout_video_api_DetailedIngestStatus"]:
         video_rids = video_rids if video_rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72788,10 +72079,10 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(video_rids)
+        _json: Any = _conjure_encoder.default(video_rids)
 
         _path = '/video/v1/videos/batch-get-ingest-status'
         _path = _path.format(**_path_params)
@@ -72807,6 +72098,7 @@ class scout_video_VideoService(Service):
         return _decoder.decode(_response.json(), Dict[api_rids_VideoRid, scout_video_api_DetailedIngestStatus], self._return_none_for_unknown_union_types)
 
     def get_enriched_ingest_status(self, auth_header: str, request: "scout_video_api_GetEnrichedVideoIngestStatusRequest") -> Optional["scout_video_api_EnrichedVideoIngestStatus"]:
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72817,10 +72109,10 @@ class scout_video_VideoService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/enriched-ingest-status'
         _path = _path.format(**_path_params)
@@ -72836,10 +72128,10 @@ class scout_video_VideoService(Service):
         return None if _response.status_code == 204 else _decoder.decode(_response.json(), OptionalTypeWrapper[scout_video_api_EnrichedVideoIngestStatus], self._return_none_for_unknown_union_types)
 
     def archive(self, auth_header: str, video_rid: str) -> None:
-        """
-        Archives a video, which excludes it from search and hides it from being publicly visible, but does not
+        """Archives a video, which excludes it from search and hides it from being publicly visible, but does not
 permanently delete it. Archived videos can be unarchived.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72849,8 +72141,8 @@ permanently delete it. Archived videos can be unarchived.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72868,9 +72160,9 @@ permanently delete it. Archived videos can be unarchived.
         return
 
     def unarchive(self, auth_header: str, video_rid: str) -> None:
+        """Unarchives a previously archived video.
         """
-        Unarchives a previously archived video.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72880,8 +72172,8 @@ permanently delete it. Archived videos can be unarchived.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72899,10 +72191,10 @@ permanently delete it. Archived videos can be unarchived.
         return
 
     def get_playlist(self, auth_header: str, video_rid: str) -> Any:
-        """
-        Generates an HLS playlist for a video with the given video rid to enable playback. The HLS playlist will contain
+        """Generates an HLS playlist for a video with the given video rid to enable playback. The HLS playlist will contain
 links to all of the segments in the video in sequential order.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/octet-stream',
@@ -72912,8 +72204,8 @@ links to all of the segments in the video in sequential order.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72934,10 +72226,10 @@ links to all of the segments in the video in sequential order.
         return _raw
 
     def get_segment_summaries(self, auth_header: str, video_rid: str) -> List["scout_video_api_SegmentSummary"]:
-        """
-        Returns the min and max absolute and media timestamps for each segment in a video. To be used during 
+        """Returns the min and max absolute and media timestamps for each segment in a video. To be used during 
 frame-timestamp mapping.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -72947,8 +72239,8 @@ frame-timestamp mapping.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
         _json: Any = None
@@ -72967,12 +72259,12 @@ frame-timestamp mapping.
         return _decoder.decode(_response.json(), List[scout_video_api_SegmentSummary], self._return_none_for_unknown_union_types)
 
     def get_playlist_in_bounds(self, auth_header: str, request: "scout_video_api_GetPlaylistInBoundsRequest", video_rid: str) -> Any:
-        """
-        Generates an HLS playlist for a video with the given video rid to enable playback within an optional set of
+        """Generates an HLS playlist for a video with the given video rid to enable playback within an optional set of
 bounds. The HLS playlist will contain links to all of the segments in the video that overlap with the given 
 bounds.
 playlist will be limited to the given bounds.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/octet-stream',
@@ -72983,11 +72275,11 @@ playlist will be limited to the given bounds.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}/playlist-in-bounds'
         _path = _path.format(**_path_params)
@@ -73005,10 +72297,10 @@ playlist will be limited to the given bounds.
         return _raw
 
     def get_segment_summaries_in_bounds(self, auth_header: str, request: "scout_video_api_GetSegmentSummariesInBoundsRequest", video_rid: str) -> List["scout_video_api_SegmentSummary"]:
-        """
-        Returns the min and max absolute and media timestamps for each segment in a video that overlap with an 
+        """Returns the min and max absolute and media timestamps for each segment in a video that overlap with an 
 optional set of bounds.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -73019,11 +72311,11 @@ optional set of bounds.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}/segment-summaries-in-bounds'
         _path = _path.format(**_path_params)
@@ -73039,11 +72331,11 @@ optional set of bounds.
         return _decoder.decode(_response.json(), List[scout_video_api_SegmentSummary], self._return_none_for_unknown_union_types)
 
     def get_file_summaries(self, auth_header: str, request: "scout_video_api_GetFileSummariesRequest", video_rid: str) -> "scout_video_api_GetFileSummariesResponse":
-        """
-        Returns the min and max absolute timestamps from non-archived video files associated with a given video that
+        """Returns the min and max absolute timestamps from non-archived video files associated with a given video that
 overlap with an optional set of bounds. The files on the edges of the bounds will be truncated to segments
 that are inside or overlap with the bounds.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -73054,11 +72346,11 @@ that are inside or overlap with the bounds.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'videoRid': video_rid,
+        _path_params: Dict[str, str] = {
+            'videoRid': quote(str(_conjure_encoder.default(video_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/video/v1/videos/{videoRid}/get-ranges-with-existing-segment-data'
         _path = _path.format(**_path_params)
@@ -73135,8 +72427,7 @@ class scout_video_api_CreateSegment(ConjureBeanType):
 
     @builtins.property
     def frame_rate(self) -> float:
-        """
-        The average frame rate (FPS) of the segment calculated as total frames / duration in seconds.
+        """The average frame rate (FPS) of the segment calculated as total frames / duration in seconds.
         """
         return self._frame_rate
 
@@ -73205,8 +72496,7 @@ scout_video_api_CreateSegmentsResponse.__module__ = "nominal_api.scout_video_api
 
 
 class scout_video_api_CreateVideoFileRequest(ConjureBeanType):
-    """
-    Request to create and persist a video file
+    """Request to create and persist a video file
     """
 
     @builtins.classmethod
@@ -73293,8 +72583,7 @@ class scout_video_api_CreateVideoRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the video. If not provided, the video will be created in
+        """The workspace in which to create the video. If not provided, the video will be created in
 the default workspace for the user's organization, if the default workspace for the
 organization is configured.
         """
@@ -73366,8 +72655,7 @@ class scout_video_api_DetailedIngestStatus(ConjureUnionType):
 
     @builtins.property
     def in_progress(self) -> Optional[float]:
-        """
-        A number between 0 and 1 representing percentage progress.
+        """A number between 0 and 1 representing percentage progress.
         """
         return self._in_progress
 
@@ -73636,8 +72924,7 @@ class scout_video_api_GetSegmentByTimestampRequest(ConjureBeanType):
 
     @builtins.property
     def view_range_start(self) -> Optional["api_Timestamp"]:
-        """
-        The start of the view range used to dynamically calculate media timestamps. The first segment with an 
+        """The start of the view range used to dynamically calculate media timestamps. The first segment with an 
 overlap with the time bounds will have its minimum media timestamp set to 0, with every subsequent
 segment building media time cumulatively from that offset. This will determine the starting media
 timestamp of the returned segment. The view range should be the same as the one requested to get the
@@ -73808,8 +73095,7 @@ scout_video_api_ListFilesInVideoResponse.__module__ = "nominal_api.scout_video_a
 
 
 class scout_video_api_McapTimestampManifest(ConjureBeanType):
-    """
-    Timestamps are derived from the mcap file containing the video frames.
+    """Timestamps are derived from the mcap file containing the video frames.
     """
 
     @builtins.classmethod
@@ -73834,8 +73120,7 @@ scout_video_api_McapTimestampManifest.__module__ = "nominal_api.scout_video_api"
 
 
 class scout_video_api_NoTimestampManifest(ConjureBeanType):
-    """
-    these values will not be updated after ingest time, to allow for resetting. The updated values are stored
+    """these values will not be updated after ingest time, to allow for resetting. The updated values are stored
 implicitly through the segment timestamps.
     """
 
@@ -73854,15 +73139,13 @@ implicitly through the segment timestamps.
 
     @builtins.property
     def starting_timestamp(self) -> "api_Timestamp":
-        """
-        Specifies the original starting timestamp of the video.
+        """Specifies the original starting timestamp of the video.
         """
         return self._starting_timestamp
 
     @builtins.property
     def scale_parameter(self) -> Optional["scout_video_api_ScaleParameter"]:
-        """
-        A field that specifies that the frame rate of the video does not match the frame rate of the camera | i.e. a slowed down or sped up video. Can specify either the camera frame rate or the absolute end time.
+        """A field that specifies that the frame rate of the video does not match the frame rate of the camera | i.e. a slowed down or sped up video. Can specify either the camera frame rate or the absolute end time.
         """
         return self._scale_parameter
 
@@ -73932,8 +73215,7 @@ class scout_video_api_ScaleParameter(ConjureUnionType):
 
     @builtins.property
     def scale_factor(self) -> Optional[float]:
-        """
-        the scale factor can be used to calculate whether media duration differs from a video's | real duration, and if so, the true frame rate of the camera. The video time will thus be scaled | by the ratio of the real duration to media duration, or media frame rate to true frame rate.
+        """the scale factor can be used to calculate whether media duration differs from a video's | real duration, and if so, the true frame rate of the camera. The video time will thus be scaled | by the ratio of the real duration to media duration, or media frame rate to true frame rate.
         """
         return self._scale_factor
 
@@ -74182,8 +73464,7 @@ class scout_video_api_SearchVideosRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1_000.
+        """Defaults to 100. Will throw if larger than 1_000.
         """
         return self._page_size
 
@@ -74197,8 +73478,7 @@ class scout_video_api_SearchVideosRequest(ConjureBeanType):
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Default search status is NOT_ARCHIVED if none are provided. Allows for including archived videos in search.
+        """Default search status is NOT_ARCHIVED if none are provided. Allows for including archived videos in search.
         """
         return self._archived_statuses
 
@@ -74274,22 +73554,19 @@ class scout_video_api_Segment(ConjureBeanType):
 
     @builtins.property
     def frame_rate(self) -> float:
-        """
-        The average frame rate (FPS) of the segment calculated as total frames / duration in seconds.
+        """The average frame rate (FPS) of the segment calculated as total frames / duration in seconds.
         """
         return self._frame_rate
 
     @builtins.property
     def duration_seconds(self) -> float:
-        """
-        The duration of a segment in media time.
+        """The duration of a segment in media time.
         """
         return self._duration_seconds
 
     @builtins.property
     def timestamps(self) -> "scout_video_api_SegmentTimestamps":
-        """
-        for videos with frame-level timestamps, we provide mappings, otherwise we just include a single list
+        """for videos with frame-level timestamps, we provide mappings, otherwise we just include a single list
 of timestamps.
         """
         return self._timestamps
@@ -74301,8 +73578,7 @@ scout_video_api_Segment.__module__ = "nominal_api.scout_video_api"
 
 
 class scout_video_api_SegmentSummary(ConjureBeanType):
-    """
-    Bounding timestamps for the frames within a segment. For non-frame-mapped videos, the min and max media
+    """Bounding timestamps for the frames within a segment. For non-frame-mapped videos, the min and max media
 timestamps will be empty.
     """
 
@@ -74349,7 +73625,8 @@ class scout_video_api_SegmentTimestamps(ConjureUnionType):
     """A video segment will either contain timestamps or timestamp mappings depending on whether it is intended to
 be frame-mapped. Without a frame-timestamp mapping manifest file, a list of absolute timestamps will be
 automatically assigned to each segment based on media timestamps.. Otherwise, media timestamps will be
-extracted and mapped to those in the provided manifest."""
+extracted and mapped to those in the provided manifest.
+    """
     _timestamp_mappings: Optional["scout_video_api_TimestampMappings"] = None
 
     @builtins.classmethod
@@ -74467,8 +73744,7 @@ scout_video_api_SuccessIngestStatus.__module__ = "nominal_api.scout_video_api"
 
 
 class scout_video_api_TimestampMappings(ConjureBeanType):
-    """
-    contains 2 equal-length lists, which contain the video media time and user-provided absolute time
+    """contains 2 equal-length lists, which contain the video media time and user-provided absolute time
 for the frame at each index. Enables frame-mapping on the front-end.
     """
 
@@ -74627,8 +73903,7 @@ scout_video_api_UpdateIngestStatusRequest.__module__ = "nominal_api.scout_video_
 
 
 class scout_video_api_UpdateVideoFileRequest(ConjureBeanType):
-    """
-    Request to update metadata for a given video file.
+    """Request to update metadata for a given video file.
     """
 
     @builtins.classmethod
@@ -74843,8 +74118,7 @@ class scout_video_api_VideoAllSegmentsMetadata(ConjureBeanType):
 
     @builtins.property
     def scale_factor(self) -> Optional[float]:
-        """
-        deprecated, in favor of per-file VideoFileSegmentsMetadata scaleFactor. Will be removed after April 15th.
+        """deprecated, in favor of per-file VideoFileSegmentsMetadata scaleFactor. Will be removed after April 15th.
         """
         return self._scale_factor
 
@@ -74854,8 +74128,7 @@ class scout_video_api_VideoAllSegmentsMetadata(ConjureBeanType):
 
     @builtins.property
     def max_absolute_timestamp(self) -> "api_Timestamp":
-        """
-        the timestamp corresponding to absolute starting timestamp plus absolute duration of the video.
+        """the timestamp corresponding to absolute starting timestamp plus absolute duration of the video.
         """
         return self._max_absolute_timestamp
 
@@ -74865,36 +74138,31 @@ class scout_video_api_VideoAllSegmentsMetadata(ConjureBeanType):
 
     @builtins.property
     def media_frame_rate(self) -> float:
-        """
-        The average media frame rate (FPS) of the video calculated as total frames / duration in seconds.
+        """The average media frame rate (FPS) of the video calculated as total frames / duration in seconds.
         """
         return self._media_frame_rate
 
     @builtins.property
     def min_timestamp(self) -> Optional["api_Timestamp"]:
-        """
-        deprecated. Will be removed after April 15th.
+        """deprecated. Will be removed after April 15th.
         """
         return self._min_timestamp
 
     @builtins.property
     def max_timestamp(self) -> Optional["api_Timestamp"]:
-        """
-        deprecated. Will be removed after April 15th.
+        """deprecated. Will be removed after April 15th.
         """
         return self._max_timestamp
 
     @builtins.property
     def duration_seconds(self) -> Optional[float]:
-        """
-        deprecated. Will be removed after April 15th.
+        """deprecated. Will be removed after April 15th.
         """
         return self._duration_seconds
 
     @builtins.property
     def frame_rate(self) -> Optional[float]:
-        """
-        deprecated. Will be removed after April 15th.
+        """deprecated. Will be removed after April 15th.
         """
         return self._frame_rate
 
@@ -74905,8 +74173,7 @@ scout_video_api_VideoAllSegmentsMetadata.__module__ = "nominal_api.scout_video_a
 
 
 class scout_video_api_VideoFile(ConjureBeanType):
-    """
-    Representation of a single user-provided video file.
+    """Representation of a single user-provided video file.
     """
 
     @builtins.classmethod
@@ -75071,8 +74338,7 @@ scout_video_api_VideoFileIngestStatusVisitor.__module__ = "nominal_api.scout_vid
 
 
 class scout_video_api_VideoFileOriginMetadata(ConjureBeanType):
-    """
-    Metadata about the origin of the video file. This includes the original source of the video file and 
+    """Metadata about the origin of the video file. This includes the original source of the video file and 
 additional timestamp metadata used to time-sync the video file.
     """
 
@@ -75104,8 +74370,7 @@ scout_video_api_VideoFileOriginMetadata.__module__ = "nominal_api.scout_video_ap
 
 
 class scout_video_api_VideoFileSegmentsMetadata(ConjureBeanType):
-    """
-    High-level metadata about the segments comprising a video file post-segmentation.
+    """High-level metadata about the segments comprising a video file post-segmentation.
     """
 
     @builtins.classmethod
@@ -75175,7 +74440,8 @@ class scout_video_api_VideoFileTimestampManifest(ConjureUnionType):
     """A video file’s timestamp manifest specifies how to determine absolute timestamps for each frame. In an MCAP 
 file, this data is embedded within the source file. Alternatively, the manifest may be provided as an external 
 sidecar file. If no manifest is available, the timestamps are calculated by applying a starting offset to the 
-presentation timestamp of each frame."""
+presentation timestamp of each frame.
+    """
     _mcap: Optional["scout_video_api_McapTimestampManifest"] = None
     _s3path: Optional[str] = None
     _no_manifest: Optional["scout_video_api_NoTimestampManifest"] = None
@@ -75542,8 +74808,7 @@ class scout_workbookcommon_api_EventReference(ConjureBeanType):
 
     @builtins.property
     def rid(self) -> str:
-        """
-        The event's unique identifier.
+        """The event's unique identifier.
         """
         return self._rid
 
@@ -75651,8 +74916,7 @@ class scout_workbookcommon_api_WorkbookContent(ConjureBeanType):
 
     @builtins.property
     def charts(self) -> Dict[str, "scout_chartdefinition_api_VizDefinition"]:
-        """
-        map of visualizations. Previously termed "charts"
+        """map of visualizations. Previously termed "charts"
         """
         return self._charts
 
@@ -75707,8 +74971,7 @@ class secrets_api_CreateSecretRequest(ConjureBeanType):
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the secret. If not provided, the secret will be created in
+        """The workspace in which to create the secret. If not provided, the secret will be created in
 the default workspace for the user's organization, if the default workspace for the
 organization is configured.
         """
@@ -75954,8 +75217,7 @@ class secrets_api_SearchSecretsRequest(ConjureBeanType):
 
     @builtins.property
     def page_size(self) -> Optional[int]:
-        """
-        Defaults to 100. Will throw if larger than 1000.
+        """Defaults to 100. Will throw if larger than 1000.
         """
         return self._page_size
 
@@ -75969,8 +75231,7 @@ class secrets_api_SearchSecretsRequest(ConjureBeanType):
 
     @builtins.property
     def archived_statuses(self) -> Optional[List["api_ArchivedStatus"]]:
-        """
-        Default search status is NOT_ARCHIVED if none are provided. Allows for including archived secrets in search.
+        """Default search status is NOT_ARCHIVED if none are provided. Allows for including archived secrets in search.
         """
         return self._archived_statuses
 
@@ -76075,14 +75336,13 @@ secrets_api_Secret.__module__ = "nominal_api.secrets_api"
 
 
 class secrets_api_SecretService(Service):
-    """
-    The secrets service provides functionality for creating and retrieving customer secrets (e.g. influx passwords, API keys, etc)
+    """The secrets service provides functionality for creating and retrieving customer secrets (e.g. influx passwords, API keys, etc)
     """
 
     def create(self, auth_header: str, request: "secrets_api_CreateSecretRequest") -> "secrets_api_Secret":
+        """Create a new secret. The secret value is immutable after creation.
         """
-        Create a new secret. The secret value is immutable after creation.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76093,10 +75353,10 @@ class secrets_api_SecretService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/secrets/v1/secrets'
         _path = _path.format(**_path_params)
@@ -76112,9 +75372,9 @@ class secrets_api_SecretService(Service):
         return _decoder.decode(_response.json(), secrets_api_Secret, self._return_none_for_unknown_union_types)
 
     def get(self, auth_header: str, rid: str) -> "secrets_api_Secret":
+        """Get secret by rid.
         """
-        Get secret by rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76124,8 +75384,8 @@ class secrets_api_SecretService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -76144,9 +75404,9 @@ class secrets_api_SecretService(Service):
         return _decoder.decode(_response.json(), secrets_api_Secret, self._return_none_for_unknown_union_types)
 
     def get_batch(self, auth_header: str, request: "secrets_api_GetSecretsRequest") -> "secrets_api_GetSecretsResponse":
+        """Get secrets by a set of rids.
         """
-        Get secrets by a set of rids.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76157,10 +75417,10 @@ class secrets_api_SecretService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/secrets/v1/secrets/batch'
         _path = _path.format(**_path_params)
@@ -76176,9 +75436,9 @@ class secrets_api_SecretService(Service):
         return _decoder.decode(_response.json(), secrets_api_GetSecretsResponse, self._return_none_for_unknown_union_types)
 
     def update(self, auth_header: str, request: "secrets_api_UpdateSecretRequest", rid: str) -> "secrets_api_Secret":
+        """Update a secret by rid.
         """
-        Update a secret by rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76189,11 +75449,11 @@ class secrets_api_SecretService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/secrets/v1/secrets/{rid}'
         _path = _path.format(**_path_params)
@@ -76209,10 +75469,10 @@ class secrets_api_SecretService(Service):
         return _decoder.decode(_response.json(), secrets_api_Secret, self._return_none_for_unknown_union_types)
 
     def delete(self, auth_header: str, rid: str) -> None:
-        """
-        Delete a secret by rid. This is a permanent deletion. To perform a soft delete,
+        """Delete a secret by rid. This is a permanent deletion. To perform a soft delete,
 use the archive endpoint.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76222,8 +75482,8 @@ use the archive endpoint.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -76241,9 +75501,9 @@ use the archive endpoint.
         return
 
     def archive(self, auth_header: str, rid: str) -> None:
+        """Archive a secret by rid.
         """
-        Archive a secret by rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76253,8 +75513,8 @@ use the archive endpoint.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -76272,9 +75532,9 @@ use the archive endpoint.
         return
 
     def unarchive(self, auth_header: str, rid: str) -> None:
+        """Unarchive a secret by rid.
         """
-        Unarchive a secret by rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76284,8 +75544,8 @@ use the archive endpoint.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -76303,9 +75563,9 @@ use the archive endpoint.
         return
 
     def search(self, auth_header: str, request: "secrets_api_SearchSecretsRequest") -> "secrets_api_SearchSecretsResponse":
+        """Returns metadata about secrets that match a given query.
         """
-        Returns metadata about secrets that match a given query.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76316,10 +75576,10 @@ use the archive endpoint.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/secrets/v1/secrets/search'
         _path = _path.format(**_path_params)
@@ -76427,8 +75687,7 @@ secrets_api_UpdateSecretRequest.__module__ = "nominal_api.secrets_api"
 
 
 class security_api_workspace_RemoveType(ConjureBeanType):
-    """
-    The request to remove a field from a workspace.
+    """The request to remove a field from a workspace.
     """
 
     @builtins.classmethod
@@ -76448,7 +75707,8 @@ security_api_workspace_RemoveType.__module__ = "nominal_api.security_api_workspa
 class security_api_workspace_UpdateOrRemoveWorkspaceDisplayName(ConjureUnionType):
     """The request to update the display name of the workspace. The request will replace the existing display name
 with the display name specified if it's provided. Otherwise, the current display name will be removed from
-the workspace."""
+the workspace.
+    """
     _display_name: Optional[str] = None
     _remove_type: Optional["security_api_workspace_RemoveType"] = None
 
@@ -76528,7 +75788,8 @@ security_api_workspace_UpdateOrRemoveWorkspaceDisplayNameVisitor.__module__ = "n
 class security_api_workspace_UpdateOrRemoveWorkspaceSymbol(ConjureUnionType):
     """The request to update the symbol of the workspace. The request will replace the existing symbol
 with the symbol specified if it's provided. Otherwise, the current symbol will be removed from
-the workspace."""
+the workspace.
+    """
     _symbol: Optional["security_api_workspace_WorkspaceSymbol"] = None
     _remove_type: Optional["security_api_workspace_RemoveType"] = None
 
@@ -76657,8 +75918,7 @@ class security_api_workspace_Workspace(ConjureBeanType):
 
     @builtins.property
     def id(self) -> str:
-        """
-        A unique identifier for the workspace within the organization. The workspace ID must be lower case alphanumeric characters, optionally separated by hyphens.
+        """A unique identifier for the workspace within the organization. The workspace ID must be lower case alphanumeric characters, optionally separated by hyphens.
         """
         return self._id
 
@@ -76685,15 +75945,14 @@ security_api_workspace_Workspace.__module__ = "nominal_api.security_api_workspac
 
 
 class security_api_workspace_WorkspaceService(Service):
-    """
-    This service provides information about workspaces. Workspaces provide access control boundaries. All resources in
+    """This service provides information about workspaces. Workspaces provide access control boundaries. All resources in
 Nominal live within a workspace.
     """
 
     def get_workspaces(self, auth_header: str) -> List["security_api_workspace_Workspace"]:
+        """Gets all workspaces that the requesting user belongs to.
         """
-        Gets all workspaces that the requesting user belongs to.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76703,7 +75962,7 @@ Nominal live within a workspace.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -76722,9 +75981,9 @@ Nominal live within a workspace.
         return _decoder.decode(_response.json(), List[security_api_workspace_Workspace], self._return_none_for_unknown_union_types)
 
     def get_workspace(self, auth_header: str, workspace_rid: str) -> "security_api_workspace_Workspace":
+        """Gets the workspace with the specified WorkspaceRid.
         """
-        Gets the workspace with the specified WorkspaceRid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76734,8 +75993,8 @@ Nominal live within a workspace.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'workspaceRid': workspace_rid,
+        _path_params: Dict[str, str] = {
+            'workspaceRid': quote(str(_conjure_encoder.default(workspace_rid)), safe=''),
         }
 
         _json: Any = None
@@ -76754,9 +76013,9 @@ Nominal live within a workspace.
         return _decoder.decode(_response.json(), security_api_workspace_Workspace, self._return_none_for_unknown_union_types)
 
     def update_workspace(self, auth_header: str, request: "security_api_workspace_UpdateWorkspaceRequest", rid: str) -> "security_api_workspace_Workspace":
+        """Updates the settings of the workspace with the specified WorkspaceRid.
         """
-        Updates the settings of the workspace with the specified WorkspaceRid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76767,11 +76026,11 @@ Nominal live within a workspace.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/workspaces/v1/workspaces/{rid}'
         _path = _path.format(**_path_params)
@@ -76787,11 +76046,11 @@ Nominal live within a workspace.
         return _decoder.decode(_response.json(), security_api_workspace_Workspace, self._return_none_for_unknown_union_types)
 
     def get_default_workspace(self, auth_header: str) -> Optional["security_api_workspace_Workspace"]:
-        """
-        Gets the default workspace for the requesting user. If the user belongs to a single workspace,
+        """Gets the default workspace for the requesting user. If the user belongs to a single workspace,
 that workspace is returned. Otherwise, if the user's organization has a default workspace and
 the user belongs to it, that will be returned.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -76801,7 +76060,7 @@ the user belongs to it, that will be returned.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -76877,22 +76136,19 @@ class security_api_workspace_WorkspaceSymbol(ConjureUnionType):
 
     @builtins.property
     def icon(self) -> Optional[str]:
-        """
-        Workspace icon name (e.g. castle)
+        """Workspace icon name (e.g. castle)
         """
         return self._icon
 
     @builtins.property
     def emoji(self) -> Optional[str]:
-        """
-        Workspace emoji name (e.g. :castle:)
+        """Workspace emoji name (e.g. :castle:)
         """
         return self._emoji
 
     @builtins.property
     def image(self) -> Optional[str]:
-        """
-        Workspace image url (e.g. https://example.com/image.png)
+        """Workspace image url (e.g. https://example.com/image.png)
         """
         return self._image
 
@@ -76955,8 +76211,7 @@ class storage_datasource_api_CreateNominalDataSourceRequest(ConjureBeanType):
 
     @builtins.property
     def id(self) -> str:
-        """
-        A human readable identifier. Must be unique within an organization.
+        """A human readable identifier. Must be unique within an organization.
         """
         return self._id
 
@@ -76966,8 +76221,7 @@ class storage_datasource_api_CreateNominalDataSourceRequest(ConjureBeanType):
 
     @builtins.property
     def granularity(self) -> Optional["api_Granularity"]:
-        """
-        Specifies the timestamp granularity of the datasource (i.e., picosecond or nanosecond scale).
+        """Specifies the timestamp granularity of the datasource (i.e., picosecond or nanosecond scale).
 Defaults to nanosecond granularity.
         """
         return self._granularity
@@ -76978,8 +76232,7 @@ Defaults to nanosecond granularity.
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the datasource. If not provided, the datasource will be created in the default workspace for
+        """The workspace in which to create the datasource. If not provided, the datasource will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -76991,8 +76244,7 @@ storage_datasource_api_CreateNominalDataSourceRequest.__module__ = "nominal_api.
 
 
 class storage_datasource_api_NominalDataSource(ConjureBeanType):
-    """
-    A logical grouping of series.
+    """A logical grouping of series.
     """
 
     @builtins.classmethod
@@ -77030,8 +76282,7 @@ class storage_datasource_api_NominalDataSource(ConjureBeanType):
 
     @builtins.property
     def data_last_written_at(self) -> Optional[str]:
-        """
-        Returns the approximate timestamp at which data was written to the data source.
+        """Returns the approximate timestamp at which data was written to the data source.
 Will be accurate to within 1 minute.
         """
         return self._data_last_written_at
@@ -77051,14 +76302,13 @@ storage_datasource_api_NominalDataSource.__module__ = "nominal_api.storage_datas
 
 
 class storage_datasource_api_NominalDataSourceService(Service):
-    """
-    Manages data sources (logical groupings of series) that are stored by Nominal.
+    """Manages data sources (logical groupings of series) that are stored by Nominal.
     """
 
     def create(self, auth_header: str, request: "storage_datasource_api_CreateNominalDataSourceRequest") -> "storage_datasource_api_NominalDataSource":
+        """Creates a data source.
         """
-        Creates a data source.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77069,10 +76319,10 @@ class storage_datasource_api_NominalDataSourceService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/storage/data-source/v1'
         _path = _path.format(**_path_params)
@@ -77088,6 +76338,7 @@ class storage_datasource_api_NominalDataSourceService(Service):
         return _decoder.decode(_response.json(), storage_datasource_api_NominalDataSource, self._return_none_for_unknown_union_types)
 
     def update(self, auth_header: str, request: "storage_datasource_api_UpdateNominalDataSourceRequest", rid: str) -> "storage_datasource_api_NominalDataSource":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77098,11 +76349,11 @@ class storage_datasource_api_NominalDataSourceService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/storage/data-source/v1/{rid}'
         _path = _path.format(**_path_params)
@@ -77118,12 +76369,12 @@ class storage_datasource_api_NominalDataSourceService(Service):
         return _decoder.decode(_response.json(), storage_datasource_api_NominalDataSource, self._return_none_for_unknown_union_types)
 
     def batch_get(self, auth_header: str, rids: List[str] = None) -> List["storage_datasource_api_NominalDataSource"]:
-        """
-        Retrieves the data sources for the given data source RIDs.
+        """Retrieves the data sources for the given data source RIDs.
 
 Excludes data sources that do not exist or are unauthorized. A maximum of 1000 rids can be requested.
         """
         rids = rids if rids is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77134,10 +76385,10 @@ Excludes data sources that do not exist or are unauthorized. A maximum of 1000 r
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(rids)
+        _json: Any = _conjure_encoder.default(rids)
 
         _path = '/storage/data-source/v1/batch-get'
         _path = _path.format(**_path_params)
@@ -77153,9 +76404,9 @@ Excludes data sources that do not exist or are unauthorized. A maximum of 1000 r
         return _decoder.decode(_response.json(), List[storage_datasource_api_NominalDataSource], self._return_none_for_unknown_union_types)
 
     def update_last_written_timestamp(self, auth_header: str, rid: str, timestamp: str) -> None:
+        """Sets the timestamp that the Nominal Data Source in question was last written to. Only needs to be called once per minute.
         """
-        Sets the timestamp that the Nominal Data Source in question was last written to. Only needs to be called once per minute.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77166,11 +76417,11 @@ Excludes data sources that do not exist or are unauthorized. A maximum of 1000 r
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(timestamp)
+        _json: Any = _conjure_encoder.default(timestamp)
 
         _path = '/storage/data-source/v1/{rid}/last-written'
         _path = _path.format(**_path_params)
@@ -77236,16 +76487,14 @@ class storage_deletion_api_DeleteDataRequest(ConjureBeanType):
 
     @builtins.property
     def time_range(self) -> Optional["storage_deletion_api_TimeRange"]:
-        """
-        If specified, will only delete data within the given time range.
+        """If specified, will only delete data within the given time range.
 If not specified, will delete data across all time.
         """
         return self._time_range
 
     @builtins.property
     def tags(self) -> Optional[Dict[str, str]]:
-        """
-        If specified, will only delete data that fully matches the given tags.
+        """If specified, will only delete data that fully matches the given tags.
 If not specified, will delete data across all tags.
         """
         return self._tags
@@ -77257,15 +76506,14 @@ storage_deletion_api_DeleteDataRequest.__module__ = "nominal_api.storage_deletio
 
 
 class storage_deletion_api_InternalNominalStorageDataDeletionService(Service):
-    """
-    For internal user only. Contact Nominal support if you need to delete data.
+    """For internal user only. Contact Nominal support if you need to delete data.
     """
 
     def delete(self, auth_header: str, request: "storage_deletion_api_DeleteDataRequest") -> None:
-        """
-        Deletes stored data. This is an irreversible operation so be careful about specified
+        """Deletes stored data. This is an irreversible operation so be careful about specified
 time range and tag scope.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77276,10 +76524,10 @@ time range and tag scope.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/internal/storage-data-deletion/v1/delete-data'
         _path = _path.format(**_path_params)
@@ -77329,8 +76577,7 @@ storage_deletion_api_TimeRange.__module__ = "nominal_api.storage_deletion_api"
 
 
 class storage_series_api_NominalDataType(ConjureEnumType):
-    """
-    The data types supported by Nominal's database.
+    """The data types supported by Nominal's database.
     """
 
     DOUBLE = 'DOUBLE'
@@ -77358,7 +76605,8 @@ storage_series_api_NominalDataType.__module__ = "nominal_api.storage_series_api"
 
 
 class storage_writer_api_ArrayPoints(ConjureUnionType):
-    """Array points for the internal API for directly writing points which supports all points types."""
+    """Array points for the internal API for directly writing points which supports all points types.
+    """
     _double: Optional[List["storage_writer_api_DoubleArrayPoint"]] = None
     _string: Optional[List["storage_writer_api_StringArrayPoint"]] = None
 
@@ -77437,7 +76685,8 @@ storage_writer_api_ArrayPointsVisitor.__module__ = "nominal_api.storage_writer_a
 
 class storage_writer_api_ArraysValues(ConjureUnionType):
     """Each element within the outer list corresponds to an Array point. Subsequent inner lists contain the array 
-values recorded for that point."""
+values recorded for that point.
+    """
     _strings1d: Optional[List[List[str]]] = None
     _doubles1d: Optional[List[List[float]]] = None
 
@@ -77515,8 +76764,7 @@ storage_writer_api_ArraysValuesVisitor.__module__ = "nominal_api.storage_writer_
 
 
 class storage_writer_api_ColumnBatch(ConjureBeanType):
-    """
-    Batch of data to stream for a single channel with their associated timestamps.
+    """Batch of data to stream for a single channel with their associated timestamps.
     """
 
     @builtins.classmethod
@@ -77538,30 +76786,26 @@ class storage_writer_api_ColumnBatch(ConjureBeanType):
 
     @builtins.property
     def channel(self) -> str:
-        """
-        Channel within nominal to stream data to.
+        """Channel within nominal to stream data to.
         """
         return self._channel
 
     @builtins.property
     def tags(self) -> Dict[str, str]:
-        """
-        Mapping of key-value pairs to provide as tags to all points within the batch
+        """Mapping of key-value pairs to provide as tags to all points within the batch
         """
         return self._tags
 
     @builtins.property
     def timestamps(self) -> List["api_Timestamp"]:
-        """
-        List of timestamp values that correspond to the provided list of column values. The number of timestamps
+        """List of timestamp values that correspond to the provided list of column values. The number of timestamps
 provided MUST match the number of columnar values provided, otherwise a 400 error will be returned.
         """
         return self._timestamps
 
     @builtins.property
     def values(self) -> "storage_writer_api_ColumnValues":
-        """
-        List of time series values that should be ingested to a single channel. The number of columnar values
+        """List of time series values that should be ingested to a single channel. The number of columnar values
 provided MUST match the number of timestamps provided, otherwise a 400 error will be returned.
         """
         return self._values
@@ -77573,7 +76817,8 @@ storage_writer_api_ColumnBatch.__module__ = "nominal_api.storage_writer_api"
 
 
 class storage_writer_api_ColumnValues(ConjureUnionType):
-    """List of values for a set of points to ingest from a single channel."""
+    """List of values for a set of points to ingest from a single channel.
+    """
     _strings: Optional[List[str]] = None
     _doubles: Optional[List[float]] = None
     _ints: Optional[List[int]] = None
@@ -77693,18 +76938,17 @@ storage_writer_api_ColumnValuesVisitor.__module__ = "nominal_api.storage_writer_
 
 
 class storage_writer_api_DirectNominalChannelWriterService(Service):
-    """
-    Writes data points directly to Nominal's managed database offering.
+    """Writes data points directly to Nominal's managed database offering.
     """
 
     def write_batches(self, auth_header: str, request: "storage_writer_api_WriteBatchesRequest") -> None:
-        """
-        Synchronously writes batches of records to a Nominal data source. This endpoint bypasses the
+        """Synchronously writes batches of records to a Nominal data source. This endpoint bypasses the
 Channel Writer service entirely, and should only be used if the implications are well understood.
 
 If you call this endpoint, writes will go directly into Nominal DB and will not be placed in Nominal's
 durable queue. This results in lower latency, but also consequently lower durability.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77715,10 +76959,10 @@ durable queue. This results in lower latency, but also consequently lower durabi
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/storage/direct-writer/v1'
         _path = _path.format(**_path_params)
@@ -77884,14 +77128,13 @@ storage_writer_api_LogValue.__module__ = "nominal_api.storage_writer_api"
 
 
 class storage_writer_api_NominalChannelWriterService(Service):
-    """
-    Write data points to Nominal data sources.
+    """Write data points to Nominal data sources.
     """
 
     def write_batches(self, auth_header: str, request: "storage_writer_api_WriteBatchesRequestExternal") -> None:
+        """Synchronously writes batches of records to a Nominal data source.
         """
-        Synchronously writes batches of records to a Nominal data source.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77902,10 +77145,10 @@ class storage_writer_api_NominalChannelWriterService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/storage/writer/v1'
         _path = _path.format(**_path_params)
@@ -77920,14 +77163,14 @@ class storage_writer_api_NominalChannelWriterService(Service):
         return
 
     def write_column_batches(self, auth_header: str, request: "storage_writer_api_WriteColumnBatchesRequest") -> None:
-        """
-        Synchronously writes batches of columns of data to a Nominal data source.
+        """Synchronously writes batches of columns of data to a Nominal data source.
 
 This is a column-major variant of writeBatches (which is row-major) to optimize serialization and compression
 time for client applications streaming large numbers of points from a single column at a time. This has the
 tradeoff of slightly larger sizes post-gzipping of requests, so should be used in the particular case where
 the main bottleneck is in encoding columnar data into the row-based format found in writeBatches.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77938,10 +77181,10 @@ the main bottleneck is in encoding columnar data into the row-based format found
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/storage/writer/v1/columnar'
         _path = _path.format(**_path_params)
@@ -77956,14 +77199,14 @@ the main bottleneck is in encoding columnar data into the row-based format found
         return
 
     def write_telegraf_batches(self, auth_header: str, data_source_rid: str, request: "storage_writer_api_WriteTelegrafBatchesRequest") -> None:
-        """
-        Synchronously writes batches of records to a Nominal data source.
+        """Synchronously writes batches of records to a Nominal data source.
 
 Has the same functionality as writeBatches, but is compatible with the Telegraf output format.
 Assumes that the Telegraf batch format is used. Timestamp is assumed to be in nanoseconds.
 The URL in the Telegraf output plugin configuration should be the fully qualified URL,
 including the dataSourceRid query parameter.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -77974,11 +77217,11 @@ including the dataSourceRid query parameter.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataSourceRid': data_source_rid,
+        _path_params: Dict[str, str] = {
+            'dataSourceRid': quote(str(_conjure_encoder.default(data_source_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/storage/writer/v1/telegraf/{dataSourceRid}'
         _path = _path.format(**_path_params)
@@ -77993,8 +77236,7 @@ including the dataSourceRid query parameter.
         return
 
     def write_prometheus_batches(self, auth_header: str, data_source_rid: str, request: Any) -> None:
-        """
-        Synchronously writes batches of records to a Nominal data source.
+        """Synchronously writes batches of records to a Nominal data source.
 
 Has the same functionality as writeBatches, but is encoded using the Prometheus remote write
 format. We follow the specification defined here: https://prometheus.io/docs/specs/remote_write_spec/
@@ -78002,6 +77244,7 @@ There are a few notable caveats:
   1. Must be content encoded as application/x-protobuf
   2. Must be compressed using snappy compression
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -78012,8 +77255,8 @@ There are a few notable caveats:
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataSourceRid': data_source_rid,
+        _path_params: Dict[str, str] = {
+            'dataSourceRid': quote(str(_conjure_encoder.default(data_source_rid)), safe=''),
         }
 
         _data: Any = request
@@ -78031,13 +77274,13 @@ There are a few notable caveats:
         return
 
     def prometheus_remote_write_health_check(self, auth_header: str, data_source_rid: str) -> bool:
-        """
-        Performs a health check for prometheus remote write Vector sink. All this endpoint does
+        """Performs a health check for prometheus remote write Vector sink. All this endpoint does
 is verify if the caller is authenticated and the server is online. Once Vector allows the Prometheus
 remote write endpoint to configure the healthcheck url, we can remove this endpoint.
 
 See: https://github.com/vectordotdev/vector/issues/8279
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -78047,8 +77290,8 @@ See: https://github.com/vectordotdev/vector/issues/8279
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataSourceRid': data_source_rid,
+        _path_params: Dict[str, str] = {
+            'dataSourceRid': quote(str(_conjure_encoder.default(data_source_rid)), safe=''),
         }
 
         _json: Any = None
@@ -78067,8 +77310,7 @@ See: https://github.com/vectordotdev/vector/issues/8279
         return _decoder.decode(_response.json(), bool, self._return_none_for_unknown_union_types)
 
     def write_nominal_batches(self, auth_header: str, data_source_rid: str, request: Any) -> None:
-        """
-        Synchronously writes a Nominal Write Request to a Nominal data source using the NominalWrite Protobuf schema.
+        """Synchronously writes a Nominal Write Request to a Nominal data source using the NominalWrite Protobuf schema.
 The request must be Protobuf-encoded and accompanied by the appropriate content encoding headers if compressed.
 
 The request should follow this Protobuf schema:
@@ -78122,6 +77364,7 @@ Each request can contain multiple series, where each series consists of:
 The endpoint requires the Content-Type header to be set to "application/x-protobuf".
 If the payload is compressed, the appropriate Content-Encoding header must be included.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -78132,8 +77375,8 @@ If the payload is compressed, the appropriate Content-Encoding header must be in
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataSourceRid': data_source_rid,
+        _path_params: Dict[str, str] = {
+            'dataSourceRid': quote(str(_conjure_encoder.default(data_source_rid)), safe=''),
         }
 
         _data: Any = request
@@ -78151,9 +77394,9 @@ If the payload is compressed, the appropriate Content-Encoding header must be in
         return
 
     def write_logs(self, auth_header: str, data_source_rid: str, request: "storage_writer_api_WriteLogsRequest") -> None:
+        """Synchronously writes logs to a Nominal data source.
         """
-        Synchronously writes logs to a Nominal data source.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -78164,11 +77407,11 @@ If the payload is compressed, the appropriate Content-Encoding header must be in
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'dataSourceRid': data_source_rid,
+        _path_params: Dict[str, str] = {
+            'dataSourceRid': quote(str(_conjure_encoder.default(data_source_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/storage/writer/v1/logs/{dataSourceRid}'
         _path = _path.format(**_path_params)
@@ -78190,7 +77433,8 @@ storage_writer_api_NominalChannelWriterService.__module__ = "nominal_api.storage
 
 class storage_writer_api_Points(ConjureUnionType):
     """Points for internal API for directly writing points which supports all points types.
-Logs specifically are supported externally via a separate endpoint."""
+Logs specifically are supported externally via a separate endpoint.
+    """
     _string: Optional[List["storage_writer_api_StringPoint"]] = None
     _double: Optional[List["storage_writer_api_DoublePoint"]] = None
     _log: Optional[List["storage_writer_api_LogPoint"]] = None
@@ -78577,15 +77821,13 @@ class storage_writer_api_TelegrafMetric(ConjureBeanType):
 
     @builtins.property
     def fields(self) -> Dict[str, Any]:
-        """
-        The values are expected to be either numeric or string values
+        """The values are expected to be either numeric or string values
         """
         return self._fields_
 
     @builtins.property
     def name(self) -> str:
-        """
-        The measurement name. Measurement name and field are concatenated when creating the Nominal channel name.
+        """The measurement name. Measurement name and field are concatenated when creating the Nominal channel name.
         """
         return self._name
 
@@ -78630,8 +77872,7 @@ class storage_writer_api_WriteBatchesRequest(ConjureBeanType):
 
     @builtins.property
     def asynchronous_insert(self) -> Optional[bool]:
-        """
-        Defaults to true if not specified. If enabled, the server handles batching of requests. Request latency
+        """Defaults to true if not specified. If enabled, the server handles batching of requests. Request latency
 will be slower, but overall throughput will be faster if requests are sent in parallel.
         """
         return self._asynchronous_insert
@@ -78669,8 +77910,7 @@ class storage_writer_api_WriteBatchesRequestExternal(ConjureBeanType):
 
     @builtins.property
     def asynchronous_insert(self) -> Optional[bool]:
-        """
-        Defaults to true if not specified. If enabled, the server handles batching of requests. Request latency
+        """Defaults to true if not specified. If enabled, the server handles batching of requests. Request latency
 will be slower, but overall throughput will be faster if requests are sent in parallel.
         """
         return self._asynchronous_insert
@@ -78698,15 +77938,13 @@ class storage_writer_api_WriteColumnBatchesRequest(ConjureBeanType):
 
     @builtins.property
     def batches(self) -> List["storage_writer_api_ColumnBatch"]:
-        """
-        Batches of columnar data to stream to Nominal. Each channel's data are provided as a column batch.
+        """Batches of columnar data to stream to Nominal. Each channel's data are provided as a column batch.
         """
         return self._batches
 
     @builtins.property
     def data_source_rid(self) -> str:
-        """
-        RID of the datasource (e.g., for a Connection) or dataset to stream data into.
+        """RID of the datasource (e.g., for a Connection) or dataset to stream data into.
         """
         return self._data_source_rid
 
@@ -78737,8 +77975,7 @@ class storage_writer_api_WriteLogsRequest(ConjureBeanType):
 
     @builtins.property
     def channel(self) -> Optional[str]:
-        """
-        If provided, the channel to which to write logs.
+        """If provided, the channel to which to write logs.
 If not provided, defaults to "logs"
         """
         return self._channel
@@ -78799,50 +78036,43 @@ class themes_api_ChartTheme(ConjureBeanType):
 
     @builtins.property
     def rid(self) -> str:
-        """
-        Unique resource identifier for the theme.
+        """Unique resource identifier for the theme.
         """
         return self._rid
 
     @builtins.property
     def name(self) -> str:
-        """
-        The name of the theme as defined by the user.
+        """The name of the theme as defined by the user.
         """
         return self._name
 
     @builtins.property
     def created_by(self) -> str:
-        """
-        The rid of the user who first created the theme.
+        """The rid of the user who first created the theme.
         """
         return self._created_by
 
     @builtins.property
     def created_at(self) -> str:
-        """
-        The time the theme was created.
+        """The time the theme was created.
         """
         return self._created_at
 
     @builtins.property
     def updated_by(self) -> Optional[str]:
-        """
-        The rid of the user who last updated the theme.
+        """The rid of the user who last updated the theme.
         """
         return self._updated_by
 
     @builtins.property
     def updated_at(self) -> Optional[str]:
-        """
-        The rid of the user who last updated the theme.
+        """The rid of the user who last updated the theme.
         """
         return self._updated_at
 
     @builtins.property
     def content(self) -> "themes_api_ChartThemeContent":
-        """
-        Specifies the chart theme styling (e.g. font, legends, axes)
+        """Specifies the chart theme styling (e.g. font, legends, axes)
         """
         return self._content
 
@@ -78953,114 +78183,98 @@ class themes_api_ChartThemeContentV1(ConjureBeanType):
 
     @builtins.property
     def title_enabled(self) -> bool:
-        """
-        Whether to show a title in the export.
+        """Whether to show a title in the export.
         """
         return self._title_enabled
 
     @builtins.property
     def title_alignment(self) -> "themes_api_TextAlignment":
-        """
-        How to align the text of the title.
+        """How to align the text of the title.
         """
         return self._title_alignment
 
     @builtins.property
     def title_font_size(self) -> int:
-        """
-        Font size of the title.
+        """Font size of the title.
         """
         return self._title_font_size
 
     @builtins.property
     def title_font_color(self) -> str:
-        """
-        Font color of the title.
+        """Font color of the title.
         """
         return self._title_font_color
 
     @builtins.property
     def caption_enabled(self) -> bool:
-        """
-        Whether to show a caption in the export.
+        """Whether to show a caption in the export.
         """
         return self._caption_enabled
 
     @builtins.property
     def caption_alignment(self) -> "themes_api_TextAlignment":
-        """
-        How to align the text of the caption.
+        """How to align the text of the caption.
         """
         return self._caption_alignment
 
     @builtins.property
     def caption_font_size(self) -> int:
-        """
-        Font size of the caption.
+        """Font size of the caption.
         """
         return self._caption_font_size
 
     @builtins.property
     def caption_font_color(self) -> str:
-        """
-        Font color of the caption.
+        """Font color of the caption.
         """
         return self._caption_font_color
 
     @builtins.property
     def background_enabled(self) -> bool:
-        """
-        Whether to include a default background with the export.
+        """Whether to include a default background with the export.
 (`false` indicates that the background should be transparent)
         """
         return self._background_enabled
 
     @builtins.property
     def legend_enabled(self) -> bool:
-        """
-        Whether to include a legend in the export.
+        """Whether to include a legend in the export.
         """
         return self._legend_enabled
 
     @builtins.property
     def legend_position(self) -> "themes_api_LegendPosition":
-        """
-        Which side the legend should appear on.
+        """Which side the legend should appear on.
         """
         return self._legend_position
 
     @builtins.property
     def legend_font_size(self) -> int:
-        """
-        Font size of the legend.
+        """Font size of the legend.
         """
         return self._legend_font_size
 
     @builtins.property
     def legend_font_color(self) -> str:
-        """
-        Font color of the legend.
+        """Font color of the legend.
         """
         return self._legend_font_color
 
     @builtins.property
     def aspect_ratio_width(self) -> int:
-        """
-        The relative width of the chart export.
+        """The relative width of the chart export.
         """
         return self._aspect_ratio_width
 
     @builtins.property
     def aspect_ratio_height(self) -> int:
-        """
-        The relative height of the chart export.
+        """The relative height of the chart export.
         """
         return self._aspect_ratio_height
 
     @builtins.property
     def chart_type_themes(self) -> "themes_api_ChartTypeThemes":
-        """
-        Theme parameters specific to chart types.
+        """Theme parameters specific to chart types.
         """
         return self._chart_type_themes
 
@@ -79071,8 +78285,7 @@ themes_api_ChartThemeContentV1.__module__ = "nominal_api.themes_api"
 
 
 class themes_api_ChartTypeThemes(ConjureBeanType):
-    """
-    Theme parameters specific to chart types.
+    """Theme parameters specific to chart types.
     """
 
     @builtins.classmethod
@@ -79088,8 +78301,7 @@ class themes_api_ChartTypeThemes(ConjureBeanType):
 
     @builtins.property
     def time_series(self) -> "themes_api_TimeSeriesChartTheme":
-        """
-        The theme specific to parameters of the time series chart.
+        """The theme specific to parameters of the time series chart.
         """
         return self._time_series
 
@@ -79118,22 +78330,19 @@ class themes_api_CreateChartThemeRequest(ConjureBeanType):
 
     @builtins.property
     def name(self) -> str:
-        """
-        The name of the theme.
+        """The name of the theme.
         """
         return self._name
 
     @builtins.property
     def content(self) -> "themes_api_ChartThemeContent":
-        """
-        The theme fields.
+        """The theme fields.
         """
         return self._content
 
     @builtins.property
     def workspace(self) -> Optional[str]:
-        """
-        The workspace in which to create the theme. If not provided, the theme will be created in the default workspace for
+        """The workspace in which to create the theme. If not provided, the theme will be created in the default workspace for
 the user's organization, if the default workspace for the organization is configured.
         """
         return self._workspace
@@ -79207,15 +78416,14 @@ themes_api_TextDirection.__module__ = "nominal_api.themes_api"
 
 
 class themes_api_ThemesService(Service):
-    """
-    Themes service manages themes for exporting charts.
+    """Themes service manages themes for exporting charts.
     """
 
     def list_chart_themes(self, auth_header: str, workspaces: List[str] = None) -> List["themes_api_ChartTheme"]:
-        """
-        Get all chart themes saved to the requested workspaces.
+        """Get all chart themes saved to the requested workspaces.
         """
         workspaces = workspaces if workspaces is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79223,10 +78431,10 @@ class themes_api_ThemesService(Service):
         }
 
         _params: Dict[str, Any] = {
-            'workspaces': workspaces,
+            'workspaces': _conjure_encoder.default(workspaces),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _json: Any = None
@@ -79245,9 +78453,9 @@ class themes_api_ThemesService(Service):
         return _decoder.decode(_response.json(), List[themes_api_ChartTheme], self._return_none_for_unknown_union_types)
 
     def get_chart_theme(self, auth_header: str, chart_theme_rid: str) -> "themes_api_ChartTheme":
+        """Get a specific chart theme by RID.
         """
-        Get a specific chart theme by RID.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79257,8 +78465,8 @@ class themes_api_ThemesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'chartThemeRid': chart_theme_rid,
+        _path_params: Dict[str, str] = {
+            'chartThemeRid': quote(str(_conjure_encoder.default(chart_theme_rid)), safe=''),
         }
 
         _json: Any = None
@@ -79277,9 +78485,9 @@ class themes_api_ThemesService(Service):
         return _decoder.decode(_response.json(), themes_api_ChartTheme, self._return_none_for_unknown_union_types)
 
     def create_chart_theme(self, auth_header: str, request: "themes_api_CreateChartThemeRequest") -> "themes_api_ChartTheme":
+        """Create a new chart theme.
         """
-        Create a new chart theme.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79290,10 +78498,10 @@ class themes_api_ThemesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/themes/v1/chart-themes'
         _path = _path.format(**_path_params)
@@ -79309,9 +78517,9 @@ class themes_api_ThemesService(Service):
         return _decoder.decode(_response.json(), themes_api_ChartTheme, self._return_none_for_unknown_union_types)
 
     def update_chart_theme(self, auth_header: str, chart_theme_rid: str, request: "themes_api_UpdateChartThemeRequest") -> "themes_api_ChartTheme":
+        """Update an existing chart theme.
         """
-        Update an existing chart theme.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79322,11 +78530,11 @@ class themes_api_ThemesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'chartThemeRid': chart_theme_rid,
+        _path_params: Dict[str, str] = {
+            'chartThemeRid': quote(str(_conjure_encoder.default(chart_theme_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/themes/v1/chart-themes/{chartThemeRid}'
         _path = _path.format(**_path_params)
@@ -79342,9 +78550,9 @@ class themes_api_ThemesService(Service):
         return _decoder.decode(_response.json(), themes_api_ChartTheme, self._return_none_for_unknown_union_types)
 
     def delete_chart_theme(self, auth_header: str, chart_theme_rid: str) -> None:
+        """Delete an existing comment.
         """
-        Delete an existing comment.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79354,8 +78562,8 @@ class themes_api_ThemesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'chartThemeRid': chart_theme_rid,
+        _path_params: Dict[str, str] = {
+            'chartThemeRid': quote(str(_conjure_encoder.default(chart_theme_rid)), safe=''),
         }
 
         _json: Any = None
@@ -79435,8 +78643,7 @@ themes_api_TimeSeriesChartThemeVisitor.__module__ = "nominal_api.themes_api"
 
 
 class themes_api_TimeSeriesChartThemeV1(ConjureBeanType):
-    """
-    Theme parameters specific to the time series chart.
+    """Theme parameters specific to the time series chart.
     """
 
     @builtins.classmethod
@@ -79458,29 +78665,25 @@ class themes_api_TimeSeriesChartThemeV1(ConjureBeanType):
 
     @builtins.property
     def x_axis_tick_font_size(self) -> int:
-        """
-        The font size of the x-axis ticks.
+        """The font size of the x-axis ticks.
         """
         return self._x_axis_tick_font_size
 
     @builtins.property
     def x_axis_tick_font_color(self) -> str:
-        """
-        The font color of the x-axis ticks.
+        """The font color of the x-axis ticks.
         """
         return self._x_axis_tick_font_color
 
     @builtins.property
     def y_axis_title_font_size(self) -> int:
-        """
-        The font size of the y-axis labels.
+        """The font size of the y-axis labels.
         """
         return self._y_axis_title_font_size
 
     @builtins.property
     def y_axis_tick_font_size(self) -> int:
-        """
-        The font size of the y-axis ticks.
+        """The font size of the y-axis ticks.
         """
         return self._y_axis_tick_font_size
 
@@ -79507,15 +78710,13 @@ class themes_api_UpdateChartThemeRequest(ConjureBeanType):
 
     @builtins.property
     def name(self) -> str:
-        """
-        The name of the theme.
+        """The name of the theme.
         """
         return self._name
 
     @builtins.property
     def content(self) -> "themes_api_ChartThemeContent":
-        """
-        The theme fields.
+        """The theme fields.
         """
         return self._content
 
@@ -79526,17 +78727,16 @@ themes_api_UpdateChartThemeRequest.__module__ = "nominal_api.themes_api"
 
 
 class timeseries_archetype_SeriesArchetypeService(Service):
-    """
-    [INTERNAL]
+    """[INTERNAL]
 A series archetype represents the constant information about data in a series - specifically, the name, units, a
 description, and the tags. Series archetypes can be used to query points from specific series depending on the tag
 value selections.
     """
 
     def batch_get(self, auth_header: str, request: "timeseries_archetype_api_BatchGetSeriesArchetypeRequest") -> "timeseries_archetype_api_BatchGetSeriesArchetypeResponse":
+        """Batch get series archetypes by DataSourceRid.
         """
-        Batch get series archetypes by DataSourceRid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79547,10 +78747,10 @@ value selections.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/archetype/v1/series-archetype/batch-get'
         _path = _path.format(**_path_params)
@@ -79566,9 +78766,9 @@ value selections.
         return _decoder.decode(_response.json(), timeseries_archetype_api_BatchGetSeriesArchetypeResponse, self._return_none_for_unknown_union_types)
 
     def create(self, auth_header: str, request: "timeseries_archetype_api_CreateSeriesArchetypeRequest") -> None:
+        """Create a new series archetype.
         """
-        Create a new series archetype.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79579,10 +78779,10 @@ value selections.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/archetype/v1/series-archetype'
         _path = _path.format(**_path_params)
@@ -79597,9 +78797,9 @@ value selections.
         return
 
     def batch_create(self, auth_header: str, request: "timeseries_archetype_api_BatchCreateSeriesArchetypeRequest") -> None:
+        """Idempotently creates series archetypes.
         """
-        Idempotently creates series archetypes.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79610,10 +78810,10 @@ value selections.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/archetype/v1/series-archetype/batch-create'
         _path = _path.format(**_path_params)
@@ -79628,9 +78828,9 @@ value selections.
         return
 
     def get(self, auth_header: str, rid: str) -> "timeseries_archetype_api_SeriesArchetype":
+        """Get a series archetype from its series archetype rid.
         """
-        Get a series archetype from its series archetype rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79640,8 +78840,8 @@ value selections.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -79660,10 +78860,10 @@ value selections.
         return _decoder.decode(_response.json(), timeseries_archetype_api_SeriesArchetype, self._return_none_for_unknown_union_types)
 
     def update_metadata(self, auth_header: str, request: "timeseries_archetype_api_UpdateSeriesArchetypeMetadataRequest", rid: str) -> "timeseries_archetype_api_SeriesArchetype":
-        """
-        Update the metadata on an existing series archetype. 
+        """Update the metadata on an existing series archetype. 
 Throws SeriesArchetypeNotFound if the series archetype does not exist.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -79674,11 +78874,11 @@ Throws SeriesArchetypeNotFound if the series archetype does not exist.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/archetype/v1/series-archetype/{rid}/metadata'
         _path = _path.format(**_path_params)
@@ -79828,8 +79028,7 @@ class timeseries_archetype_api_CreateSeriesArchetypeRequest(ConjureBeanType):
 
     @builtins.property
     def channel(self) -> str:
-        """
-        This name should be unique amongst SeriesArchetypes within the data source. All series created from this
+        """This name should be unique amongst SeriesArchetypes within the data source. All series created from this
 archetype will share this name.
         """
         return self._channel
@@ -79852,8 +79051,7 @@ archetype will share this name.
 
     @builtins.property
     def tags(self) -> Dict[str, str]:
-        """
-        Tags specified here will take precedence over tags specified in the RunDatasource, in the case that both specify the same TagName.
+        """Tags specified here will take precedence over tags specified in the RunDatasource, in the case that both specify the same TagName.
         """
         return self._tags
 
@@ -79935,8 +79133,7 @@ class timeseries_archetype_api_Influx2LocatorTemplate(ConjureBeanType):
 
     @builtins.property
     def value_column(self) -> Optional[str]:
-        """
-        If omitted, defaults to `_value`. Can be used to extract tag values.
+        """If omitted, defaults to `_value`. Can be used to extract tag values.
         """
         return self._value_column
 
@@ -80218,8 +79415,7 @@ class timeseries_archetype_api_SeriesArchetype(ConjureBeanType):
 
     @builtins.property
     def tags(self) -> Dict[str, str]:
-        """
-        Tags specified here will take precedence over tags specified in the RunDatasource, in the case that both specify the same TagName.
+        """Tags specified here will take precedence over tags specified in the RunDatasource, in the case that both specify the same TagName.
         """
         return self._tags
 
@@ -80322,8 +79518,7 @@ timeseries_archetype_api_TimestreamLocatorTemplate.__module__ = "nominal_api.tim
 
 
 class timeseries_archetype_api_UpdateSeriesArchetypeMetadataRequest(ConjureBeanType):
-    """
-    If fields are present, will override existing values.
+    """If fields are present, will override existing values.
     """
 
     @builtins.classmethod
@@ -80382,8 +79577,7 @@ class timeseries_archetype_api_VisualCrossingLocatorTemplate(ConjureBeanType):
 
     @builtins.property
     def endpoint(self) -> Optional["timeseries_logicalseries_api_VisualCrossingEndpointUri"]:
-        """
-        Defaults to HISTORY.
+        """Defaults to HISTORY.
         """
         return self._endpoint
 
@@ -80398,14 +79592,13 @@ timeseries_archetype_api_VisualCrossingLocatorTemplate.__module__ = "nominal_api
 
 
 class timeseries_channelmetadata_ChannelMetadataService(Service):
-    """
-    Endpoints for retrieving and updating channel metadata.
+    """Endpoints for retrieving and updating channel metadata.
     """
 
     def get_channel_metadata(self, auth_header: str, request: "timeseries_channelmetadata_api_GetChannelMetadataRequest") -> "timeseries_channelmetadata_api_ChannelMetadata":
+        """Get the metadata for a channel.
         """
-        Get the metadata for a channel.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80416,10 +79609,10 @@ class timeseries_channelmetadata_ChannelMetadataService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/channel-metadata/v1/channel-metadata/get'
         _path = _path.format(**_path_params)
@@ -80435,10 +79628,10 @@ class timeseries_channelmetadata_ChannelMetadataService(Service):
         return _decoder.decode(_response.json(), timeseries_channelmetadata_api_ChannelMetadata, self._return_none_for_unknown_union_types)
 
     def batch_get_channel_metadata(self, auth_header: str, request: "timeseries_channelmetadata_api_BatchGetChannelMetadataRequest") -> "timeseries_channelmetadata_api_BatchGetChannelMetadataResponse":
-        """
-        Batch get the metadata for multiple channels. If some channels cannot be found or authorized, 
+        """Batch get the metadata for multiple channels. If some channels cannot be found or authorized, 
 they will be omitted from the response.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80449,10 +79642,10 @@ they will be omitted from the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/channel-metadata/v1/channel-metadata/batch-get'
         _path = _path.format(**_path_params)
@@ -80468,9 +79661,9 @@ they will be omitted from the response.
         return _decoder.decode(_response.json(), timeseries_channelmetadata_api_BatchGetChannelMetadataResponse, self._return_none_for_unknown_union_types)
 
     def update_channel_metadata(self, auth_header: str, request: "timeseries_channelmetadata_api_UpdateChannelMetadataRequest") -> "timeseries_channelmetadata_api_ChannelMetadata":
+        """Update the metadata for a channel.
         """
-        Update the metadata for a channel.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80481,10 +79674,10 @@ they will be omitted from the response.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/channel-metadata/v1/channel-metadata/update'
         _path = _path.format(**_path_params)
@@ -80500,10 +79693,10 @@ they will be omitted from the response.
         return _decoder.decode(_response.json(), timeseries_channelmetadata_api_ChannelMetadata, self._return_none_for_unknown_union_types)
 
     def batch_update_channel_metadata(self, auth_header: str, request: "timeseries_channelmetadata_api_BatchUpdateChannelMetadataRequest") -> "timeseries_channelmetadata_api_BatchUpdateChannelMetadataResponse":
-        """
-        Batch update the metadata for multiple channels. If some channels cannot be found or authorized,
+        """Batch update the metadata for multiple channels. If some channels cannot be found or authorized,
 no metadata will be updated for any of the channels in the request.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80514,10 +79707,10 @@ no metadata will be updated for any of the channels in the request.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/channel-metadata/v1/channel-metadata/batch-update'
         _path = _path.format(**_path_params)
@@ -80759,14 +79952,13 @@ timeseries_channelmetadata_api_UpdateChannelMetadataRequest.__module__ = "nomina
 
 
 class timeseries_logicalseries_LogicalSeriesService(Service):
-    """
-    A logical series is a timeseries, represented by a channel name and a tag set.
+    """A logical series is a timeseries, represented by a channel name and a tag set.
     """
 
     def create_logical_series(self, auth_header: str, create_logical_series: "timeseries_logicalseries_api_CreateLogicalSeries") -> "timeseries_logicalseries_api_LogicalSeries":
+        """Create a new logical series.
         """
-        Create a new logical series.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80777,10 +79969,10 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(create_logical_series)
+        _json: Any = _conjure_encoder.default(create_logical_series)
 
         _path = '/timeseries/logical-series/v1/logical-series'
         _path = _path.format(**_path_params)
@@ -80796,9 +79988,9 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         return _decoder.decode(_response.json(), timeseries_logicalseries_api_LogicalSeries, self._return_none_for_unknown_union_types)
 
     def batch_create_logical_series(self, auth_header: str, request: "timeseries_logicalseries_api_BatchCreateLogicalSeriesRequest") -> "timeseries_logicalseries_api_BatchCreateLogicalSeriesResponse":
+        """Batch create new logical series.
         """
-        Batch create new logical series.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80809,10 +80001,10 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/logical-series/v1/logical-series/batch-create'
         _path = _path.format(**_path_params)
@@ -80828,9 +80020,9 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         return _decoder.decode(_response.json(), timeseries_logicalseries_api_BatchCreateLogicalSeriesResponse, self._return_none_for_unknown_union_types)
 
     def batch_update_logical_series(self, auth_header: str, request: "timeseries_logicalseries_api_BatchUpdateLogicalSeriesRequest") -> "timeseries_logicalseries_api_BatchUpdateLogicalSeriesResponse":
+        """Batch update logical series descriptions and units.
         """
-        Batch update logical series descriptions and units.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80841,10 +80033,10 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/logical-series/v1/logical-series/batch-update'
         _path = _path.format(**_path_params)
@@ -80860,9 +80052,9 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         return _decoder.decode(_response.json(), timeseries_logicalseries_api_BatchUpdateLogicalSeriesResponse, self._return_none_for_unknown_union_types)
 
     def get_logical_series(self, auth_header: str, rid: str) -> "timeseries_logicalseries_api_LogicalSeries":
+        """Get a logical series by logical series rid.
         """
-        Get a logical series by logical series rid.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80872,8 +80064,8 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'rid': rid,
+        _path_params: Dict[str, str] = {
+            'rid': quote(str(_conjure_encoder.default(rid)), safe=''),
         }
 
         _json: Any = None
@@ -80892,10 +80084,10 @@ class timeseries_logicalseries_LogicalSeriesService(Service):
         return _decoder.decode(_response.json(), timeseries_logicalseries_api_LogicalSeries, self._return_none_for_unknown_union_types)
 
     def resolve_batch(self, auth_header: str, request: "timeseries_logicalseries_api_BatchResolveSeriesRequest") -> "timeseries_logicalseries_api_BatchResolveSeriesResponse":
-        """
-        Resolves groups of channels, datasources and tags into logical series rids. An error response is provided
+        """Resolves groups of channels, datasources and tags into logical series rids. An error response is provided
 if the channel + datasource + tag cannot be resolved into a logical series rid.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -80906,10 +80098,10 @@ if the channel + datasource + tag cannot be resolved into a logical series rid.
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/logical-series/v1/resolve'
         _path = _path.format(**_path_params)
@@ -81089,22 +80281,19 @@ class timeseries_logicalseries_api_BigQueryLocator(ConjureBeanType):
 
     @builtins.property
     def value_column(self) -> str:
-        """
-        The name of the column which has the values for this series
+        """The name of the column which has the values for this series
         """
         return self._value_column
 
     @builtins.property
     def time_column(self) -> str:
-        """
-        The name of the column which has the timestamps for this series
+        """The name of the column which has the timestamps for this series
         """
         return self._time_column
 
     @builtins.property
     def tag_values(self) -> Dict[str, str]:
-        """
-        The mapping of columns to column values to filter on
+        """The mapping of columns to column values to filter on
         """
         return self._tag_values
 
@@ -81252,8 +80441,7 @@ class timeseries_logicalseries_api_CreateLogicalSeries(ConjureBeanType):
 
     @builtins.property
     def id_locator(self) -> Optional[str]:
-        """
-        If present, will be used as the locator of the LogicalSeriesRid. If a logical series already exists
+        """If present, will be used as the locator of the LogicalSeriesRid. If a logical series already exists
 with this id, will throw a CONFLICT.
         """
         return self._id_locator
@@ -81285,8 +80473,7 @@ timeseries_logicalseries_api_CreateLogicalSeries.__module__ = "nominal_api.times
 
 
 class timeseries_logicalseries_api_CsvLocator(ConjureBeanType):
-    """
-    Deprecated in favor of CsvLocatorV2
+    """Deprecated in favor of CsvLocatorV2
     """
 
     @builtins.classmethod
@@ -81318,23 +80505,20 @@ class timeseries_logicalseries_api_CsvLocator(ConjureBeanType):
 
     @builtins.property
     def uses_legacy_format(self) -> Optional[bool]:
-        """
-        If empty, defaults to false. This refers to whether the CSV was ingested using legacy format where the timestamp
+        """If empty, defaults to false. This refers to whether the CSV was ingested using legacy format where the timestamp
 and values are split into two separate arrow files.
         """
         return self._uses_legacy_format
 
     @builtins.property
     def x_series_handle(self) -> Optional[str]:
-        """
-        The handle of the x series to use for this logical series.
+        """The handle of the x series to use for this logical series.
         """
         return self._x_series_handle
 
     @builtins.property
     def y_series_handle(self) -> Optional[str]:
-        """
-        The handle of the y series to use for this logical series.
+        """The handle of the y series to use for this logical series.
         """
         return self._y_series_handle
 
@@ -81463,8 +80647,7 @@ class timeseries_logicalseries_api_Influx2Locator(ConjureBeanType):
 
     @builtins.property
     def value_column(self) -> Optional[str]:
-        """
-        If omitted, defaults to `_value`. Can be used to extract tag values.
+        """If omitted, defaults to `_value`. Can be used to extract tag values.
         """
         return self._value_column
 
@@ -81769,8 +80952,7 @@ class timeseries_logicalseries_api_LogicalSeries(ConjureBeanType):
 
     @builtins.property
     def time_locator(self) -> Optional["timeseries_logicalseries_api_Locator"]:
-        """
-        Only required to be present for legacy CSVs.
+        """Only required to be present for legacy CSVs.
         """
         return self._time_locator
 
@@ -81792,8 +80974,7 @@ class timeseries_logicalseries_api_LogicalSeries(ConjureBeanType):
 
     @builtins.property
     def granularity(self) -> Optional["api_Granularity"]:
-        """
-        Time granularity of the series. If omitted, defaults to nanoseconds.
+        """Time granularity of the series. If omitted, defaults to nanoseconds.
         """
         return self._granularity
 
@@ -81810,16 +80991,14 @@ class timeseries_logicalseries_api_NominalLocator(ConjureBeanType):
         return {
             'channel': ConjureFieldDefinition('channel', api_Channel),
             'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue]),
-            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[api_TagName]),
             'type': ConjureFieldDefinition('type', storage_series_api_NominalDataType)
         }
 
-    __slots__: List[str] = ['_channel', '_tags', '_tags_to_group_by', '_type']
+    __slots__: List[str] = ['_channel', '_tags', '_type']
 
-    def __init__(self, channel: str, tags: Dict[str, str], tags_to_group_by: List[str], type: "storage_series_api_NominalDataType") -> None:
+    def __init__(self, channel: str, tags: Dict[str, str], type: "storage_series_api_NominalDataType") -> None:
         self._channel = channel
         self._tags = tags
-        self._tags_to_group_by = tags_to_group_by
         self._type = type
 
     @builtins.property
@@ -81829,10 +81008,6 @@ class timeseries_logicalseries_api_NominalLocator(ConjureBeanType):
     @builtins.property
     def tags(self) -> Dict[str, str]:
         return self._tags
-
-    @builtins.property
-    def tags_to_group_by(self) -> List[str]:
-        return self._tags_to_group_by
 
     @builtins.property
     def type(self) -> "storage_series_api_NominalDataType":
@@ -81880,17 +81055,15 @@ class timeseries_logicalseries_api_ResolveSeriesRequest(ConjureBeanType):
         return {
             'name': ConjureFieldDefinition('name', api_Channel),
             'datasource': ConjureFieldDefinition('datasource', api_rids_DataSourceRid),
-            'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue]),
-            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[api_TagName])
+            'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue])
         }
 
-    __slots__: List[str] = ['_name', '_datasource', '_tags', '_tags_to_group_by']
+    __slots__: List[str] = ['_name', '_datasource', '_tags']
 
-    def __init__(self, datasource: str, name: str, tags: Dict[str, str], tags_to_group_by: List[str]) -> None:
+    def __init__(self, datasource: str, name: str, tags: Dict[str, str]) -> None:
         self._name = name
         self._datasource = datasource
         self._tags = tags
-        self._tags_to_group_by = tags_to_group_by
 
     @builtins.property
     def name(self) -> str:
@@ -81903,10 +81076,6 @@ class timeseries_logicalseries_api_ResolveSeriesRequest(ConjureBeanType):
     @builtins.property
     def tags(self) -> Dict[str, str]:
         return self._tags
-
-    @builtins.property
-    def tags_to_group_by(self) -> List[str]:
-        return self._tags_to_group_by
 
 
 timeseries_logicalseries_api_ResolveSeriesRequest.__name__ = "ResolveSeriesRequest"
@@ -82099,8 +81268,7 @@ class timeseries_logicalseries_api_TimestreamLocator(ConjureBeanType):
 
     @builtins.property
     def attribute(self) -> Optional[str]:
-        """
-        If present, will be the attribute within the measurement for multi-measures.
+        """If present, will be the attribute within the measurement for multi-measures.
         """
         return self._attribute
 
@@ -82133,7 +81301,8 @@ timeseries_logicalseries_api_TimestreamType.__module__ = "nominal_api.timeseries
 
 
 class timeseries_logicalseries_api_UnitUpdate(ConjureUnionType):
-    """UnitUpdate is used to either set a unit, or to clear an existing unit."""
+    """UnitUpdate is used to either set a unit, or to clear an existing unit.
+    """
     _unit: Optional[str] = None
     _clear_unit: Optional["api_Empty"] = None
 
@@ -82290,16 +81459,14 @@ class timeseries_logicalseries_api_VisualCrossingLocator(ConjureBeanType):
 
     @builtins.property
     def location(self) -> str:
-        """
-        Location to fetch data from.  Can be any arbitrary string (i.e. name, abbreviation,
+        """Location to fetch data from.  Can be any arbitrary string (i.e. name, abbreviation,
 zip code, lat/long, etc.) as remote endpoint performs location resolution.
         """
         return self._location
 
     @builtins.property
     def endpoint(self) -> Optional["timeseries_logicalseries_api_VisualCrossingEndpointUri"]:
-        """
-        Defaults to HISTORY.  Endpoint to fetch data from for this series.
+        """Defaults to HISTORY.  Endpoint to fetch data from for this series.
         """
         return self._endpoint
 
@@ -82336,14 +81503,13 @@ timeseries_logicalseries_api_VisualCrossingType.__module__ = "nominal_api.timese
 
 
 class timeseries_seriescache_SeriesCacheService(Service):
-    """
-    The Series Cache service manages internal chunks of data cached by Nominal's backend.
+    """The Series Cache service manages internal chunks of data cached by Nominal's backend.
     """
 
     def batch_get_cached_series(self, auth_header: str, request: "timeseries_seriescache_api_GetCachedSeriesRequest") -> "timeseries_seriescache_api_CachedSeriesResponse":
+        """Fetches information about logical series that are cached in the Nominal time series database.
         """
-        Fetches information about logical series that are cached in the Nominal time series database.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -82354,10 +81520,10 @@ class timeseries_seriescache_SeriesCacheService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/series-cache/v1/logical-series/get-cached-series'
         _path = _path.format(**_path_params)
@@ -82373,9 +81539,9 @@ class timeseries_seriescache_SeriesCacheService(Service):
         return _decoder.decode(_response.json(), timeseries_seriescache_api_CachedSeriesResponse, self._return_none_for_unknown_union_types)
 
     def create_cached_series(self, auth_header: str, request: "timeseries_seriescache_api_CreateCachedSeriesRequest") -> None:
+        """Records a logical series as cached in the Nominal time series database.
         """
-        Records a logical series as cached in the Nominal time series database.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -82386,10 +81552,10 @@ class timeseries_seriescache_SeriesCacheService(Service):
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/series-cache/v1/logical-series/create-cached-series'
         _path = _path.format(**_path_params)
@@ -82404,10 +81570,10 @@ class timeseries_seriescache_SeriesCacheService(Service):
         return
 
     def get_chunks(self, auth_header: str, get_chunks_parameters: "timeseries_seriescache_api_GetChunksParameters", logical_series_rid: str) -> "timeseries_seriescache_api_GetChunksResponse":
-        """
-        Fetches "chunks" of series that are stored as Arrow files in S3.
+        """Fetches "chunks" of series that are stored as Arrow files in S3.
 This endpoint is being deprecated for new series in favor of batchGetCachedSeries
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -82418,11 +81584,11 @@ This endpoint is being deprecated for new series in favor of batchGetCachedSerie
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'logicalSeriesRid': logical_series_rid,
+        _path_params: Dict[str, str] = {
+            'logicalSeriesRid': quote(str(_conjure_encoder.default(logical_series_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(get_chunks_parameters)
+        _json: Any = _conjure_encoder.default(get_chunks_parameters)
 
         _path = '/timeseries/series-cache/v1/logical-series/{logicalSeriesRid}/get-chunks'
         _path = _path.format(**_path_params)
@@ -82438,6 +81604,7 @@ This endpoint is being deprecated for new series in favor of batchGetCachedSerie
         return _decoder.decode(_response.json(), timeseries_seriescache_api_GetChunksResponse, self._return_none_for_unknown_union_types)
 
     def create_chunks(self, auth_header: str, create_chunks_parameters: "timeseries_seriescache_api_CreateChunksParameters", logical_series_rid: str) -> "timeseries_seriescache_api_CreateChunksResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -82448,11 +81615,11 @@ This endpoint is being deprecated for new series in favor of batchGetCachedSerie
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'logicalSeriesRid': logical_series_rid,
+        _path_params: Dict[str, str] = {
+            'logicalSeriesRid': quote(str(_conjure_encoder.default(logical_series_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(create_chunks_parameters)
+        _json: Any = _conjure_encoder.default(create_chunks_parameters)
 
         _path = '/timeseries/series-cache/v1/logical-series/{logicalSeriesRid}/create-chunks'
         _path = _path.format(**_path_params)
@@ -82468,6 +81635,7 @@ This endpoint is being deprecated for new series in favor of batchGetCachedSerie
         return _decoder.decode(_response.json(), timeseries_seriescache_api_CreateChunksResponse, self._return_none_for_unknown_union_types)
 
     def batch_create_chunks(self, auth_header: str, request: "timeseries_seriescache_api_CreateChunksParameters") -> "timeseries_seriescache_api_CreateChunksResponse":
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -82478,10 +81646,10 @@ This endpoint is being deprecated for new series in favor of batchGetCachedSerie
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/series-cache/v1/batch-create-chunks'
         _path = _path.format(**_path_params)
@@ -82497,9 +81665,9 @@ This endpoint is being deprecated for new series in favor of batchGetCachedSerie
         return _decoder.decode(_response.json(), timeseries_seriescache_api_CreateChunksResponse, self._return_none_for_unknown_union_types)
 
     def delete_chunks(self, auth_header: str, logical_series_rid: str, request: "timeseries_seriescache_api_DeleteChunksParameters") -> "timeseries_seriescache_api_DeleteChunksResponse":
+        """Deletes the chunks that intersect the given time range. Does not delete the corresponding files from S3.
         """
-        Deletes the chunks that intersect the given time range. Does not delete the corresponding files from S3.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -82510,11 +81678,11 @@ This endpoint is being deprecated for new series in favor of batchGetCachedSerie
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
-            'logicalSeriesRid': logical_series_rid,
+        _path_params: Dict[str, str] = {
+            'logicalSeriesRid': quote(str(_conjure_encoder.default(logical_series_rid)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(request)
+        _json: Any = _conjure_encoder.default(request)
 
         _path = '/timeseries/series-cache/v1/logical-series/{logicalSeriesRid}/delete-chunks'
         _path = _path.format(**_path_params)
@@ -82650,8 +81818,7 @@ class timeseries_seriescache_api_Chunk(ConjureBeanType):
 
     @builtins.property
     def count(self) -> int:
-        """
-        The number of distinct timestamps contained within the chunk.
+        """The number of distinct timestamps contained within the chunk.
         """
         return self._count
 
@@ -82803,8 +81970,7 @@ timeseries_seriescache_api_CreateChunksParameters.__module__ = "nominal_api.time
 
 
 class timeseries_seriescache_api_CreateChunksResponse(ConjureBeanType):
-    """
-    Responses are returned in the same order as the requests.
+    """Responses are returned in the same order as the requests.
     """
 
     @builtins.classmethod
@@ -83041,15 +82207,14 @@ timeseries_seriescache_api_S3Handle.__module__ = "nominal_api.timeseries_seriesc
 
 
 class upload_api_UploadService(Service):
-    """
-    The Upload Service manages file uploads to object storage.
+    """The Upload Service manages file uploads to object storage.
     """
 
     def initiate_multipart_upload(self, auth_header: str, upload_request: "ingest_api_InitiateMultipartUploadRequest") -> "ingest_api_InitiateMultipartUploadResponse":
-        """
-        Initiates a multipart upload to object storage.
+        """Initiates a multipart upload to object storage.
 Returns an uploadId that should be used with listParts, signPart, and completeMultipartUpload.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -83060,10 +82225,10 @@ Returns an uploadId that should be used with listParts, signPart, and completeMu
         _params: Dict[str, Any] = {
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
-        _json: Any = ConjureEncoder().default(upload_request)
+        _json: Any = _conjure_encoder.default(upload_request)
 
         _path = '/upload/v1/multipart-upload'
         _path = _path.format(**_path_params)
@@ -83079,9 +82244,9 @@ Returns an uploadId that should be used with listParts, signPart, and completeMu
         return _decoder.decode(_response.json(), ingest_api_InitiateMultipartUploadResponse, self._return_none_for_unknown_union_types)
 
     def list_parts(self, auth_header: str, key: str, upload_id: str) -> List["ingest_api_PartWithSize"]:
+        """Lists the parts that have been uploaded for a given uploadId.
         """
-        Lists the parts that have been uploaded for a given uploadId.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -83089,11 +82254,11 @@ Returns an uploadId that should be used with listParts, signPart, and completeMu
         }
 
         _params: Dict[str, Any] = {
-            'key': key,
+            'key': _conjure_encoder.default(key),
         }
 
-        _path_params: Dict[str, Any] = {
-            'uploadId': upload_id,
+        _path_params: Dict[str, str] = {
+            'uploadId': quote(str(_conjure_encoder.default(upload_id)), safe=''),
         }
 
         _json: Any = None
@@ -83112,10 +82277,10 @@ Returns an uploadId that should be used with listParts, signPart, and completeMu
         return _decoder.decode(_response.json(), List[ingest_api_PartWithSize], self._return_none_for_unknown_union_types)
 
     def sign_part(self, auth_header: str, key: str, part_number: int, upload_id: str) -> "ingest_api_SignPartResponse":
-        """
-        Signs an upload request for a single part.
+        """Signs an upload request for a single part.
 Returns a URL that will execute the upload without further authentication.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -83123,12 +82288,12 @@ Returns a URL that will execute the upload without further authentication.
         }
 
         _params: Dict[str, Any] = {
-            'key': key,
-            'partNumber': part_number,
+            'key': _conjure_encoder.default(key),
+            'partNumber': _conjure_encoder.default(part_number),
         }
 
-        _path_params: Dict[str, Any] = {
-            'uploadId': upload_id,
+        _path_params: Dict[str, str] = {
+            'uploadId': quote(str(_conjure_encoder.default(upload_id)), safe=''),
         }
 
         _json: Any = None
@@ -83147,12 +82312,12 @@ Returns a URL that will execute the upload without further authentication.
         return _decoder.decode(_response.json(), ingest_api_SignPartResponse, self._return_none_for_unknown_union_types)
 
     def complete_multipart_upload(self, auth_header: str, key: str, upload_id: str, parts: List["ingest_api_Part"] = None) -> "ingest_api_CompleteMultipartUploadResponse":
-        """
-        Completes a multipart upload to object storage.
+        """Completes a multipart upload to object storage.
 This should be called after all parts have been uploaded.
 Will throw EmptyMultipartUpload if there are 0 parts.
         """
         parts = parts if parts is not None else []
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -83161,14 +82326,14 @@ Will throw EmptyMultipartUpload if there are 0 parts.
         }
 
         _params: Dict[str, Any] = {
-            'key': key,
+            'key': _conjure_encoder.default(key),
         }
 
-        _path_params: Dict[str, Any] = {
-            'uploadId': upload_id,
+        _path_params: Dict[str, str] = {
+            'uploadId': quote(str(_conjure_encoder.default(upload_id)), safe=''),
         }
 
-        _json: Any = ConjureEncoder().default(parts)
+        _json: Any = _conjure_encoder.default(parts)
 
         _path = '/upload/v1/multipart-upload/{uploadId}/complete'
         _path = _path.format(**_path_params)
@@ -83184,10 +82349,10 @@ Will throw EmptyMultipartUpload if there are 0 parts.
         return _decoder.decode(_response.json(), ingest_api_CompleteMultipartUploadResponse, self._return_none_for_unknown_union_types)
 
     def abort_multipart_upload(self, auth_header: str, key: str, upload_id: str) -> None:
-        """
-        Aborts a multipart upload to S3.
+        """Aborts a multipart upload to S3.
 Frees storage used by previously uploaded parts and prevents further uploads to the same uploadId.
         """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -83195,11 +82360,11 @@ Frees storage used by previously uploaded parts and prevents further uploads to 
         }
 
         _params: Dict[str, Any] = {
-            'key': key,
+            'key': _conjure_encoder.default(key),
         }
 
-        _path_params: Dict[str, Any] = {
-            'uploadId': upload_id,
+        _path_params: Dict[str, str] = {
+            'uploadId': quote(str(_conjure_encoder.default(upload_id)), safe=''),
         }
 
         _json: Any = None
@@ -83217,9 +82382,9 @@ Frees storage used by previously uploaded parts and prevents further uploads to 
         return
 
     def upload_file(self, auth_header: str, body: Any, file_name: str, size_bytes: Optional[int] = None, workspace: Optional[str] = None) -> str:
+        """Uploads a file to S3. Intended for smaller files.
         """
-        Uploads a file to S3. Intended for smaller files.
-        """
+        _conjure_encoder = ConjureEncoder()
 
         _headers: Dict[str, Any] = {
             'Accept': 'application/json',
@@ -83228,12 +82393,12 @@ Frees storage used by previously uploaded parts and prevents further uploads to 
         }
 
         _params: Dict[str, Any] = {
-            'fileName': file_name,
-            'sizeBytes': size_bytes,
-            'workspace': workspace,
+            'fileName': _conjure_encoder.default(file_name),
+            'sizeBytes': _conjure_encoder.default(size_bytes),
+            'workspace': _conjure_encoder.default(workspace),
         }
 
-        _path_params: Dict[str, Any] = {
+        _path_params: Dict[str, str] = {
         }
 
         _data: Any = body

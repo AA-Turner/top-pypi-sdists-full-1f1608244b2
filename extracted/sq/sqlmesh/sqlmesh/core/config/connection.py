@@ -224,6 +224,7 @@ class DuckDBAttachOptions(BaseConfig):
     # DuckLake specific options
     data_path: t.Optional[str] = None
     encrypted: bool = False
+    data_inlining_row_limit: t.Optional[int] = None
 
     def to_sql(self, alias: str) -> str:
         options = []
@@ -236,10 +237,12 @@ class DuckDBAttachOptions(BaseConfig):
 
         # DuckLake specific options
         if self.type == "ducklake":
-            if self.data_path:
+            if self.data_path is not None:
                 options.append(f"DATA_PATH '{self.data_path}'")
             if self.encrypted:
                 options.append("ENCRYPTED")
+            if self.data_inlining_row_limit is not None:
+                options.append(f"DATA_INLINING_ROW_LIMIT {self.data_inlining_row_limit}")
 
         options_sql = f" ({', '.join(options)})" if options else ""
         alias_sql = ""
@@ -1734,11 +1737,19 @@ class ClickhouseConnectionConfig(ConnectionConfig):
     cluster: t.Optional[str] = None
     connect_timeout: int = 10
     send_receive_timeout: int = 300
-    verify: bool = True
     query_limit: int = 0
     use_compression: bool = True
     compression_method: t.Optional[str] = None
     connection_settings: t.Optional[t.Dict[str, t.Any]] = None
+    http_proxy: t.Optional[str] = None
+    # HTTPS/TLS settings
+    verify: bool = True
+    ca_cert: t.Optional[str] = None
+    client_cert: t.Optional[str] = None
+    client_cert_key: t.Optional[str] = None
+    https_proxy: t.Optional[str] = None
+    server_host_name: t.Optional[str] = None
+    tls_mode: t.Optional[str] = None
 
     concurrent_tasks: int = 1
     register_comments: bool = True
@@ -1763,8 +1774,15 @@ class ClickhouseConnectionConfig(ConnectionConfig):
             "password",
             "connect_timeout",
             "send_receive_timeout",
-            "verify",
             "query_limit",
+            "http_proxy",
+            "verify",
+            "ca_cert",
+            "client_cert",
+            "client_cert_key",
+            "https_proxy",
+            "server_host_name",
+            "tls_mode",
         }
         return kwargs
 
@@ -1783,7 +1801,18 @@ class ClickhouseConnectionConfig(ConnectionConfig):
             maxsize=self.concurrent_tasks,
             # Block if there are no free connections
             block=True,
+            verify=self.verify,
+            ca_cert=self.ca_cert,
+            client_cert=self.client_cert,
+            client_cert_key=self.client_cert_key,
+            https_proxy=self.https_proxy,
         )
+        # this doesn't happen automatically because we always supply our own pool manager to the connection
+        # https://github.com/ClickHouse/clickhouse-connect/blob/3a7f4b04cad29c7c2536661b831fb744248e2ec0/clickhouse_connect/driver/httpclient.py#L109
+        if self.server_host_name:
+            pool_manager_options["server_hostname"] = self.server_host_name
+            if self.verify:
+                pool_manager_options["assert_hostname"] = self.server_host_name
         if self.connection_pool_options:
             pool_manager_options.update(self.connection_pool_options)
         pool_mgr = httputil.get_pool_manager(**pool_manager_options)

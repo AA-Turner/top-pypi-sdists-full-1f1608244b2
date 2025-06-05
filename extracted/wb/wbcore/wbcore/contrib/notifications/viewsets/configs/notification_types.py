@@ -1,4 +1,3 @@
-from rest_framework.reverse import reverse
 from wbcore.contrib.icons import WBIcon
 from wbcore.enums import Unit
 from wbcore.metadata.configs.display import Field, Legend, LegendItem, ListDisplay
@@ -45,9 +44,6 @@ class NotificationTypeSettingDisplayConfig(DisplayViewConfig):
 class NotificationTypeSettingEndpointConfig(EndpointViewConfig):
     def get_endpoint(self, **kwargs):
         return None
-
-    def get_list_endpoint(self, **kwargs):
-        return reverse("wbcore:notifications:notification_type_setting-list", args=[], request=self.request)
 
     def get_update_endpoint(self):
         return "{{_update_url}}"

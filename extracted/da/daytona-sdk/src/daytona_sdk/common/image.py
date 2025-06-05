@@ -12,8 +12,8 @@ from typing import List, Literal, Optional, Sequence, Union, get_args
 import toml
 from pydantic import BaseModel, PrivateAttr
 
-from .errors import DaytonaError
 from .._async.object_storage import ObjectStorage
+from .errors import DaytonaError
 
 SupportedPythonSeries = Literal["3.9", "3.10", "3.11", "3.12", "3.13"]
 SUPPORTED_PYTHON_SERIES = list(get_args(SupportedPythonSeries))

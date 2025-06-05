@@ -45,7 +45,7 @@ class Capture(System.Object):
         ...
 
 
-class CaptureCollection(System.Object, System.Collections.Generic.IList[System.Text.RegularExpressions.Capture], System.Collections.Generic.IReadOnlyList[System.Text.RegularExpressions.Capture], System.Collections.IList, typing.Iterable[System.Text.RegularExpressions.Capture]):
+class CaptureCollection(System.Object, System.Collections.Generic.IList[System.Text.RegularExpressions.Capture], System.Collections.IList, typing.Iterable[System.Text.RegularExpressions.Capture]):
     """
     Represents a sequence of capture substrings. The object is used
     to return the set of captures done by a single capturing group.
@@ -119,7 +119,7 @@ class Group(System.Text.RegularExpressions.Capture):
         ...
 
 
-class GroupCollection(System.Object, System.Collections.Generic.IList[System.Text.RegularExpressions.Group], System.Collections.Generic.IReadOnlyList[System.Text.RegularExpressions.Group], System.Collections.IList, System.Collections.Generic.IReadOnlyDictionary[str, System.Text.RegularExpressions.Group], typing.Iterable[System.Text.RegularExpressions.Group]):
+class GroupCollection(System.Object, System.Collections.Generic.IList[System.Text.RegularExpressions.Group], System.Collections.IList, System.Collections.Generic.IReadOnlyDictionary[str, System.Text.RegularExpressions.Group], typing.Iterable[System.Text.RegularExpressions.Group]):
     """
     Represents a sequence of capture substrings. The object is used
     to return the set of captures done by a single capturing group.
@@ -221,7 +221,7 @@ class Match(System.Text.RegularExpressions.Group):
         ...
 
 
-class MatchCollection(System.Object, System.Collections.Generic.IList[System.Text.RegularExpressions.Match], System.Collections.Generic.IReadOnlyList[System.Text.RegularExpressions.Match], System.Collections.IList, typing.Iterable[System.Text.RegularExpressions.Match]):
+class MatchCollection(System.Object, System.Collections.Generic.IList[System.Text.RegularExpressions.Match], System.Collections.IList, typing.Iterable[System.Text.RegularExpressions.Match]):
     """
     Represents the set of names appearing as capturing group
     names in a regular expression.

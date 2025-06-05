@@ -7,14 +7,15 @@ from collections import defaultdict
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, cast, Iterable
 
 import regex as re
-from lxml.etree import _Comment, _ElementTree, _Entity, _ProcessingInstruction
+from lxml.etree import _Comment, _ElementTree, _Entity, _ProcessingInstruction, _Element
 
+from arelle import XbrlConst
 from arelle.FunctionIxt import ixtNamespaces
-from arelle import ModelDocument as ModelDocumentFile
-from arelle.ModelDocument import ModelDocument
+from arelle.ModelDocument import ModelDocument, Type as ModelDocumentType
+from arelle.ModelDtsObject import ModelConcept
 from arelle.ModelInstanceObject import ModelContext, ModelFact, ModelInlineFootnote, ModelUnit, ModelInlineFact
 from arelle.ModelObject import ModelObject
 from arelle.ModelValue import QName
@@ -22,10 +23,10 @@ from arelle.ModelXbrl import ModelXbrl
 from arelle.typing import assert_type
 from arelle.utils.PluginData import PluginData
 from arelle.utils.validate.ValidationUtil import etreeIterWithDepth
-from arelle.ValidateXbrl import ValidateXbrl
 from arelle.XbrlConst import ixbrl11, xhtmlBaseIdentifier, xmlBaseIdentifier
 from arelle.XmlValidate import lexicalPatterns
 from arelle.XmlValidateConst import VALID
+from .LinkbaseType import LinkbaseType
 
 XBRLI_IDENTIFIER_PATTERN = re.compile(r"^(?!00)\d{8}$")
 XBRLI_IDENTIFIER_SCHEMA = 'http://www.kvk.nl/kvk-id'
@@ -57,10 +58,42 @@ ALLOWABLE_LANGUAGES = frozenset((
     'fr'
 ))
 
-EFFECTIVE_TAXONOMY_URLS = frozenset((
+EFFECTIVE_KVK_GAAP_IFRS_ENTRYPOINT_FILES = frozenset((
     'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-nlgaap-ext.xsd',
     'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-ifrs-ext.xsd',
 ))
+
+TAXONOMY_URLS_BY_YEAR = {
+    '2024': {
+        'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-nlgaap-ext.xsd',
+        'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-ifrs-ext.xsd',
+        'https://www.nltaxonomie.nl/kvk/2024-12-31/kvk-annual-report-other-gaap.xsd',
+    }
+}
+
+STANDARD_TAXONOMY_URLS = frozenset((
+    'http://www.nltaxonomie.nl/ifrs/20',
+    'https://www.nltaxonomie.nl/ifrs/20',
+    'http://www.nltaxonomie.nl/',
+    'https://www.nltaxonomie.nl/',
+    'http://www.xbrl.org/taxonomy/int/lei/',
+    'https://www.xbrl.org/taxonomy/int/lei/',
+    'http://www.xbrl.org/20',
+    'https://www.xbrl.org/20',
+    'http://www.xbrl.org/lrr/',
+    'https://www.xbrl.org/lrr/',
+    'http://xbrl.org/20',
+    'https://xbrl.org/20',
+    'http://xbrl.ifrs.org/',
+    'https://xbrl.ifrs.org/',
+    'http://www.xbrl.org/dtr/',
+    'https://www.xbrl.org/dtr/',
+    'http://xbrl.org/2020/extensible-enumerations-2.0',
+    'https://xbrl.org/2020/extensible-enumerations-2.0',
+    'http://www.w3.org/1999/xlink',
+    'https://www.w3.org/1999/xlink'
+))
+
 
 @dataclass(frozen=True)
 class ContextData:
@@ -69,12 +102,55 @@ class ContextData:
     contextsWithPeriodTimeZone: list[ModelContext | None]
     contextsWithSegments: list[ModelContext | None]
 
+
+@dataclass(frozen=True)
+class ExtensionData:
+    extensionConcepts: list[ModelConcept]
+    extensionDocuments: dict[ModelDocument, ExtensionDocumentData]
+    extensionImportedUrls: frozenset[str]
+
+
+@dataclass(frozen=True)
+class ExtensionDocumentData:
+    basename: str
+    hrefXlinkRole: str | None
+    linkbases: list[LinkbaseData]
+
+    def iterArcsByType(
+            self,
+            linkbaseType: LinkbaseType,
+            includeArcroles: set[str] | None = None,
+            excludeArcroles: set[str] | None = None,
+    ) -> Iterable[_Element]:
+        """
+        Returns a list of LinkbaseData objects for the specified LinkbaseType.
+        """
+        for linkbase in self.iterLinkbasesByType(linkbaseType):
+            for arc in linkbase.arcs:
+                if includeArcroles is not None:
+                    if arc.get(XbrlConst.qnXlinkArcRole.clarkNotation) not in includeArcroles:
+                        continue
+                if excludeArcroles is not None:
+                    if arc.get(XbrlConst.qnXlinkArcRole.clarkNotation) in excludeArcroles:
+                        continue
+                yield arc
+
+    def iterLinkbasesByType(self, linkbaseType: LinkbaseType) -> Iterable[LinkbaseData]:
+        """
+        Returns a list of LinkbaseData objects for the specified LinkbaseType.
+        """
+        for linkbase in self.linkbases:
+            if linkbase.linkbaseType == linkbaseType:
+                yield linkbase
+
+
 @dataclass(frozen=True)
 class HiddenElementsData:
     cssHiddenFacts: set[ModelInlineFact]
     eligibleForTransformHiddenFacts: set[ModelInlineFact]
     hiddenFactsOutsideHiddenSection: set[ModelInlineFact]
     requiredToDisplayFacts: set[ModelInlineFact]
+
 
 @dataclass(frozen=True)
 class InlineHTMLData:
@@ -85,6 +161,19 @@ class InlineHTMLData:
     factLangFootnotes: dict[ModelInlineFootnote, set[str]]
     fractionElements: set[Any]
 
+
+@dataclass(frozen=True)
+class LinkbaseData:
+    arcs: list[_Element]
+    basename: str
+    element: _Element
+    linkbaseType: LinkbaseType | None
+
+    @property
+    def hasArcs(self) -> bool:
+        return len(self.arcs) > 0
+
+
 @dataclass
 class PluginValidationDataExtension(PluginData):
     chamberOfCommerceRegistrationNumberQn: QName
@@ -93,6 +182,7 @@ class PluginValidationDataExtension(PluginData):
     documentResubmissionUnsurmountableInaccuraciesQn: QName
     entrypointRoot: str
     entrypoints: set[str]
+    financialReportingPeriodQn: QName
     financialReportingPeriodCurrentStartDateQn: QName
     financialReportingPeriodCurrentEndDateQn: QName
     financialReportingPeriodPreviousStartDateQn: QName
@@ -144,21 +234,6 @@ class PluginValidationDataExtension(PluginData):
             contextsWithSegments=contextsWithSegments,
         )
 
-    def checkFilingDTS(
-            self,
-            val: ValidateXbrl,
-            modelDocument: ModelDocument,
-            visited: list[ModelDocument]
-    ) -> None:
-        visited.append(modelDocument)
-        for referencedDocument, modelDocumentReference in modelDocument.referencesDocument.items():
-            if referencedDocument not in visited and referencedDocument.inDTS:
-                self.checkFilingDTS(val, referencedDocument, visited)
-        if modelDocument.type == ModelDocumentFile.Type.SCHEMA:
-            for doc, docRef in modelDocument.referencesDocument.items():
-                if "import" in docRef.referenceTypes:
-                    val.extensionImportedUrls.add(doc.uri)
-
     @lru_cache(1)
     def checkHiddenElements(self, modelXbrl: ModelXbrl) -> HiddenElementsData:
         cssHiddenFacts = set()
@@ -169,7 +244,7 @@ class PluginValidationDataExtension(PluginData):
         presentedHiddenEltIds = defaultdict(list)
         requiredToDisplayFacts = set()
         for ixdsHtmlRootElt in modelXbrl.ixdsHtmlElements:
-            ixNStag = getattr(ixdsHtmlRootElt.modelDocument, "ixNStag", ixbrl11)
+            ixNStag = str(getattr(ixdsHtmlRootElt.modelDocument, "ixNStag", ixbrl11))
             for ixHiddenElt in ixdsHtmlRootElt.iterdescendants(tag=ixNStag + "hidden"):
                 for tag in (ixNStag + "nonNumeric", ixNStag+"nonFraction"):
                     for ixElt in ixHiddenElt.iterdescendants(tag=tag):
@@ -218,7 +293,7 @@ class PluginValidationDataExtension(PluginData):
         tupleElements = set()
         orphanedFootnotes = set()
         for ixdsHtmlRootElt in modelXbrl.ixdsHtmlElements:
-            ixNStag = getattr(ixdsHtmlRootElt.modelDocument, "ixNStag", ixbrl11)
+            ixNStag = str(getattr(ixdsHtmlRootElt.modelDocument, "ixNStag", ixbrl11))
             ixTupleTag = ixNStag + "tuple"
             ixFractionTag = ixNStag + "fraction"
             for elts in modelXbrl.ixdsEltById.values():   # type: ignore[attr-defined]
@@ -291,6 +366,24 @@ class PluginValidationDataExtension(PluginData):
     def getContextsWithSegments(self, modelXbrl: ModelXbrl) -> list[ModelContext | None]:
         return self.checkContexts(modelXbrl).contextsWithSegments
 
+    @lru_cache(1)
+    def getDocumentsInDts(self, modelXbrl: ModelXbrl) -> dict[ModelDocument, str | None]:
+        modelDocuments: dict[ModelDocument, str | None] = {}
+        if modelXbrl.modelDocument is None:
+            return modelDocuments
+
+        def _getDocumentsInDts(modelDocument: ModelDocument) -> None:
+            for referencedDocument, modelDocumentReference in modelDocument.referencesDocument.items():
+                if referencedDocument in modelDocuments:
+                    continue
+                if referencedDocument.inDTS:
+                    modelDocuments[referencedDocument] = modelDocumentReference.referringXlinkRole
+                    _getDocumentsInDts(referencedDocument)
+
+        modelDocuments[modelXbrl.modelDocument] = None
+        _getDocumentsInDts(modelXbrl.modelDocument)
+        return modelDocuments
+
     def getEligibleForTransformHiddenFacts(self, modelXbrl: ModelXbrl) -> set[ModelInlineFact]:
         return self.checkHiddenElements(modelXbrl).eligibleForTransformHiddenFacts
 
@@ -321,8 +414,19 @@ class PluginValidationDataExtension(PluginData):
         )
 
     @lru_cache(1)
-    def getFilenameParts(self, filename: str) -> dict[str, Any] | None:
-        match = self.getFilenameFormatPattern().match(filename)
+    def getExtensionFilenameFormatPattern(self) -> re.Pattern[str]:
+        return re.compile(
+            r"^(?<base>[^-]*)"
+            r"-(?<year>\d{4})-(?<month>0[1-9]|1[012])-(?<day>0?[1-9]|[12][0-9]|3[01])"
+            r"(?<suffix>[_pre|_cal|_lab|_def]*)"
+            r"(?<lang>-*[^-]*)"
+            r"\.(?<extension>xsd|xml)$",
+            flags=re.ASCII
+        )
+
+    @lru_cache(1)
+    def getFilenameParts(self, filename: str, filenamePattern: re.Pattern[str]) -> dict[str, Any] | None:
+        match = filenamePattern.match(filename)
         if match:
             return match.groupdict()
         return None
@@ -330,6 +434,56 @@ class PluginValidationDataExtension(PluginData):
     @lru_cache(1)
     def getIxdsDocBasenames(self, modelXbrl: ModelXbrl) -> set[str]:
         return set(Path(url).name for url in getattr(modelXbrl, "ixdsDocUrls", []))
+
+    def getExtensionConcepts(self, modelXbrl: ModelXbrl) -> list[ModelConcept]:
+        """
+        Returns a list of extension concepts in the DTS.
+        """
+        extensionConcepts = []
+        for concepts in modelXbrl.nameConcepts.values():
+            for concept in concepts:
+                if self.isExtensionUri(concept.qname.namespaceURI, modelXbrl):
+                    extensionConcepts.append(concept)
+        return extensionConcepts
+
+    @lru_cache(1)
+    def getExtensionData(self, modelXbrl: ModelXbrl) -> ExtensionData:
+        extensionDocuments = {}
+        extensionImportedUrls = set()
+        documentsInDts = self.getDocumentsInDts(modelXbrl)
+        for modelDocument, hrefXlinkRole in documentsInDts.items():
+            if not self.isExtensionUri(modelDocument.uri, modelDocument.modelXbrl):
+                # Skip non-extension documents
+                continue
+            if modelDocument.type in (ModelDocumentType.LINKBASE, ModelDocumentType.SCHEMA):
+                extensionDocuments[modelDocument] = ExtensionDocumentData(
+                    basename=modelDocument.basename,
+                    hrefXlinkRole=hrefXlinkRole,
+                    linkbases=self.getLinkbaseData(modelDocument),
+                )
+            if modelDocument.type == ModelDocumentType.SCHEMA:
+                for doc, docRef in modelDocument.referencesDocument.items():
+                    if "import" in docRef.referenceTypes:
+                        extensionImportedUrls.add(doc.uri)
+        return ExtensionData(
+            extensionConcepts=self.getExtensionConcepts(modelXbrl),
+            extensionDocuments=extensionDocuments,
+            extensionImportedUrls=frozenset(sorted(extensionImportedUrls)),
+        )
+
+    def getLinkbaseData(self, modelDocument: ModelDocument) -> list[LinkbaseData]:
+        linkbases = []
+        for linkbaseType in LinkbaseType:
+            for linkElt in modelDocument.xmlRootElement.iterdescendants(tag=linkbaseType.getLinkQn().clarkNotation):
+                arcQn = linkbaseType.getArcQn()
+                arcs = list(linkElt.iterdescendants(tag=arcQn.clarkNotation))
+                linkbases.append(LinkbaseData(
+                    arcs=arcs,
+                    basename=modelDocument.basename,
+                    element=linkElt,
+                    linkbaseType=linkbaseType,
+                ))
+        return linkbases
 
     def getNoMatchLangFootnotes(self, modelXbrl: ModelXbrl) -> set[ModelInlineFootnote]:
         return self.checkInlineHTMLElements(modelXbrl).noMatchLangFootnotes
@@ -345,6 +499,14 @@ class PluginValidationDataExtension(PluginData):
 
     def getTupleElements(self, modelXbrl: ModelXbrl) -> set[tuple[Any]]:
         return self.checkInlineHTMLElements(modelXbrl).tupleElements
+
+    @lru_cache(1)
+    def getReportingPeriod(self, modelXbrl: ModelXbrl) -> str | None:
+        reportingPeriodFacts = modelXbrl.factsByQname.get(self.financialReportingPeriodQn, set())
+        for fact in reportingPeriodFacts:
+            if fact.xValid >= VALID:
+                return cast(str, fact.xValue)
+        return None
 
     @lru_cache(1)
     def getReportXmlLang(self, modelXbrl: ModelXbrl) -> str | None:
@@ -365,12 +527,19 @@ class PluginValidationDataExtension(PluginData):
     def getTargetElements(self, modelXbrl: ModelXbrl) -> list[Any]:
         targetElements = []
         for ixdsHtmlRootElt in modelXbrl.ixdsHtmlElements:
-            ixNStag = getattr(ixdsHtmlRootElt.modelDocument, "ixNStag", ixbrl11)
+            ixNStag = str(getattr(ixdsHtmlRootElt.modelDocument, "ixNStag", ixbrl11))
             ixTags = set(ixNStag + ln for ln in ("nonNumeric", "nonFraction", "references", "relationship"))
             for elt, depth in etreeIterWithDepth(ixdsHtmlRootElt):
                 if elt.tag in ixTags and elt.get("target"):
                     targetElements.append(elt)
         return targetElements
+
+    def isExtensionUri(self, uri: str, modelXbrl: ModelXbrl) -> bool:
+        if uri.startswith(modelXbrl.uriDir):
+            return True
+        if not any(uri.startswith(taxonomyUri) for taxonomyUri in STANDARD_TAXONOMY_URLS):
+            return True
+        return False
 
     @lru_cache(1)
     def isFilenameValidCharacters(self, filename: str) -> bool:

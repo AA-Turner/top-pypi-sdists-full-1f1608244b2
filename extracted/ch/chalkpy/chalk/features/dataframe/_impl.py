@@ -209,15 +209,15 @@ class DataFrameMeta(type):
 
     @property
     def references_feature_set(cls):
-        from chalk.features.feature_set import FeatureSetBase
-
         cls = cast(Type[DataFrame], cls)
         if cls.__references_feature_set__ is not None:
             return cls.__references_feature_set__
         else:
             # Determine the unique @features cls that encompasses all columns
             root_ns = get_unique_item((x.root_namespace for x in cls.__columns__), "root ns")
-        return FeatureSetBase.registry[root_ns]
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
+
+        return CURRENT_FEATURE_REGISTRY.get().get_feature_sets()[root_ns]
 
     @property
     def namespace(cls) -> str:
@@ -338,7 +338,7 @@ class DataFrame(metaclass=DataFrameMeta):
         ... }))
         """
         super().__init__()
-        from chalk.features.feature_set import Features, FeatureSetBase
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY, Features
 
         try:
             import polars as pl
@@ -491,7 +491,8 @@ class DataFrame(metaclass=DataFrameMeta):
         namespaces_set = {x.root_namespace for x in self.columns if not x.root_namespace == "__chalk__"}
         if len(namespaces_set) == 1:
             self.namespace = get_unique_item(namespaces_set, "DataFrame column namespaces")
-            self.references_feature_set = FeatureSetBase.registry[self.namespace]
+            feature_sets = CURRENT_FEATURE_REGISTRY.get().get_feature_sets()
+            self.references_feature_set = feature_sets[self.namespace]
         else:
             # Allow empty dataframes or dataframes with multiple namespaces
             self.namespace = None
@@ -677,13 +678,17 @@ class DataFrame(metaclass=DataFrameMeta):
         """
         import polars as pl
 
-        from chalk.features.feature_set import FeatureSetBase
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
 
         groupby = [pl.col(str(v)).alias(str(k)) for k, v in group.items()]
 
         namespaces = {unwrap_feature(a).namespace for a in agg.keys()}
         namespace = namespaces.pop() if len(namespaces) == 1 else None
-        timestamp_feature = None if namespace is None else FeatureSetBase.registry[namespace].__chalk_ts__
+        if namespace is not None:
+            features_cls = CURRENT_FEATURE_REGISTRY.get().get_feature_sets()[namespace]
+            timestamp_feature = features_cls.__chalk_ts__
+        else:
+            timestamp_feature = None
 
         now = datetime.now(tz=timezone.utc)
         cols = []
@@ -939,13 +944,18 @@ class DataFrame(metaclass=DataFrameMeta):
         """
         import polars as pl
 
-        from chalk.features.feature_set import FeatureSetBase
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
 
         groupby = [pl.col(str(v)).alias(str(k)) for k, v in group.items()] if group is not None else None
 
         namespaces = {unwrap_feature(a).namespace for a in agg.keys()}
         namespace = namespaces.pop() if len(namespaces) == 1 else None
-        timestamp_feature = None if namespace is None else FeatureSetBase.registry[namespace].__chalk_ts__
+
+        if namespace is not None:
+            features_cls = CURRENT_FEATURE_REGISTRY.get().get_feature_sets()[namespace]
+            timestamp_feature = features_cls.__chalk_ts__
+        else:
+            timestamp_feature = None
 
         now = get_filter_now()
         cols: List[pl.Expr] = []
@@ -1152,7 +1162,7 @@ class DataFrame(metaclass=DataFrameMeta):
         """
         import polars as pl
 
-        from chalk.features.feature_set import FeatureSetBase
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
 
         new_c = {}
         for k, v in c.items():
@@ -1171,7 +1181,11 @@ class DataFrame(metaclass=DataFrameMeta):
 
         namespaces = {unwrap_feature(a).namespace for a in c.keys()}
         namespace = namespaces.pop() if len(namespaces) == 1 else None
-        timestamp_feature = None if namespace is None else FeatureSetBase.registry[namespace].__chalk_ts__
+        if namespace is not None:
+            features_cls = CURRENT_FEATURE_REGISTRY.get().get_feature_sets()[namespace]
+            timestamp_feature = features_cls.__chalk_ts__
+        else:
+            timestamp_feature = None
 
         now = get_filter_now()
         cols: List[pl.Expr] = []
@@ -2131,7 +2145,7 @@ class DataFrame(metaclass=DataFrameMeta):
             SpaceShip(id=2, volume=5000)
         ]
         """
-        from chalk.features.feature_set import FeatureSetBase
+        from chalk.features.feature_set import CURRENT_FEATURE_REGISTRY
 
         if self.namespace is None and self._pydantic_model is None:
             raise ValueError("This method is not supported if the DataFrame spans multiple namespaces")
@@ -2175,7 +2189,7 @@ class DataFrame(metaclass=DataFrameMeta):
                 if rooted_prefix == self.namespace:
                     assert not values_are_lists, "Top level feature shouldn't be a has-many"
                     assert self.namespace is not None
-                    features_cls = FeatureSetBase.registry[self.namespace]
+                    features_cls = CURRENT_FEATURE_REGISTRY.get().get_feature_sets()[self.namespace]
                     ans.append(features_cls(**sub_kwargs))
                 else:
                     rooted_prefix_split = rooted_prefix.split(".")

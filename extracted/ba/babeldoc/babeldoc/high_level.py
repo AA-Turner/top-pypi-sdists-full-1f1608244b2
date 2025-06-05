@@ -5,7 +5,6 @@ import io
 import logging
 import pathlib
 import shutil
-import struct
 import threading
 import time
 from asyncio import CancelledError
@@ -14,11 +13,6 @@ from typing import Any
 from typing import BinaryIO
 
 import pymupdf
-from pdfminer.cmapdb import IdentityCMap
-from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdfinterp import PDFResourceManager
-from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfparser import PDFParser
 from pymupdf import Document
 from pymupdf import Font
 
@@ -45,23 +39,16 @@ from babeldoc.document_il.midend.typesetting import Typesetting
 from babeldoc.document_il.utils.fontmap import FontMapper
 from babeldoc.document_il.xml_converter import XMLConverter
 from babeldoc.pdfinterp import PDFPageInterpreterEx
+from babeldoc.pdfminer.pdfdocument import PDFDocument
+from babeldoc.pdfminer.pdfinterp import PDFResourceManager
+from babeldoc.pdfminer.pdfpage import PDFPage
+from babeldoc.pdfminer.pdfparser import PDFParser
 from babeldoc.progress_monitor import ProgressMonitor
 from babeldoc.result_merger import ResultMerger
 from babeldoc.split_manager import SplitManager
 from babeldoc.translation_config import TranslateResult
 from babeldoc.translation_config import TranslationConfig
 from babeldoc.translation_config import WatermarkOutputMode
-
-
-def decode(_, code: bytes) -> tuple[int, ...]:
-    n = len(code) // 2
-    if n:
-        return struct.unpack_from(f">{n}H", code)
-    else:
-        return ()
-
-
-IdentityCMap.decode = decode
 
 logger = logging.getLogger(__name__)
 
@@ -608,6 +595,12 @@ def do_translate(
         # not being able to copy translated text can be fixed,
         # the macOS preview is broken
         # fix_cmap(result, translation_config)
+        try:
+            migrate_toc(translation_config, result)
+        except Exception as e:
+            logger.error(
+                f"Failed to migrate TOC from {translation_config.input_file}: {e}"
+            )
         pm.translate_done(result)
         return result
 
@@ -625,6 +618,51 @@ def do_translate(
         translation_config.cleanup_temp_files()
 
 
+def migrate_toc(
+    translation_config: TranslationConfig, translate_result: TranslateResult
+):
+    old_doc = Document(translation_config.input_file)
+    if not old_doc:
+        return
+
+    try:
+        fix_filter(old_doc)
+        fix_null_xref(old_doc)
+    except Exception:
+        logger.exception("auto fix failed, please check the pdf file")
+
+    toc_data = old_doc.get_toc()
+
+    if not toc_data:
+        logger.info("No TOC found in the original PDF, skipping migration.")
+        return
+
+    files = {
+        translate_result.dual_pdf_path,
+        # translate_result.mono_pdf_path,
+        translate_result.no_watermark_dual_pdf_path,
+        # translate_result.no_watermark_mono_pdf_path
+    }
+
+    for f in files:
+        mig_toc_temp_input = translation_config.get_working_file_path(
+            "mig_toc_temp.pdf"
+        )
+        shutil.copy(f, mig_toc_temp_input)
+        new_doc = Document(mig_toc_temp_input.as_posix())
+        if not new_doc:
+            continue
+
+        new_doc.set_toc(toc_data)
+        PDFCreater.save_pdf_with_timeout(
+            new_doc,
+            f.as_posix(),
+            translation_config=translation_config,
+            clean=not translation_config.skip_clean,
+            tag="mig_toc",
+        )
+
+
 def fix_media_box(doc: Document) -> None:
     mediabox_data = {}
     for x in range(1, doc.xref_length()):
@@ -632,7 +670,7 @@ def fix_media_box(doc: Document) -> None:
         box_set = {}
         if t[1] in ["/Pages", "/Page"]:
             mediabox = doc.xref_get_key(x, "MediaBox")
-            if mediabox[0] != "null":
+            if mediabox[0] == "array":
                 _, _, x1, y1 = mediabox[1].replace("[", "").replace("]", "").split(" ")
                 doc.xref_set_key(x, "MediaBox", f"[0 0 {x1} {y1}]")
                 box_set["MediaBox"] = mediabox[1]

@@ -15,6 +15,7 @@
 
 
 # import models into model package
+from daytona_api_client.models.account_provider import AccountProvider
 from daytona_api_client.models.api_key_list import ApiKeyList
 from daytona_api_client.models.api_key_response import ApiKeyResponse
 from daytona_api_client.models.build_image import BuildImage
@@ -47,6 +48,7 @@ from daytona_api_client.models.git_clone_request import GitCloneRequest
 from daytona_api_client.models.git_commit_info import GitCommitInfo
 from daytona_api_client.models.git_commit_request import GitCommitRequest
 from daytona_api_client.models.git_commit_response import GitCommitResponse
+from daytona_api_client.models.git_delete_branch_request import GitDeleteBranchRequest
 from daytona_api_client.models.git_repo_request import GitRepoRequest
 from daytona_api_client.models.git_status import GitStatus
 from daytona_api_client.models.image_dto import ImageDto
@@ -88,6 +90,7 @@ from daytona_api_client.models.usage_overview import UsageOverview
 from daytona_api_client.models.user import User
 from daytona_api_client.models.user_public_key import UserPublicKey
 from daytona_api_client.models.volume_dto import VolumeDto
+from daytona_api_client.models.volume_state import VolumeState
 from daytona_api_client.models.workspace import Workspace
 from daytona_api_client.models.workspace_info import WorkspaceInfo
 from daytona_api_client.models.workspace_labels import WorkspaceLabels

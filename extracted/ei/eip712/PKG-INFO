@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: eip712
-Version: 0.2.12
+Version: 0.2.13
 Summary: eip712: Message classes for typed structured data hashing and signing in Ethereum
 Home-page: https://github.com/ApeWorX/eip712
 Author: ApeWorX Ltd.

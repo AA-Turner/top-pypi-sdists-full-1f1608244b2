@@ -60,7 +60,7 @@ def add_solana_files_to_context(context: CertoraContext, json_obj: dict) -> None
 def run_rust_build(context: CertoraContext, build_cmd: List[str]) -> None:
 
     try:
-        build_script_logger.info(f"Building by calling {build_cmd}")
+        build_script_logger.info(f"Building by calling `{' '.join(build_cmd)}`")
         result = subprocess.run(build_cmd, capture_output=True, text=True)
 
         # Check if the script executed successfully

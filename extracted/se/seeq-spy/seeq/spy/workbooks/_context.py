@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Dict
+
+import pandas as pd
 
 from seeq.spy._session import Session
 from seeq.spy._status import Status
@@ -17,4 +19,5 @@ class WorkbookPushContext:
     global_inventory: str
     session: Session
     specific_worksheet_ids: Optional[List[str]]
+    pushed_inventory: Optional[Dict[str, pd.DataFrame]]
     status: Status

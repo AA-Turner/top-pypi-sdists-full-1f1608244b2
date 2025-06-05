@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: compas
-Version: 2.12.0
+Version: 2.13.0
 Summary: The main COMPAS framework library.
 Author-email: tom van mele <tom.v.mele@gmail.com>
 License: MIT License
@@ -85,12 +85,6 @@ The **COMPAS** framework is an open-source, Python-based framework for computati
 The framework consists of a general-purpose core library, written in pure Python, and a growing collection of extensions that provide easy access to peer-reviewed research, state-of-the-art external libraries such as CGAL, libigl and Triangle, and tools with specialized functionality for AEFC applications such as Abaqus, ANSYS, SOFISTIK, ROS, etc.
 
 COMPAS has dedicated packages for working with Rhino, Grasshopper, and Blender, but it can be used in any environment that supports Python scripting. It is available on PyPI and conda-forge and can be easily installed using popular package managers on multiple platforms.
-
-## COMPAS 2.0!
-
-We are working on a new major release of the framework, COMPAS 2.0!
-Therefore, be aware that the current version of the repository already contains some changes that are incompatible with the version 1 releases.
-The documentation of the latest stable version (COMPAS 1.17.9) [is available here](https://compas.dev/compas/1.17.9).
 
 ## Installation
 

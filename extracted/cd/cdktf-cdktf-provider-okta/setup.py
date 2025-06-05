@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-okta",
-    "version": "13.13.0",
+    "version": "14.0.0",
     "description": "Prebuilt okta Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-okta.git",
@@ -179,7 +179,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_okta._jsii": [
-            "provider-okta@13.13.0.jsii.tgz"
+            "provider-okta@14.0.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_okta": [
             "py.typed"
@@ -187,8 +187,8 @@ kwargs = json.loads(
     },
     "python_requires": "~=3.9",
     "install_requires": [
-        "cdktf>=0.20.0, <0.21.0",
-        "constructs>=10.3.0, <11.0.0",
+        "cdktf>=0.21.0, <0.22.0",
+        "constructs>=10.4.2, <11.0.0",
         "jsii>=1.111.0, <2.0.0",
         "publication>=0.0.3",
         "typeguard>=2.13.3,<4.3.0"

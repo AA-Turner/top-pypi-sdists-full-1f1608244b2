@@ -6,26 +6,7 @@ from wbcore.permissions.shortcuts import is_internal_user
 
 
 class RelationshipEntryModelEndpoint(EndpointViewConfig):
-    def get_list_endpoint(self, **kwargs):
-        return reverse(
-            "wbcore:directory:entry-relationship-detail",
-            args=[
-                self.view.kwargs["entry_id"],
-                self.view.kwargs.get("pk"),
-            ],
-            request=self.request,
-        )
-
-    def get_instance_endpoint(self, **kwargs):
-        return reverse(
-            "wbcore:directory:entry-relationship-list",
-            args=[
-                self.view.kwargs["entry_id"],
-            ],
-            request=self.request,
-        )
-
-    def get_create_endpoint(self, **kwargs):
+    def get_endpoint(self, **kwargs):
         return reverse(
             "wbcore:directory:entry-relationship-list",
             args=[
@@ -56,9 +37,6 @@ class ClientManagerEndpoint(EndpointViewConfig):
             ]:
                 return None
         return super().get_delete_endpoint(**kwargs)
-
-    def get_list_endpoint(self, **kwargs):
-        return f"{reverse('wbcore:directory:clientmanagerrelationship-list', args=[], request=self.request)}"
 
 
 class EmployeeEmployerEndpointConfig(EndpointViewConfig):
@@ -101,6 +79,3 @@ class UserIsClientEndpointConfig(EndpointViewConfig):
         if is_internal_user(self.request.user, include_superuser=True):
             return reverse("wbcore:directory:person-list", request=self.request)
         return None
-
-    def get_list_endpoint(self, **kwargs):
-        return reverse("wbcore:directory:clientmanagerrelationship-userclient-list", request=self.request)

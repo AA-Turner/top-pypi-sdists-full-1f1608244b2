@@ -222,7 +222,7 @@ class OrderablePartitioner(typing.Generic[System_Collections_Concurrent_Orderabl
         ...
 
 
-class ConcurrentDictionary(typing.Generic[System_Collections_Concurrent_ConcurrentDictionary_TKey, System_Collections_Concurrent_ConcurrentDictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Concurrent_ConcurrentDictionary_TKey, System_Collections_Concurrent_ConcurrentDictionary_TValue], System.Collections.IDictionary, System.Collections.Generic.IReadOnlyDictionary[System_Collections_Concurrent_ConcurrentDictionary_TKey, System_Collections_Concurrent_ConcurrentDictionary_TValue], typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Concurrent_ConcurrentDictionary_TKey, System_Collections_Concurrent_ConcurrentDictionary_TValue]]):
+class ConcurrentDictionary(typing.Generic[System_Collections_Concurrent_ConcurrentDictionary_TKey, System_Collections_Concurrent_ConcurrentDictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Concurrent_ConcurrentDictionary_TKey, System_Collections_Concurrent_ConcurrentDictionary_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Concurrent_ConcurrentDictionary_TKey, System_Collections_Concurrent_ConcurrentDictionary_TValue]]):
     """Represents a thread-safe collection of keys and values."""
 
     class AlternateLookup(typing.Generic[System_Collections_Concurrent_ConcurrentDictionary_AlternateLookup_TAlternateKey]):

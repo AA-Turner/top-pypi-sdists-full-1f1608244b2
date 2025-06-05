@@ -333,6 +333,7 @@ __all__ = (
     "MovPaddingControlType",
     "MovReferenceType",
     "Mp3RateControlModeType",
+    "Mp4C2paManifestType",
     "Mp4CslgAtomType",
     "Mp4FreeSpaceBoxType",
     "Mp4MoovPlacementType",
@@ -1261,6 +1262,7 @@ MovMpeg2FourCCControlType = Literal["MPEG", "XDCAM"]
 MovPaddingControlType = Literal["NONE", "OMNEON"]
 MovReferenceType = Literal["EXTERNAL", "SELF_CONTAINED"]
 Mp3RateControlModeType = Literal["CBR", "VBR"]
+Mp4C2paManifestType = Literal["EXCLUDE", "INCLUDE"]
 Mp4CslgAtomType = Literal["EXCLUDE", "INCLUDE"]
 Mp4FreeSpaceBoxType = Literal["EXCLUDE", "INCLUDE"]
 Mp4MoovPlacementType = Literal["NORMAL", "PROGRESSIVE_DOWNLOAD"]
@@ -1696,6 +1698,7 @@ ServiceName = Literal[
     "es",
     "events",
     "evidently",
+    "evs",
     "finspace",
     "finspace-data",
     "firehose",

@@ -8,8 +8,6 @@ import typing as t
 from functools import cached_property, partial
 from pathlib import Path
 
-import pandas as pd
-import numpy as np
 from pydantic import Field
 from sqlglot import diff, exp
 from sqlglot.diff import Insert
@@ -1566,6 +1564,8 @@ class SeedModel(_Model):
         yield from self.render_seed()
 
     def render_seed(self) -> t.Iterator[QueryOrDF]:
+        import numpy as np
+
         self._ensure_hydrated()
 
         date_columns = []
@@ -1596,6 +1596,8 @@ class SeedModel(_Model):
 
             # convert all date/time types to native pandas timestamp
             for column in [*date_columns, *datetime_columns]:
+                import pandas as pd
+
                 df[column] = pd.to_datetime(df[column])
 
             # extract datetime.date from pandas timestamp for DATE columns

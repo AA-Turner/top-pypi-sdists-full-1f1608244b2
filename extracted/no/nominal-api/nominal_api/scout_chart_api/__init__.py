@@ -4,3 +4,8 @@ from .._impl import (
     scout_chart_api_JsonString as JsonString,
 )
 
+__all__ = [
+    'DeprecatedDefinitionAndSchemaVersion',
+    'JsonString',
+]
+

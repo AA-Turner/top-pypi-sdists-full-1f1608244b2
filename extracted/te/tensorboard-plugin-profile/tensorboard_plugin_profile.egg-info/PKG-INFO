@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: tensorboard_plugin_profile
-Version: 2.19.8
+Version: 2.19.9
 Summary: Profile Tensorboard Plugin
 Home-page: https://github.com/openxla/xprof
 Author: Google Inc.

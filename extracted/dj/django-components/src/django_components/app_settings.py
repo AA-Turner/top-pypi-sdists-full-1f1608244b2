@@ -56,7 +56,7 @@ class ContextBehavior(str, Enum):
     That is, they enrich the context, and pass it along.
 
     1. Component fills use the context of the component they are within.
-    2. Variables from [`Component.get_context_data()`](../api#django_components.Component.get_context_data)
+    2. Variables from [`Component.get_template_data()`](../api#django_components.Component.get_template_data)
     are available to the component fill.
 
     **Example:**
@@ -71,7 +71,7 @@ class ContextBehavior(str, Enum):
     {% endwith %}
     ```
 
-    and this context returned from the `Component.get_context_data()` method
+    and this context returned from the `Component.get_template_data()` method
     ```python
     { "my_var": 123 }
     ```
@@ -98,7 +98,7 @@ class ContextBehavior(str, Enum):
     """
     This setting makes the component fills behave similar to Vue or React, where
     the fills use EXCLUSIVELY the context variables defined in
-    [`Component.get_context_data()`](../api#django_components.Component.get_context_data).
+    [`Component.get_template_data()`](../api#django_components.Component.get_template_data).
 
     **Example:**
 
@@ -112,7 +112,7 @@ class ContextBehavior(str, Enum):
     {% endwith %}
     ```
 
-    and this context returned from the `get_context_data()` method
+    and this context returned from the `get_template_data()` method
     ```python
     { "my_var": 123 }
     ```
@@ -158,12 +158,39 @@ class ComponentsSettings(NamedTuple):
     - Python import path, e.g. `"path.to.my_extension.MyExtension"`.
     - Extension class, e.g. `my_extension.MyExtension`.
 
+    Read more about [extensions](../../concepts/advanced/extensions).
+
+    **Example:**
+
     ```python
     COMPONENTS = ComponentsSettings(
         extensions=[
             "path.to.my_extension.MyExtension",
             StorybookExtension,
         ],
+    )
+    ```
+    """
+
+    extensions_defaults: Optional[Dict[str, Any]] = None
+    """
+    Global defaults for the extension classes.
+
+    Read more about [Extension defaults](../../concepts/advanced/extensions#extension-defaults).
+
+    **Example:**
+
+    ```python
+    COMPONENTS = ComponentsSettings(
+        extensions_defaults={
+            "my_extension": {
+                "my_setting": "my_value",
+            },
+            "cache": {
+                "enabled": True,
+                "ttl": 60,
+            },
+        },
     )
     ```
     """
@@ -188,7 +215,7 @@ class ComponentsSettings(NamedTuple):
     Defaults to `[Path(settings.BASE_DIR) / "components"]`. That is, the root `components/` app.
 
     Directories must be full paths, same as with
-    [STATICFILES_DIRS](https://docs.djangoproject.com/en/5.1/ref/settings/#std-setting-STATICFILES_DIRS).
+    [STATICFILES_DIRS](https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-STATICFILES_DIRS).
 
     These locations are searched during [autodiscovery](../../concepts/fundamentals/autodiscovery),
     or when you [define HTML, JS, or CSS as separate files](../../concepts/fundamentals/defining_js_css_html_files).
@@ -238,10 +265,10 @@ class ComponentsSettings(NamedTuple):
 
     cache: Optional[str] = None
     """
-    Name of the [Django cache](https://docs.djangoproject.com/en/5.1/topics/cache/)
+    Name of the [Django cache](https://docs.djangoproject.com/en/5.2/topics/cache/)
     to be used for storing component's JS and CSS files.
 
-    If `None`, a [`LocMemCache`](https://docs.djangoproject.com/en/5.1/topics/cache/#local-memory-caching)
+    If `None`, a [`LocMemCache`](https://docs.djangoproject.com/en/5.2/topics/cache/#local-memory-caching)
     is used with default settings.
 
     Defaults to `None`.
@@ -282,8 +309,13 @@ class ComponentsSettings(NamedTuple):
     > [here](https://github.com/django-components/django-components/issues/498).
     """
 
+    # TODO_v1 - remove. Users should use extension defaults instead.
     debug_highlight_components: Optional[bool] = None
     """
+    DEPRECATED. Use
+    [`extensions_defaults`](../settings/#django_components.app_settings.ComponentsSettings.extensions_defaults)
+    instead. Will be removed in v1.
+
     Enable / disable component highlighting.
     See [Troubleshooting](../../guides/other/troubleshooting#component-highlighting) for more details.
 
@@ -296,8 +328,13 @@ class ComponentsSettings(NamedTuple):
     ```
     """
 
+    # TODO_v1 - remove. Users should use extension defaults instead.
     debug_highlight_slots: Optional[bool] = None
     """
+    DEPRECATED. Use
+    [`extensions_defaults`](../settings/#django_components.app_settings.ComponentsSettings.extensions_defaults)
+    instead. Will be removed in v1.
+
     Enable / disable slot highlighting.
     See [Troubleshooting](../../guides/other/troubleshooting#slot-highlighting) for more details.
 
@@ -359,7 +396,7 @@ class ComponentsSettings(NamedTuple):
     ```
 
     This would be the equivalent of importing these modules from within Django's
-    [`AppConfig.ready()`](https://docs.djangoproject.com/en/5.1/ref/applications/#django.apps.AppConfig.ready):
+    [`AppConfig.ready()`](https://docs.djangoproject.com/en/5.2/ref/applications/#django.apps.AppConfig.ready):
 
     ```python
     class MyAppConfig(AppConfig):
@@ -441,12 +478,12 @@ class ComponentsSettings(NamedTuple):
     [`COMPONENTS.dirs`](../settings/#django_components.app_settings.ComponentsSettings.dirs)
     or
     [`COMPONENTS.app_dirs`](../settings/#django_components.app_settings.ComponentsSettings.app_dirs)
-    are treated as [static files](https://docs.djangoproject.com/en/5.1/howto/static-files/).
+    are treated as [static files](https://docs.djangoproject.com/en/5.2/howto/static-files/).
 
     If a file is matched against any of the patterns, it's considered a static file. Such files are collected
-    when running [`collectstatic`](https://docs.djangoproject.com/en/5.1/ref/contrib/staticfiles/#collectstatic),
+    when running [`collectstatic`](https://docs.djangoproject.com/en/5.2/ref/contrib/staticfiles/#collectstatic),
     and can be accessed under the
-    [static file endpoint](https://docs.djangoproject.com/en/5.1/ref/settings/#static-url).
+    [static file endpoint](https://docs.djangoproject.com/en/5.2/ref/settings/#static-url).
 
     You can also pass in compiled regexes ([`re.Pattern`](https://docs.python.org/3/library/re.html#re.Pattern))
     for more advanced patterns.
@@ -486,7 +523,7 @@ class ComponentsSettings(NamedTuple):
     [`COMPONENTS.dirs`](../settings/#django_components.app_settings.ComponentsSettings.dirs)
     or
     [`COMPONENTS.app_dirs`](../settings/#django_components.app_settings.ComponentsSettings.app_dirs)
-    will NEVER be treated as [static files](https://docs.djangoproject.com/en/5.1/howto/static-files/).
+    will NEVER be treated as [static files](https://docs.djangoproject.com/en/5.2/howto/static-files/).
 
     If a file is matched against any of the patterns, it will never be considered a static file,
     even if the file matches a pattern in
@@ -583,13 +620,16 @@ class ComponentsSettings(NamedTuple):
         ```
     """
 
+    # TODO_V1 - remove
     template_cache_size: Optional[int] = None
     """
+    DEPRECATED. Template caching will be removed in v1.
+
     Configure the maximum amount of Django templates to be cached.
 
     Defaults to `128`.
 
-    Each time a [Django template](https://docs.djangoproject.com/en/5.1/ref/templates/api/#django.template.Template)
+    Each time a [Django template](https://docs.djangoproject.com/en/5.2/ref/templates/api/#django.template.Template)
     is rendered, it is cached to a global in-memory cache (using Python's
     [`lru_cache`](https://docs.python.org/3/library/functools.html#functools.lru_cache)
     decorator). This speeds up the next render of the component.
@@ -670,6 +710,7 @@ defaults = ComponentsSettings(
     debug_highlight_slots=False,
     dynamic_component_name="dynamic",
     extensions=[],
+    extensions_defaults={},
     libraries=[],  # E.g. ["mysite.components.forms", ...]
     multiline_tags=True,
     reload_on_file_change=False,
@@ -735,6 +776,7 @@ class InternalSettings:
             # NOTE: Internally we store the extensions as a list of instances, but the user
             #       can pass in either a list of classes or a list of import strings.
             extensions=self._prepare_extensions(components_settings),  # type: ignore[arg-type]
+            extensions_defaults=default(components_settings.extensions_defaults, defaults.extensions_defaults),
             multiline_tags=default(components_settings.multiline_tags, defaults.multiline_tags),
             reload_on_file_change=self._prepare_reload_on_file_change(components_settings),
             template_cache_size=default(components_settings.template_cache_size, defaults.template_cache_size),
@@ -751,11 +793,19 @@ class InternalSettings:
 
         # Prepend built-in extensions
         from django_components.extensions.cache import CacheExtension
+        from django_components.extensions.debug_highlight import DebugHighlightExtension
         from django_components.extensions.defaults import DefaultsExtension
-        from django_components.extensions.url import UrlExtension
         from django_components.extensions.view import ViewExtension
 
-        extensions = [CacheExtension, DefaultsExtension, ViewExtension, UrlExtension] + list(extensions)
+        extensions = cast(
+            List[Type["ComponentExtension"]],
+            [
+                CacheExtension,
+                DefaultsExtension,
+                ViewExtension,
+                DebugHighlightExtension,
+            ],
+        ) + list(extensions)
 
         # Extensions may be passed in either as classes or import strings.
         extension_instances: List["ComponentExtension"] = []

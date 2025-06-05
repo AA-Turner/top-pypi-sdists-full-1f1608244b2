@@ -92,8 +92,8 @@ class ParserHandler(models.Model):
 
     class Meta:
         unique_together = ("parser", "handler")
-        verbose_name = "Parser-Handler"
-        verbose_name_plural = "Parsers-Handlers"
+        verbose_name = _("Parser-Handler")
+        verbose_name_plural = _("Parsers-Handlers")
 
     @classmethod
     def get_representation_value_key(self) -> str:
@@ -130,8 +130,8 @@ class ImportedObjectProviderRelationship(ComplexToStringMixin, models.Model):
             return f"{self.provider.title} ({self.provider_identifier})"
 
     class Meta:
-        verbose_name = "Content object Provider Identifier relationship"
-        verbose_name_plural = "Content object Provider Identifier relationships"
+        verbose_name = _("Content object Provider Identifier relationship")
+        verbose_name_plural = _("Content object Provider Identifier relationships")
         unique_together = [
             ("content_type", "object_id", "provider"),
             ("content_type", "provider_identifier", "provider"),
@@ -158,8 +158,8 @@ class Provider(models.Model):
         return f"{self.title} ({self.key})"
 
     class Meta:
-        verbose_name = "Provider"
-        verbose_name_plural = "Providers"
+        verbose_name = _("Provider")
+        verbose_name_plural = _("Providers")
 
 
 class DataBackend(models.Model):
@@ -203,8 +203,8 @@ class DataBackend(models.Model):
             return rel.content_object
 
     class Meta:
-        verbose_name = "Data Backend"
-        verbose_name_plural = "Data Backends"
+        verbose_name = _("Data Backend")
+        verbose_name_plural = _("Data Backends")
 
     @cached_property
     def backend_class(self) -> Any:
@@ -296,8 +296,8 @@ class Source(models.Model):
         return self.title if self.title else f"{self.uuid}"
 
     class Meta:
-        verbose_name = "Source"
-        verbose_name_plural = "Sources"
+        verbose_name = _("Source")
+        verbose_name_plural = _("Sources")
 
     @property
     def current_valid_credential(self) -> "ImportCredential":
@@ -810,8 +810,8 @@ class ImportSource(ImportExportSource):
     errors_log = models.TextField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Import Source"
-        verbose_name_plural = "Import Sources"
+        verbose_name = _("Import Source")
+        verbose_name_plural = _("Import Sources")
         notification_types = [
             create_notification_type(
                 code="io.import_done",
@@ -1019,8 +1019,8 @@ class ImportCredential(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = "Import Credential"
-        verbose_name_plural = "Import Credentials"
+        verbose_name = _("Import Credential")
+        verbose_name_plural = _("Import Credentials")
 
     def __str__(self) -> str:
         dates_repr = ""

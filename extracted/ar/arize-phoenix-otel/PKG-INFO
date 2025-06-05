@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: arize-phoenix-otel
-Version: 0.10.2
+Version: 0.10.3
 Summary: LLM Observability
 Project-URL: Documentation, https://arize.com/docs/phoenix/
 Project-URL: Issues, https://github.com/Arize-ai/phoenix/issues
@@ -25,6 +25,7 @@ Requires-Dist: opentelemetry-proto>=1.12.0
 Requires-Dist: opentelemetry-sdk
 Requires-Dist: opentelemetry-semantic-conventions
 Requires-Dist: typing-extensions<5,>=4.5
+Requires-Dist: wrapt
 Provides-Extra: test
 Description-Content-Type: text/markdown
 

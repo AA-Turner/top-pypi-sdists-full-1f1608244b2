@@ -1,11 +1,12 @@
 # Copyright 2025 Daytona Platforms Inc.
 # SPDX-License-Identifier: AGPL-3.0
 
+import asyncio
 import hashlib
 import os
 import tarfile
-import asyncio
 import threading
+
 import aioboto3
 
 from .._utils.docs_ignore import docs_ignore
@@ -39,21 +40,26 @@ class ObjectStorage:
             aws_secret_access_key=aws_secret_access_key,
             aws_session_token=aws_session_token,
         )
+        # unasync: delete start
+        self._client_ctx = None
 
     async def open_client(self):
         try:
             self._client_ctx = self.s3_client
+            # pylint: disable=unnecessary-dunder-call
             self.s3_client = await self._client_ctx.__aenter__()
         except Exception as e:
-            raise Exception(f"Error opening S3 client: {e}")
+            raise Exception(f"Error opening S3 client: {e}") from e
 
     async def close_client(self):
         try:
             await self._client_ctx.__aexit__(None, None, None)
-            self.s3 = None
+            self.s3_client = None
             self._client_ctx = None
         except Exception as e:
-            raise Exception(f"Error closing S3 client: {e}")
+            raise Exception(f"Error closing S3 client: {e}") from e
+
+    # unasync: delete end
 
     async def upload(self, path, organization_id, archive_base_path=None) -> str:
         """Uploads a file to the object storage service.
@@ -181,4 +187,3 @@ class ObjectStorage:
 
         read_file.close()
         await asyncio.to_thread(thread.join)
-

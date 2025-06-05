@@ -35,7 +35,6 @@ else:
 PLAN = "enterprise" if plus_features_enabled() else "developer"
 USER_API_URL = os.getenv("LANGGRAPH_API_URL", None)
 
-LOGS: list[dict] = []
 RUN_COUNTER = 0
 NODE_COUNTER = 0
 FROM_TIMESTAMP = datetime.now(UTC).isoformat()
@@ -57,14 +56,6 @@ def incr_runs(*, incr: int = 1) -> None:
 def incr_nodes(_, *, incr: int = 1) -> None:
     global NODE_COUNTER
     NODE_COUNTER += incr
-
-
-def append_log(log: dict) -> None:
-    if not LANGGRAPH_CLOUD_LICENSE_KEY and not LANGSMITH_API_KEY:
-        return
-
-    global LOGS
-    LOGS.append(log)
 
 
 async def metadata_loop() -> None:
@@ -91,8 +82,6 @@ async def metadata_loop() -> None:
         to_timestamp = datetime.now(UTC).isoformat()
         nodes = NODE_COUNTER
         runs = RUN_COUNTER
-        logs = LOGS.copy()
-        LOGS.clear()
         RUN_COUNTER = 0
         NODE_COUNTER = 0
         FROM_TIMESTAMP = to_timestamp
@@ -123,7 +112,7 @@ async def metadata_loop() -> None:
                 "langgraph.platform.runs": runs,
                 "langgraph.platform.nodes": nodes,
             },
-            "logs": logs,
+            "logs": [],
         }
         try:
             await http_request(

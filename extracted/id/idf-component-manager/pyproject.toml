@@ -10,7 +10,7 @@ include = [
 
 [project]
 name = "idf-component-manager"
-version = "2.1.2"
+version = "2.2.1"
 authors = [
     { name = "Sergei Silnov", email = "sergei.silnov@espressif.com" },
     { name = "Fu Hanxi", email = "fuhanxi@espressif.com" },
@@ -37,7 +37,6 @@ dependencies = [
     "click",
     "colorama",
     "pyparsing",
-    "pyyaml",
     "ruamel.yaml",
     "requests",
     "requests-file",
@@ -48,6 +47,7 @@ dependencies = [
     "pydantic-core",
     "pydantic-settings",
     "typing-extensions; python_version < '3.12'",
+    "truststore; python_version >= '3.10'"
 ]
 
 [project.optional-dependencies]
@@ -95,7 +95,7 @@ Changelog = "https://github.com/espressif/idf-component-manager/blob/main/CHANGE
 # Tools #
 #########
 [tool.mypy]
-python_version = "3.7"
+python_version = "3.8"
 plugins = [
     "pydantic.mypy"
 ]
@@ -109,6 +109,7 @@ testpaths = ["tests"]
 addopts = "--strict-markers"
 markers = [
     "enable_request_cache: Enable in-memory cache for HTTP requests",
+    "network: mark a test as a network test",
 ]
 
 [tool.deptry]
@@ -125,7 +126,6 @@ DEP001 = ["idf_py_actions"]
 DEP002 = ["colorama"]
 
 [tool.deptry.package_module_name_map]
-pyyaml = ["yaml"]
 "ruamel.yaml" = ["ruamel"]
 
 [tool.commitizen]

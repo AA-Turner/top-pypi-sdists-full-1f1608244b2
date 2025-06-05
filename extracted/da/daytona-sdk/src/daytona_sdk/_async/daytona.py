@@ -1,34 +1,30 @@
 # Copyright 2025 Daytona Platforms Inc.
 # SPDX-License-Identifier: AGPL-3.0
 
-import json
-import warnings
-import time
 import asyncio
+import json
 import threading
+import time
+import warnings
 from typing import Callable, Dict, List, Optional
 
-from daytona_api_client_async import ApiClient, Configuration
+from daytona_api_client_async import ApiClient, BuildImage, Configuration, CreateBuildInfo
 from daytona_api_client_async import CreateWorkspace as CreateSandbox
+from daytona_api_client_async import ImagesApi, ImageState, ObjectStorageApi
 from daytona_api_client_async import ToolboxApi as ToolboxApi
 from daytona_api_client_async import VolumesApi as VolumesApi
 from daytona_api_client_async import WorkspaceApi as SandboxApi
-from daytona_api_client_async import ImagesApi
-from daytona_api_client_async import ObjectStorageApi
-from daytona_api_client_async import CreateBuildInfo
 from daytona_api_client_async import WorkspaceState as SandboxState
-from daytona_api_client_async import ImageState
-from daytona_api_client_async import BuildImage
+from daytona_sdk._async.object_storage import ObjectStorage
 from daytona_sdk._async.sandbox import AsyncSandbox, SandboxTargetRegion
 from daytona_sdk._async.volume import AsyncVolumeService
-from daytona_sdk._async.object_storage import ObjectStorage
 from daytona_sdk._utils.enum import to_enum
 from daytona_sdk._utils.errors import DaytonaError, intercept_errors
+from daytona_sdk._utils.stream import process_streaming_response
 from daytona_sdk._utils.timeout import with_timeout
 from daytona_sdk.code_toolbox.sandbox_python_code_toolbox import SandboxPythonCodeToolbox
 from daytona_sdk.code_toolbox.sandbox_ts_code_toolbox import SandboxTsCodeToolbox
 from daytona_sdk.common.daytona import CodeLanguage, CreateSandboxParams, DaytonaConfig, Image
-from daytona_sdk._utils.stream import process_streaming_response
 from deprecated import deprecated
 from environs import Env
 
@@ -224,7 +220,8 @@ class AsyncDaytona:
             Sandbox: The created Sandbox instance.
 
         Raises:
-            DaytonaError: If timeout or auto_stop_interval is negative; If sandbox fails to start or times out
+            DaytonaError: If timeout, auto_stop_interval or auto_archive_interval is negative;
+                If sandbox fails to start or times out
 
         Example:
             Create a default Python Sandbox:
@@ -239,7 +236,8 @@ class AsyncDaytona:
                 image="debian:12.9",
                 env_vars={"DEBUG": "true"},
                 resources=SandboxResources(cpu=2, memory=4),
-                auto_stop_interval=0
+                auto_stop_interval=0,
+                auto_archive_interval=60
             )
             sandbox = await daytona.create(params, 40)
             ```
@@ -281,7 +279,8 @@ class AsyncDaytona:
             Sandbox: The created Sandbox instance.
 
         Raises:
-            DaytonaError: If timeout or auto_stop_interval is negative; If sandbox fails to start or times out
+            DaytonaError: If timeout, auto_stop_interval or auto_archive_interval is negative;
+                If sandbox fails to start or times out
         """
         code_toolbox = self._get_code_toolbox(params)
 
@@ -290,6 +289,9 @@ class AsyncDaytona:
 
         if params.auto_stop_interval is not None and params.auto_stop_interval < 0:
             raise DaytonaError("auto_stop_interval must be a non-negative integer")
+
+        if params.auto_archive_interval is not None and params.auto_archive_interval < 0:
+            raise DaytonaError("auto_archive_interval must be a non-negative integer")
 
         target = self.target
 
@@ -301,6 +303,7 @@ class AsyncDaytona:
             public=params.public,
             target=str(target) if target else None,
             auto_stop_interval=params.auto_stop_interval,
+            auto_archive_interval=params.auto_archive_interval,
             volumes=params.volumes,
         )
 
@@ -652,7 +655,7 @@ class AsyncDaytona:
                 return latest_image.state in terminal_states
 
             asyncio.run(
-                    process_streaming_response(
+                process_streaming_response(
                     url=url,
                     headers=self.image_api.api_client.default_headers,
                     on_chunk=on_logs,

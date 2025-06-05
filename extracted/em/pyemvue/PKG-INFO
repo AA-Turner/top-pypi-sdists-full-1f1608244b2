@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyemvue
-Version: 0.18.8
+Version: 0.18.9
 Summary: Unofficial library for interacting with the Emporia Vue energy monitor.
 Project-URL: Homepage, https://github.com/magico13/PyEmVue
 Project-URL: Issues, https://github.com/magico13/PyEmVue/issues
@@ -11,7 +11,7 @@ Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Home Automation
 Requires-Python: >=3.9
-Requires-Dist: pycognito>=2024.2.0
+Requires-Dist: pycognito>=2024.5.0
 Requires-Dist: python-dateutil>=2.8.2
 Requires-Dist: requests>=2.26.0
 Requires-Dist: typing-extensions>=4.0.1

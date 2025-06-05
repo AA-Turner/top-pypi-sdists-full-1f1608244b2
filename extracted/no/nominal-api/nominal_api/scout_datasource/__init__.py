@@ -3,3 +3,7 @@ from .._impl import (
     scout_datasource_DataSourceService as DataSourceService,
 )
 
+__all__ = [
+    'DataSourceService',
+]
+

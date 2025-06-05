@@ -26,7 +26,6 @@ def has_chinese(text):
     return bool(pattern.search(text))
 
 
-
 @lru_cache()
 def remove_date_suffix(filename):
     """
@@ -147,6 +146,7 @@ if __name__ == '__main__':
         https://oss.ffire.cc/files/%E6%8B%9B%E6%A0%87%E6%96%87%E4%BB%B6%E5%A4%87%E6%A1%88%E8%A1%A8%EF%BC%88%E7%AC%AC%E4%BA%8C%E6%AC%A1%EF%BC%89.pdf 这个文件讲了什么？
 
     """
+
     # https://oss.ffire.cc/files/%E6%8B%9B%E6%A0%87%E6%96%87%E4%BB%B6%E5%A4%87%E6%A1%88%E8%A1%A8%EF%BC%88%E7%AC%AC%E4%BA%8C%E6%AC%A1%EF%BC%89.pdf 正则匹配会卡死
     # from urllib3.util import parse_url
     # text = "@firebot /换衣 https://oss.ffire.cc/files/try-on.png"
@@ -163,10 +163,14 @@ if __name__ == '__main__':
 
     print(parse_url(text))
 
-    print(parse_url("[](https://oss.ffire.cc/cdn/2025-03-20/YbHhMbrXV82XGn4msunAJw)"))
+    # print(parse_url("[](https://oss.ffire.cc/cdn/2025-03-20/YbHhMbrXV82XGn4msunAJw)"))
 
     # print('https://mj101-1317487292.cos.ap-shanghai.myqcloud.com/ai/test.pdf\\n\\n'.strip(r"\n"))
 
     # print(parse_url("http://154.3.0.117:39666/docs#/default/get_content_preview_spider_playwright_get"))
 
     # print(parse_url(text, True))
+    text = """
+    https://p3-bot-workflow-sign.byteimg.com/tos-cn-i-mdko3gqilj/1fe07cca46224208bfbed8c0f3c50ed8.png~tplv-mdko3gqilj-image.image?rk3s=81d4c505&x-expires=1780112531&x-signature=e7q1NOMjqCHvMz%2FC3dVAEVisAh4%3D&x-wf-file_name=9748f6214970f744fe7fd7a3699cfa2.png \nA young woman holding a lipstick tube with a black body and gold decorative rings, featuring a nude or light brown lipstick bullet. The lipstick product faces the camera, positioned slightly below her face. In the background, a close-up of lips coated with the same nude or light brown shade, creating a natural and soft effect.
+    """
+    print(parse_url(text, for_image=True))

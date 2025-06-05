@@ -10,7 +10,6 @@ from typing import Dict, Optional, List
 import pytz
 import requests
 from dateutil.tz import tz
-
 from seeq import spy, sdk
 from seeq.sdk import *
 from seeq.sdk.configuration import ClientConfiguration
@@ -321,6 +320,12 @@ class Session:
             the timezone of any timezone-aware datetime. If set to None, naive
             datetimes will be interpreted as being in the logged-in user's preferred
             timezone. Timezone can be specified as str, pytz.timezone or dateutil.tzinfo.
+
+        ``spy.options.include_push_method`` (default: False)
+
+            If True, a Push Method column will be added to the metadata push result DataFrame
+            that indicates whether an item was pushed via the (fast) ``batch`` REST APIs or had
+            to resort to the (slower) ``single`` REST APIs.
         """
         return self._options
 
@@ -420,6 +425,7 @@ class Options:
     _DEFAULT_TIMEZONE = None
     _DEFAULT_COMPATIBILITY = None
     _DEFAULT_MIN_COMPATIBILITY = 188
+    _DEFAULT_INCLUDE_PUSH_METHOD = False
 
     def __init__(self, client_configuration: ClientConfiguration):
         self.client_configuration = client_configuration
@@ -433,6 +439,7 @@ class Options:
         self.allow_version_mismatch = self._DEFAULT_ALLOW_VERSION_MISMATCH
         self.default_timezone = self._DEFAULT_TIMEZONE
         self._compatibility = self._DEFAULT_COMPATIBILITY
+        self.include_push_method = self._DEFAULT_INCLUDE_PUSH_METHOD
         try:
             self.friendly_exceptions = self._DEFAULT_FRIENDLY_EXCEPTIONS
         except RuntimeError:
@@ -666,6 +673,12 @@ class Options:
                 the timezone of any timezone-aware datetime. If set to None, naive
                 datetimes will be interpreted as being in the logged-in user's preferred
                 timezone. Timezone can be specified as str, pytz.timezone or dateutil.tzinfo.
+
+            spy.options.include_push_method (default: {self._DEFAULT_INCLUDE_PUSH_METHOD})
+
+                If True, a Push Method column will be added to the metadata push result DataFrame
+                that indicates whether an item was pushed via the (fast) ``batch`` REST APIs or had
+                to resort to the (slower) ``single`` REST APIs.
         """
 
         _common.print_output(textwrap.dedent(help_string))

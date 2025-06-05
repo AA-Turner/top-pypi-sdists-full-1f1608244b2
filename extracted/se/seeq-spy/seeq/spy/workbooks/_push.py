@@ -257,8 +257,11 @@ def push(workbooks, *, path: Optional[str] = None, owner: Optional[str] = None,
         item_map            A dictionary of IDs that map from the input
                             workbooks and inventory to the actual IDs as they
                             were created/updated on the server
+        pushed_inventory    A dictionary of DataFrames that map from the
+                            workbook ID to the DataFrame of any inventory that
+                            was pushed along with the workbook
         status              A spy.Status object with the status of the
-                            spy.push call
+                            spy.workbooks.push call
         =================== ===================================================
     """
     input_args = _common.validate_argument_types([
@@ -390,6 +393,7 @@ def push(workbooks, *, path: Optional[str] = None, owner: Optional[str] = None,
         global_inventory=global_inventory,
         session=session,
         specific_worksheet_ids=specific_worksheet_ids,
+        pushed_inventory={},
         status=status
     )
 
@@ -543,6 +547,7 @@ def push(workbooks, *, path: Optional[str] = None, owner: Optional[str] = None,
         input=workbooks,
         output=new_workbooks,
         datasource=datasource_output,
+        pushed_inventory=context.pushed_inventory,
         item_map=item_map,
         status=status)
 

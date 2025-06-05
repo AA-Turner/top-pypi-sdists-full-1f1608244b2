@@ -200,8 +200,8 @@ if __name__ == '__main__':
     # model = 'deep_seek-search'
     model = 'deep_seek'
     # model = 'hunyuan_t1'
-    model = 'hunyuan_t1-search'
-    # model = 'deep_seek-search'
+    # model = 'hunyuan_t1-search'
+    model = 'deep_seek-search'
 
     arun(Completions().create(
         CompletionRequest(

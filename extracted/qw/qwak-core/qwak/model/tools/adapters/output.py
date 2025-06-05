@@ -46,7 +46,7 @@ def get_output_adapter(
 
             first_result = (
                 return_result[0]
-                if isinstance(return_result, list) and len(return_result) > 0
+                if type(return_result) == list and len(return_result) > 0
                 else return_result
             )
             if issubclass(type(first_result), Message):

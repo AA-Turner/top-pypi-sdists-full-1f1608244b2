@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@cdktf/provider-external",
-    "10.0.3",
+    "11.0.0",
     __name__[0:-6],
-    "provider-external@10.0.3.jsii.tgz",
+    "provider-external@11.0.0.jsii.tgz",
 )
 
 __all__ = [

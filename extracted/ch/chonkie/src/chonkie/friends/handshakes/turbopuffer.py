@@ -1,8 +1,7 @@
 """Turbopuffer Handshake to export Chonkie's Chunks into a Turbopuffer database."""
 import importlib.util as importutil
 import os
-import warnings
-from typing import TYPE_CHECKING, Any, Literal, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Literal, Optional, Sequence, Union
 from uuid import NAMESPACE_OID, uuid5
 
 from chonkie.embeddings import AutoEmbeddings, BaseEmbeddings
@@ -12,10 +11,7 @@ from .base import BaseHandshake
 from .utils import generate_random_collection_name
 
 if TYPE_CHECKING:
-    try:
-        import turbopuffer as tpuf
-    except ImportError:
-        tpuf = Any
+    import turbopuffer as tpuf
 
 
 class TurbopufferHandshake(BaseHandshake):
@@ -36,9 +32,6 @@ class TurbopufferHandshake(BaseHandshake):
             api_key: The API key to use.
 
         """
-        # Warn the user that TurbopufferHandshake is experimental
-        warnings.warn("Chonkie's TurbopufferHandshake is experimental and may change in the future. Not all Chonkie features are supported yet.", FutureWarning)
-        
         super().__init__()
 
         # Lazy import the dependencies

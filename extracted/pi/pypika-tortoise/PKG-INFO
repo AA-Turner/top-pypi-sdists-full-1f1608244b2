@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: pypika-tortoise
-Version: 0.6.0
+Version: 0.6.1
 Summary: Forked from pypika and streamline just for tortoise-orm
 License: Apache-2.0
 Keywords: postgresql,Tortoise-ORM,mysql,sqlite,sql

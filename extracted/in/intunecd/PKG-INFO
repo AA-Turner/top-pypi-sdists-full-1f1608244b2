@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: IntuneCD
-Version: 2.4.0
+Version: 2.4.1
 Summary: Tool to backup and update configurations in Intune
 Home-page: https://github.com/almenscorner/IntuneCD
 Author: Tobias Almén

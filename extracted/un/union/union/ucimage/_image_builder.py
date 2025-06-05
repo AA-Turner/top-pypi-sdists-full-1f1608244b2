@@ -169,7 +169,7 @@ def _apply_task_template_changes(
 
     # Register the updated task with a new version
     name = f"{task.name}-{_BUILD_IMAGE_SUFFIX}"
-    version = _build_image_exec_version([imagepull_secret_name])
+    version = _build_image_exec_version([imagepull_secret_name, task.id.version])
 
     try:
         task = remote.fetch_task(name=name, version=version)
@@ -303,6 +303,7 @@ class UCImageSpecBuilder(ImageSpecBuilder):
         "conda_channels",
         "source_copy_mode",
         "registry",
+        "copy",
     }
 
     _SUPPORTED_CUSTOM_BASE_IMAGE_PARAMETERS = _SUPPORTED_UNIVERSAL_PARAMETERS | {

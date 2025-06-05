@@ -12,3 +12,16 @@ from .._impl import (
     security_api_workspace_WorkspaceSymbolVisitor as WorkspaceSymbolVisitor,
 )
 
+__all__ = [
+    'RemoveType',
+    'UpdateOrRemoveWorkspaceDisplayName',
+    'UpdateOrRemoveWorkspaceDisplayNameVisitor',
+    'UpdateOrRemoveWorkspaceSymbol',
+    'UpdateOrRemoveWorkspaceSymbolVisitor',
+    'UpdateWorkspaceRequest',
+    'Workspace',
+    'WorkspaceSymbol',
+    'WorkspaceSymbolVisitor',
+    'WorkspaceService',
+]
+

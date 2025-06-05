@@ -207,11 +207,16 @@ async def astream_state(
                 elif "events" in stream_mode:
                     yield "events", event
     else:
+        output_keys = kwargs.pop("output_keys", graph.output_channels)
         async with (
             stack,
             aclosing(
                 graph.astream(
-                    input, config, stream_mode=list(stream_modes_set), **kwargs
+                    input,
+                    config,
+                    stream_mode=list(stream_modes_set),
+                    output_keys=output_keys,
+                    **kwargs,
                 )
             ) as stream,
         ):

@@ -27,9 +27,12 @@ from sqlmesh.lsp.context import (
 )
 from sqlmesh.lsp.custom import (
     ALL_MODELS_FEATURE,
+    ALL_MODELS_FOR_RENDER_FEATURE,
     RENDER_MODEL_FEATURE,
     AllModelsRequest,
     AllModelsResponse,
+    AllModelsForRenderRequest,
+    AllModelsForRenderResponse,
     RenderModelRequest,
     RenderModelResponse,
 )
@@ -56,6 +59,7 @@ class SQLMeshLanguageServer:
         self.server = LanguageServer(server_name, version)
         self.context_class = context_class
         self.lsp_context: t.Optional[LSPContext] = None
+        self.workspace_folders: t.List[Path] = []
 
         self.client_supports_pull_diagnostics = False
         # Register LSP features (e.g., formatting, hover, etc.)
@@ -68,7 +72,7 @@ class SQLMeshLanguageServer:
         def initialize(ls: LanguageServer, params: types.InitializeParams) -> None:
             """Initialize the server when the client connects."""
             try:
-                # Check if client supports pull diagnostics
+                # Check if the client supports pull diagnostics
                 if params.capabilities and params.capabilities.text_document:
                     diagnostics = getattr(params.capabilities.text_document, "diagnostic", None)
                     if diagnostics:
@@ -81,9 +85,13 @@ class SQLMeshLanguageServer:
                     self.client_supports_pull_diagnostics = False
 
                 if params.workspace_folders:
+                    # Store all workspace folders for later use
+                    self.workspace_folders = [
+                        Path(self._uri_to_path(folder.uri)) for folder in params.workspace_folders
+                    ]
+
                     # Try to find a SQLMesh config file in any workspace folder (only at the root level)
-                    for folder in params.workspace_folders:
-                        folder_path = Path(self._uri_to_path(folder.uri))
+                    for folder_path in self.workspace_folders:
                         # Only check for config files directly in the workspace directory
                         for ext in ("py", "yml", "yaml"):
                             config_path = folder_path / f"config.{ext}"
@@ -95,27 +103,43 @@ class SQLMeshLanguageServer:
                                     loaded_sqlmesh_message(ls, folder_path)
                                     return  # Exit after successfully loading any config
                                 except Exception as e:
-                                    ls.show_message(
+                                    ls.log_trace(
                                         f"Error loading context from {config_path}: {e}",
-                                        types.MessageType.Warning,
                                     )
             except Exception as e:
-                ls.show_message(f"Error initializing SQLMesh context: {e}", types.MessageType.Error)
+                ls.log_trace(
+                    f"Error initializing SQLMesh context: {e}",
+                )
 
         @self.server.feature(ALL_MODELS_FEATURE)
         def all_models(ls: LanguageServer, params: AllModelsRequest) -> AllModelsResponse:
+            uri = URI(params.textDocument.uri)
             try:
-                uri = URI(params.textDocument.uri)
                 context = self._context_get_or_load(uri)
-                return get_sql_completions(context, uri)
+                return context.get_autocomplete(uri)
             except Exception as e:
-                return get_sql_completions(None, uri)
+                from sqlmesh.lsp.completions import get_sql_completions
+
+                return get_sql_completions(None, URI(params.textDocument.uri))
 
         @self.server.feature(RENDER_MODEL_FEATURE)
         def render_model(ls: LanguageServer, params: RenderModelRequest) -> RenderModelResponse:
             uri = URI(params.textDocumentUri)
             context = self._context_get_or_load(uri)
             return RenderModelResponse(models=context.render_model(uri))
+
+        @self.server.feature(ALL_MODELS_FOR_RENDER_FEATURE)
+        def all_models_for_render(
+            ls: LanguageServer, params: AllModelsForRenderRequest
+        ) -> AllModelsForRenderResponse:
+            if self.lsp_context is None:
+                current_path = Path.cwd()
+                self._ensure_context_in_folder(current_path)
+            if self.lsp_context is None:
+                raise RuntimeError("No context found")
+            return AllModelsForRenderResponse(
+                models=self.lsp_context.list_of_models_for_rendering()
+            )
 
         @self.server.feature(API_FEATURE)
         def api(ls: LanguageServer, request: ApiRequest) -> t.Dict[str, t.Any]:
@@ -199,6 +223,17 @@ class SQLMeshLanguageServer:
         @self.server.feature(types.TEXT_DOCUMENT_DID_SAVE)
         def did_save(ls: LanguageServer, params: types.DidSaveTextDocumentParams) -> None:
             uri = URI(params.text_document.uri)
+
+            # Reload the entire context and create a new LSPContext
+            if self.lsp_context is not None:
+                try:
+                    new_context = Context(paths=list(self.lsp_context.context.configs))
+                    new_full_context = LSPContext(new_context)
+                    self.lsp_context = new_full_context
+                    return
+                except Exception as e:
+                    pass
+
             context = self._context_get_or_load(uri)
             models = context.map[uri.to_path()]
             if models is None or not isinstance(models, ModelTarget):
@@ -287,7 +322,9 @@ class SQLMeshLanguageServer:
                 )
 
             except Exception as e:
-                ls.show_message(f"Error getting hover information: {e}", types.MessageType.Error)
+                ls.log_trace(
+                    f"Error getting hover information: {e}",
+                )
                 return None
 
         @self.server.feature(types.TEXT_DOCUMENT_DEFINITION)
@@ -355,7 +392,9 @@ class SQLMeshLanguageServer:
                     result_id=str(result_id),
                 )
             except Exception as e:
-                ls.show_message(f"Error getting diagnostics: {e}", types.MessageType.Error)
+                ls.log_trace(
+                    f"Error getting diagnostics: {e}",
+                )
                 return types.RelatedFullDocumentDiagnosticReport(
                     kind=types.DocumentDiagnosticReportKind.Full,
                     items=[],
@@ -418,10 +457,51 @@ class SQLMeshLanguageServer:
                 return types.WorkspaceDiagnosticReport(items=items)
 
             except Exception as e:
-                ls.show_message(
-                    f"Error getting workspace diagnostics: {e}", types.MessageType.Error
+                ls.log_trace(
+                    f"Error getting workspace diagnostics: {e}",
                 )
                 return types.WorkspaceDiagnosticReport(items=[])
+
+        @self.server.feature(types.TEXT_DOCUMENT_COMPLETION)
+        def completion(
+            ls: LanguageServer, params: types.CompletionParams
+        ) -> t.Optional[types.CompletionList]:
+            """Handle completion requests from the client."""
+            try:
+                uri = URI(params.text_document.uri)
+                context = self._context_get_or_load(uri)
+
+                # Get completions using the existing completions module
+                completion_response = context.get_autocomplete(uri)
+
+                completion_items = []
+                # Add model completions
+                for model in completion_response.models:
+                    completion_items.append(
+                        types.CompletionItem(
+                            label=model,
+                            kind=types.CompletionItemKind.Reference,
+                            detail="SQLMesh Model",
+                        )
+                    )
+                # Add keyword completions
+                for keyword in completion_response.keywords:
+                    completion_items.append(
+                        types.CompletionItem(
+                            label=keyword,
+                            kind=types.CompletionItemKind.Keyword,
+                            detail="SQL Keyword",
+                        )
+                    )
+
+                return types.CompletionList(
+                    is_incomplete=False,
+                    items=completion_items,
+                )
+
+            except Exception as e:
+                get_sql_completions(None, URI(params.text_document.uri))
+                return None
 
     def _get_diagnostics_for_uri(self, uri: URI) -> t.Tuple[t.List[types.Diagnostic], int]:
         """Get diagnostics for a specific URI, returning (diagnostics, result_id).
@@ -446,6 +526,8 @@ class SQLMeshLanguageServer:
     def _ensure_context_in_folder(self, folder_uri: Path) -> None:
         if self.lsp_context is not None:
             return
+
+        # First, check the provided folder
         for ext in ("py", "yml", "yaml"):
             config_path = folder_uri / f"config.{ext}"
             if config_path.exists():
@@ -456,6 +538,22 @@ class SQLMeshLanguageServer:
                     return
                 except Exception as e:
                     self.server.show_message(f"Error loading context: {e}", types.MessageType.Error)
+
+        # If not found in the provided folder, search through all workspace folders
+        for workspace_folder in self.workspace_folders:
+            for ext in ("py", "yml", "yaml"):
+                config_path = workspace_folder / f"config.{ext}"
+                if config_path.exists():
+                    try:
+                        created_context = self.context_class(paths=[workspace_folder])
+                        self.lsp_context = LSPContext(created_context)
+                        loaded_sqlmesh_message(self.server, workspace_folder)
+                        return
+                    except Exception as e:
+                        self.server.show_message(
+                            f"Error loading context from {config_path}: {e}",
+                            types.MessageType.Warning,
+                        )
 
     def _ensure_context_for_document(
         self,
@@ -494,6 +592,23 @@ class SQLMeshLanguageServer:
                             f"Error loading context: {e}", types.MessageType.Error
                         )
             path = path.parent
+
+        # If still no context found, try the workspace folders
+        if not loaded:
+            for workspace_folder in self.workspace_folders:
+                for ext in ("py", "yml", "yaml"):
+                    config_path = workspace_folder / f"config.{ext}"
+                    if config_path.exists():
+                        try:
+                            created_context = self.context_class(paths=[workspace_folder])
+                            self.lsp_context = LSPContext(created_context)
+                            loaded_sqlmesh_message(self.server, workspace_folder)
+                            return
+                        except Exception as e:
+                            self.server.show_message(
+                                f"Error loading context from {config_path}: {e}",
+                                types.MessageType.Warning,
+                            )
 
         return
 

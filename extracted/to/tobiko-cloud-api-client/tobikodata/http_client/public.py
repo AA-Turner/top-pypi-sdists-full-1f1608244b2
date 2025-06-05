@@ -134,6 +134,99 @@ class PublicHttpClient:
             raise ValueError("No health endpoint configured")
         self.get(self.health_endpoint)
 
+    def _prepare_request_kwargs(
+        self,
+        data: t.Optional[bytes] = None,
+        params: t.Optional[t.Dict] = None,
+        headers: t.Optional[t.Dict[str, str]] = None,
+        **kwargs: t.Any,
+    ) -> t.Dict[str, t.Any]:
+        if "timeout" not in kwargs:
+            kwargs["timeout"] = self.DEFAULT_TIMEOUT
+
+        request_headers = headers or {}
+        if data:
+            request_headers["Content-Encoding"] = "gzip"
+
+        request_kwargs = {"headers": request_headers, **kwargs}
+
+        if params is not None:
+            request_kwargs["params"] = params
+        if data is not None:
+            request_kwargs["data"] = data
+
+        return request_kwargs
+
+    def _handle_response_errors(
+        self,
+        resp: Response,
+        raise_status_codes: t.Optional[t.Set[int]] = None,
+    ) -> None:
+        if raise_status_codes and resp.status_code in raise_status_codes:
+            try:
+                resp.raise_for_status()
+            except httpx.HTTPStatusError as e:
+                if "application/json" in resp.headers.get("Content-Type", ""):
+                    detail = e.response.json().get("detail")
+                    if detail:
+                        raise self.error_class(
+                            "\n"
+                            + "\n".join(
+                                json.dumps(x, default=self._make_serializable)
+                                for x in ensure_list(detail)
+                            ),
+                            status_code=resp.status_code,
+                        ) from e
+                    raise e
+                else:
+                    raise e
+
+    def _handle_stream_response_errors(
+        self,
+        resp: Response,
+        raise_status_codes: t.Set[int],
+    ) -> None:
+        """Handle error responses for streaming requests without accessing content."""
+        if raise_status_codes and resp.status_code in raise_status_codes:
+            try:
+                resp.raise_for_status()
+            except httpx.HTTPStatusError as e:
+                # For streaming responses, we can't access the content yet
+                # Just raise the error with status code information
+                raise self.error_class(
+                    f"HTTP {resp.status_code} error",
+                    status_code=resp.status_code,
+                ) from e
+
+    def _execute_request(
+        self,
+        method: HttpMethod,
+        url: str,
+        request_kwargs: t.Dict[str, t.Any],
+    ) -> Response:
+        headers = request_kwargs.pop("headers", {})
+        params = request_kwargs.pop("params", None)
+        data = request_kwargs.pop("data", None)
+
+        if method.is_get:
+            return self._client.get(url, params=params, headers=headers, **request_kwargs)
+        elif method.is_post:
+            return self._client.post(
+                url, params=params, data=data, headers=headers, **request_kwargs
+            )  # type: ignore
+        elif method.is_put:
+            return self._client.put(
+                url, params=params, data=data, headers=headers, **request_kwargs
+            )  # type: ignore
+        elif method.is_delete:
+            return self._client.delete(url, params=params, headers=headers, **request_kwargs)
+        elif method.is_patch:
+            return self._client.patch(
+                url, params=params, data=data, headers=headers, **request_kwargs
+            )  # type: ignore
+        else:
+            raise ValueError(f"Unsupported HTTP method: {method}")
+
     def _call(
         self,
         method: HttpMethod,
@@ -157,41 +250,14 @@ class PublicHttpClient:
             raise_status_codes: t.Optional[t.Set[int]] = None,
             **kwargs: t.Any,
         ) -> Response:
-            if "timeout" not in kwargs:
-                kwargs["timeout"] = self.DEFAULT_TIMEOUT
-            header = kwargs.pop("headers", {})
-            if data:
-                header["Content-Encoding"] = "gzip"
-            if method.is_get:
-                resp = self._client.get(url, params=params, headers=header, **kwargs)
-            elif method.is_post:
-                resp = self._client.post(url, params=params, data=data, headers=header, **kwargs)  # type: ignore
-            elif method.is_put:
-                resp = self._client.put(url, params=params, data=data, headers=header, **kwargs)  # type: ignore
-            elif method.is_delete:
-                resp = self._client.delete(url, params=params, headers=header, **kwargs)
-            elif method.is_patch:
-                resp = self._client.patch(url, params=params, data=data, headers=header, **kwargs)  # type: ignore
-            else:
-                raise ValueError(f"Unsupported HTTP method: {method}")
-            if raise_status_codes and resp.status_code in raise_status_codes:
-                try:
-                    resp.raise_for_status()
-                except httpx.HTTPStatusError as e:
-                    if "application/json" in resp.headers.get("Content-Type", ""):
-                        detail = e.response.json().get("detail")
-                        if detail:
-                            raise self.error_class(
-                                "\n"
-                                + "\n".join(
-                                    json.dumps(x, default=self._make_serializable)
-                                    for x in ensure_list(detail)
-                                ),
-                                status_code=resp.status_code,
-                            ) from e
-                        raise e
-                    else:
-                        raise e
+            request_kwargs = self._prepare_request_kwargs(
+                data=data, params=params, headers=kwargs.pop("headers", {}), **kwargs
+            )
+
+            resp = self._execute_request(method, url, request_kwargs)
+
+            self._handle_response_errors(resp, raise_status_codes)
+
             return resp
 
         return _call_retry(method, url, data, params, raise_status_codes, **kwargs)
@@ -524,14 +590,32 @@ class PublicHttpClient:
         raise_status_codes: t.Optional[t.Set[int]] = None,
         **kwargs: t.Any,
     ) -> t.Iterator[Response]:
+        raise_status_codes = (
+            ALL_ERROR_STATUS_CODES if raise_status_codes is None else raise_status_codes
+        )
+
+        request_kwargs = self._prepare_request_kwargs(
+            data=self._to_data(data),
+            params=self._to_params(params),
+            headers=kwargs.pop("headers", {}),
+            **kwargs,
+        )
+
+        headers = request_kwargs.pop("headers", {})
+        params_processed = request_kwargs.pop("params", None)
+        data_processed = request_kwargs.pop("data", None)
+
         with self._client.stream(
             method=method.value,
             url=self._to_url(url_parts),
-            data=self._to_data(data),  # type: ignore
-            params=self._to_params(params),
-            **kwargs,
-        ) as r:
-            yield r
+            data=data_processed,  # type: ignore
+            params=params_processed,
+            headers=headers,
+            **request_kwargs,
+        ) as resp:
+            # Use streaming-specific error handler that doesn't access content
+            self._handle_stream_response_errors(resp, raise_status_codes)
+            yield resp
 
     def close(self) -> None:
         self._client.close()

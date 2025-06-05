@@ -190,7 +190,7 @@ factory_startup: typing.Any
 """
 
 ffmpeg: typing.Any
-""" Constant value bpy.app.ffmpeg(supported=True, avcodec_version=(60, 31, 102), avcodec_version_string='60, 31, 102', avdevice_version=(60, 3, 100), avdevice_version_string='60,  3, 100', avformat_version=(60, 16, 100), avformat_version_string='60, 16, 100', avutil_version=(58, 29, 100), avutil_version_string='58, 29, 100', swscale_version=(7, 5, 100), swscale_version_string=' 7,  5, 100')
+""" Constant value bpy.app.ffmpeg(supported=True, avcodec_version=(61, 19, 101), avcodec_version_string='61, 19, 101', avdevice_version=(61, 3, 100), avdevice_version_string='61,  3, 100', avformat_version=(61, 7, 100), avformat_version_string='61,  7, 100', avutil_version=(59, 39, 100), avutil_version_string='59, 39, 100', swscale_version=(8, 3, 100), swscale_version_string=' 8,  3, 100')
 """
 
 module: typing.Any
@@ -202,7 +202,7 @@ ocio: typing.Any
 """
 
 oiio: typing.Any
-""" Constant value bpy.app.oiio(supported=True, version=(3, 0, 3), version_string=' 3,  0,  3')
+""" Constant value bpy.app.oiio(supported=True, version=(3, 0, 6), version_string=' 3,  0,  6')
 """
 
 online_access: typing.Any

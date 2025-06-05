@@ -6,12 +6,16 @@ from threading import Event, Thread
 from typing import Callable
 
 import pandas as pd
-
 from seeq.spy import _common
 
 SCOPED_DATA_ID_REGEX = re.compile(r'^\[(.*?)] \{(.*?)} (.*)$')
 
 ORIGINAL_INDEX_COLUMN = '__Original Index__'
+
+
+class PushMethod:
+    BATCH = 'batch'
+    SINGLE = 'single'
 
 
 class PushResults(dict):
@@ -75,6 +79,7 @@ class PushResults(dict):
         self._asset_side_effect_count += 1
         index = f'__side_effect_asset_{self._asset_side_effect_count}__'
         asset_dict[ORIGINAL_INDEX_COLUMN] = index
+        asset_dict['Push Method'] = PushMethod.BATCH  # side effect assets are always pushed in batch
         self[index] = asset_dict
         return index, self[index]
 

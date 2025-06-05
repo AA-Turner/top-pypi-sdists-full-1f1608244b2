@@ -1,13 +1,13 @@
 Metadata-Version: 2.4
 Name: crewai-tools
-Version: 0.46.0
+Version: 0.47.0
 Summary: Set of tools for the crewAI framework
 Project-URL: Homepage, https://crewai.com
 Project-URL: Repository, https://github.com/crewAIInc/crewAI-tools
 Project-URL: Documentation, https://docs.crewai.com
 Author-email: João Moura <joaomdmoura@gmail.com>
 License-File: LICENSE
-Requires-Python: <=3.13,>=3.10
+Requires-Python: <3.14,>=3.10
 Requires-Dist: chromadb>=0.4.22
 Requires-Dist: click>=8.1.8
 Requires-Dist: crewai>=0.121.1
@@ -19,6 +19,7 @@ Requires-Dist: pydantic>=2.6.1
 Requires-Dist: pyright>=1.1.350
 Requires-Dist: pytube>=15.0.0
 Requires-Dist: requests>=2.31.0
+Requires-Dist: tiktoken>=0.8.0
 Provides-Extra: apify
 Requires-Dist: langchain-apify<1.0.0,>=0.1.2; extra == 'apify'
 Provides-Extra: beautifulsoup4
@@ -42,7 +43,7 @@ Provides-Extra: linkup-sdk
 Requires-Dist: linkup-sdk>=0.2.2; extra == 'linkup-sdk'
 Provides-Extra: mcp
 Requires-Dist: mcp>=1.6.0; extra == 'mcp'
-Requires-Dist: mcpadapt>=0.1.3; extra == 'mcp'
+Requires-Dist: mcpadapt>=0.1.9; extra == 'mcp'
 Provides-Extra: multion
 Requires-Dist: multion>=1.1.0; extra == 'multion'
 Provides-Extra: patronus

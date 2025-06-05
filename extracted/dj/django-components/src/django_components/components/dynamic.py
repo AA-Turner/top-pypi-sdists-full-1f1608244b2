@@ -1,9 +1,9 @@
 import inspect
-from typing import Any, Dict, Optional, Type, Union, cast
+from typing import Any, Optional, Type, Union, cast
 
 from django.template import Context, Template
 
-from django_components import Component, ComponentRegistry, NotRegistered, types
+from django_components import Component, ComponentRegistry, NotRegistered
 from django_components.component_registry import ALL_REGISTRIES
 
 
@@ -59,13 +59,13 @@ class DynamicComponent(Component):
         },
         slots={
             "pagination": PaginationComponent.render(
-                render_dependencies=False,
+                deps_strategy="ignore",
             ),
         },
     )
     ```
 
-    # Use cases
+    ## Use cases
 
     Dynamic components are suitable if you are writing something like a form component. You may design
     it such that users give you a list of input types, and you render components depending on the input types.
@@ -73,7 +73,7 @@ class DynamicComponent(Component):
     While you could handle this with a series of if / else statements, that's not an extensible approach.
     Instead, you can use the dynamic component in place of normal components.
 
-    # Component name
+    ## Component name
 
     By default, the dynamic component is registered under the name `"dynamic"`. In case of a conflict,
     you can set the
@@ -99,55 +99,38 @@ class DynamicComponent(Component):
 
     _is_dynamic_component = True
 
-    def get_context_data(
-        self,
-        *args: Any,
-        registry: Optional[ComponentRegistry] = None,
-        **kwargs: Any,
-    ) -> Dict:
-        # NOTE: We have to access `is` via kwargs, because it's a special keyword in Python
-        comp_name_or_class: Union[str, Type[Component]] = kwargs.pop("is", None)
-        if not comp_name_or_class:
-            raise TypeError(f"Component '{self.name}' is missing a required argument 'is'")
-
-        comp_class = self._resolve_component(comp_name_or_class, registry)
-
-        return {
-            "comp_class": comp_class,
-            "args": args,
-            "kwargs": kwargs,
-        }
-
-    # NOTE: The inner component is rendered in `on_render_before`, so that the `Context` object
+    # NOTE: The inner component is rendered in `on_render`, so that the `Context` object
     # is already configured as if the inner component was rendered inside the template.
     # E.g. the `_COMPONENT_CONTEXT_KEY` is set, which means that the child component
     # will know that it's a child of this component.
-    def on_render_before(self, context: Context, template: Template) -> Context:
-        comp_class = context["comp_class"]
-        args = context["args"]
-        kwargs = context["kwargs"]
+    def on_render(
+        self,
+        context: Context,
+        template: Optional[Template],
+    ) -> str:
+        # Make a copy of kwargs so we pass to the child only the kwargs that are
+        # actually used by the child component.
+        cleared_kwargs = self.raw_kwargs.copy()
 
-        comp = comp_class(
+        registry: Optional[ComponentRegistry] = cleared_kwargs.pop("registry", None)
+        comp_name_or_class: Union[str, Type[Component]] = cleared_kwargs.pop("is", None)
+        if not comp_name_or_class:
+            raise TypeError(f"Component '{self.name}' is missing a required argument 'is'")
+
+        # Resolve the component class
+        comp_class = self._resolve_component(comp_name_or_class, registry)
+
+        output = comp_class.render(
+            context=self.context,
+            args=self.raw_args,
+            kwargs=cleared_kwargs,
+            slots=self.raw_slots,
+            deps_strategy=self.deps_strategy,
             registered_name=self.registered_name,
             outer_context=self.outer_context,
             registry=self.registry,
         )
-        output = comp.render(
-            context=self.input.context,
-            args=args,
-            kwargs=kwargs,
-            slots=self.input.slots,
-            # NOTE: Since we're accessing slots as `self.input.slots`, the content of slot functions
-            # was already escaped (if set so).
-            escape_slots_content=False,
-            type=self.input.type,
-            render_dependencies=self.input.render_dependencies,
-        )
-
-        context["output"] = output
-        return context
-
-    template: types.django_html = """{{ output|safe }}"""
+        return output
 
     def _resolve_component(
         self,

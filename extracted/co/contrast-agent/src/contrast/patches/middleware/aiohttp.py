@@ -11,7 +11,6 @@ from contrast.utils.patch_utils import (
     register_module_patcher,
 )
 from contrast.utils.decorators import fail_quietly
-from contrast.agent import scope
 
 from contrast_vendor import structlog as logging
 
@@ -31,20 +30,10 @@ def build__init__patch(orig_func, patch_policy):
     def __init__patch(wrapped, instance, args, kwargs) -> None:
         del instance
 
-        aiohttp_pre_middleware_setup()
         add_middleware_to_kwargs(kwargs)
         return wrapped(*args, **kwargs)
 
     return wrap_and_watermark(orig_func, __init__patch)
-
-
-@fail_quietly()
-@scope.contrast_scope()
-def aiohttp_pre_middleware_setup() -> None:
-    logger.info("Automatically applying aiohttp instrumentation")
-    from contrast.agent.agent_state import set_detected_framework
-
-    set_detected_framework("aiohttp")
 
 
 @fail_quietly()

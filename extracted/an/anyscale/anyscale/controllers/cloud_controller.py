@@ -197,7 +197,6 @@ class CloudController(BaseController):
             ]
         else:
             clouds = self.api_client.list_clouds_api_v2_clouds_get().results
-
         clouds_output = clouds[:max_items]
         output = clouds_formatter.format_clouds_output(
             clouds=clouds_output, json_format=False

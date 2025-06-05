@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='AMR',
-    version='3.0.0',
+    version='3.0.0.9001',
     packages=find_packages(),
     install_requires=[
         'rpy2',

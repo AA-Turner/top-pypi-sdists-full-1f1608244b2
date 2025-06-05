@@ -5,3 +5,9 @@ from .._impl import (
     scout_video_VideoService as VideoService,
 )
 
+__all__ = [
+    'VideoFileService',
+    'VideoSegmentService',
+    'VideoService',
+]
+

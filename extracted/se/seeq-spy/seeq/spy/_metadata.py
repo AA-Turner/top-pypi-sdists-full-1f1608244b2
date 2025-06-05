@@ -10,14 +10,13 @@ from typing import Callable, Dict, Optional, List, Tuple, Set, Union
 
 import numpy as np
 import pandas as pd
-
 from seeq.base import util
 from seeq.base.seeq_names import SeeqNames
 from seeq.sdk import *
 from seeq.spy import _common, _compatibility, _login
 from seeq.spy._common import EMPTY_GUID
 from seeq.spy._errors import *
-from seeq.spy._metadata_push_results import PushResults, ORIGINAL_INDEX_COLUMN
+from seeq.spy._metadata_push_results import PushResults, ORIGINAL_INDEX_COLUMN, PushMethod
 from seeq.spy._push import WorkbookContext
 from seeq.spy._redaction import safely
 from seeq.spy._session import Session
@@ -454,6 +453,8 @@ def _process_display_template(index, push_context, row_dict, scoped_data_id, ses
         else:
             setattr(display_template_input, 'dataframe_index', index)
             push_context.display_template_inputs.append(display_template_input)
+            if session.options.include_push_method:
+                push_context.push_results[index]['Push Method'] = PushMethod.BATCH
         status.df['Display Template'] += 1
     except (ApiException, SPyException) as e:
         _common.raise_or_catalog(status, df=push_context.push_results, column='Push Result',
@@ -513,6 +514,8 @@ def _process_display(index, push_context, row_dict, scoped_data_id, session, sta
             setattr(display_input, 'datasource_id', template_output.datasource_id)
             setattr(display_input, 'dataframe_index', index)
             status.df['Display'] += _add_no_dupe(push_context.display_inputs, display_input)
+            if session.options.include_push_method:
+                push_context.push_results[index]['Push Method'] = PushMethod.BATCH
         row_dict['Template ID'] = template_output.id
 
     except (ApiException, SPyException) as e:
@@ -568,6 +571,9 @@ def _process_metric(index, push_context, row_dict, scoped_data_id, session, stat
         setattr(threshold_metric_input, 'dataframe_index', index)
         status.df['Threshold Metric'] += _add_no_dupe(push_context.threshold_metric_inputs,
                                                       threshold_metric_input)
+        if session.options.include_push_method:
+            push_context.push_results[index]['Push Method'] = PushMethod.BATCH
+
     row_dict['Push Result'] = 'Success'
 
 
@@ -630,6 +636,8 @@ def _process_asset(index, push_context, row_dict, scoped_data_id, session, statu
         push_context.asset_batch_input.host_id = push_context.datasource_output.id
         if _common.present(row_dict, 'Path') and len(row_dict['Path']) == 0:
             push_context.roots[asset_input.data_id] = asset_input
+        if session.options.include_push_method:
+            push_context.push_results[index]['Push Method'] = PushMethod.BATCH
     push_context.reified_assets.add(scoped_data_id)
 
 
@@ -678,6 +686,8 @@ def _process_condition(index, push_context, row_dict, scoped_data_id, session, s
         setattr(condition_update_input, 'dataframe_index', index)
         status.df['Condition'] += _add_no_dupe(push_context.condition_batch_input.conditions,
                                                condition_update_input)
+        if session.options.include_push_method:
+            push_context.push_results[index]['Push Method'] = PushMethod.BATCH
 
 
 def _process_scalar(index, push_context, row_dict, scoped_data_id, session, status, _set_properties_by_id):
@@ -699,6 +709,8 @@ def _process_scalar(index, push_context, row_dict, scoped_data_id, session, stat
         scalar_input.sync_token = push_context.sync_token
         setattr(scalar_input, 'dataframe_index', index)
         status.df['Scalar'] += _add_no_dupe(push_context.put_scalars_input.scalars, scalar_input)
+        if session.options.include_push_method:
+            push_context.push_results[index]['Push Method'] = PushMethod.BATCH
 
         # Since with scalars we have to put the Datasource Class and Datasource ID on the batch, we have to
         # recognize if it changed and, if so, flush the current batch.
@@ -771,6 +783,8 @@ def _process_signal(index, push_context, row_dict, scoped_data_id, session, stat
         signal_input.sync_token = push_context.sync_token
         setattr(signal_input, 'dataframe_index', index)
         status.df['Signal'] += _add_no_dupe(push_context.put_signals_input.signals, signal_input)
+        if session.options.include_push_method:
+            push_context.push_results[index]['Push Method'] = PushMethod.BATCH
 
 
 PUSH_DIRECTIVE_CREATE_ONLY = 'CreateOnly'
@@ -1583,6 +1597,9 @@ def _set_existing_item_push_results(session: Session, index, push_results: PushR
         attr = p.lower().replace(' ', '_')
         if hasattr(output_object, attr):
             push_item[p] = getattr(output_object, attr)
+    if session.options.include_push_method:
+        # all items going through this method were processed singularly (non batchy)
+        push_item['Push Method'] = PushMethod.SINGLE
     push_item['Push Result'] = 'Success'
 
 

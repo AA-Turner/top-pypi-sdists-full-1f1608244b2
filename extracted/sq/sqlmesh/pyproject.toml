@@ -10,7 +10,7 @@ dependencies = [
     "astor",
     "click",
     "croniter",
-    "duckdb!=0.10.3",
+    "duckdb>=0.10.0,!=0.10.3",
     "dateparser",
     "hyperscript>=0.1.0",
     "importlib-metadata; python_version<'3.12'",
@@ -22,7 +22,7 @@ dependencies = [
     "requests",
     "rich[jupyter]",
     "ruamel.yaml",
-    "sqlglot[rs]~=26.24.0",
+    "sqlglot[rs]~=26.25.3",
     "tenacity",
     "time-machine",
     "json-stream"
@@ -76,7 +76,7 @@ dev = [
     "psycopg2-binary",
     "pydantic",
     "PyAthena[Pandas]",
-    "PyGithub~=2.5.0",
+    "PyGithub>=2.6.0",
     "pyperf",
     "pyspark~=3.5.0",
     "pytest",
@@ -270,4 +270,12 @@ retry_delay = 10
 select = [
     "F401",
     "RET505",
+]
+extend-select = ["TID"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+banned-module-level-imports = [
+    "duckdb",
+    "numpy",
+    "pandas",
 ]

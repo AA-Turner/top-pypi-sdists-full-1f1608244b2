@@ -82,7 +82,7 @@ class AlertCondition(
         :param name: The title of the condition. Must be between 1 and 128 characters, inclusive. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#name AlertCondition#name}
         :param policy_id: The ID of the policy where this condition should be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#policy_id AlertCondition#policy_id}
         :param term: term block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#term AlertCondition#term}
-        :param type: The type of condition. One of: (apm_app_metric, apm_jvm_metric, apm_kt_metric, browser_metric, mobile_metric, servers_metric). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#type AlertCondition#type}
+        :param type: The type of condition. One of: (mobile_metric, servers_metric, apm_app_metric, apm_jvm_metric, apm_kt_metric, browser_metric). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#type AlertCondition#type}
         :param condition_scope: One of (application, instance). Choose application for most scenarios. If you are using the JVM plugin in New Relic, the instance setting allows your condition to trigger for specific app instances. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#condition_scope AlertCondition#condition_scope}
         :param enabled: Whether the condition is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#enabled AlertCondition#enabled}
         :param gc_metric: A valid Garbage Collection metric e.g. GC/G1 Young Generation. This is required if you are using apm_jvm_metric with gc_cpu_time condition type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#gc_metric AlertCondition#gc_metric}
@@ -521,7 +521,7 @@ class AlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param name: The title of the condition. Must be between 1 and 128 characters, inclusive. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#name AlertCondition#name}
         :param policy_id: The ID of the policy where this condition should be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#policy_id AlertCondition#policy_id}
         :param term: term block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#term AlertCondition#term}
-        :param type: The type of condition. One of: (apm_app_metric, apm_jvm_metric, apm_kt_metric, browser_metric, mobile_metric, servers_metric). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#type AlertCondition#type}
+        :param type: The type of condition. One of: (mobile_metric, servers_metric, apm_app_metric, apm_jvm_metric, apm_kt_metric, browser_metric). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#type AlertCondition#type}
         :param condition_scope: One of (application, instance). Choose application for most scenarios. If you are using the JVM plugin in New Relic, the instance setting allows your condition to trigger for specific app instances. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#condition_scope AlertCondition#condition_scope}
         :param enabled: Whether the condition is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#enabled AlertCondition#enabled}
         :param gc_metric: A valid Garbage Collection metric e.g. GC/G1 Young Generation. This is required if you are using apm_jvm_metric with gc_cpu_time condition type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#gc_metric AlertCondition#gc_metric}
@@ -713,7 +713,7 @@ class AlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def type(self) -> builtins.str:
-        '''The type of condition. One of: (apm_app_metric, apm_jvm_metric, apm_kt_metric, browser_metric, mobile_metric, servers_metric).
+        '''The type of condition. One of: (mobile_metric, servers_metric, apm_app_metric, apm_jvm_metric, apm_kt_metric, browser_metric).
 
         Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/alert_condition#type AlertCondition#type}
         '''

@@ -73,7 +73,7 @@ __all__ = [
     'upload_api',
 ]
 
-__conjure_generator_version__ = "4.9.0"
+__conjure_generator_version__ = "4.17.0"
 
-__version__ = "0.706.0"
+__version__ = "0.708.0"
 

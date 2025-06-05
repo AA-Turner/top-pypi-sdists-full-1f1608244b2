@@ -11,6 +11,10 @@ from .models.activate_account_request import ActivateAccountRequest
 from .models.activate_account_response import ActivateAccountResponse
 from .models.activated_account import ActivatedAccount
 from .models.activity_event_type import ActivityEventType
+from .models.activity_record import ActivityRecord
+from .models.activity_record_actor import ActivityRecordActor
+from .models.activity_record_entitlement import ActivityRecordEntitlement
+from .models.activity_record_target import ActivityRecordTarget
 from .models.amount import Amount
 from .models.app_category import AppCategory
 from .models.app_info import AppInfo
@@ -104,6 +108,10 @@ from .models.list_accounts import ListAccounts
 from .models.list_accounts200_response import ListAccounts200Response
 from .models.list_accounts_request import ListAccountsRequest
 from .models.list_accounts_response import ListAccountsResponse
+from .models.list_activity_records import ListActivityRecords
+from .models.list_activity_records200_response import ListActivityRecords200Response
+from .models.list_activity_records_request import ListActivityRecordsRequest
+from .models.list_activity_records_response import ListActivityRecordsResponse
 from .models.list_connector_app_ids200_response import ListConnectorAppIds200Response
 from .models.list_custom_attributes_schema import ListCustomAttributesSchema
 from .models.list_custom_attributes_schema200_response import ListCustomAttributesSchema200Response
@@ -181,6 +189,10 @@ __all__ = [
     "ActivateAccountResponse",
     "ActivatedAccount",
     "ActivityEventType",
+    "ActivityRecord",
+    "ActivityRecordActor",
+    "ActivityRecordEntitlement",
+    "ActivityRecordTarget",
     "Amount",
     "AppCategory",
     "AppInfo",
@@ -274,6 +286,10 @@ __all__ = [
     "ListAccounts200Response",
     "ListAccountsRequest",
     "ListAccountsResponse",
+    "ListActivityRecords",
+    "ListActivityRecords200Response",
+    "ListActivityRecordsRequest",
+    "ListActivityRecordsResponse",
     "ListConnectorAppIds200Response",
     "ListCustomAttributesSchema",
     "ListCustomAttributesSchema200Response",

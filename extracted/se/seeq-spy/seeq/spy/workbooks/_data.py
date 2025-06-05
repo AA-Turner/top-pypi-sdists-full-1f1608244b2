@@ -8,7 +8,6 @@ import textwrap
 from typing import List, Dict, Union, Optional, Tuple
 
 import pandas as pd
-
 from seeq.base import util
 from seeq.sdk import *
 from seeq.spy import _common, _metadata
@@ -537,6 +536,13 @@ class StoredItem(StoredOrCalculatedItem):
                     label, for_item=item_inventory[self.definition['Parent ID']],
                     reconcile_by=context.reconcile_inventory_by, workbook_id=pushed_workbook_id)
                 del metadata_dict['Parent ID']
+        else:
+            # get here when round tripping an item that already exists but may be in a different
+            # datasource than the workbooks.push operation (i.e. label=None)
+            # to still use batch endpoints when possible, scrub the ID for items in the matching datasource
+            if (metadata_dict['Datasource Class'] == datasource_output.datasource_class and
+                    metadata_dict['Datasource ID'] == datasource_output.datasource_id):
+                del metadata_dict['ID']
 
         # Scope it to the pushed workbook
         metadata_dict['Scoped To'] = pushed_workbook_id
@@ -743,11 +749,6 @@ class CalculatedItem(StoredOrCalculatedItem):
                     metadata_dict['Datasource ID'] == datasource_output.datasource_id):
                 # This allows the batch endpoints to be used
                 del metadata_dict['ID']
-
-                if 'Parent ID' in metadata_dict:
-                    metadata_dict['Parent Data ID'] = self._construct_data_id(
-                        label, for_item=item_inventory[self.definition['Parent ID']],
-                        reconcile_by=context.reconcile_inventory_by, workbook_id=pushed_workbook_id)
         else:
             del metadata_dict['ID']
             metadata_dict['Datasource Class'] = datasource_output.datasource_class

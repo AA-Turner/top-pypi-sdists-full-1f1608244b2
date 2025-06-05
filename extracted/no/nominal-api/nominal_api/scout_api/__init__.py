@@ -11,3 +11,15 @@ from .._impl import (
     scout_api_Priority as Priority,
 )
 
+__all__ = [
+    'ChannelLocator',
+    'ClosedWithFurtherActionDispositionState',
+    'ClosedWithIgnoreDispositionState',
+    'DataSourceRefName',
+    'DispositionState',
+    'DispositionStateVisitor',
+    'HexColor',
+    'PendingReviewDispositionState',
+    'Priority',
+]
+

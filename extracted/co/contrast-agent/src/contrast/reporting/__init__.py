@@ -21,7 +21,9 @@ from contrast_fireball import (
 
 
 class Reporter(Protocol):
-    def initialize_application(self, config: AgentConfig, framework="") -> bool: ...
+    # NOTE: server_type is separate from config because its default value
+    # is generated at runtime.
+    def initialize_application(self, config: AgentConfig, server_type="") -> bool: ...
 
     def new_discovered_routes(self, routes: set[DiscoveredRoute]): ...
 

@@ -1,5 +1,5 @@
 import sys
-from typing import TYPE_CHECKING, Callable, Dict, List, NamedTuple, Optional, Set, Type, Union
+from typing import TYPE_CHECKING, Callable, Dict, List, NamedTuple, Optional, Set, Type, TypeVar, Union
 from weakref import ReferenceType, finalize
 
 from django.template import Library
@@ -18,15 +18,7 @@ from django_components.tag_formatter import TagFormatterABC, get_tag_formatter
 from django_components.util.weakref import cached_ref
 
 if TYPE_CHECKING:
-    from django_components.component import (
-        ArgsType,
-        Component,
-        CssDataType,
-        DataType,
-        JsDataType,
-        KwargsType,
-        SlotsType,
-    )
+    from django_components.component import Component
 
 
 # NOTE: `ReferenceType` is NOT a generic pre-3.9
@@ -34,6 +26,9 @@ if sys.version_info >= (3, 9):
     AllRegistries = List[ReferenceType["ComponentRegistry"]]
 else:
     AllRegistries = List[ReferenceType]
+
+
+TComponent = TypeVar("TComponent", bound="Component")
 
 
 class AlreadyRegistered(Exception):
@@ -177,14 +172,14 @@ class ComponentRegistry:
 
     When you register a component to a registry, behind the scenes the registry
     automatically adds the component's template tag (e.g. `{% component %}` to
-    the [`Library`](https://docs.djangoproject.com/en/5.1/howto/custom-template-tags/#code-layout).
+    the [`Library`](https://docs.djangoproject.com/en/5.2/howto/custom-template-tags/#code-layout).
     And the opposite happens when you unregister a component - the tag is removed.
 
     See [Registering components](../../concepts/advanced/component_registry).
 
     Args:
         library (Library, optional): Django\
-            [`Library`](https://docs.djangoproject.com/en/5.1/howto/custom-template-tags/#code-layout)\
+            [`Library`](https://docs.djangoproject.com/en/5.2/howto/custom-template-tags/#code-layout)\
             associated with this registry. If omitted, the default Library instance from django_components is used.
         settings (Union[RegistrySettings, Callable[[ComponentRegistry], RegistrySettings]], optional): Configure\
             how the components registered with this registry will behave when rendered.\
@@ -264,6 +259,10 @@ class ComponentRegistry:
         )
 
     def __del__(self) -> None:
+        # Skip if `extensions` was deleted before this registry
+        if not extensions:
+            return
+
         extensions.on_registry_deleted(
             OnRegistryDeletedContext(
                 registry=self,
@@ -282,7 +281,7 @@ class ComponentRegistry:
     @property
     def library(self) -> Library:
         """
-        The template tag [`Library`](https://docs.djangoproject.com/en/5.1/howto/custom-template-tags/#code-layout)
+        The template tag [`Library`](https://docs.djangoproject.com/en/5.2/howto/custom-template-tags/#code-layout)
         that is associated with the registry.
         """
         # Lazily use the default library if none was passed
@@ -615,8 +614,8 @@ _the_registry = registry
 
 
 def register(name: str, registry: Optional[ComponentRegistry] = None) -> Callable[
-    [Type["Component[ArgsType, KwargsType, SlotsType, DataType, JsDataType, CssDataType]"]],
-    Type["Component[ArgsType, KwargsType, SlotsType, DataType, JsDataType, CssDataType]"],
+    [Type[TComponent]],
+    Type[TComponent],
 ]:
     """
     Class decorator for registering a [component](./#django_components.Component)
@@ -661,9 +660,7 @@ def register(name: str, registry: Optional[ComponentRegistry] = None) -> Callabl
     if registry is None:
         registry = _the_registry
 
-    def decorator(
-        component: Type["Component[ArgsType, KwargsType, SlotsType, DataType, JsDataType, CssDataType]"],
-    ) -> Type["Component[ArgsType, KwargsType, SlotsType, DataType, JsDataType, CssDataType]"]:
+    def decorator(component: Type[TComponent]) -> Type[TComponent]:
         registry.register(name=name, component=component)
         return component
 

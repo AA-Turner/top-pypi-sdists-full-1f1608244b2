@@ -1,6 +1,5 @@
+import typing
 import _my_library
-from synchronicity import Synchronizer
 
-synchronizer = Synchronizer()
-
-foo = synchronizer.wrap(_my_library.foo, name="foo", target_module=__name__)
+def foo() -> typing.Generator[int, None, None]:
+    _my_library.foo.__original__

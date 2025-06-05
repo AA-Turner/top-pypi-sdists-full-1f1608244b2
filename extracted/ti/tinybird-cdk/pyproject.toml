@@ -1,7 +1,7 @@
 [project]
 dynamic = ["dependencies", "optional-dependencies"]
 name = "tinybird-cdk"
-version = "0.17.27"
+version = "0.17.28"
 description = "Tinybird's Connector Development Kit.\nThis package is under active development and currently meant for internal use only."
 readme = "DESCRIPTION.md"
 authors=[{name = "tinybird.co", email= "support@tinybird.co"}]

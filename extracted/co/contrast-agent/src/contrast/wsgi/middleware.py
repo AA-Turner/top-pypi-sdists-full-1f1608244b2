@@ -1,6 +1,7 @@
 # Copyright © 2025 Contrast Security, Inc.
 # See https://www.contrastsecurity.com/enduser-terms-0317a for more details.
 from functools import cached_property, lru_cache
+from contrast.agent.framework import UNKNOWN_FRAMEWORK
 from contrast.agent.request_context import RequestContext
 from contrast_vendor.webob import Request
 
@@ -32,7 +33,13 @@ class WSGIMiddleware(BaseMiddleware):
 
     @scope.contrast_scope()
     def __init__(
-        self, wsgi_app, app_name=None, original_app=None, orig_pyramid_registry=None
+        self,
+        wsgi_app,
+        app_name=None,
+        original_app=None,
+        orig_pyramid_registry=None,
+        *,
+        framework_name: str = UNKNOWN_FRAMEWORK.name,
     ):
         # We need to keep the `original_app` `orig_pyramid_registry` kwarg for now to prevent a breaking API
         # change
@@ -52,6 +59,8 @@ class WSGIMiddleware(BaseMiddleware):
                 DEFAULT_WSGI_NAME,
             )
         )
+        self.framework_name = framework_name
+        agent_state.set_detected_framework(self.framework_name)
 
         super().__init__()
 

@@ -158,6 +158,10 @@ cloud = Cloud(
     is_default: Optional[bool] = field(
         default=None, metadata={"docstring": "Whether this is the default cloud."}
     )
+    is_aggregated_logs_enabled: Optional[bool] = field(
+        default=None,
+        metadata={"docstring": "Whether aggregated logs are enabled for this cloud."},
+    )
 
     def _validate_name(self, name: str) -> str:
         if not isinstance(name, str) or not name.strip():
@@ -207,3 +211,12 @@ cloud = Cloud(
             raise TypeError("'compute_stack' must be a ComputeStack.")
 
         return compute_stack
+
+    def _validate_is_aggregated_logs_enabled(
+        self, is_aggregated_logs_enabled: Optional[bool]
+    ) -> Optional[bool]:
+        if is_aggregated_logs_enabled is not None and not isinstance(
+            is_aggregated_logs_enabled, bool
+        ):
+            raise TypeError("is_aggregated_logs_enabled must be a bool")
+        return is_aggregated_logs_enabled

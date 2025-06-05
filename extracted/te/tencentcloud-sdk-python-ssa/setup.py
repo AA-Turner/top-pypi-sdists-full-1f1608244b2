@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-ssa',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1393"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1394"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Ssa SDK for Python',
     long_description=open('README.rst').read(),

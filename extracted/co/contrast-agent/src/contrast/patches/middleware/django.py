@@ -133,17 +133,13 @@ def get_app_name() -> str:
 
 @fail_loudly("Failed to initialize Django-specific instrumentation")
 def initialize_django():
-    from contrast.agent.agent_state import (
-        set_application_name,
-        set_detected_framework,
-    )
+    from contrast.agent.agent_state import set_application_name
 
     # Lazy import for django
     from django.core import signals
 
     logger = logging.getLogger("contrast")
 
-    set_detected_framework("django")
     # TODO: PYT-2852 Revisit application name detection
     set_application_name(get_app_name())
 
@@ -179,7 +175,7 @@ def build_get_wsgi_app_patch(orig_func, _):
         initialize_django()
 
         with automatic_middleware():
-            return ContrastMiddleware(wrapped(*args, **kwargs))
+            return ContrastMiddleware(wrapped(*args, **kwargs), framework_name="django")
 
     return wrap_and_watermark(orig_func, get_wsgi_application)
 
@@ -194,7 +190,7 @@ def build_get_asgi_app_patch(orig_func, _):
         initialize_django()
 
         with automatic_middleware():
-            return ContrastMiddleware(wrapped(*args, **kwargs))
+            return ContrastMiddleware(wrapped(*args, **kwargs), framework_name="django")
 
     return wrap_and_watermark(orig_func, get_asgi_application)
 

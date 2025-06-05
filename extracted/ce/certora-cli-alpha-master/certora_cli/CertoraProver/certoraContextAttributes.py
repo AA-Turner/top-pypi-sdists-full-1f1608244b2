@@ -1719,7 +1719,7 @@ class RangerAttributes(EvmProverAttributes):
     @classmethod
     def ranger_unsupported_attributes(cls) -> List[AttrUtil.AttributeDefinition]:
         return [cls.PROJECT_SANITY, cls.RULE_SANITY, cls.COVERAGE_INFO, cls.FOUNDRY, cls.INDEPENDENT_SATISFY,
-                cls.MULTI_ASSERT_CHECK, cls.MULTI_EXAMPLE]
+                cls.MULTI_ASSERT_CHECK, cls.MULTI_EXAMPLE, cls.VYPER]
 
     @classmethod
     def ranger_true_by_default_attributes(cls) -> List[AttrUtil.AttributeDefinition]:

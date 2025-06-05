@@ -38,3 +38,13 @@ def test_acres() -> None:
 def test_acres_docstring() -> None:
     assert load_resource.__doc__
     assert 'text_file' in load_resource.__doc__
+
+    throwaway = Loader('tests.data')
+    assert isinstance(throwaway.__doc__, str)
+    assert 'text_file' not in throwaway.__doc__
+    assert throwaway.readable('text_file').is_file()
+
+    throwaway = Loader('tests.data', list_contents=True)
+    assert isinstance(throwaway.__doc__, str)
+    assert 'text_file' in throwaway.__doc__
+    assert throwaway.readable('text_file').is_file()

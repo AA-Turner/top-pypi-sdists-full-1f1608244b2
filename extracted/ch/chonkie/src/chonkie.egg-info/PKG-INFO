@@ -1,36 +1,14 @@
 Metadata-Version: 2.4
 Name: chonkie
-Version: 1.0.8
+Version: 1.0.9
 Summary: 🦛 CHONK your texts with Chonkie ✨ - The no-nonsense chunking library
 Author-email: Bhavnick Minhas <bhavnick@chonkie.ai>, Shreyash Nigam <shreyash@chonkie.ai>
 Maintainer-email: Bhavnick Minhas <bhavnick@chonkie.ai>, Shreyash Nigam <shreyash@chonkie.ai>
-License: MIT License
-        
-        Copyright (c) 2025 Chonkie
-        
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-        
-        The above copyright notice and this permission notice shall be included in all
-        copies or substantial portions of the Software.
-        
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-        SOFTWARE.
-        
+License-Expression: MIT
 Project-URL: Homepage, https://github.com/chonkie-inc/chonkie
 Project-URL: Documentation, https://docs.chonkie.ai
 Project-URL: Bug Tracker, https://github.com/chonkie-inc/chonkie/issues
 Keywords: chunking,rag,retrieval-augmented-generation,nlp,natural-language-processing,text-processing,text-analysis,text-chunking,artificial-intelligence,machine-learning
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.9
@@ -93,6 +71,8 @@ Provides-Extra: qdrant
 Requires-Dist: qdrant-client>=1.0.0; extra == "qdrant"
 Provides-Extra: tpuf
 Requires-Dist: turbopuffer[fast]>=0.2.0; extra == "tpuf"
+Provides-Extra: pgvector
+Requires-Dist: vecs>=0.4.0; extra == "pgvector"
 Provides-Extra: genie
 Requires-Dist: pydantic>=2.0.0; extra == "genie"
 Requires-Dist: google-genai>=1.0.0; extra == "genie"
@@ -127,6 +107,7 @@ Requires-Dist: pytest-asyncio>=0.26.0; extra == "dev"
 Requires-Dist: coverage; extra == "dev"
 Requires-Dist: ruff>=0.0.265; extra == "dev"
 Requires-Dist: mypy>=1.11.0; extra == "dev"
+Requires-Dist: cython>=3.0.0; extra == "dev"
 Dynamic: license-file
 
 <div align='center'>
@@ -247,7 +228,7 @@ More on these methods and the approaches taken inside the [docs](https://docs.ch
 
 ## Integrations
 
-Chonkie boasts 17+ integrations across tokenizers and embedding providers, ensuring it fits seamlessly into your existing workflow.
+Chonkie boasts 19+ integrations across tokenizers, embedding providers, LLMs, porters, and vector databases, ensuring it fits seamlessly into your existing workflow.
 
 <details>
 <summary><strong>🪓 Slice 'n' Dice! Chonkie supports 5+ ways to tokenize! </strong></summary>
@@ -278,7 +259,7 @@ You can use this to extend Chonkie to support any tokenization scheme you want!
 </details>
 
 <details>
-<summary><strong>🧠 Embed like a boss! Chonkie links up with 6+ embedding pals!</strong></summary>
+<summary><strong>🧠 Embed like a boss! Chonkie links up with 7+ embedding pals!</strong></summary>
 
 Seamlessly works with various embedding model providers. Bring your favorite embeddings to the CHONK party! Use `AutoEmbeddings` to load models easily.
 
@@ -288,6 +269,7 @@ Seamlessly works with various embedding model providers. Bring your favorite emb
 | `sentence-transformers` | `SentenceTransformerEmbeddings` | Use any `sentence-transformers` model.       | `chonkie[st]`       |
 | `openai`                | `OpenAIEmbeddings`              | Use OpenAI's embedding API.                  | `chonkie[openai]`   |
 | `cohere`                | `CohereEmbeddings`              | Use Cohere's embedding API.                  | `chonkie[cohere]`   |
+| `gemini`                | `GeminiEmbeddings`              | Use Google's Gemini embedding API.           | `chonkie[gemini]`   |
 | `jina`                  | `JinaEmbeddings`                | Use Jina AI's embedding API.                 | `chonkie[jina]`     |
 | `voyageai`              | `VoyageAIEmbeddings`            | Use Voyage AI's embedding API.               | `chonkie[voyageai]` |
 
@@ -327,7 +309,7 @@ Porters help you save your chunks easily.
 </details>
 
 <details>
-<summary><strong>🤝 Shake hands with your DB! Chonkie connects with 3+ vector stores!</strong></summary>
+<summary><strong>🤝 Shake hands with your DB! Chonkie connects with 4+ vector stores!</strong></summary>
 
 Handshakes provide a unified interface to ingest chunks directly into your favorite vector databases.
 
@@ -335,6 +317,7 @@ Handshakes provide a unified interface to ingest chunks directly into your favor
 |----------------|-----------------------|-----------------------------------------|---------------------------|
 | `chroma`       | `ChromaHandshake`     | Ingest chunks into ChromaDB.            | `chonkie[chroma]`         |
 | `qdrant`       | `QdrantHandshake`     | Ingest chunks into Qdrant.              | `chonkie[qdrant]`         |
+| `pgvector`     | `PgvectorHandshake`   | Ingest chunks into PostgreSQL with pgvector. | `chonkie[pgvector]`   |
 | `turbopuffer`  | `TurbopufferHandshake`| Ingest chunks into Turbopuffer.         | `chonkie[turbopuffer]`    |
 
 </details>

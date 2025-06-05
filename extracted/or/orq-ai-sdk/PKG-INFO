@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: orq-ai-sdk
-Version: 3.6.5
+Version: 3.6.10
 Summary: Python Client SDK for the Orq API.
 Author: Orq
 Requires-Python: >=3.9.2
@@ -313,6 +313,8 @@ import os
 
 
 with Orq(
+    environment="<value>",
+    contact_id="<id>",
     api_key=os.getenv("ORQ_API_KEY", ""),
 ) as orq:
 
@@ -354,7 +356,7 @@ with Orq(
     res = orq.files.create(file={
         "file_name": "example.file",
         "content": open("example.file", "rb"),
-    })
+    }, purpose="retrieval")
 
     assert res is not None
 
@@ -446,7 +448,7 @@ with Orq(
     res = None
     try:
 
-        res = orq.deployments.list()
+        res = orq.deployments.list(limit=10)
 
         assert res is not None
 

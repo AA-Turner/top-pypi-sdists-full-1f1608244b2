@@ -1,11 +1,12 @@
 import io
 import json
-import requests
 from datetime import date, datetime
 from urllib.parse import parse_qs
 from uuid import UUID
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.parsers.expat import ExpatError
+
+import requests
 
 from .auth import OAuth2Credentials
 from .exceptions import (
@@ -40,6 +41,7 @@ class BaseManager:
     OBJECT_DECORATED_METHODS = {
         "Invoices": ["email", "online_invoice"],
         "Organisations": ["actions"],
+        "CreditNotes": ["put_allocation", "delete_allocation"],
     }
     OBJECT_FILTER_FIELDS = {
         "Invoices": {
@@ -152,6 +154,7 @@ class BaseManager:
         "HasErrors",
         "DueDateString",
         "HasAccount",
+        "ID",
     )
     OPERATOR_MAPPINGS = {
         "gt": ">",
@@ -374,6 +377,20 @@ class BaseManager:
         uri = "/".join([self.base_url, self.name, "Actions"])
         return uri, {}, "get", None, None, False
 
+    def _put_allocation(self, id, data):
+        uri = "/".join([self.base_url, self.name, id, "Allocations"])
+        root_elm = Element("Allocation")
+        if "Amount" in data:
+            data["AppliedAmount"] = data["Amount"]
+            del data["Amount"]
+        self.dict_to_xml(root_elm, data)
+        body = tostring(root_elm)
+        return uri, {}, "put", body, None, False
+
+    def _delete_allocation(self, cn_id, allocation_id):
+        uri = "/".join([self.base_url, self.name, cn_id, "Allocations", allocation_id])
+        return uri, {}, "delete", None, None, True
+
     def save_or_put(self, data, method="post", headers=None, summarize_errors=True):
         uri = "/".join([self.base_url, self.name])
         body = self._prepare_data_for_save(data)
@@ -447,7 +464,7 @@ class BaseManager:
                     return value.isoformat()
                 elif key.endswith("ID") or value_type == UUID:
                     return "%s" % (
-                        value.hex if type(value) == UUID else UUID(value).hex
+                        value.hex if type(value) is UUID else UUID(value).hex
                     )
                 else:
                     return value
@@ -490,7 +507,7 @@ class BaseManager:
                     field = field.replace("_", ".")
                 return fmt % (field, get_filter_params(key, value))
 
-            KNOWN_PARAMETERS = ["order", "offset", "page"]
+            KNOWN_PARAMETERS = ["order", "offset", "page", "pageSize"]
             object_params = self.OBJECT_FILTER_FIELDS.get(self.name, {})
             LIST_PARAMETERS = list(
                 filter(lambda x: object_params[x] == list, object_params)

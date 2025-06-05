@@ -13,8 +13,8 @@ import System.Threading
 import System.Threading.Tasks
 
 System_Collections_Generic_IAsyncEnumerator_T = typing.TypeVar("System_Collections_Generic_IAsyncEnumerator_T")
-System_Collections_Generic_IDictionary_TValue = typing.TypeVar("System_Collections_Generic_IDictionary_TValue")
 System_Collections_Generic_IDictionary_TKey = typing.TypeVar("System_Collections_Generic_IDictionary_TKey")
+System_Collections_Generic_IDictionary_TValue = typing.TypeVar("System_Collections_Generic_IDictionary_TValue")
 System_Collections_Generic_IReadOnlyList_T = typing.TypeVar("System_Collections_Generic_IReadOnlyList_T")
 System_Collections_Generic_IReadOnlyCollection_T = typing.TypeVar("System_Collections_Generic_IReadOnlyCollection_T")
 System_Collections_Generic_ICollection_T = typing.TypeVar("System_Collections_Generic_ICollection_T")
@@ -79,17 +79,17 @@ class IAsyncEnumerator(typing.Generic[System_Collections_Generic_IAsyncEnumerato
         ...
 
 
-class IDictionary(typing.Generic[System_Collections_Generic_IDictionary_TKey, System_Collections_Generic_IDictionary_TValue], System.Collections.Generic.ICollection[System.Collections.Generic.KeyValuePair[System_Collections_Generic_IDictionary_TKey, System_Collections_Generic_IDictionary_TValue]], metaclass=abc.ABCMeta):
+class IDictionary(typing.Generic[System_Collections_Generic_IDictionary_TKey, System_Collections_Generic_IDictionary_TValue], System.Collections.Generic.ICollection[System.Collections.Generic.KeyValuePair[System_Collections_Generic_IDictionary_TKey, System_Collections_Generic_IDictionary_TValue]], System.Collections.Generic.IReadOnlyDictionary[System_Collections_Generic_IDictionary_TKey, System_Collections_Generic_IDictionary_TValue], metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
     @property
     @abc.abstractmethod
-    def keys(self) -> System.Collections.Generic.ICollection[System_Collections_Generic_IDictionary_TKey]:
+    def keys(self) -> typing.Iterable[System_Collections_Generic_IDictionary_TKey]:
         ...
 
     @property
     @abc.abstractmethod
-    def values(self) -> System.Collections.Generic.ICollection[System_Collections_Generic_IDictionary_TValue]:
+    def values(self) -> typing.Iterable[System_Collections_Generic_IDictionary_TValue]:
         ...
 
     def __contains__(self, key: System_Collections_Generic_IDictionary_TKey) -> bool:
@@ -99,9 +99,6 @@ class IDictionary(typing.Generic[System_Collections_Generic_IDictionary_TKey, Sy
         ...
 
     def __len__(self) -> int:
-        ...
-
-    def __setitem__(self, key: System_Collections_Generic_IDictionary_TKey, value: System_Collections_Generic_IDictionary_TValue) -> None:
         ...
 
     def add(self, key: System_Collections_Generic_IDictionary_TKey, value: System_Collections_Generic_IDictionary_TValue) -> None:
@@ -133,17 +130,17 @@ class IReadOnlyCollection(typing.Generic[System_Collections_Generic_IReadOnlyCol
         ...
 
 
-class ICollection(typing.Generic[System_Collections_Generic_ICollection_T], System.Collections.Generic.IEnumerable[System_Collections_Generic_ICollection_T], metaclass=abc.ABCMeta):
+class ICollection(typing.Generic[System_Collections_Generic_ICollection_T], System.Collections.Generic.IReadOnlyCollection[System_Collections_Generic_ICollection_T], metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
     @property
     @abc.abstractmethod
-    def count(self) -> int:
+    def is_read_only(self) -> bool:
         ...
 
     @property
     @abc.abstractmethod
-    def is_read_only(self) -> bool:
+    def count(self) -> int:
         ...
 
     def __contains__(self, item: System_Collections_Generic_ICollection_T) -> bool:
@@ -348,12 +345,21 @@ class IAsyncEnumerable(typing.Generic[System_Collections_Generic_IAsyncEnumerabl
         ...
 
 
-class ISet(typing.Generic[System_Collections_Generic_ISet_T], System.Collections.Generic.ICollection[System_Collections_Generic_ISet_T], metaclass=abc.ABCMeta):
+class ISet(typing.Generic[System_Collections_Generic_ISet_T], System.Collections.Generic.ICollection[System_Collections_Generic_ISet_T], System.Collections.Generic.IReadOnlySet[System_Collections_Generic_ISet_T], metaclass=abc.ABCMeta):
     """
     Generic collection that guarantees the uniqueness of its elements, as defined
     by some comparer. It also supports basic set operations such as Union, Intersection,
     Complement and Exclusive Complement.
     """
+
+    def __contains__(self, value: System_Collections_Generic_ISet_T) -> bool:
+        ...
+
+    def __len__(self) -> int:
+        ...
+
+    def contains(self, value: System_Collections_Generic_ISet_T) -> bool:
+        ...
 
     def except_with(self, other: System.Collections.Generic.IEnumerable[System_Collections_Generic_ISet_T]) -> None:
         ...
@@ -633,13 +639,10 @@ class KeyNotFoundException(System.SystemException):
         ...
 
 
-class IList(typing.Generic[System_Collections_Generic_IList_T], System.Collections.Generic.ICollection[System_Collections_Generic_IList_T], metaclass=abc.ABCMeta):
+class IList(typing.Generic[System_Collections_Generic_IList_T], System.Collections.Generic.ICollection[System_Collections_Generic_IList_T], System.Collections.Generic.IReadOnlyList[System_Collections_Generic_IList_T], metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
     def __getitem__(self, index: int) -> System_Collections_Generic_IList_T:
-        ...
-
-    def __setitem__(self, index: int, value: System_Collections_Generic_IList_T) -> None:
         ...
 
     def index_of(self, item: System_Collections_Generic_IList_T) -> int:
@@ -738,7 +741,7 @@ class CollectionExtensions(System.Object):
     """This class has no documentation."""
 
 
-class List(typing.Generic[System_Collections_Generic_List_T], System.Object, System.Collections.Generic.IList[System_Collections_Generic_List_T], System.Collections.IList, System.Collections.Generic.IReadOnlyList[System_Collections_Generic_List_T], typing.Iterable[System_Collections_Generic_List_T]):
+class List(typing.Generic[System_Collections_Generic_List_T], System.Object, System.Collections.Generic.IList[System_Collections_Generic_List_T], System.Collections.IList, typing.Iterable[System_Collections_Generic_List_T]):
     """This class has no documentation."""
 
     class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Generic_List_T]):
@@ -978,7 +981,7 @@ class IEnumerator(typing.Generic[System_Collections_Generic_IEnumerator_T], Syst
     """This class has no documentation."""
 
 
-class HashSet(typing.Generic[System_Collections_Generic_HashSet_T], System.Object, System.Collections.Generic.ISet[System_Collections_Generic_HashSet_T], System.Collections.Generic.IReadOnlySet[System_Collections_Generic_HashSet_T], System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System_Collections_Generic_HashSet_T]):
+class HashSet(typing.Generic[System_Collections_Generic_HashSet_T], System.Object, System.Collections.Generic.ISet[System_Collections_Generic_HashSet_T], System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System_Collections_Generic_HashSet_T]):
     """This class has no documentation."""
 
     class AlternateLookup(typing.Generic[System_Collections_Generic_HashSet_AlternateLookup_TAlternate]):
@@ -1305,7 +1308,7 @@ class IEnumerable(typing.Generic[System_Collections_Generic_IEnumerable_T], Syst
         ...
 
 
-class Dictionary(typing.Generic[System_Collections_Generic_Dictionary_TKey, System_Collections_Generic_Dictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Generic_Dictionary_TKey, System_Collections_Generic_Dictionary_TValue], System.Collections.IDictionary, System.Collections.Generic.IReadOnlyDictionary[System_Collections_Generic_Dictionary_TKey, System_Collections_Generic_Dictionary_TValue], System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Generic_Dictionary_TKey, System_Collections_Generic_Dictionary_TValue]]):
+class Dictionary(typing.Generic[System_Collections_Generic_Dictionary_TKey, System_Collections_Generic_Dictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Generic_Dictionary_TKey, System_Collections_Generic_Dictionary_TValue], System.Collections.IDictionary, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Generic_Dictionary_TKey, System_Collections_Generic_Dictionary_TValue]]):
     """This class has no documentation."""
 
     class AlternateLookup(typing.Generic[System_Collections_Generic_Dictionary_AlternateLookup_TAlternateKey]):
@@ -1425,7 +1428,7 @@ class Dictionary(typing.Generic[System_Collections_Generic_Dictionary_TKey, Syst
         def move_next(self) -> bool:
             ...
 
-    class KeyCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_Dictionary_TKey], System.Collections.ICollection, System.Collections.Generic.IReadOnlyCollection[System_Collections_Generic_Dictionary_TKey], typing.Iterable[System_Collections_Generic_Dictionary_TKey]):
+    class KeyCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_Dictionary_TKey], System.Collections.ICollection, typing.Iterable[System_Collections_Generic_Dictionary_TKey]):
         """This class has no documentation."""
 
         class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Generic_Dictionary_TKey]):
@@ -1466,7 +1469,7 @@ class Dictionary(typing.Generic[System_Collections_Generic_Dictionary_TKey, Syst
         def get_enumerator(self) -> System.Collections.Generic.Dictionary.KeyCollection.Enumerator:
             ...
 
-    class ValueCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_Dictionary_TValue], System.Collections.ICollection, System.Collections.Generic.IReadOnlyCollection[System_Collections_Generic_Dictionary_TValue], typing.Iterable[System_Collections_Generic_Dictionary_TValue]):
+    class ValueCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_Dictionary_TValue], System.Collections.ICollection, typing.Iterable[System_Collections_Generic_Dictionary_TValue]):
         """This class has no documentation."""
 
         class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Generic_Dictionary_TValue]):
@@ -1658,7 +1661,7 @@ class IReadOnlyDictionary(typing.Generic[System_Collections_Generic_IReadOnlyDic
         ...
 
 
-class SortedSet(typing.Generic[System_Collections_Generic_SortedSet_T], System.Object, System.Collections.Generic.ISet[System_Collections_Generic_SortedSet_T], System.Collections.ICollection, System.Collections.Generic.IReadOnlySet[System_Collections_Generic_SortedSet_T], System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System_Collections_Generic_SortedSet_T]):
+class SortedSet(typing.Generic[System_Collections_Generic_SortedSet_T], System.Object, System.Collections.Generic.ISet[System_Collections_Generic_SortedSet_T], System.Collections.ICollection, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System_Collections_Generic_SortedSet_T]):
     """This class has no documentation."""
 
     class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Generic_SortedSet_T], System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback):
@@ -1821,7 +1824,7 @@ class SortedSet(typing.Generic[System_Collections_Generic_SortedSet_T], System.O
         ...
 
 
-class LinkedList(typing.Generic[System_Collections_Generic_LinkedList_T], System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_LinkedList_T], System.Collections.ICollection, System.Collections.Generic.IReadOnlyCollection[System_Collections_Generic_LinkedList_T], System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System_Collections_Generic_LinkedList_T]):
+class LinkedList(typing.Generic[System_Collections_Generic_LinkedList_T], System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_LinkedList_T], System.Collections.ICollection, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, typing.Iterable[System_Collections_Generic_LinkedList_T]):
     """This class has no documentation."""
 
     class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Generic_LinkedList_T], System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback):
@@ -1979,7 +1982,7 @@ class LinkedListNode(typing.Generic[System_Collections_Generic_LinkedListNode_T]
         ...
 
 
-class SortedList(typing.Generic[System_Collections_Generic_SortedList_TKey, System_Collections_Generic_SortedList_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Generic_SortedList_TKey, System_Collections_Generic_SortedList_TValue], System.Collections.IDictionary, System.Collections.Generic.IReadOnlyDictionary[System_Collections_Generic_SortedList_TKey, System_Collections_Generic_SortedList_TValue], typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Generic_SortedList_TKey, System_Collections_Generic_SortedList_TValue]]):
+class SortedList(typing.Generic[System_Collections_Generic_SortedList_TKey, System_Collections_Generic_SortedList_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Generic_SortedList_TKey, System_Collections_Generic_SortedList_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Generic_SortedList_TKey, System_Collections_Generic_SortedList_TValue]]):
     """This class has no documentation."""
 
     class KeyList(System.Object, System.Collections.Generic.IList[System_Collections_Generic_SortedList_TKey], System.Collections.ICollection, typing.Iterable[System_Collections_Generic_SortedList_TKey]):
@@ -2212,7 +2215,7 @@ class SortedList(typing.Generic[System_Collections_Generic_SortedList_TKey, Syst
         ...
 
 
-class SortedDictionary(typing.Generic[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue], System.Collections.IDictionary, System.Collections.Generic.IReadOnlyDictionary[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue], typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue]]):
+class SortedDictionary(typing.Generic[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue], System.Object, System.Collections.Generic.IDictionary[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue], System.Collections.IDictionary, typing.Iterable[System.Collections.Generic.KeyValuePair[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue]]):
     """This class has no documentation."""
 
     class Enumerator(System.Collections.Generic.IEnumerator[System.Collections.Generic.KeyValuePair[System_Collections_Generic_SortedDictionary_TKey, System_Collections_Generic_SortedDictionary_TValue]], System.Collections.IDictionaryEnumerator):
@@ -2228,7 +2231,7 @@ class SortedDictionary(typing.Generic[System_Collections_Generic_SortedDictionar
         def move_next(self) -> bool:
             ...
 
-    class KeyCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_SortedDictionary_TKey], System.Collections.ICollection, System.Collections.Generic.IReadOnlyCollection[System_Collections_Generic_SortedDictionary_TKey], typing.Iterable[System_Collections_Generic_SortedDictionary_TKey]):
+    class KeyCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_SortedDictionary_TKey], System.Collections.ICollection, typing.Iterable[System_Collections_Generic_SortedDictionary_TKey]):
         """This class has no documentation."""
 
         class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Generic_SortedDictionary_TKey]):
@@ -2269,7 +2272,7 @@ class SortedDictionary(typing.Generic[System_Collections_Generic_SortedDictionar
         def get_enumerator(self) -> System.Collections.Generic.SortedDictionary.KeyCollection.Enumerator:
             ...
 
-    class ValueCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_SortedDictionary_TValue], System.Collections.ICollection, System.Collections.Generic.IReadOnlyCollection[System_Collections_Generic_SortedDictionary_TValue], typing.Iterable[System_Collections_Generic_SortedDictionary_TValue]):
+    class ValueCollection(System.Object, System.Collections.Generic.ICollection[System_Collections_Generic_SortedDictionary_TValue], System.Collections.ICollection, typing.Iterable[System_Collections_Generic_SortedDictionary_TValue]):
         """This class has no documentation."""
 
         class Enumerator(System.Collections.Generic.IEnumerator[System_Collections_Generic_SortedDictionary_TValue]):

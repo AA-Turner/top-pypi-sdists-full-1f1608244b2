@@ -6,3 +6,10 @@ from .._impl import (
     scout_metadata_ResourceType as ResourceType,
 )
 
+__all__ = [
+    'ListPropertiesAndLabelsRequest',
+    'ListPropertiesAndLabelsResponse',
+    'ResourceType',
+    'ResourceMetadataService',
+]
+

@@ -48,7 +48,6 @@ from pathlib import Path
 from shutil import rmtree
 from types import MappingProxyType
 
-import pandas as pd
 from sqlglot import Dialect, exp
 from sqlglot.helper import first
 from sqlglot.lineage import GraphHTML
@@ -89,7 +88,7 @@ from sqlmesh.core.notification_target import (
     NotificationTarget,
     NotificationTargetManager,
 )
-from sqlmesh.core.plan import Plan, PlanBuilder, SnapshotIntervals
+from sqlmesh.core.plan import Plan, PlanBuilder, SnapshotIntervals, PlanExplainer
 from sqlmesh.core.plan.definition import UserProvidedFlags
 from sqlmesh.core.reference import ReferenceGraph
 from sqlmesh.core.scheduler import Scheduler, CompletionStatus
@@ -134,6 +133,7 @@ from sqlmesh.utils.config import print_config
 from sqlmesh.utils.jinja import JinjaMacroRegistry
 
 if t.TYPE_CHECKING:
+    import pandas as pd
     from typing_extensions import Literal
 
     from sqlmesh.core.engine_adapter._typing import (
@@ -367,11 +367,7 @@ class GenericContext(BaseContext, t.Generic[C]):
         self._requirements: t.Dict[str, str] = {}
         self._environment_statements: t.List[EnvironmentStatements] = []
         self._excluded_requirements: t.Set[str] = set()
-        self._default_catalog: t.Optional[str] = None
-        self._default_catalog_per_gateway: t.Optional[t.Dict[str, str]] = None
         self._engine_adapter: t.Optional[EngineAdapter] = None
-        self._connection_config: t.Optional[ConnectionConfig] = None
-        self._test_connection_config: t.Optional[ConnectionConfig] = None
         self._linters: t.Dict[str, Linter] = {}
         self._loaded: bool = False
 
@@ -967,11 +963,9 @@ class GenericContext(BaseContext, t.Generic[C]):
         """Returns the Python dependencies of the project loaded in this context."""
         return self._requirements.copy()
 
-    @property
+    @cached_property
     def default_catalog(self) -> t.Optional[str]:
-        if self._default_catalog is None and self.default_catalog_per_gateway:
-            self._default_catalog = self.default_catalog_per_gateway[self.selected_gateway]
-        return self._default_catalog
+        return self.default_catalog_per_gateway.get(self.selected_gateway)
 
     @python_api_analytics
     def render(
@@ -1013,6 +1007,8 @@ class GenericContext(BaseContext, t.Generic[C]):
         expand = self.dag.upstream(model.fqn) if expand is True else expand or []
 
         if model.is_seed:
+            import pandas as pd
+
             df = next(
                 model.render(
                     context=self.execution_context(
@@ -1215,6 +1211,7 @@ class GenericContext(BaseContext, t.Generic[C]):
         run: t.Optional[bool] = None,
         diff_rendered: t.Optional[bool] = None,
         skip_linter: t.Optional[bool] = None,
+        explain: t.Optional[bool] = None,
     ) -> Plan:
         """Interactively creates a plan.
 
@@ -1260,6 +1257,7 @@ class GenericContext(BaseContext, t.Generic[C]):
             run: Whether to run latest intervals as part of the plan application.
             diff_rendered: Whether the diff should compare raw vs rendered models
             skip_linter: Linter runs by default so this will skip it if enabled
+            explain: Whether to explain the plan instead of applying it.
 
         Returns:
             The populated Plan object.
@@ -1287,6 +1285,7 @@ class GenericContext(BaseContext, t.Generic[C]):
             run=run,
             diff_rendered=diff_rendered,
             skip_linter=skip_linter,
+            explain=explain,
         )
 
         plan = plan_builder.build()
@@ -1295,6 +1294,9 @@ class GenericContext(BaseContext, t.Generic[C]):
             # Prompts are required if the auto categorization is disabled
             # or if there are any uncategorized snapshots in the plan
             no_prompts = False
+
+        if explain:
+            auto_apply = True
 
         self.console.plan(
             plan_builder,
@@ -1332,6 +1334,7 @@ class GenericContext(BaseContext, t.Generic[C]):
         run: t.Optional[bool] = None,
         diff_rendered: t.Optional[bool] = None,
         skip_linter: t.Optional[bool] = None,
+        explain: t.Optional[bool] = None,
     ) -> PlanBuilder:
         """Creates a plan builder.
 
@@ -1548,6 +1551,7 @@ class GenericContext(BaseContext, t.Generic[C]):
             interval_end_per_model=max_interval_end_per_model,
             console=self.console,
             user_provided_flags=user_provided_flags,
+            explain=explain or False,
         )
 
     def apply(
@@ -1572,6 +1576,16 @@ class GenericContext(BaseContext, t.Generic[C]):
             return
         if plan.uncategorized:
             raise UncategorizedPlanError("Can't apply a plan with uncategorized changes.")
+
+        if plan.explain:
+            explainer = PlanExplainer(
+                state_reader=self.state_reader,
+                default_catalog=self.default_catalog,
+                console=self.console,
+            )
+            explainer.evaluate(plan.to_evaluatable())
+            return
+
         self.notification_target_manager.notify(
             NotificationEvent.APPLY_START,
             environment=plan.environment_naming_info.name,
@@ -1680,6 +1694,12 @@ class GenericContext(BaseContext, t.Generic[C]):
         Returns:
             The list of TableDiff objects containing schema and summary differences.
         """
+
+        if "|" in source or "|" in target:
+            raise ConfigError(
+                "Cross-database table diffing is available in Tobiko Cloud. Read more here: "
+                "https://sqlmesh.readthedocs.io/en/stable/guides/tablediff/#diffing-tables-or-views-across-gateways"
+            )
 
         table_diffs: t.List[TableDiff] = []
 
@@ -2019,6 +2039,8 @@ class GenericContext(BaseContext, t.Generic[C]):
     ) -> ModelTextTestResult:
         """Discover and run model tests"""
         if verbosity >= Verbosity.VERBOSE:
+            import pandas as pd
+
             pd.set_option("display.max_columns", None)
 
         test_meta = self.load_model_tests(tests=tests, patterns=match_patterns)
@@ -2516,13 +2538,9 @@ class GenericContext(BaseContext, t.Generic[C]):
     @cached_property
     def default_catalog_per_gateway(self) -> t.Dict[str, str]:
         """Returns the default catalogs for each engine adapter."""
-        if self._default_catalog_per_gateway is None:
-            self._default_catalog_per_gateway = self._scheduler.get_default_catalog_per_gateway(
-                self
-            )
-        return self._default_catalog_per_gateway
+        return self._scheduler.get_default_catalog_per_gateway(self)
 
-    @cached_property
+    @property
     def concurrent_tasks(self) -> int:
         if self._concurrent_tasks is None:
             self._concurrent_tasks = self.connection_config.concurrent_tasks
@@ -2530,19 +2548,15 @@ class GenericContext(BaseContext, t.Generic[C]):
 
     @cached_property
     def connection_config(self) -> ConnectionConfig:
-        if self._connection_config is None:
-            self._connection_config = self.config.get_connection(self.selected_gateway)
-        return self._connection_config
+        return self.config.get_connection(self.selected_gateway)
 
     @cached_property
     def test_connection_config(self) -> ConnectionConfig:
-        if self._test_connection_config is None:
-            self._test_connection_config = self.config.get_test_connection(
-                self.gateway,
-                self.default_catalog,
-                default_catalog_dialect=self.config.dialect,
-            )
-        return self._test_connection_config
+        return self.config.get_test_connection(
+            self.gateway,
+            self.default_catalog,
+            default_catalog_dialect=self.config.dialect,
+        )
 
     @cached_property
     def environment_catalog_mapping(self) -> RegexKeyDict:

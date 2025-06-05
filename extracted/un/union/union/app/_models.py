@@ -394,7 +394,7 @@ class App:
     dependencies: List["App"] = field(default_factory=list)
     config: Optional[AppConfigProtocol] = None
     subdomain: Optional[str] = None
-    links: Optional[List[Link]] = None
+    links: List[Link] = field(default_factory=list)
 
     _include_resolved: Optional[List[ResolvedInclude]] = field(default=None, init=False)
     _port: Optional[Port] = field(default=None, init=False)

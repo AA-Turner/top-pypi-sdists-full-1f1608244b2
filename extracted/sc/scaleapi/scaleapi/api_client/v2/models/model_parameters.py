@@ -29,7 +29,9 @@ class ModelParameters(BaseModel):
     model: Optional[StrictStr] = Field(default=None, description="The name of the model that generated the message.")
     temperature: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The temperature of the model that generated the message.")
     max_completion_tokens: Optional[StrictInt] = Field(default=None, description="The maximum number of tokens the model can generate.")
-    __properties: ClassVar[List[str]] = ["model", "temperature", "max_completion_tokens"]
+    top_p: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The top-p value of the model that generated the message.")
+    top_k: Optional[StrictInt] = Field(default=None, description="The top-k value of the model that generated the message.")
+    __properties: ClassVar[List[str]] = ["model", "temperature", "max_completion_tokens", "top_p", "top_k"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,6 +87,8 @@ class ModelParameters(BaseModel):
         _obj = cls.model_validate({
             "model": obj.get("model"),
             "temperature": obj.get("temperature"),
-            "max_completion_tokens": obj.get("max_completion_tokens")
+            "max_completion_tokens": obj.get("max_completion_tokens"),
+            "top_p": obj.get("top_p"),
+            "top_k": obj.get("top_k")
         })
         return _obj

@@ -1,12 +1,12 @@
 Metadata-Version: 2.3
 Name: truss
-Version: 0.9.98
+Version: 0.9.100
 Summary: A seamless bridge from model development to model delivery
 License: MIT
 Keywords: MLOps,AI,Model Serving,Model Deployment,Machine Learning
 Author: Pankaj Gupta
 Author-email: pankaj@baseten.co
-Requires-Python: >=3.9,<=3.13.3
+Requires-Python: >=3.9,<3.14
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.9
